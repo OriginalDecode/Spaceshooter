@@ -1,0 +1,9 @@
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Bin\LogReader.exe.config
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Bin\LogReader.exe
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Bin\LogReader.pdb
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Engine\LogReader\obj\Debug\LogReader.csprojResolveAssemblyReference.cache
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Engine\LogReader\obj\Debug\LogReader.LogReader.resources
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Engine\LogReader\obj\Debug\LogReader.Properties.Resources.resources
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Engine\LogReader\obj\Debug\LogReader.csproj.GenerateResource.Cache
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Engine\LogReader\obj\Debug\LogReader.exe
+C:\Users\stlisk1\Desktop\dagl\game-engine\Source\Engine\LogReader\obj\Debug\LogReader.pdb
