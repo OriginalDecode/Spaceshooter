@@ -57,3 +57,4 @@ Workbed/log/
 *.pdb
 Workbed/Application_Debug.ilk
 Workbed/
+Solution/Launcher/obj/
