@@ -7,6 +7,9 @@
 #include <DL_Debug.h>
 #include <TimerManager.h>
 
+#include "VTuneApi.h"
+
+
 Engine* Engine::myInstance = nullptr;
 
 bool Engine::Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo)
@@ -30,12 +33,16 @@ void Engine::Shutdown()
 
 void Engine::Render()
 {
+	VTUNE_EVENT_BEGIN(VTUNE::RENDER);
+
 	TIME_FUNCTION
 
 	myDirectX->Present(0, 0);
 
 	float clearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
 	myDirectX->Clear(clearColor);
+
+	VTUNE_EVENT_END();
 }
 
 void Engine::OnResize(int aWidth, int aHeigth)

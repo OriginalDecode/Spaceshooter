@@ -107,6 +107,9 @@
     <ClInclude Include="FontContainer.h">
       <Filter>Text</Filter>
     </ClInclude>
+    <ClInclude Include="VTuneApi.h">
+      <Filter>DebugServices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">

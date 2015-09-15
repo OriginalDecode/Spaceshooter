@@ -322,6 +322,14 @@ Effect* Model::GetEffect()
 	return myEffect;
 }
 
+void Model::SetEffect(Effect* aEffect)
+{
+	myEffect = aEffect;
+
+	for (int i = 0; i < mySurfaces.Size(); ++i)
+		mySurfaces[i].SetEffect(myEffect);
+}
+
 void Model::Render(const CU::Matrix44<float>& aOrientation)
 {
 	TIME_FUNCTION

@@ -41,14 +41,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -57,7 +57,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -73,7 +73,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -89,7 +89,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DL_Debug\DL_Debug.vcxproj">

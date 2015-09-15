@@ -5,9 +5,11 @@
 #include <Windows.h>
 #include <string>
 #include <D3DX11tex.h>
-#include <DL_Debug.h>
 #include "DirectX.h"
 #include "Engine.h"
 
-#include "targetver.h"
+
+#include <DL_Debug.h>
 #include <Vector.h>
+#include <Matrix.h>
+#include <GrowingArray.h>

@@ -27,6 +27,7 @@ public:
 	void InitGeometry(const MeshData& aMeshData);
 
 	Effect* GetEffect();
+	void SetEffect(Effect* aEffect);
 
 	void Render(const CU::Matrix44<float>& aOrientation);
 
@@ -54,4 +55,3 @@ private:
 	CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 	CU::Matrix44f myOrientation;
 };
-

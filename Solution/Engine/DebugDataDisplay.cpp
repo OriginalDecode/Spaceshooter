@@ -6,6 +6,8 @@
 #include <sstream>
 #include <Psapi.h>
 
+#include "VTuneApi.h"
+
 
 DebugDataDisplay::DebugDataDisplay()
 	: myFunctionTimersStartPos(0.f, 0.f)
@@ -143,6 +145,8 @@ void DebugDataDisplay::Render(Camera& aCamera)
 
 void DebugDataDisplay::RenderFunctionTimers(Camera& aCamera)
 {
+	VTUNE_EVENT_BEGIN(VTUNE::FUNCTION_TIMERS);
+
 	TIME_FUNCTION
 
 	CU::Vector2<float> drawPos = myFunctionTimersStartPos;
@@ -163,7 +167,6 @@ void DebugDataDisplay::RenderFunctionTimers(Camera& aCamera)
 
 			it->second.myTimeText->UpdateSentence(myStringStream.str().c_str(), drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, myTextScale);
 			it->second.myTimeText->Render(aCamera);
-
 			drawPos.y -= 30.f;
 
 			//FUNCTION_TIMER_LOG("%s took %s", it->second.myNameString.c_str(), myStringStream.str().c_str());
@@ -172,6 +175,8 @@ void DebugDataDisplay::RenderFunctionTimers(Camera& aCamera)
 			it->second.myHitCount = 0;
 		}
 	}
+
+	VTUNE_EVENT_END();
 }
 
 void DebugDataDisplay::RenderMemoryUsage(Camera& aCamera)
