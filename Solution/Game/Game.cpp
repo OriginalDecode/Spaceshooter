@@ -41,12 +41,10 @@ bool Game::Init(HWND& aHwnd)
 	
 	myInstances.Add(new Instance(*myWaveModel));
 	myInstances.Add(new Instance(*myGravityModel));
-	//myInstances.Add(new Instance(*myExtrudeModel));
+	myInstances.Add(new Instance(*myExtrudeModel));
 	myInstances.Add(new Instance(*myNormalModel));
 	myInstances.GetLast()->SetPosition({ 0.f, 25.f, 0.f });
 
-	//for (int i = 0; i < 1000; ++i)
-	//	myInstances.Add(new Instance(*myNormalModel));
 
 	myInstances[0]->SetPosition({ -15.f, 10.f, 0.f });
 	myInstances[1]->SetPosition({ 0.f, 10.f, 0.f });
@@ -57,6 +55,7 @@ bool Game::Init(HWND& aHwnd)
 	GeometryGenerator::CreateGrid(500.f, 500.f, 100, 100, worldMesh);
 	myGeometryModel = new Model();
 	myGeometryModel->InitGeometry(worldMesh);
+	//myGeometryModel->SetEffect(Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
 	myInstances.Add(new Instance(*myGeometryModel));
 
 	myScene = new Scene();
@@ -134,7 +133,7 @@ void Game::OnResize(int aWidth, int aHeight)
 void Game::LogicUpdate(const float aDeltaTime)
 {
 	myLight->Update();
-	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundY(-0.005f * 3.14f / 180.f));
+	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundY((45.f * aDeltaTime) * 3.14f / 180.f));
 
 	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundX((720 * aDeltaTime) * 3.14f / 180.f));
 	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundY((720 * aDeltaTime) * 3.14f / 180.f));
