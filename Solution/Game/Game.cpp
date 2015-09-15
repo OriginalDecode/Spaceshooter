@@ -12,6 +12,8 @@
 #include <Text.h>
 #include <DebugDataDisplay.h>
 
+#include <VTuneApi.h>
+
 Game::Game()
 {
 
@@ -174,6 +176,8 @@ void Game::LogicUpdate(const float aDeltaTime)
 
 void Game::Render()
 {
+	VTUNE_EVENT_BEGIN(VTUNE::GAME_RENDER);
+
 	BEGIN_TIME_BLOCK("Game::Render");
 
 	if (myRenderStuff)
@@ -182,4 +186,6 @@ void Game::Render()
 	END_TIME_BLOCK("Game::Render");
 
 	Engine::GetInstance()->GetDebugDisplay().Render(myCamera);
+
+	VTUNE_EVENT_END();
 }
