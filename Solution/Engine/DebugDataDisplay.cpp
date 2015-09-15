@@ -14,7 +14,7 @@ DebugDataDisplay::DebugDataDisplay()
 	, myMemUsageStartPos(1000.f, 0.f)
 	, myCPUUSageStartPos(1000.f, -30.f)
 	, myFrameTimeStartPos(1000.f, -60.f)
-	, myTextScale(0.75f)
+	, myTextScale(0.75f) 
 {
 }
 
@@ -120,7 +120,7 @@ void DebugDataDisplay::RecordFrameTime(const float aDeltaTime)
 	}
 }
 
-void DebugDataDisplay::Render(Camera& aCamera)
+void DebugDataDisplay::Render(const Camera& aCamera)
 {
 	if (myBoolContainer.at(eBitSetEnum::FUNCTION_TIMERS))
 	{
@@ -143,7 +143,7 @@ void DebugDataDisplay::Render(Camera& aCamera)
 	}
 }
 
-void DebugDataDisplay::RenderFunctionTimers(Camera& aCamera)
+void DebugDataDisplay::RenderFunctionTimers(const Camera& aCamera)
 {
 	VTUNE_EVENT_BEGIN(VTUNE::FUNCTION_TIMERS);
 
@@ -179,7 +179,7 @@ void DebugDataDisplay::RenderFunctionTimers(Camera& aCamera)
 	VTUNE_EVENT_END();
 }
 
-void DebugDataDisplay::RenderMemoryUsage(Camera& aCamera)
+void DebugDataDisplay::RenderMemoryUsage(const Camera& aCamera)
 {
 	TIME_FUNCTION
 
@@ -191,7 +191,7 @@ void DebugDataDisplay::RenderMemoryUsage(Camera& aCamera)
 	myText->Render(aCamera);
 }
 
-void DebugDataDisplay::RenderCPUUsage(Camera& aCamera)
+void DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
 {
 	TIME_FUNCTION
 
@@ -203,7 +203,7 @@ void DebugDataDisplay::RenderCPUUsage(Camera& aCamera)
 	myText->Render(aCamera);
 }
 
-void DebugDataDisplay::RenderFrameTime(Camera& aCamera)
+void DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 {
 	TIME_FUNCTION
 

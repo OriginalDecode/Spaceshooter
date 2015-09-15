@@ -44,7 +44,7 @@ void GraphRenderer::Init()
 	ZeroMemory(&myInitData, sizeof(myInitData));
 }
 
-void GraphRenderer::Render(Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData)
+void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData)
 {
 	if (aNewData == true)
 	{

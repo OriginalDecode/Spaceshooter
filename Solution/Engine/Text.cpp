@@ -124,7 +124,7 @@ void Text::InitBlendState()
 	}
 }
 
-void Text::Render(Camera& aCamera)
+void Text::Render(const Camera& aCamera)
 {
 	if (myHasText == false)
 		return;

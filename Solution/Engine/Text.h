@@ -19,7 +19,7 @@ public:
 
 	void Init(Font* aFont);
 
-	void Render(Camera& aCamera);
+	void Render(const Camera& aCamera);
 
 	void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
 

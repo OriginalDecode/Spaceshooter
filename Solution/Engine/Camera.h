@@ -9,10 +9,10 @@ public:
 
 	void OnResize(const int aWidth, const int aHeight);
 
-	CU::Matrix44<float>& GetOrientation();
-	CU::Vector3<float>& GetPosition();
-	CU::Matrix44<float>& GetProjection();
-	CU::Matrix44<float>& GetOrthogonal();
+	const CU::Matrix44<float>& GetOrientation() const;
+	const CU::Vector3<float>& GetPosition() const;
+	const CU::Matrix44<float>& GetProjection() const;
+	const CU::Matrix44<float>& GetOrthogonal() const;
 
 	void SetOrientation(const CU::Matrix44<float>& aOrientation);
 	void SetPosition(const CU::Vector3<float>& aPosition);

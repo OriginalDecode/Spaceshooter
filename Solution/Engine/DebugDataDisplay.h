@@ -30,7 +30,7 @@ public:
 	void EndFunctionTimer(const std::string& aFunc);
 
 	void RecordFrameTime(const float aDeltaTime);
-	void Render(Camera& aCamera);
+	void Render(const Camera& aCamera);
 
 	void ToggleFunctionTimers();
 	void ToggleMemoryUsage();
@@ -68,10 +68,10 @@ private:
 		int myFrameCounter = 0;
 	};
 
-	void RenderFunctionTimers(Camera& aCamera);
-	void RenderMemoryUsage(Camera& aCamera);
-	void RenderCPUUsage(Camera& aCamera);
-	void RenderFrameTime(Camera& aCamera);
+	void RenderFunctionTimers(const Camera& aCamera);
+	void RenderMemoryUsage(const Camera& aCamera);
+	void RenderCPUUsage(const Camera& aCamera);
+	void RenderFrameTime(const Camera& aCamera);
 
 	int GetMemoryUsageMB();
 

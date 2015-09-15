@@ -20,7 +20,7 @@ public:
 
 	void Init();
 
-	void Render(Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData = false);
+	void Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData = false);
 
 private:
 

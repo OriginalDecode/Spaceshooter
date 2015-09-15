@@ -20,22 +20,22 @@ void Camera::OnResize(const int aWidth, const int aHeight)
 	myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(aWidth), static_cast<float>(aHeight), 0.1f, 1000.f);
 }
 
-CU::Matrix44<float>& Camera::GetOrientation()
+const CU::Matrix44<float>& Camera::GetOrientation() const
 {
 	return myOrientation;
 }
 
-CU::Vector3<float>& Camera::GetPosition()
+const CU::Vector3<float>& Camera::GetPosition() const
 {
 	return myPosition;
 }
 
-CU::Matrix44<float>& Camera::GetProjection()
+const CU::Matrix44<float>& Camera::GetProjection() const
 {
 	return myProjectionMatrix;
 }
 
-CU::Matrix44<float>& Camera::GetOrthogonal()
+const CU::Matrix44<float>& Camera::GetOrthogonal() const
 {
 	return myOrthogonalMatrix;
 }
