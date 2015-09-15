@@ -171,6 +171,15 @@ void Game::LogicUpdate(const float aDeltaTime)
 	{
 		myCamera.MoveRight(100.f * aDeltaTime);
 	}
+
+	if (myInputWrapper.KeyIsPressed(DIK_Q))
+	{
+		myCamera.RotateZ(90.f * aDeltaTime);
+	}
+	if (myInputWrapper.KeyIsPressed(DIK_E))
+	{
+		myCamera.RotateZ(-90.f * aDeltaTime);
+	}
 }
 
 void Game::Render()
