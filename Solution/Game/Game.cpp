@@ -189,7 +189,9 @@ void Game::Render()
 	BEGIN_TIME_BLOCK("Game::Render");
 
 	if (myRenderStuff)
+	{
 		myScene->Render();
+	}
 
 	END_TIME_BLOCK("Game::Render");
 
