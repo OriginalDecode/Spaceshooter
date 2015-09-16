@@ -23,9 +23,7 @@ public:
 
 	void Init();
 
-	void Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
-		, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
-		, const float aMaxValue, bool aNewData = false);
+	void Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData = false);
 
 private:
 
@@ -33,12 +31,9 @@ private:
 	void InitIndexBuffer();
 	void InitSurface();
 
-	void BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
-		, const CU::Vector2<float>& aGraphSize, const float aMaxValue);
-	void CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
-		, const int aIndex, const float aHeightCoef);
-	void CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
-		, const int aIndex, const float aHeightCoef);
+	void BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue);
+	void CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize, const int aIndex, const float aHeightCoef);
+	void CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize, const int aIndex, const float aHeightCoef);
 	void SetupVertexBuffer();
 	void SetupIndexBuffer();
 	CU::Vector4<float> GetColor(const float aHeightCoef);

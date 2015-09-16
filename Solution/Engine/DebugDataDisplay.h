@@ -1,14 +1,18 @@
 #pragma once
 #define TIME_FUNCTION Debug_BlockTimer funcTimer__(__FUNCTION__);
+
 #define BEGIN_TIME_BLOCK(NAME) Engine::GetInstance()->GetDebugDisplay().StartFunctionTimer(NAME);
+
 #define END_TIME_BLOCK(NAME) Engine::GetInstance()->GetDebugDisplay().EndFunctionTimer(NAME);
 
 
-#include <bitset>
 #include "Debug_BlockTimer.h"
 #include "GraphRenderer.h"
-#include <sstream>
+
 #include <unordered_map>
+#include <bitset>
+#include <Vector.h>
+#include <sstream>
 
 class Text;
 class Camera;
@@ -18,6 +22,7 @@ class DebugDataDisplay
 {
 public:
 	DebugDataDisplay();
+	~DebugDataDisplay();
 
 	void Init();
 
@@ -42,7 +47,6 @@ private:
 		NEW_GRAPH_DATA,
 		count
 	};
-
 	struct FunctionData
 	{
 		Text* myNameText = nullptr;
