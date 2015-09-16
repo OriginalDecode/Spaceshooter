@@ -1,11 +1,12 @@
 #pragma once
-#include "TextureContainer.h"
+
 #include "EffectContainer.h"
 #include "FBXFactory.h"
 #include "FontContainer.h"
 #include "DebugDataDisplay.h"
 
 class DirectX;
+class TextureContainer;
 struct SetupInfo;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -21,7 +22,7 @@ public:
 
 	ID3D11Device* GetDevice();
 	ID3D11DeviceContext* GetContex();
-	TextureContainer& GetTextureContainer();
+	TextureContainer* GetTextureContainer();
 	EffectContainer& GetEffectContainer();
 	FontContainer& GetFontContainer();
 	DebugDataDisplay& GetDebugDisplay();
@@ -36,7 +37,7 @@ private:
 
 	DirectX* myDirectX;
 	SetupInfo* mySetupInfo;
-	TextureContainer myTextureContainer;
+	TextureContainer* myTextureContainer;
 	EffectContainer myEffectContainer;
 	FBXFactory myModelFactory;
 	FontContainer myFontContainer;
@@ -46,7 +47,7 @@ private:
 };
 
 
-inline TextureContainer& Engine::GetTextureContainer()
+inline TextureContainer* Engine::GetTextureContainer()
 {
 	return myTextureContainer;
 }

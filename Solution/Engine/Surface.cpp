@@ -4,6 +4,7 @@
 #include "Effect.h"
 #include "Surface.h"
 #include "Texture.h"
+#include "TextureContainer.h"
 
 Surface::Surface()
 {
@@ -21,7 +22,7 @@ bool Surface::SetTexture(const std::string& aResourceName, const std::string& aF
 {
 	aUseSRGB;
 
-	Texture* tex = Engine::GetInstance()->GetTextureContainer().GetTexture(aFileName);
+	Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(aFileName);
 	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
 
 	if (shaderVar->IsValid() == false)

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Font.h"
+#include "TextureContainer.h"
 
 
 Font::Font()
@@ -14,7 +15,7 @@ Font::~Font()
 
 bool Font::Init(const char* aFontPath)
 {
-	myTexture = Engine::GetInstance()->GetTextureContainer().GetTexture(aFontPath);
+	myTexture = Engine::GetInstance()->GetTextureContainer()->GetTexture(aFontPath);
 
 	return true;
 }

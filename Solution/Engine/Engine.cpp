@@ -1,12 +1,12 @@
 #include "stdafx.h"
+
 #include "Engine.h"
-#include "DirectX.h"
-#include "Model.h"
 #include "DebugDataDisplay.h"
-
+#include "DirectX.h"
 #include <DL_Debug.h>
+#include "Model.h"
 #include <TimerManager.h>
-
+#include "TextureContainer.h"
 #include "VTuneApi.h"
 
 
@@ -81,6 +81,9 @@ bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	UpdateWindow(aHwnd);
 
 	myDebugDataDisplay.Init();
+
+	myTextureContainer = new TextureContainer();;
+
 
 	ENGINE_LOG("Engine Init Successful");
 	return true;
