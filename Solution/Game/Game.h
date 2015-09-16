@@ -1,14 +1,19 @@
 #pragma once
-#include "stdafx.h"
-#include <Model.h>
-#include <Camera.h>
-#include <InputWrapper.h>
+#include <Matrix.h>
 
-class Scene;
-class Instance;
+namespace CommonUtilities
+{
+	class InputWrapper;
+}
+
+class Camera;
 class DirectionalLight;
+class Model;
 class PointLight;
+class Scene;
 class Text;
+class Instance;
+
 class Game
 {
 public:
@@ -31,7 +36,7 @@ private:
 	void LogicUpdate(const float aDeltaTime);
 	void Render();
 
-	CU::InputWrapper myInputWrapper;
+	CU::InputWrapper* myInputWrapper;
 
 	Model* myWaveModel;
 	Model* myGravityModel;
@@ -41,7 +46,7 @@ private:
 	Model* myPolygonModel;
 	CU::GrowingArray<Instance*> myInstances;
 	Scene* myScene;
-	Camera myCamera;
+	Camera* myCamera;
 	DirectionalLight* myLight;
 	PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;

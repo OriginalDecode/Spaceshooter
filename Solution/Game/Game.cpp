@@ -1,33 +1,36 @@
 #include "stdafx.h"
-#include "Game.h"
 
-#include <Instance.h>
-#include <Scene.h>
-#include <DirectionalLight.h>
-#include <PointLight.h>
-#include <TimerManager.h>
-
-#include <GeometryGenerator.h>
-
-#include <Font.h>
-#include <Text.h>
 #include <DebugDataDisplay.h>
-
+#include <DirectionalLight.h>
+#include <Font.h>
+#include "Game.h"
+#include <GeometryGenerator.h>
+#include <InputWrapper.h>
+#include <Instance.h>
+#include <PointLight.h>
+#include <Scene.h>
+#include <Text.h>
+#include <TimerManager.h>
 #include <VTuneApi.h>
 
 Game::Game()
 {
-
+	myCamera = new Camera();
+	myInputWrapper = new CU::InputWrapper();
 }
+
 Game::~Game()
 {
+	delete myCamera;
+	delete myInputWrapper;
 	delete myScene;
 	myInstances.DeleteAll();
 }
 
 bool Game::Init(HWND& aHwnd)
 {
-	myInputWrapper.Init(aHwnd, GetModuleHandle(NULL), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
+		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	myLight = new DirectionalLight();
 	myLight->SetColor({ 1.f, 0.6f, 0.6f, 1.f });
@@ -39,10 +42,14 @@ bool Game::Init(HWND& aHwnd)
 	myPointLight->SetRange(15.f);
 	myInstances.Init(4);
 
-	myWaveModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx", Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
-	myGravityModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx", Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GravityWell.fx"));
-	myExtrudeModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx", Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
-	myNormalModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx", Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/BasicEffect.fx"));
+	myWaveModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
+	myGravityModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GravityWell.fx"));
+	myExtrudeModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
+	myNormalModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/BasicEffect.fx"));
 
 	
 	myInstances.Add(new Instance(*myWaveModel));
@@ -65,7 +72,7 @@ bool Game::Init(HWND& aHwnd)
 	myInstances.Add(new Instance(*myGeometryModel));
 
 	myScene = new Scene();
-	myScene->SetCamera(&myCamera);
+	myScene->SetCamera(myCamera);
 	for (int i = 0; i < myInstances.Size(); ++i)
 		myScene->AddInstance(myInstances[i]);
 
@@ -88,29 +95,29 @@ bool Game::Update()
 {
 	BEGIN_TIME_BLOCK("Game::Update");
 
-	myInputWrapper.Update();
+	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 	Engine::GetInstance()->GetEffectContainer().Update(deltaTime);
 	Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
 
-	if (myInputWrapper.KeyDown(DIK_F5))
+	if (myInputWrapper->KeyDown(DIK_F5))
 	{
 		Engine::GetInstance()->GetDebugDisplay().ToggleFunctionTimers();
 	}
-	else if (myInputWrapper.KeyDown(DIK_F6))
+	else if (myInputWrapper->KeyDown(DIK_F6))
 	{
 		Engine::GetInstance()->GetDebugDisplay().ToggleMemoryUsage();
 	}
-	else if (myInputWrapper.KeyDown(DIK_F7))
+	else if (myInputWrapper->KeyDown(DIK_F7))
 	{
 		Engine::GetInstance()->GetDebugDisplay().ToggleCPUUsage();
 	}
-	else if (myInputWrapper.KeyDown(DIK_F8))
+	else if (myInputWrapper->KeyDown(DIK_F8))
 	{
 		Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
 	}
-	else if (myInputWrapper.KeyDown(DIK_R))
+	else if (myInputWrapper->KeyDown(DIK_R))
 	{
 		myRenderStuff = !myRenderStuff;
 	}
@@ -134,7 +141,7 @@ void Game::UnPause()
 }
 void Game::OnResize(int aWidth, int aHeight)
 {
-	myCamera.OnResize(aWidth, aHeight);
+	myCamera->OnResize(aWidth, aHeight);
 }
 
 void Game::LogicUpdate(const float aDeltaTime)
@@ -145,47 +152,47 @@ void Game::LogicUpdate(const float aDeltaTime)
 	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundX((720 * aDeltaTime) * 3.14f / 180.f));
 	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundY((720 * aDeltaTime) * 3.14f / 180.f));
 
-	if (myInputWrapper.KeyIsPressed(DIK_UP))
+	if (myInputWrapper->KeyIsPressed(DIK_UP))
 	{
-		myCamera.RotateX(-90.f * aDeltaTime);
+		myCamera->RotateX(-90.f * aDeltaTime);
 	}
-	if (myInputWrapper.KeyIsPressed(DIK_DOWN))
+	if (myInputWrapper->KeyIsPressed(DIK_DOWN))
 	{
-		myCamera.RotateX(90.f * aDeltaTime);
+		myCamera->RotateX(90.f * aDeltaTime);
 	}
-	if (myInputWrapper.KeyIsPressed(DIK_LEFT))
+	if (myInputWrapper->KeyIsPressed(DIK_LEFT))
 	{
-		myCamera.RotateY(-90.f * aDeltaTime);
+		myCamera->RotateY(-90.f * aDeltaTime);
 	}
-	if (myInputWrapper.KeyIsPressed(DIK_RIGHT))
+	if (myInputWrapper->KeyIsPressed(DIK_RIGHT))
 	{
-		myCamera.RotateY(90.f * aDeltaTime);
-	}
-
-	if (myInputWrapper.KeyIsPressed(DIK_W))
-	{
-		myCamera.MoveForward(100.f * aDeltaTime);
-	}
-	if (myInputWrapper.KeyIsPressed(DIK_S))
-	{
-		myCamera.MoveForward(-100.f * aDeltaTime);
-	}
-	if (myInputWrapper.KeyIsPressed(DIK_A))
-	{
-		myCamera.MoveRight(-100.f * aDeltaTime);
-	}
-	if (myInputWrapper.KeyIsPressed(DIK_D))
-	{
-		myCamera.MoveRight(100.f * aDeltaTime);
+		myCamera->RotateY(90.f * aDeltaTime);
 	}
 
-	if (myInputWrapper.KeyIsPressed(DIK_Q))
+	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		myCamera.RotateZ(90.f * aDeltaTime);
+		myCamera->MoveForward(100.f * aDeltaTime);
 	}
-	if (myInputWrapper.KeyIsPressed(DIK_E))
+	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		myCamera.RotateZ(-90.f * aDeltaTime);
+		myCamera->MoveForward(-100.f * aDeltaTime);
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_A))
+	{
+		myCamera->MoveRight(-100.f * aDeltaTime);
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_D))
+	{
+		myCamera->MoveRight(100.f * aDeltaTime);
+	}
+
+	if (myInputWrapper->KeyIsPressed(DIK_Q))
+	{
+		myCamera->RotateZ(90.f * aDeltaTime);
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_E))
+	{
+		myCamera->RotateZ(-90.f * aDeltaTime);
 	}
 }
 
@@ -202,7 +209,7 @@ void Game::Render()
 
 	END_TIME_BLOCK("Game::Render");
 
-	Engine::GetInstance()->GetDebugDisplay().Render(myCamera);
+	Engine::GetInstance()->GetDebugDisplay().Render(*myCamera);
 
 	VTUNE_EVENT_END();
 }
