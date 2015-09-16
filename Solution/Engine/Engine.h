@@ -31,6 +31,8 @@ public:
 	void EnableZBuffer();
 	void DisableZBuffer();
 private:
+	Engine();
+	~Engine();
 	bool Init(HWND& aHwnd, WNDPROC aWndProc);
 	bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
 	

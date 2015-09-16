@@ -12,6 +12,17 @@
 
 Engine* Engine::myInstance = nullptr;
 
+Engine::Engine()
+{
+	myTextureContainer = new TextureContainer();
+}
+
+Engine::~Engine()
+{
+	delete myTextureContainer;
+	myTextureContainer = nullptr;
+}
+
 bool Engine::Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo)
 {
 	myInstance = new Engine();
@@ -82,7 +93,6 @@ bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 
 	myDebugDataDisplay.Init();
 
-	myTextureContainer = new TextureContainer();;
 
 
 	ENGINE_LOG("Engine Init Successful");
