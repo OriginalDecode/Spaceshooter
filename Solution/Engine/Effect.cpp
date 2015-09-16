@@ -1,18 +1,10 @@
 #include "stdafx.h"
 
-#include "Effect.h"
 #include <D3DX11async.h>
 #include <DL_Debug.h>
+#include "Effect.h"
 #include "Engine.h"
-
-Effect::Effect()
-{
-}
-
-
-Effect::~Effect()
-{
-}
+#include "Texture.h"
 
 bool Effect::Init(const std::string& aEffectFile)
 {
@@ -28,7 +20,8 @@ bool Effect::Init(const std::string& aEffectFile)
 	ID3D10Blob* compiledShader = nullptr;
 	ID3D10Blob* compilationMsgs = nullptr;
 
-	hr = D3DX11CompileFromFile(aEffectFile.c_str(), 0, 0, 0, "fx_5_0", shaderFlags, 0, 0, &compiledShader, &compilationMsgs, 0);
+	hr = D3DX11CompileFromFile(aEffectFile.c_str(), 0, 0, 0, "fx_5_0", shaderFlags, 0, 0, &compiledShader
+		, &compilationMsgs, 0);
 	if (FAILED(hr))
 	{
 		if (compilationMsgs != nullptr)
@@ -41,7 +34,8 @@ bool Effect::Init(const std::string& aEffectFile)
 		compilationMsgs->Release();
 	}
 
-	hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), NULL, Engine::GetInstance()->GetDevice(), &myEffect);
+	hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), NULL
+		, Engine::GetInstance()->GetDevice(), &myEffect);
 
 	if (FAILED(hr))
 	{
@@ -118,7 +112,8 @@ bool Effect::Init(const std::string& aEffectFile)
 	return true;
 }
 
-void Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs, CU::StaticArray<CU::Vector4<float>, 1> someColors)
+void Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs
+	, CU::StaticArray<CU::Vector4<float>, 1> someColors)
 {
 	if (myDirectionalLightDirection != nullptr && myDirectionalLigthColor != nullptr)
 	{
@@ -127,7 +122,8 @@ void Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someD
 	}
 }
 
-void Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges)
+void Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions
+	, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges)
 {
 	if (myPointLightPosition != nullptr && myPointLigthColor != nullptr)
 	{

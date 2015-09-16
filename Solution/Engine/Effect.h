@@ -4,14 +4,10 @@
 #include <string.h>
 #include <d3dx11effect.h>
 #include <StaticArray.h>
-#include "Texture.h"
 
 class Effect
 {
 public:
-	Effect();
-	~Effect();
-
 	ID3DX11Effect* GetEffect();
 	ID3DX11EffectTechnique* GetTechnique();
 	const std::string& GetFileName() const;

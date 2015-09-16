@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "Surface.h"
-#include "Effect.h"
 
 #include <d3dx11effect.h>
-
+#include "Effect.h"
+#include "Surface.h"
+#include "Texture.h"
 
 Surface::Surface()
 {

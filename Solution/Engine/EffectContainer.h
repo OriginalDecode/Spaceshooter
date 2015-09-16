@@ -6,9 +6,6 @@ class Effect;
 class EffectContainer
 {
 public:
-	EffectContainer();
-	~EffectContainer();
-
 	Effect* GetEffect(const std::string& aFilePath);
 
 	void Update(const float aDeltaTime);

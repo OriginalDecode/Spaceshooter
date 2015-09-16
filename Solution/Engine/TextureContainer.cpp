@@ -1,15 +1,7 @@
 #include "stdafx.h"
-#include "TextureContainer.h"
+
 #include "Texture.h"
-
-TextureContainer::TextureContainer()
-{
-}
-
-
-TextureContainer::~TextureContainer()
-{
-}
+#include "TextureContainer.h"
 
 Texture* TextureContainer::GetTexture(const std::string& aFileName)
 {
