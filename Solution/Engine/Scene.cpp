@@ -1,10 +1,11 @@
 #include "stdafx.h"
-#include "Scene.h"
-#include "Instance.h"
-#include "DirectionalLight.h"
-#include "PointLight.h"
 
 #include "DebugDataDisplay.h"
+#include "DirectionalLight.h"
+#include "Instance.h"
+#include "PointLight.h"
+#include "Scene.h"
+
 
 
 Scene::Scene()
