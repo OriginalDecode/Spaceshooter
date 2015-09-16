@@ -2,9 +2,6 @@
 class PointLight
 {
 public:
-	PointLight();
-	~PointLight();
-
 	void Update();
 
 	const CU::Vector4<float>& GetColor() const;
@@ -27,6 +24,11 @@ private:
 	CU::Vector4<float> myOriginalPosition;
 	float myRange;
 };
+
+inline void PointLight::Update()
+{
+	myPosition = myOriginalPosition * myOrientation;
+}
 
 inline const CU::Vector4<float>& PointLight::GetColor() const
 {
