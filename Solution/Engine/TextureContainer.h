@@ -5,6 +5,9 @@ class Texture;
 class TextureContainer
 {
 public:
+	TextureContainer();
+	~TextureContainer();
+
 	Texture* GetTexture(const std::string& aFileName);
 
 private:

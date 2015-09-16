@@ -1,6 +1,16 @@
-#include "Effect.h"
-#include "EffectContainer.h"
 #include "stdafx.h"
+#include "EffectContainer.h"
+#include "Effect.h"
+
+EffectContainer::EffectContainer()
+{
+}
+
+
+EffectContainer::~EffectContainer()
+{
+}
+
 
 Effect* EffectContainer::GetEffect(const std::string& aFilePath)
 {

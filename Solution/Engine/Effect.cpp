@@ -1,9 +1,18 @@
-#include <DL_Debug.h>
-#include <D3DX11async.h>
-#include "Effect.h"
-#include "Engine.h"
 #include "stdafx.h"
 
+#include "Effect.h"
+#include <D3DX11async.h>
+#include <DL_Debug.h>
+#include "Engine.h"
+
+Effect::Effect()
+{
+}
+
+
+Effect::~Effect()
+{
+}
 
 bool Effect::Init(const std::string& aEffectFile)
 {
