@@ -1,6 +1,15 @@
 #pragma once
-#include <d3d11.h>
 #include "SetupInfo.h"
+
+struct ID3D11DepthStencilState;
+struct ID3D11DepthStencilView;
+struct ID3D11DepthStencilState;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
+struct ID3D11RenderTargetView;
+struct ID3D11Texture2D;
+struct IDXGISwapChain;
+struct SetupInfo;
 
 class DirectX
 {

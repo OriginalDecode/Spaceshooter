@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DirectX.h"
-#include <DL_Debug.h>
+#include <D3D11.h>
+
 
 
 DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
