@@ -34,7 +34,8 @@ void GraphRenderer::Init()
 
 	D3DX11_PASS_DESC passDesc;
 	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc)
+		, passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "GraphRenderer::Init", MB_ICONWARNING);
@@ -50,7 +51,9 @@ void GraphRenderer::Init()
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
-void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData)
+void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
+	, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
+	, const float aMaxValue, bool aNewData)
 {
 	if (aNewData == true)
 	{
@@ -66,8 +69,11 @@ void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>&
 	myEffect->SetWorldMatrix(myIdentityMatrix);
 
 	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
-	Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
+	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
+		, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer, &myVertexBuffer->myStride
+		, &myVertexBuffer->myByteOffset);
+	Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
+		, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
 
 
 	D3DX11_TECHNIQUE_DESC techDesc;
@@ -128,7 +134,8 @@ void GraphRenderer::InitSurface()
 	mySurface->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue)
+void GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
+	, const CU::Vector2<float>& aGraphSize, const float aMaxValue)
 {
 	float widthPerElement = aGraphSize.x / aDataArray.Size();
 
@@ -160,7 +167,8 @@ void GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, cons
 	mySurface->SetVertexCount(myVertices.Size());
 }
 
-void GraphRenderer::CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize, const int aIndex, const float aHeightCoef)
+void GraphRenderer::CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
+	, const int aIndex, const float aHeightCoef)
 {
 	TIME_FUNCTION
 
@@ -193,7 +201,8 @@ void GraphRenderer::CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU:
 	++index;
 }
 
-void GraphRenderer::CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize, const int aIndex, const float aHeightCoef)
+void GraphRenderer::CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
+	, const int aIndex, const float aHeightCoef)
 {
 	TIME_FUNCTION
 
@@ -237,7 +246,8 @@ void GraphRenderer::SetupVertexBuffer()
 	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
 
 
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData
+		, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "GraphRenderer::SetupVertexBuffer", MB_ICONWARNING);
@@ -255,7 +265,8 @@ void GraphRenderer::SetupIndexBuffer()
 	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
 
 
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData, &myIndexBuffer->myIndexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData
+		, &myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "GraphRenderer::SetupIndexBuffer", MB_ICONWARNING);

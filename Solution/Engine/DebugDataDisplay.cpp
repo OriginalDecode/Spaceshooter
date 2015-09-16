@@ -1,11 +1,10 @@
 #include "stdafx.h"
+
 #include "DebugDataDisplay.h"
-
-#include "Text.h"
 #include "Font.h"
-#include <sstream>
 #include <Psapi.h>
-
+#include <sstream>
+#include "Text.h"
 #include "VTuneApi.h"
 
 
@@ -15,11 +14,6 @@ DebugDataDisplay::DebugDataDisplay()
 	, myCPUUSageStartPos(1000.f, -30.f)
 	, myFrameTimeStartPos(1000.f, -60.f)
 	, myTextScale(0.75f) 
-{
-}
-
-
-DebugDataDisplay::~DebugDataDisplay()
 {
 }
 
@@ -71,10 +65,12 @@ void DebugDataDisplay::EndFunctionTimer(const std::string& aFunc)
 
 
 			it->second.myNameText = new Text();
-			it->second.myNameText->Init(Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
+			it->second.myNameText->Init(
+				Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
 
 			it->second.myTimeText = new Text();
-			it->second.myTimeText->Init(Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
+			it->second.myTimeText->Init(
+				Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
 		}
 
 		LARGE_INTEGER time;
@@ -83,7 +79,8 @@ void DebugDataDisplay::EndFunctionTimer(const std::string& aFunc)
 		++it->second.myHitCount;
 		it->second.myEnabled = true;
 
-		float ms = static_cast<float>(((time.QuadPart * 1000000 / myFrequency) - (it->second.myStart * 1000000 / myFrequency)) / 1000.f);
+		float ms = static_cast<float>(
+			((time.QuadPart * 1000000 / myFrequency) - (it->second.myStart * 1000000 / myFrequency)) / 1000.f);
 		it->second.myMS = ms;
 	}
 }
@@ -165,7 +162,8 @@ void DebugDataDisplay::RenderFunctionTimers(const Camera& aCamera)
 			it->second.myNameText->UpdateSentence(it->second.myNameString.c_str(), drawPos.x, drawPos.y, myTextScale);
 			it->second.myNameText->Render(aCamera);
 
-			it->second.myTimeText->UpdateSentence(myStringStream.str().c_str(), drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, myTextScale);
+			it->second.myTimeText->UpdateSentence(myStringStream.str().c_str()
+				, drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, myTextScale);
 			it->second.myTimeText->Render(aCamera);
 			drawPos.y -= 30.f;
 
@@ -197,7 +195,8 @@ void DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
 
 	myStringStream.clear();
 	myStringStream.str(std::string());
-	myStringStream << "CPU: " << GetCPUUsage(&myPrevSysKernel, &myPrevSysUser, &myPrevProcKernel, &myPrevProcUser) << "%" << std::endl;
+	myStringStream << "CPU: " 
+		<< GetCPUUsage(&myPrevSysKernel, &myPrevSysUser, &myPrevProcKernel, &myPrevProcUser) << "%" << std::endl;
 
 	myText->UpdateSentence(myStringStream.str().c_str(), myCPUUSageStartPos.x, myCPUUSageStartPos.y, myTextScale);
 	myText->Render(aCamera);
@@ -226,7 +225,9 @@ void DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 
 	float graphHeight = 50.f;
 	float graphWidth = 200.f;
-	myGraphRenderer.Render(aCamera, myFrameData.myFrameTimes, { myFrameTimeStartPos.x - graphWidth - 40.f, myFrameTimeStartPos.y - 30.f }, { graphWidth, graphHeight }, 16.f, myBoolContainer.at(eBitSetEnum::NEW_GRAPH_DATA));
+	myGraphRenderer.Render(aCamera, myFrameData.myFrameTimes
+		, { myFrameTimeStartPos.x - graphWidth - 40.f, myFrameTimeStartPos.y - 30.f }
+		, { graphWidth, graphHeight }, 16.f, myBoolContainer.at(eBitSetEnum::NEW_GRAPH_DATA));
 }
 
 
