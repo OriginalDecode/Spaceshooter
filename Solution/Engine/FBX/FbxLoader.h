@@ -7,6 +7,7 @@
 
 #define FBXLoaderArray CU::GrowingArray
 
+#pragma warning(disable : 4099)
 
 enum FBXTextureType
 {

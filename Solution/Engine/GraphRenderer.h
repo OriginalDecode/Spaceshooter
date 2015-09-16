@@ -4,13 +4,16 @@
 #include <Matrix.h>
 #include "Vertices.h"
 
+class Camera;
 class Effect;
 class Font;
 class Surface;
-class Camera;
+
+struct D3D11_BUFFER_DESC;
+struct D3D11_SUBRESOURCE_DATA;
 struct ID3D11InputLayout;
-struct VertexBufferWrapper;
 struct IndexBufferWrapper;
+struct VertexBufferWrapper;
 
 class GraphRenderer
 {
@@ -42,10 +45,10 @@ private:
 	CU::Matrix44<float> myIdentityMatrix;
 
 	VertexBufferWrapper* myVertexBuffer;
-	D3D11_BUFFER_DESC myVertexBufferDesc;
+	D3D11_BUFFER_DESC* myVertexBufferDesc;
 	IndexBufferWrapper* myIndexBuffer;
-	D3D11_BUFFER_DESC myIndexBufferDesc;
-	D3D11_SUBRESOURCE_DATA myInitData;
+	D3D11_BUFFER_DESC* myIndexBufferDesc;
+	D3D11_SUBRESOURCE_DATA* myInitData;
 
 	Surface* mySurface;
 };

@@ -1,19 +1,25 @@
 #include "stdafx.h"
-#include "GraphRenderer.h"
 
 #include "Camera.h"
+#include <D3D11.h>
 #include "Effect.h"
-#include "VertexBufferWrapper.h"
+#include "GraphRenderer.h"
 #include "IndexBufferWrapper.h"
 #include "Surface.h"
+#include "VertexBufferWrapper.h"
 
 GraphRenderer::GraphRenderer()
 {
+	myVertexBufferDesc = new D3D11_BUFFER_DESC();
+	myIndexBufferDesc = new D3D11_BUFFER_DESC();
+	myInitData = new D3D11_SUBRESOURCE_DATA();
 }
-
 
 GraphRenderer::~GraphRenderer()
 {
+	delete myVertexBufferDesc;
+	delete myIndexBufferDesc;
+	delete myInitData;
 }
 
 void GraphRenderer::Init()
@@ -41,7 +47,7 @@ void GraphRenderer::Init()
 	InitIndexBuffer();
 	InitSurface();
 
-	ZeroMemory(&myInitData, sizeof(myInitData));
+	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
 void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize, const float aMaxValue, bool aNewData)
@@ -87,12 +93,12 @@ void GraphRenderer::InitVertexBuffer()
 	myVertexBuffer->myNumberOfBuffers = 1;
 
 
-	ZeroMemory(&myVertexBufferDesc, sizeof(myVertexBufferDesc));
-	myVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	myVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	myVertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	myVertexBufferDesc.MiscFlags = 0;
-	myVertexBufferDesc.StructureByteStride = 0;
+	ZeroMemory(myVertexBufferDesc, sizeof(myVertexBufferDesc));
+	myVertexBufferDesc->Usage = D3D11_USAGE_DYNAMIC;
+	myVertexBufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	myVertexBufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	myVertexBufferDesc->MiscFlags = 0;
+	myVertexBufferDesc->StructureByteStride = 0;
 }
 
 void GraphRenderer::InitIndexBuffer()
@@ -102,12 +108,12 @@ void GraphRenderer::InitIndexBuffer()
 	myIndexBuffer->myByteOffset = 0;
 
 
-	ZeroMemory(&myIndexBufferDesc, sizeof(myIndexBufferDesc));
-	myIndexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	myIndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	myIndexBufferDesc.CPUAccessFlags = 0;
-	myIndexBufferDesc.MiscFlags = 0;
-	myIndexBufferDesc.StructureByteStride = 0;
+	ZeroMemory(myIndexBufferDesc, sizeof(myIndexBufferDesc));
+	myIndexBufferDesc->Usage = D3D11_USAGE_IMMUTABLE;
+	myIndexBufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER;
+	myIndexBufferDesc->CPUAccessFlags = 0;
+	myIndexBufferDesc->MiscFlags = 0;
+	myIndexBufferDesc->StructureByteStride = 0;
 }
 
 void GraphRenderer::InitSurface()
@@ -227,11 +233,11 @@ void GraphRenderer::SetupVertexBuffer()
 	if (myVertexBuffer->myVertexBuffer != nullptr)
 		myVertexBuffer->myVertexBuffer->Release();
 
-	myVertexBufferDesc.ByteWidth = sizeof(VertexPosColor) * myVertices.Size();
-	myInitData.pSysMem = reinterpret_cast<char*>(&myVertices[0]);
+	myVertexBufferDesc->ByteWidth = sizeof(VertexPosColor) * myVertices.Size();
+	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
 
 
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&myVertexBufferDesc, &myInitData, &myVertexBuffer->myVertexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "GraphRenderer::SetupVertexBuffer", MB_ICONWARNING);
@@ -245,11 +251,11 @@ void GraphRenderer::SetupIndexBuffer()
 	if (myIndexBuffer->myIndexBuffer != nullptr)
 		myIndexBuffer->myIndexBuffer->Release();
 
-	myIndexBufferDesc.ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
-	myInitData.pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
+	myIndexBufferDesc->ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
+	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
 
 
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&myIndexBufferDesc, &myInitData, &myIndexBuffer->myIndexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData, &myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "GraphRenderer::SetupIndexBuffer", MB_ICONWARNING);

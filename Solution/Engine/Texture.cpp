@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Texture.h"
 #include <DL_Debug.h>
+#include <D3DX11tex.h>
 
 Texture::Texture()
 {

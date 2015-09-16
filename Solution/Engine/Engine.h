@@ -1,14 +1,14 @@
 #pragma once
-#include "stdafx.h"
 #include "TextureContainer.h"
 #include "EffectContainer.h"
 #include "FBXFactory.h"
 #include "FontContainer.h"
 #include "DebugDataDisplay.h"
 
-
 class DirectX;
 struct SetupInfo;
+struct ID3D11Device;
+struct ID3D11DeviceContext;
 
 class Engine
 {
@@ -45,15 +45,6 @@ private:
 	static Engine* myInstance;
 };
 
-inline ID3D11Device* Engine::GetDevice()
-{
-	return myDirectX->GetDevice();
-}
-
-inline ID3D11DeviceContext* Engine::GetContex()
-{
-	return myDirectX->GetContex();
-}
 
 inline TextureContainer& Engine::GetTextureContainer()
 {

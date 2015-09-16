@@ -1,3 +1,10 @@
 #pragma once
 
-#include <Engine.h>
+#pragma warning( disable : 4005 )
+
+#include <DL_Debug.h>
+#include "Engine.h"
+#include <GrowingArray.h>
+#include <Matrix.h>
+#include <string>
+#include <Vector.h>

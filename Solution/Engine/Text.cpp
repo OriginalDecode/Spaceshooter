@@ -17,6 +17,9 @@ Text::Text()
 	, myLastDrawY(-999.f)
 	, myLastScale(-999.f)
 {
+	myVertexBufferDesc = new D3D11_BUFFER_DESC();
+	myIndexBufferDesc = new D3D11_BUFFER_DESC();
+	myInitData = new D3D11_SUBRESOURCE_DATA();
 }
 
 
@@ -24,6 +27,10 @@ Text::~Text()
 {
 	myVertexBuffer->myVertexBuffer->Release();
 	myIndexBuffer->myIndexBuffer->Release();
+
+	delete myVertexBufferDesc;
+	delete myIndexBufferDesc;
+	delete myInitData;
 }
 
 void Text::Init(Font* aFont)
@@ -55,7 +62,7 @@ void Text::Init(Font* aFont)
 	InitSurface();
 	InitBlendState();
 
-	ZeroMemory(&myInitData, sizeof(myInitData));
+	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
 void Text::InitVertexBuffer()
@@ -67,12 +74,12 @@ void Text::InitVertexBuffer()
 	myVertexBuffer->myNumberOfBuffers = 1;
 
 
-	ZeroMemory(&myVertexBufferDesc, sizeof(myVertexBufferDesc));
-	myVertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-	myVertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	myVertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	myVertexBufferDesc.MiscFlags = 0;
-	myVertexBufferDesc.StructureByteStride = 0;
+	ZeroMemory(myVertexBufferDesc, sizeof(myVertexBufferDesc));
+	myVertexBufferDesc->Usage = D3D11_USAGE_DYNAMIC;
+	myVertexBufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	myVertexBufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	myVertexBufferDesc->MiscFlags = 0;
+	myVertexBufferDesc->StructureByteStride = 0;
 }
 
 void Text::InitIndexBuffer()
@@ -82,12 +89,12 @@ void Text::InitIndexBuffer()
 	myIndexBuffer->myByteOffset = 0;
 
 
-	ZeroMemory(&myIndexBufferDesc, sizeof(myIndexBufferDesc));
-	myIndexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	myIndexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	myIndexBufferDesc.CPUAccessFlags = 0;
-	myIndexBufferDesc.MiscFlags = 0;
-	myIndexBufferDesc.StructureByteStride = 0;
+	ZeroMemory(myIndexBufferDesc, sizeof(myIndexBufferDesc));
+	myIndexBufferDesc->Usage = D3D11_USAGE_IMMUTABLE;
+	myIndexBufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER;
+	myIndexBufferDesc->CPUAccessFlags = 0;
+	myIndexBufferDesc->MiscFlags = 0;
+	myIndexBufferDesc->StructureByteStride = 0;
 }
 
 void Text::InitSurface()
@@ -168,11 +175,11 @@ void Text::SetupVertexBuffer()
 	if (myVertexBuffer->myVertexBuffer != nullptr)
 		myVertexBuffer->myVertexBuffer->Release();
 
-	myVertexBufferDesc.ByteWidth = sizeof(VertexPosUV) * myVertices.Size();
-	myInitData.pSysMem = reinterpret_cast<char*>(&myVertices[0]);
+	myVertexBufferDesc->ByteWidth = sizeof(VertexPosUV) * myVertices.Size();
+	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
 
 
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&myVertexBufferDesc, &myInitData, &myVertexBuffer->myVertexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Text::SetupVertexBuffer", MB_ICONWARNING);
@@ -186,11 +193,11 @@ void Text::SetupIndexBuffer()
 	if (myIndexBuffer->myIndexBuffer != nullptr)
 		myIndexBuffer->myIndexBuffer->Release();
 
-	myIndexBufferDesc.ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
-	myInitData.pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
+	myIndexBufferDesc->ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
+	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
 
 	
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&myIndexBufferDesc, &myInitData, &myIndexBuffer->myIndexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData, &myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Text::SetupIndexBuffer", MB_ICONWARNING);

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "Effect.h"
 #include <D3DX11async.h>
 #include <DL_Debug.h>

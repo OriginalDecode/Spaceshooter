@@ -50,6 +50,16 @@ void Engine::OnResize(int aWidth, int aHeigth)
 	myDirectX->OnResize(aWidth, aHeigth);
 }
 
+ID3D11Device* Engine::GetDevice()
+{
+	return myDirectX->GetDevice();
+}
+
+ID3D11DeviceContext* Engine::GetContex()
+{
+	return myDirectX->GetContex();
+}
+
 bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 {
 	TIME_FUNCTION

@@ -7,9 +7,11 @@ class Effect;
 class Font;
 class Surface;
 class Camera;
+
+struct ID3D11BlendState;
 struct ID3D11InputLayout;
-struct VertexBufferWrapper;
 struct IndexBufferWrapper;
+struct VertexBufferWrapper;
 
 class Text
 {
@@ -24,8 +26,8 @@ public:
 	void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
 
 	const float& GetTextWidth() const;
-private:
 
+private:
 	void InitSentence();
 	void InitVertexBuffer();
 	void InitIndexBuffer();
@@ -47,10 +49,10 @@ private:
 	CU::GrowingArray<int> myVerticeIndices;
 
 	VertexBufferWrapper* myVertexBuffer;
-	D3D11_BUFFER_DESC myVertexBufferDesc;
+	D3D11_BUFFER_DESC* myVertexBufferDesc;
 	IndexBufferWrapper* myIndexBuffer;
-	D3D11_BUFFER_DESC myIndexBufferDesc;
-	D3D11_SUBRESOURCE_DATA myInitData;
+	D3D11_BUFFER_DESC* myIndexBufferDesc;
+	D3D11_SUBRESOURCE_DATA* myInitData;
 
 	Surface* mySurface;
 
