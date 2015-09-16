@@ -1,17 +1,17 @@
 #include "stdafx.h"
-#include "Light.h"
+#include "DirectionalLight.h"
 
 
-Light::Light()
+DirectionalLight::DirectionalLight()
 {
 }
 
 
-Light::~Light()
+DirectionalLight::~DirectionalLight()
 {
 }
 
-void Light::Update()
+void DirectionalLight::Update()
 {
 	CU::Vector3<float> newDir = myOriginalDirection * myOrientation;
 

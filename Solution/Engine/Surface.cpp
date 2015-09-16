@@ -26,7 +26,8 @@ bool Surface::SetTexture(const std::string& aResourceName, const std::string& aF
 
 	if (shaderVar->IsValid() == false)
 	{
-		DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
+		std::string errorMsg = "Failed to get ShaderResource: " + aResourceName;
+		//DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
 		return false;
 	}
 

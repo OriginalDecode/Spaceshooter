@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "Scene.h"
 #include "Instance.h"
-#include "Light.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
 
 #include "DebugDataDisplay.h"
 
@@ -9,7 +10,15 @@
 Scene::Scene()
 {
 	myInstances.Init(4);
-	myLights.Init(4);
+	myDirectionalLights.Init(4);
+	myPointLights.Init(4);
+
+	memset(&myDirectionalLightDirections[0], 0, sizeof(CU::Vector4<float>) * 1);
+	memset(&myDirectionalLightColors[0], 0, sizeof(CU::Vector4<float>) * 1);
+
+	memset(&myPointLightPositions[0], 0, sizeof(CU::Vector4<float>) * 3);
+	memset(&myPointLightColors[0], 0, sizeof(CU::Vector4<float>) * 3);
+	memset(&myPointLightRanges[0], 0, sizeof(float) * 3);
 }
 
 
@@ -21,15 +30,26 @@ void Scene::Render()
 {
 	TIME_FUNCTION
 
+	for (int i = 0; i < 0; ++i)
+	{
+		myDirectionalLights[i]->Update();
+		myDirectionalLightDirections[i] = myDirectionalLights[i]->GetCurrentDir();
+		myDirectionalLightColors[i] = myDirectionalLights[i]->GetColor();
+	}
+
 	for (int i = 0; i < 1; ++i)
 	{
-		myDirections[i] = myLights[i]->GetCurrentLightDir();
-		myColors[i] = myLights[i]->GetLightColor();
+		myPointLights[i]->Update();
+		myPointLightColors[i] = myPointLights[i]->GetColor();
+		myPointLightPositions[i] = myPointLights[i]->GetPosition();
+		myPointLightRanges[i] = myPointLights[i]->GetRange();
 	}
 
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
-		myInstances[i]->Render(*myCamera, myDirections, myColors);
+		myInstances[i]->UpdateDirectionalLights(myDirectionalLightDirections, myDirectionalLightColors);
+		myInstances[i]->UpdatePointLights(myPointLightPositions, myPointLightColors, myPointLightRanges);
+		myInstances[i]->Render(*myCamera);
 	}
 }
 
@@ -38,9 +58,14 @@ void Scene::AddInstance(Instance* aInstance)
 	myInstances.Add(aInstance);
 }
 
-void Scene::AddLight(Light* aLight)
+void Scene::AddLight(DirectionalLight* aLight)
 {
-	myLights.Add(aLight);
+	myDirectionalLights.Add(aLight);
+}
+
+void Scene::AddLight(PointLight* aLight)
+{
+	myPointLights.Add(aLight);
 }
 
 

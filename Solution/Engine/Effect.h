@@ -20,7 +20,8 @@ public:
 	void SetViewMatrix(const CU::Matrix44<float>& aViewMatrix);
 	void SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix);
 	void SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask = 0xFFFFFFFF);
-	void UpdateLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs, CU::StaticArray<CU::Vector4<float>, 1> someColors);
+	void UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs, CU::StaticArray<CU::Vector4<float>, 1> someColors);
+	void UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges);
 	void UpdateTime(const float aDeltaTime);
 
 private:
@@ -33,6 +34,9 @@ private:
 	ID3DX11EffectVectorVariable* myDirectionalLightDirection;
 	ID3DX11EffectScalarVariable* myEyePositionVariable;
 	ID3DX11EffectScalarVariable* myTotalTimeVariable;
+	ID3DX11EffectVectorVariable* myPointLigthColor;
+	ID3DX11EffectVectorVariable* myPointLightPosition;
+	ID3DX11EffectScalarVariable* myPointLightRange;
 
 
 	std::string myFileName;

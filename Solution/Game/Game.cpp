@@ -3,7 +3,8 @@
 
 #include <Instance.h>
 #include <Scene.h>
-#include <Light.h>
+#include <DirectionalLight.h>
+#include <PointLight.h>
 #include <TimerManager.h>
 
 #include <GeometryGenerator.h>
@@ -28,9 +29,14 @@ bool Game::Init(HWND& aHwnd)
 {
 	myInputWrapper.Init(aHwnd, GetModuleHandle(NULL), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLight = new Light();
-	myLight->SetLightColor({ 1.f, 0.6f, 0.6f, 1.f });
-	myLight->SetLightDir({ 0.f, 0.5f, -1.f });
+	myLight = new DirectionalLight();
+	myLight->SetColor({ 1.f, 0.6f, 0.6f, 1.f });
+	myLight->SetDir({ 0.f, 0.5f, -1.f });
+
+	myPointLight = new PointLight();
+	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
+	myPointLight->SetPosition({ 0.f, 5.f, 0.f, 1.f });
+	myPointLight->SetRange(15.f);
 	myInstances.Init(4);
 
 	myWaveModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx", Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
@@ -63,7 +69,8 @@ bool Game::Init(HWND& aHwnd)
 	for (int i = 0; i < myInstances.Size(); ++i)
 		myScene->AddInstance(myInstances[i]);
 
-	myScene->AddLight(myLight);
+	//myScene->AddLight(myLight);
+	myScene->AddLight(myPointLight);
 
 	myRenderStuff = true;
 

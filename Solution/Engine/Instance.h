@@ -15,8 +15,8 @@ public:
 	~Instance();
 
 	bool Init();
-	void Render(Camera& aCamera, CU::StaticArray<CU::Vector4<float>, 1> someLightDirections, CU::StaticArray<CU::Vector4<float>, 1> someLightColors);
-	void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera, CU::StaticArray<CU::Vector4<float>, 1> someLightDirections, CU::StaticArray<CU::Vector4<float>, 1> someLightColors);
+	void Render(Camera& aCamera);
+	void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
 
 	void SetPosition(const CU::Vector3<float>& aPosition);
 	CU::Vector3<float>& GetPosition();
@@ -26,6 +26,8 @@ public:
 	void PerformRotationWorld(CU::Matrix44<float>& aRotation);
 	void PerformTransformation(CU::Matrix44<float>& aTransformation);
 
+	void UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections, const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors);
+	void UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions, const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, const CU::StaticArray<float, 3>& someLightRanges);
 
 private:
 	void operator=(Instance&) = delete;

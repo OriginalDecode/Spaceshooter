@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Instance.h"
 #include "Effect.h"
-#include "Light.h"
 
 
 Instance::Instance(Model& aModel)
@@ -19,20 +18,16 @@ bool Instance::Init()
 	return true;
 }
 
-void Instance::Render(Camera& aCamera, CU::StaticArray<CU::Vector4<float>, 1> someLightDirections, CU::StaticArray<CU::Vector4<float>, 1> someLightColors)
+void Instance::Render(Camera& aCamera)
 {
-	myModel.GetEffect()->UpdateLight(someLightDirections, someLightColors);
-
 	myModel.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 	myModel.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 
 	myModel.Render(myOrientation);
 }
 
-void Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera, CU::StaticArray<CU::Vector4<float>, 1> someLightDirections, CU::StaticArray<CU::Vector4<float>, 1> someLightColors)
+void Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera)
 {
-	myModel.GetEffect()->UpdateLight(someLightDirections, someLightColors);
-
 	myModel.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 	myModel.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 
@@ -76,4 +71,14 @@ void Instance::PerformRotationWorld(CU::Matrix44<float>& aRotation)
 void Instance::PerformTransformation(CU::Matrix44<float>& aTransformation)
 {
 	myOrientation = myOrientation * aTransformation;
+}
+
+void Instance::UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections, const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors)
+{
+	myModel.GetEffect()->UpdateDirectionalLight(someLightDirections, someLightColors);
+}
+
+void Instance::UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions, const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, const CU::StaticArray<float, 3>& someLightRanges)
+{
+	myModel.GetEffect()->UpdatePointLight(someLightPositions, someLightColors, someLightRanges);
 }

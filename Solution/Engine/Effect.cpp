@@ -77,18 +77,34 @@ bool Effect::Init(const std::string& aEffectFile)
 		return false;
 	}
 
-	myDirectionalLigthColor = myEffect->GetVariableByName("myLightColor")->AsVector();
+	myDirectionalLigthColor = myEffect->GetVariableByName("DirectionalLightColor")->AsVector();
 	if (myDirectionalLigthColor->IsValid() == false)
 	{
-		DL_MESSAGE_BOX("Failed to get LightColor", "Effect Error", MB_ICONWARNING);
-		return false;
+		myDirectionalLigthColor = nullptr;;
 	}
 
-	myDirectionalLightDirection = myEffect->GetVariableByName("myLightDir")->AsVector();
+	myDirectionalLightDirection = myEffect->GetVariableByName("DirectionalLightDir")->AsVector();
 	if (myDirectionalLightDirection->IsValid() == false)
 	{
-		DL_MESSAGE_BOX("Failed to get LightDirection", "Effect Error", MB_ICONWARNING);
-		return false;
+		myDirectionalLightDirection = nullptr;
+	}
+
+	myPointLightPosition = myEffect->GetVariableByName("PointLightPosition")->AsVector();
+	if (myPointLightPosition->IsValid() == false)
+	{
+		myPointLightPosition = nullptr;;
+	}
+
+	myPointLigthColor = myEffect->GetVariableByName("PointLightColor")->AsVector();
+	if (myPointLigthColor->IsValid() == false)
+	{
+		myPointLigthColor = nullptr;
+	}
+
+	myPointLightRange = myEffect->GetVariableByName("PointLightRange")->AsScalar();
+	if (myPointLightRange->IsValid() == false)
+	{
+		myPointLightRange = nullptr;
 	}
 
 	myTotalTimeVariable = nullptr;
@@ -101,10 +117,23 @@ bool Effect::Init(const std::string& aEffectFile)
 	return true;
 }
 
-void Effect::UpdateLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs, CU::StaticArray<CU::Vector4<float>, 1> someColors)
+void Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs, CU::StaticArray<CU::Vector4<float>, 1> someColors)
 {
-	myDirectionalLightDirection->SetFloatVectorArray(reinterpret_cast<float*>(&someDirs[0]), 0, 1);
-	myDirectionalLigthColor->SetFloatVectorArray(reinterpret_cast<float*>(&someColors[0]), 0, 1);
+	if (myDirectionalLightDirection != nullptr && myDirectionalLigthColor != nullptr)
+	{
+		myDirectionalLightDirection->SetFloatVectorArray(reinterpret_cast<float*>(&someDirs[0]), 0, 1);
+		myDirectionalLigthColor->SetFloatVectorArray(reinterpret_cast<float*>(&someColors[0]), 0, 1);
+	}
+}
+
+void Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges)
+{
+	if (myPointLightPosition != nullptr && myPointLigthColor != nullptr)
+	{
+		myPointLightPosition->SetFloatVectorArray(reinterpret_cast<float*>(&somePositions[0]), 0, 3);
+		myPointLigthColor->SetFloatVectorArray(reinterpret_cast<float*>(&someColors[0]), 0, 3);
+		myPointLightRange->SetFloatArray(reinterpret_cast<float*>(&someRanges[0]), 0, 3);
+	}
 }
 
 void Effect::UpdateTime(const float aDeltaTime)

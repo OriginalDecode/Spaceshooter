@@ -6,7 +6,8 @@
 
 class Scene;
 class Instance;
-class Light;
+class DirectionalLight;
+class PointLight;
 class Text;
 class Game
 {
@@ -41,7 +42,8 @@ private:
 	CU::GrowingArray<Instance*> myInstances;
 	Scene* myScene;
 	Camera myCamera;
-	Light* myLight;
+	DirectionalLight* myLight;
+	PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
 
 	bool myRenderStuff;
