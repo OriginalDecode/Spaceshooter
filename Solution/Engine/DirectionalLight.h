@@ -1,13 +1,8 @@
 #pragma once
 
-#include <Matrix.h>
-
 class DirectionalLight
 {
 public:
-	DirectionalLight();
-	~DirectionalLight();
-
 	void Update();
 
 	CU::Vector4<float> GetCurrentDir() const;
@@ -25,6 +20,13 @@ private:
 	CU::Vector3<float> myOriginalDirection;
 	CU::Matrix33<float> myOrientation;
 };
+
+inline void DirectionalLight::Update()
+{
+	CU::Vector3f newDir = myOriginalDirection * myOrientation;
+
+	myDirection = newDir;
+}
 
 inline CU::Vector4<float> DirectionalLight::GetCurrentDir() const
 {
