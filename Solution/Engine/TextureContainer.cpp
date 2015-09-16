@@ -2,15 +2,6 @@
 #include "TextureContainer.h"
 #include "Texture.h"
 
-TextureContainer::TextureContainer()
-{
-}
-
-
-TextureContainer::~TextureContainer()
-{
-}
-
 Texture* TextureContainer::GetTexture(const std::string& aFileName)
 {
 	auto it = myTextures.find(aFileName);
