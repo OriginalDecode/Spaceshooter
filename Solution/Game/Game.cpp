@@ -2,11 +2,13 @@
 
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
+#include <Camera.h>
 #include <Font.h>
 #include "Game.h"
 #include <GeometryGenerator.h>
 #include <InputWrapper.h>
 #include <Instance.h>
+#include <Model.h>
 #include <PointLight.h>
 #include <Scene.h>
 #include <Text.h>

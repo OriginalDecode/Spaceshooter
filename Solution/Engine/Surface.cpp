@@ -12,13 +12,7 @@ Surface::Surface()
 	myShaderViews.Init(2);
 }
 
-
-Surface::~Surface()
-{
-}
-
-
-bool Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, const bool aUseSRGB)
+bool Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
 {
 	aUseSRGB;
 
@@ -28,7 +22,7 @@ bool Surface::SetTexture(const std::string& aResourceName, const std::string& aF
 	if (shaderVar->IsValid() == false)
 	{
 		std::string errorMsg = "Failed to get ShaderResource: " + aResourceName;
-		//DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+		DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
 		return false;
 	}
 

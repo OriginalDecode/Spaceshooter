@@ -1,21 +1,14 @@
 #include "stdafx.h"
-#include "Instance.h"
+
+#include "Camera.h"
 #include "Effect.h"
+#include "Instance.h"
+#include "Model.h"
 
 
 Instance::Instance(Model& aModel)
 	: myModel(aModel)
 {
-}
-
-
-Instance::~Instance()
-{
-}
-
-bool Instance::Init()
-{
-	return true;
 }
 
 void Instance::Render(Camera& aCamera)
@@ -73,12 +66,14 @@ void Instance::PerformTransformation(CU::Matrix44<float>& aTransformation)
 	myOrientation = myOrientation * aTransformation;
 }
 
-void Instance::UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections, const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors)
+void Instance::UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections, 
+		const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors)
 {
 	myModel.GetEffect()->UpdateDirectionalLight(someLightDirections, someLightColors);
 }
 
-void Instance::UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions, const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, const CU::StaticArray<float, 3>& someLightRanges)
+void Instance::UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions, 
+		const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, const CU::StaticArray<float, 3>& someLightRanges)
 {
 	myModel.GetEffect()->UpdatePointLight(someLightPositions, someLightColors, someLightRanges);
 }
