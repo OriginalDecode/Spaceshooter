@@ -3,8 +3,8 @@ class Component
 {
 public:
 
-	virtual void Init() = 0;
-	virtual void Update(float aDeltaTime) = 0;
+	virtual void Init();
+	virtual void Update(float aDeltaTime);
 	static int GetID();
 
 protected:

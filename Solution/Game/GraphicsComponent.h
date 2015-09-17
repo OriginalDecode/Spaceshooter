@@ -12,6 +12,7 @@ public:
 	void Update(float aDeltaTime);
 
 	Instance* GetInstance();
+	static int GetID();
 
 private:
 	Instance* myInstance;
@@ -20,4 +21,9 @@ private:
 inline Instance* GraphicsComponent::GetInstance()
 {
 	return myInstance;
+}
+
+inline int GraphicsComponent::GetID()
+{
+	return 0;
 }

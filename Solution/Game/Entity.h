@@ -1,6 +1,5 @@
 #pragma once
 #include <unordered_map>
-
 class Component;
 
 class Entity
@@ -22,20 +21,20 @@ private:
 template <typename T>
 T* Entity::AddComponent()
 {
-	T component = new T();
-	myComponents[T->GetID()] = component;
+	T* component = new T();
+	myComponents[T::GetID()] = component;
 	return component;
 }
 
 template <typename T>
 T* Entity::GetComponent()
 {
-	auto it = myComponents.find(T->GetID());
+	auto it = myComponents.find(T::GetID());
 
 	if (it == myComponents.end())
 	{
 		return nullptr;
 	}
 
-	return it->second;
+	return static_cast<T*>(it->second);
 }

@@ -8,10 +8,18 @@
 GraphicsComponent::GraphicsComponent()
 	: myInstance(nullptr)
 {
-	GraphicsComponent::myID = 0;
+	myID = 0;
 }
 
 void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
+{
+	Model* model = Engine::GetInstance()->LoadModel(aModelPath
+		, Engine::GetInstance()->GetEffectContainer().GetEffect(aEffectPath));
+
+	myInstance = new Instance(*model);
+}
+
+void GraphicsComponent::Update(float aDeltaTime)
 {
 
 }
