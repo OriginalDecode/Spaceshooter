@@ -21,6 +21,7 @@ public:
 
 
 private:
+	void operator= (const Player&) = delete;
 	void MoveForward(float aDistance);
 	void MoveRight(float aDistance);
 
