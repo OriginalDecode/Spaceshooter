@@ -3,7 +3,7 @@
 #include "Effect.h"
 #include "EffectContainer.h"
 
-Effect* EffectContainer::GetEffect(const std::string& aFilePath)
+Prism::Effect* Prism::EffectContainer::GetEffect(const std::string& aFilePath)
 {
 	auto it = myEffects.find(aFilePath);
 
@@ -15,7 +15,7 @@ Effect* EffectContainer::GetEffect(const std::string& aFilePath)
 	return myEffects[aFilePath];
 }
 
-void EffectContainer::LoadEffect(const std::string& aFilePath)
+void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 {
 	Effect* newEffect = new Effect();
 	newEffect->Init(aFilePath);
@@ -23,7 +23,7 @@ void EffectContainer::LoadEffect(const std::string& aFilePath)
 	myEffects[aFilePath] = newEffect;
 }
 
-void EffectContainer::Update(const float aDeltaTime)
+void Prism::EffectContainer::Update(const float aDeltaTime)
 {
 	for (auto it = myEffects.begin(); it != myEffects.end(); ++it)
 	{

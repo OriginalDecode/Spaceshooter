@@ -3,24 +3,19 @@
 #include "TextureContainer.h"
 
 
-Font::Font()
+Prism::Font::Font()
 	: myCharSize(32.f, 32.f)
 {
 }
 
-
-Font::~Font()
-{
-}
-
-bool Font::Init(const char* aFontPath)
+bool Prism::Font::Init(const char* aFontPath)
 {
 	myTexture = Engine::GetInstance()->GetTextureContainer()->GetTexture(aFontPath);
 
 	return true;
 }
 
-Font::CharacterData Font::GetCharData(char aChar)
+Prism::Font::CharacterData Prism::Font::GetCharData(char aChar)
 {
 	int x = aChar % 16;
 	int y = aChar / 16;

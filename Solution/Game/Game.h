@@ -6,13 +6,16 @@ namespace CommonUtilities
 	class InputWrapper;
 }
 
-class Camera;
-class DirectionalLight;
-class Model;
-class PointLight;
-class Scene;
-class Text;
-class Instance;
+namespace Prism
+{
+	class Camera;
+	class DirectionalLight;
+	class Model;
+	class PointLight;
+	class Scene;
+	class Text;
+	class Instance;
+}
 
 class Game
 {
@@ -38,17 +41,17 @@ private:
 
 	CU::InputWrapper* myInputWrapper;
 
-	Model* myWaveModel;
-	Model* myGravityModel;
-	Model* myExtrudeModel;
-	Model* myNormalModel;
-	Model* myGeometryModel;
-	Model* myPolygonModel;
-	CU::GrowingArray<Instance*> myInstances;
-	Scene* myScene;
-	Camera* myCamera;
-	DirectionalLight* myLight;
-	PointLight* myPointLight;
+	Prism::Model* myWaveModel;
+	Prism::Model* myGravityModel;
+	Prism::Model* myExtrudeModel;
+	Prism::Model* myNormalModel;
+	Prism::Model* myGeometryModel;
+	Prism::Model* myPolygonModel;
+	CU::GrowingArray<Prism::Instance*> myInstances;
+	Prism::Scene* myScene;
+	Prism::Camera* myCamera;
+	Prism::DirectionalLight* myLight;
+	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
 
 	bool myRenderStuff;

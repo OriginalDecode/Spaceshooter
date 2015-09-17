@@ -17,7 +17,7 @@
 
 Game::Game()
 {
-	myCamera = new Camera();
+	myCamera = new Prism::Camera();
 	myInputWrapper = new CU::InputWrapper();
 }
 
@@ -34,30 +34,30 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLight = new DirectionalLight();
+	myLight = new Prism::DirectionalLight();
 	myLight->SetColor({ 1.f, 0.6f, 0.6f, 1.f });
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
-	myPointLight = new PointLight();
+	myPointLight = new Prism::PointLight();
 	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
 	myPointLight->SetPosition({ 0.f, 5.f, 0.f, 1.f });
 	myPointLight->SetRange(15.f);
 	myInstances.Init(4);
 
-	myWaveModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
-	myGravityModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GravityWell.fx"));
-	myExtrudeModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
-	myNormalModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/BasicEffect.fx"));
+	myWaveModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
+	myGravityModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GravityWell.fx"));
+	myExtrudeModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
+	myNormalModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
+		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/BasicEffect.fx"));
 
 	
-	myInstances.Add(new Instance(*myWaveModel));
-	myInstances.Add(new Instance(*myGravityModel));
-	myInstances.Add(new Instance(*myExtrudeModel));
-	myInstances.Add(new Instance(*myNormalModel));
+	myInstances.Add(new Prism::Instance(*myWaveModel));
+	myInstances.Add(new Prism::Instance(*myGravityModel));
+	myInstances.Add(new Prism::Instance(*myExtrudeModel));
+	myInstances.Add(new Prism::Instance(*myNormalModel));
 	myInstances.GetLast()->SetPosition({ 0.f, 25.f, 0.f });
 
 
@@ -66,14 +66,14 @@ bool Game::Init(HWND& aHwnd)
 	//myInstances[2]->SetPosition({ 15.f, 0.f, 0.f });
 	//myInstances[3]->SetPosition({ 0.f, 15.f, 0.f });
 
-	MeshData worldMesh;
-	GeometryGenerator::CreateGrid(500.f, 500.f, 100, 100, worldMesh);
-	myGeometryModel = new Model();
+	Prism::MeshData worldMesh;
+	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 100, 100, worldMesh);
+	myGeometryModel = new Prism::Model();
 	myGeometryModel->InitGeometry(worldMesh);
 	//myGeometryModel->SetEffect(Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
-	myInstances.Add(new Instance(*myGeometryModel));
+	myInstances.Add(new Prism::Instance(*myGeometryModel));
 
-	myScene = new Scene();
+	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
 	for (int i = 0; i < myInstances.Size(); ++i)
 		myScene->AddInstance(myInstances[i]);
@@ -95,29 +95,29 @@ bool Game::Destroy()
 
 bool Game::Update()
 {
-	BEGIN_TIME_BLOCK("Game::Update");
+	Prism::BEGIN_TIME_BLOCK("Game::Update");
 
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-	Engine::GetInstance()->GetEffectContainer().Update(deltaTime);
-	Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
+	Prism::Engine::GetInstance()->GetEffectContainer().Update(deltaTime);
+	Prism::Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
-		Engine::GetInstance()->GetDebugDisplay().ToggleFunctionTimers();
+		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFunctionTimers();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F6))
 	{
-		Engine::GetInstance()->GetDebugDisplay().ToggleMemoryUsage();
+		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleMemoryUsage();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F7))
 	{
-		Engine::GetInstance()->GetDebugDisplay().ToggleCPUUsage();
+		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleCPUUsage();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F8))
 	{
-		Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
+		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
 	}
 	else if (myInputWrapper->KeyDown(DIK_R))
 	{
@@ -126,7 +126,7 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 
-	END_TIME_BLOCK("Game::Update");
+	Prism::END_TIME_BLOCK("Game::Update");
 
 	Render();
 	
@@ -202,16 +202,16 @@ void Game::Render()
 {
 	VTUNE_EVENT_BEGIN(VTUNE::GAME_RENDER);
 
-	BEGIN_TIME_BLOCK("Game::Render");
+	Prism::BEGIN_TIME_BLOCK("Game::Render");
 
 	if (myRenderStuff)
 	{
 		myScene->Render();
 	}
 
-	END_TIME_BLOCK("Game::Render");
+	Prism::END_TIME_BLOCK("Game::Render");
 
-	Engine::GetInstance()->GetDebugDisplay().Render(*myCamera);
+	Prism::Engine::GetInstance()->GetDebugDisplay().Render(*myCamera);
 
 	VTUNE_EVENT_END();
 }

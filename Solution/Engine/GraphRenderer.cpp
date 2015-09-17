@@ -8,21 +8,21 @@
 #include "Surface.h"
 #include "VertexBufferWrapper.h"
 
-GraphRenderer::GraphRenderer()
+Prism::GraphRenderer::GraphRenderer()
 {
 	myVertexBufferDesc = new D3D11_BUFFER_DESC();
 	myIndexBufferDesc = new D3D11_BUFFER_DESC();
 	myInitData = new D3D11_SUBRESOURCE_DATA();
 }
 
-GraphRenderer::~GraphRenderer()
+Prism::GraphRenderer::~GraphRenderer()
 {
 	delete myVertexBufferDesc;
 	delete myIndexBufferDesc;
 	delete myInitData;
 }
 
-void GraphRenderer::Init()
+void Prism::GraphRenderer::Init()
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GraphEffect.fx");
 
@@ -51,7 +51,7 @@ void GraphRenderer::Init()
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
-void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
+void Prism::GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
 	, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
 	, const float aMaxValue, bool aNewData)
 {
@@ -90,7 +90,7 @@ void GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>&
 	Engine::GetInstance()->EnableZBuffer();
 }
 
-void GraphRenderer::InitVertexBuffer()
+void Prism::GraphRenderer::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
 	myVertexBuffer->myStride = sizeof(VertexPosColor);
@@ -107,7 +107,7 @@ void GraphRenderer::InitVertexBuffer()
 	myVertexBufferDesc->StructureByteStride = 0;
 }
 
-void GraphRenderer::InitIndexBuffer()
+void Prism::GraphRenderer::InitIndexBuffer()
 {
 	myIndexBuffer = new IndexBufferWrapper();
 	myIndexBuffer->myIndexBufferFormat = DXGI_FORMAT_R32_UINT;
@@ -122,7 +122,7 @@ void GraphRenderer::InitIndexBuffer()
 	myIndexBufferDesc->StructureByteStride = 0;
 }
 
-void GraphRenderer::InitSurface()
+void Prism::GraphRenderer::InitSurface()
 {
 	mySurface = new Surface();
 
@@ -134,7 +134,7 @@ void GraphRenderer::InitSurface()
 	mySurface->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-void GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
+void Prism::GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
 	, const CU::Vector2<float>& aGraphSize, const float aMaxValue)
 {
 	float widthPerElement = aGraphSize.x / aDataArray.Size();
@@ -167,7 +167,7 @@ void GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, cons
 	mySurface->SetVertexCount(myVertices.Size());
 }
 
-void GraphRenderer::CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
+void Prism::GraphRenderer::CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
 	, const int aIndex, const float aHeightCoef)
 {
 	TIME_FUNCTION
@@ -201,7 +201,7 @@ void GraphRenderer::CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU:
 	++index;
 }
 
-void GraphRenderer::CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
+void Prism::GraphRenderer::CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
 	, const int aIndex, const float aHeightCoef)
 {
 	TIME_FUNCTION
@@ -235,7 +235,7 @@ void GraphRenderer::CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU
 	++index;
 }
 
-void GraphRenderer::SetupVertexBuffer()
+void Prism::GraphRenderer::SetupVertexBuffer()
 {
 	TIME_FUNCTION
 
@@ -254,7 +254,7 @@ void GraphRenderer::SetupVertexBuffer()
 	}
 }
 
-void GraphRenderer::SetupIndexBuffer()
+void Prism::GraphRenderer::SetupIndexBuffer()
 {
 	TIME_FUNCTION
 
@@ -273,7 +273,7 @@ void GraphRenderer::SetupIndexBuffer()
 	}
 }
 
-CU::Vector4<float> GraphRenderer::GetColor(const float aHeightCoef)
+CU::Vector4<float> Prism::GraphRenderer::GetColor(const float aHeightCoef)
 {
 	if (aHeightCoef < 0.25f)
 		return{ 0.f, 1.f, 0.f, 1.f };

@@ -1,29 +1,32 @@
 #pragma once
 #include <vector>
 
-class Model;
-class FBXLoader;
 struct ModelData;
+
+class FBXLoader;
 class FbxModelData;
-class Effect;
 
-class FBXFactory
+namespace Prism
 {
-public:
-	FBXFactory();
-	~FBXFactory();
-
-	Model* LoadModel(const char* aFilePath, Effect* aEffect);
-private:
-	void FillData(ModelData* someData, Model* outData, Effect* aEffect);
-	Model* CreateModel(FbxModelData* someModelData, Effect* aEffect);
-
-	FBXLoader *myLoader;
-
-	struct FBXData
+class Model;
+class Effect;
+	class FBXFactory
 	{
-		FbxModelData* myData;
-		std::string myPath;
+	public:
+		FBXFactory();
+
+		Model* LoadModel(const char* aFilePath, Effect* aEffect);
+	private:
+		void FillData(ModelData* someData, Model* outData, Effect* aEffect);
+		Model* CreateModel(FbxModelData* someModelData, Effect* aEffect);
+
+		FBXLoader *myLoader;
+
+		struct FBXData
+		{
+			FbxModelData* myData;
+			std::string myPath;
+		};
+		std::vector<FBXData*> myFBXData;
 	};
-	std::vector<FBXData*> myFBXData;
-};
+}
