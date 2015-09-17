@@ -54,6 +54,14 @@ bool Game::Init(HWND& aHwnd)
 	//cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	//myEntities.Add(cube);
 
+	for (int i = 0; i < 50; ++i)
+	{
+		Entity* astroids = new Entity();
+		astroids->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
+		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
+				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+		myEntities.Add(astroids);
+	}
 
 	Prism::MeshData geometryData;
 	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);

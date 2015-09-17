@@ -19,6 +19,14 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	myInstance = new Prism::Instance(*model);
 }
 
+void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
+{
+	Prism::Model* cube = new Prism::Model();
+	cube->InitCube(aWidth, aHeight, aDepth);
+
+	myInstance = new Prism::Instance(*cube);
+}
+
 void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
 {
 	Prism::Model* model = new Prism::Model();
@@ -64,4 +72,9 @@ void GraphicsComponent::ReceiveMessage(eMessage aMessage)
 		pos.x += speed;
 		myInstance->SetPosition(pos);
 	}
+}
+
+void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
+{
+	myInstance->SetPosition(aPosition);
 }
