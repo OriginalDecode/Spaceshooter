@@ -31,8 +31,6 @@ public:
 	void UnPause();
 	void OnResize(int aWidth, int aHeight);
 
-	
-
 private:
 	void operator=(Game& aApp) = delete;
 

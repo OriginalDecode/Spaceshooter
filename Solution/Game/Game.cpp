@@ -49,7 +49,6 @@ bool Game::Init(HWND& aHwnd)
 	myPointLight->SetRange(15.f);
 	myInstances.Init(4);
 
-
 	myWaveModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
 		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
 	myGravityModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
@@ -65,7 +64,6 @@ bool Game::Init(HWND& aHwnd)
 	myInstances.Add(new Prism::Instance(*myExtrudeModel));
 	myInstances.Add(new Prism::Instance(*myNormalModel));
 	myInstances.GetLast()->SetPosition({ 0.f, 25.f, 0.f });
-
 
 	myInstances[0]->SetPosition({ -15.f, 10.f, 0.f });
 	myInstances[1]->SetPosition({ 0.f, 10.f, 0.f });
@@ -84,7 +82,6 @@ bool Game::Init(HWND& aHwnd)
 
 	for (int i = 0; i < myInstances.Size(); ++i)
 		myScene->AddInstance(myInstances[i]);
-
 	myScene->AddLight(myPointLight);
 
 	myRenderStuff = true;
@@ -128,6 +125,11 @@ bool Game::Update()
 	else if (myInputWrapper->KeyDown(DIK_R))
 	{
 		myRenderStuff = !myRenderStuff;
+	}
+
+	if (myInputWrapper->KeyDown(DIK_ESCAPE))
+	{
+		return false;
 	}
 
 	LogicUpdate(deltaTime);
