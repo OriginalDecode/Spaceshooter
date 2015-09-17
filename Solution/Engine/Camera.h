@@ -27,6 +27,8 @@ namespace Prism
 		void MoveRight(const float aDistance);
 
 	private:
+		void operator= (const Camera&) = delete;
+
 		CU::Matrix44<float>& myOrientation;
 		CU::Matrix44<float> myProjectionMatrix;
 		CU::Matrix44<float> myOrthogonalMatrix;
