@@ -15,6 +15,10 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 
+
+#include "Entity.h"
+#include "GraphicsComponent.h"
+
 Game::Game()
 {
 	myCamera = new Prism::Camera();
@@ -39,10 +43,12 @@ bool Game::Init(HWND& aHwnd)
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
 	myPointLight = new Prism::PointLight();
+
 	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
 	myPointLight->SetPosition({ 0.f, 5.f, 0.f, 1.f });
 	myPointLight->SetRange(15.f);
 	myInstances.Init(4);
+
 
 	myWaveModel = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
 		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
@@ -75,10 +81,10 @@ bool Game::Init(HWND& aHwnd)
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
+
 	for (int i = 0; i < myInstances.Size(); ++i)
 		myScene->AddInstance(myInstances[i]);
 
-	//myScene->AddLight(myLight);
 	myScene->AddLight(myPointLight);
 
 	myRenderStuff = true;
@@ -137,10 +143,12 @@ void Game::Pause()
 {
 
 }
+
 void Game::UnPause()
 {
 
 }
+
 void Game::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
@@ -148,12 +156,6 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
-	myLight->Update();
-	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundY((45.f * aDeltaTime) * 3.14f / 180.f));
-
-	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundX((720 * aDeltaTime) * 3.14f / 180.f));
-	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundY((720 * aDeltaTime) * 3.14f / 180.f));
-
 	if (myInputWrapper->KeyIsPressed(DIK_UP))
 	{
 		myCamera->RotateX(-90.f * aDeltaTime);
