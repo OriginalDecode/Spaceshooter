@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Constants.h"
+#include "../Engine/Text.h"
 #include <InputWrapper.h>
 #include "Player.h"
 
@@ -7,7 +8,12 @@
 Player::Player(CU::InputWrapper& aInputWrapper)
 	: myInputWrapper(aInputWrapper)
 {
+	myCursorPosition;
+}
 
+CU::Matrix44f& Player::GetOrientation() 
+{
+	return myOrientation;
 }
 
 void Player::Update(float aDeltaTime)
@@ -22,21 +28,32 @@ void Player::Update(float aDeltaTime)
 	}
 	if (myInputWrapper.KeyIsPressed(DIK_D) == true)
 	{
-		MoveForward(50 * aDeltaTime);
+		MoveRight(50 * aDeltaTime);
 	}
 	if (myInputWrapper.KeyIsPressed(DIK_A) == true)
 	{
 		MoveRight(-50 * aDeltaTime);
 	}
 
-	if (myInputWrapper.KeyIsPressed(DIK_E) == true)
+	if (myInputWrapper.KeyIsPressed(DIK_Q) == true)
 	{
 		RotateZ(aDeltaTime);
 	}
-	if (myInputWrapper.KeyIsPressed(DIK_Q) == true)
+	if (myInputWrapper.KeyIsPressed(DIK_E) == true)
 	{
 		RotateZ(-aDeltaTime);
 	}
+
+	myCursorPosition.x += myInputWrapper.GetMouseDX() * 0.001f;
+	myCursorPosition.y += myInputWrapper.GetMouseDY() * 0.001f;
+
+	float negateX = myCursorPosition.x > 0.0f ? 1.0f : -1.0f;
+	float negateY = myCursorPosition.y > 0.0f ? 1.0f : -1.0f;
+
+	myOrientation = myOrientation.CreateRotateAroundY((fabs(pow(myCursorPosition.x, 1) * 2) * negateX) * aDeltaTime)
+		* myOrientation;
+	myOrientation = myOrientation.CreateRotateAroundX((fabs(pow(myCursorPosition.y, 1) * 2) * negateY) * aDeltaTime)
+		* myOrientation;
 
 }
 

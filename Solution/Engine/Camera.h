@@ -4,7 +4,7 @@
 class Camera
 {
 public:
-	Camera();
+	Camera(CU::Matrix44f& aPlayerMatrix);
 	~Camera();
 
 	void OnResize(const int aWidth, const int aHeight);
@@ -25,7 +25,7 @@ public:
 	void MoveRight(const float aDistance);
 
 private:
-	CU::Matrix44<float> myOrientation;
+	CU::Matrix44<float>& myOrientation;
 	CU::Matrix44<float> myProjectionMatrix;
 	CU::Matrix44<float> myOrthogonalMatrix;
 	CU::Vector3<float> myPosition;

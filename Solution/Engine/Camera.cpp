@@ -2,11 +2,12 @@
 #include "Camera.h"
 #include <xnamath.h>
 
-Camera::Camera()
+Camera::Camera(CU::Matrix44f& aPlayerMatrix)
+	: myOrientation(aPlayerMatrix)
 {
 	OnResize(800, 600);
 
-	myOrientation.SetPos(CU::Vector3<float>(0.f, 0.f, -25.f));
+	//myOrientation.SetPos(CU::Vector3<float>(0.f, 0.f, -25.f));
 }
 
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <Matrix.h>
+
 	
 namespace CommonUtilities
 {
@@ -12,7 +13,11 @@ public:
 	Player(CU::InputWrapper& aInputWrapper);
 	//När spelaren skapas så skall dennes matrix skickas in till kameran som en referens, så att kameran rör sig som splearen.
 
+	CU::Matrix44f& GetOrientation();
+	
 	void Update(float aDeltaTime);
+
+	
 
 
 private:
@@ -25,5 +30,8 @@ private:
 
 	CU::Matrix44f myOrientation;
 	CU::Vector3f myPosition;
+
+	CU::Vector2<float> myCursorPosition;
+
 	CU::InputWrapper& myInputWrapper;
 };

@@ -9,6 +9,7 @@ namespace CommonUtilities
 class Camera;
 class DirectionalLight;
 class Model;
+class Player;
 class PointLight;
 class Scene;
 class Text;
@@ -37,7 +38,7 @@ private:
 	void Render();
 
 	CU::InputWrapper* myInputWrapper;
-
+	Player* myPlayer;
 	Model* myWaveModel;
 	Model* myGravityModel;
 	Model* myExtrudeModel;

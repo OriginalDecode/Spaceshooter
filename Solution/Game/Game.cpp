@@ -7,6 +7,7 @@
 #include <GeometryGenerator.h>
 #include <InputWrapper.h>
 #include <Instance.h>
+#include "Player.h"
 #include <PointLight.h>
 #include <Scene.h>
 #include <Text.h>
@@ -15,8 +16,10 @@
 
 Game::Game()
 {
-	myCamera = new Camera();
 	myInputWrapper = new CU::InputWrapper();
+	myPlayer = new Player(*myInputWrapper);
+	myCamera = new Camera(myPlayer->GetOrientation());
+	ShowCursor(false);
 }
 
 Game::~Game()
@@ -168,32 +171,32 @@ void Game::LogicUpdate(const float aDeltaTime)
 	{
 		myCamera->RotateY(90.f * aDeltaTime);
 	}
-
-	if (myInputWrapper->KeyIsPressed(DIK_W))
-	{
-		myCamera->MoveForward(100.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_S))
-	{
-		myCamera->MoveForward(-100.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_A))
-	{
-		myCamera->MoveRight(-100.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_D))
-	{
-		myCamera->MoveRight(100.f * aDeltaTime);
-	}
-
-	if (myInputWrapper->KeyIsPressed(DIK_Q))
-	{
-		myCamera->RotateZ(90.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_E))
-	{
-		myCamera->RotateZ(-90.f * aDeltaTime);
-	}
+	myPlayer->Update(aDeltaTime);
+	//if (myInputWrapper->KeyIsPressed(DIK_W))
+	//{
+	//	myCamera->MoveForward(100.f * aDeltaTime);
+	//}
+	//if (myInputWrapper->KeyIsPressed(DIK_S))
+	//{
+	//	myCamera->MoveForward(-100.f * aDeltaTime);
+	//}
+	//if (myInputWrapper->KeyIsPressed(DIK_A))
+	//{
+	//	myCamera->MoveRight(-100.f * aDeltaTime);
+	//}
+	//if (myInputWrapper->KeyIsPressed(DIK_D))
+	//{
+	//	myCamera->MoveRight(100.f * aDeltaTime);
+	//}
+	//
+	//if (myInputWrapper->KeyIsPressed(DIK_Q))
+	//{
+	//	myCamera->RotateZ(90.f * aDeltaTime);
+	//}
+	//if (myInputWrapper->KeyIsPressed(DIK_E))
+	//{
+	//	myCamera->RotateZ(-90.f * aDeltaTime);
+	//}
 }
 
 void Game::Render()
