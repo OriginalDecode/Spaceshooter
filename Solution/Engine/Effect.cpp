@@ -6,7 +6,7 @@
 #include "Engine.h"
 #include "Texture.h"
 
-bool Effect::Init(const std::string& aEffectFile)
+bool Prism::Effect::Init(const std::string& aEffectFile)
 {
 	myFileName = aEffectFile;
 
@@ -112,7 +112,7 @@ bool Effect::Init(const std::string& aEffectFile)
 	return true;
 }
 
-void Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs
+void Prism::Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs
 	, CU::StaticArray<CU::Vector4<float>, 1> someColors)
 {
 	if (myDirectionalLightDirection != nullptr && myDirectionalLigthColor != nullptr)
@@ -122,7 +122,7 @@ void Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someD
 	}
 }
 
-void Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions
+void Prism::Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions
 	, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges)
 {
 	if (myPointLightPosition != nullptr && myPointLigthColor != nullptr)
@@ -133,7 +133,7 @@ void Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositio
 	}
 }
 
-void Effect::UpdateTime(const float aDeltaTime)
+void Prism::Effect::UpdateTime(const float aDeltaTime)
 {
 	if (myTotalTimeVariable != nullptr)
 	{

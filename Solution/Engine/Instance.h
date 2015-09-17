@@ -3,38 +3,40 @@
 #include <Matrix.h>
 #include <StaticArray.h>
 
-class Camera;
-class Light;
-class Model;
-
-class Instance
+namespace Prism
 {
-public:
-	Instance(Model& aModel);
+	class Camera;
+	class Light;
+	class Model;
 
-	void Render(Camera& aCamera);
-	void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
+	class Instance
+	{
+	public:
+		Instance(Model& aModel);
 
-	void SetPosition(const CU::Vector3<float>& aPosition);
-	CU::Vector3<float>& GetPosition();
-	CU::Matrix44<float>& GetOrientation();
-	void SetOrientation(const CU::Matrix44<float>& aOrientation);
+		void Render(Camera& aCamera);
+		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
 
-	void PerformRotationLocal(CU::Matrix44<float>& aRotation);
-	void PerformRotationWorld(CU::Matrix44<float>& aRotation);
-	void PerformTransformation(CU::Matrix44<float>& aTransformation);
+		void SetPosition(const CU::Vector3<float>& aPosition);
+		CU::Vector3<float>& GetPosition();
+		CU::Matrix44<float>& GetOrientation();
+		void SetOrientation(const CU::Matrix44<float>& aOrientation);
 
-	void UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections, 
+		void PerformRotationLocal(CU::Matrix44<float>& aRotation);
+		void PerformRotationWorld(CU::Matrix44<float>& aRotation);
+		void PerformTransformation(CU::Matrix44<float>& aTransformation);
+
+		void UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections,
 			const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors);
-	void UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions, 
-			const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, 
+		void UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions,
+			const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors,
 			const CU::StaticArray<float, 3>& someLightRanges);
 
-private:
-	void operator=(Instance&) = delete;
+	private:
+		void operator=(Instance&) = delete;
 
-	Model& myModel;
-	CU::Matrix44<float> myOrientation;
-	CU::Vector3<float> myPosition;
-};
-
+		Model& myModel;
+		CU::Matrix44<float> myOrientation;
+		CU::Vector3<float> myPosition;
+	};
+}

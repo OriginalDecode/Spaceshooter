@@ -8,7 +8,7 @@
 #include "VTuneApi.h"
 
 
-DebugDataDisplay::DebugDataDisplay()
+Prism::DebugDataDisplay::DebugDataDisplay()
 	: myFunctionTimersStartPos(0.f, 0.f)
 	, myMemUsageStartPos(1000.f, 0.f)
 	, myCPUUSageStartPos(1000.f, -30.f)
@@ -17,7 +17,7 @@ DebugDataDisplay::DebugDataDisplay()
 {
 }
 
-void DebugDataDisplay::Init()
+void Prism::DebugDataDisplay::Init()
 {
 	myText = new Text();
 	myText->Init(Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
@@ -37,7 +37,7 @@ void DebugDataDisplay::Init()
 	myFrameData.myLastDeltaTime = 0.f;
 }
 
-void DebugDataDisplay::StartFunctionTimer(const std::string& aFunc)
+void Prism::DebugDataDisplay::StartFunctionTimer(const std::string& aFunc)
 {
 	FunctionData& it = myFunctionTimers[aFunc];
 
@@ -47,7 +47,7 @@ void DebugDataDisplay::StartFunctionTimer(const std::string& aFunc)
 	it.myStart = time.QuadPart;
 }
 
-void DebugDataDisplay::EndFunctionTimer(const std::string& aFunc)
+void Prism::DebugDataDisplay::EndFunctionTimer(const std::string& aFunc)
 {
 	auto it = myFunctionTimers.find(aFunc);
 
@@ -85,7 +85,7 @@ void DebugDataDisplay::EndFunctionTimer(const std::string& aFunc)
 	}
 }
 
-void DebugDataDisplay::RecordFrameTime(const float aDeltaTime)
+void Prism::DebugDataDisplay::RecordFrameTime(const float aDeltaTime)
 {
 	myBoolContainer.set(eBitSetEnum::NEW_GRAPH_DATA, false);
 
@@ -117,7 +117,7 @@ void DebugDataDisplay::RecordFrameTime(const float aDeltaTime)
 	}
 }
 
-void DebugDataDisplay::Render(const Camera& aCamera)
+void Prism::DebugDataDisplay::Render(const Camera& aCamera)
 {
 	if (myBoolContainer.at(eBitSetEnum::FUNCTION_TIMERS))
 	{
@@ -140,7 +140,7 @@ void DebugDataDisplay::Render(const Camera& aCamera)
 	}
 }
 
-void DebugDataDisplay::RenderFunctionTimers(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderFunctionTimers(const Camera& aCamera)
 {
 	VTUNE_EVENT_BEGIN(VTUNE::FUNCTION_TIMERS);
 
@@ -177,7 +177,7 @@ void DebugDataDisplay::RenderFunctionTimers(const Camera& aCamera)
 	VTUNE_EVENT_END();
 }
 
-void DebugDataDisplay::RenderMemoryUsage(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderMemoryUsage(const Camera& aCamera)
 {
 	TIME_FUNCTION
 
@@ -189,7 +189,7 @@ void DebugDataDisplay::RenderMemoryUsage(const Camera& aCamera)
 	myText->Render(aCamera);
 }
 
-void DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
 {
 	TIME_FUNCTION
 
@@ -202,7 +202,7 @@ void DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
 	myText->Render(aCamera);
 }
 
-void DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 {
 	TIME_FUNCTION
 
@@ -231,7 +231,7 @@ void DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 }
 
 
-int DebugDataDisplay::GetMemoryUsageMB()
+int Prism::DebugDataDisplay::GetMemoryUsageMB()
 {
 	PROCESS_MEMORY_COUNTERS memCounter;
 	GetProcessMemoryInfo(GetCurrentProcess(), &memCounter, sizeof(memCounter));
@@ -242,7 +242,7 @@ int DebugDataDisplay::GetMemoryUsageMB()
 	return memUsedMb;
 }
 
-ULONGLONG DebugDataDisplay::FixCPUTimings(const FILETIME &a, const FILETIME &b)
+ULONGLONG Prism::DebugDataDisplay::FixCPUTimings(const FILETIME &a, const FILETIME &b)
 {
 	LARGE_INTEGER la, lb;
 	la.LowPart = a.dwLowDateTime;
@@ -253,7 +253,7 @@ ULONGLONG DebugDataDisplay::FixCPUTimings(const FILETIME &a, const FILETIME &b)
 	return la.QuadPart - lb.QuadPart;
 }
 
-float DebugDataDisplay::GetCPUUsage(FILETIME *prevSysKernel, FILETIME *prevSysUser,
+float Prism::DebugDataDisplay::GetCPUUsage(FILETIME *prevSysKernel, FILETIME *prevSysUser,
 	FILETIME *prevProcKernel, FILETIME *prevProcUser,
 	bool firstRun)
 {

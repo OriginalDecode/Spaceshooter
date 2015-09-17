@@ -6,13 +6,13 @@
 #include "Texture.h"
 #include "TextureContainer.h"
 
-Surface::Surface()
+Prism::Surface::Surface()
 {
 	myTextures.Init(2);
 	myShaderViews.Init(2);
 }
 
-bool Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
+bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
 {
 	aUseSRGB;
 
@@ -32,7 +32,7 @@ bool Surface::SetTexture(const std::string& aResourceName, const std::string& aF
 	return true;
 }
 
-bool Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
+bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
 {
 	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
 	if (shaderVar->IsValid() == false)
@@ -47,7 +47,7 @@ bool Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
 	return true;
 }
 
-void Surface::Activate()
+void Prism::Surface::Activate()
 {
 	Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(myPrimitiveTopologyType);
 

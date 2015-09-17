@@ -2,19 +2,21 @@
 
 #include "Vertices.h"
 
-struct VertexDataWrapper
+namespace Prism
 {
-	int myNumberOfVertices;
-	int mySize;
-	int myStride;
-	VertexType myType;
-	char* myVertexData;
+	struct VertexDataWrapper
+	{
+		int myNumberOfVertices;
+		int mySize;
+		int myStride;
+		VertexType myType;
+		char* myVertexData;
 
-	VertexPosColor* GetDataAsVertexPosColor();
-};
+		VertexPosColor* GetDataAsVertexPosColor();
+	};
+}
 
-inline VertexPosColor* VertexDataWrapper::GetDataAsVertexPosColor()
+inline Prism::VertexPosColor* Prism::VertexDataWrapper::GetDataAsVertexPosColor()
 {
 	return reinterpret_cast<VertexPosColor*>(myVertexData);
 }
-

@@ -1,15 +1,17 @@
 #pragma once
 #include <unordered_map>
-class Texture;
-
-class TextureContainer
+namespace Prism
 {
-public:
-	Texture* GetTexture(const std::string& aFileName);
+	class Texture;
 
-private:
-	void LoadTexture(const std::string& aFileName);
+	class TextureContainer
+	{
+	public:
+		Texture* GetTexture(const std::string& aFileName);
 
-	std::unordered_map<std::string, Texture*> myTextures;
-};
+	private:
+		void LoadTexture(const std::string& aFileName);
 
+		std::unordered_map<std::string, Texture*> myTextures;
+	};
+}

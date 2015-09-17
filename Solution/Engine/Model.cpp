@@ -10,7 +10,7 @@
 #include "VertexDataWrapper.h"
 #include "VertexIndexWrapper.h"
 
-Model::Model()
+Prism::Model::Model()
 {
 	myChilds.Init(2);
 	myChildTransforms.Init(2);
@@ -21,15 +21,14 @@ Model::Model()
 	myIsNULLObject = true;
 }
 
-
-Model::~Model()
+Prism::Model::~Model()
 {
 	myVertexBuffer->myVertexBuffer->Release();
 	myIndexBuffer->myIndexBuffer->Release();
 	mySurfaces.DeleteAll();
 }
 
-void Model::Init()
+void Prism::Model::Init()
 {
 	if (myIsNULLObject == false)
 	{
@@ -59,7 +58,7 @@ void Model::Init()
 	}
 }
 
-void Model::InitPolygon()
+void Prism::Model::InitPolygon()
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/PolygonEffect.fx");
 
@@ -111,7 +110,7 @@ void Model::InitPolygon()
 	myIsNULLObject = false;
 }
 
-void Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
+void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/CubeEffect.fx");
 
@@ -259,7 +258,7 @@ void Model::InitCube(const float aWidth, const float aHeight, const float aDepth
 	myIsNULLObject = false;
 }
 
-void Model::InitGeometry(const MeshData& aMeshData)
+void Prism::Model::InitGeometry(const MeshData& aMeshData)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GeometryEffect.fx");
 	
@@ -319,18 +318,18 @@ void Model::InitGeometry(const MeshData& aMeshData)
 	myIsNULLObject = false;
 }
 
-void Model::AddChild(Model* aChild)
+void Prism::Model::AddChild(Model* aChild)
 {
 	myChilds.Add(aChild);
 	myChildTransforms.Add(aChild->myOrientation);
 }
 
-Effect* Model::GetEffect()
+Prism::Effect* Prism::Model::GetEffect()
 {
 	return myEffect;
 }
 
-void Model::SetEffect(Effect* aEffect)
+void Prism::Model::SetEffect(Effect* aEffect)
 {
 	myEffect = aEffect;
 
@@ -340,7 +339,7 @@ void Model::SetEffect(Effect* aEffect)
 	}
 }
 
-void Model::Render(const CU::Matrix44<float>& aOrientation)
+void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 {
 	TIME_FUNCTION
 
@@ -386,7 +385,7 @@ void Model::Render(const CU::Matrix44<float>& aOrientation)
 	}
 }
 
-void Model::InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, int aVertexSize, char* aVertexData)
+void Prism::Model::InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, int aVertexSize, char* aVertexData)
 {
 	myVertexBaseData = new VertexDataWrapper();
 	myVertexBaseData->myNumberOfVertices = aNumberOfVertices;
@@ -396,7 +395,7 @@ void Model::InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, in
 	myVertexBaseData->myVertexData = aVertexData;
 }
 
-void Model::InitIndexBaseData(DXGI_FORMAT aFormat, int aNumberOfIndices, char* aIndexData)
+void Prism::Model::InitIndexBaseData(DXGI_FORMAT aFormat, int aNumberOfIndices, char* aIndexData)
 {
 	myIndexBaseData = new VertexIndexWrapper();
 	myIndexBaseData->myFormat = aFormat;
@@ -405,7 +404,7 @@ void Model::InitIndexBaseData(DXGI_FORMAT aFormat, int aNumberOfIndices, char* a
 	myIndexBaseData->mySize = sizeof(UINT) * myIndexBaseData->myNumberOfIndices;
 }
 
-bool Model::InitVertexBuffer()
+bool Prism::Model::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
 
@@ -436,7 +435,7 @@ bool Model::InitVertexBuffer()
 	return true;
 }
 
-bool Model::InitIndexBuffer()
+bool Prism::Model::InitIndexBuffer()
 {
 	myIndexBuffer = new IndexBufferWrapper();
 

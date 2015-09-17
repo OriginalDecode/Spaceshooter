@@ -10,7 +10,7 @@
 #include "Camera.h"
 
 
-Text::Text()
+Prism::Text::Text()
 	: myHasText(false)
 	/*, myLastText(nullptr)*/
 	, myLastDrawX(-999.f)
@@ -23,7 +23,7 @@ Text::Text()
 }
 
 
-Text::~Text()
+Prism::Text::~Text()
 {
 	myVertexBuffer->myVertexBuffer->Release();
 	myIndexBuffer->myIndexBuffer->Release();
@@ -33,7 +33,7 @@ Text::~Text()
 	delete myInitData;
 }
 
-void Text::Init(Font* aFont)
+void Prism::Text::Init(Font* aFont)
 {
 
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/FontEffect.fx");
@@ -65,7 +65,7 @@ void Text::Init(Font* aFont)
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
-void Text::InitVertexBuffer()
+void Prism::Text::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
 	myVertexBuffer->myStride = sizeof(VertexPosUV);
@@ -82,7 +82,7 @@ void Text::InitVertexBuffer()
 	myVertexBufferDesc->StructureByteStride = 0;
 }
 
-void Text::InitIndexBuffer()
+void Prism::Text::InitIndexBuffer()
 {
 	myIndexBuffer = new IndexBufferWrapper();
 	myIndexBuffer->myIndexBufferFormat = DXGI_FORMAT_R32_UINT;
@@ -97,7 +97,7 @@ void Text::InitIndexBuffer()
 	myIndexBufferDesc->StructureByteStride = 0;
 }
 
-void Text::InitSurface()
+void Prism::Text::InitSurface()
 {
 	mySurface = new Surface();
 
@@ -110,7 +110,7 @@ void Text::InitSurface()
 	mySurface->SetTexture("DiffuseTexture", myFont->GetTexture());
 }
 
-void Text::InitBlendState()
+void Prism::Text::InitBlendState()
 {
 	D3D11_BLEND_DESC blendDesc;
 	blendDesc.AlphaToCoverageEnable = false;
@@ -131,7 +131,7 @@ void Text::InitBlendState()
 	}
 }
 
-void Text::Render(const Camera& aCamera)
+void Prism::Text::Render(const Camera& aCamera)
 {
 	if (myHasText == false)
 		return;
@@ -168,7 +168,7 @@ void Text::Render(const Camera& aCamera)
 	Engine::GetInstance()->EnableZBuffer();
 }
 
-void Text::SetupVertexBuffer()
+void Prism::Text::SetupVertexBuffer()
 {
 	TIME_FUNCTION
 
@@ -186,7 +186,7 @@ void Text::SetupVertexBuffer()
 	}
 }
 
-void Text::SetupIndexBuffer()
+void Prism::Text::SetupIndexBuffer()
 {
 	TIME_FUNCTION
 
@@ -197,18 +197,20 @@ void Text::SetupIndexBuffer()
 	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
 
 	
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData, &myIndexBuffer->myIndexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData, 
+			&myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Text::SetupIndexBuffer", MB_ICONWARNING);
 	}
 }
 
-void Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale)
 {
 	TIME_FUNCTION
 	
-	if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX && aDrawY == myLastDrawY && aScale == myLastScale)
+	if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX 
+			&& aDrawY == myLastDrawY && aScale == myLastScale)
 	{
 		return;
 	}
@@ -252,7 +254,8 @@ void Text::UpdateSentence(const char* aString, const float aDrawX, const float a
 	myTextWidth = drawX - myTextWidth;
 }
 
-void Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
+void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, 
+		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
 {
 	int index = aIndex;
 
@@ -287,7 +290,8 @@ void Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale
 	++index;
 }
 
-void Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
+void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex,
+		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
 {
 	int index = aIndex;
 

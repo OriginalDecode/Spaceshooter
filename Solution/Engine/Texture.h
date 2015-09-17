@@ -2,15 +2,17 @@
 #include <string>
 struct ID3D11ShaderResourceView;
 
-class Texture
+namespace Prism
 {
-public:
-	bool LoadTexture(const std::string& aFilePath);
-	const std::string& GetFileName() const;
-	ID3D11ShaderResourceView* GetShaderView();
+	class Texture
+	{
+	public:
+		bool LoadTexture(const std::string& aFilePath);
+		const std::string& GetFileName() const;
+		ID3D11ShaderResourceView* GetShaderView();
 
-private:
-	std::string myFileName;
-	ID3D11ShaderResourceView* myTexture;
-};
-
+	private:
+		std::string myFileName;
+		ID3D11ShaderResourceView* myTexture;
+	};
+}

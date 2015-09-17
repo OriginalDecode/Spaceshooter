@@ -2,12 +2,14 @@
 
 struct ID3D11Buffer;
 
-struct VertexBufferWrapper
+namespace Prism
 {
-	unsigned int myByteOffset;
-	int myNumberOfBuffers;
-	int myStartSlot;
-	unsigned int myStride;
-	ID3D11Buffer* myVertexBuffer;
-};
-
+	struct VertexBufferWrapper
+	{
+		unsigned int myByteOffset;
+		int myNumberOfBuffers;
+		int myStartSlot;
+		unsigned int myStride;
+		ID3D11Buffer* myVertexBuffer;
+	};
+}

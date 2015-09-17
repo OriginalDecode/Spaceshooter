@@ -10,39 +10,39 @@
 #include "VTuneApi.h"
 
 
-Engine* Engine::myInstance = nullptr;
+Prism::Engine* Prism::Engine::myInstance = nullptr;
 
-Engine::Engine()
+Prism::Engine::Engine()
 {
 	myTextureContainer = new TextureContainer();
 }
 
-Engine::~Engine()
+Prism::Engine::~Engine()
 {
 	delete myTextureContainer;
 	myTextureContainer = nullptr;
 }
 
-bool Engine::Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo)
+bool Prism::Engine::Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo)
 {
 	myInstance = new Engine();
 	myInstance->mySetupInfo = &aSetupInfo;
 	return myInstance->Init(aHwnd, aWndProc);
 }
 
-Engine* Engine::GetInstance()
+Prism::Engine* Prism::Engine::GetInstance()
 {
 	return myInstance;
 }
 
-void Engine::Shutdown()
+void Prism::Engine::Shutdown()
 {
 	myDirectX->CleanD3D();
 	delete myDirectX;
 	myDirectX = nullptr;
 }
 
-void Engine::Render()
+void Prism::Engine::Render()
 {
 	VTUNE_EVENT_BEGIN(VTUNE::RENDER);
 
@@ -56,22 +56,22 @@ void Engine::Render()
 	VTUNE_EVENT_END();
 }
 
-void Engine::OnResize(int aWidth, int aHeigth)
+void Prism::Engine::OnResize(int aWidth, int aHeigth)
 {
 	myDirectX->OnResize(aWidth, aHeigth);
 }
 
-ID3D11Device* Engine::GetDevice()
+ID3D11Device* Prism::Engine::GetDevice()
 {
 	return myDirectX->GetDevice();
 }
 
-ID3D11DeviceContext* Engine::GetContex()
+ID3D11DeviceContext* Prism::Engine::GetContex()
 {
 	return myDirectX->GetContex();
 }
 
-bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
+bool Prism::Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 {
 	TIME_FUNCTION
 
@@ -99,7 +99,7 @@ bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	return true;
 }
 
-Model* Engine::LoadModel(const std::string& aPath, Effect* aEffect)
+Prism::Model* Prism::Engine::LoadModel(const std::string& aPath, Effect* aEffect)
 {
 	CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 	Model* model = myModelFactory.LoadModel(aPath.c_str(), aEffect);
@@ -113,17 +113,17 @@ Model* Engine::LoadModel(const std::string& aPath, Effect* aEffect)
 	return model;
 }
 
-void Engine::EnableZBuffer()
+void Prism::Engine::EnableZBuffer()
 {
 	myDirectX->EnableZBuffer();
 }
 
-void Engine::DisableZBuffer()
+void Prism::Engine::DisableZBuffer()
 {
 	myDirectX->DisableZBuffer();
 }
 
-bool Engine::WindowSetup(HWND& aHwnd, WNDPROC aWindowProc)
+bool Prism::Engine::WindowSetup(HWND& aHwnd, WNDPROC aWindowProc)
 {
 	WNDCLASSEX wcex;
 

@@ -6,9 +6,7 @@
 #include "PointLight.h"
 #include "Scene.h"
 
-
-
-Scene::Scene()
+Prism::Scene::Scene()
 {
 	myInstances.Init(4);
 	myDirectionalLights.Init(4);
@@ -22,12 +20,7 @@ Scene::Scene()
 	memset(&myPointLightRanges[0], 0, sizeof(float) * 3);
 }
 
-
-Scene::~Scene()
-{
-}
-
-void Scene::Render()
+void Prism::Scene::Render()
 {
 	TIME_FUNCTION
 
@@ -54,28 +47,28 @@ void Scene::Render()
 	}
 }
 
-void Scene::AddInstance(Instance* aInstance)
+void Prism::Scene::AddInstance(Instance* aInstance)
 {
 	myInstances.Add(aInstance);
 }
 
-void Scene::AddLight(DirectionalLight* aLight)
+void Prism::Scene::AddLight(DirectionalLight* aLight)
 {
 	myDirectionalLights.Add(aLight);
 }
 
-void Scene::AddLight(PointLight* aLight)
+void Prism::Scene::AddLight(PointLight* aLight)
 {
 	myPointLights.Add(aLight);
 }
 
 
-void Scene::SetCamera(Camera* aCamera)
+void Prism::Scene::SetCamera(Camera* aCamera)
 {
 	myCamera = aCamera;
 }
 
-Camera& Scene::GetCamera()
+Prism::Camera& Prism::Scene::GetCamera()
 {
 	return *myCamera;
 }

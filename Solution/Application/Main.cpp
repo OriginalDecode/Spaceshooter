@@ -7,7 +7,7 @@
 #include <TimerManager.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-void ReadSetup(SetupInfo& aSetup, const std::string& aFilePath);
+void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath);
 void OnResize();
 
 Game* globalGame = nullptr;
@@ -57,20 +57,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 		LocalFree(realCommands);
 	}
 
-
-	
-
-
-	SetupInfo setup;
+	Prism::SetupInfo setup;
 	ReadSetup(setup, "Data/bin/config.bin");
 
 	HWND hwnd;
 
-	if (Engine::Create(hwnd, WndProc, setup) == false)
+	if (Prism::Engine::Create(hwnd, WndProc, setup) == false)
 	{
 		return 1;
 	}
-
 
 	globalGame = new Game();
 	if (globalGame->Init(hwnd) == false)
@@ -101,12 +96,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 				break;
 			}
 
-			Engine::GetInstance()->Render();
+			Prism::Engine::GetInstance()->Render();
 		}
 	}
 
-
-	Engine::GetInstance()->Shutdown();
+	Prism::Engine::GetInstance()->Shutdown();
 	globalGame->Destroy();
 	delete globalGame;
 	globalGame = nullptr;
@@ -197,10 +191,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void OnResize()
 {
 	globalGame->OnResize(globalClientWidth, globalClientHeight);
-	Engine::GetInstance()->OnResize(globalClientWidth, globalClientHeight);
+	Prism::Engine::GetInstance()->OnResize(globalClientWidth, globalClientHeight);
 }
 
-void ReadSetup(SetupInfo& aSetup, const std::string& aFilePath)
+void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 {
 	int width = 800;
 	int height = 600;

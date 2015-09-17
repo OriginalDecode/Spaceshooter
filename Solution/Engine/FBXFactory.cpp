@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "FBXFactory.h"
 
-#include "Model.h"
+#include "FBXFactory.h"
 #include "FBX/FbxLoader.h"
 #include "Matrix44.h"
+#include "Model.h"
 #include "Surface.h"
 #include "IndexBufferWrapper.h"
 #include "VertexBufferWrapper.h"
@@ -11,7 +11,7 @@
 #include "VertexIndexWrapper.h"
 
 
-FBXFactory::FBXFactory()
+Prism::FBXFactory::FBXFactory()
 {
 	CU::Matrix44f test;
 	test.SetPos(CU::Vector3f(1, 1, 1));
@@ -19,14 +19,8 @@ FBXFactory::FBXFactory()
 
 	myLoader = new FBXLoader();
 }
-
-FBXFactory::~FBXFactory()
-{
-
-}
-
 	
-void FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aEffect)
+void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aEffect)
 {
 	VertexIndexWrapper* indexWrapper = new VertexIndexWrapper();
 	indexWrapper->myFormat = DXGI_FORMAT_R32_UINT;
@@ -138,7 +132,7 @@ void FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aEffect)
 	outData->mySurfaces.Add(new Surface(surface));
 }
 
-Model* FBXFactory::CreateModel(FbxModelData* someModelData, Effect* aEffect)
+Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect* aEffect)
 {
 	Model* tempModel = new Model();
 	tempModel->myEffect = aEffect;
@@ -157,7 +151,7 @@ Model* FBXFactory::CreateModel(FbxModelData* someModelData, Effect* aEffect)
 	return tempModel;
 }
 
-Model* FBXFactory::LoadModel(const char* aFilePath, Effect* aEffect)
+Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffect)
 {
 	FBXData* found = 0;
 	for (FBXData* data : myFBXData)

@@ -3,7 +3,7 @@
 #include "Texture.h"
 #include "TextureContainer.h"
 
-Texture* TextureContainer::GetTexture(const std::string& aFileName)
+Prism::Texture* Prism::TextureContainer::GetTexture(const std::string& aFileName)
 {
 	auto it = myTextures.find(aFileName);
 
@@ -15,7 +15,7 @@ Texture* TextureContainer::GetTexture(const std::string& aFileName)
 	return myTextures[aFileName];
 }
 
-void TextureContainer::LoadTexture(const std::string& aFileName)
+void Prism::TextureContainer::LoadTexture(const std::string& aFileName)
 {
 	Texture* newTex = new Texture();
 	newTex->LoadTexture(aFileName);
