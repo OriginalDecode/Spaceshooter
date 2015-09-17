@@ -50,9 +50,12 @@ void Player::Update(float aDeltaTime)
 	float negateX = myCursorPosition.x > 0.0f ? 1.0f : -1.0f;
 	float negateY = myCursorPosition.y > 0.0f ? 1.0f : -1.0f;
 
-	myOrientation = myOrientation.CreateRotateAroundY((fabs(pow(myCursorPosition.x, 1) * 2) * negateX) * aDeltaTime)
+	float x = myCursorPosition.x;
+	float y = myCursorPosition.y;
+
+	myOrientation = myOrientation.CreateRotateAroundY((fabs(x + (pow((x), 4)))  * negateX) * aDeltaTime)
 		* myOrientation;
-	myOrientation = myOrientation.CreateRotateAroundX((fabs(pow(myCursorPosition.y, 1) * 2) * negateY) * aDeltaTime)
+	myOrientation = myOrientation.CreateRotateAroundX((fabs(y + (pow((y), 4)))  * negateY) * aDeltaTime)
 		* myOrientation;
 
 }
