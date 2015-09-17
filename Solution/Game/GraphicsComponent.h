@@ -1,7 +1,10 @@
 #pragma once
 #include "Component.h"
 
-class Instance;
+namespace Prism
+{
+	class Instance;
+};
 
 class GraphicsComponent : public Component
 {
@@ -10,14 +13,20 @@ public:
 
 	void Init(const char* aModelPath, const char* aEffectPath);
 	void Update(float aDeltaTime);
-
-	Instance* GetInstance();
+	void ReceiveMessage(eMessage aMessage) override;
+	Prism::Instance* GetInstance();
+	static int GetID();
 
 private:
-	Instance* myInstance;
+	Prism::Instance* myInstance;
 };
 
-inline Instance* GraphicsComponent::GetInstance()
+inline Prism::Instance* GraphicsComponent::GetInstance()
 {
 	return myInstance;
+}
+
+inline int GraphicsComponent::GetID()
+{
+	return 0;
 }

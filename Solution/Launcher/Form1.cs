@@ -21,7 +21,7 @@ namespace Launcher
         enum eResolutions
         {
             R800x600,
-            R1280x800,
+			R1280x720,
             R1650x1080,
             R1920x1080
         }
@@ -41,7 +41,7 @@ namespace Launcher
         private void Form1_Load(object sender, EventArgs e)
         {
             resolutionDropdown.Items.Add("800 x 600");
-            resolutionDropdown.Items.Add("1280 x 800");
+			resolutionDropdown.Items.Add("1280 x 720");
             resolutionDropdown.Items.Add("1650 x 1080");
             resolutionDropdown.Items.Add("1920 x 1080");
             resolutionDropdown.SelectedIndex = 3;
@@ -96,9 +96,9 @@ namespace Launcher
                     width = 800;
                     height = 600;
                     break;
-                case (int)eResolutions.R1280x800:
+                case (int)eResolutions.R1280x720:
                     width = 1280;
-                    height = 800;
+                    height = 720;
                     break;
                 case (int)eResolutions.R1650x1080:
                     width = 1650;
@@ -156,7 +156,7 @@ namespace Launcher
             {
                 resolutionDropdown.SelectedIndex = 0;
             }
-            else if(width == 1280 && height == 800)
+            else if(width == 1280 && height == 720)
             {
                 resolutionDropdown.SelectedIndex = 1;
             }

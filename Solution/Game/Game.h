@@ -15,7 +15,9 @@ namespace Prism
 	class Scene;
 	class Text;
 	class Instance;
-}
+};
+
+class Entity;
 
 class Game
 {
@@ -53,6 +55,7 @@ private:
 	Prism::DirectionalLight* myLight;
 	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
+	Entity* myEntity;
 
 	bool myRenderStuff;
 };
