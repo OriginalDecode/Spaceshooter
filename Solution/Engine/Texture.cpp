@@ -4,7 +4,7 @@
 #include <DL_Debug.h>
 #include "Texture.h"
 
-bool Texture::LoadTexture(const std::string& aFilePath)
+bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 {
 	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice(), aFilePath.c_str()
 		, NULL, NULL, &myTexture, NULL);
@@ -24,12 +24,12 @@ bool Texture::LoadTexture(const std::string& aFilePath)
 	return true;
 }
 
-const std::string& Texture::GetFileName() const
+const std::string& Prism::Texture::GetFileName() const
 {
 	return myFileName;
 }
 
-ID3D11ShaderResourceView* Texture::GetShaderView()
+ID3D11ShaderResourceView* Prism::Texture::GetShaderView()
 {
 	return myTexture;
 }

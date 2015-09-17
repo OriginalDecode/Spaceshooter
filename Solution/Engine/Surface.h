@@ -1,95 +1,98 @@
 #pragma once
 #include <D3DX11.h>
-#include <string>
 #include <GrowingArray.h>
 
-class Texture;
-class Effect;
 struct ID3DX11EffectShaderResourceVariable;
 
-class Surface
-{
-public:
-	Surface();
-	~Surface();
+namespace Prism{
+	class Texture;
+	class Effect;
 
-	int GetVertexStart() const;
-	int GetVertexCount() const;
-	int GetIndexStart() const;
-	int GetIndexCount() const;
+	class Surface
+	{
+	public:
+		Surface();
 
-	void SetEffect(Effect* aEffect);
-	void SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY aTopology);
-	void SetVertexStart(const int aStart);
-	void SetVertexCount(const int aCount);
-	void SetIndexStart(const int aStart);
-	void SetIndexCount(const int aCount);
+		int GetVertexStart() const;
+		void SetVertexStart(int aStart);
 
-	bool SetTexture(const std::string& aResourceName, const std::string& aFileName, const bool aUseSRGB);
-	bool SetTexture(const std::string& aResourceName, Texture* aTexture);
+		int GetVertexCount() const;
+		void SetVertexCount(int aCount);
 
-	void Activate();
+		int GetIndexStart() const;
+		void SetIndexStart(int aStart);
 
-private:
-	CU::GrowingArray<Texture*> myTextures;
-	CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderViews;
+		int GetIndexCount() const;
+		void SetIndexCount(int aCount);
 
-	D3D11_PRIMITIVE_TOPOLOGY myPrimitiveTopologyType;
-	int myVertexStart;
-	int myVertexCount;
-	int myIndexCount;
-	int myIndexStart;
+		void SetEffect(Effect* aEffect);
+		void SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY aTopology);
 
-	Effect* myEffect;
-};
+		bool SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB);
+		bool SetTexture(const std::string& aResourceName, Texture* aTexture);
 
-inline int Surface::GetVertexStart() const
+		void Activate();
+
+	private:
+		CU::GrowingArray<Texture*> myTextures;
+		CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderViews;
+
+		D3D11_PRIMITIVE_TOPOLOGY myPrimitiveTopologyType;
+		int myVertexStart;
+		int myVertexCount;
+		int myIndexCount;
+		int myIndexStart;
+
+		Effect* myEffect;
+	};
+}
+
+inline int Prism::Surface::GetVertexStart() const
 {
 	return myVertexStart;
 }
 
-inline int Surface::GetVertexCount() const
-{
-	return myVertexCount;
-}
-
-inline int Surface::GetIndexStart() const
-{
-	return myIndexStart;
-}
-
-inline int Surface::GetIndexCount() const
-{
-	return myIndexCount;
-}
-
-
-inline void Surface::SetEffect(Effect* aEffect)
-{
-	myEffect = aEffect;
-}
-
-inline void Surface::SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY aTopology)
-{
-	myPrimitiveTopologyType = aTopology;
-}
-
-inline void Surface::SetVertexStart(const int aStart)
+inline void Prism::Surface::SetVertexStart(const int aStart)
 {
 	myVertexStart = aStart;
 }
 
-inline void Surface::SetVertexCount(const int aCount)
+inline int Prism::Surface::GetVertexCount() const
+{
+	return myVertexCount;
+}
+
+inline void Prism::Surface::SetVertexCount(const int aCount)
 {
 	myVertexCount = aCount;
 }
 
-inline void Surface::SetIndexStart(const int aStart)
+inline int Prism::Surface::GetIndexStart() const
+{
+	return myIndexStart;
+}
+
+inline void Prism::Surface::SetIndexStart(const int aStart)
 {
 	myIndexStart = aStart;
 }
 
-inline void Surface::SetIndexCount(const int aCount)
+inline int Prism::Surface::GetIndexCount() const
+{
+	return myIndexCount;
+}
+
+inline void Prism::Surface::SetIndexCount(const int aCount)
 {
 	myIndexCount = aCount;
+}
+
+inline void Prism::Surface::SetEffect(Effect* aEffect)
+{
+	myEffect = aEffect;
+}
+
+inline void Prism::Surface::SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY aTopology)
+{
+	myPrimitiveTopologyType = aTopology;
 }

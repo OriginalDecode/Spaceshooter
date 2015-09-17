@@ -4,31 +4,26 @@
 
 
 
-DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
+Prism::DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
 	: myHWND(aHwnd)
 	, mySetupInfo(aSetupInfo)
 {
 	D3DSetup();
 }
 
-
-DirectX::~DirectX()
-{
-}
-
-void DirectX::Present(const unsigned int aSyncInterval, const unsigned int aFlags)
+void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned int aFlags)
 {
 	mySwapChain->Present(aSyncInterval, aFlags);
 	
 }
-void DirectX::Clear(const float aClearColor[4])
+void Prism::DirectX::Clear(const float aClearColor[4])
 {
 	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
 	myContext->ClearRenderTargetView(myRenderTargetView, aClearColor);
 	myContext->ClearDepthStencilView(myDepthBufferView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
-void DirectX::OnResize(const int aWidth, const int aHeight)
+void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 {
 	myContext->OMSetRenderTargets(0, NULL, NULL);
 	myRenderTargetView->Release();
@@ -45,7 +40,7 @@ void DirectX::OnResize(const int aWidth, const int aHeight)
 	D3DStencilBufferSetup(aWidth, aHeight);
 }
 
-void DirectX::CleanD3D()
+void Prism::DirectX::CleanD3D()
 {
 	mySwapChain->SetFullscreenState(FALSE, NULL);
 
@@ -62,19 +57,17 @@ void DirectX::CleanD3D()
 	myContext = nullptr;
 }
 
-void DirectX::EnableZBuffer()
+void Prism::DirectX::EnableZBuffer()
 {
 	myContext->OMSetDepthStencilState(myEnabledDepthStencilState, 1);
 }
 
-void DirectX::DisableZBuffer()
+void Prism::DirectX::DisableZBuffer()
 {
 	myContext->OMSetDepthStencilState(myDisabledDepthStencilState, 1);
 }
 
-
-
-bool DirectX::D3DSetup()
+bool Prism::DirectX::D3DSetup()
 {
 	if (D3DSwapChainSetup() == false)
 	{
@@ -118,7 +111,7 @@ bool DirectX::D3DSetup()
 	return true;
 }
 
-bool DirectX::D3DRenderTargetSetup()
+bool Prism::DirectX::D3DRenderTargetSetup()
 {
 	ID3D11Texture2D* backBuffer;
 	mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
@@ -131,7 +124,7 @@ bool DirectX::D3DRenderTargetSetup()
 	return TRUE;
 }
 
-bool DirectX::D3DSwapChainSetup()
+bool Prism::DirectX::D3DSwapChainSetup()
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	ZeroMemory(&swapChainDesc, sizeof(DXGI_SWAP_CHAIN_DESC));
@@ -168,7 +161,7 @@ bool DirectX::D3DSwapChainSetup()
 	return TRUE;
 }
 
-bool DirectX::D3DViewPortSetup(int aWidth, int aHeight)
+bool Prism::DirectX::D3DViewPortSetup(int aWidth, int aHeight)
 {
 	D3D11_VIEWPORT viewPort;
 	ZeroMemory(&viewPort, sizeof(D3D11_VIEWPORT));
@@ -185,7 +178,7 @@ bool DirectX::D3DViewPortSetup(int aWidth, int aHeight)
 	return true;
 }
 
-bool DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
+bool Prism::DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
 {
 	HRESULT hr = S_OK;
 
@@ -224,7 +217,7 @@ bool DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
 	return true;
 }
 
-bool DirectX::D3DEnabledStencilStateSetup()
+bool Prism::DirectX::D3DEnabledStencilStateSetup()
 {
 	HRESULT hr = S_OK;
 
@@ -255,7 +248,7 @@ bool DirectX::D3DEnabledStencilStateSetup()
 	return true;
 }
 
-bool DirectX::D3DDisabledStencilStateSetup()
+bool Prism::DirectX::D3DDisabledStencilStateSetup()
 {
 	HRESULT hr = S_OK;
 

@@ -2,7 +2,8 @@
 #include "GeometryGenerator.h"
 
 
-void GeometryGenerator::CreateGrid(const float aWidth, const float aDepth, const unsigned int aM, const unsigned int aN, MeshData& aOutputMeshData)
+void Prism::GeometryGenerator::CreateGrid(const float aWidth, const float aDepth, 
+		const unsigned int aM, const unsigned int aN, MeshData& aOutputMeshData)
 {
 	unsigned int vertexCount = aM * aN;
 	unsigned int faceCount = (aM - 1) * (aN - 1) * 2;
@@ -72,14 +73,15 @@ void GeometryGenerator::CreateGrid(const float aWidth, const float aDepth, const
 	}
 }
 
-void GeometryGenerator::GenerateHeightAndColor(Vertex& aVertex)
+void Prism::GeometryGenerator::GenerateHeightAndColor(Vertex& aVertex)
 {
 	float divFactor = ((rand() % 10) / 10) + 25.f;
 
 	float xCoef = 1.55f;
 	float zCoef = 1.55f;
 
-	float height = 0.3f * (aVertex.myPosition.z * cosf((xCoef * aVertex.myPosition.x) / divFactor) + aVertex.myPosition.x * cosf(zCoef * aVertex.myPosition.z / divFactor));
+	float height = 0.3f * (aVertex.myPosition.z * cosf((xCoef * aVertex.myPosition.x) / divFactor) 
+			+ aVertex.myPosition.x * cosf(zCoef * aVertex.myPosition.z / divFactor));
 
 	//float divFactor = 25.f;
 	//float height = 0.3f * (cosf((aVertex.myPosition.x / divFactor)) + cosf((aVertex.myPosition.z / divFactor)));

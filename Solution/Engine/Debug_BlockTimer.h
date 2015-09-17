@@ -1,13 +1,15 @@
 #pragma once
 
-class Debug_BlockTimer
+namespace Prism
 {
-public:
-	Debug_BlockTimer(const char* aName);
-	~Debug_BlockTimer();
+	class Debug_BlockTimer
+	{
+	public:
+		Debug_BlockTimer(const char* aName);
+		~Debug_BlockTimer();
 
-private:
-	const char* myName;
-	unsigned long long myStartTime;
-};
-
+	private:
+		const char* myName;
+		unsigned long long myStartTime;
+	};
+}

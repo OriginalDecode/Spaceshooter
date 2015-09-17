@@ -5,66 +5,70 @@
 #include "FontContainer.h"
 #include "DebugDataDisplay.h"
 
-class DirectX;
-class TextureContainer;
-struct SetupInfo;
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
-class Engine
+namespace Prism
 {
-public:
-	static bool Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo);
-	static Engine* GetInstance();
-	void Shutdown();
-	void Render();
-	void OnResize(int aWidth, int aHeigth);
+	class DirectX;
+	class TextureContainer;	
 
-	ID3D11Device* GetDevice();
-	ID3D11DeviceContext* GetContex();
-	TextureContainer* GetTextureContainer();
-	EffectContainer& GetEffectContainer();
-	FontContainer& GetFontContainer();
-	DebugDataDisplay& GetDebugDisplay();
-	Model* LoadModel(const std::string& aPath, Effect* aEffect);
+	struct SetupInfo;
 
-	void EnableZBuffer();
-	void DisableZBuffer();
-private:
-	Engine();
-	~Engine();
-	bool Init(HWND& aHwnd, WNDPROC aWndProc);
-	bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
-	
+	class Engine
+	{
+	public:
+		static bool Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo);
+		static Engine* GetInstance();
+		void Shutdown();
+		void Render();
+		void OnResize(int aWidth, int aHeigth);
 
-	DirectX* myDirectX;
-	SetupInfo* mySetupInfo;
-	TextureContainer* myTextureContainer;
-	EffectContainer myEffectContainer;
-	FBXFactory myModelFactory;
-	FontContainer myFontContainer;
-	DebugDataDisplay myDebugDataDisplay;
+		ID3D11Device* GetDevice();
+		ID3D11DeviceContext* GetContex();
+		TextureContainer* GetTextureContainer();
+		EffectContainer& GetEffectContainer();
+		FontContainer& GetFontContainer();
+		DebugDataDisplay& GetDebugDisplay();
+		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
-	static Engine* myInstance;
-};
+		void EnableZBuffer();
+		void DisableZBuffer();
+	private:
+		Engine();
+		~Engine();
+		bool Init(HWND& aHwnd, WNDPROC aWndProc);
+		bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
 
 
-inline TextureContainer* Engine::GetTextureContainer()
+		DirectX* myDirectX;
+		SetupInfo* mySetupInfo;
+		TextureContainer* myTextureContainer;
+		EffectContainer myEffectContainer;
+		FBXFactory myModelFactory;
+		FontContainer myFontContainer;
+		DebugDataDisplay myDebugDataDisplay;
+
+		static Engine* myInstance;
+	};
+}
+
+inline Prism::TextureContainer* Prism::Engine::GetTextureContainer()
 {
 	return myTextureContainer;
 }
 
-inline EffectContainer& Engine::GetEffectContainer()
+inline Prism::EffectContainer& Prism::Engine::GetEffectContainer()
 {
 	return myEffectContainer;
 }
 
-inline FontContainer& Engine::GetFontContainer()
+inline Prism::FontContainer& Prism::Engine::GetFontContainer()
 {
 	return myFontContainer;
 }
 
-inline DebugDataDisplay& Engine::GetDebugDisplay()
+inline Prism::DebugDataDisplay& Prism::Engine::GetDebugDisplay()
 {
 	return myDebugDataDisplay;
 }

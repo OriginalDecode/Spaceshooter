@@ -4,57 +4,59 @@
 #include <Matrix.h>
 #include "Vertices.h"
 
-class Camera;
-class Effect;
-class Font;
-class Surface;
-
 struct D3D11_BUFFER_DESC;
 struct D3D11_SUBRESOURCE_DATA;
 struct ID3D11InputLayout;
-struct IndexBufferWrapper;
-struct VertexBufferWrapper;
 
-class GraphRenderer
+namespace Prism
 {
-public:
-	GraphRenderer();
-	~GraphRenderer();
+	class Camera;
+	class Effect;
+	class Font;
+	class Surface;
 
-	void Init();
+	struct IndexBufferWrapper;
+	struct VertexBufferWrapper;
 
-	void Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
-		, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
-		, const float aMaxValue, bool aNewData = false);
+	class GraphRenderer
+	{
+	public:
+		GraphRenderer();
+		~GraphRenderer();
 
-private:
+		void Init();
 
-	void InitVertexBuffer();
-	void InitIndexBuffer();
-	void InitSurface();
+		void Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
+			, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
+			, const float aMaxValue, bool aNewData = false);
 
-	void BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
-		, const CU::Vector2<float>& aGraphSize, const float aMaxValue);
-	void CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
-		, const int aIndex, const float aHeightCoef);
-	void CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
-		, const int aIndex, const float aHeightCoef);
-	void SetupVertexBuffer();
-	void SetupIndexBuffer();
-	CU::Vector4<float> GetColor(const float aHeightCoef);
+	private:
+		void InitVertexBuffer();
+		void InitIndexBuffer();
+		void InitSurface();
 
-	Effect* myEffect;
-	ID3D11InputLayout* myVertexLayout;
-	CU::GrowingArray<VertexPosColor> myVertices;
-	CU::GrowingArray<int> myVerticeIndices;
-	CU::Matrix44<float> myIdentityMatrix;
+		void BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
+			, const CU::Vector2<float>& aGraphSize, const float aMaxValue);
+		void CreateFirstTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
+			, const int aIndex, const float aHeightCoef);
+		void CreateSecondTri(const CU::Vector2<float>& aBotLeft, const CU::Vector2<float>& aColumSize
+			, const int aIndex, const float aHeightCoef);
+		void SetupVertexBuffer();
+		void SetupIndexBuffer();
+		CU::Vector4<float> GetColor(const float aHeightCoef);
 
-	VertexBufferWrapper* myVertexBuffer;
-	D3D11_BUFFER_DESC* myVertexBufferDesc;
-	IndexBufferWrapper* myIndexBuffer;
-	D3D11_BUFFER_DESC* myIndexBufferDesc;
-	D3D11_SUBRESOURCE_DATA* myInitData;
+		Effect* myEffect;
+		ID3D11InputLayout* myVertexLayout;
+		CU::GrowingArray<VertexPosColor> myVertices;
+		CU::GrowingArray<int> myVerticeIndices;
+		CU::Matrix44<float> myIdentityMatrix;
 
-	Surface* mySurface;
-};
+		VertexBufferWrapper* myVertexBuffer;
+		D3D11_BUFFER_DESC* myVertexBufferDesc;
+		IndexBufferWrapper* myIndexBuffer;
+		D3D11_BUFFER_DESC* myIndexBufferDesc;
+		D3D11_SUBRESOURCE_DATA* myInitData;
 
+		Surface* mySurface;
+	};
+}

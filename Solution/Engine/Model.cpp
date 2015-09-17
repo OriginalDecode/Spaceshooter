@@ -1,16 +1,16 @@
 #include "stdafx.h"
-#include "Model.h"
+
+#include "GeometryGenerator.h"
 #include "Effect.h"
 #include "Engine.h"
-#include "Surface.h"
-#include "GeometryGenerator.h"
-
 #include "IndexBufferWrapper.h"
+#include "Model.h"
+#include "Surface.h"
 #include "VertexBufferWrapper.h"
 #include "VertexDataWrapper.h"
 #include "VertexIndexWrapper.h"
 
-Model::Model()
+Prism::Model::Model()
 {
 	myChilds.Init(2);
 	myChildTransforms.Init(2);
@@ -21,14 +21,14 @@ Model::Model()
 	myIsNULLObject = true;
 }
 
-
-Model::~Model()
+Prism::Model::~Model()
 {
 	myVertexBuffer->myVertexBuffer->Release();
 	myIndexBuffer->myIndexBuffer->Release();
+	mySurfaces.DeleteAll();
 }
 
-void Model::Init()
+void Prism::Model::Init()
 {
 	if (myIsNULLObject == false)
 	{
@@ -43,7 +43,8 @@ void Model::Init()
 		D3DX11_PASS_DESC passDesc;
 		HRESULT hr = S_OK;
 		hr = myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-		hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, size, passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
+		hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, size, 
+				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 
 		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 
@@ -57,7 +58,7 @@ void Model::Init()
 	}
 }
 
-void Model::InitPolygon()
+void Prism::Model::InitPolygon()
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/PolygonEffect.fx");
 
@@ -69,7 +70,8 @@ void Model::InitPolygon()
 
 	D3DX11_PASS_DESC passDesc;
 	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), 
+			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitPolygon", MB_ICONWARNING);
@@ -88,7 +90,8 @@ void Model::InitPolygon()
 	myVerticeIndices.Add(1);
 	myVerticeIndices.Add(2);
 
-	InitVertexBaseData(vertices.Size(), VertexType::POS_COLOR, sizeof(VertexPosColor), reinterpret_cast<char*>(&vertices[0]));
+	InitVertexBaseData(vertices.Size(), VertexType::POS_COLOR, sizeof(VertexPosColor), 
+			reinterpret_cast<char*>(&vertices[0]));
 	InitIndexBaseData(DXGI_FORMAT_R32_UINT, myVerticeIndices.Size(), reinterpret_cast<char*>(&myVerticeIndices[0]));
 
 	InitVertexBuffer();
@@ -102,12 +105,12 @@ void Model::InitPolygon()
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
 
-	mySurfaces.Add(surf);
+	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
 }
 
-void Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
+void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/CubeEffect.fx");
 
@@ -120,7 +123,8 @@ void Model::InitCube(const float aWidth, const float aHeight, const float aDepth
 
 	D3DX11_PASS_DESC passDesc;
 	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), 
+			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitCube", MB_ICONWARNING);
@@ -233,7 +237,8 @@ void Model::InitCube(const float aWidth, const float aHeight, const float aDepth
 #pragma endregion
 	
 
-	InitVertexBaseData(vertices.Size(), VertexType::POS_NORM_UV, sizeof(VertexPosNormUV), reinterpret_cast<char*>(&vertices[0]));
+	InitVertexBaseData(vertices.Size(), VertexType::POS_NORM_UV, sizeof(VertexPosNormUV), 
+			reinterpret_cast<char*>(&vertices[0]));
 	InitIndexBaseData(DXGI_FORMAT_R32_UINT, myVerticeIndices.Size(), reinterpret_cast<char*>(&myVerticeIndices[0]));
 
 	InitVertexBuffer();
@@ -248,12 +253,12 @@ void Model::InitCube(const float aWidth, const float aHeight, const float aDepth
 	surf.SetIndexCount(myVerticeIndices.Size());
 	surf.SetTexture("DiffuseTexture", "Data/resources/texture/seafloor.dds", true);
 
-	mySurfaces.Add(surf);
+	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
 }
 
-void Model::InitGeometry(const MeshData& aMeshData)
+void Prism::Model::InitGeometry(const MeshData& aMeshData)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GeometryEffect.fx");
 	
@@ -266,7 +271,8 @@ void Model::InitGeometry(const MeshData& aMeshData)
 	
 	D3DX11_PASS_DESC passDesc;
 	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), 
+			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitGeometry", MB_ICONWARNING);
@@ -292,7 +298,8 @@ void Model::InitGeometry(const MeshData& aMeshData)
 		myVerticeIndices.Add(aMeshData.myIndices[i]);
 	}
 	
-	InitVertexBaseData(vertices.Size(), VertexType::POS_NORM_COLOR, sizeof(VertexPosNormColor), reinterpret_cast<char*>(&vertices[0]));
+	InitVertexBaseData(vertices.Size(), VertexType::POS_NORM_COLOR, sizeof(VertexPosNormColor), 
+			reinterpret_cast<char*>(&vertices[0]));
 	InitIndexBaseData(DXGI_FORMAT_R32_UINT, myVerticeIndices.Size(), reinterpret_cast<char*>(&myVerticeIndices[0]));
 
 	InitVertexBuffer();
@@ -306,31 +313,33 @@ void Model::InitGeometry(const MeshData& aMeshData)
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
 
-	mySurfaces.Add(surf);
+	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
 }
 
-void Model::AddChild(Model* aChild)
+void Prism::Model::AddChild(Model* aChild)
 {
 	myChilds.Add(aChild);
 	myChildTransforms.Add(aChild->myOrientation);
 }
 
-Effect* Model::GetEffect()
+Prism::Effect* Prism::Model::GetEffect()
 {
 	return myEffect;
 }
 
-void Model::SetEffect(Effect* aEffect)
+void Prism::Model::SetEffect(Effect* aEffect)
 {
 	myEffect = aEffect;
 
 	for (int i = 0; i < mySurfaces.Size(); ++i)
-		mySurfaces[i].SetEffect(myEffect);
+	{
+		mySurfaces[i]->SetEffect(myEffect);
+	}
 }
 
-void Model::Render(const CU::Matrix44<float>& aOrientation)
+void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 {
 	TIME_FUNCTION
 
@@ -346,8 +355,11 @@ void Model::Render(const CU::Matrix44<float>& aOrientation)
 		myEffect->SetWorldMatrix(aOrientation);
 
 		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-		Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
-		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
+		Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot, 
+				myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer, 
+				&myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
+		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer, 
+				myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
 
 
 		D3DX11_TECHNIQUE_DESC techDesc;
@@ -355,12 +367,14 @@ void Model::Render(const CU::Matrix44<float>& aOrientation)
 
 		for (int s = 0; s < mySurfaces.Size(); ++s)
 		{
-			mySurfaces[s].Activate();
+			mySurfaces[s]->Activate();
 
 			for (UINT i = 0; i < techDesc.Passes; ++i)
 			{
-				myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, Engine::GetInstance()->GetContex());
-				Engine::GetInstance()->GetContex()->DrawIndexed(mySurfaces[s].GetIndexCount(), mySurfaces[s].GetVertexStart(), 0);
+				myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, 
+						Engine::GetInstance()->GetContex());
+				Engine::GetInstance()->GetContex()->DrawIndexed(mySurfaces[s]->GetIndexCount(),
+						mySurfaces[s]->GetVertexStart(), 0);
 			}
 		}
 	}
@@ -371,7 +385,7 @@ void Model::Render(const CU::Matrix44<float>& aOrientation)
 	}
 }
 
-void Model::InitVertexBaseData(const int aNumberOfVertices, const VertexType aVertexType, const int aVertexSize, char* aVertexData)
+void Prism::Model::InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, int aVertexSize, char* aVertexData)
 {
 	myVertexBaseData = new VertexDataWrapper();
 	myVertexBaseData->myNumberOfVertices = aNumberOfVertices;
@@ -381,7 +395,7 @@ void Model::InitVertexBaseData(const int aNumberOfVertices, const VertexType aVe
 	myVertexBaseData->myVertexData = aVertexData;
 }
 
-void Model::InitIndexBaseData(const DXGI_FORMAT aFormat, const int aNumberOfIndices, char* aIndexData)
+void Prism::Model::InitIndexBaseData(DXGI_FORMAT aFormat, int aNumberOfIndices, char* aIndexData)
 {
 	myIndexBaseData = new VertexIndexWrapper();
 	myIndexBaseData->myFormat = aFormat;
@@ -390,7 +404,7 @@ void Model::InitIndexBaseData(const DXGI_FORMAT aFormat, const int aNumberOfIndi
 	myIndexBaseData->mySize = sizeof(UINT) * myIndexBaseData->myNumberOfIndices;
 }
 
-bool Model::InitVertexBuffer()
+bool Prism::Model::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
 
@@ -408,7 +422,8 @@ bool Model::InitVertexBuffer()
 
 	InitData.pSysMem = myVertexBaseData->myVertexData;
 	
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&bd, &InitData, &myVertexBuffer->myVertexBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&bd, &InitData, 
+			&myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 		return false;
 
@@ -420,7 +435,7 @@ bool Model::InitVertexBuffer()
 	return true;
 }
 
-bool Model::InitIndexBuffer()
+bool Prism::Model::InitIndexBuffer()
 {
 	myIndexBuffer = new IndexBufferWrapper();
 

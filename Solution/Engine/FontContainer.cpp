@@ -2,17 +2,7 @@
 #include "FontContainer.h"
 #include "Font.h"
 
-FontContainer::FontContainer()
-{
-}
-
-
-FontContainer::~FontContainer()
-{
-}
-
-
-Font* FontContainer::GetFont(const std::string& aPath)
+Prism::Font* Prism::FontContainer::GetFont(const std::string& aPath)
 {
 	auto it = myFonts.find(aPath);
 
@@ -24,7 +14,7 @@ Font* FontContainer::GetFont(const std::string& aPath)
 	return myFonts[aPath];
 }
 
-void FontContainer::LoadFont(const std::string& aPath)
+void Prism::FontContainer::LoadFont(const std::string& aPath)
 {
 	Font* newFont = new Font();
 	newFont->Init(aPath.c_str());

@@ -5,5 +5,6 @@
 #include "Engine.h"
 #include <GrowingArray.h>
 #include <Matrix.h>
+#include <StaticArray.h>
 #include <string>
 #include <Vector.h>

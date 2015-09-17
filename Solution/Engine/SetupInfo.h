@@ -1,9 +1,12 @@
 #pragma once
 
-struct SetupInfo
+namespace Prism
 {
-	int myScreenWidth;
-	int myScreenHeight;
-	bool myWindowed;
-	int myMSAACount;
-};
+	struct SetupInfo
+	{
+		int myScreenWidth;
+		int myScreenHeight;
+		bool myWindowed;
+		int myMSAACount;
+	};
+}

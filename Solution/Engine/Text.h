@@ -3,74 +3,79 @@
 #include <Matrix.h>
 #include "Vertices.h"
 
-class Effect;
-class Font;
-class Surface;
-class Camera;
-
 struct ID3D11BlendState;
 struct ID3D11InputLayout;
-struct IndexBufferWrapper;
-struct VertexBufferWrapper;
 
-class Text
+namespace Prism
 {
-public:
-	Text();
-	~Text();
+	class Effect;
+	class Font;
+	class Surface;
+	class Camera;
 
-	void Init(Font* aFont);
+	struct IndexBufferWrapper;
+	struct VertexBufferWrapper;
+	class Text
+	{
+	public:
+		Text();
+		~Text();
 
-	void Render(const Camera& aCamera);
+		void Init(Font* aFont);
 
-	void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
+		void Render(const Camera& aCamera);
 
-	const float& GetTextWidth() const;
+		void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
 
-private:
-	void InitSentence();
-	void InitVertexBuffer();
-	void InitIndexBuffer();
-	void InitSurface();
-	void InitBlendState();
+		const float& GetTextWidth() const;
 
-	void SetupVertexBuffer();
-	void SetupIndexBuffer();
+	private:
+		void InitSentence();
+		void InitVertexBuffer();
+		void InitIndexBuffer();
+		void InitSurface();
+		void InitBlendState();
 
-
-	void CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
-	void CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
+		void SetupVertexBuffer();
+		void SetupIndexBuffer();
 
 
-	Font* myFont;
-	Effect* myEffect;
-	ID3D11InputLayout* myVertexLayout;
-	CU::GrowingArray<VertexPosUV> myVertices;
-	CU::GrowingArray<int> myVerticeIndices;
+		void CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, 
+				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
+		void CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, 
+				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
 
-	VertexBufferWrapper* myVertexBuffer;
-	D3D11_BUFFER_DESC* myVertexBufferDesc;
-	IndexBufferWrapper* myIndexBuffer;
-	D3D11_BUFFER_DESC* myIndexBufferDesc;
-	D3D11_SUBRESOURCE_DATA* myInitData;
 
-	Surface* mySurface;
+		Font* myFont;
+		Effect* myEffect;
+		ID3D11InputLayout* myVertexLayout;
+		CU::GrowingArray<VertexPosUV> myVertices;
+		CU::GrowingArray<int> myVerticeIndices;
 
-	CU::Matrix44<float>  myIdentityMatrix;
-	ID3D11BlendState* myBlendState;
+		VertexBufferWrapper* myVertexBuffer;
+		D3D11_BUFFER_DESC* myVertexBufferDesc;
+		IndexBufferWrapper* myIndexBuffer;
+		D3D11_BUFFER_DESC* myIndexBufferDesc;
+		D3D11_SUBRESOURCE_DATA* myInitData;
 
-	bool myHasText;
-	CU::Vector2<float> myCharSize;
-	float myTextWidth;
+		Surface* mySurface;
 
-	//const char* myLastText;
-	std::string myLastText;
-	float myLastDrawX;
-	float myLastDrawY;
-	float myLastScale;
-};
+		CU::Matrix44<float>  myIdentityMatrix;
+		ID3D11BlendState* myBlendState;
 
-inline const float& Text::GetTextWidth() const
+		bool myHasText;
+		CU::Vector2<float> myCharSize;
+		float myTextWidth;
+
+		//const char* myLastText;
+		std::string myLastText;
+		float myLastDrawX;
+		float myLastDrawY;
+		float myLastScale;
+	};
+}
+
+inline const float& Prism::Text::GetTextWidth() const
 {
 	return myTextWidth;
 }

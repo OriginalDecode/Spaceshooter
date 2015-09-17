@@ -6,19 +6,13 @@
 #include "Texture.h"
 #include "TextureContainer.h"
 
-Surface::Surface()
+Prism::Surface::Surface()
 {
 	myTextures.Init(2);
 	myShaderViews.Init(2);
 }
 
-
-Surface::~Surface()
-{
-}
-
-
-bool Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, const bool aUseSRGB)
+bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
 {
 	aUseSRGB;
 
@@ -28,7 +22,7 @@ bool Surface::SetTexture(const std::string& aResourceName, const std::string& aF
 	if (shaderVar->IsValid() == false)
 	{
 		std::string errorMsg = "Failed to get ShaderResource: " + aResourceName;
-		//DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+		DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
 		return false;
 	}
 
@@ -38,7 +32,7 @@ bool Surface::SetTexture(const std::string& aResourceName, const std::string& aF
 	return true;
 }
 
-bool Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
+bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
 {
 	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
 	if (shaderVar->IsValid() == false)
@@ -53,7 +47,7 @@ bool Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
 	return true;
 }
 
-void Surface::Activate()
+void Prism::Surface::Activate()
 {
 	Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(myPrimitiveTopologyType);
 
