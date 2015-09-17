@@ -48,19 +48,37 @@ bool Game::Init(HWND& aHwnd)
 	myPointLight->SetRange(50.f);
 	myEntities.Init(4);
 	
-	Entity* cube = new Entity();
-	cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/companion/companion.fbx"
-		, "Data/effect/BasicEffect.fx");
-	cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	myEntities.Add(cube);
+	//Entity* cube = new Entity();
+	//cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/companion/companion.fbx"
+	//	, "Data/effect/BasicEffect.fx");
+	//cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
+	//myEntities.Add(cube);
 
 
 	Prism::MeshData geometryData;
 	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
 
-	Entity* geometry = new Entity();
-	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
-	myEntities.Add(geometry);
+	//Entity* geometry = new Entity();
+	//geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
+	//myEntities.Add(geometry);
+
+	for (int i = 0; i < 100; ++i)
+	{
+		float width = static_cast<float>(rand() % 20) + 1.f;
+		float height = static_cast<float>(rand() % 20) + 1.f;
+		float depth = static_cast<float>(rand() % 20) + 1.f;
+
+		float x = static_cast<float>(rand() % 200) - 100.f;
+		float y = static_cast<float>(rand() % 200) - 100.f;
+		float z = static_cast<float>(rand() % 200) - 100.f;
+
+		Entity* cube = new Entity();
+		cube->AddComponent<GraphicsComponent>()->InitCube(width, height, depth);
+		cube->GetComponent<GraphicsComponent>()->GetInstance()->SetPosition({ x, y, z });
+		cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
+		myEntities.Add(cube);
+	}
+
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);

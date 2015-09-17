@@ -14,6 +14,7 @@ public:
 
 	void Init(const char* aModelPath, const char* aEffectPath);
 	void InitGeometry(const Prism::MeshData& aMeshData);
+	void InitCube(float aWidth, float aHeight, float aDepth);
 	void Update(float aDeltaTime);
 	void ReceiveMessage(eMessage aMessage) override;
 	Prism::Instance* GetInstance();

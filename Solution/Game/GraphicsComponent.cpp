@@ -27,6 +27,14 @@ void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
 	myInstance = new Prism::Instance(*model);
 }
 
+void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
+{
+	Prism::Model* model = new Prism::Model();
+	model->InitCube(aWidth, aHeight, aDepth);
+
+	myInstance = new Prism::Instance(*model);
+}
+
 void GraphicsComponent::Update(float aDeltaTime)
 {
 
@@ -35,7 +43,7 @@ void GraphicsComponent::Update(float aDeltaTime)
 void GraphicsComponent::ReceiveMessage(eMessage aMessage)
 {
 	CU::Vector3<float> pos = myInstance->GetPosition();
-	float speed = 0.001f;
+	float speed = 0.01f;
 	if (aMessage == eMessage::MOVE_UP)
 	{
 		pos.y += speed;
