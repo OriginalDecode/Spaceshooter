@@ -50,7 +50,7 @@ void Prism::Engine::Render()
 
 	myDirectX->Present(0, 0);
 
-	float clearColor[4] = { 0.0f, 0.125f, 0.3f, 1.0f };
+	float clearColor[4] = { 0.8f, 0.125f, 0.8f, 1.0f };
 	myDirectX->Clear(clearColor);
 
 	VTUNE_EVENT_END();
