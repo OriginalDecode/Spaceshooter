@@ -4,7 +4,8 @@
 
 namespace Prism
 {
-	Camera::Camera(CU::Matrix44f&)
+	Camera::Camera(CU::Matrix44f& aPlayerMatrix)
+		: myOrientation(aPlayerMatrix)
 	{
 		OnResize(800, 600);
 

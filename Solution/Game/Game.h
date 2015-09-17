@@ -18,6 +18,7 @@ namespace Prism
 };
 
 class Entity;
+class Player;
 
 class Game
 {
@@ -54,6 +55,7 @@ private:
 	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
 	Entity* myEntity;
+	Player* myPlayer;
 
 	bool myRenderStuff;
 };

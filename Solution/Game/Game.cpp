@@ -9,6 +9,7 @@
 #include <InputWrapper.h>
 #include <Instance.h>
 #include <Model.h>
+#include "Player.h"
 #include <PointLight.h>
 #include <Scene.h>
 #include <Text.h>
@@ -22,8 +23,9 @@
 
 Game::Game()
 {
-	myCamera = new Prism::Camera(CU::Matrix44<float>());
 	myInputWrapper = new CU::InputWrapper();
+	myPlayer = new Player(*myInputWrapper);
+	myCamera = new Prism::Camera(myPlayer->GetOrientation());
 }
 
 Game::~Game()
@@ -84,6 +86,7 @@ bool Game::Update()
 	Prism::Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
 
 	myEntity->Update(deltaTime);
+	myPlayer->Update(deltaTime);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
@@ -100,6 +103,10 @@ bool Game::Update()
 	else if (myInputWrapper->KeyDown(DIK_F8))
 	{
 		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
+	}
+	else if (myInputWrapper->KeyDown(DIK_ESCAPE))
+	{
+		return false;
 	}
 	else if (myInputWrapper->KeyDown(DIK_R))
 	{
