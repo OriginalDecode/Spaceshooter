@@ -39,7 +39,7 @@ alla privata funktioner först och variabler sen. Ordning på funktioner / variabl
 "inline" endast nere vid definitionen, inte vid deklarationen.
 I praktiken inga kommentarer, självdokumenterande kod.
 Skriv ut Rotation / Position osv, inga "rot/pos"
-Ifall det är includes som dycker upp minst 3-4 ggr på olika ställen, så bör den läggas i pre-compile headern - ta bort från alla cpp i projektet
+Ifall det är includes som dyker upp minst 3-4 ggr på olika ställen, så bör den läggas i pre-compile headern - ta bort från alla cpp i projektet
 ha så få includes i .h filen som möjligt.
 
 for (int i = 0; i < mySize; ++i)
@@ -52,3 +52,5 @@ typedef Matrix44<float> Matrix44f;
 CU::Vector3f myPosition;
 
 Prism-namespace för Engine
+
+Use radians instead of degrees

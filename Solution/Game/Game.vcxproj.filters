@@ -5,12 +5,15 @@
     <ClInclude Include="stdafx.h">
       <Filter>Precompile</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Constants.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="stdafx.cpp">
       <Filter>Precompile</Filter>
     </ClCompile>
+    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
