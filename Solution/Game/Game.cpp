@@ -22,7 +22,7 @@
 
 Game::Game()
 {
-	myCamera = new Prism::Camera();
+	myCamera = new Prism::Camera(CU::Matrix44<float>());
 	myInputWrapper = new CU::InputWrapper();
 }
 
