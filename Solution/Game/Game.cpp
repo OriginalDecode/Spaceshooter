@@ -13,6 +13,10 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 
+
+#include "Entity.h"
+#include "GraphicsComponent.h"
+
 Game::Game()
 {
 	myCamera = new Camera();
@@ -32,51 +36,21 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLight = new DirectionalLight();
-	myLight->SetColor({ 1.f, 0.6f, 0.6f, 1.f });
-	myLight->SetDir({ 0.f, 0.5f, -1.f });
-
 	myPointLight = new PointLight();
 	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
 	myPointLight->SetPosition({ 0.f, 5.f, 0.f, 1.f });
 	myPointLight->SetRange(15.f);
 	myInstances.Init(4);
 
-	myWaveModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Wave.fx"));
-	myGravityModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GravityWell.fx"));
-	myExtrudeModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
-	myNormalModel = Engine::GetInstance()->LoadModel("Data/resources/model/companion/companion.fbx"
-		, Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/BasicEffect.fx"));
-
-	
-	myInstances.Add(new Instance(*myWaveModel));
-	myInstances.Add(new Instance(*myGravityModel));
-	myInstances.Add(new Instance(*myExtrudeModel));
-	myInstances.Add(new Instance(*myNormalModel));
-	myInstances.GetLast()->SetPosition({ 0.f, 25.f, 0.f });
-
-
-	myInstances[0]->SetPosition({ -15.f, 10.f, 0.f });
-	myInstances[1]->SetPosition({ 0.f, 10.f, 0.f });
-	//myInstances[2]->SetPosition({ 15.f, 0.f, 0.f });
-	//myInstances[3]->SetPosition({ 0.f, 15.f, 0.f });
-
-	MeshData worldMesh;
-	GeometryGenerator::CreateGrid(500.f, 500.f, 100, 100, worldMesh);
-	myGeometryModel = new Model();
-	myGeometryModel->InitGeometry(worldMesh);
-	//myGeometryModel->SetEffect(Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/Extrude.fx"));
-	myInstances.Add(new Instance(*myGeometryModel));
+	//Entity* newObject = new Entity();
+	//newObject->AddComponent<GraphicsComponent>()->Init();
+	//
+	//myScene->AddInstance(newObject->GetComponent<GraphicsComponent>()->GetInstance());
 
 	myScene = new Scene();
-	myScene->SetCamera(myCamera);
 	for (int i = 0; i < myInstances.Size(); ++i)
 		myScene->AddInstance(myInstances[i]);
 
-	//myScene->AddLight(myLight);
 	myScene->AddLight(myPointLight);
 
 	myRenderStuff = true;
@@ -135,10 +109,12 @@ void Game::Pause()
 {
 
 }
+
 void Game::UnPause()
 {
 
 }
+
 void Game::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
@@ -146,12 +122,6 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
-	myLight->Update();
-	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundY((45.f * aDeltaTime) * 3.14f / 180.f));
-
-	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundX((720 * aDeltaTime) * 3.14f / 180.f));
-	//myInstances[3]->PerformRotationLocal(CU::Matrix44<float>::CreateRotateAroundY((720 * aDeltaTime) * 3.14f / 180.f));
-
 	if (myInputWrapper->KeyIsPressed(DIK_UP))
 	{
 		myCamera->RotateX(-90.f * aDeltaTime);
