@@ -19,6 +19,14 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	myInstance = new Prism::Instance(*model);
 }
 
+void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
+{
+	Prism::Model* model = new Prism::Model();
+	model->InitGeometry(aMeshData);
+
+	myInstance = new Prism::Instance(*model);
+}
+
 void GraphicsComponent::Update(float aDeltaTime)
 {
 

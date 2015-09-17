@@ -1,11 +1,15 @@
 #include "stdafx.h"
 
+#include <Camera.h>
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
-#include <Camera.h>
+#include "Entity.h"
 #include <Font.h>
 #include "Game.h"
 #include <GeometryGenerator.h>
+#include "GraphicsComponent.h"
+#include <GeometryGenerator.h>
+#include "InputComponent.h"
 #include <InputWrapper.h>
 #include <Instance.h>
 #include <Model.h>
@@ -17,9 +21,6 @@
 #include <VTuneApi.h>
 
 
-#include "Entity.h"
-#include "GraphicsComponent.h"
-#include "InputComponent.h"
 
 Game::Game()
 {
@@ -33,7 +34,7 @@ Game::~Game()
 	delete myCamera;
 	delete myInputWrapper;
 	delete myScene;
-	myInstances.DeleteAll();
+	myEntities.DeleteAll();
 }
 
 bool Game::Init(HWND& aHwnd)
@@ -45,21 +46,34 @@ bool Game::Init(HWND& aHwnd)
 	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
 	myPointLight->SetPosition({ 0.f, 0.f, 0.f, 1.f });
 	myPointLight->SetRange(50.f);
-	myInstances.Init(4);
+	myEntities.Init(4);
 	
-	myEntity = new Entity();
-	myEntity->AddComponent<GraphicsComponent>()->Init("Data/resources/model/companion/companion.fbx"
+	Entity* cube = new Entity();
+	cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/companion/companion.fbx"
 		, "Data/effect/BasicEffect.fx");
-	myEntity->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	
+	cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
+	myEntities.Add(cube);
 
+
+	Prism::MeshData geometryData;
+	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
+
+	Entity* geometry = new Entity();
+	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
+	myEntities.Add(geometry);
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
-	myScene->AddInstance(myEntity->GetComponent<GraphicsComponent>()->GetInstance());
-	
-	for (int i = 0; i < myInstances.Size(); ++i)
-		myScene->AddInstance(myInstances[i]);
+
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		GraphicsComponent* gfxComp = myEntities[i]->GetComponent<GraphicsComponent>();
+
+		if (gfxComp != nullptr)
+		{
+			myScene->AddInstance(gfxComp->GetInstance());
+		}
+	}
 
 	myScene->AddLight(myPointLight);
 
@@ -84,9 +98,6 @@ bool Game::Update()
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 	Prism::Engine::GetInstance()->GetEffectContainer().Update(deltaTime);
 	Prism::Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
-
-	myEntity->Update(deltaTime);
-	myPlayer->Update(deltaTime);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
@@ -181,6 +192,12 @@ void Game::LogicUpdate(const float aDeltaTime)
 	{
 		myCamera->RotateZ(-90.f * aDeltaTime);
 	}
+
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		myEntities[i]->Update(aDeltaTime);
+	}
+	myPlayer->Update(aDeltaTime);
 }
 
 void Game::Render()
