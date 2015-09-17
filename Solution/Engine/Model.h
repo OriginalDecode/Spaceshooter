@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Vertices.h"
+#include <D3DX11.h>
 #include <GrowingArray.h>
 #include <Matrix.h>
-#include "Surface.h"
-
 
 class Effect;
-struct MeshData;
+class Surface;
+
 struct IndexBufferWrapper;
+struct MeshData;
 struct VertexBufferWrapper;
 struct VertexDataWrapper;
 struct VertexIndexWrapper;
@@ -22,7 +22,7 @@ public:
 
 	void Init();
 	void InitPolygon();
-	void InitCube(const float aWidth = 1.f, const float aHeight = 1.f, const float aDepth = 1.f);
+	void InitCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
 	void AddChild(Model* aChild);
 	void InitGeometry(const MeshData& aMeshData);
 
@@ -32,8 +32,8 @@ public:
 	void Render(const CU::Matrix44<float>& aOrientation);
 
 private:
-	void InitVertexBaseData(const int aNumberOfVertices, const VertexType aVertexType, const int aVertexSize, char* aVertexData);
-	void InitIndexBaseData(const DXGI_FORMAT aFormat, const int aNumberOfIndices, char* aIndexData);
+	void InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, int aVertexSize, char* aVertexData);
+	void InitIndexBaseData(DXGI_FORMAT aFormat, int aNumberOfIndices, char* aIndexData);
 
 	bool InitVertexBuffer();
 	bool InitIndexBuffer();
@@ -50,7 +50,7 @@ private:
 	VertexDataWrapper* myVertexBaseData;
 	VertexBufferWrapper* myVertexBuffer;
 
-	CU::GrowingArray<Surface> mySurfaces;
+	CU::GrowingArray<Surface*> mySurfaces;
 	CU::GrowingArray<Model*> myChilds;
 	CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 	CU::Matrix44f myOrientation;

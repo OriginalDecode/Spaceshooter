@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "FBX/FbxLoader.h"
 #include "Matrix44.h"
-
+#include "Surface.h"
 #include "IndexBufferWrapper.h"
 #include "VertexBufferWrapper.h"
 #include "VertexDataWrapper.h"
@@ -135,7 +135,7 @@ void FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aEffect)
 		}
 		surface.SetTexture(resourceName, currentTexture.myFileName, useSRGB);
 	}
-	outData->mySurfaces.Add(surface);
+	outData->mySurfaces.Add(new Surface(surface));
 }
 
 Model* FBXFactory::CreateModel(FbxModelData* someModelData, Effect* aEffect)
