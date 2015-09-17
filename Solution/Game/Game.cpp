@@ -150,48 +150,6 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
-	if (myInputWrapper->KeyIsPressed(DIK_UP))
-	{
-		myCamera->RotateX(-90.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_DOWN))
-	{
-		myCamera->RotateX(90.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_LEFT))
-	{
-		myCamera->RotateY(-90.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_RIGHT))
-	{
-		myCamera->RotateY(90.f * aDeltaTime);
-	}
-
-	if (myInputWrapper->KeyIsPressed(DIK_W))
-	{
-		myCamera->MoveForward(100.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_S))
-	{
-		myCamera->MoveForward(-100.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_A))
-	{
-		myCamera->MoveRight(-100.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_D))
-	{
-		myCamera->MoveRight(100.f * aDeltaTime);
-	}
-
-	if (myInputWrapper->KeyIsPressed(DIK_Q))
-	{
-		myCamera->RotateZ(90.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_E))
-	{
-		myCamera->RotateZ(-90.f * aDeltaTime);
-	}
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
