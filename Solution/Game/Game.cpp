@@ -187,8 +187,10 @@ void Game::Render()
 
 	if (myRenderStuff)
 	{
+		
 		myScene->Render();
 	}
+		Prism::Engine::GetInstance()->PrintDebugText(*myCamera, "Hello World!", CU::Vector2<float>(0, 0));
 
 	END_TIME_BLOCK("Game::Render");
 

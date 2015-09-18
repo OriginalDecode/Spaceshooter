@@ -1,10 +1,15 @@
 #pragma once
 
+class Camera;
+class Instance;
+
 namespace Prism
 {
 	class PointLight
 	{
 	public:
+		void Initiate();
+		void Render(Camera* aCamera);
 		void Update();
 
 		const CU::Vector4<float>& GetColor() const;
@@ -23,9 +28,13 @@ namespace Prism
 	private:
 		CU::Vector4<float> myColor;
 		CU::Vector4<float> myPosition;
-		CU::Matrix44<float> myOrientation;
 		CU::Vector4<float> myOriginalPosition;
+
+		CU::Matrix44<float> myOrientation;
+
 		float myRange;
+
+		Instance* myInstance;
 	};
 }
 
