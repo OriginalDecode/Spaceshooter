@@ -25,19 +25,19 @@ void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		MoveForward(300.f * aDeltaTime);
+		MoveForward(50.f * aDeltaTime);
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		MoveBackward(300.f * aDeltaTime);
+		MoveBackward(50.f * aDeltaTime);
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_A))
 	{
-		MoveLeft(300.f * aDeltaTime);
+		MoveLeft(50.f * aDeltaTime);
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_D))
 	{
-		MoveRight(300.f * aDeltaTime);
+		MoveRight(50.f * aDeltaTime);
 	}
 
 	if (myInputWrapper->KeyIsPressed(DIK_Q))
