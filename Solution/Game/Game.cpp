@@ -27,6 +27,7 @@ Game::Game()
 	myInputWrapper = new CU::InputWrapper();
 	myPlayer = new Player(*myInputWrapper);
 	myCamera = new Prism::Camera(myPlayer->GetOrientation());
+	myShowPointLightCube = false;
 }
 
 Game::~Game()
@@ -142,6 +143,10 @@ bool Game::Update()
 	{
 		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
 	}
+	else if (myInputWrapper->KeyDown(DIK_F9))
+	{
+		myShowPointLightCube = !myShowPointLightCube;
+	}
 	else if (myInputWrapper->KeyDown(DIK_ESCAPE))
 	{
 		return false;
@@ -197,6 +202,10 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
+	}
+
+	if (myShowPointLightCube == true)
+	{
 		myPointLight->Render(myCamera);
 	}
 

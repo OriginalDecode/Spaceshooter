@@ -54,4 +54,5 @@ private:
 	Player* myPlayer;
 
 	bool myRenderStuff;
+	bool myShowPointLightCube;
 };
