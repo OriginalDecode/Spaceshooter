@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AIComponent.h" />
+    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
@@ -95,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
+    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Entity.cpp" />
