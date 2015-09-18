@@ -34,6 +34,8 @@ namespace Prism
 		Effect* GetEffect();
 		void SetEffect(Effect* aEffect);
 
+		bool GetIsSkybox() const;
+
 		void Render(const CU::Matrix44<float>& aOrientation);
 
 	private:
@@ -49,6 +51,7 @@ namespace Prism
 		CU::GrowingArray<int> myVerticeIndices;
 		CU::GrowingArray<D3D11_INPUT_ELEMENT_DESC*> myVertexFormat;
 		bool myIsNULLObject;
+		bool myIsSkybox;
 
 		VertexIndexWrapper* myIndexBaseData;
 		IndexBufferWrapper* myIndexBuffer;
@@ -60,4 +63,9 @@ namespace Prism
 		CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 		CU::Matrix44f myOrientation;
 	};
+}
+
+inline bool Prism::Model::GetIsSkybox() const
+{
+	return myIsSkybox;
 }

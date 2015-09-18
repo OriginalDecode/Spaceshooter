@@ -19,6 +19,7 @@ Prism::Model::Model()
 	mySurfaces.Init(4);
 	myVertexFormat.Init(2);
 	myIsNULLObject = true;
+	myIsSkybox = false;
 }
 
 Prism::Model::~Model()
@@ -408,7 +409,7 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 
 void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/CubeEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/SkyboxEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -437,41 +438,43 @@ void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 	float halfHeight = aHeight / 2.f;
 	float halfDepth = aDepth / 2.f;
 
+	float cubeMapUVStep = 1 / 6.f;
+
 	//0 - 3 (Top)
-	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { 0.f, 1.f, 0.f }, { 0.0f, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 0.f, 1.f, 0.f }, { 1.0f, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 0.f, 1.f, 0.f }, { 1.0f, 1.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { 0.f, 1.f, 0.f }, { 0.0f, 1.0f } });
+	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 2, 0.0f } });
+	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 3, 0.0f } });
+	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 3, 1.0f } });
+	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 2, 1.0f } });
 
 	//4 - 7 (Bottom)
-	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { 0.f, -1.f, 0.f }, { 0.0f, 0.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 0.f, -1.f, 0.f }, { 1.0f, 0.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 0.f, -1.f, 0.f }, { 1.0f, 1.0f } });
-	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { 0.f, -1.f, 0.f }, { 0.0f, 1.0f } });
+	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 3, 1.0f } });
+	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 4, 1.0f } });
+	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 4, 0.0f } });
+	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 3, 0.0f } });
 
 	//8 - 11 (Left)
-	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { -1.f, 0.f, 0.f }, { 0.0f, 0.0f } });
-	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { -1.f, 0.f, 0.f }, { 1.0f, 0.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { -1.f, 0.f, 0.f }, { 1.0f, 1.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { -1.f, 0.f, 0.f }, { 0.0f, 1.0f } });
+	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 2, 1.0f } });
+	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 1.0f } });
+	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 0.0f } });
+	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 2, 0.0f } });
 
 	//12 - 15 (Right)
-	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 1.f, 0.f, 0.f }, { 0.0f, 0.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 1.f, 0.f, 0.f }, { 1.0f, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 1.f, 0.f, 0.f }, { 1.0f, 1.0f } });
-	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 1.f, 0.f, 0.f }, { 0.0f, 1.0f } });
+	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 0, 1.0f } });
+	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 1.0f } });
+	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 0.0f } });
+	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 0, 0.0f } });
 
 	//16 - 19 (Front)
-	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { 0.0f, 0.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { 1.0f, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { 1.0f, 1.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { 0.0f, 1.0f } });
+	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 6, 1.0f } });
+	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 5, 1.0f } });
+	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 5, 0.0f } });
+	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 6, 0.0f } });
 
 	//20 - 23 (Back)
-	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { 0.0f, 0.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { 1.0f, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { 1.0f, 1.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { 0.0f, 1.0f } });
+	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 4, 1.0f } });
+	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 5, 1.0f } });
+	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 5, 0.0f } });
+	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 4, 0.0f } });
 #pragma endregion
 
 #pragma region Indices
@@ -547,11 +550,12 @@ void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 	surf.SetVertexCount(myVertices.Size());
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
-	surf.SetTexture("DiffuseTexture", "Data/resources/texture/skyTest.dds", true);
+	surf.SetTexture("DiffuseTexture", "Data/resources/texture/un_MilkyWay_test.dds", true);
 
 	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
+	myIsSkybox = true;
 }
 
 void Prism::Model::InitGeometry(const MeshData& aMeshData)
