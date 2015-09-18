@@ -22,9 +22,6 @@
     <ClInclude Include="ComponentEnums.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PhysicsComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
@@ -42,9 +39,6 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="InputComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>

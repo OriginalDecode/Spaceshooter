@@ -45,7 +45,6 @@ void Prism::Scene::Render()
 		myInstances[i]->UpdatePointLights(myPointLightPositions, myPointLightColors, myPointLightRanges);
 		myInstances[i]->Render(*myCamera);
 	}
-
 }
 
 void Prism::Scene::AddInstance(Instance* aInstance)

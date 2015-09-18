@@ -34,8 +34,6 @@ public:
 	void UnPause();
 	void OnResize(int aWidth, int aHeight);
 
-	Entity* GetTestShot();
-
 private:
 	void operator=(Game& aApp) = delete;
 
