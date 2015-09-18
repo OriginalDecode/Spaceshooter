@@ -37,7 +37,7 @@ void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 
 void GraphicsComponent::Update(float aDeltaTime)
 {
-
+	aDeltaTime;
 }
 
 void GraphicsComponent::ReceiveMessage(eMessage aMessage)

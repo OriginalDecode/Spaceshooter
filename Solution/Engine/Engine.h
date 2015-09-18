@@ -5,6 +5,8 @@
 #include "FontContainer.h"
 #include "DebugDataDisplay.h"
 
+class Text;
+
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
@@ -32,6 +34,9 @@ namespace Prism
 		DebugDataDisplay& GetDebugDisplay();
 		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
+		void PrintDebugText(const Camera& aCamera, const std::string& aText
+			, const CU::Vector2<float>& aPosition, float aScale = 1.f);
+
 		void EnableZBuffer();
 		void DisableZBuffer();
 	private:
@@ -48,6 +53,8 @@ namespace Prism
 		FBXFactory myModelFactory;
 		FontContainer myFontContainer;
 		DebugDataDisplay myDebugDataDisplay;
+
+		Text* myDebugText;
 
 		static Engine* myInstance;
 	};
