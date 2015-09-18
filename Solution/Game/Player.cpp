@@ -4,12 +4,15 @@
 #include <InputWrapper.h>
 #include "Player.h"
 #include <sstream>
+#include <XMLReader.h>
 
 
 Player::Player(CU::InputWrapper& aInputWrapper)
 	: myInputWrapper(aInputWrapper)
 {
-	mySteeringModifier = 1.7f;
+	XMLReader reader;
+	reader.OpenDocument("Data/script/player.xml");
+	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
 }
 
 CU::Matrix44f& Player::GetOrientation() 
@@ -45,8 +48,8 @@ void Player::Update(float aDeltaTime)
 		RotateZ(-aDeltaTime);
 	}
 
-	myCursorPosition.x += myInputWrapper.GetMouseDX() * 0.001f;
-	myCursorPosition.y += myInputWrapper.GetMouseDY() * 0.001f;
+	myCursorPosition.x += static_cast<float>(myInputWrapper.GetMouseDX()) * 0.001f;
+	myCursorPosition.y += static_cast<float>(myInputWrapper.GetMouseDY()) * 0.001f;
 
 	float negateX = myCursorPosition.x > 0.0f ? 1.0f : -1.0f;
 	float negateY = myCursorPosition.y > 0.0f ? 1.0f : -1.0f;

@@ -43,7 +43,7 @@ void GraphicsComponent::Update(float aDeltaTime)
 void GraphicsComponent::ReceiveMessage(eMessage aMessage)
 {
 	CU::Vector3<float> pos = myInstance->GetPosition();
-	float speed = 0.01f;
+	float speed = 0.1f;
 	if (aMessage == eMessage::MOVE_UP)
 	{
 		pos.y += speed;
@@ -62,6 +62,16 @@ void GraphicsComponent::ReceiveMessage(eMessage aMessage)
 	if (aMessage == eMessage::MOVE_RIGHT)
 	{
 		pos.x += speed;
+		myInstance->SetPosition(pos);
+	}
+	if (aMessage == eMessage::MOVE_FORWARD)
+	{
+		pos.z += speed;
+		myInstance->SetPosition(pos);
+	}
+	if (aMessage == eMessage::MOVE_BACKWARD)
+	{
+		pos.z -= speed;
 		myInstance->SetPosition(pos);
 	}
 }
