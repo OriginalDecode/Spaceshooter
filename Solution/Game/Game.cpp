@@ -51,7 +51,7 @@ bool Game::Init(HWND& aHwnd)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	myLight = new Prism::DirectionalLight();
-	myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
+	myLight->SetColor({ 1.f, 1.f, 0.f, 1.f });
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
 	myPointLight = new Prism::PointLight();
@@ -79,14 +79,16 @@ bool Game::Init(HWND& aHwnd)
 	for (int i = 0; i < 50; ++i)
 	{
 		Entity* astroids = new Entity();
-		astroids->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
+		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+			"Data/effect/BasicEffect.fx");
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
-
+	
 		astroids->AddComponent<AIComponent>()->Init();
 		
 		myEntities.Add(astroids);
 	}
+
 
 	Prism::MeshData geometryData;
 	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
@@ -168,6 +170,12 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 
+	float R = (rand()% 255+1);
+	float G = (rand()% 255+1);
+	float B = (rand()% 255+1);
+
+	myLight->SetColor({ R/255.f, G/255.f, B/255.f, 1.f });
+
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	myBulletManager->Update(deltaTime);
@@ -196,7 +204,7 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
-	//myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
+	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{

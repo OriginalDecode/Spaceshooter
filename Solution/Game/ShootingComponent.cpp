@@ -11,7 +11,8 @@
 void ShootingComponent::Init()
 {
 	myBullet = new Entity();
-	myBullet->AddComponent<GraphicsComponent>()->InitCube(0.5, 0.5, 0.5);
+	myBullet->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+		"Data/effect/BasicEffect.fx");
 	
 	myBullet->AddComponent<PhysicsComponent>()->Init({ 0, 0, 0 }, { 0, 0, 0 });
 	myIsShooting = false;
