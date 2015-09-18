@@ -11,8 +11,10 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="TranslationMessage.cpp" />
     <ClCompile Include="BulletManager.cpp" />
+    <ClCompile Include="ShootingComponent.cpp" />
+    <ClCompile Include="ShootMessage.cpp" />
+    <ClCompile Include="BulletMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AIComponent.h" />
@@ -27,7 +29,11 @@
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TranslationMessage.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="RefreshOrientationMessage.h" />
+    <ClInclude Include="ShootingComponent.h" />
+    <ClInclude Include="ShootMessage.h" />
+    <ClInclude Include="BulletMessage.h" />
+    <ClInclude Include="BulletEnums.h" />
   </ItemGroup>
 </Project>
