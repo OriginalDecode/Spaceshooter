@@ -1,16 +1,48 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="stdafx.h">
-      <Filter>Precompile</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="AIComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InputComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootingComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootMessage.cpp">
+      <Filter>Components\Message</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="Entity.h">
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="AIComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="GraphicsComponent.h">
@@ -19,67 +51,28 @@
     <ClInclude Include="InputComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEnums.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-<<<<<<< HEAD
-    <ClInclude Include="ControllerComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="AIComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="TranslationMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
-=======
     <ClInclude Include="PhysicsComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
->>>>>>> parent of 4ed2914... Revert "Added physics component, bullet lies in player for now"
+    <ClInclude Include="ComponentEnums.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootingComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootMessage.h">
+      <Filter>Components\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="RefreshOrientationMessage.h">
+      <Filter>Components\Message</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Precompile</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Entity.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="Component.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="InputComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphicsComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="AIComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ControllerComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="TranslationMessage.cpp">
-      <Filter>Components\Messages</Filter>
-=======
-    <ClCompile Include="PhysicsComponent.cpp">
-      <Filter>Components</Filter>
->>>>>>> parent of 4ed2914... Revert "Added physics component, bullet lies in player for now"
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Precompile">
-      <UniqueIdentifier>{e01fe9a6-cf46-480f-a715-a3e485166e0f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Components">
-      <UniqueIdentifier>{702613d6-7d8e-4b8f-9312-600affcb8481}</UniqueIdentifier>
+      <UniqueIdentifier>{03ada96f-4972-4d38-8e48-5d81b16dfd15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\Messages">
-      <UniqueIdentifier>{cf666880-233b-4da1-95e0-c0949cff2b2e}</UniqueIdentifier>
+    <Filter Include="Components\Message">
+      <UniqueIdentifier>{3babf716-da59-4436-9824-fef69b012deb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

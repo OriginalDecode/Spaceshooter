@@ -61,7 +61,7 @@ void Player::Update(float aDeltaTime)
 	}
 	if (myInputWrapper.MouseIsPressed(0) == true)
 	{
-		ShootTest();
+		//ShootTest();
 	}
 
 	myCursorPosition.x += static_cast<float>(myInputWrapper.GetMouseDX()) * 0.001f;

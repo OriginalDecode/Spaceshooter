@@ -2,58 +2,71 @@
 
 #include "ControllerComponent.h"
 #include "Entity.h"
-#include "TranslationMessage.h"
+#include "ShootMessage.h"
+#include "RefreshOrientationMessage.h"
 
 void ControllerComponent::MoveUp(float aDistance)
 {
-	TranslationMessage msg(eTranslationType::MOVE_UP, aDistance);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() 
+		+ myEntity->myOrientation.GetUp() * aDistance);
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::MoveDown(float aDistance)
 {
-	TranslationMessage msg(eTranslationType::MOVE_DOWN, aDistance);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() 
+		+ myEntity->myOrientation.GetUp() * (-aDistance));
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::MoveLeft(float aDistance)
 {
-	TranslationMessage msg(eTranslationType::MOVE_LEFT, aDistance);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() 
+		+ myEntity->myOrientation.GetRight() * (-aDistance));
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::MoveRight(float aDistance)
 {
-	TranslationMessage msg(eTranslationType::MOVE_RIGHT, aDistance);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() 
+		+ myEntity->myOrientation.GetRight() * aDistance);
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::MoveForward(float aDistance)
 {
-	TranslationMessage msg(eTranslationType::MOVE_FORWARD, aDistance);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() 
+		+ myEntity->myOrientation.GetForward() * aDistance);
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::MoveBackward(float aDistance)
 {
-	TranslationMessage msg(eTranslationType::MOVE_BACKWARD, aDistance);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() 
+		+ myEntity->myOrientation.GetForward() * (-aDistance));
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::RotateX(float aAmount)
 {
-	TranslationMessage msg(eTranslationType::ROTATE_X, aAmount);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aAmount) * myEntity->myOrientation;
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::RotateY(float aAmount)
 {
-	TranslationMessage msg(eTranslationType::ROTATE_Y, aAmount);
-	myEntity->SendMessage(msg);
+	myEntity->myOrientation = CU::Matrix44<float>::CreateRotateAroundY(aAmount) * myEntity->myOrientation;
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void ControllerComponent::RotateZ(float aAmount)
 {
-	TranslationMessage msg(eTranslationType::ROTATE_Z, aAmount);
+	myEntity->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aAmount) * myEntity->myOrientation;
+	myEntity->SendMessage(RefreshOrientationMessage());
+}
+
+void ControllerComponent::Shoot(float aSpeed)
+{
+	ShootMessage msg(aSpeed);
 	myEntity->SendMessage(msg);
 }

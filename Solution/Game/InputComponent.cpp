@@ -49,6 +49,11 @@ void InputComponent::Update(float aDeltaTime)
 		RotateZ(-(globalPi / 4.f * aDeltaTime));
 	}
 
+	if (myInputWrapper->MouseDown(0))
+	{
+		Shoot(30000.f * aDeltaTime);
+	}
+
 	myCursorPosition.x += static_cast<float>(myInputWrapper->GetMouseDX()) * 0.001f;
 	myCursorPosition.y += static_cast<float>(myInputWrapper->GetMouseDY()) * 0.001f;
 

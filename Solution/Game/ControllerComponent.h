@@ -12,6 +12,7 @@ public:
 	void RotateX(float aAmount);
 	void RotateY(float aAmount);
 	void RotateZ(float aAmount);
+	void Shoot(float aSpeed);
 
 	static int GetID();
 };

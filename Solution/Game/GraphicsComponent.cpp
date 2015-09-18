@@ -1,13 +1,16 @@
 #include "stdafx.h"
 
 #include "GraphicsComponent.h"
+#include "Entity.h"
 #include <Engine.h>
 #include <Instance.h>
 #include <Model.h>
-#include "TranslationMessage.h"
+#include "RefreshOrientationMessage.h"
 
 GraphicsComponent::GraphicsComponent()
 	: myInstance(nullptr)
+	, myRenderSelf(false)
+	, myCamera(nullptr)
 {
 }
 
@@ -38,55 +41,24 @@ void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 void GraphicsComponent::Update(float aDeltaTime)
 {
 	aDeltaTime;
+	if (myRenderSelf == true)
+	{
+		myInstance->Render(*myCamera);
+	}
 }
 
-void GraphicsComponent::ReceiveMessage(const TranslationMessage& aMessage)
+void GraphicsComponent::ReceiveMessage(const RefreshOrientationMessage&)
 {
-	CU::Vector3<float> pos = myInstance->GetPosition();
-	CU::Vector3<float> forward = myInstance->GetOrientation().GetForward();
-	CU::Vector3<float> right = myInstance->GetOrientation().GetRight();
-	CU::Vector3<float> up = myInstance->GetOrientation().GetUp();
-
-	switch (aMessage.GetTranslationType())
-	{
-	case eTranslationType::MOVE_UP:
-		pos += up * aMessage.GetTranslationAmount();
-		break;
-	case eTranslationType::MOVE_DOWN:
-		pos += up * (-aMessage.GetTranslationAmount());
-		break;
-	case eTranslationType::MOVE_LEFT:
-		pos += right * (-aMessage.GetTranslationAmount());
-		break;
-	case eTranslationType::MOVE_RIGHT:
-		pos += right * aMessage.GetTranslationAmount();
-		break;
-	case eTranslationType::MOVE_FORWARD:
-		pos += forward * aMessage.GetTranslationAmount();
-		break;
-	case eTranslationType::MOVE_BACKWARD:
-		pos += forward * (-aMessage.GetTranslationAmount());
-		break;
-	case eTranslationType::ROTATE_X:
-		myInstance->SetOrientation(CU::Matrix44<float>::CreateRotateAroundX(
-			aMessage.GetTranslationAmount()) * myInstance->GetOrientation());
-		break;
-	case eTranslationType::ROTATE_Y:
-		myInstance->SetOrientation(CU::Matrix44<float>::CreateRotateAroundY(
-			aMessage.GetTranslationAmount()) * myInstance->GetOrientation());
-		break;
-	case eTranslationType::ROTATE_Z:
-		myInstance->SetOrientation(CU::Matrix44<float>::CreateRotateAroundZ(
-			aMessage.GetTranslationAmount()) * myInstance->GetOrientation());
-		break;
-	default:
-		break;
-	}
-
-	myInstance->SetPosition(pos);
+	myInstance->SetOrientation(myEntity->myOrientation);
 }
 
 void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 {
 	myInstance->SetPosition(aPosition);
+}
+
+void GraphicsComponent::SetSelfRender(Prism::Camera* aCamera)
+{
+	myCamera = aCamera;
+	myRenderSelf = true;
 }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "stdafx.h"
 
 #include "AIComponent.h"
@@ -19,6 +18,7 @@
 #include "Player.h"
 #include <PointLight.h>
 #include <Scene.h>
+#include "ShootingComponent.h"
 #include <Text.h>
 #include <TimerManager.h>
 #include <VTuneApi.h>
@@ -56,11 +56,14 @@ bool Game::Init(HWND& aHwnd)
 	myEntities.Init(4);
 	
 	Entity* player = new Entity();
+	
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
+	player->AddComponent<ShootingComponent>()->Init();
+
 	myEntities.Add(player);
 	myCamera = new Prism::Camera(player->GetComponent<GraphicsComponent>()->GetInstance()->GetOrientation());
-
+	player->myCamera = myCamera;
 	mySkyboxModel = new Prism::Model();
 	mySkyboxModel->InitSkyblox(500, 500, 500);
 	mySkybox = new Prism::Instance(*mySkyboxModel);
@@ -83,7 +86,7 @@ bool Game::Init(HWND& aHwnd)
 
 	Entity* geometry = new Entity();
 	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
-	geometry->AddComponent<AIComponent>()->Init();
+	//geometry->AddComponent<AIComponent>()->Init();
 	myEntities.Add(geometry);
 
 	
