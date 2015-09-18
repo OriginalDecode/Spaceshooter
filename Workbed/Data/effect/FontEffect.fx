@@ -1,12 +1,4 @@
-
-Matrix World;
-Matrix View;
-Matrix Projection;
-
-Texture2D DiffuseTexture;
-
-float4 myLightDir[1];
-float4 myLightColor[1];
+#include "ShaderVariables.fx"
 
 SamplerState linearSampling
 {
@@ -15,23 +7,11 @@ SamplerState linearSampling
 	AddressV = Wrap;
 };
 
-struct VS_INPUT
-{
-	float4 Pos : POSITION;
-	float2 Tex : TEXCOORD;
-};
 
-struct PS_INPUT
+PS_INPUT_POS_TEX VS(VS_INPUT_POS_TEX input)
 {
-	float4 Pos : SV_POSITION;
-	float2 Tex : TEXCOORD;
-};
-
-PS_INPUT VS(VS_INPUT input)
-{
-	PS_INPUT output = (PS_INPUT)0;
-	//output.Pos = mul(input.Pos, World);
-	//output.Pos = mul(output.Pos, View);
+	PS_INPUT_POS_TEX output = (PS_INPUT_POS_TEX)0;
+	
 	output.Pos = mul(input.Pos, Projection);
 	output.Pos.x -= 1;
 	output.Pos.y += 1;
@@ -40,7 +20,7 @@ PS_INPUT VS(VS_INPUT input)
 	return output;
 }
 
-float4 PS(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT_POS_TEX input) : SV_Target
 {
 	float4 color = DiffuseTexture.Sample(linearSampling, input.Tex);
 

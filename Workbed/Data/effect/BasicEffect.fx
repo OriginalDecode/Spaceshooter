@@ -1,17 +1,4 @@
-Matrix World;
-Matrix View;
-Matrix Projection;
-
-Texture2D DiffuseTexture;
-Texture2D NormalTexture;
-
-float4 DirectionalLightDir[1];
-float4 DirectionalLightColor[1];
-
-float4 PointLightPosition[3];
-float4 PointLightColor[3];
-float PointLightRange[3];
-
+#include "ShaderVariables.fx"
 
 SamplerState linearSampling
 {
@@ -20,28 +7,9 @@ SamplerState linearSampling
 	AddressV = Wrap;
 };
 
-struct VS_INPUT
+PS_INPUT_POS_NORM_TEX_BI_TANG VS(VS_INPUT_POS_NORM_TEX_BI_TANG input)
 {
-	float4 Position : POSITION;
-	float3 Normal : NORMAL;
-	float2 Tex : TEXCOORD;
-	float3 BiNormal : BINORMAL;
-	float3 Tangent : TANGENT;
-};
-
-struct PS_INPUT
-{
-	float4 Position : SV_POSITION;
-	float3 Normal : NORMAL;
-	float2 Tex : TEXCOORD;
-	float3 BiNormal : BINORMAL;
-	float3 Tangent : TANGENT;
-	float4 WorldPosition : POSITION;
-};
-
-PS_INPUT VS(VS_INPUT input)
-{
-	PS_INPUT output = (PS_INPUT)0;
+	PS_INPUT_POS_NORM_TEX_BI_TANG output = (PS_INPUT_POS_NORM_TEX_BI_TANG)0;
 	output.Position = mul(input.Position, World);
 	output.Position = mul(output.Position, View);
 	output.Position = mul(output.Position, Projection);
@@ -58,7 +26,7 @@ PS_INPUT VS(VS_INPUT input)
 	return output;
 }
 
-float4 PS(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 {
 	float3 norm = NormalTexture.Sample(linearSampling, input.Tex) * 2 - 1;
 	

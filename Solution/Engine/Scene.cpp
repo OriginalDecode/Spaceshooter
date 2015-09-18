@@ -25,9 +25,6 @@ void Prism::Scene::Render()
 	TIME_FUNCTION;
 
 	for (int i = 0; i < myDirectionalLights.Size(); ++i)
-	TIME_FUNCTION
-
-	for (int i = 0; i < 0; ++i)
 	{
 		myDirectionalLights[i]->Update();
 		myDirectionalLightDirections[i] = myDirectionalLights[i]->GetCurrentDir();
@@ -35,7 +32,6 @@ void Prism::Scene::Render()
 	}
 
 	for (int i = 0; i < myPointLights.Size(); ++i)
-	for (int i = 0; i < 1; ++i)
 	{
 		myPointLights[i]->Update();
 		myPointLightColors[i] = myPointLights[i]->GetColor();

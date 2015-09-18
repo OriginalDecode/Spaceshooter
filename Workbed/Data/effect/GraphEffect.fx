@@ -1,11 +1,4 @@
-Matrix World;
-Matrix View;
-Matrix Projection;
-
-Texture2D DiffuseTexture;
-
-float4 myLightDir[1];
-float4 myLightColor[1];
+#include "ShaderVariables.fx"
 
 SamplerState linearSampling
 {
@@ -14,21 +7,9 @@ SamplerState linearSampling
 	AddressV = Wrap;
 };
 
-struct VS_INPUT
+PS_INPUT_POS_COL VS(VS_INPUT_POS_COL input)
 {
-	float4 Pos : POSITION;
-	float4 Color : COLOR;
-};
-
-struct PS_INPUT
-{
-	float4 Pos : SV_POSITION;
-	float4 Color : COLOR;
-};
-
-PS_INPUT VS(VS_INPUT input)
-{
-	PS_INPUT output = (PS_INPUT)0;
+	PS_INPUT_POS_COL output = (PS_INPUT_POS_COL)0;
 	output.Pos = mul(input.Pos, Projection);
 	output.Pos.x -= 1;
 	output.Pos.y += 1;
@@ -37,7 +18,7 @@ PS_INPUT VS(VS_INPUT input)
 	return output;
 }
 
-float4 PS(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT_POS_COL input) : SV_Target
 {
 	return input.Color;
 }

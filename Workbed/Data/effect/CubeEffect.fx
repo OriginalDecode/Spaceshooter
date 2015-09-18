@@ -1,38 +1,13 @@
-Matrix World;
-Matrix View;
-Matrix Projection;
-	
-Texture2D DiffuseTexture;
-
-float4 DirectionalLightDir[1];
-float4 DirectionalLightColor[1];
-
-float4 PointLightPosition[3];
-float4 PointLightColor[3];
-float PointLightRange[3];
+#include "ShaderVariables.fx"
 
 SamplerState linearSampling
 {
 	Filter = MIN_MAG_MIP_LINEAR;
 };
 
-struct VS_INPUT
+PS_INPUT_POS_NORM_TEX VS(VS_INPUT_POS_NORM_TEX input)
 {
-	float4 Pos : POSITION;
-	float3 Norm : NORMAL;
-	float2 Tex : TEXCOORD;
-};
-
-struct PS_INPUT
-{
-	float4 Pos : SV_POSITION;
-	float3 Norm : NORMAL;
-	float2 Tex : TEXCOORD;
-};
-
-PS_INPUT VS(VS_INPUT input)
-{
-	PS_INPUT output = (PS_INPUT)0;
+	PS_INPUT_POS_NORM_TEX output = (PS_INPUT_POS_NORM_TEX)0;
 	output.Pos = mul(input.Pos, World);
 	output.Pos = mul(output.Pos, View);
 	output.Pos = mul(output.Pos, Projection);
@@ -42,7 +17,7 @@ PS_INPUT VS(VS_INPUT input)
 	return output;
 }
 
-float4 PS(PS_INPUT input) : SV_Target
+float4 PS(PS_INPUT_POS_NORM_TEX input) : SV_Target
 {
 	float ambient = 0.6;
 	float4 finalColor = DiffuseTexture.Sample(linearSampling, input.Tex) * ambient;
