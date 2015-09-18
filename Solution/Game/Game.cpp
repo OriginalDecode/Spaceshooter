@@ -22,14 +22,13 @@
 #include <Text.h>
 #include <TimerManager.h>
 #include <VTuneApi.h>
-#include "BulletManager.h"
 
 Game::Game()
 {
 	myInputWrapper = new CU::InputWrapper();
 	myPlayer = new Player(*myInputWrapper);
 	myShowPointLightCube = false;
-	myBulletManager = new BulletManager;
+	ShowCursor(false);
 }
 
 Game::~Game()
@@ -37,7 +36,6 @@ Game::~Game()
 	delete myCamera;
 	delete myInputWrapper;
 	delete myScene;
-	delete myBulletManager;
 	myEntities.DeleteAll();
 }
 
@@ -57,7 +55,7 @@ bool Game::Init(HWND& aHwnd)
 	myPointLight->Initiate();
 
 	myEntities.Init(4);
-
+	
 	Entity* player = new Entity();
 	
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
@@ -81,7 +79,7 @@ bool Game::Init(HWND& aHwnd)
 
 		astroids->AddComponent<AIComponent>()->Init();
 		
-		//myEntities.Add(astroids);
+		myEntities.Add(astroids);
 	}
 
 	Prism::MeshData geometryData;
@@ -90,7 +88,7 @@ bool Game::Init(HWND& aHwnd)
 	Entity* geometry = new Entity();
 	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
 	//geometry->AddComponent<AIComponent>()->Init();
-	myEntities.Add(geometry);
+	//myEntities.Add(geometry);
 
 	
 

@@ -1,39 +1,99 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="AIComponent.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="GraphicsComponent.cpp" />
-    <ClCompile Include="InputComponent.cpp" />
-    <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="BulletManager.cpp" />
-    <ClCompile Include="ShootingComponent.cpp" />
-    <ClCompile Include="ShootMessage.cpp" />
-    <ClCompile Include="BulletMessage.cpp" />
+    <ClCompile Include="AIComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ControllerComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="GraphicsComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="InputComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootingComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootMessage.cpp">
+      <Filter>Components\Message</Filter>
+    </ClCompile>
+    <ClCompile Include="PostMaster.cpp">
+      <Filter>PostMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Subscriber.cpp">
+      <Filter>PostMaster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AIComponent.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="GraphicsComponent.h" />
-    <ClInclude Include="InputComponent.h" />
-    <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="BulletManager.h" />
-    <ClInclude Include="RefreshOrientationMessage.h" />
-    <ClInclude Include="ShootingComponent.h" />
-    <ClInclude Include="ShootMessage.h" />
-    <ClInclude Include="BulletMessage.h" />
-    <ClInclude Include="BulletEnums.h" />
+    <ClInclude Include="AIComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentEnums.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="InputComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootingComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="RefreshOrientationMessage.h">
+      <Filter>Components\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootMessage.h">
+      <Filter>Components\Message</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h" />
+    <ClInclude Include="Message.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMaster.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Subscriber.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Components">
+      <UniqueIdentifier>{7332d161-61a2-480e-a95b-383f68bbd7fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Message">
+      <UniqueIdentifier>{2794649f-d9cf-4096-8e11-92ba2a74ee9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostMaster">
+      <UniqueIdentifier>{9b1b9366-e227-44bd-a8bf-877f484737b7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

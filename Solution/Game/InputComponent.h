@@ -16,8 +16,12 @@ public:
 
 private:
 	void operator=(const InputComponent&) = delete;
+	void Rotate(float aDeltaTime);
 	CU::InputWrapper* myInputWrapper;
+
 
 	CU::Vector2<float> myCursorPosition;
 	float mySteeringModifier;
+	float myRotationSpeed;
+	float myMovementSpeed;
 };
