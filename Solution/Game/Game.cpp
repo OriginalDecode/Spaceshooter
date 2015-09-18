@@ -26,7 +26,6 @@ Game::Game()
 {
 	myInputWrapper = new CU::InputWrapper();
 	myPlayer = new Player(*myInputWrapper);
-	myCamera = new Prism::Camera(myPlayer->GetOrientation());
 	myShowPointLightCube = false;
 }
 
@@ -55,6 +54,12 @@ bool Game::Init(HWND& aHwnd)
 
 	myEntities.Init(4);
 	
+	Entity* player = new Entity();
+	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
+	player->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
+	myEntities.Add(player);
+	myCamera = new Prism::Camera(player->GetComponent<GraphicsComponent>()->GetInstance()->GetOrientation());
+
 	mySkyboxModel = new Prism::Model();
 	mySkyboxModel->InitSkyblox(500, 500, 500);
 	mySkybox = new Prism::Instance(*mySkyboxModel);
@@ -67,18 +72,9 @@ bool Game::Init(HWND& aHwnd)
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
 
-		int input = rand() % 2;
-
-		if (input == 0)
-		{
-			astroids->AddComponent<InputComponent>()->Init(*myInputWrapper);
-		}
-		else
-		{
-			astroids->AddComponent<AIComponent>()->Init();
-		}
+		astroids->AddComponent<AIComponent>()->Init();
 		
-		myEntities.Add(astroids);
+		//myEntities.Add(astroids);
 	}
 
 	Prism::MeshData geometryData;
@@ -86,7 +82,10 @@ bool Game::Init(HWND& aHwnd)
 
 	Entity* geometry = new Entity();
 	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
-	//myEntities.Add(geometry);
+	geometry->AddComponent<AIComponent>()->Init();
+	myEntities.Add(geometry);
+
+	
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
