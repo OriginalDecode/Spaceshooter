@@ -78,7 +78,7 @@ bool Game::Init(HWND& aHwnd)
 
 		astroids->AddComponent<AIComponent>()->Init();
 		
-		//myEntities.Add(astroids);
+		myEntities.Add(astroids);
 	}
 
 	Prism::MeshData geometryData;
@@ -87,7 +87,7 @@ bool Game::Init(HWND& aHwnd)
 	Entity* geometry = new Entity();
 	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
 	//geometry->AddComponent<AIComponent>()->Init();
-	myEntities.Add(geometry);
+	//myEntities.Add(geometry);
 
 	
 

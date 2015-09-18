@@ -30,6 +30,12 @@
     <ClCompile Include="ShootMessage.cpp">
       <Filter>Components\Message</Filter>
     </ClCompile>
+    <ClCompile Include="PostMaster.cpp">
+      <Filter>PostMaster</Filter>
+    </ClCompile>
+    <ClCompile Include="Subscriber.cpp">
+      <Filter>PostMaster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -68,6 +74,16 @@
     <ClInclude Include="ShootMessage.h">
       <Filter>Components\Message</Filter>
     </ClInclude>
+    <ClInclude Include="Enums.h" />
+    <ClInclude Include="Message.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="PostMaster.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="Subscriber.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -75,6 +91,9 @@
     </Filter>
     <Filter Include="Components\Message">
       <UniqueIdentifier>{2794649f-d9cf-4096-8e11-92ba2a74ee9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostMaster">
+      <UniqueIdentifier>{9b1b9366-e227-44bd-a8bf-877f484737b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
