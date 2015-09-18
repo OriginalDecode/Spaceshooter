@@ -20,18 +20,26 @@ void InputComponent::Update(float aDeltaTime)
 	aDeltaTime;
 	if (myInputWrapper->KeyIsPressed(DIK_U))
 	{
-		myEntity->SendMessage(eMessage::MOVE_UP);
+		MoveUp();
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_J))
 	{
-		myEntity->SendMessage(eMessage::MOVE_DOWN);
+		MoveDown();
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_H))
 	{
-		myEntity->SendMessage(eMessage::MOVE_LEFT);
+		MoveLeft();
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_K))
 	{
-		myEntity->SendMessage(eMessage::MOVE_RIGHT);
+		MoveRight();
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_O))
+	{
+		MoveForward();
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_L))
+	{
+		MoveBackward();
 	}
 }
