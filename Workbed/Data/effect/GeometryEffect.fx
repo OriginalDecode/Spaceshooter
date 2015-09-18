@@ -44,7 +44,7 @@ PS_INPUT VS(VS_INPUT input)
 
 float4 PS(PS_INPUT input) : SV_Target
 {
-	float ambient = 0.3;
+	float ambient = 0.5;
 	float4 finalColor = input.Color * ambient;
 	float lambert = dot((float3)DirectionalLightDir[0], input.Norm);
 	float4 lightColor = saturate(lambert * DirectionalLightColor[0]);

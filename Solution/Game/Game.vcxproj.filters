@@ -22,6 +22,7 @@
     <ClInclude Include="ComponentEnums.h">
       <Filter>Components</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="ControllerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -31,6 +32,11 @@
     <ClInclude Include="TranslationMessage.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
+=======
+    <ClInclude Include="PhysicsComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+>>>>>>> parent of 4ed2914... Revert "Added physics component, bullet lies in player for now"
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
@@ -56,8 +62,13 @@
     <ClCompile Include="ControllerComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="TranslationMessage.cpp">
       <Filter>Components\Messages</Filter>
+=======
+    <ClCompile Include="PhysicsComponent.cpp">
+      <Filter>Components</Filter>
+>>>>>>> parent of 4ed2914... Revert "Added physics component, bullet lies in player for now"
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

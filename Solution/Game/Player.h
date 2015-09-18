@@ -7,6 +7,13 @@ namespace CommonUtilities
 	class InputWrapper;
 }
 
+namespace Prism 
+{
+	class Camera;
+}
+
+class Entity;
+
 class Player
 {
 public:
@@ -17,8 +24,7 @@ public:
 	
 	void Update(float aDeltaTime);
 
-	
-
+	void Render(Prism::Camera* aCamera);
 
 private:
 	void operator= (const Player&) = delete;
@@ -29,6 +35,8 @@ private:
 	void RotateY(float aRadian);
 	void RotateZ(float aRadian);
 
+	void ShootTest();
+
 	CU::Matrix44f myOrientation;
 	CU::Vector3f myPosition;
 
@@ -37,4 +45,7 @@ private:
 	CU::InputWrapper& myInputWrapper;
 
 	float mySteeringModifier;
+	// test
+	Entity* myTestBullet;
+	bool myIsShooting;
 };

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "stdafx.h"
 
 #include "AIComponent.h"
@@ -202,6 +203,7 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
+		myPlayer->Render(&myScene->GetCamera());
 	}
 
 	if (myShowPointLightCube == true)
