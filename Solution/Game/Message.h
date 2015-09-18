@@ -5,7 +5,7 @@
 class Message
 {
 public:
-	inline const eMessageType GetMessageType() const;
+	const eMessageType GetMessageType() const;
 
 protected:
 	

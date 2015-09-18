@@ -19,6 +19,7 @@ namespace Prism
 
 class Entity;
 class Player;
+class BulletManager;
 
 class Game
 {
@@ -54,6 +55,7 @@ private:
 	CU::Matrix44<float> myWorldMatrix;
 	CU::GrowingArray<Entity*> myEntities;
 	Player* myPlayer;
+	BulletManager* myBulletManager;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;

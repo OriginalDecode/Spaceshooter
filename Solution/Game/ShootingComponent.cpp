@@ -5,6 +5,8 @@
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
 #include "ShootMessage.h"
+#include "PostMaster.h"
+#include "BulletMessage.h"
 
 void ShootingComponent::Init()
 {
@@ -27,9 +29,10 @@ void ShootingComponent::Update(float aDeltaTime)
 
 void ShootingComponent::ReceiveMessage(const ShootMessage& aMessage)
 {
-	myBullet->GetComponent<PhysicsComponent>()->Init(myForward * aMessage.GetSpeed(), myPosition);
-	myIsShooting = true;
-	myBullet->GetComponent<GraphicsComponent>()->SetSelfRender(myEntity->myCamera);
+	PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, myForward * aMessage.GetSpeed(), myPosition));
+	//myBullet->GetComponent<PhysicsComponent>()->Init(myForward * aMessage.GetSpeed(), myPosition);
+	//myIsShooting = true;
+	//myBullet->GetComponent<GraphicsComponent>()->SetSelfRender(myEntity->myCamera);
 }
 
 void ShootingComponent::ReceiveMessage(const RefreshOrientationMessage&)

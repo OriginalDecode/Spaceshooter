@@ -22,10 +22,14 @@
 #include <Text.h>
 #include <TimerManager.h>
 #include <VTuneApi.h>
+#include "PostMaster.h"
+#include "BulletManager.h"
 
 Game::Game()
 {
+	PostMaster::Create();
 	myInputWrapper = new CU::InputWrapper();
+	myBulletManager = new BulletManager;
 	myPlayer = new Player(*myInputWrapper);
 	myShowPointLightCube = false;
 	ShowCursor(false);
@@ -37,10 +41,12 @@ Game::~Game()
 	delete myInputWrapper;
 	delete myScene;
 	myEntities.DeleteAll();
+	PostMaster::Destroy();
 }
 
 bool Game::Init(HWND& aHwnd)
 {
+
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
@@ -164,7 +170,15 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 
+	float R = (rand()% 255+1);
+	float G = (rand()% 255+1);
+	float B = (rand()% 255+1);
+
+	myLight->SetColor({ R/255.f, G/255.f, B/255.f, 1.f });
+
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
+
+	myBulletManager->Update(deltaTime);
 
 	END_TIME_BLOCK("Game::Update");
 
@@ -215,6 +229,8 @@ void Game::Render()
 	{
 		myPointLight->Render(myCamera);
 	}
+
+	myBulletManager->Render(myCamera);
 
 	END_TIME_BLOCK("Game::Render");
 

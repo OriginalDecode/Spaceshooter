@@ -36,6 +36,9 @@
     <ClCompile Include="Subscriber.cpp">
       <Filter>PostMaster</Filter>
     </ClCompile>
+    <ClCompile Include="BulletMessage.cpp">
+      <Filter>PostMaster</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -82,6 +85,10 @@
       <Filter>PostMaster</Filter>
     </ClInclude>
     <ClInclude Include="Subscriber.h">
+      <Filter>PostMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletEnums.h" />
+    <ClInclude Include="BulletMessage.h">
       <Filter>PostMaster</Filter>
     </ClInclude>
   </ItemGroup>
