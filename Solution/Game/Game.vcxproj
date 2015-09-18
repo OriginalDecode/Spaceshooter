@@ -91,8 +91,10 @@
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="RefreshOrientationMessage.h" />
+    <ClInclude Include="ShootingComponent.h" />
+    <ClInclude Include="ShootMessage.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TranslationMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
@@ -105,11 +107,12 @@
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ShootingComponent.cpp" />
+    <ClCompile Include="ShootMessage.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="TranslationMessage.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

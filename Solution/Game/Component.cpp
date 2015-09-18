@@ -9,6 +9,9 @@ void Component::Update(float)
 {
 }
 
-void Component::ReceiveMessage(const TranslationMessage&)
+void Component::ReceiveMessage(const RefreshOrientationMessage&)
+{
+}
+void Component::ReceiveMessage(const ShootMessage&)
 {
 }

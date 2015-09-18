@@ -17,4 +17,7 @@ public:
 private:
 	void operator=(const InputComponent&) = delete;
 	CU::InputWrapper* myInputWrapper;
+
+	CU::Vector2<float> myCursorPosition;
+	float mySteeringModifier;
 };

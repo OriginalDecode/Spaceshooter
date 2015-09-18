@@ -2,8 +2,13 @@
 #include <unordered_map>
 #undef SendMessage
 
+namespace Prism
+{
+	class Camera;
+}
 
 class Component;
+
 
 class Entity
 {
@@ -18,6 +23,9 @@ public:
 
 	template <typename T>
 	void SendMessage(const T& aMessage);
+
+	CU::Matrix44<float> myOrientation;
+	Prism::Camera* myCamera;
 
 private:
 	std::unordered_map<int, Component*> myComponents;

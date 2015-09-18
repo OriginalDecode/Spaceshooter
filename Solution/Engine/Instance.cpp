@@ -69,11 +69,17 @@ void Prism::Instance::PerformTransformation(CU::Matrix44<float>& aTransformation
 void Prism::Instance::UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections,
 		const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors)
 {
-	myModel.GetEffect()->UpdateDirectionalLight(someLightDirections, someLightColors);
+	if (myModel.GetIsSkybox() == false)
+	{
+		myModel.GetEffect()->UpdateDirectionalLight(someLightDirections, someLightColors);
+	}
 }
 
 void Prism::Instance::UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions,
 		const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, const CU::StaticArray<float, 3>& someLightRanges)
 {
-	myModel.GetEffect()->UpdatePointLight(someLightPositions, someLightColors, someLightRanges);
+	if (myModel.GetIsSkybox() == false)
+	{
+		myModel.GetEffect()->UpdatePointLight(someLightPositions, someLightColors, someLightRanges);
+	}
 }

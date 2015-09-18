@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AIComponent.h"
+#include "Constants.h"
 
 void AIComponent::Init()
 {
@@ -17,28 +18,37 @@ void AIComponent::Update(float aDeltaTime)
 	switch (myDecision)
 	{
 	case 0:
-		MoveLeft(150.f * aDeltaTime);
+		MoveLeft(10.f * aDeltaTime);
 		break;
 	case 1:
-		MoveRight(150.f * aDeltaTime);
+		MoveRight(10.f * aDeltaTime);
 		break;
 	case 2:
-		MoveUp(150.f * aDeltaTime);
+		MoveUp(10.f * aDeltaTime);
 		break;
 	case 3:
-		MoveDown(150.f * aDeltaTime);
+		MoveDown(10.f * aDeltaTime);
 		break;
 	case 4:
-		MoveForward(150.f * aDeltaTime);
+		MoveForward(10.f * aDeltaTime);
 		break;
 	case 5:
-		MoveBackward(150.f * aDeltaTime);
+		MoveBackward(10.f * aDeltaTime);
+		break;
+	case 6:
+		RotateX(globalPi / 4.f * aDeltaTime);
+		break;
+	case 7:
+		RotateY(globalPi / 4.f * aDeltaTime);
+		break;
+	case 8:
+		RotateZ(globalPi / 4.f * aDeltaTime);
 		break;
 	}
 }
 
 void AIComponent::MakeDecision()
 {
-	myDecision = rand() % 6;
+	myDecision = rand() % 9;
 	myTimeToNextDecision = 5.f;
 }
