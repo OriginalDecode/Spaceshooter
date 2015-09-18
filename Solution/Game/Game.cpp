@@ -21,8 +21,6 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 
-
-
 Game::Game()
 {
 	myInputWrapper = new CU::InputWrapper();
@@ -48,6 +46,11 @@ bool Game::Init(HWND& aHwnd)
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 	myEntities.Init(4);
 	
+	mySkyboxModel = new Prism::Model();
+	mySkyboxModel->InitSkyblox(500, 500, 500);
+	mySkybox = new Prism::Instance(*mySkyboxModel);
+	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
+
 	for (int i = 0; i < 50; ++i)
 	{
 		Entity* astroids = new Entity();
@@ -81,9 +84,10 @@ bool Game::Init(HWND& aHwnd)
 		myEntities.Add(cube);
 	}
 
-
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
+
+	myScene->AddInstance(mySkybox);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -146,6 +150,8 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 
+	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
+
 	END_TIME_BLOCK("Game::Update");
 
 	Render();
@@ -187,10 +193,8 @@ void Game::Render()
 
 	if (myRenderStuff)
 	{
-		
 		myScene->Render();
 	}
-		Prism::Engine::GetInstance()->PrintDebugText(*myCamera, "Hello World!", CU::Vector2<float>(0, 0));
 
 	END_TIME_BLOCK("Game::Render");
 

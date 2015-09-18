@@ -258,7 +258,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	myIsNULLObject = false;
 }
 
-void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
+void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/CubeEffect.fx");
 
@@ -329,58 +329,58 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 #pragma region Indices
 
 	//Top
-	myVerticeIndices.Add(3);
-	myVerticeIndices.Add(1);
 	myVerticeIndices.Add(0);
-
-	myVerticeIndices.Add(2);
 	myVerticeIndices.Add(1);
 	myVerticeIndices.Add(3);
+
+	myVerticeIndices.Add(3);
+	myVerticeIndices.Add(1);
+	myVerticeIndices.Add(2);
 
 	//Bottom
-	myVerticeIndices.Add(6);
-	myVerticeIndices.Add(4);
 	myVerticeIndices.Add(5);
-
-	myVerticeIndices.Add(7);
 	myVerticeIndices.Add(4);
 	myVerticeIndices.Add(6);
+
+	myVerticeIndices.Add(6);
+	myVerticeIndices.Add(4);
+	myVerticeIndices.Add(7);
 
 	//Left
-	myVerticeIndices.Add(11);
-	myVerticeIndices.Add(9);
 	myVerticeIndices.Add(8);
-
-	myVerticeIndices.Add(10);
 	myVerticeIndices.Add(9);
 	myVerticeIndices.Add(11);
+
+	myVerticeIndices.Add(11);
+	myVerticeIndices.Add(9);
+	myVerticeIndices.Add(10);
 
 	//Right
-	myVerticeIndices.Add(14);
-	myVerticeIndices.Add(12);
 	myVerticeIndices.Add(13);
-
-	myVerticeIndices.Add(15);
 	myVerticeIndices.Add(12);
 	myVerticeIndices.Add(14);
+
+	myVerticeIndices.Add(14);
+	myVerticeIndices.Add(12);
+	myVerticeIndices.Add(15);
 
 	//Front
-	myVerticeIndices.Add(19);
-	myVerticeIndices.Add(17);
 	myVerticeIndices.Add(16);
-
-	myVerticeIndices.Add(18);
 	myVerticeIndices.Add(17);
 	myVerticeIndices.Add(19);
+
+	myVerticeIndices.Add(19);
+	myVerticeIndices.Add(17);
+	myVerticeIndices.Add(18);
 
 	//Back
-	myVerticeIndices.Add(22);
-	myVerticeIndices.Add(20);
 	myVerticeIndices.Add(21);
-
-	myVerticeIndices.Add(23);
 	myVerticeIndices.Add(20);
 	myVerticeIndices.Add(22);
+
+	myVerticeIndices.Add(22);
+	myVerticeIndices.Add(20);
+	myVerticeIndices.Add(23);
 
 #pragma endregion
 
@@ -399,7 +399,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	surf.SetVertexCount(myVertices.Size());
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
-	surf.SetTexture("DiffuseTexture", "Data/resources/texture/seafloor.dds", true);
+	surf.SetTexture("DiffuseTexture", "Data/resources/texture/skyTest.dds", true);
 
 	mySurfaces.Add(new Surface(surf));
 
