@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
+#include "AIComponent.h"
 #include <Camera.h>
+#include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
 #include "Entity.h"
@@ -20,13 +22,12 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 
-
-
 Game::Game()
 {
 	myInputWrapper = new CU::InputWrapper();
 	myPlayer = new Player(*myInputWrapper);
 	myCamera = new Prism::Camera(myPlayer->GetOrientation());
+	myShowPointLightCube = false;
 }
 
 Game::~Game()
@@ -42,17 +43,22 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
+	myLight = new Prism::DirectionalLight();
+	myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
+	myLight->SetDir({ 0.f, 0.5f, -1.f });
+
 	myPointLight = new Prism::PointLight();
-	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
-	myPointLight->SetPosition({ 0.f, 0.f, 0.f, 1.f });
+	myPointLight->SetColor({ 1.f, 1.f, 1.f, 1.f });
+	myPointLight->SetPosition({ 0, 0, 0, 0 });
 	myPointLight->SetRange(50.f);
+	myPointLight->Initiate();
+
 	myEntities.Init(4);
 	
-	//Entity* cube = new Entity();
-	//cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/companion/companion.fbx"
-	//	, "Data/effect/BasicEffect.fx");
-	//cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	//myEntities.Add(cube);
+	mySkyboxModel = new Prism::Model();
+	mySkyboxModel->InitSkyblox(500, 500, 500);
+	mySkybox = new Prism::Instance(*mySkyboxModel);
+	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	for (int i = 0; i < 50; ++i)
 	{
@@ -60,36 +66,32 @@ bool Game::Init(HWND& aHwnd)
 		astroids->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+
+		int input = rand() % 2;
+
+		if (input == 0)
+		{
+			astroids->AddComponent<InputComponent>()->Init(*myInputWrapper);
+		}
+		else
+		{
+			astroids->AddComponent<AIComponent>()->Init();
+		}
+		
 		myEntities.Add(astroids);
 	}
 
 	Prism::MeshData geometryData;
 	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
 
-	//Entity* geometry = new Entity();
-	//geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
+	Entity* geometry = new Entity();
+	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
 	//myEntities.Add(geometry);
-
-	for (int i = 0; i < 100; ++i)
-	{
-		float width = static_cast<float>(rand() % 20) + 1.f;
-		float height = static_cast<float>(rand() % 20) + 1.f;
-		float depth = static_cast<float>(rand() % 20) + 1.f;
-
-		float x = static_cast<float>(rand() % 200) - 100.f;
-		float y = static_cast<float>(rand() % 200) - 100.f;
-		float z = static_cast<float>(rand() % 200) - 100.f;
-
-		Entity* cube = new Entity();
-		cube->AddComponent<GraphicsComponent>()->InitCube(width, height, depth);
-		cube->GetComponent<GraphicsComponent>()->GetInstance()->SetPosition({ x, y, z });
-		cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
-		myEntities.Add(cube);
-	}
-
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
+	myScene->AddLight(myPointLight);
+	myScene->AddInstance(mySkybox);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -101,7 +103,7 @@ bool Game::Init(HWND& aHwnd)
 		}
 	}
 
-	myScene->AddLight(myPointLight);
+	myScene->AddLight(myLight);
 
 	myRenderStuff = true;
 
@@ -141,6 +143,10 @@ bool Game::Update()
 	{
 		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
 	}
+	else if (myInputWrapper->KeyDown(DIK_F9))
+	{
+		myShowPointLightCube = !myShowPointLightCube;
+	}
 	else if (myInputWrapper->KeyDown(DIK_ESCAPE))
 	{
 		return false;
@@ -151,6 +157,8 @@ bool Game::Update()
 	}
 
 	LogicUpdate(deltaTime);
+
+	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	END_TIME_BLOCK("Game::Update");
 
@@ -176,6 +184,7 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
+	//myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -193,6 +202,11 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
+	}
+
+	if (myShowPointLightCube == true)
+	{
+		myPointLight->Render(myCamera);
 	}
 
 	END_TIME_BLOCK("Game::Render");

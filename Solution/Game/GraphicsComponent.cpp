@@ -4,11 +4,11 @@
 #include <Engine.h>
 #include <Instance.h>
 #include <Model.h>
+#include "TranslationMessage.h"
 
 GraphicsComponent::GraphicsComponent()
 	: myInstance(nullptr)
 {
-	myID = 0;
 }
 
 void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
@@ -37,33 +37,53 @@ void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 
 void GraphicsComponent::Update(float aDeltaTime)
 {
-
+	aDeltaTime;
 }
 
-void GraphicsComponent::ReceiveMessage(eMessage aMessage)
+void GraphicsComponent::ReceiveMessage(const TranslationMessage& aMessage)
 {
 	CU::Vector3<float> pos = myInstance->GetPosition();
-	float speed = 0.01f;
-	if (aMessage == eMessage::MOVE_UP)
+	CU::Vector3<float> forward = myInstance->GetOrientation().GetForward();
+	CU::Vector3<float> right = myInstance->GetOrientation().GetRight();
+	CU::Vector3<float> up = myInstance->GetOrientation().GetUp();
+
+	switch (aMessage.GetTranslationType())
 	{
-		pos.y += speed;
-		myInstance->SetPosition(pos);
+	case eTranslationType::MOVE_UP:
+		pos += up * aMessage.GetTranslationAmount();
+		break;
+	case eTranslationType::MOVE_DOWN:
+		pos += up * (-aMessage.GetTranslationAmount());
+		break;
+	case eTranslationType::MOVE_LEFT:
+		pos += right * (-aMessage.GetTranslationAmount());
+		break;
+	case eTranslationType::MOVE_RIGHT:
+		pos += right * aMessage.GetTranslationAmount();
+		break;
+	case eTranslationType::MOVE_FORWARD:
+		pos += forward * aMessage.GetTranslationAmount();
+		break;
+	case eTranslationType::MOVE_BACKWARD:
+		pos += forward * (-aMessage.GetTranslationAmount());
+		break;
+	case eTranslationType::ROTATE_X:
+		myInstance->SetOrientation(CU::Matrix44<float>::CreateRotateAroundX(
+			aMessage.GetTranslationAmount()) * myInstance->GetOrientation());
+		break;
+	case eTranslationType::ROTATE_Y:
+		myInstance->SetOrientation(CU::Matrix44<float>::CreateRotateAroundY(
+			aMessage.GetTranslationAmount()) * myInstance->GetOrientation());
+		break;
+	case eTranslationType::ROTATE_Z:
+		myInstance->SetOrientation(CU::Matrix44<float>::CreateRotateAroundZ(
+			aMessage.GetTranslationAmount()) * myInstance->GetOrientation());
+		break;
+	default:
+		break;
 	}
-	if (aMessage == eMessage::MOVE_DOWN)
-	{
-		pos.y -= speed;
-		myInstance->SetPosition(pos);
-	}
-	if (aMessage == eMessage::MOVE_LEFT)
-	{
-		pos.x -= speed;
-		myInstance->SetPosition(pos);
-	}
-	if (aMessage == eMessage::MOVE_RIGHT)
-	{
-		pos.x += speed;
-		myInstance->SetPosition(pos);
-	}
+
+	myInstance->SetPosition(pos);
 }
 
 void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)

@@ -4,10 +4,9 @@
 #include <cassert>
 #include "Vector4decl.h"
 
-#define Vector4f Vector4<float>
-
 namespace CommonUtilities
 {
+	typedef Vector4<float> Vector4f;
 
 	template <typename T>
 	Vector4<T>::Vector4(T aX = 0, T aY = 0, T aZ = 0, T aW = 0)

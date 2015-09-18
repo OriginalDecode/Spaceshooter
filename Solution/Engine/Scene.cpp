@@ -22,16 +22,16 @@ Prism::Scene::Scene()
 
 void Prism::Scene::Render()
 {
-	TIME_FUNCTION
+	TIME_FUNCTION;
 
-	for (int i = 0; i < 0; ++i)
+	for (int i = 0; i < myDirectionalLights.Size(); ++i)
 	{
 		myDirectionalLights[i]->Update();
 		myDirectionalLightDirections[i] = myDirectionalLights[i]->GetCurrentDir();
 		myDirectionalLightColors[i] = myDirectionalLights[i]->GetColor();
 	}
 
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < myPointLights.Size(); ++i)
 	{
 		myPointLights[i]->Update();
 		myPointLightColors[i] = myPointLights[i]->GetColor();

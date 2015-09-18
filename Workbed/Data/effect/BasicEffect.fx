@@ -80,7 +80,7 @@ float4 PS(PS_INPUT input) : SV_Target
 	}
 	
 	
-	for(int i = 0; i < 1; ++i)
+	for(int i = 0; i < 0; ++i)
 	{
 		//Vector from light to pixel
 		float4 lightVec = PointLightPosition[i] - input.WorldPosition;

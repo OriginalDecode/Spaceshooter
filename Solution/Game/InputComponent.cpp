@@ -1,5 +1,7 @@
 #include "stdafx.h"
+
 #include "ComponentEnums.h"
+#include "Constants.h"
 #include "Entity.h"
 #include "InputComponent.h"
 #include <InputWrapper.h>
@@ -7,7 +9,6 @@
 
 InputComponent::InputComponent()
 {
-	myID = 1;
 }
 
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)
@@ -19,18 +20,44 @@ void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_U))
 	{
-		myEntity->SendMessage(eMessage::MOVE_UP);
+		MoveForward(300.f * aDeltaTime);
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_J))
 	{
-		myEntity->SendMessage(eMessage::MOVE_DOWN);
+		MoveBackward(300.f * aDeltaTime);
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_H))
 	{
-		myEntity->SendMessage(eMessage::MOVE_LEFT);
+		MoveLeft(300.f * aDeltaTime);
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_K))
 	{
-		myEntity->SendMessage(eMessage::MOVE_RIGHT);
+		MoveRight(300.f * aDeltaTime);
+	}
+
+	if (myInputWrapper->KeyIsPressed(DIK_Y))
+	{
+		RotateZ(globalPi / 4.f * aDeltaTime);
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_I))
+	{
+		RotateZ(-(globalPi / 4.f * aDeltaTime));
+	}
+
+	if (myInputWrapper->KeyIsPressed(DIK_UP))
+	{
+		RotateX(-(globalPi / 4.f * aDeltaTime));
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_DOWN))
+	{
+		RotateX(globalPi / 4.f * aDeltaTime);
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_LEFT))
+	{
+		RotateY(-(globalPi / 4.f * aDeltaTime));
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_RIGHT))
+	{
+		RotateY(globalPi / 4.f * aDeltaTime);
 	}
 }

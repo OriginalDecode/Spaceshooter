@@ -2,12 +2,14 @@
 #include "ComponentEnums.h"
 
 class Entity;
+class TranslationMessage;
+
 class Component
 {
 public:
 	virtual void Init();
 	virtual void Update(float aDeltaTime);
-	virtual void ReceiveMessage(eMessage aMessage);
+	virtual void ReceiveMessage(const TranslationMessage& aMessage);
 
 
 	void SetEntity(Entity* aEntity);
@@ -15,13 +17,12 @@ public:
 	static int GetID();
 
 protected:
-	static int myID;
 	Entity* myEntity;
 };
 
 inline int Component::GetID()
 {
-	return myID;
+	return -1;
 }
 
 inline void Component::SetEntity(Entity* aEntity)

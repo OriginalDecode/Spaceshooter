@@ -12,7 +12,6 @@
 
 Prism::Text::Text()
 	: myHasText(false)
-	/*, myLastText(nullptr)*/
 	, myLastDrawX(-999.f)
 	, myLastDrawY(-999.f)
 	, myLastScale(-999.f)
@@ -131,10 +130,15 @@ void Prism::Text::InitBlendState()
 	}
 }
 
-void Prism::Text::Render(const Camera& aCamera)
+void Prism::Text::Render(const Camera& aCamera, const char* aString
+	, const float aDrawX, const float aDrawY, const float aScale)
 {
+	UpdateSentence(aString, aDrawX, aDrawY, aScale);
+
 	if (myHasText == false)
 		return;
+
+	
 
 	Engine::GetInstance()->DisableZBuffer();
 
@@ -150,8 +154,11 @@ void Prism::Text::Render(const Camera& aCamera)
 	myEffect->SetWorldMatrix(myIdentityMatrix);
 
 	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
-	Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
+	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
+		, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer
+		, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
+	Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
+		, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
 
 
 	D3DX11_TECHNIQUE_DESC techDesc;
@@ -205,54 +212,6 @@ void Prism::Text::SetupIndexBuffer()
 	}
 }
 
-void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale)
-{
-	TIME_FUNCTION
-	
-	if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX 
-			&& aDrawY == myLastDrawY && aScale == myLastScale)
-	{
-		return;
-	}
-
-	myLastText = aString;
-	myLastDrawX = aDrawX;
-	myLastDrawY = aDrawY;
-	myLastScale = aScale;
-	myTextWidth = aDrawX;
-
-	myHasText = true;
-	int numOfLetters = static_cast<int>(strlen(aString));
-	int index = 0;
-	float drawX = aDrawX;
-	float drawY = aDrawY;
-	float z = 1.f;
-
-	myVertices.RemoveAll();
-	myVerticeIndices.RemoveAll();
-	for (int i = 0; i < numOfLetters; ++i)
-	{
-		Font::CharacterData charData = myFont->GetCharData(aString[i]);
-
-		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
-		index += 3;
-
-		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
-		index += 3;
-
-
-		drawX += myCharSize.x - 17.f;
-		z -= 0.001f;
-	}
-
-	SetupVertexBuffer();
-	SetupIndexBuffer();
-
-	mySurface->SetIndexCount(myVerticeIndices.Size());
-	mySurface->SetVertexCount(myVertices.Size());
-
-	myTextWidth = drawX - myTextWidth;
-}
 
 void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, 
 		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
@@ -322,4 +281,54 @@ void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const floa
 	myVertices.Add(vert);
 	myVerticeIndices.Add(index);
 	++index;
+}
+
+
+void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale)
+{
+	TIME_FUNCTION
+
+		if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX
+			&& aDrawY == myLastDrawY && aScale == myLastScale)
+		{
+		return;
+		}
+
+	myLastText = aString;
+	myLastDrawX = aDrawX;
+	myLastDrawY = aDrawY;
+	myLastScale = aScale;
+	myTextWidth = aDrawX;
+
+	myHasText = true;
+	int numOfLetters = static_cast<int>(strlen(aString));
+	int index = 0;
+	float drawX = aDrawX;
+	float drawY = aDrawY;
+	float z = 1.f;
+
+	myVertices.RemoveAll();
+	myVerticeIndices.RemoveAll();
+	for (int i = 0; i < numOfLetters; ++i)
+	{
+		Font::CharacterData charData = myFont->GetCharData(aString[i]);
+
+		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
+		index += 3;
+
+		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
+		index += 3;
+
+
+		drawX += myCharSize.x - 17.f;
+		z -= 0.001f;
+	}
+
+	SetupVertexBuffer();
+	SetupIndexBuffer();
+
+	mySurface->SetIndexCount(myVerticeIndices.Size());
+	mySurface->SetVertexCount(myVertices.Size());
+
+	myTextWidth = drawX - myTextWidth;
 }

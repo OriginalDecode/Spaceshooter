@@ -3,12 +3,16 @@
 #include "../Engine/Text.h"
 #include <InputWrapper.h>
 #include "Player.h"
+#include <sstream>
+#include <XMLReader.h>
 
 
 Player::Player(CU::InputWrapper& aInputWrapper)
 	: myInputWrapper(aInputWrapper)
 {
-	myCursorPosition;
+	XMLReader reader;
+	reader.OpenDocument("Data/script/player.xml");
+	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
 }
 
 CU::Matrix44f& Player::GetOrientation() 
@@ -44,8 +48,8 @@ void Player::Update(float aDeltaTime)
 		RotateZ(-aDeltaTime);
 	}
 
-	myCursorPosition.x += myInputWrapper.GetMouseDX() * 0.001f;
-	myCursorPosition.y += myInputWrapper.GetMouseDY() * 0.001f;
+	myCursorPosition.x += static_cast<float>(myInputWrapper.GetMouseDX()) * 0.001f;
+	myCursorPosition.y += static_cast<float>(myInputWrapper.GetMouseDY()) * 0.001f;
 
 	float negateX = myCursorPosition.x > 0.0f ? 1.0f : -1.0f;
 	float negateY = myCursorPosition.y > 0.0f ? 1.0f : -1.0f;
@@ -53,9 +57,27 @@ void Player::Update(float aDeltaTime)
 	float x = myCursorPosition.x;
 	float y = myCursorPosition.y;
 
-	myOrientation = myOrientation.CreateRotateAroundY((fabs(x + (pow((x), 4)))  * negateX) * aDeltaTime)
+	if (x < 0.001f && x > -0.001f)
+	{
+		x = 0;
+	}
+	if (y < 0.001f && y > -0.001f)
+	{
+		y = 0;
+	}
+
+
+	float xRotation = (fabs((x*x) * mySteeringModifier)  * negateX) * aDeltaTime;
+	float yRotation = (fabs((y*y) * mySteeringModifier)  * negateY) * aDeltaTime;
+
+	std::stringstream ss;
+	ss << "\nCursorPosX: " << xRotation << " CursorPosY: " << yRotation;
+	OutputDebugStringA(ss.str().c_str());
+
+
+	myOrientation = myOrientation.CreateRotateAroundY(xRotation)
 		* myOrientation;
-	myOrientation = myOrientation.CreateRotateAroundX((fabs(y + (pow((y), 4)))  * negateY) * aDeltaTime)
+	myOrientation = myOrientation.CreateRotateAroundX(yRotation)
 		* myOrientation;
 
 }
