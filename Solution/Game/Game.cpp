@@ -46,6 +46,7 @@ bool Game::Init(HWND& aHwnd)
 	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
 	myPointLight->SetPosition({ 0.f, 0.f, 0.f, 1.f });
 	myPointLight->SetRange(50.f);
+	myPointLight->Initiate();
 	myEntities.Init(4);
 	
 	//Entity* cube = new Entity();
@@ -155,7 +156,6 @@ bool Game::Update()
 	END_TIME_BLOCK("Game::Update");
 
 	Render();
-	
 	return true;
 }
 
@@ -193,6 +193,8 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
+		myPointLight->Render(myCamera);
+
 	}
 
 	END_TIME_BLOCK("Game::Render");

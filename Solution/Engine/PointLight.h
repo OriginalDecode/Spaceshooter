@@ -5,7 +5,9 @@ namespace Prism
 	class PointLight
 	{
 	public:
+		void Initiate();
 		void Update();
+		void Render(class Camera* aCamera);
 
 		const CU::Vector4<float>& GetColor() const;
 		void SetColor(const CU::Vector4<float>& aVector);
@@ -22,10 +24,14 @@ namespace Prism
 
 	private:
 		CU::Vector4<float> myColor;
-		CU::Vector4<float> myPosition;
-		CU::Matrix44<float> myOrientation;
 		CU::Vector4<float> myOriginalPosition;
+		CU::Vector4<float> myPosition;
+
+		CU::Matrix44<float> myOrientation;
+
 		float myRange;
+
+		class Instance* myInstance;
 	};
 }
 
