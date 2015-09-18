@@ -17,6 +17,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 
 void InputComponent::Update(float aDeltaTime)
 {
+	aDeltaTime;
 	if (myInputWrapper->KeyIsPressed(DIK_U))
 	{
 		myEntity->SendMessage(eMessage::MOVE_UP);

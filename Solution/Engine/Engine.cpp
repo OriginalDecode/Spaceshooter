@@ -1,11 +1,12 @@
 #include "stdafx.h"
 
-#include "Engine.h"
 #include "DebugDataDisplay.h"
 #include "DirectX.h"
 #include <DL_Debug.h>
+#include "Engine.h"
 #include "Model.h"
 #include <TimerManager.h>
+#include "Text.h"
 #include "TextureContainer.h"
 #include "VTuneApi.h"
 
@@ -93,7 +94,9 @@ bool Prism::Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 
 	myDebugDataDisplay.Init();
 
-
+	
+	myDebugText = new Text();
+	myDebugText->Init(GetFontContainer().GetFont("Data/resources/font/font.dds"));
 
 	ENGINE_LOG("Engine Init Successful");
 	return true;
@@ -111,6 +114,12 @@ Prism::Model* Prism::Engine::LoadModel(const std::string& aPath, Effect* aEffect
 	RESOURCE_LOG("Model \"%s\" took %d ms to load", aPath.c_str(), elapsed);
 
 	return model;
+}
+
+void Prism::Engine::PrintDebugText(const Camera& aCamera, const std::string& aText
+	, const CU::Vector2<float>& aPosition, float aScale)
+{
+	myDebugText->Render(aCamera, aText.c_str(), aPosition.x, aPosition.y, aScale);
 }
 
 void Prism::Engine::EnableZBuffer()

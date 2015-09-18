@@ -23,9 +23,8 @@ namespace Prism
 
 		void Init(Font* aFont);
 
-		void Render(const Camera& aCamera);
+		void Render(const Camera& aCamera, const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
 
-		void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
 
 		const float& GetTextWidth() const;
 
@@ -45,6 +44,7 @@ namespace Prism
 		void CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, 
 				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
 
+		void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale);
 
 		Font* myFont;
 		Effect* myEffect;
