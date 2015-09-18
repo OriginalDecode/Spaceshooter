@@ -1,11 +1,15 @@
 Matrix World;
 Matrix View;
 Matrix Projection;
-
+	
 Texture2D DiffuseTexture;
 
-float4 myLightDir[1];
-float4 myLightColor[1];
+float4 DirectionalLightDir[1];
+float4 DirectionalLightColor[1];
+
+float4 PointLightPosition[3];
+float4 PointLightColor[3];
+float PointLightRange[3];
 
 SamplerState linearSampling
 {
@@ -42,8 +46,8 @@ float4 PS(PS_INPUT input) : SV_Target
 {
 	float ambient = 0.3;
 	float4 finalColor = DiffuseTexture.Sample(linearSampling, input.Tex) * ambient;
-	float lambert = dot((float3)myLightDir[0], input.Norm);
-	float4 lightColor = saturate(lambert * myLightColor[0]);
+	float lambert = dot((float3)DirectionalLightDir[0], input.Norm);
+	float4 lightColor = saturate(lambert * DirectionalLightColor[0]);
 	finalColor += lightColor;
 	
 	finalColor.a = 1;

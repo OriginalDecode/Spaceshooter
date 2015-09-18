@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <Camera.h>
+#include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
 #include "Entity.h"
@@ -42,18 +43,11 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myPointLight = new Prism::PointLight();
-	myPointLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
-	myPointLight->SetPosition({ 0.f, 0.f, 0.f, 1.f });
-	myPointLight->SetRange(50.f);
+	myLight = new Prism::DirectionalLight();
+	myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
+	myLight->SetDir({ 0.f, 0.5f, -1.f });
 	myEntities.Init(4);
 	
-	//Entity* cube = new Entity();
-	//cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/companion/companion.fbx"
-	//	, "Data/effect/BasicEffect.fx");
-	//cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	//myEntities.Add(cube);
-
 	for (int i = 0; i < 50; ++i)
 	{
 		Entity* astroids = new Entity();
@@ -66,9 +60,9 @@ bool Game::Init(HWND& aHwnd)
 	Prism::MeshData geometryData;
 	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
 
-	//Entity* geometry = new Entity();
-	//geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
-	//myEntities.Add(geometry);
+	Entity* geometry = new Entity();
+	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
+	myEntities.Add(geometry);
 
 	for (int i = 0; i < 100; ++i)
 	{
@@ -101,7 +95,7 @@ bool Game::Init(HWND& aHwnd)
 		}
 	}
 
-	myScene->AddLight(myPointLight);
+	myScene->AddLight(myLight);
 
 	myRenderStuff = true;
 
@@ -176,6 +170,7 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
+	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
