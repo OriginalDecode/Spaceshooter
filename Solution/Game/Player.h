@@ -35,4 +35,6 @@ private:
 	CU::Vector2<float> myCursorPosition;
 
 	CU::InputWrapper& myInputWrapper;
+
+	float mySteeringModifier;
 };

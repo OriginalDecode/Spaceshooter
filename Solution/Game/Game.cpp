@@ -42,9 +42,16 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLight = new Prism::DirectionalLight();
-	myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
-	myLight->SetDir({ 0.f, 0.5f, -1.f });
+	//myLight = new Prism::DirectionalLight();
+	//myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
+	//myLight->SetDir({ 0.f, 0.5f, -1.f });
+
+	myPointLight = new Prism::PointLight();
+	myPointLight->SetColor({ 1.f, 1.f, 1.f, 1.f });
+	myPointLight->SetPosition({ 0, 0, 0, 0 });
+	myPointLight->SetRange(50.f);
+	myPointLight->Initiate();
+
 	myEntities.Init(4);
 	
 	mySkyboxModel = new Prism::Model();
@@ -82,7 +89,7 @@ bool Game::Init(HWND& aHwnd)
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
-
+	myScene->AddLight(myPointLight);
 	myScene->AddInstance(mySkybox);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
@@ -95,7 +102,7 @@ bool Game::Init(HWND& aHwnd)
 		}
 	}
 
-	myScene->AddLight(myLight);
+//	myScene->AddLight(myLight);
 
 	myRenderStuff = true;
 
@@ -172,7 +179,7 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
-	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
+	//myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -190,6 +197,7 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
+		myPointLight->Render(myCamera);
 	}
 
 	END_TIME_BLOCK("Game::Render");

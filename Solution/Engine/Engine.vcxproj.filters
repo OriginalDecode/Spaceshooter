@@ -42,6 +42,9 @@
     <ClCompile Include="FontContainer.cpp">
       <Filter>Text</Filter>
     </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />

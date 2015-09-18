@@ -3,12 +3,13 @@
 #include "../Engine/Text.h"
 #include <InputWrapper.h>
 #include "Player.h"
+#include <sstream>
 
 
 Player::Player(CU::InputWrapper& aInputWrapper)
 	: myInputWrapper(aInputWrapper)
 {
-	myCursorPosition;
+	mySteeringModifier = 1.7f;
 }
 
 CU::Matrix44f& Player::GetOrientation() 
@@ -53,9 +54,27 @@ void Player::Update(float aDeltaTime)
 	float x = myCursorPosition.x;
 	float y = myCursorPosition.y;
 
-	myOrientation = myOrientation.CreateRotateAroundY((fabs(x + (pow((x), 4)))  * negateX) * aDeltaTime)
+	if (x < 0.001f && x > -0.001f)
+	{
+		x = 0;
+	}
+	if (y < 0.001f && y > -0.001f)
+	{
+		y = 0;
+	}
+
+
+	float xRotation = (fabs((x*x) * mySteeringModifier)  * negateX) * aDeltaTime;
+	float yRotation = (fabs((y*y) * mySteeringModifier)  * negateY) * aDeltaTime;
+
+	std::stringstream ss;
+	ss << "\nCursorPosX: " << xRotation << " CursorPosY: " << yRotation;
+	OutputDebugStringA(ss.str().c_str());
+
+
+	myOrientation = myOrientation.CreateRotateAroundY(xRotation)
 		* myOrientation;
-	myOrientation = myOrientation.CreateRotateAroundX((fabs(y + (pow((y), 4)))  * negateY) * aDeltaTime)
+	myOrientation = myOrientation.CreateRotateAroundX(yRotation)
 		* myOrientation;
 
 }

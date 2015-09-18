@@ -48,6 +48,7 @@ private:
 	Prism::Scene* myScene;
 	Prism::Camera* myCamera;
 	Prism::DirectionalLight* myLight;
+	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
 	CU::GrowingArray<Entity*> myEntities;
 	Player* myPlayer;
