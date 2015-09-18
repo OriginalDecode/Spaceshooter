@@ -19,14 +19,25 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	XMLReader reader;
 	reader.OpenDocument("Data/script/player.xml");
 	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	myRotationSpeed = 0.f;
+	myMovementSpeed = 0.f;
 }
 
 void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		MoveForward(50.f * aDeltaTime);
+		myMovementSpeed = 50.f;
 	}
+	else
+	{
+		myMovementSpeed -= globalPi / 128.f;
+		if (myMovementSpeed <= 0.f)
+		{
+			myMovementSpeed = 0.f;
+		}
+	}
+	MoveForward(myMovementSpeed * aDeltaTime);
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		MoveBackward(50.f * aDeltaTime);
@@ -40,14 +51,7 @@ void InputComponent::Update(float aDeltaTime)
 		MoveRight(50.f * aDeltaTime);
 	}
 
-	if (myInputWrapper->KeyIsPressed(DIK_Q))
-	{
-		RotateZ(globalPi / 4.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_E))
-	{
-		RotateZ(-(globalPi / 4.f * aDeltaTime));
-	}
+	Rotate(aDeltaTime);
 
 	if (myInputWrapper->MouseDown(0))
 	{
@@ -78,4 +82,44 @@ void InputComponent::Update(float aDeltaTime)
 
 	RotateX(yRotation);
 	RotateY(xRotation);
+}
+
+void InputComponent::Rotate(float aDeltaTime)
+{
+	if (myInputWrapper->KeyIsPressed(DIK_Q))
+	{
+		myRotationSpeed += globalPi / 128.f;
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_E))
+	{
+		myRotationSpeed -= globalPi / 128.f;
+	}
+
+	if (myRotationSpeed > globalPi * 2)
+	{
+		myRotationSpeed = globalPi * 2;
+	}
+	if (myRotationSpeed < -(globalPi)* 2)
+	{
+		myRotationSpeed = -(globalPi)* 2;
+	}
+
+	if (myRotationSpeed > 0.f)
+	{
+		myRotationSpeed -= globalPi / 256.f;
+		if (myRotationSpeed < 0.f)
+		{
+			myRotationSpeed = 0.f;
+		}
+	}
+	else if (myRotationSpeed < 0.f)
+	{
+		myRotationSpeed += globalPi / 256.f;
+		if (myRotationSpeed > 0.f)
+		{
+			myRotationSpeed = 0.f;
+		}
+	}
+
+	RotateZ(myRotationSpeed * aDeltaTime);
 }

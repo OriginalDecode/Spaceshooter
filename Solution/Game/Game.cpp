@@ -28,6 +28,7 @@ Game::Game()
 	myInputWrapper = new CU::InputWrapper();
 	myPlayer = new Player(*myInputWrapper);
 	myShowPointLightCube = false;
+	ShowCursor(false);
 }
 
 Game::~Game()
