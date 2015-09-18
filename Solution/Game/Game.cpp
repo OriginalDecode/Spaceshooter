@@ -193,6 +193,7 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
+		myPlayer->Render(&myScene->GetCamera());
 	}
 
 	END_TIME_BLOCK("Game::Render");
