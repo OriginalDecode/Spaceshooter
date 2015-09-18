@@ -12,7 +12,7 @@ namespace Prism
 	{
 		Model* model;
 		model = new Model();
-		model->InitCube(1, 1, 1);
+		model->InitLightCube(1, 1, 1);
 		myInstance = new Instance(*model);
 	}
 
