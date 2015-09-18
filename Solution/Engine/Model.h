@@ -25,6 +25,7 @@ namespace Prism
 		void Init();
 		void InitPolygon();
 		void InitCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
+		void InitSkyblox(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
 		void AddChild(Model* aChild);
 		void InitGeometry(const MeshData& aMeshData);
 

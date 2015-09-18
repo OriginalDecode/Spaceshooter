@@ -54,6 +54,11 @@ bool Game::Init(HWND& aHwnd)
 	//cube->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	//myEntities.Add(cube);
 
+	mySkyboxModel = new Prism::Model();
+	mySkyboxModel->InitSkyblox(500, 500, 500);
+	mySkybox = new Prism::Instance(*mySkyboxModel);
+	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
+
 	for (int i = 0; i < 50; ++i)
 	{
 		Entity* astroids = new Entity();
@@ -90,6 +95,8 @@ bool Game::Init(HWND& aHwnd)
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
+
+	myScene->AddInstance(mySkybox);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -153,6 +160,8 @@ bool Game::Update()
 	LogicUpdate(deltaTime);
 
 	END_TIME_BLOCK("Game::Update");
+
+	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	Render();
 	
