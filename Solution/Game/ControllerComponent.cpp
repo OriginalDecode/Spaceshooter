@@ -2,33 +2,58 @@
 
 #include "ControllerComponent.h"
 #include "Entity.h"
+#include "TranslationMessage.h"
 
-void ControllerComponent::MoveUp()
+void ControllerComponent::MoveUp(float aDistance)
 {
-	myEntity->SendMessage(eMessage::MOVE_UP);
+	TranslationMessage msg(eTranslationType::MOVE_UP, aDistance);
+	myEntity->SendMessage(msg);
 }
 
-void ControllerComponent::MoveDown()
+void ControllerComponent::MoveDown(float aDistance)
 {
-	myEntity->SendMessage(eMessage::MOVE_DOWN);
+	TranslationMessage msg(eTranslationType::MOVE_DOWN, aDistance);
+	myEntity->SendMessage(msg);
 }
 
-void ControllerComponent::MoveLeft()
+void ControllerComponent::MoveLeft(float aDistance)
 {
-	myEntity->SendMessage(eMessage::MOVE_LEFT);
+	TranslationMessage msg(eTranslationType::MOVE_LEFT, aDistance);
+	myEntity->SendMessage(msg);
 }
 
-void ControllerComponent::MoveRight()
+void ControllerComponent::MoveRight(float aDistance)
 {
-	myEntity->SendMessage(eMessage::MOVE_RIGHT);
+	TranslationMessage msg(eTranslationType::MOVE_RIGHT, aDistance);
+	myEntity->SendMessage(msg);
 }
 
-void ControllerComponent::MoveForward()
+void ControllerComponent::MoveForward(float aDistance)
 {
-	myEntity->SendMessage(eMessage::MOVE_FORWARD);
+	TranslationMessage msg(eTranslationType::MOVE_FORWARD, aDistance);
+	myEntity->SendMessage(msg);
 }
 
-void ControllerComponent::MoveBackward()
+void ControllerComponent::MoveBackward(float aDistance)
 {
-	myEntity->SendMessage(eMessage::MOVE_BACKWARD);
+	TranslationMessage msg(eTranslationType::MOVE_BACKWARD, aDistance);
+	myEntity->SendMessage(msg);
+}
+
+void ControllerComponent::RotateX(float aAmount)
+{
+	TranslationMessage msg(eTranslationType::ROTATE_X, aAmount);
+	myEntity->SendMessage(msg);
+}
+
+void ControllerComponent::RotateY(float aAmount)
+{
+	TranslationMessage msg(eTranslationType::ROTATE_Y, aAmount);
+	myEntity->SendMessage(msg);
+}
+
+void ControllerComponent::RotateZ(float aAmount)
+{
+	TranslationMessage msg(eTranslationType::ROTATE_Z, aAmount);
+	myEntity->SendMessage(msg);
 }

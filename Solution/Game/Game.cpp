@@ -42,9 +42,9 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	//myLight = new Prism::DirectionalLight();
-	//myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
-	//myLight->SetDir({ 0.f, 0.5f, -1.f });
+	myLight = new Prism::DirectionalLight();
+	myLight->SetColor({ 1.f, 0.f, 0.f, 1.f });
+	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
 	myPointLight = new Prism::PointLight();
 	myPointLight->SetColor({ 1.f, 1.f, 1.f, 1.f });
@@ -102,7 +102,7 @@ bool Game::Init(HWND& aHwnd)
 		}
 	}
 
-//	myScene->AddLight(myLight);
+	myScene->AddLight(myLight);
 
 	myRenderStuff = true;
 

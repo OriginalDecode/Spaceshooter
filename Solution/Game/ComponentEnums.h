@@ -1,5 +1,5 @@
 #pragma once
-enum class eMessage
+enum class eTranslationType
 {
 	MOVE_LEFT,
 	MOVE_RIGHT,
@@ -7,4 +7,7 @@ enum class eMessage
 	MOVE_DOWN,
 	MOVE_FORWARD,
 	MOVE_BACKWARD,
+	ROTATE_X,
+	ROTATE_Y,
+	ROTATE_Z,
 };

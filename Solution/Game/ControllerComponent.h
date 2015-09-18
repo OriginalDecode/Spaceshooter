@@ -3,17 +3,20 @@
 class ControllerComponent : public Component
 {
 public:
-	virtual void MoveUp();
-	virtual void MoveDown();
-	virtual void MoveLeft();
-	virtual void MoveRight();
-	virtual void MoveForward();
-	virtual void MoveBackward();
+	void MoveUp(float aDistance);
+	void MoveDown(float aDistance);
+	void MoveLeft(float aDistance);
+	void MoveRight(float aDistance);
+	void MoveForward(float aDistance);
+	void MoveBackward(float aDistance);
+	void RotateX(float aAmount);
+	void RotateY(float aAmount);
+	void RotateZ(float aAmount);
 
 	static int GetID();
 };
 
 inline int ControllerComponent::GetID()
 {
-	return 2;
+	return 1;
 }

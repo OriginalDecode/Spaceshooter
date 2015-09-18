@@ -17,22 +17,22 @@ void AIComponent::Update(float aDeltaTime)
 	switch (myDecision)
 	{
 	case 0:
-		MoveLeft();
+		MoveLeft(150.f * aDeltaTime);
 		break;
 	case 1:
-		MoveRight();
+		MoveRight(150.f * aDeltaTime);
 		break;
 	case 2:
-		MoveUp();
+		MoveUp(150.f * aDeltaTime);
 		break;
 	case 3:
-		MoveDown();
+		MoveDown(150.f * aDeltaTime);
 		break;
 	case 4:
-		MoveForward();
+		MoveForward(150.f * aDeltaTime);
 		break;
 	case 5:
-		MoveBackward();
+		MoveBackward(150.f * aDeltaTime);
 		break;
 	}
 }

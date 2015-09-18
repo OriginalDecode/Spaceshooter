@@ -1,5 +1,4 @@
 #pragma once
-#include "ComponentEnums.h"
 #include <unordered_map>
 #undef SendMessage
 
@@ -17,7 +16,8 @@ public:
 	template <typename T>
 	T* GetComponent();
 
-	void SendMessage(eMessage aMessage);
+	template <typename T>
+	void SendMessage(const T& aMessage);
 
 private:
 	std::unordered_map<int, Component*> myComponents;
@@ -43,4 +43,13 @@ T* Entity::GetComponent()
 	}
 
 	return static_cast<T*>(it->second);
+}
+
+template <typename T>
+void Entity::SendMessage(const T& aMessage)
+{
+	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
+	{
+		it->second->ReceiveMessage(aMessage);
+	}
 }
