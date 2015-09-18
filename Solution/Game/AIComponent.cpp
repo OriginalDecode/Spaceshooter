@@ -17,24 +17,24 @@ void AIComponent::Update(float aDeltaTime)
 
 	switch (myDecision)
 	{
-	case 0:
-		MoveLeft(10.f * aDeltaTime);
-		break;
-	case 1:
-		MoveRight(10.f * aDeltaTime);
-		break;
-	case 2:
-		MoveUp(10.f * aDeltaTime);
-		break;
-	case 3:
-		MoveDown(10.f * aDeltaTime);
-		break;
-	case 4:
-		MoveForward(10.f * aDeltaTime);
-		break;
-	case 5:
-		MoveBackward(10.f * aDeltaTime);
-		break;
+	//case 0:
+	//	MoveLeft(10.f * aDeltaTime);
+	//	break;
+	//case 1:
+	//	MoveRight(10.f * aDeltaTime);
+	//	break;
+	//case 2:
+	//	MoveUp(10.f * aDeltaTime);
+	//	break;
+	//case 3:
+	//	MoveDown(10.f * aDeltaTime);
+	//	break;
+	//case 4:
+	//	MoveForward(10.f * aDeltaTime);
+	//	break;
+	//case 5:
+	//	MoveBackward(10.f * aDeltaTime);
+	//	break;
 	case 6:
 		RotateX(globalPi / 4.f * aDeltaTime);
 		break;

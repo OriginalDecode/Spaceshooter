@@ -2,6 +2,7 @@
 
 #include "ComponentEnums.h"
 #include "Constants.h"
+#include <Engine.h>
 #include "Entity.h"
 #include "InputComponent.h"
 #include <InputWrapper.h>
@@ -16,11 +17,14 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
 	myInputWrapper = &aInputWrapper;
 
-	XMLReader reader;
-	reader.OpenDocument("Data/script/player.xml");
-	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	
 	myRotationSpeed = 0.f;
 	myMovementSpeed = 0.f;
+
+
+	Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
+
+	ReadXML("Data/script/player.xml");
 }
 
 void InputComponent::Update(float aDeltaTime)
@@ -82,6 +86,13 @@ void InputComponent::Update(float aDeltaTime)
 
 	RotateX(yRotation);
 	RotateY(xRotation);
+}
+
+void InputComponent::ReadXML(const std::string& aFile)
+{
+	XMLReader reader;
+	reader.OpenDocument(aFile);
+	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
 }
 
 void InputComponent::Rotate(float aDeltaTime)

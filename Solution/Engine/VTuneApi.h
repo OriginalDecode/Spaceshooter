@@ -1,6 +1,6 @@
 #pragma once
 
-#define USE_VTUNE_API
+//#define USE_VTUNE_API
 
 #ifdef USE_VTUNE_API
 

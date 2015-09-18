@@ -1,9 +1,10 @@
 #pragma once
 
+#include "DebugDataDisplay.h"
 #include "EffectContainer.h"
 #include "FBXFactory.h"
+#include "FileWatcher.h"
 #include "FontContainer.h"
-#include "DebugDataDisplay.h"
 
 class Text;
 
@@ -32,6 +33,8 @@ namespace Prism
 		EffectContainer& GetEffectContainer();
 		FontContainer& GetFontContainer();
 		DebugDataDisplay& GetDebugDisplay();
+		FileWatcher& GetFileWatcher();
+
 		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
 		void PrintDebugText(const Camera& aCamera, const std::string& aText
@@ -53,6 +56,7 @@ namespace Prism
 		FBXFactory myModelFactory;
 		FontContainer myFontContainer;
 		DebugDataDisplay myDebugDataDisplay;
+		FileWatcher myFileWatcher;
 
 		Text* myDebugText;
 
@@ -78,4 +82,9 @@ inline Prism::FontContainer& Prism::Engine::GetFontContainer()
 inline Prism::DebugDataDisplay& Prism::Engine::GetDebugDisplay()
 {
 	return myDebugDataDisplay;
+}
+
+inline Prism::FileWatcher& Prism::Engine::GetFileWatcher()
+{
+	return myFileWatcher;
 }

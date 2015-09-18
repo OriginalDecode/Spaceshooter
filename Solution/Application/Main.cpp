@@ -96,7 +96,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 				break;
 			}
 
-			SetCursorPos(globalClientWidth / 2, globalClientHeight / 2);
+			//SetCursorPos(globalClientWidth / 2, globalClientHeight / 2);
 
 			Prism::Engine::GetInstance()->Render();
 		}

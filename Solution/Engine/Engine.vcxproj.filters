@@ -45,6 +45,7 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
+    <ClCompile Include="FileWatcher.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -113,6 +114,7 @@
     <ClInclude Include="DirectionalLight.h">
       <Filter>Lights</Filter>
     </ClInclude>
+    <ClInclude Include="FileWatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">

@@ -16,6 +16,8 @@ public:
 
 private:
 	void operator=(const InputComponent&) = delete;
+	void ReadXML(const std::string& aFile);
+
 	void Rotate(float aDeltaTime);
 	CU::InputWrapper* myInputWrapper;
 

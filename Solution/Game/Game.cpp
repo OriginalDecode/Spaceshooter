@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AIComponent.h"
+#include "BulletManager.h"
 #include <Camera.h>
 #include "Constants.h"
 #include <DebugDataDisplay.h>
@@ -10,7 +11,6 @@
 #include "Game.h"
 #include <GeometryGenerator.h>
 #include "GraphicsComponent.h"
-#include <GeometryGenerator.h>
 #include "InputComponent.h"
 #include <InputWrapper.h>
 #include <Instance.h>
@@ -19,11 +19,9 @@
 #include <PointLight.h>
 #include <Scene.h>
 #include "ShootingComponent.h"
-#include <Text.h>
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
-#include "BulletManager.h"
 
 Game::Game()
 {
@@ -119,10 +117,10 @@ bool Game::Init(HWND& aHwnd)
 
 	myRenderStuff = true;
 
-
 	GAME_LOG("Init Successful");
 	return true;
 }
+
 
 bool Game::Destroy()
 {
@@ -170,15 +168,17 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 
-	float R = (rand()% 255+1);
-	float G = (rand()% 255+1);
-	float B = (rand()% 255+1);
-
-	myLight->SetColor({ R/255.f, G/255.f, B/255.f, 1.f });
+	//float R = (rand()% 255+1);
+	//float G = (rand()% 255+1);
+	//float B = (rand()% 255+1);
+	//
+	//myLight->SetColor({ R/255.f, G/255.f, B/255.f, 1.f });
 
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	myBulletManager->Update(deltaTime);
+
+	Prism::Engine::GetInstance()->GetFileWatcher().CheckFiles();
 
 	END_TIME_BLOCK("Game::Update");
 

@@ -22,6 +22,9 @@ namespace Prism
 		void UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges);
 		void UpdateTime(const float aDeltaTime);
 
+
+		void ReloadShader(const std::string& aFile);
+
 	private:
 		ID3DX11Effect* myEffect;
 		ID3DX11EffectMatrixVariable* myProjectionMatrixVariable;

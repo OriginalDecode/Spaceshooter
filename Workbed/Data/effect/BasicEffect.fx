@@ -37,7 +37,7 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 	float3x3 tangentSpaceMatrix = float3x3(input.Tangent, input.BiNormal, input.Normal);
 	norm = normalize(mul(norm, tangentSpaceMatrix));
 
-	float ambient = 0.1;
+	float ambient = 0.1f;
 	float4 finalColor = DiffuseTexture.Sample(linearSampling, input.Tex) * ambient;
 	
 	for(int i = 0; i < 1; ++i)
@@ -73,7 +73,7 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 	}
 	
 	
-	finalColor.a = 1;
+	finalColor.a = 1.f;
 	
 	return finalColor;
 }
