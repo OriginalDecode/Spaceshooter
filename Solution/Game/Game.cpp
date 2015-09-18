@@ -164,6 +164,12 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 
+	float R = (rand()% 255+1);
+	float G = (rand()% 255+1);
+	float B = (rand()% 255+1);
+
+	myLight->SetColor({ R/255.f, G/255.f, B/255.f, 1.f });
+
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	END_TIME_BLOCK("Game::Update");
