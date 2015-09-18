@@ -1,6 +1,7 @@
 #pragma once
 
-class TempMessage;
+class Message;
+class BulletMessage;
 
 class Subscriber
 {
@@ -8,6 +9,7 @@ public:
 	Subscriber();
 	~Subscriber();
 
-	virtual void ReceiveMessage(const TempMessage& aMessage);
+	virtual void ReceiveMessage(const Message& aMessage);
+	virtual void ReceiveMessage(const BulletMessage& aMessage);
 };
 
