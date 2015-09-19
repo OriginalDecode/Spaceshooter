@@ -218,11 +218,17 @@ void Prism::DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 	myText->Render(aCamera, myStringStream.str().c_str()
 		, myFrameTimeStartPos.x, myFrameTimeStartPos.y - 30.f, myTextScale);
 
-	float graphHeight = 50.f;
+	float graphHeight = 50;
 	float graphWidth = 200.f;
 	myGraphRenderer.Render(aCamera, myFrameData.myFrameTimes
-		, { myFrameTimeStartPos.x - graphWidth - 40.f, myFrameTimeStartPos.y - 30.f }
+		, { myFrameTimeStartPos.x - graphWidth - 40.f, myFrameTimeStartPos.y - 40.f }
 		, { graphWidth, graphHeight }, 16.f, myBoolContainer.at(eBitSetEnum::NEW_GRAPH_DATA));
+		
+	//float graphHeight = 250.f;
+	//float graphWidth = 1000.f;
+	//myGraphRenderer.Render(aCamera, myFrameData.myFrameTimes
+	//	, { 100.f, -300.f }
+	//	, { graphWidth, graphHeight }, 16.f, myBoolContainer.at(eBitSetEnum::NEW_GRAPH_DATA));
 }
 
 

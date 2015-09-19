@@ -22,7 +22,8 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myMovementSpeed = 0.f;
 
 
-	Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
+	//Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
+	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
 
 	ReadXML("Data/script/player.xml");
 }

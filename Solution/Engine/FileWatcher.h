@@ -1,5 +1,8 @@
 #pragma once
 
+
+#define WATCH_FILE(FILE, FUNCTION) (Prism::Engine::GetInstance()->GetFileWatcher().WatchFile(FILE, std::bind(&FUNCTION, this, FILE)))
+
 #include <functional>
 
 namespace Prism

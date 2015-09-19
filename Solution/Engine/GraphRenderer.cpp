@@ -147,6 +147,12 @@ void Prism::GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArra
 
 	CU::Vector2<float> columnSize(widthPerElement, aGraphSize.y);
 	int index = 0;
+	CreateFirstTri(aTopLeftDrawPos, { aGraphSize.x + aDataArray.Size(), 3 }, index, 1.f);
+	index += 3;
+
+	CreateSecondTri(aTopLeftDrawPos, { aGraphSize.x + aDataArray.Size(), 3 }, index, 1.f);
+	index += 3;
+
 	for (int i = 0; i < aDataArray.Size(); ++i)
 	{
 		float heightCoef = fminf(1.f, (aDataArray[i] / aMaxValue));
@@ -157,7 +163,7 @@ void Prism::GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArra
 		CreateSecondTri(botLeft, columnSize, index, heightCoef);
 		index += 3;
 
-		botLeft.x += widthPerElement;
+		botLeft.x += widthPerElement + 1;
 	}
 
 	SetupVertexBuffer();
