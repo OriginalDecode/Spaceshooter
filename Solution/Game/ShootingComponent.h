@@ -15,8 +15,7 @@ public:
 	static int GetID();
 
 private:
-	Entity* myBullet;
-	bool myIsShooting;
+
 	CU::Vector3<float> myPosition;
 	CU::Vector3<float> myForward;
 };

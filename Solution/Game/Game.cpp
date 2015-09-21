@@ -40,6 +40,7 @@ Game::~Game()
 	delete myCamera;
 	delete myInputWrapper;
 	delete myScene;
+	delete myBulletManager;
 	myEntities.DeleteAll();
 	PostMaster::Destroy();
 }

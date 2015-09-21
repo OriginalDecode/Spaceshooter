@@ -10,29 +10,15 @@
 
 void ShootingComponent::Init()
 {
-	myBullet = new Entity();
-	myBullet->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
-		"Data/effect/BasicEffect.fx");
-	
-	myBullet->AddComponent<PhysicsComponent>()->Init({ 0, 0, 0 }, { 0, 0, 0 });
-	myIsShooting = false;
 }
 
-
-void ShootingComponent::Update(float aDeltaTime)
+void ShootingComponent::Update(float)
 {
-	if (myIsShooting == true)
-	{
-		myBullet->Update(aDeltaTime);
-	}
 }
 
 void ShootingComponent::ReceiveMessage(const ShootMessage& aMessage)
 {
 	PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, myForward * aMessage.GetSpeed(), myPosition));
-	//myBullet->GetComponent<PhysicsComponent>()->Init(myForward * aMessage.GetSpeed(), myPosition);
-	//myIsShooting = true;
-	//myBullet->GetComponent<GraphicsComponent>()->SetSelfRender(myEntity->myCamera);
 }
 
 void ShootingComponent::ReceiveMessage(const RefreshOrientationMessage&)
