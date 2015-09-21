@@ -5,6 +5,8 @@
 
 struct ID3D11BlendState;
 struct ID3D11InputLayout;
+struct D3D11_BUFFER_DESC;
+struct D3D11_SUBRESOURCE_DATA;
 
 namespace Prism
 {
@@ -13,6 +15,7 @@ namespace Prism
 	class Surface;
 	class Camera;
 
+	
 	struct IndexBufferWrapper;
 	struct VertexBufferWrapper;
 	class Text

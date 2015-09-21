@@ -4,6 +4,7 @@
 #include "EffectListener.h"
 #include <GrowingArray.h>
 #include <Matrix.h>
+#include "Vertices.h"
 
 
 namespace Prism

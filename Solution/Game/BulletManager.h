@@ -1,4 +1,5 @@
 #pragma once
+#include <bitset>
 #include "Entity.h"
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
@@ -27,9 +28,6 @@ public:
 	void ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition);
 
 private:
-
-
-
 
 	CU::GrowingArray<Entity*> myBoxBullets;
 	std::bitset<BULLET_AMOUNT> myIsActiveBoxBullets;

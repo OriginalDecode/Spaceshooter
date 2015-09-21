@@ -2,6 +2,7 @@
 
 #include "DebugDataDisplay.h"
 #include "Font.h"
+#include "FontContainer.h"
 #include <Psapi.h>
 #include <sstream>
 #include "Text.h"
@@ -20,7 +21,7 @@ Prism::DebugDataDisplay::DebugDataDisplay()
 void Prism::DebugDataDisplay::Init()
 {
 	myText = new Text();
-	myText->Init(Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
+	myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
 
 	LARGE_INTEGER largeInteger;
 	QueryPerformanceFrequency(&largeInteger);
@@ -66,11 +67,11 @@ void Prism::DebugDataDisplay::EndFunctionTimer(const std::string& aFunc)
 
 			it->second.myNameText = new Text();
 			it->second.myNameText->Init(
-				Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
+				Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
 
 			it->second.myTimeText = new Text();
 			it->second.myTimeText->Init(
-				Engine::GetInstance()->GetFontContainer().GetFont("Data/resources/font/font.dds"));
+				Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
 		}
 
 		LARGE_INTEGER time;

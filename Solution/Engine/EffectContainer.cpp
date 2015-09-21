@@ -1,7 +1,9 @@
 #include "stdafx.h"
 
+#include "Engine.h"
 #include "Effect.h"
 #include "EffectContainer.h"
+#include "FileWatcher.h"
 
 Prism::Effect* Prism::EffectContainer::GetEffect(const std::string& aFilePath)
 {
@@ -27,6 +29,11 @@ void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 
 void Prism::EffectContainer::ReloadEffect(const std::string& aFilePath)
 {
+	if (myEffects.find(aFilePath) == myEffects.end())
+	{
+		return;
+	}
+
 	myEffects[aFilePath]->Init(aFilePath);
 }
 

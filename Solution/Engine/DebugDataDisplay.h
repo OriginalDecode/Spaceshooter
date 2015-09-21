@@ -1,7 +1,7 @@
 #pragma once
 #define TIME_FUNCTION Prism::Debug_BlockTimer funcTimer__(__FUNCTION__);
-#define BEGIN_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay().StartFunctionTimer(NAME);
-#define END_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay().EndFunctionTimer(NAME);
+#define BEGIN_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay()->StartFunctionTimer(NAME);
+#define END_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay()->EndFunctionTimer(NAME);
 
 
 #include <bitset>

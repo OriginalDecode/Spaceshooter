@@ -1,7 +1,9 @@
 #include "stdafx.h"
 
+
 #include "GeometryGenerator.h"
 #include "Effect.h"
+#include "EffectContainer.h"
 #include "Engine.h"
 #include "IndexBufferWrapper.h"
 #include "Model.h"
@@ -61,7 +63,7 @@ void Prism::Model::Init()
 
 void Prism::Model::InitPolygon()
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/PolygonEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/PolygonEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -113,7 +115,7 @@ void Prism::Model::InitPolygon()
 
 void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/CubeEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/CubeEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -261,7 +263,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 
 void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const float aDepth, CU::Vector4f aColour)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/CubeColored.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/CubeColored.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -409,7 +411,7 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 
 void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/SkyboxEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SkyboxEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -560,7 +562,7 @@ void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 
 void Prism::Model::InitGeometry(const MeshData& aMeshData)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GeometryEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/GeometryEffect.fx");
 	
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{

@@ -3,6 +3,7 @@
 #include "GraphicsComponent.h"
 #include "Entity.h"
 #include <Engine.h>
+#include <EffectContainer.h>
 #include <Instance.h>
 #include <Model.h>
 #include "RefreshOrientationMessage.h"
@@ -17,7 +18,7 @@ GraphicsComponent::GraphicsComponent()
 void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 {
 	Prism::Model* model = Prism::Engine::GetInstance()->LoadModel(aModelPath
-		, Prism::Engine::GetInstance()->GetEffectContainer().GetEffect(aEffectPath));
+		, Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
 
 	myInstance = new Prism::Instance(*model);
 }

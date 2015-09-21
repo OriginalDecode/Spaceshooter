@@ -94,8 +94,8 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 		}
 		if (compiledShader == nullptr)
 		{
-			int apa = 5;
-			++apa;
+			DL_MESSAGE_BOX("Something failed with ShaderCompilation that the normal error-message-blob did not catch"
+				, "Effect Error", MB_ICONWARNING);
 		}
 	}
 	if (compilationMsgs != nullptr)

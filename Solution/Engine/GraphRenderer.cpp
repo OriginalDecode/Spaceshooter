@@ -3,6 +3,7 @@
 #include "Camera.h"
 #include <D3D11.h>
 #include "Effect.h"
+#include "EffectContainer.h"
 #include "GraphRenderer.h"
 #include "IndexBufferWrapper.h"
 #include "Surface.h"
@@ -24,7 +25,7 @@ Prism::GraphRenderer::~GraphRenderer()
 
 void Prism::GraphRenderer::Init()
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/GraphEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/GraphEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{

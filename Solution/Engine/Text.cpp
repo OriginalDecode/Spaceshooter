@@ -1,14 +1,17 @@
 #include "stdafx.h"
-#include "Text.h"
-#include "Font.h"
-#include "Engine.h"
+
+#include <D3D11.h>
+#include "DebugDataDisplay.h"
+#include "Camera.h"
 #include "Effect.h"
+#include "EffectContainer.h"
+#include "Engine.h"
+#include "Font.h"
+#include "Text.h"
 #include <string.h>
 #include "VertexBufferWrapper.h"
 #include "IndexBufferWrapper.h"
 #include "Surface.h"
-#include "Camera.h"
-
 
 Prism::Text::Text()
 	: myHasText(false)
@@ -35,7 +38,7 @@ Prism::Text::~Text()
 void Prism::Text::Init(Font* aFont)
 {
 
-	myEffect = Engine::GetInstance()->GetEffectContainer().GetEffect("Data/effect/FontEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/FontEffect.fx");
 	myFont = aFont;
 	myCharSize = myFont->GetCharSize();
 

@@ -6,7 +6,9 @@
 #include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
+#include <EffectContainer.h>
 #include "Entity.h"
+#include <FileWatcher.h>
 #include <Font.h>
 #include "Game.h"
 #include <GeometryGenerator.h>
@@ -134,24 +136,24 @@ bool Game::Update()
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-	Prism::Engine::GetInstance()->GetEffectContainer().Update(deltaTime);
-	Prism::Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
+	Prism::Engine::GetInstance()->GetEffectContainer()->Update(deltaTime);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFunctionTimers();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleFunctionTimers();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F6))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleMemoryUsage();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleMemoryUsage();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F7))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleCPUUsage();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleCPUUsage();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F8))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleFrameTime();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F9))
 	{
@@ -178,7 +180,7 @@ bool Game::Update()
 
 	myBulletManager->Update(deltaTime);
 
-	Prism::Engine::GetInstance()->GetFileWatcher().CheckFiles();
+	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
 	END_TIME_BLOCK("Game::Update");
 
@@ -234,7 +236,7 @@ void Game::Render()
 
 	END_TIME_BLOCK("Game::Render");
 
-	Prism::Engine::GetInstance()->GetDebugDisplay().Render(*myCamera);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Render(*myCamera);
 
 	VTUNE_EVENT_END();
 }

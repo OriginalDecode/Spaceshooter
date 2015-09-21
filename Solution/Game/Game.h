@@ -1,6 +1,6 @@
 #pragma once
 #include <Matrix.h>
-
+#include <GrowingArray.h>
 namespace CommonUtilities
 {
 	class InputWrapper;
