@@ -66,20 +66,20 @@ void Prism::Instance::PerformTransformation(CU::Matrix44<float>& aTransformation
 	myOrientation = myOrientation * aTransformation;
 }
 
-void Prism::Instance::UpdateDirectionalLights(const CU::StaticArray<CU::Vector4<float>, 1>& someLightDirections,
-		const CU::StaticArray<CU::Vector4<float>, 1>& someLightColors)
+void Prism::Instance::UpdateDirectionalLights(
+	const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
-	if (myModel.GetIsSkybox() == false)
-	{
-		myModel.GetEffect()->UpdateDirectionalLight(someLightDirections, someLightColors);
-	}
+	myModel.GetEffect()->UpdateDirectionalLights(someDirectionalLightData);
 }
 
-void Prism::Instance::UpdatePointLights(const CU::StaticArray<CU::Vector4<float>, 3>& someLightPositions,
-		const CU::StaticArray<CU::Vector4<float>, 3>& someLightColors, const CU::StaticArray<float, 3>& someLightRanges)
+void Prism::Instance::UpdatePointLights(
+	const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData)
 {
-	if (myModel.GetIsSkybox() == false)
-	{
-		myModel.GetEffect()->UpdatePointLight(someLightPositions, someLightColors, someLightRanges);
-	}
+	myModel.GetEffect()->UpdatePointLights(somePointLightData);
+}
+
+void Prism::Instance::UpdateSpotLights(
+	const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData)
+{
+	myModel.GetEffect()->UpdateSpotLights(someSpotLightData);
 }

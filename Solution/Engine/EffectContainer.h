@@ -14,6 +14,7 @@ namespace Prism
 
 	private:
 		void LoadEffect(const std::string& aFilePath);
+		void ReloadEffect(const std::string& aFilePath);
 
 		std::unordered_map<std::string, Effect*> myEffects;
 	};

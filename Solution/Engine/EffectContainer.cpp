@@ -21,6 +21,14 @@ void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 	newEffect->Init(aFilePath);
 
 	myEffects[aFilePath] = newEffect;
+
+	WATCH_FILE(aFilePath, Prism::EffectContainer::ReloadEffect);
+}
+
+void Prism::EffectContainer::ReloadEffect(const std::string& aFilePath)
+{
+	myEffects[aFilePath] = new(myEffects[aFilePath]) Effect();
+	myEffects[aFilePath]->Init(aFilePath);
 }
 
 void Prism::EffectContainer::Update(const float aDeltaTime)

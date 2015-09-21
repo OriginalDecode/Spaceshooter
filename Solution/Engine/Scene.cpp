@@ -5,19 +5,18 @@
 #include "Instance.h"
 #include "PointLight.h"
 #include "Scene.h"
+#include "SpotLight.h"
 
 Prism::Scene::Scene()
 {
 	myInstances.Init(4);
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
+	mySpotLights.Init(4);
 
-	memset(&myDirectionalLightDirections[0], 0, sizeof(CU::Vector4<float>) * 1);
-	memset(&myDirectionalLightColors[0], 0, sizeof(CU::Vector4<float>) * 1);
-
-	memset(&myPointLightPositions[0], 0, sizeof(CU::Vector4<float>) * 3);
-	memset(&myPointLightColors[0], 0, sizeof(CU::Vector4<float>) * 3);
-	memset(&myPointLightRanges[0], 0, sizeof(float) * 3);
+	memset(&myDirectionalLightData[0], 0, sizeof(DirectionalLightData) * NUMBER_OF_DIRECTIONAL_LIGHTS);
+	memset(&myPointLightData[0], 0, sizeof(PointLightData) * NUMBER_OF_POINT_LIGHTS);
+	memset(&mySpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
 }
 
 void Prism::Scene::Render()
@@ -27,22 +26,36 @@ void Prism::Scene::Render()
 	for (int i = 0; i < myDirectionalLights.Size(); ++i)
 	{
 		myDirectionalLights[i]->Update();
-		myDirectionalLightDirections[i] = myDirectionalLights[i]->GetCurrentDir();
-		myDirectionalLightColors[i] = myDirectionalLights[i]->GetColor();
+
+		myDirectionalLightData[i].myDirection = myDirectionalLights[i]->GetCurrentDir();
+		myDirectionalLightData[i].myColor = myDirectionalLights[i]->GetColor();
 	}
 
 	for (int i = 0; i < myPointLights.Size(); ++i)
 	{
 		myPointLights[i]->Update();
-		myPointLightColors[i] = myPointLights[i]->GetColor();
-		myPointLightPositions[i] = myPointLights[i]->GetPosition();
-		myPointLightRanges[i] = myPointLights[i]->GetRange();
+
+		myPointLightData[i].myColor = myPointLights[i]->GetColor();
+		myPointLightData[i].myPosition = myPointLights[i]->GetPosition();
+		myPointLightData[i].myRange = myPointLights[i]->GetRange();
+	}
+
+	for (int i = 0; i < mySpotLights.Size(); ++i)
+	{
+		mySpotLights[i]->Update();
+
+		mySpotLightData[i].myPosition = mySpotLights[i]->GetPosition();
+		mySpotLightData[i].myDirection = mySpotLights[i]->GetDir();
+		mySpotLightData[i].myColor = mySpotLights[i]->GetColor();
+		mySpotLightData[i].myRange = mySpotLights[i]->GetRange();
+		mySpotLightData[i].myCone = mySpotLights[i]->GetCone();
 	}
 
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
-		myInstances[i]->UpdateDirectionalLights(myDirectionalLightDirections, myDirectionalLightColors);
-		myInstances[i]->UpdatePointLights(myPointLightPositions, myPointLightColors, myPointLightRanges);
+		myInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
+		myInstances[i]->UpdatePointLights(myPointLightData);
+		myInstances[i]->UpdateSpotLights(mySpotLightData);
 		myInstances[i]->Render(*myCamera);
 	}
 
@@ -63,6 +76,10 @@ void Prism::Scene::AddLight(PointLight* aLight)
 	myPointLights.Add(aLight);
 }
 
+void Prism::Scene::AddLight(SpotLight* aLight)
+{
+	mySpotLights.Add(aLight);
+}
 
 void Prism::Scene::SetCamera(Camera* aCamera)
 {

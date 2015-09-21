@@ -19,11 +19,15 @@ PS_INPUT_POS_NORM_TEX VS(VS_INPUT_POS_NORM_TEX input)
 
 float4 PS(PS_INPUT_POS_NORM_TEX input) : SV_Target
 {
-	float ambient = 0.6;
+	float ambient = 0.1f;
 	float4 finalColor = DiffuseTexture.Sample(linearSampling, input.Tex) * ambient;
-	float lambert = dot((float3)DirectionalLightDir[0], input.Norm);
-	float4 lightColor = saturate(lambert * DirectionalLightColor[0]);
-	finalColor += lightColor;
+	
+	for(int i = 0; i < 1; ++i)
+	{
+		float lambert = dot((float3)DirectionalLights[i].Direction, input.Norm);
+		float4 lightColor = saturate(lambert * DirectionalLights[i].Color);
+		finalColor += lightColor;
+	}
 	
 	finalColor.a = 1;
 	

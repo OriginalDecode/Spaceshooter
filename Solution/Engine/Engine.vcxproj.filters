@@ -46,6 +46,9 @@
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="FileWatcher.cpp" />
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -115,6 +118,13 @@
       <Filter>Lights</Filter>
     </ClInclude>
     <ClInclude Include="FileWatcher.h" />
+    <ClInclude Include="SpotLight.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h" />
+    <ClInclude Include="LightStructs.h">
+      <Filter>Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">

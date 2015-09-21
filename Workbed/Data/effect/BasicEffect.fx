@@ -40,18 +40,19 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 	float ambient = 0.1f;
 	float4 finalColor = DiffuseTexture.Sample(linearSampling, input.Tex) * ambient;
 	
+	//DirectionalLight
 	for(int i = 0; i < 1; ++i)
 	{
-		float lambert = dot((float3)DirectionalLightDir[i], norm);
-		float4 lightColor = saturate(lambert * DirectionalLightColor[i]);
+		float lambert = dot((float3)DirectionalLights[i].Direction, norm);
+		float4 lightColor = saturate(lambert * DirectionalLights[i].Color);
 		finalColor += lightColor;
 	}
 	
-	
+	//PointLight
 	for(int i = 0; i < 1; ++i)
 	{
 		//Vector from light to pixel
-		float4 lightVec = PointLightPosition[i] - input.WorldPosition;
+		float4 lightVec = PointLights[i].Position - input.WorldPosition;
 
 		//Dist betweem light and pixel
 		float distance = length(lightVec);
@@ -62,14 +63,40 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 
 		//attenuation
 		float attenuation = 1.f / (1.f + 0.1f * distance + 0.01f * distance * distance);
-		float fallOff = 1.f - (distance / (PointLightRange[i] + 0.00001f));
+		float fallOff = 1.f - (distance / (PointLights[i].Range + 0.00001f));
 		float totalAttenuation = attenuation * fallOff;
 
 
 		//add color to finalColor
 		float lambert = dot((float3)lightVec, norm);
-		float4 lightColor = saturate(lambert * PointLightColor[i]);
+		float4 lightColor = saturate(lambert * PointLights[i].Color);
 		finalColor += lightColor * totalAttenuation;
+	}
+	
+	//SpotLight
+	for(int i = 0; i < 1; ++i)
+	{
+		//Vector from light to pixel
+		float4 lightVec = SpotLights[i].Position - input.WorldPosition;
+		
+		//Dist betweem light and pixel
+		float distance = length(lightVec);
+		
+		//normalize lightvector
+		lightVec = normalize(lightVec);
+		
+		float attenuation = 1.f / (1.f + 0.1f * distance + 0.01f * distance * distance);
+
+		//attenuation
+		float angularAttenuation = dot(-lightVec, SpotLights[i].Direction);
+		angularAttenuation -= 1.f - SpotLights[i].Cone;
+		angularAttenuation *= 1.f / SpotLights[i].Cone;
+
+
+		//add color to finalColor
+		float lambert = dot((float3)lightVec, norm);
+		float4 lightColor = saturate(lambert * SpotLights[i].Color) * attenuation  * angularAttenuation * 3.f;
+		finalColor += lightColor;
 	}
 	
 	

@@ -9,7 +9,7 @@
 bool Prism::Effect::Init(const std::string& aEffectFile)
 {
 
-	Engine::GetInstance()->GetFileWatcher().WatchFile(aEffectFile, std::bind(&Prism::Effect::ReloadShader, this, aEffectFile));
+	//Engine::GetInstance()->GetFileWatcher().WatchFile(aEffectFile, std::bind(&Prism::Effect::ReloadShader, this, aEffectFile));
 
 	myEffect = nullptr;
 	ReloadShader(aEffectFile);
@@ -119,24 +119,29 @@ bool Prism::Effect::Init(const std::string& aEffectFile)
 	return true;*/
 }
 
-void Prism::Effect::UpdateDirectionalLight(CU::StaticArray<CU::Vector4<float>, 1> someDirs
-	, CU::StaticArray<CU::Vector4<float>, 1> someColors)
+void Prism::Effect::UpdateDirectionalLights(
+	const CU::StaticArray<Prism::DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
-	if (myDirectionalLightDirection != nullptr && myDirectionalLigthColor != nullptr)
+	if (myDirectionalLightVariable != nullptr)
 	{
-		myDirectionalLightDirection->SetFloatVectorArray(reinterpret_cast<float*>(&someDirs[0]), 0, 1);
-		myDirectionalLigthColor->SetFloatVectorArray(reinterpret_cast<float*>(&someColors[0]), 0, 1);
+		myDirectionalLightVariable->SetRawValue(&someDirectionalLightData[0], 0, 
+			sizeof(DirectionalLightData) * NUMBER_OF_DIRECTIONAL_LIGHTS);
 	}
 }
 
-void Prism::Effect::UpdatePointLight(CU::StaticArray<CU::Vector4<float>, 3> somePositions
-	, CU::StaticArray<CU::Vector4<float>, 3> someColors, CU::StaticArray<float, 3> someRanges)
+void Prism::Effect::UpdatePointLights(const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData)
 {
-	if (myPointLightPosition != nullptr && myPointLigthColor != nullptr)
+	if (myPointLightVariable != nullptr)
 	{
-		myPointLightPosition->SetFloatVectorArray(reinterpret_cast<float*>(&somePositions[0]), 0, 3);
-		myPointLigthColor->SetFloatVectorArray(reinterpret_cast<float*>(&someColors[0]), 0, 3);
-		myPointLightRange->SetFloatArray(reinterpret_cast<float*>(&someRanges[0]), 0, 3);
+		myPointLightVariable->SetRawValue(&somePointLightData[0], 0, sizeof(PointLightData) * NUMBER_OF_POINT_LIGHTS);
+	}
+}
+
+void Prism::Effect::UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData)
+{
+	if (mySpotLightVariable != nullptr)
+	{
+		mySpotLightVariable->SetRawValue(&someSpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
 	}
 }
 
@@ -154,6 +159,11 @@ void Prism::Effect::UpdateTime(const float aDeltaTime)
 
 void Prism::Effect::ReloadShader(const std::string& aFile)
 {
+	//if (myEffect != nullptr)
+	//{
+	//	myEffect->Release();
+	//}
+
 	myFileName = aFile;
 
 	HRESULT hr;
@@ -221,40 +231,30 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 		return;
 	}
 
-	myDirectionalLigthColor = myEffect->GetVariableByName("DirectionalLightColor")->AsVector();
-	if (myDirectionalLigthColor->IsValid() == false)
-	{
-		myDirectionalLigthColor = nullptr;;
-	}
-
-	myDirectionalLightDirection = myEffect->GetVariableByName("DirectionalLightDir")->AsVector();
-	if (myDirectionalLightDirection->IsValid() == false)
-	{
-		myDirectionalLightDirection = nullptr;
-	}
-
-	myPointLightPosition = myEffect->GetVariableByName("PointLightPosition")->AsVector();
-	if (myPointLightPosition->IsValid() == false)
-	{
-		myPointLightPosition = nullptr;;
-	}
-
-	myPointLigthColor = myEffect->GetVariableByName("PointLightColor")->AsVector();
-	if (myPointLigthColor->IsValid() == false)
-	{
-		myPointLigthColor = nullptr;
-	}
-
-	myPointLightRange = myEffect->GetVariableByName("PointLightRange")->AsScalar();
-	if (myPointLightRange->IsValid() == false)
-	{
-		myPointLightRange = nullptr;
-	}
-
 	myTotalTimeVariable = nullptr;
 	myTotalTimeVariable = myEffect->GetVariableByName("Time")->AsScalar();
 	if (myTotalTimeVariable->IsValid() == false)
 	{
 		myTotalTimeVariable = nullptr;
+	}
+
+
+
+	myDirectionalLightVariable = myEffect->GetVariableByName("DirectionalLights");
+	if (myDirectionalLightVariable->IsValid() == false)
+	{
+		myDirectionalLightVariable = nullptr;
+	}
+
+	myPointLightVariable = myEffect->GetVariableByName("PointLights");
+	if (myPointLightVariable->IsValid() == false)
+	{
+		myPointLightVariable = nullptr;
+	}
+
+	mySpotLightVariable = myEffect->GetVariableByName("SpotLights");
+	if (mySpotLightVariable->IsValid() == false)
+	{
+		mySpotLightVariable = nullptr;
 	}
 }
