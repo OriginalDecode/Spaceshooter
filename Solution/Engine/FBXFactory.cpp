@@ -135,7 +135,7 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect* aEffect)
 {
 	Model* tempModel = new Model();
-	tempModel->myEffect = aEffect;
+	tempModel->SetEffect(aEffect);
 		
 	if (someModelData->myData)
 	{

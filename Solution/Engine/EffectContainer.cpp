@@ -27,7 +27,6 @@ void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 
 void Prism::EffectContainer::ReloadEffect(const std::string& aFilePath)
 {
-	myEffects[aFilePath] = new(myEffects[aFilePath]) Effect();
 	myEffects[aFilePath]->Init(aFilePath);
 }
 

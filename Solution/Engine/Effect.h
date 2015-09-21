@@ -10,9 +10,13 @@
 
 namespace Prism
 {
+	class EffectListener;
+
 	class Effect
 	{
 	public:
+		Effect();
+
 		ID3DX11Effect* GetEffect();
 		ID3DX11EffectTechnique* GetTechnique();
 		const std::string& GetFileName() const;
@@ -29,6 +33,7 @@ namespace Prism
 		void UpdateTime(const float aDeltaTime);
 
 
+		void AddListener(EffectListener* aListener);
 		void ReloadShader(const std::string& aFile);
 
 	private:
@@ -47,6 +52,8 @@ namespace Prism
 
 
 		std::string myFileName;
+
+		CU::GrowingArray<EffectListener*> myEffectListeners;
 	};
 }
 
@@ -83,4 +90,9 @@ inline void Prism::Effect::SetProjectionMatrix(const CU::Matrix44<float>& aProje
 inline void Prism::Effect::SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask)
 {
 	Engine::GetInstance()->GetContex()->OMSetBlendState(aBlendState, aBlendFactor, aSampleMask);
+}
+
+inline void Prism::Effect::AddListener(EffectListener* aListener)
+{
+	myEffectListeners.Add(aListener);
 }

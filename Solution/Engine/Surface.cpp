@@ -10,6 +10,8 @@ Prism::Surface::Surface()
 {
 	myTextures.Init(2);
 	myShaderViews.Init(2);
+	myFilePaths.Init(2);
+	myShaderResourceNames.Init(2);
 }
 
 bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
@@ -28,8 +30,31 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::str
 
 	myTextures.Add(tex);
 	myShaderViews.Add(shaderVar);
+	myFilePaths.Add(aFileName);
+	myShaderResourceNames.Add(aResourceName);
 
 	return true;
+}
+
+void Prism::Surface::ReloadSurface()
+{
+	myTextures.RemoveAll();
+	myShaderViews.RemoveAll();
+
+	for (int i = 0; i < myFilePaths.Size(); ++i)
+	{
+		Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(myFilePaths[i]);
+		ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(myShaderResourceNames[i].c_str())->AsShaderResource();
+
+		if (shaderVar->IsValid() == false)
+		{
+			std::string errorMsg = "Failed to get ShaderResource: " + myShaderResourceNames[i];
+			DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+		}
+
+		myTextures.Add(tex);
+		myShaderViews.Add(shaderVar);
+	}
 }
 
 bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
