@@ -35,8 +35,6 @@ private:
 	void RotateY(float aRadian);
 	void RotateZ(float aRadian);
 
-	void ShootTest();
-
 	CU::Matrix44f myOrientation;
 	CU::Vector3f myPosition;
 
@@ -45,7 +43,4 @@ private:
 	CU::InputWrapper& myInputWrapper;
 
 	float mySteeringModifier;
-	// test
-	Entity* myTestBullet;
-	bool myIsShooting;
 };

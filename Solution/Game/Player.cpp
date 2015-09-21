@@ -6,11 +6,6 @@
 #include <sstream>
 #include <XMLReader.h>
 
-// for test shot
-#include "Entity.h"
-#include "GraphicsComponent.h"
-#include "PhysicsComponent.h"
-#include <Instance.h>
 
 Player::Player(CU::InputWrapper& aInputWrapper)
 	: myInputWrapper(aInputWrapper)
@@ -19,12 +14,6 @@ Player::Player(CU::InputWrapper& aInputWrapper)
 	reader.OpenDocument("Data/script/player.xml");
 	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
 	myCursorPosition;
-
-	myTestBullet = new Entity();
-	myTestBullet->AddComponent<GraphicsComponent>()->InitCube(0.5, 0.5, 0.5);
-	myTestBullet->GetComponent<GraphicsComponent>()->SetPosition(myPosition);
-	myTestBullet->AddComponent<PhysicsComponent>()->Init({ 0, 0, 0 }, myPosition);
-	myIsShooting = false;
 }
 
 CU::Matrix44f& Player::GetOrientation() 
@@ -96,19 +85,11 @@ void Player::Update(float aDeltaTime)
 	myOrientation = myOrientation.CreateRotateAroundX(yRotation)
 		* myOrientation;
 
-	if (myIsShooting == true)
-	{
-		myTestBullet->GetComponent<PhysicsComponent>()->Update(aDeltaTime);
-		myTestBullet->GetComponent<GraphicsComponent>()->SetPosition(myTestBullet->GetComponent<PhysicsComponent>()->GetPosition());
-	}
 }
 
-void Player::Render(Prism::Camera* aCamera)
+void Player::Render(Prism::Camera*)
 {
-	if (myIsShooting == true)
-	{
-		myTestBullet->GetComponent<GraphicsComponent>()->GetInstance()->Render(*aCamera);
-	}
+	
 }
 
 void Player::MoveForward(float aDistance)
@@ -145,10 +126,4 @@ void Player::RotateZ(float aRadian)
 	myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
 	myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aRadian) * myOrientation;
 	myOrientation.SetPos(myPosition);
-}
-
-void Player::ShootTest()
-{
-	myIsShooting = true;
-	myTestBullet->GetComponent<PhysicsComponent>()->Init(myOrientation.GetForward() * 50.f, myPosition);
 }
