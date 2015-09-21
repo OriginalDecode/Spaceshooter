@@ -1,8 +1,10 @@
 #pragma once
 
 #include <D3DX11.h>
+#include "EffectListener.h"
 #include <GrowingArray.h>
 #include <Matrix.h>
+
 
 namespace Prism
 {
@@ -15,7 +17,9 @@ namespace Prism
 	struct VertexDataWrapper;
 	struct VertexIndexWrapper;
 
-	class Model
+	
+
+	class Model : public EffectListener
 	{
 		friend class FBXFactory;
 	public:
@@ -37,6 +41,8 @@ namespace Prism
 		bool GetIsSkybox() const;
 
 		void Render(const CU::Matrix44<float>& aOrientation);
+
+		void OnEffectLoad() override;
 
 	private:
 		void InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, int aVertexSize, char* aVertexData);

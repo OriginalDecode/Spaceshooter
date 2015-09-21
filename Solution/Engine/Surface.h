@@ -32,10 +32,13 @@ namespace Prism{
 		bool SetTexture(const std::string& aResourceName, Texture* aTexture);
 
 		void Activate();
+		void ReloadSurface();
 
 	private:
 		CU::GrowingArray<Texture*> myTextures;
 		CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderViews;
+		CU::GrowingArray<std::string> myShaderResourceNames;
+		CU::GrowingArray<std::string> myFilePaths;
 
 		D3D11_PRIMITIVE_TOPOLOGY myPrimitiveTopologyType;
 		int myVertexStart;

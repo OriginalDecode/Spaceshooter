@@ -632,6 +632,7 @@ Prism::Effect* Prism::Model::GetEffect()
 void Prism::Model::SetEffect(Effect* aEffect)
 {
 	myEffect = aEffect;
+	myEffect->AddListener(this);
 
 	for (int i = 0; i < mySurfaces.Size(); ++i)
 	{
@@ -682,6 +683,14 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 	for (int i = 0; i < myChilds.Size(); ++i)
 	{
 		myChilds[i]->Render(myChildTransforms[i] * aOrientation);
+	}
+}
+
+void Prism::Model::OnEffectLoad()
+{
+	for (int i = 0; i < mySurfaces.Size(); ++i)
+	{
+		mySurfaces[i]->ReloadSurface();
 	}
 }
 

@@ -125,6 +125,7 @@
     <ClInclude Include="LightStructs.h">
       <Filter>Lights</Filter>
     </ClInclude>
+    <ClInclude Include="EffectListener.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
