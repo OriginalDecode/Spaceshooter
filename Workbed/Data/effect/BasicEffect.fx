@@ -74,7 +74,7 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 	}
 	
 	//SpotLight
-	for(int i = 0; i < 1; ++i)
+	for(int i = 0; i < 0; ++i)
 	{
 		//Vector from light to pixel
 		float4 lightVec = SpotLights[i].Position - input.WorldPosition;
