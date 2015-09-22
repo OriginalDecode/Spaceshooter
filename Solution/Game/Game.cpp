@@ -6,7 +6,9 @@
 #include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
+#include <EffectContainer.h>
 #include "Entity.h"
+#include <FileWatcher.h>
 #include <Font.h>
 #include "Game.h"
 #include <GeometryGenerator.h>
@@ -30,7 +32,7 @@ Game::Game()
 	myBulletManager = new BulletManager;
 	myPlayer = new Player(*myInputWrapper);
 	myShowPointLightCube = false;
-	ShowCursor(false);
+	//ShowCursor(false);
 }
 
 Game::~Game()
@@ -78,24 +80,19 @@ bool Game::Init(HWND& aHwnd)
 	for (int i = 0; i < 50; ++i)
 	{
 		Entity* astroids = new Entity();
-		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+		//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+		//	"Data/effect/BasicEffect.fx");
+		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			"Data/effect/BasicEffect.fx");
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
-	
+		
 		astroids->AddComponent<AIComponent>()->Init();
+		astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 		
 		myEntities.Add(astroids);
 	}
 
-
-	Prism::MeshData geometryData;
-	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
-
-	Entity* geometry = new Entity();
-	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
-	//geometry->AddComponent<AIComponent>()->Init();
-	//myEntities.Add(geometry);
 
 	
 
@@ -135,24 +132,24 @@ bool Game::Update()
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-	Prism::Engine::GetInstance()->GetEffectContainer().Update(deltaTime);
-	Prism::Engine::GetInstance()->GetDebugDisplay().RecordFrameTime(deltaTime);
+	Prism::Engine::GetInstance()->GetEffectContainer()->Update(deltaTime);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFunctionTimers();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleFunctionTimers();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F6))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleMemoryUsage();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleMemoryUsage();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F7))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleCPUUsage();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleCPUUsage();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F8))
 	{
-		Prism::Engine::GetInstance()->GetDebugDisplay().ToggleFrameTime();
+		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleFrameTime();
 	}
 	else if (myInputWrapper->KeyDown(DIK_F9))
 	{
@@ -179,12 +176,14 @@ bool Game::Update()
 
 	myBulletManager->Update(deltaTime);
 
-	Prism::Engine::GetInstance()->GetFileWatcher().CheckFiles();
+	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
 	END_TIME_BLOCK("Game::Update");
 
 	Render();
 	
+
+	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
 }
 
@@ -235,7 +234,7 @@ void Game::Render()
 
 	END_TIME_BLOCK("Game::Render");
 
-	Prism::Engine::GetInstance()->GetDebugDisplay().Render(*myCamera);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Render(*myCamera);
 
 	VTUNE_EVENT_END();
 }

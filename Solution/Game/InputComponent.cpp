@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "InputComponent.h"
 #include <InputWrapper.h>
+#include <FileWatcher.h>
 #include <XMLReader.h>
 
 

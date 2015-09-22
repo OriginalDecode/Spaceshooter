@@ -226,4 +226,10 @@ namespace CommonUtilities
 		aVector.w /= aScalar;
 		return aVector;
 	}
+
+	template <typename T>
+	Vector4<T> operator-(const Vector4<T>& aVector)
+	{
+		return Vector4<T>(-aVector.x, -aVector.y, -aVector.z, -aVector.w);
+	}
 }

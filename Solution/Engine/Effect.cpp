@@ -2,6 +2,7 @@
 
 #include <D3DX11async.h>
 #include <DL_Debug.h>
+#include "EffectContainer.h"
 #include "EffectListener.h"
 #include "Effect.h"
 #include "Engine.h"
@@ -14,11 +15,11 @@ Prism::Effect::Effect()
 
 bool Prism::Effect::Init(const std::string& aEffectFile)
 {
-	if (myEffect != nullptr)
-	{
-		myEffect->Release();
-		myEffect = nullptr;
-	}
+	//if (myEffect != nullptr)
+	//{
+	//	myEffect->Release();
+	//	myEffect = nullptr;
+	//}
 
 	ReloadShader(aEffectFile);
 
@@ -71,6 +72,8 @@ void Prism::Effect::UpdateTime(const float aDeltaTime)
 
 void Prism::Effect::ReloadShader(const std::string& aFile)
 {
+	Sleep(100);
+
 	myFileName = aFile;
 
 	HRESULT hr;
@@ -85,17 +88,13 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 
 	hr = D3DX11CompileFromFile(myFileName.c_str(), 0, 0, 0, "fx_5_0", shaderFlags, 0, 0, &compiledShader
 		, &compilationMsgs, 0);
-	//if (FAILED(hr))
 	if (hr != S_OK)
 	{
 		if (compilationMsgs != nullptr)
 		{
 			DL_MESSAGE_BOX((char*)compilationMsgs->GetBufferPointer(), "Effect Error", MB_ICONWARNING);
-		}
-		if (compiledShader == nullptr)
-		{
-			int apa = 5;
-			++apa;
+			myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect(
+				"Data/effect/SuperUglyDebugEffect.fx")->myEffect;
 		}
 	}
 	if (compilationMsgs != nullptr)
@@ -103,25 +102,23 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 		compilationMsgs->Release();
 	}
 
-
-	if (compiledShader == nullptr)
+	if (hr == S_OK)
 	{
-		int apa = 5;
-		++apa;
+		hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), NULL
+			, Engine::GetInstance()->GetDevice(), &myEffect);
+
+		if (FAILED(hr))
+		{
+			DL_MESSAGE_BOX("Cant Create Effect", "Effect Error", MB_ICONWARNING);
+			return;
+		}
+
+		compiledShader->Release();
 	}
+	
 
 
-	hr = D3DX11CreateEffectFromMemory(compiledShader->GetBufferPointer(), compiledShader->GetBufferSize(), NULL
-		, Engine::GetInstance()->GetDevice(), &myEffect);
-
-	if (FAILED(hr))
-	{
-		DL_MESSAGE_BOX("Cant Create Effect", "Effect Error", MB_ICONWARNING);
-		return;
-	}
-
-
-	compiledShader->Release();
+	
 
 
 	myTechnique = myEffect->GetTechniqueByName("Render");

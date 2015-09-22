@@ -1,5 +1,7 @@
 #pragma once
 #include "Component.h"
+
+#include <Matrix44.h>
 class ControllerComponent : public Component
 {
 public:
@@ -12,6 +14,7 @@ public:
 	void RotateX(float aAmount);
 	void RotateY(float aAmount);
 	void RotateZ(float aAmount);
+	void Rotate(const CU::Matrix44<float>& aRotation);
 	void Shoot(float aSpeed);
 
 	static int GetID();

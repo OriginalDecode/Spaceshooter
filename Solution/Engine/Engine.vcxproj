@@ -41,14 +41,14 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)..\Libs\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)\DL_Debug;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\..\DirectX\Include;$(SolutionDir)\FBX\;$(FBX_SDK_ROOT)\include;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\InputWrapper;$(SolutionDir)\DL_Debug;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\..\DirectX\Include;$(SolutionDir)\FBX\;$(FBX_SDK_ROOT)\include;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <LibraryPath>$(SolutionDir)..\DirectX\Libs\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\Libs\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
-    <IncludePath>$(SolutionDir)\DL_Debug;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\..\DirectX\Include;$(SolutionDir)\FBX\;$(FBX_SDK_ROOT)\include;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\InputWrapper;$(SolutionDir)\DL_Debug;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\..\DirectX\Include;$(SolutionDir)\FBX\;$(FBX_SDK_ROOT)\include;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
     <LibraryPath>$(SolutionDir)..\DirectX\Libs\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -118,6 +118,7 @@
     <ClCompile Include="FileWatcher.cpp" />
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FontContainer.cpp" />
+    <ClCompile Include="FrameTimeDebugger.cpp" />
     <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="GraphRenderer.cpp" />
     <ClCompile Include="Instance.cpp" />
@@ -130,6 +131,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="SystemMonitor.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureContainer.cpp" />
@@ -149,6 +151,7 @@
     <ClInclude Include="FileWatcher.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="FontContainer.h" />
+    <ClInclude Include="FrameTimeDebugger.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GraphRenderer.h" />
     <ClInclude Include="IndexBufferWrapper.h" />
@@ -162,6 +165,7 @@
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="SystemMonitor.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureContainer.h" />

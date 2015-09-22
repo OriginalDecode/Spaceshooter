@@ -1,20 +1,23 @@
 #pragma once
-
-#include "DebugDataDisplay.h"
-#include "EffectContainer.h"
-#include "FBXFactory.h"
-#include "FileWatcher.h"
-#include "FontContainer.h"
-
-class Text;
+#include <Vector.h>
+#include <string>
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
 namespace Prism
 {
+	class Camera;
+	class DebugDataDisplay;
 	class DirectX;
-	class TextureContainer;	
+	class EffectContainer;
+	class Effect;
+	class FBXFactory;
+	class FileWatcher;
+	class FontContainer;
+	class Model;
+	class TextureContainer;
+	class Text;
 
 	struct SetupInfo;
 
@@ -30,15 +33,15 @@ namespace Prism
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();
 		TextureContainer* GetTextureContainer();
-		EffectContainer& GetEffectContainer();
-		FontContainer& GetFontContainer();
-		DebugDataDisplay& GetDebugDisplay();
-		FileWatcher& GetFileWatcher();
+		EffectContainer* GetEffectContainer();
+		FontContainer* GetFontContainer();
+		DebugDataDisplay* GetDebugDisplay();
+		FileWatcher* GetFileWatcher();
 
 		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
-		void PrintDebugText(const Camera& aCamera, const std::string& aText
-			, const CU::Vector2<float>& aPosition, float aScale = 1.f);
+		void PrintDebugText(const Camera& aCamera, const std::string& aText, 
+			const CU::Vector2<float>& aPosition, float aScale = 1.f);
 
 		void EnableZBuffer();
 		void DisableZBuffer();
@@ -52,11 +55,11 @@ namespace Prism
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;
 		TextureContainer* myTextureContainer;
-		EffectContainer myEffectContainer;
-		FBXFactory myModelFactory;
-		FontContainer myFontContainer;
-		DebugDataDisplay myDebugDataDisplay;
-		FileWatcher myFileWatcher;
+		EffectContainer* myEffectContainer;
+		FBXFactory* myModelFactory;
+		FontContainer* myFontContainer;
+		DebugDataDisplay* myDebugDataDisplay;
+		FileWatcher* myFileWatcher;
 
 		Text* myDebugText;
 
@@ -69,22 +72,22 @@ inline Prism::TextureContainer* Prism::Engine::GetTextureContainer()
 	return myTextureContainer;
 }
 
-inline Prism::EffectContainer& Prism::Engine::GetEffectContainer()
+inline Prism::EffectContainer* Prism::Engine::GetEffectContainer()
 {
 	return myEffectContainer;
 }
 
-inline Prism::FontContainer& Prism::Engine::GetFontContainer()
+inline Prism::FontContainer* Prism::Engine::GetFontContainer()
 {
 	return myFontContainer;
 }
 
-inline Prism::DebugDataDisplay& Prism::Engine::GetDebugDisplay()
+inline Prism::DebugDataDisplay* Prism::Engine::GetDebugDisplay()
 {
 	return myDebugDataDisplay;
 }
 
-inline Prism::FileWatcher& Prism::Engine::GetFileWatcher()
+inline Prism::FileWatcher* Prism::Engine::GetFileWatcher()
 {
 	return myFileWatcher;
 }

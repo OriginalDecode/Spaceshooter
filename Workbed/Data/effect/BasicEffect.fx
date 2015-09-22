@@ -99,6 +99,8 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 		finalColor += lightColor;
 	}
 	
+	finalColor.r = 1.f;
+	
 	finalColor.a = 1.f;
 	
 	return finalColor;
