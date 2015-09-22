@@ -21,6 +21,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	
 	myRotationSpeed = 0.f;
 	myMovementSpeed = 0.f;
+	myMaxSteeringSpeed = 0;
 
 
 	//Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
@@ -86,15 +87,35 @@ void InputComponent::Update(float aDeltaTime)
 	float xRotation = (fabs((x*x) * mySteeringModifier)  * negateX) * aDeltaTime;
 	float yRotation = (fabs((y*y) * mySteeringModifier)  * negateY) * aDeltaTime;
 
+	if (xRotation > myMaxSteeringSpeed)
+	{
+		xRotation = myMaxSteeringSpeed;
+	}
+	if (xRotation < -myMaxSteeringSpeed)
+	{
+		xRotation = -myMaxSteeringSpeed;
+	}
+
+	if (yRotation > myMaxSteeringSpeed)
+	{
+		yRotation = myMaxSteeringSpeed;
+	}
+	if (yRotation < -myMaxSteeringSpeed)
+	{
+		yRotation = -myMaxSteeringSpeed;
+	}
+
 	RotateX(yRotation);
 	RotateY(xRotation);
 }
 
 void InputComponent::ReadXML(const std::string& aFile)
 {
+	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFile);
 	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	reader.ReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
 }
 
 void InputComponent::Rotate(float aDeltaTime)

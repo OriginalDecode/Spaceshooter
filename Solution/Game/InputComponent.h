@@ -26,4 +26,5 @@ private:
 	float mySteeringModifier;
 	float myRotationSpeed;
 	float myMovementSpeed;
+	float myMaxSteeringSpeed;
 };
