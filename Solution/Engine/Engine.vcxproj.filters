@@ -49,6 +49,12 @@
     <ClCompile Include="SpotLight.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
+    <ClCompile Include="FrameTimeDebugger.cpp">
+      <Filter>DebugServices</Filter>
+    </ClCompile>
+    <ClCompile Include="SystemMonitor.cpp">
+      <Filter>DebugServices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -126,6 +132,12 @@
       <Filter>Lights</Filter>
     </ClInclude>
     <ClInclude Include="EffectListener.h" />
+    <ClInclude Include="FrameTimeDebugger.h">
+      <Filter>DebugServices</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemMonitor.h">
+      <Filter>DebugServices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">

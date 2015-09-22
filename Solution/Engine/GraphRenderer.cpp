@@ -56,6 +56,8 @@ void Prism::GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<
 	, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
 	, const float aMaxValue, bool aNewData)
 {
+	TIME_FUNCTION
+
 	if (aNewData == true)
 	{
 		BuildBuffers(aDataArray, aTopLeftDrawPos, aGraphSize, aMaxValue);
@@ -138,7 +140,9 @@ void Prism::GraphRenderer::InitSurface()
 void Prism::GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArray, const CU::Vector2<float>& aTopLeftDrawPos
 	, const CU::Vector2<float>& aGraphSize, const float aMaxValue)
 {
-	float widthPerElement = aGraphSize.x / aDataArray.Size();
+	TIME_FUNCTION
+
+	float widthPerElement = (aGraphSize.x - aDataArray.Size()) / aDataArray.Size();
 
 	CU::Vector2<float> botLeft = aTopLeftDrawPos;
 	botLeft.y -= aGraphSize.y;
@@ -148,10 +152,10 @@ void Prism::GraphRenderer::BuildBuffers(const CU::GrowingArray<float>& aDataArra
 
 	CU::Vector2<float> columnSize(widthPerElement, aGraphSize.y);
 	int index = 0;
-	CreateFirstTri(aTopLeftDrawPos, { aGraphSize.x + aDataArray.Size(), 3 }, index, 1.f);
+	CreateFirstTri(aTopLeftDrawPos, { aGraphSize.x, 3 }, index, 1.f);
 	index += 3;
 
-	CreateSecondTri(aTopLeftDrawPos, { aGraphSize.x + aDataArray.Size(), 3 }, index, 1.f);
+	CreateSecondTri(aTopLeftDrawPos, { aGraphSize.x, 3 }, index, 1.f);
 	index += 3;
 
 	for (int i = 0; i < aDataArray.Size(); ++i)

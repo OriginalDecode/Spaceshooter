@@ -90,13 +90,11 @@ namespace Prism
 
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	{
-		TIME_FUNCTION
-
-			if (WindowSetup(aHwnd, aWndProc) == false)
-			{
+		if (WindowSetup(aHwnd, aWndProc) == false)
+		{
 			ENGINE_LOG("Failed to Create Window");
 			return false;
-			}
+		}
 
 		myDirectX = new DirectX(aHwnd, *mySetupInfo);
 		if (myDirectX == nullptr)

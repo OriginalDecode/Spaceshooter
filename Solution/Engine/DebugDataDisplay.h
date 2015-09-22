@@ -10,11 +10,18 @@
 #include <sstream>
 #include <unordered_map>
 
+namespace CommonUtilities
+{
+	class InputWrapper;
+}
+
 namespace Prism
 {
 	class Camera;
 	class Font;
 	class Text;
+
+	class FrameTimeDebugger;
 
 	class DebugDataDisplay
 	{
@@ -34,6 +41,8 @@ namespace Prism
 		void ToggleCPUUsage();
 		void ToggleFrameTime();
 
+		void Update(const CU::InputWrapper& aInputWrapper);
+
 	private:
 		enum eBitSetEnum
 		{
@@ -45,46 +54,13 @@ namespace Prism
 			count
 		};
 
-		struct FunctionData
-		{
-			Text* myNameText = nullptr;
-			Text* myTimeText = nullptr;
-			int myHitCount = 0;
-			float myMS = 0.f;
-			unsigned long long myStart = 0;
-			bool myEnabled = false;
-			std::string myNameString;
-		};
-
-		struct FrameTimeData
-		{
-			CU::GrowingArray<float> myFrameTimes;
-			float myLastDeltaTime = 0.f;
-			float mySampleTimer = 0.f;
-			float myTimeBetweenSamples = 0.1f;
-			int myFrameTimeIndex = 0;
-			int myFrameCounter = 0;
-		};
 
 		void RenderFunctionTimers(const Camera& aCamera);
 		void RenderMemoryUsage(const Camera& aCamera);
 		void RenderCPUUsage(const Camera& aCamera);
 		void RenderFrameTime(const Camera& aCamera);
 
-		int GetMemoryUsageMB();
-
-		ULONGLONG FixCPUTimings(const FILETIME &a, const FILETIME &b);
-		float GetCPUUsage(FILETIME *prevSysKernel, FILETIME *prevSysUser,
-			FILETIME *prevProcKernel, FILETIME *prevProcUser,
-			bool firstRun = false);
-
-		std::unordered_map<std::string, FunctionData> myFunctionTimers;
 		Text* myText;
-		unsigned long long myFrequency;
-		FILETIME myPrevSysKernel;
-		FILETIME myPrevSysUser;
-		FILETIME myPrevProcKernel;
-		FILETIME myPrevProcUser;
 
 		std::bitset<eBitSetEnum::count> myBoolContainer;
 
@@ -93,11 +69,10 @@ namespace Prism
 		CU::Vector2<float> myCPUUSageStartPos;
 		CU::Vector2<float> myFrameTimeStartPos;
 		float myTextScale;
-
-		GraphRenderer myGraphRenderer;
-		FrameTimeData myFrameData; //GrowingArray + 16 byte
-
+		float myLastDeltaTime;
 		std::stringstream myStringStream;
+
+		FrameTimeDebugger* myFrameDebugger;
 	};
 }
 

@@ -32,7 +32,7 @@ Game::Game()
 	myBulletManager = new BulletManager;
 	myPlayer = new Player(*myInputWrapper);
 	myShowPointLightCube = false;
-	ShowCursor(false);
+	//ShowCursor(false);
 }
 
 Game::~Game()
@@ -138,7 +138,7 @@ bool Game::Update()
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 	Prism::Engine::GetInstance()->GetEffectContainer()->Update(deltaTime);
-	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
@@ -187,6 +187,8 @@ bool Game::Update()
 
 	Render();
 	
+
+	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
 }
 

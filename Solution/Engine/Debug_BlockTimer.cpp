@@ -2,6 +2,7 @@
 #include "Debug_BlockTimer.h"
 #include "DebugDataDisplay.h"
 
+
 Prism::Debug_BlockTimer::Debug_BlockTimer(const char* aName)
 	: myName(aName)
 {
