@@ -124,6 +124,9 @@
     <ClCompile Include="Subscriber.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Audio\Audio\Audio.vcxproj">
+      <Project>{b5915c8f-2aef-4137-bcbe-152f819860cd}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{56e2c751-a07c-49d7-9073-839a5d0a71d2}</Project>
     </ProjectReference>

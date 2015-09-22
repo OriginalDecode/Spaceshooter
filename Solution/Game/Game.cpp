@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "AIComponent.h"
+#include "../Audio/Audio/AudioInterface.h"
 #include "BulletManager.h"
 #include <Camera.h>
 #include "Constants.h"
@@ -28,6 +29,7 @@
 Game::Game()
 {
 	PostMaster::Create();
+	Prism::Audio::AudioInterface::CreateInstance();
 	myInputWrapper = new CU::InputWrapper();
 	myBulletManager = new BulletManager;
 	myPlayer = new Player(*myInputWrapper);
@@ -42,6 +44,7 @@ Game::~Game()
 	delete myScene;
 	delete myBulletManager;
 	myEntities.DeleteAll();
+	Prism::Audio::AudioInterface::Destroy();
 	PostMaster::Destroy();
 }
 
@@ -123,6 +126,9 @@ bool Game::Init(HWND& aHwnd)
 
 	myRenderStuff = true;
 
+	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/level1.bnk");
+
 	GAME_LOG("Init Successful");
 	return true;
 }
@@ -135,13 +141,11 @@ bool Game::Destroy()
 
 bool Game::Update()
 {
+	Prism::Audio::AudioInterface::GetInstance()->Update();
 	BEGIN_TIME_BLOCK("Game::Update");
-
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-	Prism::Engine::GetInstance()->GetEffectContainer()->Update(deltaTime);
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
@@ -171,6 +175,11 @@ bool Game::Update()
 	{
 		myRenderStuff = !myRenderStuff;
 	}
+	if (myInputWrapper->KeyDown(DIK_P))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_mega_mob_incoming");
+	}
+
 
 	LogicUpdate(deltaTime);
 
