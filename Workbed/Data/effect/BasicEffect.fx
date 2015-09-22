@@ -95,7 +95,7 @@ float4 PS(PS_INPUT_POS_NORM_TEX_BI_TANG input) : SV_Target
 
 		//add color to finalColor
 		float lambert = dot((float3)lightVec, norm);
-		float4 lightColor = saturate(lambert * SpotLights[i].Color) * attenuation  * angularAttenuation * 3.f;
+		float4 lightColor = saturate(lambert * SpotLights[i].Color * attenuation  * angularAttenuation * 3.f);
 		finalColor += lightColor;
 	}
 	
