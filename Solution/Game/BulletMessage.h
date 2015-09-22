@@ -5,12 +5,13 @@
 class BulletMessage : public Message
 {
 public:
-	BulletMessage(eBulletType aType, CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition);
+	BulletMessage(eBulletType aType, CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward);
 	~BulletMessage();
 
-	inline const eBulletType& GetBulletType() const;
-	inline const CU::Vector3<float>& GetVelocity() const;
-	inline const CU::Vector3<float>& GetPosition() const;
+	const eBulletType& GetBulletType() const;
+	const CU::Vector3<float>& GetVelocity() const;
+	const CU::Vector3<float>& GetPosition() const;
+	const CU::Vector3<float>& GetForward() const;
 
 private:
 
@@ -18,6 +19,7 @@ private:
 
 	CU::Vector3<float> myVelocity;
 	CU::Vector3<float> myPosition;
+	CU::Vector3<float> myForward;
 };
 
 inline const eBulletType& BulletMessage::GetBulletType() const
@@ -33,4 +35,9 @@ inline const CU::Vector3<float>& BulletMessage::GetVelocity() const
 inline const CU::Vector3<float>& BulletMessage::GetPosition() const
 {
 	return myPosition;
+}
+
+inline const CU::Vector3<float>& BulletMessage::GetForward() const
+{
+	return myForward;
 }

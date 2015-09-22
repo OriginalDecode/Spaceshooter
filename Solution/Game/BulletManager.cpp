@@ -4,6 +4,9 @@
 #include <Instance.h>
 #include "PostMaster.h"
 #include <XMLReader.h>
+#include "GraphicsComponent.h"
+#include "PhysicsComponent.h"
+#include "BulletComponent.h"
 
 BulletManager::BulletManager()
 {
@@ -27,21 +30,18 @@ void BulletManager::Update(float aDeltaTime)
 {
 	for (int i = 0; i < myBoxBulletData.myMaxBullet; i++)
 	{
-		if (myBoxBulletData.myIsActiveBullets[i] == true)
+		if (myBoxBulletData.myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
 		{
 			myBoxBulletData.myBullets[i]->Update(aDeltaTime);
-
 		}
 	}
-
-	// todo: life counter on bullets
 }
 
 void BulletManager::Render(Prism::Camera* aCamera)
 {
 	for (int i = 0; i < myBoxBulletData.myMaxBullet; i++)
 	{
-		if (myBoxBulletData.myIsActiveBullets[i] == true)
+		if (myBoxBulletData.myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
 		{
 			myBoxBulletData.myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance()->Render(*aCamera);
 
@@ -53,7 +53,7 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	if (aMessage.GetBulletType() == eBulletType::BOX_BULLET)
 	{
-		ActivateBoxBullet(aMessage.GetVelocity(), aMessage.GetPosition());
+		ActivateBoxBullet(aMessage.GetVelocity(), aMessage.GetPosition(), aMessage.GetForward());
 	}
 }
 
@@ -61,41 +61,42 @@ void BulletManager::ReadFromXML(XMLReader& aXMLReader, tinyxml2::XMLElement* aBu
 {
 	BulletData bulletData;
 
-	std::string aType;
-
+	std::string type;
 	CU::Vector3<float> size;
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "type"), "value", aType);
+	float totalLife = 0.f;
+	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "type"), "value", type);
 	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "maxAmount"), "value", bulletData.myMaxBullet);
 	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "size"), "x", size.x);
 	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "size"), "y", size.y);
 	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "size"), "z", size.z);
+	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "LifeTime"), "value", totalLife);
 
 	bulletData.myBulletCounter = 0;
 	bulletData.myBullets.Init(bulletData.myMaxBullet);
-	bulletData.myIsActiveBullets.Init(bulletData.myMaxBullet);
 
 	for (int i = 0; i < bulletData.myMaxBullet; i++)
 	{
 		Entity* newEntity = new Entity();
 		newEntity->AddComponent<GraphicsComponent>()->InitCube(size.x, size.y, size.z);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
-		newEntity->AddComponent<PhysicsComponent>()->Init({ 0, 0, 0 }, { 0, 0, 0 });
+		newEntity->AddComponent<PhysicsComponent>();
+		newEntity->AddComponent<BulletComponent>();
+		newEntity->GetComponent<BulletComponent>()->SetMaxLifeTime(totalLife);
 		bulletData.myBullets.Add(newEntity);
-		bulletData.myIsActiveBullets.Add(false);
 	}
 
-	if (aType == "box")
+	if (type == "box")
 	{
 		bulletData.myType = eBulletType::BOX_BULLET;
 		myBoxBulletData = bulletData;
 	}
 }
 
-void BulletManager::ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition)
+void BulletManager::ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward)
 {
 	// has a limited amount of bullets, re-uses old after they've run out
-	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<PhysicsComponent>()->Init(aVelocity, aPosition);
-	myBoxBulletData.myIsActiveBullets[myBoxBulletData.myBulletCounter] = true;
+	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<PhysicsComponent>()->Init(aVelocity, aPosition, aForward);
+	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
 
 	myBoxBulletData.myBulletCounter++;
 

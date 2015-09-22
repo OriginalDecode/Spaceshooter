@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="AIComponent.h" />
+    <ClInclude Include="BulletComponent.h" />
     <ClInclude Include="BulletEnums.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
@@ -94,7 +95,6 @@
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="RefreshOrientationMessage.h" />
     <ClInclude Include="ShootingComponent.h" />
@@ -104,6 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
+    <ClCompile Include="BulletComponent.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletMessage.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -113,7 +114,6 @@
     <ClCompile Include="GraphicsComponent.cpp" />
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="ShootMessage.cpp" />

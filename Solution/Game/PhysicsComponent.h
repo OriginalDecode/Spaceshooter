@@ -7,16 +7,14 @@ public:
 	PhysicsComponent();
 	~PhysicsComponent();
 
-	void Init(const CU::Vector3<float> aVelocity, const CU::Vector3<float> aPosition);
+	void Init(const CU::Vector3<float> aVelocity, const CU::Vector3<float> aPosition, const CU::Vector3<float> aForward);
 	void Update(float aDeltaTime);
-	//void ReceiveMessage(eMessage aMessage) override;
 
-	inline const CU::Vector3<float>& GetPosition();
-	inline static int GetID();
+	const CU::Vector3<float>& GetPosition();
+	static int GetID();
 
 private:
 	CU::Vector3<float> myVelocity;
-	CU::Vector3<float> myDirection;
 	CU::Vector3<float> myPosition;
 };
 
