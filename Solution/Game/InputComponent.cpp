@@ -38,7 +38,7 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
-		myMovementSpeed -= globalPi / 128.f;
+		myMovementSpeed -= (globalPi / 128.f) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
@@ -122,11 +122,11 @@ void InputComponent::Rotate(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_Q))
 	{
-		myRotationSpeed += globalPi / 128.f;
+		myRotationSpeed += (globalPi * 10) * aDeltaTime;
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_E))
 	{
-		myRotationSpeed -= globalPi / 128.f;
+		myRotationSpeed -= (globalPi * 10) * aDeltaTime;
 	}
 
 	if (myRotationSpeed > globalPi * 2)
@@ -140,7 +140,7 @@ void InputComponent::Rotate(float aDeltaTime)
 
 	if (myRotationSpeed > 0.f)
 	{
-		myRotationSpeed -= globalPi / 256.f;
+		myRotationSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myRotationSpeed < 0.f)
 		{
 			myRotationSpeed = 0.f;
@@ -148,7 +148,7 @@ void InputComponent::Rotate(float aDeltaTime)
 	}
 	else if (myRotationSpeed < 0.f)
 	{
-		myRotationSpeed += globalPi / 256.f;
+		myRotationSpeed += (globalPi * 5) * aDeltaTime;
 		if (myRotationSpeed > 0.f)
 		{
 			myRotationSpeed = 0.f;
