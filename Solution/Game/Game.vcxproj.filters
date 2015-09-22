@@ -39,6 +39,9 @@
     <ClCompile Include="BulletMessage.cpp">
       <Filter>PostMaster</Filter>
     </ClCompile>
+    <ClCompile Include="BulletComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -90,6 +93,9 @@
     <ClInclude Include="BulletEnums.h" />
     <ClInclude Include="BulletMessage.h">
       <Filter>PostMaster</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,15 +1,12 @@
 #pragma once
 #include "Entity.h"
-#include "GraphicsComponent.h"
-#include "PhysicsComponent.h"
 #include "BulletMessage.h"
 #include "Subscriber.h"
 
-struct BulletData
+struct BulletData // holds the data for one type of bullet
 {
 	eBulletType myType;
 	CU::GrowingArray<Entity*> myBullets;
-	CU::GrowingArray<bool> myIsActiveBullets;
 	int myBulletCounter;
 	int myMaxBullet;
 };
@@ -38,7 +35,7 @@ public:
 
 	void ReadFromXML(class XMLReader& aXMLReader, tinyxml2::XMLElement* aBulletElement);
 
-	void ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition);
+	void ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward);
 
 private:
 
