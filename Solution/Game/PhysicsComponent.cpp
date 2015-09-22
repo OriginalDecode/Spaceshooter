@@ -19,9 +19,10 @@ void PhysicsComponent::Init(const CU::Vector3<float> aVelocity, const CU::Vector
 	myVelocity = aVelocity;
 	myPosition = aPosition;
 	myEntity->myOrientation.SetPos(myPosition);
-	myEntity->myOrientation.myMatrix[8] = aForward.x;
-	myEntity->myOrientation.myMatrix[9] = aForward.y;
-	myEntity->myOrientation.myMatrix[10] = aForward.z;
+	// does not work properly:
+	//myEntity->myOrientation.myMatrix[8] = aForward.x;
+	//myEntity->myOrientation.myMatrix[9] = aForward.y;
+	//myEntity->myOrientation.myMatrix[10] = aForward.z;
 	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
