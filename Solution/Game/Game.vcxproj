@@ -95,7 +95,6 @@
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
-    <ClInclude Include="Player.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="RefreshOrientationMessage.h" />
     <ClInclude Include="ShootingComponent.h" />
@@ -115,7 +114,6 @@
     <ClCompile Include="GraphicsComponent.cpp" />
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
-    <ClCompile Include="Player.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="ShootMessage.cpp" />
@@ -126,6 +124,9 @@
     <ClCompile Include="Subscriber.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Audio\Audio\Audio.vcxproj">
+      <Project>{b5915c8f-2aef-4137-bcbe-152f819860cd}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Engine\Engine.vcxproj">
       <Project>{56e2c751-a07c-49d7-9073-839a5d0a71d2}</Project>
     </ProjectReference>

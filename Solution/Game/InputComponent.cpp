@@ -21,6 +21,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	
 	myRotationSpeed = 0.f;
 	myMovementSpeed = 0.f;
+	myMaxSteeringSpeed = 0;
 
 
 	//Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
@@ -37,7 +38,7 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
-		myMovementSpeed -= globalPi / 128.f;
+		myMovementSpeed -= (globalPi / 128.f) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
@@ -86,26 +87,46 @@ void InputComponent::Update(float aDeltaTime)
 	float xRotation = (fabs((x*x) * mySteeringModifier)  * negateX) * aDeltaTime;
 	float yRotation = (fabs((y*y) * mySteeringModifier)  * negateY) * aDeltaTime;
 
+	if (xRotation > myMaxSteeringSpeed)
+	{
+		xRotation = myMaxSteeringSpeed;
+	}
+	if (xRotation < -myMaxSteeringSpeed)
+	{
+		xRotation = -myMaxSteeringSpeed;
+	}
+
+	if (yRotation > myMaxSteeringSpeed)
+	{
+		yRotation = myMaxSteeringSpeed;
+	}
+	if (yRotation < -myMaxSteeringSpeed)
+	{
+		yRotation = -myMaxSteeringSpeed;
+	}
+
 	RotateX(yRotation);
 	RotateY(xRotation);
 }
 
 void InputComponent::ReadXML(const std::string& aFile)
 {
+	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFile);
 	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	reader.ReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
 }
 
 void InputComponent::Rotate(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_Q))
 	{
-		myRotationSpeed += globalPi / 128.f;
+		myRotationSpeed += (globalPi * 10) * aDeltaTime;
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_E))
 	{
-		myRotationSpeed -= globalPi / 128.f;
+		myRotationSpeed -= (globalPi * 10) * aDeltaTime;
 	}
 
 	if (myRotationSpeed > globalPi * 2)
@@ -119,7 +140,7 @@ void InputComponent::Rotate(float aDeltaTime)
 
 	if (myRotationSpeed > 0.f)
 	{
-		myRotationSpeed -= globalPi / 256.f;
+		myRotationSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myRotationSpeed < 0.f)
 		{
 			myRotationSpeed = 0.f;
@@ -127,7 +148,7 @@ void InputComponent::Rotate(float aDeltaTime)
 	}
 	else if (myRotationSpeed < 0.f)
 	{
-		myRotationSpeed += globalPi / 256.f;
+		myRotationSpeed += (globalPi * 5) * aDeltaTime;
 		if (myRotationSpeed > 0.f)
 		{
 			myRotationSpeed = 0.f;
