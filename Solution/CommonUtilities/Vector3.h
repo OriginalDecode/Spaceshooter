@@ -43,7 +43,7 @@ namespace CommonUtilities
 	Vector3<T> GetNormalized(const Vector3<T>& aVector)
 	{
 		T length = Length(aVector);
-		assert(length != 0 && "Division by zero.");
+		//assert(length != 0 && "Division by zero.");
 		return Vector3<T>(aVector / length);
 	}
 
@@ -211,10 +211,16 @@ namespace CommonUtilities
 	template <typename T>
 	Vector3<T> operator/=(Vector3<T>& aVector, T aScalar)
 	{
-		assert(aScalar != 0 && "Division by zero.");
+		//assert(aScalar != 0 && "Division by zero.");
 		aVector.x /= aScalar;
 		aVector.y /= aScalar;
 		aVector.z /= aScalar;
 		return aVector;
+	}
+
+	template <typename T>
+	Vector3<T> operator-(const Vector3<T>& aVector)
+	{
+		return Vector3<T>(-aVector.x, -aVector.y, -aVector.z);
 	}
 }

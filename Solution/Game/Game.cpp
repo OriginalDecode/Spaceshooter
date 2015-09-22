@@ -94,14 +94,6 @@ bool Game::Init(HWND& aHwnd)
 	}
 
 
-	Prism::MeshData geometryData;
-	Prism::GeometryGenerator::CreateGrid(500.f, 500.f, 500, 500, geometryData);
-
-	Entity* geometry = new Entity();
-	geometry->AddComponent<GraphicsComponent>()->InitGeometry(geometryData);
-	//geometry->AddComponent<AIComponent>()->Init();
-	//myEntities.Add(geometry);
-
 	
 
 	myScene = new Prism::Scene();
