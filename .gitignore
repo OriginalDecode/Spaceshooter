@@ -58,3 +58,7 @@ Workbed/log/
 Workbed/Application_Debug.ilk
 Workbed/
 Solution/Launcher/obj/
+
+Tools/LogReader/LogReader/LogReader/obj/
+Tools/LogReader/LogReader_temp/obj/
+Tools/ModelViewer/ModelViewer/obj/
