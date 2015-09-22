@@ -17,7 +17,6 @@
 #include <InputWrapper.h>
 #include <Instance.h>
 #include <Model.h>
-#include "Player.h"
 #include <PointLight.h>
 #include <Scene.h>
 #include "ShootingComponent.h"
@@ -30,7 +29,6 @@ Game::Game()
 	PostMaster::Create();
 	myInputWrapper = new CU::InputWrapper();
 	myBulletManager = new BulletManager;
-	myPlayer = new Player(*myInputWrapper);
 	myShowPointLightCube = false;
 	//ShowCursor(false);
 }
@@ -210,7 +208,6 @@ void Game::LogicUpdate(const float aDeltaTime)
 	{
 		myEntities[i]->Update(aDeltaTime);
 	}
-	myPlayer->Update(aDeltaTime);
 }
 
 void Game::Render()
@@ -222,7 +219,6 @@ void Game::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render();
-		myPlayer->Render(&myScene->GetCamera());
 	}
 
 	if (myShowPointLightCube == true)

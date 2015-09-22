@@ -55,7 +55,8 @@ void GraphicsComponent::ReceiveMessage(const RefreshOrientationMessage&)
 
 void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 {
-	myInstance->SetPosition(aPosition);
+	myEntity->myOrientation.SetPos(aPosition);
+	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
 void GraphicsComponent::SetSelfRender(Prism::Camera* aCamera)
