@@ -80,12 +80,15 @@ bool Game::Init(HWND& aHwnd)
 	for (int i = 0; i < 50; ++i)
 	{
 		Entity* astroids = new Entity();
-		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+		//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+		//	"Data/effect/BasicEffect.fx");
+		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			"Data/effect/BasicEffect.fx");
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
-	
+		
 		astroids->AddComponent<AIComponent>()->Init();
+		astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 		
 		myEntities.Add(astroids);
 	}

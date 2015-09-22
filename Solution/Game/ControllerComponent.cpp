@@ -65,6 +65,12 @@ void ControllerComponent::RotateZ(float aAmount)
 	myEntity->SendMessage(RefreshOrientationMessage());
 }
 
+void ControllerComponent::Rotate(const CU::Matrix44<float>& aRotation)
+{
+	myEntity->myOrientation = aRotation * myEntity->myOrientation;
+	myEntity->SendMessage(RefreshOrientationMessage());
+}
+
 void ControllerComponent::Shoot(float aSpeed)
 {
 	ShootMessage msg(aSpeed);
