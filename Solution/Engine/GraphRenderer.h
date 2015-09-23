@@ -26,7 +26,7 @@ namespace Prism
 
 		void Init();
 
-		void Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
+		void Render(const CU::GrowingArray<float>& aDataArray
 			, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
 			, const float aMaxValue, bool aNewData = false);
 

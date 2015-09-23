@@ -171,11 +171,11 @@ namespace Prism
 		}
 	}
 
-	void FrameTimeDebugger::Render(const Camera& aCamera)
+	void FrameTimeDebugger::Render()
 	{
 		TIME_FUNCTION
 
-		myGraphRenderer->Render(aCamera, myFrameTimes, myGraphTopLeft, 
+		myGraphRenderer->Render(myFrameTimes, myGraphTopLeft, 
 		{ myGraphSize.x, myGraphSize.y }, 16.f, myNewGraphData);
 
 
@@ -201,9 +201,9 @@ namespace Prism
 		
 				myStringStream << std::endl;
 		
-				it->second.myNameText->Render(aCamera, it->second.myNameString.c_str(), drawPos.x, drawPos.y, 0.75f);
+				it->second.myNameText->Render(it->second.myNameString.c_str(), drawPos.x, drawPos.y, 0.75f);
 		
-				it->second.myTimeText->Render(aCamera, myStringStream.str().c_str()
+				it->second.myTimeText->Render(myStringStream.str().c_str()
 					, drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, 0.75f);
 				drawPos.y -= 30.f;
 			}

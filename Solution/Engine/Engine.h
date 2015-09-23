@@ -1,4 +1,5 @@
 #pragma once
+#include <Matrix.h>
 #include <Vector.h>
 #include <string>
 
@@ -37,11 +38,12 @@ namespace Prism
 		FontContainer* GetFontContainer();
 		DebugDataDisplay* GetDebugDisplay();
 		FileWatcher* GetFileWatcher();
+		const CU::Vector2<int>& GetWindowSize() const;
+		const CU::Matrix44<float>& GetOrthogonalMatrix() const;
 
 		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
-		void PrintDebugText(const Camera& aCamera, const std::string& aText, 
-			const CU::Vector2<float>& aPosition, float aScale = 1.f);
+		void PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale = 1.f);
 
 		void EnableZBuffer();
 		void DisableZBuffer();
@@ -62,6 +64,9 @@ namespace Prism
 		FileWatcher* myFileWatcher;
 
 		Text* myDebugText;
+
+		CU::Vector2<int> myWindowSize;
+		CU::Matrix44<float> myOrthogonalMatrix;
 
 		static Engine* myInstance;
 	};
@@ -90,4 +95,14 @@ inline Prism::DebugDataDisplay* Prism::Engine::GetDebugDisplay()
 inline Prism::FileWatcher* Prism::Engine::GetFileWatcher()
 {
 	return myFileWatcher;
+}
+
+inline const CU::Vector2<int>& Prism::Engine::GetWindowSize() const
+{
+	return myWindowSize;
+}
+
+inline const CU::Matrix44<float>& Prism::Engine::GetOrthogonalMatrix() const
+{
+	return myOrthogonalMatrix;
 }

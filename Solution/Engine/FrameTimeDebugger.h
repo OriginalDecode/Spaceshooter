@@ -30,7 +30,7 @@ namespace Prism
 		void EndFrame(float aDeltaTime);
 
 		void Update(const CU::InputWrapper& aInputWrapper);
-		void Render(const Camera& aCamera);
+		void Render();
 
 		void SetFocusedFrameIndex(int aFrameIndex);
 

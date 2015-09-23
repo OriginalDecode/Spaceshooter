@@ -26,7 +26,7 @@ namespace Prism
 
 		void Init(Font* aFont);
 
-		void Render(const Camera& aCamera, const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
+		void Render(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
 
 
 		const float& GetTextWidth() const;
@@ -70,7 +70,6 @@ namespace Prism
 		CU::Vector2<float> myCharSize;
 		float myTextWidth;
 
-		//const char* myLastText;
 		std::string myLastText;
 		float myLastDrawX;
 		float myLastDrawY;

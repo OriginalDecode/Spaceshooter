@@ -46,26 +46,26 @@ void Prism::DebugDataDisplay::RecordFrameTime(const float aDeltaTime)
 	myFrameDebugger->EndFrame(aDeltaTime);
 }
 
-void Prism::DebugDataDisplay::Render(const Camera& aCamera)
+void Prism::DebugDataDisplay::Render()
 {
 	if (myBoolContainer.at(eBitSetEnum::FUNCTION_TIMERS))
 	{
-		RenderFunctionTimers(aCamera);
+		RenderFunctionTimers();
 	}
 
 	if (myBoolContainer.at(eBitSetEnum::MEMORY_USAGE))
 	{
-		RenderMemoryUsage(aCamera);
+		RenderMemoryUsage();
 	}
 
 	if (myBoolContainer.at(eBitSetEnum::CPU_USAGE))
 	{
-		RenderCPUUsage(aCamera);
+		RenderCPUUsage();
 	}
 
 	if (myBoolContainer.at(eBitSetEnum::FRAME_TIME))
 	{
-		RenderFrameTime(aCamera);
+		RenderFrameTime();
 	}
 }
 
@@ -73,16 +73,16 @@ void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
 {
 	myFrameDebugger->Update(aInputWrapper);
 }
-void Prism::DebugDataDisplay::RenderFunctionTimers(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderFunctionTimers()
 {
 	VTUNE_EVENT_BEGIN(VTUNE::FUNCTION_TIMERS);
 
-	myFrameDebugger->Render(aCamera);
+	myFrameDebugger->Render();
 	
 	VTUNE_EVENT_END();
 }
 
-void Prism::DebugDataDisplay::RenderMemoryUsage(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderMemoryUsage()
 {
 	TIME_FUNCTION
 
@@ -90,10 +90,10 @@ void Prism::DebugDataDisplay::RenderMemoryUsage(const Camera& aCamera)
 	myStringStream.str(std::string());
 	myStringStream << "Memory: " << Prism::SystemMonitor::GetMemoryUsageMB() << "mb" << std::endl;
 
-	myText->Render(aCamera, myStringStream.str().c_str(), myMemUsageStartPos.x, myMemUsageStartPos.y, myTextScale);
+	myText->Render(myStringStream.str().c_str(), myMemUsageStartPos.x, myMemUsageStartPos.y, myTextScale);
 }
 
-void Prism::DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderCPUUsage()
 {
 	TIME_FUNCTION
 
@@ -102,10 +102,10 @@ void Prism::DebugDataDisplay::RenderCPUUsage(const Camera& aCamera)
 	myStringStream << "CPU: "
 		<< Prism::SystemMonitor::GetCPUUsage() << "%" << std::endl;;
 
-	myText->Render(aCamera, myStringStream.str().c_str(), myCPUUSageStartPos.x, myCPUUSageStartPos.y, myTextScale);
+	myText->Render(myStringStream.str().c_str(), myCPUUSageStartPos.x, myCPUUSageStartPos.y, myTextScale);
 }
 
-void Prism::DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
+void Prism::DebugDataDisplay::RenderFrameTime()
 {
 	TIME_FUNCTION
 
@@ -114,7 +114,7 @@ void Prism::DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 	myStringStream.str(std::string());
 	myStringStream << "FPS: " << FPS << std::endl;
 
-	myText->Render(aCamera, myStringStream.str().c_str(), myFrameTimeStartPos.x, myFrameTimeStartPos.y, myTextScale);
+	myText->Render(myStringStream.str().c_str(), myFrameTimeStartPos.x, myFrameTimeStartPos.y, myTextScale);
 
 
 	float frameTimeMS = myLastDeltaTime * 1000.f;
@@ -122,6 +122,6 @@ void Prism::DebugDataDisplay::RenderFrameTime(const Camera& aCamera)
 	myStringStream.str(std::string());
 	myStringStream << "FrameTime: " << frameTimeMS << "ms" << std::endl;
 
-	myText->Render(aCamera, myStringStream.str().c_str()
+	myText->Render(myStringStream.str().c_str()
 		, myFrameTimeStartPos.x, myFrameTimeStartPos.y - 30.f, myTextScale);
 }
