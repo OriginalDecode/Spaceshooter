@@ -260,8 +260,7 @@ namespace CommonUtilities
 	}
 
 	template<class T>
-	Matrix44<T> Matrix44<T>::RotatePointAroundAxis(const CU::Vector3<T>& aPoint,
-		const CU::Vector3<T>& aAxis, T aAngleInRadians)
+	Matrix44<T> Matrix44<T>::RotateAroundAxis(const CU::Vector3<T>& aAxis, T aAngleInRadians)
 	{
 		//http://paulbourke.net/geometry/rotate/
 		//CU::Vector4<T> startPoint(aPoint.x, aPoint.y, aPoint.z, 1.f);
@@ -271,7 +270,14 @@ namespace CommonUtilities
 		//
 		//Matrix44<T> TInverse = CU::InverseSimple(transform);
 
+
+		
 		CU::Vector3<T> U = CU::GetNormalized(aAxis);
+		if (U.x < 0.1f && U.y < 0.1f && U.z < 0.1f)
+		{
+			return CU::Matrix44<float>();
+		}
+
 		float a = U.x;
 		float b = U.y;
 		float c = U.z;
