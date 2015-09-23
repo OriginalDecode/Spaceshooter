@@ -28,6 +28,7 @@ namespace Prism
 		myFontContainer = new FontContainer();
 		myDebugDataDisplay = new DebugDataDisplay();
 		myFileWatcher = new FileWatcher();
+		myWireframeIsOn = false;
 	}
 
 	Engine::~Engine()
@@ -154,6 +155,19 @@ namespace Prism
 	void Engine::DisableZBuffer()
 	{
 		myDirectX->DisableZBuffer();
+	}
+
+	void Engine::ToggleWireframe()
+	{
+		myDirectX->EnableWireframe();
+
+		if (myWireframeIsOn == true)
+		{
+			myDirectX->DisableWireframe();
+			myWireframeIsOn = false;
+			return;
+		}
+		myWireframeIsOn = true;
 	}
 
 	bool Engine::WindowSetup(HWND& aHwnd, WNDPROC aWindowProc)

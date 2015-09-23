@@ -221,6 +221,74 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
+	Matrix44<T> operator*(const Matrix44<T>& aMatrix, float aScalar)
+	{
+		Matrix44<T> result(aMatrix);
+		result *= aScalar;
+		return result;
+	}
+
+	template <typename T>
+	Matrix44<T> operator*=(Matrix44<T>& aMatrix, float aScalar)
+	{
+		aMatrix.myMatrix[0] *= aScalar;
+		aMatrix.myMatrix[1] *= aScalar;
+		aMatrix.myMatrix[2] *= aScalar;
+		aMatrix.myMatrix[3] *= aScalar;
+			 
+		aMatrix.myMatrix[4] *= aScalar;
+		aMatrix.myMatrix[5] *= aScalar;
+		aMatrix.myMatrix[6] *= aScalar;
+		aMatrix.myMatrix[7] *= aScalar;
+				 
+		aMatrix.myMatrix[8] *= aScalar;
+		aMatrix.myMatrix[9] *= aScalar;
+		aMatrix.myMatrix[10] *= aScalar;
+		aMatrix.myMatrix[11] *= aScalar;
+		  
+		aMatrix.myMatrix[12] *= aScalar;
+		aMatrix.myMatrix[13] *= aScalar;
+		aMatrix.myMatrix[14] *= aScalar;
+		aMatrix.myMatrix[15] *= aScalar;
+
+		return aMatrix;
+	}
+
+	template <typename T>
+	Matrix44<T> operator+(const Matrix44<T>& aMatrix, float aScalar)
+	{
+		Matrix44<T> result(aMatrix);
+		result += aScalar;
+		return result;
+	}
+
+	template <typename T>
+	Matrix44<T> operator+=(Matrix44<T>& aMatrix, float aScalar)
+	{
+		aMatrix.myMatrix[0] += aScalar;
+		aMatrix.myMatrix[1] += aScalar;
+		aMatrix.myMatrix[2] += aScalar;
+		aMatrix.myMatrix[3] += aScalar;
+							
+		aMatrix.myMatrix[4] += aScalar;
+		aMatrix.myMatrix[5] += aScalar;
+		aMatrix.myMatrix[6] += aScalar;
+		aMatrix.myMatrix[7] += aScalar;
+
+		aMatrix.myMatrix[8] += aScalar;
+		aMatrix.myMatrix[9] += aScalar;
+		aMatrix.myMatrix[10] += aScalar;
+		aMatrix.myMatrix[11] += aScalar;
+
+		aMatrix.myMatrix[12] += aScalar;
+		aMatrix.myMatrix[13] += aScalar;
+		aMatrix.myMatrix[14] += aScalar;
+		aMatrix.myMatrix[15] += aScalar;
+
+		return aMatrix;
+	}
+
+	template <typename T>
 	Matrix44<T> Matrix44<T>::CreateRotateAroundX(T aAngleInRadians)
 	{
 		Matrix44<T> M;
@@ -271,49 +339,90 @@ namespace CommonUtilities
 		//Matrix44<T> TInverse = CU::InverseSimple(transform);
 
 
+
+		//CU::Vector3<T> U = CU::GetNormalized(aAxis);
+		//if (U.x < 0.1f && U.y < 0.1f && U.z < 0.1f)
+		//{
+		//	return CU::Matrix44<float>();
+		//}
+		//
+		//float a = U.x;
+		//float b = U.y;
+		//float c = U.z;
+		//float d = sqrtf(b*b + c*c);
+		//
+		//Matrix44<T> Rx;
+		//if (d != 0)
+		//{
+		//	Rx.myMatrix[5] = c / d;
+		//	Rx.myMatrix[6] = (-b) / d;
+		//	Rx.myMatrix[9] = b / d;
+		//	Rx.myMatrix[10] = c / d;
+		//}
+		//
+		//Matrix44<T> RxInverse = CU::InverseSimple(Rx);
+		//
+		//
+		//Matrix44<T> Ry;
+		//Ry.myMatrix[0] = d;
+		//Ry.myMatrix[2] = -a;
+		//Ry.myMatrix[8] = a;
+		//Ry.myMatrix[10] = d;
+		//
+		//Matrix44<T> RyInverse = CU::InverseSimple(Ry);
+		//
+		//
+		//Matrix44<T> Rz;
+		//Rz.myMatrix[0] = cos(aAngleInRadians);
+		//Rz.myMatrix[1] = -sin(aAngleInRadians);
+		//Rz.myMatrix[4] = sin(aAngleInRadians);
+		//Rz.myMatrix[5] = cos(aAngleInRadians);
+		//
+		//
+		////CU::Matrix44<T> finalMatrix = TInverse * RxInverse * RyInverse * Rz * Ry * Rx * transform;
+		//CU::Matrix44<T> finalMatrix =  RxInverse * RyInverse * Rz * Ry * Rx ;
+
+
+		CU::Matrix33<T> A;
+		A.myMatrix[0] = 0.f;
+		A.myMatrix[1] = -aAxis.z;
+		A.myMatrix[2] = aAxis.y;
 		
-		CU::Vector3<T> U = CU::GetNormalized(aAxis);
-		if (U.x < 0.1f && U.y < 0.1f && U.z < 0.1f)
-		{
-			return CU::Matrix44<float>();
-		}
-
-		float a = U.x;
-		float b = U.y;
-		float c = U.z;
-		float d = sqrtf(b*b + c*c);
-
-		Matrix44<T> Rx;
-		if (d != 0)
-		{
-			Rx.myMatrix[5] = c / d;
-			Rx.myMatrix[6] = (-b) / d;
-			Rx.myMatrix[9] = b / d;
-			Rx.myMatrix[10] = c / d;
-		}
-
-		Matrix44<T> RxInverse = CU::InverseSimple(Rx);
-
-
-		Matrix44<T> Ry;
-		Ry.myMatrix[0] = d;
-		Ry.myMatrix[2] = -a;
-		Ry.myMatrix[8] = a;
-		Ry.myMatrix[10] = d;
-
-		Matrix44<T> RyInverse = CU::InverseSimple(Ry);
-
-
-		Matrix44<T> Rz;
-		Rz.myMatrix[0] = cos(aAngleInRadians);
-		Rz.myMatrix[1] = -sin(aAngleInRadians);
-		Rz.myMatrix[4] = sin(aAngleInRadians);
-		Rz.myMatrix[5] = cos(aAngleInRadians);
-
+		A.myMatrix[3] = aAxis.z;
+		A.myMatrix[4] = 0.f;
+		A.myMatrix[5] = -aAxis.x;
 		
-		//CU::Matrix44<T> finalMatrix = TInverse * RxInverse * RyInverse * Rz * Ry * Rx * transform;
-		CU::Matrix44<T> finalMatrix =  RxInverse * RyInverse * Rz * Ry * Rx ;
-		return finalMatrix;
+		A.myMatrix[6] = -aAxis.y;
+		A.myMatrix[7] = aAxis.x;
+		A.myMatrix[8] = 0.f;
+		
+
+		CU::Matrix33<T> A2 = A * A;
+
+		float angleSin = sinf(aAngleInRadians);
+		float anglecos = (1 - cosf(aAngleInRadians));
+
+		CU::Matrix33<T> R;
+
+		CU::Matrix33<T> idenity;
+		idenity += angleSin;
+
+		R = idenity * A;
+		R += A2 * anglecos;
+
+
+		CU::Matrix44<T> result;
+		result.myMatrix[0] = R.myMatrix[0];
+		result.myMatrix[1] = R.myMatrix[1];
+		result.myMatrix[2] = R.myMatrix[2];
+		result.myMatrix[4] = R.myMatrix[3];
+		result.myMatrix[5] = R.myMatrix[4];
+		result.myMatrix[6] = R.myMatrix[5];
+		result.myMatrix[8] = R.myMatrix[6];
+		result.myMatrix[9] = R.myMatrix[7];
+		result.myMatrix[10] = R.myMatrix[8];
+
+		return result;
 	}
 
 	template<class T>

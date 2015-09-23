@@ -12,13 +12,14 @@ void AIComponent::Init()
 
 void AIComponent::Update(float aDeltaTime)
 {
+	FollowOwnDecision(aDeltaTime);
+
 	if (myEntityToFollow == nullptr)
 	{
-		FollowOwnDecision(aDeltaTime);
 	}
 	else
 	{
-		FollowEntity(aDeltaTime);
+		//FollowEntity(aDeltaTime);
 	}
 }
 
@@ -41,7 +42,20 @@ void AIComponent::FollowEntity(float aDeltaTime)
 
 	float rotAngle = acosf(CU::Dot(myEntity->myOrientation.GetForward(), newForward)) * aDeltaTime;
 
-	Rotate(CU::Matrix44<float>::RotateAroundAxis(rotAxis, rotAngle));
+	if (rotAngle < 0.1f)
+	{
+		RotateX(rotAngle);
+	}
+	else if (rotAngle > 3.f)
+	{
+		RotateX(rotAngle);
+	}
+	else
+	{
+		Rotate(CU::Matrix44<float>::RotateAroundAxis(rotAxis, rotAngle));
+	}
+
+	
 
 	MoveForward(50.f * aDeltaTime);
 }

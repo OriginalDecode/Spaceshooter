@@ -106,6 +106,19 @@ bool Prism::DirectX::D3DSetup()
 		return false;
 	}
 
+	if (D3DWireframeRasterizerStateSetup() == false)
+	{
+		DIRECTX_LOG("Failed to Setup WireframeRasterizerState");
+		return false;
+	}
+
+	if (D3DSolidRasterizerStateSetup() == false)
+	{
+		DIRECTX_LOG("Failed to Setup SolidRasterizerState");
+		return false;
+	}
+
+	DisableWireframe();
 	EnableZBuffer();
 	
 	DIRECTX_LOG("DirectX Setup Successful");
@@ -278,4 +291,57 @@ bool Prism::DirectX::D3DDisabledStencilStateSetup()
 	}
 
 	return true;
+}
+
+bool Prism::DirectX::D3DWireframeRasterizerStateSetup()
+{
+
+	D3D11_RASTERIZER_DESC desc;
+	ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+
+	desc.FillMode = D3D11_FILL_WIREFRAME;
+	desc.CullMode = D3D11_CULL_FRONT;
+	desc.FrontCounterClockwise = true;
+	desc.DepthBias = false;
+	desc.DepthBiasClamp = 0;
+	desc.SlopeScaledDepthBias = 0;
+	desc.DepthClipEnable = false;
+	desc.ScissorEnable = false;
+	desc.MultisampleEnable = false;
+	desc.AntialiasedLineEnable = false;
+	
+	myDevice->CreateRasterizerState(&desc, &myWireframeRasterizer);
+
+	return true;
+}
+
+bool Prism::DirectX::D3DSolidRasterizerStateSetup()
+{
+	D3D11_RASTERIZER_DESC desc;
+	ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+
+	desc.FillMode = D3D11_FILL_SOLID;
+	desc.CullMode = D3D11_CULL_FRONT;
+	desc.FrontCounterClockwise = true;
+	desc.DepthBias = false;
+	desc.DepthBiasClamp = 0;
+	desc.SlopeScaledDepthBias = 0;
+	desc.DepthClipEnable = false;
+	desc.ScissorEnable = false;
+	desc.MultisampleEnable = false;
+	desc.AntialiasedLineEnable = false;
+
+	myDevice->CreateRasterizerState(&desc, &mySolidRasterizer);
+
+	return true;
+}
+
+void Prism::DirectX::EnableWireframe()
+{
+	myContext->RSSetState(myWireframeRasterizer);
+}
+
+void Prism::DirectX::DisableWireframe()
+{
+	myContext->RSSetState(mySolidRasterizer);
 }
