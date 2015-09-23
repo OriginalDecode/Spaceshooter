@@ -14,6 +14,7 @@
 #include "Game.h"
 #include <GeometryGenerator.h>
 #include "GraphicsComponent.h"
+#include "GUIComponent.h"
 #include "InputComponent.h"
 #include <InputWrapper.h>
 #include <Instance.h>
@@ -64,9 +65,11 @@ bool Game::Init(HWND& aHwnd)
 	player->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
 	player->AddComponent<ShootingComponent>()->Init();
 
+	myPlayer = player;
 	myEntities.Add(player);
 	myCamera = new Prism::Camera(player->GetComponent<GraphicsComponent>()->GetInstance()->GetOrientation());
 	player->myCamera = myCamera;
+	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 	mySkyboxModel = new Prism::Model();
 	mySkyboxModel->InitSkyblox(500, 500, 500);
 	mySkybox = new Prism::Instance(*mySkyboxModel);
@@ -111,7 +114,7 @@ bool Game::Init(HWND& aHwnd)
 	myRenderStuff = true;
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
-	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/level1.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
 
 	GAME_LOG("Init Successful");
 	return true;
@@ -130,6 +133,11 @@ bool Game::Update()
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
+	if (deltaTime > 1.0f/10.0f)
+	{
+		deltaTime = 1.0f / 10.0f;
+	}
+
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
@@ -161,7 +169,7 @@ bool Game::Update()
 	}
 	if (myInputWrapper->KeyDown(DIK_P))
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_mega_mob_incoming");
+		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_mega_mob_incoming");
 	}
 
 	LogicUpdate(deltaTime);
@@ -174,6 +182,8 @@ bool Game::Update()
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
 	END_TIME_BLOCK("Game::Update");
+
+	myPlayer->GetComponent<GUIComponent>()->SetPositions({ 500.f, -500.f }, myInputWrapper->GetMousePosition());
 
 	Render();
 	
