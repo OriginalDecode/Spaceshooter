@@ -34,7 +34,7 @@ namespace Prism
 		void EndFunctionTimer(const std::string& aFunc);
 
 		void RecordFrameTime(const float aDeltaTime);
-		void Render(const Camera& aCamera);
+		void Render();
 
 		void ToggleFunctionTimers();
 		void ToggleMemoryUsage();
@@ -55,10 +55,10 @@ namespace Prism
 		};
 
 
-		void RenderFunctionTimers(const Camera& aCamera);
-		void RenderMemoryUsage(const Camera& aCamera);
-		void RenderCPUUsage(const Camera& aCamera);
-		void RenderFrameTime(const Camera& aCamera);
+		void RenderFunctionTimers();
+		void RenderMemoryUsage();
+		void RenderCPUUsage();
+		void RenderFrameTime();
 
 		Text* myText;
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <AudioInterface.h>
 #include "ComponentEnums.h"
 #include "Constants.h"
 #include <Engine.h>
@@ -8,6 +9,8 @@
 #include <InputWrapper.h>
 #include <FileWatcher.h>
 #include <XMLReader.h>
+#include <sstream>
+#include <Macros.h>
 
 
 InputComponent::InputComponent()
@@ -30,6 +33,11 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	ReadXML("Data/script/player.xml");
 }
 
+float clip(float n, float lower, float upper) 
+{
+	return MAX(lower, MIN(n, upper));
+}
+
 void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
@@ -38,7 +46,7 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
-		myMovementSpeed -= globalPi / 128.f;
+		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
@@ -63,10 +71,18 @@ void InputComponent::Update(float aDeltaTime)
 	if (myInputWrapper->MouseDown(0))
 	{
 		Shoot(30000.f * aDeltaTime);
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
-	myCursorPosition.x += static_cast<float>(myInputWrapper->GetMouseDX()) * 0.001f;
-	myCursorPosition.y += static_cast<float>(myInputWrapper->GetMouseDY()) * 0.001f;
+	myCursorPosition.x += static_cast<float>(clip(myInputWrapper->GetMouseDX(), -20, 20)) * aDeltaTime;
+	myCursorPosition.y += static_cast<float>(clip(myInputWrapper->GetMouseDY(), -20, 20)) * aDeltaTime;
+
+	myCursorPosition.x = clip(myCursorPosition.x, -1, 1);
+	myCursorPosition.y = clip(myCursorPosition.y, -1, 1);
+
+	std::string tempX = std::to_string(myCursorPosition.x);
+	SetWindowTextA(GetActiveWindow(), tempX.c_str());
+
 
 	float negateX = myCursorPosition.x > 0.0f ? 1.0f : -1.0f;
 	float negateY = myCursorPosition.y > 0.0f ? 1.0f : -1.0f;
@@ -74,18 +90,9 @@ void InputComponent::Update(float aDeltaTime)
 	float x = myCursorPosition.x;
 	float y = myCursorPosition.y;
 
-	if (x < 0.001f && x > -0.001f)
-	{
-		x = 0;
-	}
-	if (y < 0.001f && y > -0.001f)
-	{
-		y = 0;
-	}
 
-
-	float xRotation = (fabs((x*x) * mySteeringModifier)  * negateX) * aDeltaTime;
-	float yRotation = (fabs((y*y) * mySteeringModifier)  * negateY) * aDeltaTime;
+	float xRotation = (fabs((x + (x*0.1f) ) * mySteeringModifier)  * negateX) * aDeltaTime;
+	float yRotation = (fabs((y + (y*0.1f)) * mySteeringModifier)  * negateY) * aDeltaTime;
 
 	if (xRotation > myMaxSteeringSpeed)
 	{
@@ -105,6 +112,7 @@ void InputComponent::Update(float aDeltaTime)
 		yRotation = -myMaxSteeringSpeed;
 	}
 
+
 	RotateX(yRotation);
 	RotateY(xRotation);
 }
@@ -122,11 +130,11 @@ void InputComponent::Rotate(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_Q))
 	{
-		myRotationSpeed += globalPi / 128.f;
+		myRotationSpeed += (globalPi * 10) * aDeltaTime;
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_E))
 	{
-		myRotationSpeed -= globalPi / 128.f;
+		myRotationSpeed -= (globalPi * 10) * aDeltaTime;
 	}
 
 	if (myRotationSpeed > globalPi * 2)
@@ -140,7 +148,7 @@ void InputComponent::Rotate(float aDeltaTime)
 
 	if (myRotationSpeed > 0.f)
 	{
-		myRotationSpeed -= globalPi / 256.f;
+		myRotationSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myRotationSpeed < 0.f)
 		{
 			myRotationSpeed = 0.f;
@@ -148,7 +156,7 @@ void InputComponent::Rotate(float aDeltaTime)
 	}
 	else if (myRotationSpeed < 0.f)
 	{
-		myRotationSpeed += globalPi / 256.f;
+		myRotationSpeed += (globalPi * 5) * aDeltaTime;
 		if (myRotationSpeed > 0.f)
 		{
 			myRotationSpeed = 0.f;

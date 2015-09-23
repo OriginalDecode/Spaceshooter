@@ -35,40 +35,15 @@ void AIComponent::MakeDecision()
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	CU::Vector3<float> posDif = myEntity->myOrientation.GetPos() - myEntityToFollow->myOrientation.GetPos();
-	if (CU::Length2(posDif) == 0.f)
-	{
-		return;
-	}
+	CU::Vector3<float> newForward = CU::GetNormalized(
+		myEntityToFollow->myOrientation.GetPos() - myEntity->myOrientation.GetPos());
+	CU::Vector3<float> rotAxis = CU::Cross(myEntity->myOrientation.GetForward(), newForward);
 
-	if (posDif.x > 0.2f)
-	{
-		RotateY(-globalPi / 4.f * aDeltaTime);
-	}
-	else if (posDif.x < -0.2f)
-	{
-		RotateY(globalPi / 4.f * aDeltaTime);
-	}
+	float rotAngle = acosf(CU::Dot(myEntity->myOrientation.GetForward(), newForward)) * aDeltaTime;
 
-	if (posDif.y > 0.2f)
-	{
-		RotateX(-globalPi / 4.f * aDeltaTime);
-	}
-	else if (posDif.y < -0.2f)
-	{
-		RotateX(globalPi / 4.f * aDeltaTime);
-	}
+	Rotate(CU::Matrix44<float>::RotateAroundAxis(rotAxis, rotAngle));
 
-	//if (posDif.z > 0.2f)
-	//{
-	//	RotateZ(-globalPi / 4.f * aDeltaTime);
-	//}
-	//else if (posDif.z < -0.2f)
-	//{
-	//	RotateZ(globalPi / 4.f * aDeltaTime);
-	//}
-
-	MoveForward(10.f * aDeltaTime);
+	MoveForward(50.f * aDeltaTime);
 }
 
 void AIComponent::FollowOwnDecision(float aDeltaTime)

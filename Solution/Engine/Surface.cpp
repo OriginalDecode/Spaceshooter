@@ -24,7 +24,8 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::str
 	if (shaderVar->IsValid() == false)
 	{
 		std::string errorMsg = "Failed to get ShaderResource: " + aResourceName;
-		DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+		//DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+		RESOURCE_LOG(errorMsg.c_str());
 		return false;
 	}
 
@@ -49,7 +50,8 @@ void Prism::Surface::ReloadSurface()
 		if (shaderVar->IsValid() == false)
 		{
 			std::string errorMsg = "Failed to get ShaderResource: " + myShaderResourceNames[i];
-			DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+			//DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
+			RESOURCE_LOG(errorMsg.c_str());
 		}
 
 		myTextures.Add(tex);
@@ -62,7 +64,8 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aText
 	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
 	if (shaderVar->IsValid() == false)
 	{
-		DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
+		//DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
+		RESOURCE_LOG("Failed to get ShaderResource");
 		return false;
 	}
 

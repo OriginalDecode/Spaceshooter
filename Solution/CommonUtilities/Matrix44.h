@@ -260,6 +260,63 @@ namespace CommonUtilities
 	}
 
 	template<class T>
+	Matrix44<T> Matrix44<T>::RotateAroundAxis(const CU::Vector3<T>& aAxis, T aAngleInRadians)
+	{
+		//http://paulbourke.net/geometry/rotate/
+		//CU::Vector4<T> startPoint(aPoint.x, aPoint.y, aPoint.z, 1.f);
+		//Matrix44<T> transform;
+		//transform.SetPos(-startPoint);
+		//transform.myMatrix[15] = 1;
+		//
+		//Matrix44<T> TInverse = CU::InverseSimple(transform);
+
+
+		
+		CU::Vector3<T> U = CU::GetNormalized(aAxis);
+		if (U.x < 0.1f && U.y < 0.1f && U.z < 0.1f)
+		{
+			return CU::Matrix44<float>();
+		}
+
+		float a = U.x;
+		float b = U.y;
+		float c = U.z;
+		float d = sqrtf(b*b + c*c);
+
+		Matrix44<T> Rx;
+		if (d != 0)
+		{
+			Rx.myMatrix[5] = c / d;
+			Rx.myMatrix[6] = (-b) / d;
+			Rx.myMatrix[9] = b / d;
+			Rx.myMatrix[10] = c / d;
+		}
+
+		Matrix44<T> RxInverse = CU::InverseSimple(Rx);
+
+
+		Matrix44<T> Ry;
+		Ry.myMatrix[0] = d;
+		Ry.myMatrix[2] = -a;
+		Ry.myMatrix[8] = a;
+		Ry.myMatrix[10] = d;
+
+		Matrix44<T> RyInverse = CU::InverseSimple(Ry);
+
+
+		Matrix44<T> Rz;
+		Rz.myMatrix[0] = cos(aAngleInRadians);
+		Rz.myMatrix[1] = -sin(aAngleInRadians);
+		Rz.myMatrix[4] = sin(aAngleInRadians);
+		Rz.myMatrix[5] = cos(aAngleInRadians);
+
+		
+		//CU::Matrix44<T> finalMatrix = TInverse * RxInverse * RyInverse * Rz * Ry * Rx * transform;
+		CU::Matrix44<T> finalMatrix =  RxInverse * RyInverse * Rz * Ry * Rx ;
+		return finalMatrix;
+	}
+
+	template<class T>
 	Matrix44<T> Matrix44<T>::CreateReflectionMatrixAboutAxis(CU::Vector3<T> aReflectionVector)
 	{
 		Matrix44<T> reflectionMatrix;

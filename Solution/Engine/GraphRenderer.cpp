@@ -52,7 +52,7 @@ void Prism::GraphRenderer::Init()
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
-void Prism::GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<float>& aDataArray
+void Prism::GraphRenderer::Render(const CU::GrowingArray<float>& aDataArray
 	, const CU::Vector2<float>& aTopLeftDrawPos, const CU::Vector2<float>& aGraphSize
 	, const float aMaxValue, bool aNewData)
 {
@@ -68,7 +68,7 @@ void Prism::GraphRenderer::Render(const Camera& aCamera, const CU::GrowingArray<
 
 	myEffect->SetBlendState(NULL, NULL);
 	myEffect->SetViewMatrix(myIdentityMatrix);
-	myEffect->SetProjectionMatrix(aCamera.GetOrthogonal());
+	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetWorldMatrix(myIdentityMatrix);
 
 	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);

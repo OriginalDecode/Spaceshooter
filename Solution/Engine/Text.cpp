@@ -133,7 +133,7 @@ void Prism::Text::InitBlendState()
 	}
 }
 
-void Prism::Text::Render(const Camera& aCamera, const char* aString
+void Prism::Text::Render(const char* aString
 	, const float aDrawX, const float aDrawY, const float aScale)
 {
 	UpdateSentence(aString, aDrawX, aDrawY, aScale);
@@ -153,7 +153,7 @@ void Prism::Text::Render(const Camera& aCamera, const char* aString
 
 	myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetViewMatrix(myIdentityMatrix);
-	myEffect->SetProjectionMatrix(aCamera.GetOrthogonal());
+	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetWorldMatrix(myIdentityMatrix);
 
 	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);

@@ -67,7 +67,10 @@ void ControllerComponent::RotateZ(float aAmount)
 
 void ControllerComponent::Rotate(const CU::Matrix44<float>& aRotation)
 {
+	CU::Vector4<float> pos = myEntity->myOrientation.GetPos();
+	myEntity->myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
 	myEntity->myOrientation = aRotation * myEntity->myOrientation;
+	myEntity->myOrientation.SetPos(pos);
 	myEntity->SendMessage(RefreshOrientationMessage());
 }
 

@@ -25,7 +25,6 @@ namespace Prism
 
 
 		CU::Vector2<float> myCharSize;
-
 		Texture* myTexture;
 	};
 }

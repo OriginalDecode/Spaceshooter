@@ -65,7 +65,7 @@
     <Lib>
       <AdditionalDependencies>Effects11_$(Configuration).lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;libfbxsdk-md_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Libs\</AdditionalLibraryDirectories>
-      <AdditionalOptions>/ignore:4099,4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4099,4221,4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <FxCompile>
       <ShaderType>Effect</ShaderType>
@@ -92,7 +92,7 @@
     <Lib>
       <AdditionalDependencies>Effects11_$(Configuration).lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;libfbxsdk-md_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Libs\</AdditionalLibraryDirectories>
-      <AdditionalOptions>/ignore:4099,4221 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4099,4221,4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
     <FxCompile>
       <ShaderType>Effect</ShaderType>

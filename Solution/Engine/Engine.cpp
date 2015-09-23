@@ -75,7 +75,12 @@ namespace Prism
 
 	void Engine::OnResize(int aWidth, int aHeigth)
 	{
+		myWindowSize.x = aWidth;
+		myWindowSize.y = aHeigth;
 		myDirectX->OnResize(aWidth, aHeigth);
+
+		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
+			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
 	}
 
 	ID3D11Device* Engine::GetDevice()
@@ -90,6 +95,9 @@ namespace Prism
 
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	{
+		myWindowSize.x = mySetupInfo->myScreenWidth;
+		myWindowSize.y = mySetupInfo->myScreenHeight;
+
 		if (WindowSetup(aHwnd, aWndProc) == false)
 		{
 			ENGINE_LOG("Failed to Create Window");
@@ -112,6 +120,9 @@ namespace Prism
 		myDebugText = new Text();
 		myDebugText->Init(GetFontContainer()->GetFont("Data/resources/font/font.dds"));
 
+		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
+			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
+
 		ENGINE_LOG("Engine Init Successful");
 		return true;
 	}
@@ -130,10 +141,9 @@ namespace Prism
 		return model;
 	}
 
-	void Engine::PrintDebugText(const Camera& aCamera, const std::string& aText
-		, const CU::Vector2<float>& aPosition, float aScale)
+	void Engine::PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale)
 	{
-		myDebugText->Render(aCamera, aText.c_str(), aPosition.x, aPosition.y, aScale);
+		myDebugText->Render(aText.c_str(), aPosition.x, aPosition.y, aScale);
 	}
 
 	void Engine::EnableZBuffer()
@@ -173,8 +183,18 @@ namespace Prism
 		RECT rc = { 0, 0, mySetupInfo->myScreenWidth, mySetupInfo->myScreenHeight };
 		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-		aHwnd = CreateWindow("DirectX Window", "DirectX Window", WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, GetModuleHandle(NULL), NULL);
+		aHwnd = CreateWindow(
+			"DirectX Window",
+			"DirectX Window",
+			WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT,
+			CW_USEDEFAULT,
+			rc.right - rc.left,
+			rc.bottom - rc.top,
+			NULL, 
+			NULL,
+			GetModuleHandle(NULL),
+			NULL);
 
 		if (!aHwnd)
 		{
