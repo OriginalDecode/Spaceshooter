@@ -25,6 +25,7 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
+#include <vector.h>
 
 Game::Game()
 {
@@ -194,7 +195,7 @@ bool Game::Update()
 
 	END_TIME_BLOCK("Game::Update");
 
-	myPlayer->GetComponent<GUIComponent>()->SetPositions({ 500.f, -500.f }, myInputWrapper->GetMousePosition());
+	myPlayer->GetComponent<GUIComponent>()->SetPositions(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	Render();
 	

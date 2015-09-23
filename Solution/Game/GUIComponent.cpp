@@ -20,7 +20,7 @@ GUIComponent::~GUIComponent()
 	myCrosshair = nullptr;
 }
 
-void GUIComponent::Update(float aDeltaTime)
+void GUIComponent::Update(float)
 {
 	myMousePointer->Render(*myCamera, myMousePos.x, -myMousePos.y);
 	myCrosshair->Render(*myCamera, myCenter.x, myCenter.y);
