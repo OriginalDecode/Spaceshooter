@@ -16,7 +16,7 @@ public:
 
 	void Update(float aDeltaTime);
 
-	void SetPositions(const CU::Vector2<float> aScreenCenter, const CU::Vector2<float> aMousePos);
+	void SetPositions(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos);
 	void SetCamera(Prism::Camera* aCamera);
 
 	static int GetID();
@@ -37,9 +37,10 @@ inline int GUIComponent::GetID()
 	return 6;
 }
 
-inline void GUIComponent::SetPositions(const CU::Vector2<float> aScreenCenter, const CU::Vector2<float> aMousePos)
+inline void GUIComponent::SetPositions(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos)
 {
-	myCenter = aScreenCenter;
+	myCenter.x = aScreenCenter.x / 2.f;
+	myCenter.y = -(aScreenCenter.y / 2.f);
 	myMousePos = aMousePos;
 }
 
