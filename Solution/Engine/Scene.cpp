@@ -81,6 +81,11 @@ void Prism::Scene::AddLight(SpotLight* aLight)
 	mySpotLights.Add(aLight);
 }
 
+void Prism::Scene::RemoveInstance(Instance* aInstance) 
+{
+	myInstances.RemoveCyclic(aInstance);
+}
+
 void Prism::Scene::SetCamera(Camera* aCamera)
 {
 	myCamera = aCamera;

@@ -18,9 +18,25 @@ namespace ModelViewer
         private OpenModelWindow myOpenModelWindowForm;
         private FileInfo myCurrentModelFile = null;
 
+        private string myCurrentEffectFilePath = "";
+
         public ModelViewerWindow()
         {
             InitializeComponent();
+
+            IntPtr windowHandle = ModelViewer.Handle;
+
+            ModelViewer.Invalidate();
+            //Action<Message> windowProc = WndProc;
+
+            Int32 width = ModelViewer.Width;
+            Int32 height = ModelViewer.Height;
+
+            NativeMethods.SetupWindow(width, height);
+            NativeMethods.StartEngine(windowHandle);
+            NativeMethods.Render();
+
+            UpdateTimer.Start();
         }
 
         private void Btn_OpenModel_Click(object sender, EventArgs e)
@@ -71,6 +87,36 @@ namespace ModelViewer
         public void SetModelFile(FileInfo aModelFile)
         {
             myCurrentModelFile = aModelFile;
+
+            
+        }
+
+        private void ModelViewer_Paint(object sender, PaintEventArgs e)
+        {
+            NativeMethods.Update();
+            NativeMethods.Render();
+        }
+
+        private void EffectFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            for (int i = 0; i < myEffectFiles.Count; ++i)
+            {
+                if (myEffectFiles[i].Name == EffectFilter.SelectedItem)
+                {
+                    myCurrentEffectFilePath = myEffectFiles[i].FullName;
+                    NativeMethods.SetEffect(myCurrentEffectFilePath);
+                }
+            }
+        }
+
+        private void UpdateTimer_Tick(object sender, EventArgs e)
+        {
+            ModelViewer.Invalidate();
+        }
+
+        private void Btn_LoadModel_Click(object sender, EventArgs e)
+        {
+            NativeMethods.LoadModel(myCurrentModelFile.FullName, myCurrentEffectFilePath);
         }
     }
 }

@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Effect.h"
+#include "EffectContainer.h"
 #include "Instance.h"
 #include "Model.h"
 
@@ -46,6 +47,11 @@ CU::Matrix44<float>& Prism::Instance::GetOrientation()
 void Prism::Instance::SetOrientation(const CU::Matrix44<float>& aOrientation)
 {
 	myOrientation = aOrientation;
+}
+
+void Prism::Instance::SetEffect(const std::string& aEffectFile)
+{
+	myModel.SetEffect(Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectFile));
 }
 
 void Prism::Instance::PerformRotationLocal(CU::Matrix44<float>& aRotation)
