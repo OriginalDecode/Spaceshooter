@@ -122,7 +122,6 @@ bool Game::Init(HWND& aHwnd)
 	return true;
 }
 
-
 bool Game::Destroy()
 {
 	return true;
@@ -171,7 +170,7 @@ bool Game::Update()
 	}
 	if (myInputWrapper->KeyDown(DIK_P))
 	{
-		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_mega_mob_incoming");
+		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
 

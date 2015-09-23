@@ -47,12 +47,16 @@ namespace Prism
 
 		void EnableZBuffer();
 		void DisableZBuffer();
+
+		void ToggleWireframe();
+
 	private:
 		Engine();
 		~Engine();
 		bool Init(HWND& aHwnd, WNDPROC aWndProc);
 		bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
 
+		bool myWireframeIsOn;
 
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;
