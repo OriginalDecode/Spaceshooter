@@ -31,8 +31,9 @@ Prism::Model2D::~Model2D()
 	delete myInitData;
 }
 
-void Prism::Model2D::Init(const std::string& aFileName)
+void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
 {
+	myTextureSize = aTextureSize;
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/FontEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
@@ -225,20 +226,11 @@ void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float 
 	myVerticeIndices.RemoveAll();
 	
 	float left, right, top, bottom;
-	//// Calculate the screen coordinates of the left side of the bitmap.
-	//left = ((720 / 2.f) * -1) + aDrawX;
-	//// Calculate the screen coordinates of the right side of the bitmap.
-	//right = left + 128.f;
-	//// Calculate the screen coordinates of the top of the bitmap.
-	//top = (1280 / 2.f) - aDrawY;
-	//// Calculate the screen coordinates of the bottom of the bitmap.
-	//bottom = top - 128.f;
-	left = aDrawX;
-	right = aDrawX + 128.f;
-	top = aDrawY;
-	bottom = aDrawY - 128.f;
-	
-	// First triangle.
+	left = aDrawX - (myTextureSize.x / 2.f);
+	right = aDrawX + myTextureSize.x - (myTextureSize.x / 2.f);
+	top = aDrawY + (myTextureSize.y / 2.f);
+	bottom = aDrawY - myTextureSize.y + (myTextureSize.y / 2.f);
+
 	VertexPosUV vert;
 	vert.myPos = { left, top, 0.0f };
 	vert.myUV = { 0.0f, 0.0f };
@@ -252,7 +244,6 @@ void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float 
 	vert.myUV = { 0.0f, 1.0f };
 	myVertices.Add(vert);
 
-	// second
 	vert.myPos = { left, top, 0.0f };
 	vert.myUV = { 0.0f, 0.0f };
 	myVertices.Add(vert);

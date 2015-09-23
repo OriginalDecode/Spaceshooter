@@ -15,6 +15,7 @@ public:
 	~GUIComponent();
 
 	void Update(float aDeltaTime);
+	void Render();
 
 	void SetPositions(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos);
 	void SetCamera(Prism::Camera* aCamera);

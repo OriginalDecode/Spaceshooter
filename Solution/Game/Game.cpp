@@ -188,10 +188,12 @@ bool Game::Update()
 
 	END_TIME_BLOCK("Game::Update");
 
-	myPlayer->GetComponent<GUIComponent>()->SetPositions(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	Render();
 	
+	myPlayer->GetComponent<GUIComponent>()->SetPositions(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+
+	myPlayer->GetComponent<GUIComponent>()->Render();
 
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
