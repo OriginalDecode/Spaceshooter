@@ -2,13 +2,13 @@
 
 #include "DebugDataDisplay.h"
 #include "Font.h"
+#include "FontContainer.h"
+#include "FrameTimeDebugger.h"
+#include <InputWrapper.h>
 #include <sstream>
 #include "SystemMonitor.h"
 #include "Text.h"
 #include "VTuneApi.h"
-
-#include "FrameTimeDebugger.h"
-#include "FontContainer.h"
 
 
 Prism::DebugDataDisplay::DebugDataDisplay()
@@ -71,6 +71,23 @@ void Prism::DebugDataDisplay::Render()
 
 void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
 {
+	if (aInputWrapper.KeyDown(DIK_F5))
+	{
+		ToggleFunctionTimers();
+	}
+	else if (aInputWrapper.KeyDown(DIK_F6))
+	{
+		ToggleMemoryUsage();
+	}
+	else if (aInputWrapper.KeyDown(DIK_F7))
+	{
+		ToggleCPUUsage();
+	}
+	else if (aInputWrapper.KeyDown(DIK_F8))
+	{
+		ToggleFrameTime();
+	}
+
 	myFrameDebugger->Update(aInputWrapper);
 }
 void Prism::DebugDataDisplay::RenderFunctionTimers()

@@ -76,26 +76,30 @@ bool Game::Init(HWND& aHwnd)
 	mySkybox = new Prism::Instance(*mySkyboxModel);
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
-	for (int i = 0; i < 50; ++i)
+	for (int i = 0; i < 1; ++i)
 	{
 		Entity* astroids = new Entity();
-		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			"Data/effect/NoTextureEffect.fx");
+		//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+		//	"Data/effect/NoTextureEffect.fx");
+
+		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+			"Data/effect/BasicEffect.fx");
 
 
-		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
-				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+		//astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
+		//		static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
 
-		astroids->AddComponent<AIComponent>()->Init();
-		astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+
+		//astroids->AddComponent<AIComponent>()->Init();
+		//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 		
 		myEntities.Add(astroids);
 	}
 
 	myCockPit = new Entity();
-	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
-		"Data/effect/BasicEffect.fx");
-	myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
+	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
+	//	"Data/effect/NoTextureEffect.fx");
+	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
 	myEntities.Add(myCockPit);
 
 	myScene = new Prism::Scene();
@@ -143,23 +147,8 @@ bool Game::Update()
 	myCockPit->myOrientation = myEntities[0]->myOrientation;
 	myCockPit->SendMessage(RefreshOrientationMessage());
 
-	if (myInputWrapper->KeyDown(DIK_F5))
-	{
-		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleFunctionTimers();
-	}
-	else if (myInputWrapper->KeyDown(DIK_F6))
-	{
-		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleMemoryUsage();
-	}
-	else if (myInputWrapper->KeyDown(DIK_F7))
-	{
-		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleCPUUsage();
-	}
-	else if (myInputWrapper->KeyDown(DIK_F8))
-	{
-		Prism::Engine::GetInstance()->GetDebugDisplay()->ToggleFrameTime();
-	}
-	else if (myInputWrapper->KeyDown(DIK_F9))
+	
+	if (myInputWrapper->KeyDown(DIK_F9))
 	{
 		myShowPointLightCube = !myShowPointLightCube;
 	}
@@ -192,6 +181,7 @@ bool Game::Update()
 	Render();
 	
 
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
 }
