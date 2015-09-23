@@ -41,7 +41,7 @@ void AIComponent::FollowEntity(float aDeltaTime)
 
 	float rotAngle = acosf(CU::Dot(myEntity->myOrientation.GetForward(), newForward)) * aDeltaTime;
 
-	Rotate(CU::Matrix44<float>::RotatePointAroundAxis(myEntity->myOrientation.GetPos(), rotAxis, rotAngle));
+	Rotate(CU::Matrix44<float>::RotateAroundAxis(rotAxis, rotAngle));
 
 	MoveForward(50.f * aDeltaTime);
 }

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 #include "AIComponent.h"
-#include "../Audio/Audio/AudioInterface.h"
+#include <AudioInterface.h>
 #include "BulletManager.h"
 #include <Camera.h>
 #include "Constants.h"

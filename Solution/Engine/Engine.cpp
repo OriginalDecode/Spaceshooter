@@ -173,8 +173,18 @@ namespace Prism
 		RECT rc = { 0, 0, mySetupInfo->myScreenWidth, mySetupInfo->myScreenHeight };
 		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-		aHwnd = CreateWindow("DirectX Window", "DirectX Window", WS_OVERLAPPEDWINDOW,
-			CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, GetModuleHandle(NULL), NULL);
+		aHwnd = CreateWindow(
+			"DirectX Window",
+			"DirectX Window",
+			WS_OVERLAPPEDWINDOW,
+			CW_USEDEFAULT,
+			CW_USEDEFAULT,
+			rc.right - rc.left,
+			rc.bottom - rc.top,
+			NULL, 
+			NULL,
+			GetModuleHandle(NULL),
+			NULL);
 
 		if (!aHwnd)
 		{

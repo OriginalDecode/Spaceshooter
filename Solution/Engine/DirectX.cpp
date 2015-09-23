@@ -16,6 +16,7 @@ void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned in
 	mySwapChain->Present(aSyncInterval, aFlags);
 	
 }
+
 void Prism::DirectX::Clear(const float aClearColor[4])
 {
 	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
