@@ -116,7 +116,7 @@ bool Game::Init(HWND& aHwnd)
 	myRenderStuff = true;
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
-	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/level1.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
 
 	GAME_LOG("Init Successful");
 	return true;
@@ -135,6 +135,11 @@ bool Game::Update()
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
+	if (deltaTime > 1.0f/10.0f)
+	{
+		deltaTime = 1.0f / 10.0f;
+	}
+
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
@@ -166,7 +171,7 @@ bool Game::Update()
 	}
 	if (myInputWrapper->KeyDown(DIK_P))
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_mega_mob_incoming");
+		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_mega_mob_incoming");
 	}
 
 
