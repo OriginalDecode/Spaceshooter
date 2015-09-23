@@ -243,7 +243,7 @@ void Game::Render()
 
 	END_TIME_BLOCK("Game::Render");
 
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Render(*myCamera);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
 	VTUNE_EVENT_END();
 }
