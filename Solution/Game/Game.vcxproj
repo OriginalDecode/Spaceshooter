@@ -92,6 +92,7 @@
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GraphicsComponent.h" />
+    <ClInclude Include="GUIComponent.h" />
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
@@ -112,6 +113,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
+    <ClCompile Include="GUIComponent.cpp" />
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />

@@ -13,6 +13,7 @@
 #include "Game.h"
 #include <GeometryGenerator.h>
 #include "GraphicsComponent.h"
+#include "GUIComponent.h"
 #include "InputComponent.h"
 #include <InputWrapper.h>
 #include <Instance.h>
@@ -67,9 +68,11 @@ bool Game::Init(HWND& aHwnd)
 	player->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
 	player->AddComponent<ShootingComponent>()->Init();
 
+	myPlayer = player;
 	myEntities.Add(player);
 	myCamera = new Prism::Camera(player->GetComponent<GraphicsComponent>()->GetInstance()->GetOrientation());
 	player->myCamera = myCamera;
+	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 	mySkyboxModel = new Prism::Model();
 	mySkyboxModel->InitSkyblox(500, 500, 500);
 	mySkybox = new Prism::Instance(*mySkyboxModel);
@@ -177,6 +180,8 @@ bool Game::Update()
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
 	END_TIME_BLOCK("Game::Update");
+
+	myPlayer->GetComponent<GUIComponent>()->SetPositions({ 500.f, -500.f }, myInputWrapper->GetMousePosition());
 
 	Render();
 	

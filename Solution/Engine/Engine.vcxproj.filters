@@ -55,6 +55,7 @@
     <ClCompile Include="SystemMonitor.cpp">
       <Filter>DebugServices</Filter>
     </ClCompile>
+    <ClCompile Include="Model2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="SystemMonitor.h">
       <Filter>DebugServices</Filter>
     </ClInclude>
+    <ClInclude Include="Model2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
