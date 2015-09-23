@@ -56,6 +56,7 @@ private:
 	CU::GrowingArray<Entity*> myEntities;
 	Player* myPlayer;
 	BulletManager* myBulletManager;
+	Entity* myCockPit;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;

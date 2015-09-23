@@ -24,6 +24,7 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
+#include "RefreshOrientationMessage.h"
 
 Game::Game()
 {
@@ -93,8 +94,11 @@ bool Game::Init(HWND& aHwnd)
 		myEntities.Add(astroids);
 	}
 
-
-	
+	myCockPit = new Entity();
+	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
+		"Data/effect/BasicEffect.fx");
+	myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
+	myEntities.Add(myCockPit);
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
@@ -139,7 +143,8 @@ bool Game::Update()
 	{
 		deltaTime = 1.0f / 10.0f;
 	}
-
+	myCockPit->myOrientation = myEntities[0]->myOrientation;
+	myCockPit->SendMessage(RefreshOrientationMessage());
 
 	if (myInputWrapper->KeyDown(DIK_F5))
 	{
