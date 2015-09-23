@@ -191,6 +191,58 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
+	Matrix33<T> operator*(const Matrix33<T>& aMatrix, float aScalar)
+	{
+		Matrix33<T> result(aMatrix);
+		result *= aScalar;
+		return result;
+	}
+
+	template <typename T>
+	Matrix33<T> operator*=(Matrix33<T>& aMatrix, float aScalar)
+	{
+		aMatrix.myMatrix[0] *= aScalar;
+		aMatrix.myMatrix[1] *= aScalar;
+		aMatrix.myMatrix[2] *= aScalar;
+
+		aMatrix.myMatrix[3] *= aScalar;
+		aMatrix.myMatrix[4] *= aScalar;
+		aMatrix.myMatrix[5] *= aScalar;
+
+		aMatrix.myMatrix[6] *= aScalar;
+		aMatrix.myMatrix[7] *= aScalar;
+		aMatrix.myMatrix[8] *= aScalar;
+
+		return aMatrix;
+	}
+
+	template <typename T>
+	Matrix33<T> operator+(const Matrix33<T>& aMatrix, float aScalar)
+	{
+		Matrix33<T> result(aMatrix);
+		result += aScalar;
+		return result;
+	}
+
+	template <typename T>
+	Matrix33<T> operator+=(Matrix33<T>& aMatrix, float aScalar)
+	{
+		aMatrix.myMatrix[0] += aScalar;
+		aMatrix.myMatrix[1] += aScalar;
+		aMatrix.myMatrix[2] += aScalar;
+
+		aMatrix.myMatrix[3] += aScalar;
+		aMatrix.myMatrix[4] += aScalar;
+		aMatrix.myMatrix[5] += aScalar;
+
+		aMatrix.myMatrix[6] += aScalar;
+		aMatrix.myMatrix[7] += aScalar;
+		aMatrix.myMatrix[8] += aScalar;
+
+		return aMatrix;
+	}
+
+	template <typename T>
 	Matrix33<T> Matrix33<T>::CreateRotateAroundX(T aAngleInRadians)
 	{
 		Matrix33<T> M;
