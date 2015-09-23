@@ -2,6 +2,7 @@
 #include <Matrix.h>
 #include <Vector.h>
 #include <string>
+#include <Windows.h>
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;

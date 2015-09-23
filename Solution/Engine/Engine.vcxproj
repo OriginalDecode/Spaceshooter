@@ -123,6 +123,7 @@
     <ClCompile Include="GraphRenderer.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Model2D.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SpotLight.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="LightStructs.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Model2D.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SetupInfo.h" />

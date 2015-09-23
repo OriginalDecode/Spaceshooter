@@ -1,3 +1,4 @@
+
 ﻿namespace ModelViewer
 {
     partial class ModelViewerWindow
@@ -28,6 +29,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.Menu_Panel = new System.Windows.Forms.Panel();
             this.Btn_OpenEffectFolder = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -36,12 +38,15 @@
             this.ModelViewer = new System.Windows.Forms.Panel();
             this.ModelViewerMenu = new System.Windows.Forms.Panel();
             this.effectFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
+            this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
+            this.Btn_LoadModel = new System.Windows.Forms.Button();
             this.Menu_Panel.SuspendLayout();
             this.ModelViewer.SuspendLayout();
             this.SuspendLayout();
             // 
             // Menu_Panel
             // 
+            this.Menu_Panel.Controls.Add(this.Btn_LoadModel);
             this.Menu_Panel.Controls.Add(this.Btn_OpenEffectFolder);
             this.Menu_Panel.Controls.Add(this.label1);
             this.Menu_Panel.Controls.Add(this.EffectFilter);
@@ -49,7 +54,7 @@
             this.Menu_Panel.Dock = System.Windows.Forms.DockStyle.Top;
             this.Menu_Panel.Location = new System.Drawing.Point(0, 0);
             this.Menu_Panel.Name = "Menu_Panel";
-            this.Menu_Panel.Size = new System.Drawing.Size(505, 32);
+            this.Menu_Panel.Size = new System.Drawing.Size(1032, 32);
             this.Menu_Panel.TabIndex = 0;
             // 
             // Btn_OpenEffectFolder
@@ -78,6 +83,7 @@
             this.EffectFilter.Name = "EffectFilter";
             this.EffectFilter.Size = new System.Drawing.Size(121, 21);
             this.EffectFilter.TabIndex = 1;
+            this.EffectFilter.SelectedIndexChanged += new System.EventHandler(this.EffectFilter_SelectedIndexChanged);
             // 
             // Btn_OpenModel
             // 
@@ -95,22 +101,37 @@
             this.ModelViewer.Dock = System.Windows.Forms.DockStyle.Left;
             this.ModelViewer.Location = new System.Drawing.Point(0, 32);
             this.ModelViewer.Name = "ModelViewer";
-            this.ModelViewer.Size = new System.Drawing.Size(502, 397);
+            this.ModelViewer.Size = new System.Drawing.Size(1029, 720);
             this.ModelViewer.TabIndex = 1;
+            this.ModelViewer.Paint += new System.Windows.Forms.PaintEventHandler(this.ModelViewer_Paint);
             // 
             // ModelViewerMenu
             // 
             this.ModelViewerMenu.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ModelViewerMenu.Location = new System.Drawing.Point(363, 0);
+            this.ModelViewerMenu.Location = new System.Drawing.Point(890, 0);
             this.ModelViewerMenu.Name = "ModelViewerMenu";
-            this.ModelViewerMenu.Size = new System.Drawing.Size(139, 397);
+            this.ModelViewerMenu.Size = new System.Drawing.Size(139, 720);
             this.ModelViewerMenu.TabIndex = 0;
+            // 
+            // UpdateTimer
+            // 
+            this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
+            // 
+            // Btn_LoadModel
+            // 
+            this.Btn_LoadModel.Location = new System.Drawing.Point(397, 5);
+            this.Btn_LoadModel.Name = "Btn_LoadModel";
+            this.Btn_LoadModel.Size = new System.Drawing.Size(75, 23);
+            this.Btn_LoadModel.TabIndex = 4;
+            this.Btn_LoadModel.Text = "Load Model";
+            this.Btn_LoadModel.UseVisualStyleBackColor = true;
+            this.Btn_LoadModel.Click += new System.EventHandler(this.Btn_LoadModel_Click);
             // 
             // ModelViewerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(505, 429);
+            this.ClientSize = new System.Drawing.Size(1032, 752);
             this.Controls.Add(this.ModelViewer);
             this.Controls.Add(this.Menu_Panel);
             this.Name = "ModelViewerWindow";
@@ -132,6 +153,7 @@
         private System.Windows.Forms.Panel ModelViewerMenu;
         private System.Windows.Forms.Button Btn_OpenEffectFolder;
         private System.Windows.Forms.FolderBrowserDialog effectFolderBrowser;
+        private System.Windows.Forms.Timer UpdateTimer;
+        private System.Windows.Forms.Button Btn_LoadModel;
     }
 }
-

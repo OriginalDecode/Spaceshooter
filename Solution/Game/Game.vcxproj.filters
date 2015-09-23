@@ -41,6 +41,9 @@
     <ClCompile Include="BulletComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="GUIComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -93,6 +96,9 @@
       <Filter>PostMaster</Filter>
     </ClInclude>
     <ClInclude Include="BulletComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="GUIComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
