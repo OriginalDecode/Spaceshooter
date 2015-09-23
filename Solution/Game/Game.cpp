@@ -55,14 +55,8 @@ bool Game::Init(HWND& aHwnd)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	myLight = new Prism::DirectionalLight();
-	myLight->SetColor({ 1.f, 1.f, 0.f, 1.f });
+	myLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
-
-	myPointLight = new Prism::PointLight();
-	myPointLight->SetColor({ 1.f, 1.f, 1.f, 1.f });
-	myPointLight->SetPosition({ 0, 0, 0, 0 });
-	myPointLight->SetRange(50.f);
-	myPointLight->Initiate();
 
 	myEntities.Init(4);
 	
@@ -86,11 +80,12 @@ bool Game::Init(HWND& aHwnd)
 	{
 		Entity* astroids = new Entity();
 		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			"Data/effect/BasicEffect.fx");
+			"Data/effect/NoTextureEffect.fx");
+
+
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
-		//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 0.f, 10.f, 100.f });
-		
+
 		astroids->AddComponent<AIComponent>()->Init();
 		astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 		
@@ -105,8 +100,8 @@ bool Game::Init(HWND& aHwnd)
 
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
-	myScene->AddLight(myPointLight);
 	myScene->AddInstance(mySkybox);
+	myScene->AddLight(myLight);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -118,7 +113,7 @@ bool Game::Init(HWND& aHwnd)
 		}
 	}
 
-	myScene->AddLight(myLight);
+	
 
 	myRenderStuff = true;
 
@@ -181,14 +176,8 @@ bool Game::Update()
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
-
 	LogicUpdate(deltaTime);
 
-	//float R = (rand()% 255+1);
-	//float G = (rand()% 255+1);
-	//float B = (rand()% 255+1);
-	//
-	//myLight->SetColor({ R/255.f, G/255.f, B/255.f, 1.f });
 
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
@@ -224,8 +213,6 @@ void Game::OnResize(int aWidth, int aHeight)
 
 void Game::LogicUpdate(const float aDeltaTime)
 {
-	myLight->PerformRotation(CU::Matrix33<float>::CreateRotateAroundX(globalPi / 4.f * aDeltaTime));
-
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
 		myEntities[i]->Update(aDeltaTime);
@@ -256,4 +243,3 @@ void Game::Render()
 
 	VTUNE_EVENT_END();
 }
-

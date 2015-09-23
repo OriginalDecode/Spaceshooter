@@ -108,7 +108,7 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 		std::string resourceName;
 		if (currentTexture.myType == DIFFUSE)
 		{
-			resourceName = "DiffuseTexture";
+			resourceName = "AlbedoTexture";
 		}
 		if (currentTexture.myType == NORMALMAP)
 		{
@@ -121,7 +121,7 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 		}
 		if (currentTexture.myType == SUBSTANCE)
 		{
-			resourceName = "SubstanceTexture";
+			resourceName = "MetalnessTexture";
 		}
 		if (currentTexture.myType == AO)
 		{
