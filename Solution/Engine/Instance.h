@@ -24,6 +24,8 @@ namespace Prism
 		CU::Matrix44<float>& GetOrientation();
 		void SetOrientation(const CU::Matrix44<float>& aOrientation);
 
+		void SetEffect(const std::string& aEffectFile);
+
 		void PerformRotationLocal(CU::Matrix44<float>& aRotation);
 		void PerformRotationWorld(CU::Matrix44<float>& aRotation);
 		void PerformTransformation(CU::Matrix44<float>& aTransformation);

@@ -26,6 +26,8 @@ namespace Prism
 		void AddLight(PointLight* aLight);
 		void AddLight(SpotLight* aLight);
 
+		void RemoveInstance(Instance* aInstance);
+
 		void SetCamera(Camera* aCamera);
 		Camera& GetCamera();
 
