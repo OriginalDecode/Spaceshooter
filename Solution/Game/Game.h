@@ -52,6 +52,7 @@ private:
 	CU::Matrix44<float> myWorldMatrix;
 	CU::GrowingArray<Entity*> myEntities;
 	Entity* myPlayer;
+	Entity* myCockPit;
 	BulletManager* myBulletManager;
 
 	bool myRenderStuff;
