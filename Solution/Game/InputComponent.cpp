@@ -38,7 +38,7 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
-		myMovementSpeed -= (globalPi / 128.f) * aDeltaTime;
+		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
