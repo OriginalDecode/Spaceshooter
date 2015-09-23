@@ -18,7 +18,6 @@ namespace Prism
 };
 
 class Entity;
-class Player;
 class BulletManager;
 
 class Game
@@ -34,8 +33,6 @@ public:
 	void Pause();
 	void UnPause();
 	void OnResize(int aWidth, int aHeight);
-
-	Entity* GetTestShot();
 
 private:
 	void operator=(Game& aApp) = delete;
@@ -54,7 +51,7 @@ private:
 	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
 	CU::GrowingArray<Entity*> myEntities;
-	Player* myPlayer;
+	Entity* myPlayer;
 	BulletManager* myBulletManager;
 	Entity* myCockPit;
 
