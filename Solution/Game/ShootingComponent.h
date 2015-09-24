@@ -7,11 +7,17 @@ class Entity;
 class ShootingComponent : public Component
 {
 public:
-	virtual void ReceiveMessage(const ShootMessage& aMessage) override;
+
+	ShootingComponent();
+
+	void ReceiveMessage(const ShootMessage& aMessage) override;
+	void Init(CU::Vector3<float> aSpawningPointOffset = { 0.f, 0.f, 0.f });
 
 	static int GetID();
 
 private:
+
+	CU::Vector3<float> mySpawningPointOffset;
 };
 
 inline int ShootingComponent::GetID()

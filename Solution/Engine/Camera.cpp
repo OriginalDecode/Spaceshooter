@@ -7,7 +7,7 @@ namespace Prism
 	Camera::Camera(CU::Matrix44f& aPlayerMatrix)
 		: myOrientation(aPlayerMatrix)
 	{
-		OnResize(800, 600);
+		//OnResize(800, 600);
 
 		//myOrientation.SetPos(CU::Vector3<float>(0.f, 0.f, -25.f));
 	}
@@ -19,8 +19,14 @@ namespace Prism
 
 	void Camera::OnResize(const int aWidth, const int aHeight)
 	{
-		myProjectionMatrix = CU::Matrix44<float>::CreateProjectionMatrixLH(0.1f, 1000.f, static_cast<float>(aWidth / aHeight), XM_PI * 0.4f);
+		//myProjectionMatrix = CU::Matrix44<float>::CreateProjectionMatrixLH(0.1f, 1000.f, static_cast<float>(aWidth / aHeight), XM_PI * 0.4f);
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(aWidth), static_cast<float>(aHeight), 0.1f, 1000.f);
+
+
+		XMMATRIX projection = XMMatrixPerspectiveFovLH(XM_PI * 0.4f, static_cast<float>(aWidth / aHeight), 0.1f, 1000.f);
+		XMFLOAT4X4 proj;
+		XMStoreFloat4x4(&proj, projection);
+		myProjectionMatrix.Init(reinterpret_cast<float*>(proj.m));
 	}
 
 	const CU::Matrix44<float>& Camera::GetOrientation() const
@@ -58,7 +64,7 @@ namespace Prism
 	{
 		TIME_FUNCTION
 
-			myPosition = myOrientation.GetPos();
+		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aDegrees * XM_PI / 180.f) * myOrientation;
 		myOrientation.SetPos(myPosition);
@@ -68,7 +74,7 @@ namespace Prism
 	{
 		TIME_FUNCTION
 
-			myPosition = myOrientation.GetPos();
+		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundY(aDegrees * XM_PI / 180.f) * myOrientation;
 		myOrientation.SetPos(myPosition);
@@ -78,7 +84,7 @@ namespace Prism
 	{
 		TIME_FUNCTION
 
-			myPosition = myOrientation.GetPos();
+		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDegrees * XM_PI / 180.f) * myOrientation;
 		myOrientation.SetPos(myPosition);

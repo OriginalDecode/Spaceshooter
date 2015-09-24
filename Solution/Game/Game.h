@@ -44,7 +44,6 @@ private:
 
 	CU::InputWrapper* myInputWrapper;
 
-	Prism::Model* mySkyboxModel;
 	Prism::Instance* mySkybox;
 
 	Prism::Scene* myScene;

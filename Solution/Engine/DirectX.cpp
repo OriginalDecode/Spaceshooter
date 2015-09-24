@@ -100,6 +100,12 @@ bool Prism::DirectX::D3DSetup()
 		return false;
 	}
 
+	if (D3DDisabledStencilStateSetup() == false)
+	{
+		DIRECTX_LOG("Failed to Setup DisabledStencilBuffer");
+		return false;
+	}
+
 	if (D3DStencilBufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
 		DIRECTX_LOG("Failed to Setup DisabledStencilBuffer");

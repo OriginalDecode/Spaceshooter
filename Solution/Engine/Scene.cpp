@@ -19,7 +19,7 @@ Prism::Scene::Scene()
 	memset(&mySpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
 }
 
-void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
+void Prism::Scene::Render()
 {
 	TIME_FUNCTION;
 
@@ -66,6 +66,11 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 		myInstances[i]->UpdateSpotLights(mySpotLightData);
 		myInstances[i]->Render(*myCamera);
 	}
+}
+
+void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
+{
+	Render();
 
 	for (int i = 0; i < someBulletInstances.Size(); ++i)
 	{
@@ -74,7 +79,6 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 		someBulletInstances[i]->UpdateSpotLights(mySpotLightData);
 		someBulletInstances[i]->Render(*myCamera);
 	}
-
 }
 
 void Prism::Scene::AddInstance(Instance* aInstance)

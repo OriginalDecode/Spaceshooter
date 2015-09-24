@@ -73,10 +73,15 @@ bool Game::Init(HWND& aHwnd)
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->myCamera = myCamera;
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
-	mySkyboxModel = new Prism::Model();
-	mySkyboxModel->InitSkyblox(500, 500, 500);
-	mySkybox = new Prism::Instance(*mySkyboxModel);
-	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
+
+
+	Prism::Model* skySphere = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/skybox/skySphere_test.fbx",
+		Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SkyboxEffect.fx"));
+	skySphere->InitSkySphere();
+
+	mySkybox = new Prism::Instance(*skySphere);
+	//mySkybox->SetPosition({ 0.f, 0.f, 10.f });
+	//mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
 	for (int i = 0; i < 10; ++i)
 	{
@@ -133,7 +138,6 @@ bool Game::Init(HWND& aHwnd)
 	myEntities.Add(myCockPit);
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
-	myScene->AddInstance(mySkybox);
 	myScene->AddLight(myLight);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
@@ -155,6 +159,8 @@ bool Game::Init(HWND& aHwnd)
 
 
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/un_Milkyway_test_cubemap.dds");
+
+	Prism::Engine::GetInstance()->SetClearColor({ 0.f, 1.f, 0.f, 1.f });
 
 	GAME_LOG("Init Successful");
 	return true;
@@ -244,6 +250,8 @@ void Game::Render()
 	VTUNE_EVENT_BEGIN(VTUNE::GAME_RENDER);
 
 	BEGIN_TIME_BLOCK("Game::Render");
+
+	mySkybox->Render(*myCamera);
 
 	if (myRenderStuff)
 	{

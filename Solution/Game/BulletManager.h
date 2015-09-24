@@ -36,7 +36,7 @@ public:
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
 private:
-	void ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const CU::Matrix44<float>& anOrientation);
+	void ActivateBoxBullet(const CU::Matrix44<float>& anOrientation);
 
 	BulletData* myBoxBulletData;
 	CU::GrowingArray<Prism::Instance*> myInstances;
