@@ -98,9 +98,9 @@ bool Game::Init(HWND& aHwnd)
 	}
 
 	myCockPit = new Entity();
-	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
-	//	"Data/effect/NoTextureEffect.fx");
-	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
+	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
+		"Data/effect/NoTextureEffect.fx");
+	myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
 	myEntities.Add(myCockPit);
 
 	myScene = new Prism::Scene();
@@ -179,10 +179,7 @@ bool Game::Update()
 
 
 	Render();
-	
-	myPlayer->GetComponent<GUIComponent>()->SetPositions(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
-	myPlayer->GetComponent<GUIComponent>()->Render();
 
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
@@ -229,6 +226,7 @@ void Game::Render()
 	}
 
 	myBulletManager->Render(myCamera);
+	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	END_TIME_BLOCK("Game::Render");
 

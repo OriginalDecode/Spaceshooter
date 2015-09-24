@@ -15,7 +15,6 @@ Prism::Model2D::Model2D()
 {
 	myLastDrawX = -999.f;
 	myLastDrawY = -999.f;
-	myLastScale = -999.f;
 	myVertexBufferDesc = new D3D11_BUFFER_DESC();
 	myIndexBufferDesc = new D3D11_BUFFER_DESC();
 	myInitData = new D3D11_SUBRESOURCE_DATA();
@@ -109,7 +108,7 @@ void Prism::Model2D::InitSurface(const std::string& aFileName)
 void Prism::Model2D::InitBlendState()
 {
 	D3D11_BLEND_DESC blendDesc;
-	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.AlphaToCoverageEnable = true;
 	blendDesc.IndependentBlendEnable = false;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
@@ -127,9 +126,9 @@ void Prism::Model2D::InitBlendState()
 	}
 }
 
-void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const float aDrawY)
 {
-	Update(aDrawX, aDrawY, aScale);
+	Update(aDrawX, aDrawY);
 
 	Engine::GetInstance()->DisableZBuffer();
 
@@ -209,18 +208,17 @@ void Prism::Model2D::OnEffectLoad()
 
 }
 
-void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Model2D::Update(const float aDrawX, const float aDrawY)
 {
 	TIME_FUNCTION
 
-	if (aDrawX == myLastDrawX && aDrawY == myLastDrawY && aScale == myLastScale)
+	if (aDrawX == myLastDrawX && aDrawY == myLastDrawY)
 	{
 		return;
 	}
 
 	myLastDrawX = aDrawX;
 	myLastDrawY = aDrawY;
-	myLastScale = aScale;
 
 	myVertices.RemoveAll();
 	myVerticeIndices.RemoveAll();
@@ -260,9 +258,9 @@ void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float 
 	myVerticeIndices.Add(1);
 	myVerticeIndices.Add(2);
 
-	myVerticeIndices.Add(3);
+	myVerticeIndices.Add(0);
 	myVerticeIndices.Add(4);
-	myVerticeIndices.Add(5);
+	myVerticeIndices.Add(1);
 
 	SetupVertexBuffer();
 	SetupIndexBuffer();

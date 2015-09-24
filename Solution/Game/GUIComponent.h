@@ -14,10 +14,8 @@ public:
 	GUIComponent();
 	~GUIComponent();
 
-	void Update(float aDeltaTime);
-	void Render();
+	void Render(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos);
 
-	void SetPositions(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos);
 	void SetCamera(Prism::Camera* aCamera);
 
 	static int GetID();
@@ -26,23 +24,12 @@ private:
 
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* myMousePointer;
-
-	CU::Vector2<float> myCenter;
-	CU::Vector2<float> myMousePos;
-
 	Prism::Camera* myCamera;
 };
 
 inline int GUIComponent::GetID()
 {
 	return 6;
-}
-
-inline void GUIComponent::SetPositions(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos)
-{
-	myCenter.x = aScreenCenter.x / 2.f;
-	myCenter.y = -(aScreenCenter.y / 2.f);
-	myMousePos = aMousePos;
 }
 
 inline void GUIComponent::SetCamera(Prism::Camera* aCamera)
