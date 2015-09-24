@@ -60,7 +60,7 @@ namespace CommonUtilities
 		CommonUtilities::Line<float> line2(aLine2.myStartPos, aLine2.myEndPos); 
 
 
-  		float numX = line2.myABC.y * line1.myABC.z - line1.myABC.y * line2.myABC.z;
+		float numX = line2.myABC.y * line1.myABC.z - line1.myABC.y * line2.myABC.z;
 		float denX = line1.myABC.x * line2.myABC.y - line2.myABC.x * line1.myABC.y;
 
 		float numY = line1.myABC.x * line2.myABC.z - line2.myABC.x * line1.myABC.z;

@@ -20,10 +20,6 @@ GUIComponent::~GUIComponent()
 	myCrosshair = nullptr;
 }
 
-void GUIComponent::Update(float)
-{
-}
-
 void GUIComponent::Render(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos)
 {
 	myMousePointer->Render(*myCamera, aMousePos.x, -aMousePos.y);

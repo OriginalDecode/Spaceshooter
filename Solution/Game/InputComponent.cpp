@@ -42,17 +42,18 @@ void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		myMovementSpeed = 50.f;
+		//myMovementSpeed = 50.f;
+		MoveForward(50.f * aDeltaTime);
+		
 	}
-	else
+	/*else
 	{
 		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
 		}
-	}
-	MoveForward(myMovementSpeed * aDeltaTime);
+	}*/
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		MoveBackward(50.f * aDeltaTime);
@@ -71,11 +72,11 @@ void InputComponent::Update(float aDeltaTime)
 	if (myInputWrapper->MouseDown(0))
 	{
 		Shoot(30000.f * aDeltaTime);
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
+		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
-	myCursorPosition.x += static_cast<float>(clip(myInputWrapper->GetMouseDX(), -20, 20)) * aDeltaTime;
-	myCursorPosition.y += static_cast<float>(clip(myInputWrapper->GetMouseDY(), -20, 20)) * aDeltaTime;
+	myCursorPosition.x += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
+	myCursorPosition.y += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
 
 	myCursorPosition.x = clip(myCursorPosition.x, -1, 1);
 	myCursorPosition.y = clip(myCursorPosition.y, -1, 1);

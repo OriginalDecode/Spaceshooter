@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Camera.h"
+#include <d3dx11effect.h>
 #include <D3D11.h>
 #include "Effect.h"
 #include "EffectContainer.h"

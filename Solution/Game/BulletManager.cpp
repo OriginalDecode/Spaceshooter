@@ -44,7 +44,6 @@ void BulletManager::Render(Prism::Camera* aCamera)
 		if (myBoxBulletData.myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
 		{
 			myBoxBulletData.myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance()->Render(*aCamera);
-
 		}
 	}
 }
@@ -53,7 +52,7 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	if (aMessage.GetBulletType() == eBulletType::BOX_BULLET)
 	{
-		ActivateBoxBullet(aMessage.GetVelocity(), aMessage.GetPosition(), aMessage.GetForward());
+		ActivateBoxBullet(aMessage.GetVelocity(), aMessage.GetOrientation());
 	}
 }
 
@@ -92,10 +91,10 @@ void BulletManager::ReadFromXML(XMLReader& aXMLReader, tinyxml2::XMLElement* aBu
 	}
 }
 
-void BulletManager::ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward)
+void BulletManager::ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const CU::Matrix44<float>& anOrientation)
 {
 	// has a limited amount of bullets, re-uses old after they've run out
-	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<PhysicsComponent>()->Init(aVelocity, aPosition, aForward);
+	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<PhysicsComponent>()->Init(aVelocity, anOrientation);
 	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
 
 	myBoxBulletData.myBulletCounter++;

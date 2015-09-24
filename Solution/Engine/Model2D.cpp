@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Model2D.h"
 #include <D3D11.h>
+#include <d3dx11effect.h>
 #include "DebugDataDisplay.h"
 #include "Camera.h"
 #include "Effect.h"
@@ -108,7 +109,7 @@ void Prism::Model2D::InitSurface(const std::string& aFileName)
 void Prism::Model2D::InitBlendState()
 {
 	D3D11_BLEND_DESC blendDesc;
-	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.AlphaToCoverageEnable = true;
 	blendDesc.IndependentBlendEnable = false;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
@@ -179,7 +180,7 @@ void Prism::Model2D::SetupVertexBuffer()
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Text::SetupVertexBuffer", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Model2D::SetupVertexBuffer", MB_ICONWARNING);
 	}
 }
 
@@ -198,14 +199,13 @@ void Prism::Model2D::SetupIndexBuffer()
 		&myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Text::SetupIndexBuffer", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Model2D::SetupIndexBuffer", MB_ICONWARNING);
 	}
 }
 
 void Prism::Model2D::OnEffectLoad()
 {
 	mySurface->ReloadSurface();
-
 }
 
 void Prism::Model2D::Update(const float aDrawX, const float aDrawY)
