@@ -13,6 +13,8 @@ class Component;
 class Entity
 {
 public:
+	~Entity();
+
 	virtual void Update(float aDeltaTime);
 
 	template <typename T>

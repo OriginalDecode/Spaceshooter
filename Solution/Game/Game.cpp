@@ -78,7 +78,6 @@ bool Game::Init(HWND& aHwnd)
 
 	Prism::Model* skySphere = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/skybox/skySphere_test.fbx",
 		Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SkyboxEffect.fx"));
-	skySphere->InitSkySphere();
 
 	mySkybox = new Prism::Instance(*skySphere);
 	//mySkybox->SetPosition({ 0.f, 0.f, 10.f });
@@ -256,7 +255,9 @@ void Game::Render()
 
 	BEGIN_TIME_BLOCK("Game::Render");
 
+	Prism::Engine::GetInstance()->DisableZBuffer();
 	mySkybox->Render(*myCamera);
+	Prism::Engine::GetInstance()->EnableZBuffer();
 
 	if (myRenderStuff)
 	{
