@@ -61,9 +61,9 @@ bool Game::Init(HWND& aHwnd)
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
 	myEntities.Init(4);
-	
+
 	Entity* player = new Entity();
-	
+
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>()->Init();
 	player->AddComponent<CollisionComponent>()->Init();
@@ -96,16 +96,14 @@ bool Game::Init(HWND& aHwnd)
 
 		//astroids->AddComponent<AIComponent>()->Init();
 		//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
-		
+
 		myEntities.Add(astroids);
 	}
 
 	myCockPit = new Entity();
-	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
-		"Data/effect/NoTextureEffect.fx");
-	myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
-	myCockPit->AddComponent<CollisionComponent>()->Init();
-
+	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
+	//	"Data/effect/NoTextureEffect.fx");
+	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
 	myEntities.Add(myCockPit);
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
@@ -122,7 +120,7 @@ bool Game::Init(HWND& aHwnd)
 		}
 	}
 
-	
+
 
 	myRenderStuff = true;
 
@@ -148,14 +146,14 @@ bool Game::Update()
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-	if (deltaTime > 1.0f/10.0f)
+	if (deltaTime > 1.0f / 10.0f)
 	{
 		deltaTime = 1.0f / 10.0f;
 	}
 	myCockPit->myOrientation = myPlayer->myOrientation;
 	//myCockPit->SendMessage(RefreshOrientationMessage());
 
-	
+
 	if (myInputWrapper->KeyDown(DIK_F9))
 	{
 		myShowPointLightCube = !myShowPointLightCube;
@@ -174,9 +172,7 @@ bool Game::Update()
 	}
 
 	LogicUpdate(deltaTime);
-
 	CheckCollision();
-
 
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
@@ -237,14 +233,26 @@ void Game::Render()
 	myBulletManager->Render(myCamera);
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
-	END_TIME_BLOCK("Game::Render");
+	std::stringstream ss;
+	ss << "X" << myPlayer->myOrientation.GetPos().x
+		<< "Y" << myPlayer->myOrientation.GetPos().y
+		<< "Z" << myPlayer->myOrientation.GetPos().z;
+	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
+
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (myEntities[i]->GetComponent<CollisionComponent>() != nullptr)
+		{
+			myEntities[i]->GetComponent<CollisionComponent>()->Render(myCamera);
+		}
+	}
+
+
+
+		END_TIME_BLOCK("Game::Render");
 
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
-	std::stringstream ss;
-	ss << "X : " << myPlayer->myOrientation.GetPos().x
-		<< "\nY : " << myPlayer->myOrientation.GetPos().y
-		<< "\nZ : " << myPlayer->myOrientation.GetPos().z;
-	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
+
 	VTUNE_EVENT_END();
 }
 
@@ -252,29 +260,24 @@ void Game::CheckCollision()
 {
 	for (unsigned int i = 0; i < myEntities.Size(); ++i)
 	{
-		
-		if (myEntities[i]->GetComponent<CollisionComponent>() == nullptr)
-		{
-			continue;
-		}
-
 		for (unsigned int j = 1; j < myEntities.Size(); ++j)
 		{
-			
-			if (myEntities[j]->GetComponent<CollisionComponent>() == nullptr)
-			{
+			if (myEntities[i]->GetComponent<CollisionComponent>() == nullptr)
 				continue;
-			}
-		
+
+			if (myEntities[j]->GetComponent<CollisionComponent>() == nullptr)
+				continue;
+
 			if (CommonUtilities::Intersection::PointInsideSphere
 				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere().myRadius) == true)
+				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere().myRadius + 2) == true)
 			{
 				if (myEntities[i] == myPlayer)
 				{
 					myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 0));
 				}
 			}
+
 		}
 	}
 }

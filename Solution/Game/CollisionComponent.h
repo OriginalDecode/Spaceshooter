@@ -2,27 +2,41 @@
 #include "Component.h"
 
 #include <Sphere.h>
+
 typedef CU::Intersection::Sphere Sphere;
+namespace Prism
+{
+	class Instance;
+	class Camera;
+}
+
 
 class CollisionComponent : public Component
 {
 public:
 	
+	~CollisionComponent();
 	void Init() override;
-	
 	void Update(float aDeltaTime) override;
-	
+
 	void ReceiveMessage(const ShootMessage& aMessage) override;
 
 	void SetRadius(float someRadius = 0);
 	Sphere GetSphere();
+
+	void Render(Prism::Camera* aCamera);
+
 
 
 	static int GetID();
 
 private:
 
+	bool myShouldShow;
+
 	Sphere mySphere;
+	
+	Prism::Instance* myInstance;
 
 };
 
@@ -41,5 +55,5 @@ inline void CollisionComponent::SetRadius(float someRadius)
 
 inline Sphere CollisionComponent::GetSphere()
 {
-	return mySphere;
+		return mySphere;
 }
