@@ -1,6 +1,5 @@
 #pragma warning(disable : 4005)
 
-
 #include "DLLExport.h"
 #include <Engine.h>
 #include <Windows.h>
@@ -14,6 +13,7 @@
 #include <EffectContainer.h>
 #include <Camera.h>
 #include <DirectionalLight.h>
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 HWND locEngineWindowHandler;
@@ -96,6 +96,11 @@ void SetEffect(const char* aEffectFile)
 	{
 		locInstance->SetEffect(aEffectFile);
 	}
+}
+
+void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel)
+{
+	Prism::Engine::GetInstance()->SetClearColor({ aRChannel, aGChannel, aBChannel, aAChannel });
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

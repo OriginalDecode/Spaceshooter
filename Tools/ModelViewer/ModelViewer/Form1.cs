@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Windows.Markup;
 
 namespace ModelViewer
 {
@@ -21,6 +22,8 @@ namespace ModelViewer
 
         private string myEffectFolderPath = Properties.Settings.Default.DefaultEffectFolderDirectory;
         private string myModelFolderPath = Properties.Settings.Default.DefaultModelFolderDirectory;
+
+        private Point myPreviousMousePosition;
 
         public ModelViewerWindow()
         {
@@ -41,6 +44,8 @@ namespace ModelViewer
 
             modelFileBrowser.InitialDirectory = myModelFolderPath;
             effectFolderBrowser.SelectedPath = myEffectFolderPath;
+
+            myPreviousMousePosition = MousePosition;
 
             LoadEngine();
             FillEffectList();
@@ -165,6 +170,19 @@ namespace ModelViewer
                     MessageBox.Show("Error: " + Path.GetExtension(myCurrentModelFilePath) + " is not compatible. \nTry using a .fbx file instead.");
                 }
             }
+        }
+
+        private void Btn_BackgroundColor_Click(object sender, EventArgs e)
+        {
+            BackgroundColorDialog.ShowDialog();
+            Btn_BackgroundColor.BackColor = BackgroundColorDialog.Color;
+
+            float redChannel =   (BackgroundColorDialog.Color.R)/ 255.0f;
+            float greenChannel = (BackgroundColorDialog.Color.G)/ 255.0f;
+            float blueChannel =  (BackgroundColorDialog.Color.B)/ 255.0f;
+            float alphaChannel = (BackgroundColorDialog.Color.A)/ 255.0f;
+
+            NativeMethods.SetClearColor(redChannel, greenChannel, blueChannel, alphaChannel);
         }
     }
 }
