@@ -4,6 +4,7 @@
 #include <AudioInterface.h>
 #include "BulletManager.h"
 #include <Camera.h>
+#include "CollisionComponent.h"
 #include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
@@ -18,6 +19,7 @@
 #include "InputComponent.h"
 #include <InputWrapper.h>
 #include <Instance.h>
+#include <Intersection.h>
 #include <Model.h>
 #include <PointLight.h>
 #include <Scene.h>
@@ -66,6 +68,8 @@ bool Game::Init(HWND& aHwnd)
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
 	player->AddComponent<ShootingComponent>()->Init();
+	player->AddComponent<CollisionComponent>()->Init();
+	player->GetComponent<CollisionComponent>()->SetRadius(25);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -85,7 +89,8 @@ bool Game::Init(HWND& aHwnd)
 
 		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
 			"Data/effect/BasicEffect.fx");
-
+		astroids->AddComponent<CollisionComponent>()->Init();
+		astroids->GetComponent<CollisionComponent>()->SetRadius(25);
 
 		//astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 		//		static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
@@ -101,8 +106,9 @@ bool Game::Init(HWND& aHwnd)
 	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
 	//	"Data/effect/NoTextureEffect.fx");
 	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
+	myCockPit->AddComponent<CollisionComponent>()->Init();
+	myCockPit->GetComponent<CollisionComponent>()->SetRadius(0);
 	myEntities.Add(myCockPit);
-
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
 	myScene->AddInstance(mySkybox);
@@ -167,7 +173,7 @@ bool Game::Update()
 	}
 
 	LogicUpdate(deltaTime);
-
+	CheckCollision();
 
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
@@ -233,4 +239,24 @@ void Game::Render()
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
 	VTUNE_EVENT_END();
+}
+
+void Game::CheckCollision()
+{
+	for (unsigned int i = 0; i < myEntities.Size(); ++i)
+	{
+		for (unsigned int j = 1; j < myEntities.Size(); ++j)
+		{
+			if (CommonUtilities::Intersection::PointInsideSphere
+				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
+				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere().myRadius + 2) == true)
+			{
+				if (myEntities[i] == myPlayer)
+				{
+					myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 0));
+				}
+			}
+
+		}
+	}
 }
