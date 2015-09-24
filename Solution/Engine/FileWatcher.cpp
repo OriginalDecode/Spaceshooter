@@ -41,12 +41,11 @@ namespace Prism
 			{
 				if (CompareFileTime(&myFileDatas[i].myFileTime, &findData.ftLastWriteTime) != 0)
 				{
+					Sleep(100);
 					myFileDatas[i].myFileTime = findData.ftLastWriteTime;
 					myFileDatas[i].myCallBack();
 				}
 
-
-				
 
 				FindClose(findHandle);
 			}

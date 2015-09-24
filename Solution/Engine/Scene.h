@@ -19,7 +19,7 @@ namespace Prism
 	public:
 		Scene();
 
-		void Render();
+		void Render(CU::GrowingArray<Instance*>& someBulletInstances);
 
 		void AddInstance(Instance* aInstance);
 		void AddLight(DirectionalLight* aLight);

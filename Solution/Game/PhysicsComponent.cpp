@@ -17,4 +17,6 @@ void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::
 void PhysicsComponent::Update(float aDeltaTime)
 {
 	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() + aDeltaTime * myVelocity);
+	int apa = 5;
+	++apa;
 }

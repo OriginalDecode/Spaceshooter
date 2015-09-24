@@ -9,6 +9,7 @@
 
 Prism::Instance::Instance(Model& aModel)
 	: myModel(aModel)
+	, myOrientationPointer(nullptr)
 {
 }
 
@@ -17,7 +18,15 @@ void Prism::Instance::Render(Camera& aCamera)
 	myModel.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 	myModel.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 
-	myModel.Render(myOrientation);
+	if (myOrientationPointer != nullptr)
+	{
+		myModel.Render(*myOrientationPointer);
+	}
+	else
+	{
+		myModel.Render(myOrientation);
+	}
+	
 }
 
 void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera)
@@ -25,7 +34,15 @@ void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& a
 	myModel.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 	myModel.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 
-	myModel.Render(myOrientation * aParentMatrix);
+	if (myOrientationPointer != nullptr)
+	{
+		myModel.Render(*myOrientationPointer * aParentMatrix);
+	}
+	else
+	{
+		myModel.Render(myOrientation * aParentMatrix);
+	}
+	
 }
 
 void Prism::Instance::SetPosition(const CU::Vector3<float>& aPosition)
@@ -88,4 +105,9 @@ void Prism::Instance::UpdateSpotLights(
 	const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData)
 {
 	myModel.GetEffect()->UpdateSpotLights(someSpotLightData);
+}
+
+void Prism::Instance::SetOrientationPointer(CU::Matrix44<float>& aOrientation)
+{
+	myOrientationPointer = &aOrientation;
 }

@@ -79,7 +79,7 @@ bool Game::Init(HWND& aHwnd)
 	mySkybox = new Prism::Instance(*mySkyboxModel);
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
-	for (int i = 0; i < 1; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
 		Entity* astroids = new Entity();
 		//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
@@ -90,20 +90,53 @@ bool Game::Init(HWND& aHwnd)
 		astroids->AddComponent<CollisionComponent>()->Init();
 		astroids->GetComponent<CollisionComponent>()->SetRadius(10);
 
-		//astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
-		//		static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
+				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
 
 
+<<<<<<< HEAD
 		//astroids->AddComponent<AIComponent>()->Init();
 		//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
+=======
+>>>>>>> a2103b9ea1feb142d622011f4ba048c2bdd2176f
 		myEntities.Add(astroids);
 	}
 
+	for (int i = 0; i < 50; ++i)
+	{
+		Entity* enemy = new Entity();
+		enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+			"Data/effect/NoTextureEffect.fx");
+
+
+		enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
+			static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
+
+
+		enemy->AddComponent<AIComponent>()->Init();
+
+		int chanceToFollowPlayer = rand() % 100;
+
+		if (chanceToFollowPlayer > 75)
+		{
+			enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
+		}
+			
+
+		myEntities.Add(enemy);
+	}
+
 	myCockPit = new Entity();
+<<<<<<< HEAD
 	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
 	//	"Data/effect/NoTextureEffect.fx");
 	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
+=======
+	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
+		"Data/effect/NoTextureEffect.fx");
+	myCockPit->GetComponent<GraphicsComponent>()->GetInstance()->SetOrientationPointer(myPlayer->myOrientation);
+>>>>>>> a2103b9ea1feb142d622011f4ba048c2bdd2176f
 	myEntities.Add(myCockPit);
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
@@ -150,8 +183,7 @@ bool Game::Update()
 	{
 		deltaTime = 1.0f / 10.0f;
 	}
-	myCockPit->myOrientation = myPlayer->myOrientation;
-	//myCockPit->SendMessage(RefreshOrientationMessage());
+	//myCockPit->myOrientation = myPlayer->myOrientation;
 
 
 	if (myInputWrapper->KeyDown(DIK_F9))
@@ -222,7 +254,7 @@ void Game::Render()
 
 	if (myRenderStuff)
 	{
-		myScene->Render();
+		myScene->Render(myBulletManager->GetInstances());
 	}
 
 	if (myShowPointLightCube == true)
@@ -230,7 +262,6 @@ void Game::Render()
 		myPointLight->Render(myCamera);
 	}
 
-	myBulletManager->Render(myCamera);
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	std::stringstream ss;
