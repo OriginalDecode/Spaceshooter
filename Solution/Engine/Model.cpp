@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-
+#include <d3dx11effect.h>
 #include "GeometryGenerator.h"
 #include "Effect.h"
 #include "EffectContainer.h"

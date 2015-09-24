@@ -125,6 +125,9 @@ bool Game::Init(HWND& aHwnd)
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
 
+
+	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/un_Milkyway_test_cubemap.dds");
+
 	GAME_LOG("Init Successful");
 	return true;
 }

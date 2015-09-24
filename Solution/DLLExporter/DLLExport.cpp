@@ -1,3 +1,6 @@
+#pragma warning(disable : 4005)
+
+
 #include "DLLExport.h"
 #include <Engine.h>
 #include <Windows.h>
