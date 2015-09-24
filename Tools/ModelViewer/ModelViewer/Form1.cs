@@ -137,7 +137,7 @@ namespace ModelViewer
                 if (myEffectFiles[i].Name == EffectFilter.SelectedItem)
                 {
                     myCurrentEffectFilePath = myEffectFiles[i].FullName;
-                    NativeMethods.SetEffect(myCurrentEffectFilePath);
+                    //NativeMethods.SetEffect(myCurrentEffectFilePath);
                 }
             }
         }
