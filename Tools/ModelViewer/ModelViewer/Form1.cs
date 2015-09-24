@@ -13,21 +13,46 @@ namespace ModelViewer
 {
     public partial class ModelViewerWindow : Form
     {
-        private string myEffectFolderPath = "";
         private List<FileInfo> myEffectFiles = null;
-        private OpenModelWindow myOpenModelWindowForm;
         private FileInfo myCurrentModelFile = null;
 
-        private string myCurrentEffectFilePath = "";
+        private string myCurrentEffectFilePath = Properties.Settings.Default.DefaultEffectFilePath;
+        private string myCurrentModelFilePath = Properties.Settings.Default.DefaultModelFilePath;
+
+        private string myEffectFolderPath = Properties.Settings.Default.DefaultEffectFolderDirectory;
+        private string myModelFolderPath = Properties.Settings.Default.DefaultModelFolderDirectory;
 
         public ModelViewerWindow()
         {
             InitializeComponent();
 
+            if (myModelFolderPath == "")
+            {
+                Properties.Settings.Default.DefaultModelFolderDirectory = Directory.GetCurrentDirectory();
+                myModelFolderPath = Properties.Settings.Default.DefaultModelFolderDirectory;
+                Properties.Settings.Default.Save();
+            }
+            if (myEffectFolderPath == "")
+            {
+                Properties.Settings.Default.DefaultEffectFolderDirectory = Directory.GetCurrentDirectory();
+                myEffectFolderPath = Properties.Settings.Default.DefaultEffectFolderDirectory;
+                Properties.Settings.Default.Save();
+            }
+
+            modelFileBrowser.InitialDirectory = myModelFolderPath;
+            effectFolderBrowser.SelectedPath = myEffectFolderPath;
+
+            LoadEngine();
+            FillEffectList();
+
+            UpdateTimer.Start();
+        }
+
+        private void LoadEngine()
+        {
             IntPtr windowHandle = ModelViewer.Handle;
 
             ModelViewer.Invalidate();
-            //Action<Message> windowProc = WndProc;
 
             Int32 width = ModelViewer.Width;
             Int32 height = ModelViewer.Height;
@@ -35,25 +60,35 @@ namespace ModelViewer
             NativeMethods.SetupWindow(width, height);
             NativeMethods.StartEngine(windowHandle);
             NativeMethods.Render();
-
-            UpdateTimer.Start();
         }
 
         private void Btn_OpenModel_Click(object sender, EventArgs e)
         {
-            myOpenModelWindowForm = new OpenModelWindow(this);
-            myOpenModelWindowForm.Activate();
-            myOpenModelWindowForm.Visible = true;
+            modelFileBrowser.ShowDialog();
+            myCurrentModelFilePath = modelFileBrowser.FileName;
+
+            myModelFolderPath = myCurrentModelFilePath.Replace(modelFileBrowser.SafeFileName, "");
+            Properties.Settings.Default.DefaultModelFolderDirectory = myModelFolderPath;
+            Properties.Settings.Default.Save();
+
+            modelFileBrowser.InitialDirectory = myModelFolderPath;
         }
 
         private void Btn_OpenEffectFolder_Click(object sender, EventArgs e)
         {
+            effectFolderBrowser.SelectedPath = myEffectFolderPath;
             effectFolderBrowser.ShowDialog();
+
             myEffectFolderPath = effectFolderBrowser.SelectedPath;
+
             if (myEffectFolderPath != "")
             {
+                EffectFilter.Items.Clear();
                 FillEffectList();
             }
+
+            Properties.Settings.Default.DefaultEffectFolderDirectory = myEffectFolderPath;
+            Properties.Settings.Default.Save();
         }
 
         private void FillEffectList()
@@ -84,13 +119,6 @@ namespace ModelViewer
             return effectFile;
         }
 
-        public void SetModelFile(FileInfo aModelFile)
-        {
-            myCurrentModelFile = aModelFile;
-
-            
-        }
-
         private void ModelViewer_Paint(object sender, PaintEventArgs e)
         {
             NativeMethods.Update();
@@ -116,7 +144,27 @@ namespace ModelViewer
 
         private void Btn_LoadModel_Click(object sender, EventArgs e)
         {
-            NativeMethods.LoadModel(myCurrentModelFile.FullName, myCurrentEffectFilePath);
+            if (myCurrentModelFilePath == "")
+            {
+                MessageBox.Show("Error: No model file is selected");
+                return;
+            }
+            if (myCurrentEffectFilePath == "")
+            {
+                MessageBox.Show("Error: No effect file is selected");
+                return;
+            }
+            if (myCurrentModelFilePath != "" && myCurrentEffectFilePath != "")
+            {
+                if (Path.GetExtension(myCurrentModelFilePath) == ".fbx")
+                {
+                    NativeMethods.LoadModel(myCurrentModelFilePath, myCurrentEffectFilePath);
+                }
+                else
+                {
+                    MessageBox.Show("Error: " + Path.GetExtension(myCurrentModelFilePath) + " is not compatible. \nTry using a .fbx file instead.");
+                }
+            }
         }
     }
 }
