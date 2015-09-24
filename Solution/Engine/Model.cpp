@@ -552,7 +552,7 @@ void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 	surf.SetVertexCount(myVertices.Size());
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
-	surf.SetTexture("DiffuseTexture", "Data/resources/texture/un_MilkyWay_test.dds", true);
+	surf.SetTexture("DiffuseTexture", "Data/resources/texture/cubemapTest_series.dds", true);
 
 	mySurfaces.Add(new Surface(surf));
 
