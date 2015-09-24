@@ -20,3 +20,9 @@ void BulletComponent::Update(float aDeltaTime)
 	}
 	myCurrentLifeTime += aDeltaTime;
 }
+
+void BulletComponent::Init(const float& aMaxTime)
+{
+	myIsActive = false;
+	myMaxLifeTime = aMaxTime;
+}

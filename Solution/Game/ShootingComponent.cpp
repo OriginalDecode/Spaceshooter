@@ -8,7 +8,8 @@
 #include "PostMaster.h"
 #include "BulletMessage.h"
 
-void ShootingComponent::ReceiveMessage(const ShootMessage& aMessage)
+void ShootingComponent::ReceiveMessage(const ShootMessage&)
 {
-	PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, myEntity->myOrientation.GetForward() * aMessage.GetSpeed(), myEntity->myOrientation));
+	// todo check which bullet is active
+	PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, myEntity->myOrientation.GetForward(), myEntity->myOrientation));
 }
