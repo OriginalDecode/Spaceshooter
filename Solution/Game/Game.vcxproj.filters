@@ -44,6 +44,9 @@
     <ClCompile Include="GUIComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -99,6 +102,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="GUIComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
