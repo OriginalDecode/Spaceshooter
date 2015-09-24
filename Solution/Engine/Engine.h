@@ -51,6 +51,7 @@ namespace Prism
 
 		void ToggleWireframe();
 
+		void SetClearColor(const CU::Vector4<float>& aClearColor);
 	private:
 		Engine();
 		~Engine();
@@ -70,6 +71,7 @@ namespace Prism
 
 		Text* myDebugText;
 
+		CU::Vector4<float> myClearColor;
 		CU::Vector2<int> myWindowSize;
 		CU::Matrix44<float> myOrthogonalMatrix;
 
@@ -110,4 +112,9 @@ inline const CU::Vector2<int>& Prism::Engine::GetWindowSize() const
 inline const CU::Matrix44<float>& Prism::Engine::GetOrthogonalMatrix() const
 {
 	return myOrthogonalMatrix;
+}
+
+inline void Prism::Engine::SetClearColor(const CU::Vector4<float>& aClearColor)
+{
+	myClearColor = aClearColor;
 }

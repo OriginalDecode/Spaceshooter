@@ -33,5 +33,9 @@ namespace ModelViewer
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void SetEffect(string aEffectFile);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel);
+
     }
 }

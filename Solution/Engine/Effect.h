@@ -4,9 +4,14 @@
 #include "LightStructs.h"
 #include <Matrix.h>
 #include <string.h>
-#include <d3dx11effect.h>
 #include <StaticArray.h>
 
+struct ID3D11BlendState;
+struct ID3DX11Effect;
+struct ID3DX11EffectTechnique;
+struct ID3DX11EffectMatrixVariable;
+struct ID3DX11EffectVariable;
+struct ID3DX11EffectScalarVariable;
 
 namespace Prism
 {
@@ -72,25 +77,6 @@ inline const std::string& Prism::Effect::GetFileName() const
 	return myFileName;
 }
 
-inline void Prism::Effect::SetWorldMatrix(const CU::Matrix44<float>& aWorldMatrix)
-{
-	myWorldMatrixVariable->SetMatrix(&aWorldMatrix.myMatrix[0]);
-}
-
-inline void Prism::Effect::SetViewMatrix(const CU::Matrix44<float>& aViewMatrix)
-{
-	myViewMatrixVariable->SetMatrix(&aViewMatrix.myMatrix[0]);
-}
-
-inline void Prism::Effect::SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix)
-{
-	myProjectionMatrixVariable->SetMatrix(&aProjectionMatrix.myMatrix[0]);
-}
-
-inline void Prism::Effect::SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask)
-{
-	Engine::GetInstance()->GetContex()->OMSetBlendState(aBlendState, aBlendFactor, aSampleMask);
-}
 
 inline void Prism::Effect::AddListener(EffectListener* aListener)
 {
