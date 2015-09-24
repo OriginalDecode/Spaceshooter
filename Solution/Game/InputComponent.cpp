@@ -71,7 +71,7 @@ void InputComponent::Update(float aDeltaTime)
 	if (myInputWrapper->MouseDown(0))
 	{
 		Shoot(30000.f * aDeltaTime);
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
+		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
 	myCursorPosition.x += static_cast<float>(clip(myInputWrapper->GetMouseDX(), -20, 20)) * aDeltaTime;

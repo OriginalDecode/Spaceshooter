@@ -18,7 +18,7 @@ void ShootingComponent::Update(float)
 
 void ShootingComponent::ReceiveMessage(const ShootMessage& aMessage)
 {
-	PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, myForward * aMessage.GetSpeed(), myPosition, myForward));
+	PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, myForward * aMessage.GetSpeed(), myPosition + myForward * 5.f, myForward));
 }
 
 void ShootingComponent::ReceiveMessage(const RefreshOrientationMessage&)
