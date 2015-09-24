@@ -12,6 +12,7 @@
 
 BulletManager::BulletManager()
 {
+	myInstances.Init(8);
 	myBoxBulletData = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
@@ -39,17 +40,6 @@ void BulletManager::Update(float aDeltaTime)
 		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
 		{
 			myBoxBulletData->myBullets[i]->Update(aDeltaTime);
-		}
-	}
-}
-
-void BulletManager::Render(Prism::Camera* aCamera)
-{
-	for (int i = 0; i < myBoxBulletData->myMaxBullet; i++)
-	{
-		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
-		{
-			myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance()->Render(*aCamera);
 		}
 	}
 }
@@ -120,4 +110,19 @@ void BulletManager::ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const
 	{
 		myBoxBulletData->myBulletCounter = 0;
 	}
+}
+
+CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
+{
+	myInstances.RemoveAll();
+
+	for (int i = 0; i < myBoxBulletData->myMaxBullet; i++)
+	{
+		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		{
+			myInstances.Add(myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance());
+		}
+	}
+
+	return myInstances;
 }
