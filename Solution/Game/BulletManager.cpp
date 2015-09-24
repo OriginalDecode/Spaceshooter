@@ -7,43 +7,49 @@
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
 #include "BulletComponent.h"
+#include <Engine.h>
+#include <FileWatcher.h>
 
 BulletManager::BulletManager()
 {
+	myBoxBulletData = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
 	// move to weapon factory:
-	XMLReader reader; 
-	reader.OpenDocument("Data/script/weapon.xml");
-	tinyxml2::XMLElement* bulletElement = reader.FindFirstChild("weapon");
-	bulletElement = reader.FindFirstChild(bulletElement, "projectile");
-	ReadFromXML(reader, bulletElement);
+	
+	ReadFromXML("Data/script/weapon.xml");
 	//for (; bulletElement != nullptr; bulletElement = reader.FindNextElement(bulletElement))
+	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);
 }
 
 BulletManager::~BulletManager()
 {
-	myBoxBulletData.myBullets.DeleteAll();
+	if (myBoxBulletData != nullptr)
+	{
+		myBoxBulletData->myBullets.DeleteAll();
+		delete myBoxBulletData;
+		myBoxBulletData = nullptr;
+	}
 }
 
 void BulletManager::Update(float aDeltaTime)
 {
-	for (int i = 0; i < myBoxBulletData.myMaxBullet; i++)
+	for (int i = 0; i < myBoxBulletData->myMaxBullet; i++)
 	{
-		if (myBoxBulletData.myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
 		{
-			myBoxBulletData.myBullets[i]->Update(aDeltaTime);
+			myBoxBulletData->myBullets[i]->Update(aDeltaTime);
 		}
 	}
 }
 
 void BulletManager::Render(Prism::Camera* aCamera)
 {
-	for (int i = 0; i < myBoxBulletData.myMaxBullet; i++)
+	for (int i = 0; i < myBoxBulletData->myMaxBullet; i++)
 	{
-		if (myBoxBulletData.myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
 		{
-			myBoxBulletData.myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance()->Render(*aCamera);
+			myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance()->Render(*aCamera);
 		}
 	}
 }
@@ -56,37 +62,48 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 	}
 }
 
-void BulletManager::ReadFromXML(XMLReader& aXMLReader, tinyxml2::XMLElement* aBulletElement)
+void BulletManager::ReadFromXML(const std::string aFilePath)
 {
-	BulletData bulletData;
+	XMLReader reader;
+	reader.OpenDocument(aFilePath);
+	tinyxml2::XMLElement* bulletElement = reader.FindFirstChild("weapon");
+	bulletElement = reader.FindFirstChild(bulletElement, "projectile");
+
+	if (myBoxBulletData != nullptr)
+	{
+		myBoxBulletData->myBullets.DeleteAll();
+		delete myBoxBulletData;
+		myBoxBulletData = nullptr;
+	}
+	BulletData* bulletData = new BulletData;
 
 	std::string type;
 	CU::Vector3<float> size;
 	float totalLife = 0.f;
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "type"), "value", type);
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "maxAmount"), "value", bulletData.myMaxBullet);
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "size"), "x", size.x);
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "size"), "y", size.y);
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "size"), "z", size.z);
-	aXMLReader.ReadAttribute(aXMLReader.FindFirstChild(aBulletElement, "LifeTime"), "value", totalLife);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "x", size.x);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "y", size.y);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "z", size.z);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
 
-	bulletData.myBulletCounter = 0;
-	bulletData.myBullets.Init(bulletData.myMaxBullet);
+	bulletData->myBulletCounter = 0;
+	bulletData->myBullets.Init(bulletData->myMaxBullet);
 
-	for (int i = 0; i < bulletData.myMaxBullet; i++)
+	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
 		Entity* newEntity = new Entity();
 		newEntity->AddComponent<GraphicsComponent>()->InitCube(size.x, size.y, size.z);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		newEntity->AddComponent<PhysicsComponent>();
-		newEntity->AddComponent<BulletComponent>();
-		newEntity->GetComponent<BulletComponent>()->SetMaxLifeTime(totalLife);
-		bulletData.myBullets.Add(newEntity);
+		newEntity->AddComponent<BulletComponent>()->Init(totalLife);
+		bulletData->myBullets.Add(newEntity);
 	}
 
 	if (type == "box")
 	{
-		bulletData.myType = eBulletType::BOX_BULLET;
+		bulletData->myType = eBulletType::BOX_BULLET;
 		myBoxBulletData = bulletData;
 	}
 }
@@ -94,13 +111,13 @@ void BulletManager::ReadFromXML(XMLReader& aXMLReader, tinyxml2::XMLElement* aBu
 void BulletManager::ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const CU::Matrix44<float>& anOrientation)
 {
 	// has a limited amount of bullets, re-uses old after they've run out
-	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<PhysicsComponent>()->Init(aVelocity, anOrientation);
-	myBoxBulletData.myBullets[myBoxBulletData.myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
+	myBoxBulletData->myBullets[myBoxBulletData->myBulletCounter]->GetComponent<PhysicsComponent>()->Init(anOrientation, aVelocity * myBoxBulletData->mySpeed);
+	myBoxBulletData->myBullets[myBoxBulletData->myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
 
-	myBoxBulletData.myBulletCounter++;
+	myBoxBulletData->myBulletCounter++;
 
-	if (myBoxBulletData.myBulletCounter >= myBoxBulletData.myMaxBullet)
+	if (myBoxBulletData->myBulletCounter >= myBoxBulletData->myMaxBullet)
 	{
-		myBoxBulletData.myBulletCounter = 0;
+		myBoxBulletData->myBulletCounter = 0;
 	}
 }
