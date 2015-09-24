@@ -85,6 +85,7 @@
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
     <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />

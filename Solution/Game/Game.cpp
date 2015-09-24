@@ -5,6 +5,7 @@
 #include "BulletManager.h"
 #include <Camera.h>
 #include "CollisionComponent.h"
+#include "ColoursForBG.h"
 #include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <DirectionalLight.h>
@@ -66,7 +67,7 @@ bool Game::Init(HWND& aHwnd)
 
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>()->Init();
-	player->AddComponent<CollisionComponent>()->Initiate(10);
+	player->AddComponent<CollisionComponent>()->Initiate(0);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -123,7 +124,7 @@ bool Game::Init(HWND& aHwnd)
 			enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
 		}
 			
-		enemy->AddComponent<CollisionComponent>()->Initiate(5);
+		enemy->AddComponent<CollisionComponent>()->Initiate(3);
 		myEntities.Add(enemy);
 	}
 
@@ -134,7 +135,7 @@ bool Game::Init(HWND& aHwnd)
 	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
 		"Data/effect/NoTextureEffect.fx");
 	myCockPit->GetComponent<GraphicsComponent>()->GetInstance()->SetOrientationPointer(myPlayer->myOrientation);
-	myCockPit->AddComponent<CollisionComponent>()->Initiate(10);
+	myCockPit->AddComponent<CollisionComponent>()->Initiate(0);
 	myEntities.Add(myCockPit);
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
@@ -160,7 +161,7 @@ bool Game::Init(HWND& aHwnd)
 
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/un_Milkyway_test_cubemap.dds");
 
-	Prism::Engine::GetInstance()->SetClearColor({ 0.f, 1.f, 0.f, 1.f });
+	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
 	GAME_LOG("Init Successful");
 	return true;
@@ -203,7 +204,11 @@ bool Game::Update()
 	}
 
 	LogicUpdate(deltaTime);
-	CheckCollision();
+		std::stringstream ss;
+	if (CheckCollision() == true)
+	{
+		myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
+	}
 
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 
@@ -263,14 +268,6 @@ void Game::Render()
 		myPointLight->Render(myCamera);
 	}
 
-	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
-
-	std::stringstream ss;
-	ss << "X" << myPlayer->myOrientation.GetPos().x
-		<< "Y" << myPlayer->myOrientation.GetPos().y
-		<< "Z" << myPlayer->myOrientation.GetPos().z;
-	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
-
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
 		if (myEntities[i]->GetComponent<CollisionComponent>() != nullptr)
@@ -278,6 +275,22 @@ void Game::Render()
 			myEntities[i]->GetComponent<CollisionComponent>()->Render(myCamera);
 		}
 	}
+
+	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+
+	std::stringstream ss;
+	std::stringstream ss2;
+	std::stringstream ss3;
+	
+	ss << "X" << myPlayer->myOrientation.GetPos().x;
+	ss2 << "Y" << myPlayer->myOrientation.GetPos().y;
+	ss3	<< "Z" << myPlayer->myOrientation.GetPos().z;
+	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
+	Prism::Engine::GetInstance()->PrintDebugText(ss2.str().c_str(), CU::Vector2<float>(0, -30));
+	Prism::Engine::GetInstance()->PrintDebugText(ss3.str().c_str(), CU::Vector2<float>(0, -60));
+
+
+
 
 
 
@@ -288,21 +301,22 @@ void Game::Render()
 	VTUNE_EVENT_END();
 }
 
-void Game::CheckCollision()
+bool Game::CheckCollision()
 {
-	for (unsigned int i = 0; i < myEntities.Size(); ++i)
+	for (int i = 0; i < myEntities.Size(); ++i)
 	{
-		for (unsigned int j = 1; j < myEntities.Size(); ++j)
+		for (int j = 0; j < myEntities.Size(); ++j)
 		{
-			if (CommonUtilities::Intersection::PointInsideSphere
+			if (CommonUtilities::Intersection::SphereVsSphere
 				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere().myRadius) == true)
+				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 			{
-				if (myEntities[i] == myPlayer)
+				if (myEntities[i] == myPlayer || myEntities[j] == myPlayer)
 				{
-					myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 0));
+					return true;
 				}
 			}
 		}
 	}
+	return false;
 }

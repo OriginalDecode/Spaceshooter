@@ -40,7 +40,7 @@ private:
 	void LogicUpdate(const float aDeltaTime);
 	void Render();
 
-	void CheckCollision();
+	bool CheckCollision();
 
 	CU::InputWrapper* myInputWrapper;
 

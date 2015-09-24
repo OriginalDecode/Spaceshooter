@@ -14,7 +14,7 @@ CollisionComponent::~CollisionComponent()
 
 void CollisionComponent::Initiate(float someRadius)
 {
-	mySphere.myRadius = someRadius;
+	SetRadius(someRadius);
 	Prism::Model* model;
 	model = new Prism::Model();
 	model->InitLightCube(someRadius, someRadius, someRadius);
