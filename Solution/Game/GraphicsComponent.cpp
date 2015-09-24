@@ -9,8 +9,6 @@
 
 GraphicsComponent::GraphicsComponent()
 	: myInstance(nullptr)
-	, myRenderSelf(false)
-	, myCamera(nullptr)
 {
 }
 
@@ -20,6 +18,7 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 		, Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
 
 	myInstance = new Prism::Instance(*model);
+	myInstance->SetOrientationPointer(myEntity->myOrientation);
 }
 
 void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
@@ -41,10 +40,6 @@ void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 void GraphicsComponent::Update(float aDeltaTime)
 {
 	aDeltaTime;
-	if (myRenderSelf == true)
-	{
-		myInstance->Render(*myCamera);
-	}
 	myInstance->SetOrientation(myEntity->myOrientation);
 }
 
@@ -52,10 +47,4 @@ void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 {
 	myEntity->myOrientation.SetPos(aPosition);
 	myInstance->SetOrientation(myEntity->myOrientation);
-}
-
-void GraphicsComponent::SetSelfRender(Prism::Camera* aCamera)
-{
-	myCamera = aCamera;
-	myRenderSelf = true;
 }

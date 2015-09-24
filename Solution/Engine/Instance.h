@@ -35,11 +35,14 @@ namespace Prism
 		void UpdatePointLights(const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData);
 		void UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData);
 
+		void SetOrientationPointer(CU::Matrix44<float>& aOrientation);
+
 	private:
 		void operator=(Instance&) = delete;
 
 		Model& myModel;
 		CU::Matrix44<float> myOrientation;
+		CU::Matrix44<float>* myOrientationPointer;
 		CU::Vector3<float> myPosition;
 	};
 }
