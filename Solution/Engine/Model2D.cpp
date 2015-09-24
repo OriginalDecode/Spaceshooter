@@ -180,7 +180,7 @@ void Prism::Model2D::SetupVertexBuffer()
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Text::SetupVertexBuffer", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Model2D::SetupVertexBuffer", MB_ICONWARNING);
 	}
 }
 
@@ -199,14 +199,13 @@ void Prism::Model2D::SetupIndexBuffer()
 		&myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Text::SetupIndexBuffer", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Model2D::SetupIndexBuffer", MB_ICONWARNING);
 	}
 }
 
 void Prism::Model2D::OnEffectLoad()
 {
 	mySurface->ReloadSurface();
-
 }
 
 void Prism::Model2D::Update(const float aDrawX, const float aDrawY)
