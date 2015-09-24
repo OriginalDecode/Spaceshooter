@@ -7,8 +7,8 @@ GUIComponent::GUIComponent()
 {
 	myMousePointer = new Prism::Model2D;
 	myCrosshair = new Prism::Model2D;
-	myCrosshair->Init("Data/resources/texture/crosshair.dds", { 128.f, 128.f });
-	myMousePointer->Init("Data/resources/texture/crosshair.dds", { 128.f, 128.f });
+	myCrosshair->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f }); // the size scales the pic
+	myMousePointer->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f });
 	myCamera = nullptr;
 }
 
@@ -22,11 +22,10 @@ GUIComponent::~GUIComponent()
 
 void GUIComponent::Update(float)
 {
-	
 }
 
-void GUIComponent::Render()
+void GUIComponent::Render(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos)
 {
-	myMousePointer->Render(*myCamera, myMousePos.x, -myMousePos.y);
-	myCrosshair->Render(*myCamera, myCenter.x, myCenter.y);
+	myMousePointer->Render(*myCamera, aMousePos.x, -aMousePos.y);
+	myCrosshair->Render(*myCamera, aScreenCenter.x / 2.f, -(aScreenCenter.y / 2.f));
 }
