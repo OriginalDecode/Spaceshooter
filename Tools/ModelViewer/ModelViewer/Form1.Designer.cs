@@ -31,6 +31,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.Menu_Panel = new System.Windows.Forms.Panel();
+            this.Btn_LoadModel = new System.Windows.Forms.Button();
             this.Btn_OpenEffectFolder = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.EffectFilter = new System.Windows.Forms.ComboBox();
@@ -39,7 +40,7 @@
             this.ModelViewerMenu = new System.Windows.Forms.Panel();
             this.effectFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this.Btn_LoadModel = new System.Windows.Forms.Button();
+            this.modelFileBrowser = new System.Windows.Forms.OpenFileDialog();
             this.Menu_Panel.SuspendLayout();
             this.ModelViewer.SuspendLayout();
             this.SuspendLayout();
@@ -56,6 +57,16 @@
             this.Menu_Panel.Name = "Menu_Panel";
             this.Menu_Panel.Size = new System.Drawing.Size(1032, 32);
             this.Menu_Panel.TabIndex = 0;
+            // 
+            // Btn_LoadModel
+            // 
+            this.Btn_LoadModel.Location = new System.Drawing.Point(397, 5);
+            this.Btn_LoadModel.Name = "Btn_LoadModel";
+            this.Btn_LoadModel.Size = new System.Drawing.Size(75, 23);
+            this.Btn_LoadModel.TabIndex = 4;
+            this.Btn_LoadModel.Text = "Load Model";
+            this.Btn_LoadModel.UseVisualStyleBackColor = true;
+            this.Btn_LoadModel.Click += new System.EventHandler(this.Btn_LoadModel_Click);
             // 
             // Btn_OpenEffectFolder
             // 
@@ -117,16 +128,6 @@
             // 
             this.UpdateTimer.Tick += new System.EventHandler(this.UpdateTimer_Tick);
             // 
-            // Btn_LoadModel
-            // 
-            this.Btn_LoadModel.Location = new System.Drawing.Point(397, 5);
-            this.Btn_LoadModel.Name = "Btn_LoadModel";
-            this.Btn_LoadModel.Size = new System.Drawing.Size(75, 23);
-            this.Btn_LoadModel.TabIndex = 4;
-            this.Btn_LoadModel.Text = "Load Model";
-            this.Btn_LoadModel.UseVisualStyleBackColor = true;
-            this.Btn_LoadModel.Click += new System.EventHandler(this.Btn_LoadModel_Click);
-            // 
             // ModelViewerWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,5 +156,6 @@
         private System.Windows.Forms.FolderBrowserDialog effectFolderBrowser;
         private System.Windows.Forms.Timer UpdateTimer;
         private System.Windows.Forms.Button Btn_LoadModel;
+        private System.Windows.Forms.OpenFileDialog modelFileBrowser;
     }
 }
