@@ -21,7 +21,7 @@ Prism::Model::Model()
 	mySurfaces.Init(4);
 	myVertexFormat.Init(2);
 	myIsNULLObject = true;
-	myIsSkybox = false;
+	myIsSkySphere = false;
 }
 
 Prism::Model::~Model()
@@ -557,7 +557,16 @@ void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
 	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
-	myIsSkybox = true;
+}
+
+void Prism::Model::InitSkySphere()
+{
+	myIsSkySphere = true;
+		
+	for (int i = 0; i < myChilds.Size(); ++i)
+	{
+		myChilds[i]->InitSkySphere();
+	}
 }
 
 void Prism::Model::InitGeometry(const MeshData& aMeshData)
@@ -648,6 +657,12 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 
 	if (myIsNULLObject == false)
 	{
+
+		if (myIsSkySphere == true)
+		{
+			Engine::GetInstance()->DisableZBuffer();
+		}
+
 		float blendFactor[4];
 		blendFactor[0] = 0.f;
 		blendFactor[1] = 0.f;
@@ -680,6 +695,8 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 						mySurfaces[s]->GetVertexStart(), 0);
 			}
 		}
+
+		Engine::GetInstance()->EnableZBuffer();
 	}
 
 	for (int i = 0; i < myChilds.Size(); ++i)
