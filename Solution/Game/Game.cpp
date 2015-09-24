@@ -177,10 +177,9 @@ bool Game::Update()
 
 	END_TIME_BLOCK("Game::Update");
 
-	myPlayer->GetComponent<GUIComponent>()->SetPositions(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	Render();
-	
+
 
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
@@ -227,6 +226,7 @@ void Game::Render()
 	}
 
 	myBulletManager->Render(myCamera);
+	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	END_TIME_BLOCK("Game::Render");
 

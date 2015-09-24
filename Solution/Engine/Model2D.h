@@ -23,12 +23,12 @@ namespace Prism
 		Model2D();
 		~Model2D();
 
-		void Init(const std::string& aFileName);
-		void Render(const Camera& aCamera, const float aDrawX, const float aDrawY, const float aScale = 1.f);
+		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
+		void Render(const Camera& aCamera, const float aDrawX, const float aDrawY);
 
 	private:
 
-		void Update(const float aDrawX, const float aDrawY, const float aScale);
+		void Update(const float aDrawX, const float aDrawY);
 		void InitVertexBuffer();
 		void InitIndexBuffer();
 		void InitSurface(const std::string& aFileName);
@@ -52,11 +52,11 @@ namespace Prism
 
 		Surface* mySurface;
 
-		CU::Matrix44<float>  myIdentityMatrix;
+		CU::Matrix44<float> myIdentityMatrix;
+		CU::Vector2<float> myTextureSize;
 		ID3D11BlendState* myBlendState;
 
 		float myLastDrawX;
 		float myLastDrawY;
-		float myLastScale;
 	};
 }

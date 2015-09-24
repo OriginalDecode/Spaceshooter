@@ -15,7 +15,6 @@ Prism::Model2D::Model2D()
 {
 	myLastDrawX = -999.f;
 	myLastDrawY = -999.f;
-	myLastScale = -999.f;
 	myVertexBufferDesc = new D3D11_BUFFER_DESC();
 	myIndexBufferDesc = new D3D11_BUFFER_DESC();
 	myInitData = new D3D11_SUBRESOURCE_DATA();
@@ -31,8 +30,9 @@ Prism::Model2D::~Model2D()
 	delete myInitData;
 }
 
-void Prism::Model2D::Init(const std::string& aFileName)
+void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
 {
+	myTextureSize = aTextureSize;
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/FontEffect.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
@@ -126,9 +126,9 @@ void Prism::Model2D::InitBlendState()
 	}
 }
 
-void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const float aDrawY)
 {
-	Update(aDrawX, aDrawY, aScale);
+	Update(aDrawX, aDrawY);
 
 	Engine::GetInstance()->DisableZBuffer();
 
@@ -208,37 +208,27 @@ void Prism::Model2D::OnEffectLoad()
 
 }
 
-void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Model2D::Update(const float aDrawX, const float aDrawY)
 {
 	TIME_FUNCTION
 
-	if (aDrawX == myLastDrawX && aDrawY == myLastDrawY && aScale == myLastScale)
+	if (aDrawX == myLastDrawX && aDrawY == myLastDrawY)
 	{
 		return;
 	}
 
 	myLastDrawX = aDrawX;
 	myLastDrawY = aDrawY;
-	myLastScale = aScale;
 
 	myVertices.RemoveAll();
 	myVerticeIndices.RemoveAll();
 	
 	float left, right, top, bottom;
-	//// Calculate the screen coordinates of the left side of the bitmap.
-	//left = ((720 / 2.f) * -1) + aDrawX;
-	//// Calculate the screen coordinates of the right side of the bitmap.
-	//right = left + 128.f;
-	//// Calculate the screen coordinates of the top of the bitmap.
-	//top = (1280 / 2.f) - aDrawY;
-	//// Calculate the screen coordinates of the bottom of the bitmap.
-	//bottom = top - 128.f;
-	left = aDrawX;
-	right = aDrawX + 128.f;
-	top = aDrawY;
-	bottom = aDrawY - 128.f;
-	
-	// First triangle.
+	left = aDrawX - (myTextureSize.x / 2.f);
+	right = aDrawX + myTextureSize.x - (myTextureSize.x / 2.f);
+	top = aDrawY + (myTextureSize.y / 2.f);
+	bottom = aDrawY - myTextureSize.y + (myTextureSize.y / 2.f);
+
 	VertexPosUV vert;
 	vert.myPos = { left, top, 0.0f };
 	vert.myUV = { 0.0f, 0.0f };
@@ -252,7 +242,6 @@ void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float 
 	vert.myUV = { 0.0f, 1.0f };
 	myVertices.Add(vert);
 
-	// second
 	vert.myPos = { left, top, 0.0f };
 	vert.myUV = { 0.0f, 0.0f };
 	myVertices.Add(vert);
@@ -269,9 +258,9 @@ void Prism::Model2D::Update(const float aDrawX, const float aDrawY, const float 
 	myVerticeIndices.Add(1);
 	myVerticeIndices.Add(2);
 
-	myVerticeIndices.Add(3);
+	myVerticeIndices.Add(0);
 	myVerticeIndices.Add(4);
-	myVerticeIndices.Add(5);
+	myVerticeIndices.Add(1);
 
 	SetupVertexBuffer();
 	SetupIndexBuffer();

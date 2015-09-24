@@ -535,7 +535,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 			TextureInfo ambientInfo;
 			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sAmbient, FbxSurfaceMaterial::sAmbientFactor, ambientInfo.myFileName);
 			ambientInfo.myType = AO;
-			if (substanceInfo.myFileName.empty() == false)
+			if (ambientInfo.myFileName.empty() == false)
 			{
 				someData->myTextures.push_back(ambientInfo);
 			}

@@ -90,6 +90,7 @@ void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
 
 	myFrameDebugger->Update(aInputWrapper);
 }
+
 void Prism::DebugDataDisplay::RenderFunctionTimers()
 {
 	VTUNE_EVENT_BEGIN(VTUNE::FUNCTION_TIMERS);
