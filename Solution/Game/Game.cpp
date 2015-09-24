@@ -25,7 +25,6 @@
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
-#include "RefreshOrientationMessage.h"
 #include <Vector.h>
 
 Game::Game()
@@ -64,12 +63,11 @@ bool Game::Init(HWND& aHwnd)
 	Entity* player = new Entity();
 	
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	player->AddComponent<GraphicsComponent>()->InitCube(10, 10, 10);
 	player->AddComponent<ShootingComponent>()->Init();
 
 	myPlayer = player;
 	myEntities.Add(player);
-	myCamera = new Prism::Camera(player->GetComponent<GraphicsComponent>()->GetInstance()->GetOrientation());
+	myCamera = new Prism::Camera(player->myOrientation);
 	player->myCamera = myCamera;
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 	mySkyboxModel = new Prism::Model();
@@ -145,8 +143,8 @@ bool Game::Update()
 	{
 		deltaTime = 1.0f / 10.0f;
 	}
-	myCockPit->myOrientation = myEntities[0]->myOrientation;
-	myCockPit->SendMessage(RefreshOrientationMessage());
+	myCockPit->myOrientation = myPlayer->myOrientation;
+	//myCockPit->SendMessage(RefreshOrientationMessage());
 
 	
 	if (myInputWrapper->KeyDown(DIK_F9))

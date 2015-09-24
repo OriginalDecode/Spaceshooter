@@ -6,7 +6,6 @@
 #include <EffectContainer.h>
 #include <Instance.h>
 #include <Model.h>
-#include "RefreshOrientationMessage.h"
 
 GraphicsComponent::GraphicsComponent()
 	: myInstance(nullptr)
@@ -46,17 +45,13 @@ void GraphicsComponent::Update(float aDeltaTime)
 	{
 		myInstance->Render(*myCamera);
 	}
-}
-
-void GraphicsComponent::ReceiveMessage(const RefreshOrientationMessage&)
-{
 	myInstance->SetOrientation(myEntity->myOrientation);
 }
 
 void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 {
 	myEntity->myOrientation.SetPos(aPosition);
-	myEntity->SendMessage(RefreshOrientationMessage());
+	myInstance->SetOrientation(myEntity->myOrientation);
 }
 
 void GraphicsComponent::SetSelfRender(Prism::Camera* aCamera)

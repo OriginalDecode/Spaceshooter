@@ -97,7 +97,6 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="RefreshOrientationMessage.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootMessage.h" />
     <ClInclude Include="stdafx.h" />

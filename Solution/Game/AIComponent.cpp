@@ -3,7 +3,6 @@
 #include "Constants.h"
 #include <Vector.h>
 #include "Entity.h"
-#include "RefreshOrientationMessage.h"
 
 void AIComponent::Init()
 {

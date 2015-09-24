@@ -5,8 +5,8 @@
 
 struct BulletData // holds the data for one type of bullet
 {
-	eBulletType myType;
 	CU::GrowingArray<Entity*> myBullets;
+	eBulletType myType;
 	int myBulletCounter;
 	int myMaxBullet;
 };
@@ -27,17 +27,14 @@ public:
 	BulletManager();
 	~BulletManager();
 
+	void ReadFromXML(class XMLReader& aXMLReader, tinyxml2::XMLElement* aBulletElement);
 	void Update(float aDeltaTime);
-
 	void Render(Prism::Camera* aCamera);
 
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
-	void ReadFromXML(class XMLReader& aXMLReader, tinyxml2::XMLElement* aBulletElement);
-
-	void ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward);
-
 private:
+	void ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const CU::Matrix44<float>& anOrientation);
 
 	BulletData myBoxBulletData;
 
