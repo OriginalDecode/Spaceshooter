@@ -184,5 +184,35 @@ namespace ModelViewer
 
             NativeMethods.SetClearColor(redChannel, greenChannel, blueChannel, alphaChannel);
         }
+
+        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        {
+            float xValue = DirectionLightX.Value / (360.0f / 2) - 1;
+            float xTruncatedValue = (float)(Math.Truncate((double)xValue * 100.0) / 100.0);
+            DirectionLightXValue.Text = "X: " + xTruncatedValue.ToString();
+
+            NativeMethods.DirectionaLightRotateX(xTruncatedValue);
+        }
+
+        private void DirectionalLightY_Scroll(object sender, ScrollEventArgs e)
+        {
+            float yValue = DirectionalLightY.Value / (360.0f /2) - 1;
+            float yTruncatedValue = (float)(Math.Truncate((double)yValue * 100.0) / 100.0);
+            DirectionalLightYValue.Text = "Y: " + yTruncatedValue.ToString();
+
+            NativeMethods.DirectionaLightRotateY(yTruncatedValue);
+        }
+
+        private void DirectionalLightZ_Scroll(object sender, ScrollEventArgs e)
+        {
+            float zValue = DirectionalLightZ.Value / (360.0f / 2) - 1;
+            float zTruncatedValue = (float)(Math.Truncate((double)zValue * 100.0) / 100.0);
+            DirectionalLightZValue.Text = "Z: " + zTruncatedValue.ToString();
+
+            NativeMethods.DirectionaLightRotateZ(zTruncatedValue);
+        }
+
+
+
     }
 }

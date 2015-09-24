@@ -22,12 +22,9 @@ public:
 
 	void SetPosition(const CU::Vector3<float>& aPosition);
 
-	void SetSelfRender(Prism::Camera* aCamera);
-
 private:
 	Prism::Instance* myInstance;
-	bool myRenderSelf;
-	Prism::Camera* myCamera;
+
 };
 
 inline Prism::Instance* GraphicsComponent::GetInstance()

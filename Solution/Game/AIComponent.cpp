@@ -11,14 +11,15 @@ void AIComponent::Init()
 
 void AIComponent::Update(float aDeltaTime)
 {
-	FollowOwnDecision(aDeltaTime);
+	
 
 	if (myEntityToFollow == nullptr)
 	{
+		FollowOwnDecision(aDeltaTime);
 	}
 	else
 	{
-		//FollowEntity(aDeltaTime);
+		FollowEntity(aDeltaTime);
 	}
 }
 

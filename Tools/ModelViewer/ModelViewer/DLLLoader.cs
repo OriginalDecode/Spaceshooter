@@ -37,5 +37,13 @@ namespace ModelViewer
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel);
 
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void DirectionaLightRotateX(float aXValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void DirectionaLightRotateY(float aYValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void DirectionaLightRotateZ(float aZValue);
     }
 }
