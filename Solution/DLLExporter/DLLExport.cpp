@@ -95,6 +95,11 @@ void SetEffect(const char* aEffectFile)
 	}
 }
 
+void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel)
+{
+	Prism::Engine::GetInstance()->SetClearColor({ aRChannel, aGChannel, aBChannel, aAChannel });
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)

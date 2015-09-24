@@ -11,8 +11,8 @@
 #include <TimerManager.h>
 #include "Text.h"
 #include "TextureContainer.h"
+#include <Vector.h>
 #include "VTuneApi.h"
-
 
 
 
@@ -20,7 +20,7 @@ namespace Prism
 {
 	Engine* Engine::myInstance = nullptr;
 
-	Engine::Engine()
+	Engine::Engine() : myClearColor({ 0.8f, 0.125f, 0.8f, 1.0f })
 	{
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
@@ -66,9 +66,8 @@ namespace Prism
 
 		TIME_FUNCTION
 
-			myDirectX->Present(0, 0);
-
-		float clearColor[4] = { 0.8f, 0.125f, 0.8f, 1.0f };
+		myDirectX->Present(0, 0);
+		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, myClearColor.myA };
 		myDirectX->Clear(clearColor);
 
 		VTUNE_EVENT_END();
