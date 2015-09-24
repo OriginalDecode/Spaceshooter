@@ -48,7 +48,7 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	if (aMessage.GetBulletType() == eBulletType::BOX_BULLET)
 	{
-		ActivateBoxBullet(aMessage.GetVelocity(), aMessage.GetOrientation());
+		ActivateBoxBullet(aMessage.GetOrientation());
 	}
 }
 
@@ -98,10 +98,11 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	}
 }
 
-void BulletManager::ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const CU::Matrix44<float>& anOrientation)
+void BulletManager::ActivateBoxBullet(const CU::Matrix44<float>& anOrientation)
 {
 	// has a limited amount of bullets, re-uses old after they've run out
-	myBoxBulletData->myBullets[myBoxBulletData->myBulletCounter]->GetComponent<PhysicsComponent>()->Init(anOrientation, aVelocity * myBoxBulletData->mySpeed);
+	myBoxBulletData->myBullets[myBoxBulletData->myBulletCounter]->GetComponent<PhysicsComponent>()->Init(anOrientation, 
+		anOrientation.GetForward() * myBoxBulletData->mySpeed);
 	myBoxBulletData->myBullets[myBoxBulletData->myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
 
 	myBoxBulletData->myBulletCounter++;
