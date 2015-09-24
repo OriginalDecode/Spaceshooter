@@ -38,7 +38,7 @@ void StartEngine(int* aHwnd)
 
 	locDirectionLight = new Prism::DirectionalLight();
 	locDirectionLight->SetDir({ 0.f, 0.5f, -1.f });
-	locDirectionLight->SetColor({ 0.3f, 0.5f, 0.3f, 1.f });
+	locDirectionLight->SetColor({ 0.7f, 0.7f, 0.7f, 1.f });
 
 	locPlayerPos.SetPos({ 0.f, 0.f, -5.f, 1.f });
 	locCamera = new Prism::Camera(locPlayerPos);
@@ -101,6 +101,27 @@ void SetEffect(const char* aEffectFile)
 void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel)
 {
 	Prism::Engine::GetInstance()->SetClearColor({ aRChannel, aGChannel, aBChannel, aAChannel });
+}
+
+void DirectionaLightRotateX(float aXAngle)
+{
+	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
+	rotatedDirection.myX = aXAngle;
+	locDirectionLight->SetDir(rotatedDirection);
+}
+
+void DirectionaLightRotateY(float aYAngle)
+{
+	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
+	rotatedDirection.myY = aYAngle;
+	locDirectionLight->SetDir(rotatedDirection);
+}
+
+void DirectionaLightRotateZ(float aZAngle)
+{
+	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
+	rotatedDirection.myZ = aZAngle;
+	locDirectionLight->SetDir(rotatedDirection);
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
