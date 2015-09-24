@@ -16,7 +16,7 @@ class CollisionComponent : public Component
 public:
 	
 	~CollisionComponent();
-	void Init() override;
+	void Initiate(float someRadius);
 	void Update(float aDeltaTime) override;
 
 	void ReceiveMessage(const ShootMessage& aMessage) override;

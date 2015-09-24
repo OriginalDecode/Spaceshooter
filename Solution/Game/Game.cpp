@@ -66,8 +66,7 @@ bool Game::Init(HWND& aHwnd)
 
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>()->Init();
-	player->AddComponent<CollisionComponent>()->Init();
-	player->GetComponent<CollisionComponent>()->SetRadius(5);
+	player->AddComponent<CollisionComponent>()->Initiate(10);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -87,19 +86,15 @@ bool Game::Init(HWND& aHwnd)
 
 		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
 			"Data/effect/BasicEffect.fx");
-		astroids->AddComponent<CollisionComponent>()->Init();
-		astroids->GetComponent<CollisionComponent>()->SetRadius(10);
+		astroids->AddComponent<CollisionComponent>()->Initiate(15);
 
 		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100), 
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
 
 
-<<<<<<< HEAD
 		//astroids->AddComponent<AIComponent>()->Init();
 		//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
-=======
->>>>>>> a2103b9ea1feb142d622011f4ba048c2bdd2176f
 		myEntities.Add(astroids);
 	}
 
@@ -123,20 +118,18 @@ bool Game::Init(HWND& aHwnd)
 			enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
 		}
 			
-
+		enemy->AddComponent<CollisionComponent>()->Initiate(5);
 		myEntities.Add(enemy);
 	}
 
 	myCockPit = new Entity();
-<<<<<<< HEAD
 	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
 	//	"Data/effect/NoTextureEffect.fx");
 	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
-=======
 	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
 		"Data/effect/NoTextureEffect.fx");
 	myCockPit->GetComponent<GraphicsComponent>()->GetInstance()->SetOrientationPointer(myPlayer->myOrientation);
->>>>>>> a2103b9ea1feb142d622011f4ba048c2bdd2176f
+	myCockPit->AddComponent<CollisionComponent>()->Initiate(10);
 	myEntities.Add(myCockPit);
 	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
@@ -218,8 +211,8 @@ bool Game::Update()
 	Render();
 
 
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
-	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
+//	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
+//	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
 }
 
@@ -293,22 +286,15 @@ void Game::CheckCollision()
 	{
 		for (unsigned int j = 1; j < myEntities.Size(); ++j)
 		{
-			if (myEntities[i]->GetComponent<CollisionComponent>() == nullptr)
-				continue;
-
-			if (myEntities[j]->GetComponent<CollisionComponent>() == nullptr)
-				continue;
-
 			if (CommonUtilities::Intersection::PointInsideSphere
 				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere().myRadius + 2) == true)
+				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere().myRadius) == true)
 			{
 				if (myEntities[i] == myPlayer)
 				{
 					myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 0));
 				}
 			}
-
 		}
 	}
 }

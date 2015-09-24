@@ -12,11 +12,12 @@ CollisionComponent::~CollisionComponent()
 	myInstance = nullptr;
 }
 
-void CollisionComponent::Init()
+void CollisionComponent::Initiate(float someRadius)
 {
+	mySphere.myRadius = someRadius;
 	Prism::Model* model;
 	model = new Prism::Model();
-	model->InitLightCube(1, 1, 1);
+	model->InitLightCube(someRadius, someRadius, someRadius);
 	myShouldShow = true;
 	myInstance = new Prism::Instance(*model);
 
@@ -25,6 +26,7 @@ void CollisionComponent::Init()
 void CollisionComponent::Update(float aDeltaTime)
 {
 	mySphere.myCenterPosition = myEntity->myOrientation.GetPos();
+	myInstance->SetPosition(mySphere.myCenterPosition);
 }
 
 
