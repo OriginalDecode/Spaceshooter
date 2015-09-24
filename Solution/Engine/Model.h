@@ -32,8 +32,7 @@ namespace Prism
 		void InitCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
 		void InitLightCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
 				, CU::Vector4f aColour = { 1.f, 1.f, 1.f, 1.f });
-		void InitSkyblox(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
-		void InitSkySphere();
+
 		void AddChild(Model* aChild);
 		void InitGeometry(const MeshData& aMeshData);
 
