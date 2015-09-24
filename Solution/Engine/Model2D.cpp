@@ -108,7 +108,7 @@ void Prism::Model2D::InitSurface(const std::string& aFileName)
 void Prism::Model2D::InitBlendState()
 {
 	D3D11_BLEND_DESC blendDesc;
-	blendDesc.AlphaToCoverageEnable = false;
+	blendDesc.AlphaToCoverageEnable = true;
 	blendDesc.IndependentBlendEnable = false;
 	blendDesc.RenderTarget[0].BlendEnable = TRUE;
 	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
