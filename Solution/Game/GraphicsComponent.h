@@ -17,7 +17,6 @@ public:
 	void InitGeometry(const Prism::MeshData& aMeshData);
 	void InitCube(float aWidth, float aHeight, float aDepth);
 	void Update(float aDeltaTime);
-	void ReceiveMessage(const RefreshOrientationMessage& aMessage) override;
 	Prism::Instance* GetInstance();
 	static int GetID();
 

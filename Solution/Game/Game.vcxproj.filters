@@ -75,9 +75,6 @@
     <ClInclude Include="ShootingComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="RefreshOrientationMessage.h">
-      <Filter>Components\Message</Filter>
-    </ClInclude>
     <ClInclude Include="ShootMessage.h">
       <Filter>Components\Message</Filter>
     </ClInclude>

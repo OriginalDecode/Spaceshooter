@@ -1,3 +1,5 @@
+#pragma warning(disable : 4005)
+
 #include "DLLExport.h"
 #include <Engine.h>
 #include <Windows.h>
@@ -11,6 +13,7 @@
 #include <EffectContainer.h>
 #include <Camera.h>
 #include <DirectionalLight.h>
+
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 HWND locEngineWindowHandler;
