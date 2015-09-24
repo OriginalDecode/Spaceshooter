@@ -15,6 +15,7 @@ struct BulletData // holds the data for one type of bullet
 namespace Prism
 {
 	class Camera;
+	class Instance;
 }
 
 namespace tinyxml2
@@ -30,14 +31,15 @@ public:
 
 	void ReadFromXML(const std::string aFilePath);
 	void Update(float aDeltaTime);
-	void Render(Prism::Camera* aCamera);
-
 	void ReceiveMessage(const BulletMessage& aMessage) override;
+
+	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
 private:
 	void ActivateBoxBullet(const CU::Vector3<float>& aVelocity, const CU::Matrix44<float>& anOrientation);
 
 	BulletData* myBoxBulletData;
+	CU::GrowingArray<Prism::Instance*> myInstances;
 
 };
 

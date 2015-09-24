@@ -246,7 +246,7 @@ void Game::Render()
 
 	if (myRenderStuff)
 	{
-		myScene->Render();
+		myScene->Render(myBulletManager->GetInstances());
 	}
 
 	if (myShowPointLightCube == true)
@@ -254,7 +254,6 @@ void Game::Render()
 		myPointLight->Render(myCamera);
 	}
 
-	myBulletManager->Render(myCamera);
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 	END_TIME_BLOCK("Game::Render");
