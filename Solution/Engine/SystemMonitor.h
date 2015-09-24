@@ -7,6 +7,7 @@ namespace Prism
 	public:
 
 		static int GetMemoryUsageMB();
+		static int GetMemoryUsageKB();
 		static float GetCPUUsage();
 
 	private:

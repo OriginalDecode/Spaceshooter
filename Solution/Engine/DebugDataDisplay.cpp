@@ -106,7 +106,7 @@ void Prism::DebugDataDisplay::RenderMemoryUsage()
 
 	myStringStream.clear();
 	myStringStream.str(std::string());
-	myStringStream << "Memory: " << Prism::SystemMonitor::GetMemoryUsageMB() << "mb" << std::endl;
+	myStringStream << "Memory: " << Prism::SystemMonitor::GetMemoryUsageKB() << "kb" << std::endl;
 
 	myText->Render(myStringStream.str().c_str(), myMemUsageStartPos.x, myMemUsageStartPos.y, myTextScale);
 }
