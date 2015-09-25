@@ -11,8 +11,9 @@ MainMenuState::~MainMenuState()
 {
 }
 
-void MainMenuState::InitState()
+void MainMenuState::InitState(CU::InputWrapper* anInputWrapper)
 {
+	myInputWrapper = anInputWrapper;
 	myBackground = new Prism::Model2D;
 	myBackground->Init("Data/resources/texture/seafloor.dds", { 640.f, 640.f });
 	CU::Matrix44<float> orientation;
@@ -25,7 +26,7 @@ void MainMenuState::EndState()
 	delete myCamera;
 }
 
-const eStateStatus& MainMenuState::Update()
+const eStateStatus MainMenuState::Update()
 {
 	return myStateStatus;
 }
@@ -36,6 +37,11 @@ void MainMenuState::Render()
 }
 
 void MainMenuState::ResumeState()
+{
+
+}
+
+void MainMenuState::OnResize(int aWidth, int aHeight)
 {
 
 }
