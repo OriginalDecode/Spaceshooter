@@ -88,7 +88,10 @@ void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
 		ToggleFrameTime();
 	}
 
-	myFrameDebugger->Update(aInputWrapper);
+	if (myBoolContainer.at(eBitSetEnum::FUNCTION_TIMERS))
+	{
+		myFrameDebugger->Update(aInputWrapper);
+	}
 }
 
 void Prism::DebugDataDisplay::RenderFunctionTimers()

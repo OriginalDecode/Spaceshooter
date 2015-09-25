@@ -221,8 +221,8 @@ bool Game::Update()
 	Render();
 
 
-//	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
-//	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
 }
 
