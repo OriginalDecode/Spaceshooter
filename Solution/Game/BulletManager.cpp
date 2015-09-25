@@ -27,6 +27,11 @@ BulletManager::~BulletManager()
 {
 	if (myBoxBulletData != nullptr)
 	{
+		for (int i = 0; i < myBoxBulletData->myBullets.Size(); i++)
+		{
+			delete myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+		}
+
 		myBoxBulletData->myBullets.DeleteAll();
 		delete myBoxBulletData;
 		myBoxBulletData = nullptr;
@@ -59,12 +64,6 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	tinyxml2::XMLElement* bulletElement = reader.FindFirstChild("weapon");
 	bulletElement = reader.FindFirstChild(bulletElement, "projectile");
 
-	if (myBoxBulletData != nullptr)
-	{
-		myBoxBulletData->myBullets.DeleteAll();
-		delete myBoxBulletData;
-		myBoxBulletData = nullptr;
-	}
 	BulletData* bulletData = new BulletData;
 
 	std::string type;
@@ -93,6 +92,18 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 
 	if (type == "box")
 	{
+		if (myBoxBulletData != nullptr)
+		{
+			for (int i = 0; i < myBoxBulletData->myBullets.Size(); i++)
+			{
+				delete myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+			}
+
+			myBoxBulletData->myBullets.DeleteAll();
+			delete myBoxBulletData;
+			myBoxBulletData = nullptr;
+		}
+
 		bulletData->myType = eBulletType::BOX_BULLET;
 		myBoxBulletData = bulletData;
 	}

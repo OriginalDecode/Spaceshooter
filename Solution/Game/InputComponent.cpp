@@ -69,7 +69,7 @@ void InputComponent::Update(float aDeltaTime)
 
 	Rotate(aDeltaTime);
 
-	if (myInputWrapper->MouseDown(0))
+	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
 		Shoot(30000.f * aDeltaTime);
 		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");

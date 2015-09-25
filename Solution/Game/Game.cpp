@@ -66,7 +66,7 @@ bool Game::Init(HWND& aHwnd)
 	Entity* player = new Entity();
 
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	player->AddComponent<ShootingComponent>()->Init();
+	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
 
 	myPlayer = player;
@@ -222,8 +222,8 @@ bool Game::Update()
 	Render();
 
 
-//	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
-//	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 	return true;
 }
 
