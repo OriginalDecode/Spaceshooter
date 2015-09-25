@@ -236,11 +236,12 @@ void Level::ReadXML(const std::string& aFile)
 	XMLReader reader;
 	reader.OpenDocument(aFile);
 	tinyxml2::XMLElement* levelReader = reader.FindFirstChild("level");
-	for (tinyxml2::XMLElement* entityReader = reader.FindFirstChild(levelReader, "enemy"); entityReader != nullptr; entityReader = reader.FindNextElement(entityReader, "enemy"))
+
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelReader, "entity"); entityElement != nullptr; entityElement = reader.FindNextElement(entityElement, "entity"))
 	{
 		Entity* newEntity = new Entity();
 
-		tinyxml2::XMLElement* positionReader = reader.FindFirstChild("position");
+		tinyxml2::XMLElement* positionReader = reader.FindFirstChild(entityElement, "position");
 		CU::Vector3<float> entityPosition;
 		reader.ReadAttribute(positionReader, "posX", entityPosition.x);
 		reader.ReadAttribute(positionReader, "posX", entityPosition.y);
@@ -248,10 +249,16 @@ void Level::ReadXML(const std::string& aFile)
 
 		newEntity->myOrientation.SetPos(entityPosition);
 
-		std::string entityModelPath;
-		newEntity->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			"Data/effect/NoTextureEffect.fx");
+		tinyxml2::XMLElement* graphicsComponentReader = reader.FindFirstChild(entityElement, "graphicsComponent");
+		if (graphicsComponentReader != nullptr)
+		{
+			std::string entityModelPath, entityShaderPath;
+			reader.ReadAttribute(graphicsComponentReader, "modelSrc", entityModelPath);
+			reader.ReadAttribute(graphicsComponentReader, "shaderSrc", entityShaderPath);
+			newEntity->AddComponent<GraphicsComponent>()->Init(entityModelPath.c_str(), entityShaderPath.c_str());
+		}
 
+		tinyxml2::XMLElement* aiComponentElement = reader.FindFirstChild(entityElement, "graphicsComponent");
 
 		newEntity->AddComponent<AIComponent>()->Init();
 		newEntity->AddComponent<ShootingComponent>();
