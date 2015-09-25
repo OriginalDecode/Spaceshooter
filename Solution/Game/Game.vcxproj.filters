@@ -44,6 +44,9 @@
     <ClCompile Include="GUIComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>EntityFactory</Filter>
+    </ClCompile>
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -114,6 +117,9 @@
     <ClInclude Include="GUIComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="EntityFactory.h">
+      <Filter>EntityFactory</Filter>
+    </ClInclude>
     <ClInclude Include="CollisionComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -150,6 +156,8 @@
     <Filter Include="PostMaster">
       <UniqueIdentifier>{9b1b9366-e227-44bd-a8bf-877f484737b7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EntityFactory">
+      <UniqueIdentifier>{7c644a6c-1668-4fdf-b017-af4b0abe7e2b}</UniqueIdentifier>
     <Filter Include="Utilities">
       <UniqueIdentifier>{b736cc7e-fbbe-4d8c-8b80-709391b3d9b4}</UniqueIdentifier>
     </Filter>

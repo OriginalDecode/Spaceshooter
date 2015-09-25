@@ -37,7 +37,7 @@ namespace Prism
 
 			if (loadArray.Size() == 0)
 			{
-				Sleep(1000);
+				Sleep(500);
 			}
 			else
 			{
