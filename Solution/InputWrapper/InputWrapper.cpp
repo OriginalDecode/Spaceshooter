@@ -24,6 +24,8 @@ void CommonUtilities::InputWrapper::Init(HWND aHwnd, HINSTANCE aHInstance, DWORD
 
 	myWindowHandler = aHwnd;
 
+	myIsRecordingDeltas = true;
+
 	Update();
 }
 
@@ -61,9 +63,27 @@ void CommonUtilities::InputWrapper::Update()
 	myMousePos.x = static_cast<float>(cursorPoint.x);
 	myMousePos.y = static_cast<float>(cursorPoint.y);
 
+	if (myIsRecordingDeltas == false)
+	{
+		myMouseState.lX = 0;
+		myMouseState.lY = 0;
+	}
+
 	//myMousePos.x += myMouseState.lX;
 	//myMousePos.y += myMouseState.lY;
 	//myMousePos.z += myMouseState.lZ;
+}
+
+
+void CommonUtilities::InputWrapper::PauseDeltaRecording()
+{
+	myIsRecordingDeltas = false;
+}
+
+
+void CommonUtilities::InputWrapper::ResumeDeltaRecording()
+{
+	myIsRecordingDeltas = true;
 }
 
 const CommonUtilities::Vector2<float>& CommonUtilities::InputWrapper::GetMousePosition() const

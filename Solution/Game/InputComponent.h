@@ -9,8 +9,6 @@ namespace CommonUtilities
 class InputComponent : public ControllerComponent
 {
 public:
-	InputComponent();
-
 	void Init(CU::InputWrapper& aInputWrapper);
 	void Update(float aDeltaTime) override;
 
@@ -19,6 +17,9 @@ private:
 	void ReadXML(const std::string& aFile);
 
 	void Rotate(float aDeltaTime);
+	void ToggleCameraLock();
+
+
 	CU::InputWrapper* myInputWrapper;
 
 
@@ -27,4 +28,5 @@ private:
 	float myRotationSpeed;
 	float myMovementSpeed;
 	float myMaxSteeringSpeed;
+	bool myCameraIsLocked;
 };

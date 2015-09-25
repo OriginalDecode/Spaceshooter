@@ -193,6 +193,21 @@ namespace Prism
 		{
 			if (it->second.myEnabled == true)
 			{
+				CU::Vector4<float> timeColor;
+				if (it->second.myMS < 1.f)
+				{
+					timeColor = { 0.f, 1.f, 0.f, 1.f };
+				}
+				else if (it->second.myMS < 5.f)
+				{
+					timeColor = { 1.f, 0.39f, 0.28f, 1.f };
+				}
+				else
+				{
+					timeColor = { 1.f, 0.f, 0.f, 1.f };
+				}
+
+
 				myStringStream.clear();
 				myStringStream.str(std::string());
 				myStringStream << it->second.myMS << " ms";
@@ -201,10 +216,10 @@ namespace Prism
 		
 				myStringStream << std::endl;
 		
-				it->second.myNameText->Render(it->second.myNameString.c_str(), drawPos.x, drawPos.y, 0.75f);
+				it->second.myNameText->Render(it->second.myNameString.c_str(), drawPos.x, drawPos.y, { 1.f, 1.f, 1.f, 1.f }, 0.75f);
 		
 				it->second.myTimeText->Render(myStringStream.str().c_str()
-					, drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, 0.75f);
+					, drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, timeColor, 0.75f);
 				drawPos.y -= 30.f;
 			}
 		}

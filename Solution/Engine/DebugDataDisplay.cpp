@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "DebugMenu.h"
 #include "DebugDataDisplay.h"
 #include "Font.h"
 #include "FontContainer.h"
@@ -27,6 +28,8 @@ void Prism::DebugDataDisplay::Init()
 
 	myFrameDebugger = new FrameTimeDebugger();
 	myFrameDebugger->Init();
+
+	myDebugMenu = new DebugMenu();
 }
 
 void Prism::DebugDataDisplay::StartFunctionTimer(const std::string& aFunc)
@@ -67,9 +70,11 @@ void Prism::DebugDataDisplay::Render()
 	{
 		RenderFrameTime();
 	}
+
+	myDebugMenu->Render();
 }
 
-void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
+void Prism::DebugDataDisplay::Update(CU::InputWrapper& aInputWrapper)
 {
 	if (aInputWrapper.KeyDown(DIK_F5))
 	{
@@ -92,6 +97,8 @@ void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
 	{
 		myFrameDebugger->Update(aInputWrapper);
 	}
+
+	myDebugMenu->Update(aInputWrapper);
 }
 
 void Prism::DebugDataDisplay::RenderFunctionTimers()

@@ -78,6 +78,9 @@
     <ClCompile Include="ModelProxy.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="DebugMenu.cpp">
+      <Filter>DebugServices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -186,6 +189,7 @@
     <ClInclude Include="ModelProxy.h">
       <Filter>Rendering</Filter>
     </ClInclude>
+    <ClInclude Include="DebugMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
