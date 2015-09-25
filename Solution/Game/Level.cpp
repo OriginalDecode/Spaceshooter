@@ -249,7 +249,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation.SetPos(entityPosition);
 
 		std::string entityModelPath;
-		newEntity->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemy/SM_Enemy_Ship_A.fbx",
+		newEntity->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			"Data/effect/NoTextureEffect.fx");
 
 
