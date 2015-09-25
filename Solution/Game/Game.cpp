@@ -63,7 +63,7 @@ bool Game::Init(HWND& aHwnd)
 	Entity* player = new Entity();
 	
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	player->AddComponent<ShootingComponent>()->Init();
+	player->AddComponent<ShootingComponent>();
 
 	myPlayer = player;
 	myEntities.Add(player);
