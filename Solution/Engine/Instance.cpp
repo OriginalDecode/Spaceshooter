@@ -5,44 +5,50 @@
 #include "EffectContainer.h"
 #include "Instance.h"
 #include "Model.h"
+#include "ModelProxy.h"
 
 
-Prism::Instance::Instance(Model& aModel)
-	: myModel(aModel)
+Prism::Instance::Instance(ModelProxy& aModel)
+	: myProxy(aModel)
 	, myOrientationPointer(nullptr)
 {
+
 }
 
 void Prism::Instance::Render(Camera& aCamera)
 {
-	myModel.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
-	myModel.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+	if (myProxy.IsLoaded())
+	{
+		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
+		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 
-	if (myOrientationPointer != nullptr)
-	{
-		myModel.Render(*myOrientationPointer);
+		if (myOrientationPointer != nullptr)
+		{
+			myProxy.Render(*myOrientationPointer);
+		}
+		else
+		{
+			myProxy.Render(myOrientation);
+		}
 	}
-	else
-	{
-		myModel.Render(myOrientation);
-	}
-	
 }
 
 void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera)
 {
-	myModel.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
-	myModel.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+	if (myProxy.IsLoaded())
+	{
+		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
+		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 
-	if (myOrientationPointer != nullptr)
-	{
-		myModel.Render(*myOrientationPointer * aParentMatrix);
+		if (myOrientationPointer != nullptr)
+		{
+			myProxy.Render(*myOrientationPointer * aParentMatrix);
+		}
+		else
+		{
+			myProxy.Render(myOrientation * aParentMatrix);
+		}
 	}
-	else
-	{
-		myModel.Render(myOrientation * aParentMatrix);
-	}
-	
 }
 
 void Prism::Instance::SetPosition(const CU::Vector3<float>& aPosition)
@@ -68,7 +74,10 @@ void Prism::Instance::SetOrientation(const CU::Matrix44<float>& aOrientation)
 
 void Prism::Instance::SetEffect(const std::string& aEffectFile)
 {
-	myModel.SetEffect(Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectFile));
+	if (myProxy.IsLoaded())
+	{
+		myProxy.SetEffect(Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectFile));
+	}
 }
 
 void Prism::Instance::PerformRotationLocal(CU::Matrix44<float>& aRotation)
@@ -92,19 +101,28 @@ void Prism::Instance::PerformTransformation(CU::Matrix44<float>& aTransformation
 void Prism::Instance::UpdateDirectionalLights(
 	const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
-	myModel.GetEffect()->UpdateDirectionalLights(someDirectionalLightData);
+	if (myProxy.IsLoaded())
+	{
+		myProxy.GetEffect()->UpdateDirectionalLights(someDirectionalLightData);
+	}
 }
 
 void Prism::Instance::UpdatePointLights(
 	const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData)
 {
-	myModel.GetEffect()->UpdatePointLights(somePointLightData);
+	if (myProxy.IsLoaded())
+	{
+		myProxy.GetEffect()->UpdatePointLights(somePointLightData);
+	}
 }
 
 void Prism::Instance::UpdateSpotLights(
 	const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData)
 {
-	myModel.GetEffect()->UpdateSpotLights(someSpotLightData);
+	if (myProxy.IsLoaded())
+	{
+		myProxy.GetEffect()->UpdateSpotLights(someSpotLightData);
+	}
 }
 
 void Prism::Instance::SetOrientationPointer(CU::Matrix44<float>& aOrientation)

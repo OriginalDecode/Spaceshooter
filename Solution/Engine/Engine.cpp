@@ -8,13 +8,13 @@
 #include "FileWatcher.h"
 #include "FontContainer.h"
 #include "Model.h"
+#include "ModelLoader.h"
+#include "ModelProxy.h"
 #include <TimerManager.h>
 #include "Text.h"
 #include "TextureContainer.h"
 #include <Vector.h>
 #include "VTuneApi.h"
-
-
 
 namespace Prism
 {
@@ -28,7 +28,10 @@ namespace Prism
 		myFontContainer = new FontContainer();
 		myDebugDataDisplay = new DebugDataDisplay();
 		myFileWatcher = new FileWatcher();
+		myModelLoader = new ModelLoader();
+
 		myWireframeIsOn = false;
+		myWireframeShouldShow = false;
 	}
 
 	Engine::~Engine()
@@ -55,6 +58,9 @@ namespace Prism
 
 	void Engine::Shutdown()
 	{
+		myModelLoader->Shutdown();
+		myModelLoaderThread->join();
+
 		myDirectX->CleanD3D();
 		delete myDirectX;
 		myDirectX = nullptr;
@@ -81,6 +87,20 @@ namespace Prism
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
+	}
+
+	Model* Engine::DLLLoadModel(const std::string& aModelPath, Effect* aEffect)
+	{
+		CU::TimerManager::GetInstance()->StartTimer("LoadModel");
+
+		Model* model = myModelFactory->LoadModel(aModelPath.c_str(), aEffect);
+		model->Init();
+
+		int elapsed = static_cast<int>(
+			CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
+		RESOURCE_LOG("Model \"%s\" took %d ms to load", aModelPath.c_str(), elapsed);
+
+		return model;
 	}
 
 	ID3D11Device* Engine::GetDevice()
@@ -123,22 +143,10 @@ namespace Prism
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
 
+		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
+
 		ENGINE_LOG("Engine Init Successful");
 		return true;
-	}
-
-	Model* Engine::LoadModel(const std::string& aPath, Effect* aEffect)
-	{
-		CU::TimerManager::GetInstance()->StartTimer("LoadModel");
-		Model* model = myModelFactory->LoadModel(aPath.c_str(), aEffect);
-		model->Init();
-
-
-		int elapsed = static_cast<int>(CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
-
-		RESOURCE_LOG("Model \"%s\" took %d ms to load", aPath.c_str(), elapsed);
-
-		return model;
 	}
 
 	void Engine::PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale)
@@ -160,13 +168,27 @@ namespace Prism
 	{
 		myDirectX->EnableWireframe();
 
+		
 		if (myWireframeIsOn == true)
 		{
 			myDirectX->DisableWireframe();
 			myWireframeIsOn = false;
+			myWireframeShouldShow = false;
 			return;
 		}
+
+		myWireframeShouldShow = true;
 		myWireframeIsOn = true;
+	}
+
+	void Engine::EnableWireframe()
+	{
+		myDirectX->EnableWireframe();
+	}
+
+	void Engine::DisableWireframe()
+	{
+		myDirectX->DisableWireframe();
 	}
 
 	bool Engine::WindowSetup(HWND& aHwnd, WNDPROC aWindowProc)

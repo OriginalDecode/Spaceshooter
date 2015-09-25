@@ -19,6 +19,11 @@ Prism::Scene::Scene()
 	memset(&mySpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
 }
 
+Prism::Scene::~Scene()
+{
+	myInstances.DeleteAll();
+}
+
 void Prism::Scene::Render()
 {
 	TIME_FUNCTION;

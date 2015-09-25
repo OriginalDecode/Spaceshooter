@@ -9,12 +9,12 @@ namespace Prism
 {
 	class Camera;
 	class Light;
-	class Model;
+	class ModelProxy;
 
 	class Instance
 	{
 	public:
-		Instance(Model& aModel);
+		Instance(ModelProxy& aModel);
 
 		void Render(Camera& aCamera);
 		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
@@ -40,7 +40,7 @@ namespace Prism
 	private:
 		void operator=(Instance&) = delete;
 
-		Model& myModel;
+		ModelProxy& myProxy;
 		CU::Matrix44<float> myOrientation;
 		CU::Matrix44<float>* myOrientationPointer;
 		CU::Vector3<float> myPosition;
