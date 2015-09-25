@@ -189,11 +189,11 @@ void Level::LogicUpdate(float aDeltaTime)
 		myEntities[i]->Update(aDeltaTime);
 	}
 
-	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 	//if (CheckCollision() == true)
 	//{
 	//	myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
 	//}
+	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 }
 
 void Level::OnResize(int aWidth, int aHeight)
@@ -211,7 +211,17 @@ bool Level::CheckCollision()
 				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
 				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 			{
-				if (myEntities[i] == myPlayer || myEntities[j] == myPlayer)
+				if (myEntities[i] == myPlayer)
+				{
+					return true;
+				}
+
+			}
+			if (CommonUtilities::Intersection::SphereVsSphere
+				(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
+				, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
+			{
+				if (myEntities[i] == myPlayer)
 				{
 					return true;
 				}
