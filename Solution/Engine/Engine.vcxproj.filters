@@ -72,6 +72,12 @@
     <ClCompile Include="EffectContainer.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelProxy.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -172,6 +178,12 @@
       <Filter>Rendering</Filter>
     </ClInclude>
     <ClInclude Include="Effect.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelProxy.h">
       <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>

@@ -10,6 +10,8 @@
 #include <Scene.h>
 #include <Instance.h>
 #include <Model.h>
+#include <ModelLoader.h>
+#include <ModelProxy.h>
 #include <EffectContainer.h>
 #include <Camera.h>
 #include <DirectionalLight.h>
@@ -22,6 +24,7 @@ HWND locPanelWindowHandler;
 Prism::SetupInfo locWindowSetup;
 Prism::Scene locScene;
 Prism::Model* locModel;
+Prism::ModelProxy* locModelProxy;
 Prism::Instance* locInstance;
 Prism::Camera* locCamera;
 Prism::DirectionalLight* locDirectionLight;
@@ -68,7 +71,7 @@ void SetupWindow(int aWidth, int aHeight)
 void Render()
 {
 	Prism::Engine::GetInstance()->Render();
-//	locScene.Render();
+	locScene.Render();
 }
 
 void Update()
@@ -119,8 +122,12 @@ void LoadModel(const char* aModelFile, const char* aEffectFile)
 	{
 		aEffectFile = "Data/effect/BasicEffect.fx";
 	}
-	locModel = Prism::Engine::GetInstance()->LoadModel(aModelFile, 
+
+	locModel = Prism::Engine::GetInstance()->DLLLoadModel(aModelFile,
 		Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectFile));
+
+	locModelProxy = new Prism::ModelProxy();
+	locModelProxy->SetModel(locModel);
 
 	if (locInstance != nullptr) 
 	{
@@ -129,7 +136,7 @@ void LoadModel(const char* aModelFile, const char* aEffectFile)
 		locInstance = nullptr;
 	}
 
-	locInstance = new Prism::Instance(*locModel);
+	locInstance = new Prism::Instance(*locModelProxy);
 
 	locScene.AddInstance(locInstance);
 }

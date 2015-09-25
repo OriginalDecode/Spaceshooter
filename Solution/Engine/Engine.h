@@ -2,7 +2,9 @@
 #include <Matrix.h>
 #include <Vector.h>
 #include <string>
+#include <thread>
 #include <Windows.h>
+
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -18,6 +20,8 @@ namespace Prism
 	class FileWatcher;
 	class FontContainer;
 	class Model;
+	class ModelLoader;
+	class ModelProxy;
 	class TextureContainer;
 	class Text;
 
@@ -39,10 +43,12 @@ namespace Prism
 		FontContainer* GetFontContainer();
 		DebugDataDisplay* GetDebugDisplay();
 		FileWatcher* GetFileWatcher();
+		ModelLoader* GetModelLoader();
+
+		Model* DLLLoadModel(const std::string& aModelPath, Effect* aEffect);
+
 		const CU::Vector2<int>& GetWindowSize() const;
 		const CU::Matrix44<float>& GetOrthogonalMatrix() const;
-
-		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
 		void PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale = 1.f);
 
@@ -83,6 +89,10 @@ namespace Prism
 		CU::Vector2<int> myWindowSize;
 		CU::Matrix44<float> myOrthogonalMatrix;
 
+
+		ModelLoader* myModelLoader;
+		std::thread* myModelLoaderThread;
+
 		static Engine* myInstance;
 	};
 }
@@ -110,6 +120,11 @@ inline Prism::DebugDataDisplay* Prism::Engine::GetDebugDisplay()
 inline Prism::FileWatcher* Prism::Engine::GetFileWatcher()
 {
 	return myFileWatcher;
+}
+
+inline Prism::ModelLoader* Prism::Engine::GetModelLoader()
+{
+	return myModelLoader;
 }
 
 inline const CU::Vector2<int>& Prism::Engine::GetWindowSize() const

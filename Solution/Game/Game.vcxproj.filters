@@ -47,6 +47,18 @@
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="StateStack.cpp">
+      <Filter>StateStack</Filter>
+    </ClCompile>
+    <ClCompile Include="StateStackProxy.cpp">
+      <Filter>StateStack</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameState.cpp">
+      <Filter>StateStack\States</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuState.cpp">
+      <Filter>StateStack\States</Filter>
+    </ClCompile>
     <ClCompile Include="Level.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -108,6 +120,24 @@
     <ClInclude Include="ColoursForBG.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="StateStack.h">
+      <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="StateStackProxy.h">
+      <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="StateEnums.h">
+      <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>StateStack\States</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameState.h">
+      <Filter>StateStack\States</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuState.h">
+      <Filter>StateStack\States</Filter>
+    </ClInclude>
     <ClInclude Include="Level.h" />
   </ItemGroup>
   <ItemGroup>
@@ -122,6 +152,12 @@
     </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{b736cc7e-fbbe-4d8c-8b80-709391b3d9b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateStack">
+      <UniqueIdentifier>{62de55aa-ba16-458a-a318-fdaacc2ebd88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateStack\States">
+      <UniqueIdentifier>{00a32eb8-3ecb-478c-8180-0ad625e6ab79}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
