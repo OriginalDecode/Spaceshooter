@@ -1,13 +1,16 @@
 #pragma once
 #include <Matrix.h>
 #include <GrowingArray.h>
+#include "StateStack.h"
+#include "MainMenuState.h"
+#include "InGameState.h"
+
 namespace CommonUtilities
 {
 	class InputWrapper;
 }
 
 class BulletManager;
-class Level;
 
 class Game
 {
@@ -26,17 +29,12 @@ public:
 private:
 	void operator=(Game& aApp) = delete;
 
-	void LogicUpdate(const float aDeltaTime);
-	void Render();
-
-	bool CheckCollision();
-
 	CU::InputWrapper* myInputWrapper;
 
-
-	BulletManager* myBulletManager;
-
-	Level* myLevel;
+	StateStack myStateStack;
+	
+	MainMenuState* myMainMenu;
+	InGameState* myGame;
 
 
 };
