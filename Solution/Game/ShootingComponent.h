@@ -7,6 +7,7 @@ struct WeaponData
 	eBulletType myBulletType;
 	float myCoolDownTime;
 	float myCurrentTime;
+	int mySpread;
 };
 
 class Entity;
