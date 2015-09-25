@@ -25,6 +25,15 @@ void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 	Effect* newEffect = new Effect();
 	newEffect->Init(aFilePath);
 
+	Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(myCubeMap);
+	ID3DX11EffectShaderResourceVariable* shaderVar = newEffect->GetEffect()->GetVariableByName("CubeMap")->AsShaderResource();
+
+	if (shaderVar->IsValid())
+	{
+		shaderVar->SetResource(tex->GetShaderView());
+	}
+
+
 	myEffects[aFilePath] = newEffect;
 
 	WATCH_FILE(aFilePath, Prism::EffectContainer::ReloadEffect);
@@ -60,15 +69,4 @@ void Prism::EffectContainer::Update(const float aDeltaTime)
 void Prism::EffectContainer::SetCubeMap(const std::string& aFilePath)
 {
 	myCubeMap = aFilePath;
-
-	for (auto it = myEffects.begin(); it != myEffects.end(); ++it)
-	{
-		Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(myCubeMap);
-		ID3DX11EffectShaderResourceVariable* shaderVar = it->second->GetEffect()->GetVariableByName("CubeMap")->AsShaderResource();
-
-		if (shaderVar->IsValid())
-		{
-			shaderVar->SetResource(tex->GetShaderView());
-		}
-	}
 }

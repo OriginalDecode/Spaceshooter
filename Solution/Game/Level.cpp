@@ -29,6 +29,8 @@
 
 Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML)
 {
+	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
+
 	myEntityFactory = new EntityFactory();
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
@@ -75,18 +77,18 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 			myEntities.Add(astroids);
 		}
 
-		for (int i = 0; i < 50; ++i)
-		{
-			Entity* enemy = new Entity();
-			//enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			//	"Data/effect/NoTextureEffect.fx");
-			myEntityFactory->CopyEntity(enemy, "defaultEnemy");
-
-			enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
-				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
-
-			myEntities.Add(enemy);
-		}
+		//for (int i = 0; i < 50; ++i)
+		//{
+		//	Entity* enemy = new Entity();
+		//	//enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+		//	//	"Data/effect/NoTextureEffect.fx");
+		//	myEntityFactory->CopyEntity(enemy, "defaultEnemy");
+		//
+		//	enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
+		//		static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
+		//
+		//	myEntities.Add(enemy);
+		//}
 	}
 	else
 	{
@@ -120,11 +122,11 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 	myRenderStuff = true;
 
-	//Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
 
 
-	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/un_Milkyway_test_cubemap.dds");
+
 }
 
 
