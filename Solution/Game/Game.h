@@ -40,6 +40,8 @@ private:
 	void LogicUpdate(const float aDeltaTime);
 	void Render();
 
+	bool CheckCollision();
+
 	CU::InputWrapper* myInputWrapper;
 
 	Prism::Instance* mySkybox;

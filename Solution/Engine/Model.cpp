@@ -408,167 +408,6 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 	myIsNULLObject = false;
 }
 
-
-void Prism::Model::InitSkyblox(float aWidth, float aHeight, float aDepth)
-{
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SkyboxEffect.fx");
-
-	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	D3DX11_PASS_DESC passDesc;
-	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc),
-		passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitCube", MB_ICONWARNING);
-	}
-
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-
-
-#pragma region Vertices
-	CU::GrowingArray<VertexPosNormUV> vertices;
-	vertices.Init(24);
-
-	float halfWidth = aWidth / 2.f;
-	float halfHeight = aHeight / 2.f;
-	float halfDepth = aDepth / 2.f;
-
-	float cubeMapUVStep = 1 / 6.f;
-
-	//0 - 3 (Top)
-	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 2, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 3, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 3, 1.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { 0.f, 1.f, 0.f }, { cubeMapUVStep * 2, 1.0f } });
-
-	//4 - 7 (Bottom)
-	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 3, 1.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 4, 1.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 4, 0.0f } });
-	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { 0.f, -1.f, 0.f }, { cubeMapUVStep * 3, 0.0f } });
-
-	//8 - 11 (Left)
-	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 2, 1.0f } });
-	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 1.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 0.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { -1.f, 0.f, 0.f }, { cubeMapUVStep * 2, 0.0f } });
-
-	//12 - 15 (Right)
-	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 0, 1.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 1.0f } });
-	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 1, 0.0f } });
-	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 1.f, 0.f, 0.f }, { cubeMapUVStep * 0, 0.0f } });
-
-	//16 - 19 (Front)
-	vertices.Add({ { -halfWidth, -halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 6, 1.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 5, 1.0f } });
-	vertices.Add({ { halfWidth, halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 5, 0.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, -halfDepth }, { 0.f, 0.f, -1.f }, { cubeMapUVStep * 6, 0.0f } });
-
-	//20 - 23 (Back)
-	vertices.Add({ { -halfWidth, -halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 4, 1.0f } });
-	vertices.Add({ { halfWidth, -halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 5, 1.0f } });
-	vertices.Add({ { halfWidth, halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 5, 0.0f } });
-	vertices.Add({ { -halfWidth, halfHeight, halfDepth }, { 0.f, 0.f, 1.f }, { cubeMapUVStep * 4, 0.0f } });
-#pragma endregion
-
-#pragma region Indices
-
-	//Top
-	myVerticeIndices.Add(0);
-	myVerticeIndices.Add(1);
-	myVerticeIndices.Add(3);
-
-	myVerticeIndices.Add(3);
-	myVerticeIndices.Add(1);
-	myVerticeIndices.Add(2);
-
-	//Bottom
-	myVerticeIndices.Add(5);
-	myVerticeIndices.Add(4);
-	myVerticeIndices.Add(6);
-
-	myVerticeIndices.Add(6);
-	myVerticeIndices.Add(4);
-	myVerticeIndices.Add(7);
-
-	//Left
-	myVerticeIndices.Add(8);
-	myVerticeIndices.Add(9);
-	myVerticeIndices.Add(11);
-
-	myVerticeIndices.Add(11);
-	myVerticeIndices.Add(9);
-	myVerticeIndices.Add(10);
-
-	//Right
-	myVerticeIndices.Add(13);
-	myVerticeIndices.Add(12);
-	myVerticeIndices.Add(14);
-
-	myVerticeIndices.Add(14);
-	myVerticeIndices.Add(12);
-	myVerticeIndices.Add(15);
-
-	//Front
-	myVerticeIndices.Add(16);
-	myVerticeIndices.Add(17);
-	myVerticeIndices.Add(19);
-
-	myVerticeIndices.Add(19);
-	myVerticeIndices.Add(17);
-	myVerticeIndices.Add(18);
-
-	//Back
-	myVerticeIndices.Add(21);
-	myVerticeIndices.Add(20);
-	myVerticeIndices.Add(22);
-
-	myVerticeIndices.Add(22);
-	myVerticeIndices.Add(20);
-	myVerticeIndices.Add(23);
-
-#pragma endregion
-
-
-	InitVertexBaseData(vertices.Size(), VertexType::POS_NORM_UV, sizeof(VertexPosNormUV),
-		reinterpret_cast<char*>(&vertices[0]));
-	InitIndexBaseData(DXGI_FORMAT_R32_UINT, myVerticeIndices.Size(), reinterpret_cast<char*>(&myVerticeIndices[0]));
-
-	InitVertexBuffer();
-	InitIndexBuffer();
-
-	Surface surf;
-	surf.SetEffect(myEffect);
-	surf.SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	surf.SetVertexStart(0);
-	surf.SetVertexCount(myVertices.Size());
-	surf.SetIndexStart(0);
-	surf.SetIndexCount(myVerticeIndices.Size());
-	surf.SetTexture("DiffuseTexture", "Data/resources/texture/cubemapTest_series.dds", true);
-
-	mySurfaces.Add(new Surface(surf));
-
-	myIsNULLObject = false;
-}
-
-void Prism::Model::InitSkySphere()
-{
-	myIsSkySphere = true;
-		
-	for (int i = 0; i < myChilds.Size(); ++i)
-	{
-		myChilds[i]->InitSkySphere();
-	}
-}
-
 void Prism::Model::InitGeometry(const MeshData& aMeshData)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/GeometryEffect.fx");
@@ -653,15 +492,11 @@ void Prism::Model::SetEffect(Effect* aEffect)
 
 void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 {
-	TIME_FUNCTION
+	TIME_FUNCTION;
+
 
 	if (myIsNULLObject == false)
 	{
-
-		if (myIsSkySphere == true)
-		{
-			Engine::GetInstance()->DisableZBuffer();
-		}
 
 		float blendFactor[4];
 		blendFactor[0] = 0.f;
@@ -695,8 +530,6 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 						mySurfaces[s]->GetVertexStart(), 0);
 			}
 		}
-
-		Engine::GetInstance()->EnableZBuffer();
 	}
 
 	for (int i = 0; i < myChilds.Size(); ++i)

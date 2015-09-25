@@ -18,6 +18,7 @@ namespace Prism
 	{
 	public:
 		Scene();
+		~Scene();
 
 		void Render();
 		void Render(CU::GrowingArray<Instance*>& someBulletInstances);

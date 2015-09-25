@@ -42,17 +42,18 @@ void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		myMovementSpeed = 50.f;
+		//myMovementSpeed = 50.f;
+		MoveForward(50.f * aDeltaTime);
+		
 	}
-	else
+	/*else
 	{
 		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
 		}
-	}
-	MoveForward(myMovementSpeed * aDeltaTime);
+	}*/
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		MoveBackward(50.f * aDeltaTime);
