@@ -138,10 +138,6 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 	}
 	
 
-
-	
-
-
 	myTechnique = myEffect->GetTechniqueByName("Render");
 	if (myTechnique->IsValid() == false)
 	{
