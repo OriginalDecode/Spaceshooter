@@ -13,6 +13,7 @@ class Component;
 class Entity
 {
 public:
+	Entity();
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -31,6 +32,9 @@ public:
 
 private:
 	std::unordered_map<int, Component*> myComponents;
+
+	bool myEntityIsActive;
+
 };
 
 template <typename T>

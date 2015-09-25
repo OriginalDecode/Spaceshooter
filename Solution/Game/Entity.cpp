@@ -3,6 +3,12 @@
 #include "Component.h"
 #include "Entity.h"
 
+Entity::Entity()
+	:myEntityIsActive(false)
+{
+}
+
+
 Entity::~Entity()
 {
 	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)

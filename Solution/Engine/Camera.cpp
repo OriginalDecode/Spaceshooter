@@ -1,6 +1,9 @@
 #include "stdafx.h"
+
 #include "Camera.h"
+#include <Fov90Frustum.h>
 #include <xnamath.h>
+
 
 namespace Prism
 {
@@ -10,17 +13,21 @@ namespace Prism
 		//OnResize(800, 600);
 
 		//myOrientation.SetPos(CU::Vector3<float>(0.f, 0.f, -25.f));
+
+		myFrustum = new CU::Intersection::Fov90Frustum(0.1f, 1000.f);
 	}
 
 
 	Camera::~Camera()
 	{
+		delete myFrustum;
+		myFrustum = nullptr;
 	}
 
 	void Camera::OnResize(const int aWidth, const int aHeight)
 	{
-		//myProjectionMatrix = CU::Matrix44<float>::CreateProjectionMatrixLH(0.1f, 1000.f, static_cast<float>(aWidth / aHeight), XM_PI * 0.4f);
-		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(aWidth), static_cast<float>(aHeight), 0.1f, 1000.f);
+		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(aWidth)
+			, static_cast<float>(aHeight), 0.1f, 1000.f);
 
 
 		XMMATRIX projection = XMMatrixPerspectiveFovLH(XM_PI * 0.4f, static_cast<float>(aWidth / aHeight), 0.1f, 1000.f);
@@ -62,7 +69,7 @@ namespace Prism
 
 	void Camera::RotateX(const float aDegrees)
 	{
-		TIME_FUNCTION
+		TIME_FUNCTION;
 
 		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
@@ -72,7 +79,7 @@ namespace Prism
 
 	void Camera::RotateY(const float aDegrees)
 	{
-		TIME_FUNCTION
+		TIME_FUNCTION;
 
 		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
@@ -82,7 +89,7 @@ namespace Prism
 
 	void Camera::RotateZ(const float aDegrees)
 	{
-		TIME_FUNCTION
+		TIME_FUNCTION;
 
 		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
@@ -92,17 +99,17 @@ namespace Prism
 
 	void Camera::MoveForward(const float aDistance)
 	{
-		TIME_FUNCTION
+		TIME_FUNCTION;
 
-			myPosition += myOrientation.GetForward() * aDistance;
+		myPosition += myOrientation.GetForward() * aDistance;
 		myOrientation.SetPos(myPosition);
 	}
 
 	void Camera::MoveRight(const float aDistance)
 	{
-		TIME_FUNCTION
+		TIME_FUNCTION;
 
-			myPosition += myOrientation.GetRight() * aDistance;
+		myPosition += myOrientation.GetRight() * aDistance;
 		myOrientation.SetPos(myPosition);
 	}
 }
