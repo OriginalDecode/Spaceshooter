@@ -16,7 +16,8 @@
 #include "InputComponent.h"
 #include <Intersection.h>
 #include "Level.h"
-#include "Model.h"
+#include <ModelLoader.h>
+#include <ModelProxy.h>
 #include "PointLight.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
@@ -135,8 +136,8 @@ Level::~Level()
 
 void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName)
 {
-	Prism::Model* skySphere = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/skybox/skySphere_test.fbx",
-		Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SkyboxEffect.fx"));
+	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		aModelFilePath, aEffectFileName);
 
 	mySkySphere = new Prism::Instance(*skySphere);
 }
