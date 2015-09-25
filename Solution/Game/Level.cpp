@@ -120,7 +120,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 	myRenderStuff = true;
 
-	//Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
 
 
