@@ -139,6 +139,12 @@ void Prism::Text::InitBlendState()
 void Prism::Text::Render(const char* aString
 	, const float aDrawX, const float aDrawY, const CU::Vector4<float>& aColor, const float aScale)
 {
+
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	{
+		Engine::GetInstance()->DisableWireframe();
+	}
+
 	UpdateSentence(aString, aDrawX, aDrawY, aColor, aScale);
 
 	if (myHasText == false)
@@ -179,6 +185,11 @@ void Prism::Text::Render(const char* aString
 	}
 
 	Engine::GetInstance()->EnableZBuffer();
+
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	{
+		Engine::GetInstance()->EnableWireframe();
+	}
 }
 
 
