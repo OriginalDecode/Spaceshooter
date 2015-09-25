@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include "DebugDataDisplay.h"
-#include "DebugMenu.h"
 #include "Font.h"
 #include "FontContainer.h"
 #include "FrameTimeDebugger.h"
@@ -28,8 +27,6 @@ void Prism::DebugDataDisplay::Init()
 
 	myFrameDebugger = new FrameTimeDebugger();
 	myFrameDebugger->Init();
-
-	myDebugMenu = new DebugMenu();
 }
 
 void Prism::DebugDataDisplay::StartFunctionTimer(const std::string& aFunc)
@@ -70,11 +67,9 @@ void Prism::DebugDataDisplay::Render()
 	{
 		RenderFrameTime();
 	}
-
-	myDebugMenu->Render();
 }
 
-void Prism::DebugDataDisplay::Update(CU::InputWrapper& aInputWrapper)
+void Prism::DebugDataDisplay::Update(const CU::InputWrapper& aInputWrapper)
 {
 	if (aInputWrapper.KeyDown(DIK_F5))
 	{
@@ -97,9 +92,6 @@ void Prism::DebugDataDisplay::Update(CU::InputWrapper& aInputWrapper)
 	{
 		myFrameDebugger->Update(aInputWrapper);
 	}
-
-	
-	myDebugMenu->Update(aInputWrapper);
 }
 
 void Prism::DebugDataDisplay::RenderFunctionTimers()
@@ -117,10 +109,9 @@ void Prism::DebugDataDisplay::RenderMemoryUsage()
 
 	myStringStream.clear();
 	myStringStream.str(std::string());
-	myStringStream << "Memory: " << Prism::SystemMonitor::GetMemoryUsageMB() << "mb" << std::endl;
+	myStringStream << "Memory: " << Prism::SystemMonitor::GetMemoryUsageKB() << "kb" << std::endl;
 
-	myText->Render(myStringStream.str().c_str(), myMemUsageStartPos.x, myMemUsageStartPos.y,
-	{ 1.f, 1.f, 1.f, 1.f }, myTextScale);
+	myText->Render(myStringStream.str().c_str(), myMemUsageStartPos.x, myMemUsageStartPos.y, myTextScale);
 }
 
 void Prism::DebugDataDisplay::RenderCPUUsage()
@@ -132,8 +123,7 @@ void Prism::DebugDataDisplay::RenderCPUUsage()
 	myStringStream << "CPU: "
 		<< Prism::SystemMonitor::GetCPUUsage() << "%" << std::endl;;
 
-	myText->Render(myStringStream.str().c_str(), myCPUUSageStartPos.x, myCPUUSageStartPos.y,
-	{ 1.f, 1.f, 1.f, 1.f }, myTextScale);
+	myText->Render(myStringStream.str().c_str(), myCPUUSageStartPos.x, myCPUUSageStartPos.y, myTextScale);
 }
 
 void Prism::DebugDataDisplay::RenderFrameTime()
@@ -145,8 +135,7 @@ void Prism::DebugDataDisplay::RenderFrameTime()
 	myStringStream.str(std::string());
 	myStringStream << "FPS: " << FPS << std::endl;
 
-	myText->Render(myStringStream.str().c_str(), myFrameTimeStartPos.x, myFrameTimeStartPos.y,
-	{ 1.f, 1.f, 1.f, 1.f }, myTextScale);
+	myText->Render(myStringStream.str().c_str(), myFrameTimeStartPos.x, myFrameTimeStartPos.y, myTextScale);
 
 
 	float frameTimeMS = myLastDeltaTime * 1000.f;
@@ -155,5 +144,5 @@ void Prism::DebugDataDisplay::RenderFrameTime()
 	myStringStream << "FrameTime: " << frameTimeMS << "ms" << std::endl;
 
 	myText->Render(myStringStream.str().c_str()
-		, myFrameTimeStartPos.x, myFrameTimeStartPos.y - 30.f, { 1.f, 1.f, 1.f, 1.f }, myTextScale);
+		, myFrameTimeStartPos.x, myFrameTimeStartPos.y - 30.f, myTextScale);
 }

@@ -17,18 +17,14 @@ public:
 	void InitGeometry(const Prism::MeshData& aMeshData);
 	void InitCube(float aWidth, float aHeight, float aDepth);
 	void Update(float aDeltaTime);
-	void ReceiveMessage(const RefreshOrientationMessage& aMessage) override;
 	Prism::Instance* GetInstance();
 	static int GetID();
 
 	void SetPosition(const CU::Vector3<float>& aPosition);
 
-	void SetSelfRender(Prism::Camera* aCamera);
-
 private:
 	Prism::Instance* myInstance;
-	bool myRenderSelf;
-	Prism::Camera* myCamera;
+
 };
 
 inline Prism::Instance* GraphicsComponent::GetInstance()

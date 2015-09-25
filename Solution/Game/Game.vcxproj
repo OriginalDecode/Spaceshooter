@@ -84,22 +84,31 @@
     <ClInclude Include="BulletEnums.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
+    <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsComponent.h" />
     <ClInclude Include="GUIComponent.h" />
+    <ClInclude Include="InGameState.h" />
     <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
-    <ClInclude Include="RefreshOrientationMessage.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootMessage.h" />
+    <ClInclude Include="StateEnums.h" />
+    <ClInclude Include="StateStack.h" />
+    <ClInclude Include="StateStackProxy.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Subscriber.h" />
   </ItemGroup>
@@ -108,17 +117,24 @@
     <ClCompile Include="BulletComponent.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletMessage.cpp" />
+    <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
     <ClCompile Include="GUIComponent.cpp" />
+    <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="ShootMessage.cpp" />
+    <ClCompile Include="StateStack.cpp" />
+    <ClCompile Include="StateStackProxy.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

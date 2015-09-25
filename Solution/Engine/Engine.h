@@ -2,7 +2,9 @@
 #include <Matrix.h>
 #include <Vector.h>
 #include <string>
+#include <thread>
 #include <Windows.h>
+
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
@@ -18,6 +20,8 @@ namespace Prism
 	class FileWatcher;
 	class FontContainer;
 	class Model;
+	class ModelLoader;
+	class ModelProxy;
 	class TextureContainer;
 	class Text;
 
@@ -39,10 +43,12 @@ namespace Prism
 		FontContainer* GetFontContainer();
 		DebugDataDisplay* GetDebugDisplay();
 		FileWatcher* GetFileWatcher();
+		ModelLoader* GetModelLoader();
+
+		Model* DLLLoadModel(const std::string& aModelPath, Effect* aEffect);
+
 		const CU::Vector2<int>& GetWindowSize() const;
 		const CU::Matrix44<float>& GetOrthogonalMatrix() const;
-
-		Model* LoadModel(const std::string& aPath, Effect* aEffect);
 
 		void PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale = 1.f);
 
@@ -51,6 +57,14 @@ namespace Prism
 
 		void ToggleWireframe();
 
+		void EnableWireframe();
+		void DisableWireframe();
+
+
+		void SetClearColor(const CU::Vector4<float>& aClearColor);
+
+		bool myWireframeShouldShow;
+
 	private:
 		Engine();
 		~Engine();
@@ -58,6 +72,7 @@ namespace Prism
 		bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
 
 		bool myWireframeIsOn;
+
 
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;
@@ -70,8 +85,13 @@ namespace Prism
 
 		Text* myDebugText;
 
+		CU::Vector4<float> myClearColor;
 		CU::Vector2<int> myWindowSize;
 		CU::Matrix44<float> myOrthogonalMatrix;
+
+
+		ModelLoader* myModelLoader;
+		std::thread* myModelLoaderThread;
 
 		static Engine* myInstance;
 	};
@@ -102,6 +122,11 @@ inline Prism::FileWatcher* Prism::Engine::GetFileWatcher()
 	return myFileWatcher;
 }
 
+inline Prism::ModelLoader* Prism::Engine::GetModelLoader()
+{
+	return myModelLoader;
+}
+
 inline const CU::Vector2<int>& Prism::Engine::GetWindowSize() const
 {
 	return myWindowSize;
@@ -110,4 +135,9 @@ inline const CU::Vector2<int>& Prism::Engine::GetWindowSize() const
 inline const CU::Matrix44<float>& Prism::Engine::GetOrthogonalMatrix() const
 {
 	return myOrthogonalMatrix;
+}
+
+inline void Prism::Engine::SetClearColor(const CU::Vector4<float>& aClearColor)
+{
+	myClearColor = aClearColor;
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <d3dx11effect.h>
 #include <D3DX11async.h>
 #include <DL_Debug.h>
 #include "EffectContainer.h"
@@ -30,6 +31,26 @@ bool Prism::Effect::Init(const std::string& aEffectFile)
 
 	return true;
 
+}
+
+void Prism::Effect::SetWorldMatrix(const CU::Matrix44<float>& aWorldMatrix)
+{
+	myWorldMatrixVariable->SetMatrix(&aWorldMatrix.myMatrix[0]);
+}
+
+void Prism::Effect::SetViewMatrix(const CU::Matrix44<float>& aViewMatrix)
+{
+	myViewMatrixVariable->SetMatrix(&aViewMatrix.myMatrix[0]);
+}
+
+void Prism::Effect::SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix)
+{
+	myProjectionMatrixVariable->SetMatrix(&aProjectionMatrix.myMatrix[0]);
+}
+
+void Prism::Effect::SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask)
+{
+	Engine::GetInstance()->GetContex()->OMSetBlendState(aBlendState, aBlendFactor, aSampleMask);
 }
 
 void Prism::Effect::UpdateDirectionalLights(

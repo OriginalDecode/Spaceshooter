@@ -3,8 +3,6 @@
 #include <AudioInterface.h>
 #include "ComponentEnums.h"
 #include "Constants.h"
-#include "DebugMenu.h"
-#include "DebugDataDisplay.h"
 #include <Engine.h>
 #include "Entity.h"
 #include "InputComponent.h"
@@ -16,10 +14,6 @@
 
 
 InputComponent::InputComponent()
-	: myRotationSpeed(0.f)
-	, myMovementSpeed(0.f)
-	, myMaxSteeringSpeed(0)
-	, myCameraIsLocked(false)
 {
 }
 
@@ -27,15 +21,16 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
 	myInputWrapper = &aInputWrapper;
 
-
+	
+	myRotationSpeed = 0.f;
+	myMovementSpeed = 0.f;
+	myMaxSteeringSpeed = 0;
 
 
 	//Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
 	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
 
 	ReadXML("Data/script/player.xml");
-
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Camera Lock", InputComponent::ToggleCameraLock, this);
 }
 
 float clip(float n, float lower, float upper) 
@@ -47,17 +42,18 @@ void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		myMovementSpeed = 50.f;
+		//myMovementSpeed = 50.f;
+		MoveForward(50.f * aDeltaTime);
+		
 	}
-	else
+	/*else
 	{
 		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
 		if (myMovementSpeed <= 0.f)
 		{
 			myMovementSpeed = 0.f;
 		}
-	}
-	MoveForward(myMovementSpeed * aDeltaTime);
+	}*/
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		MoveBackward(50.f * aDeltaTime);
@@ -73,18 +69,14 @@ void InputComponent::Update(float aDeltaTime)
 
 	Rotate(aDeltaTime);
 
-	if (myInputWrapper->MouseDown(0))
+	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
 		Shoot(30000.f * aDeltaTime);
 		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
-	if (myCameraIsLocked == false)
-	{
-		myCursorPosition.x += static_cast<float>(clip(myInputWrapper->GetMouseDX(), -20, 20)) * aDeltaTime;
-		myCursorPosition.y += static_cast<float>(clip(myInputWrapper->GetMouseDY(), -20, 20)) * aDeltaTime;
-	}
-	
+	myCursorPosition.x += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
+	myCursorPosition.y += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
 
 	myCursorPosition.x = clip(myCursorPosition.x, -1, 1);
 	myCursorPosition.y = clip(myCursorPosition.y, -1, 1);
@@ -173,14 +165,4 @@ void InputComponent::Rotate(float aDeltaTime)
 	}
 
 	RotateZ(myRotationSpeed * aDeltaTime);
-}
-
-
-void InputComponent::ToggleCameraLock()
-{
-	myCameraIsLocked = !myCameraIsLocked;
-	if (myCameraIsLocked == true)
-	{
-		myCursorPosition = { 0.f, 0.f };
-	}
 }

@@ -19,6 +19,11 @@ Prism::Scene::Scene()
 	memset(&mySpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
 }
 
+Prism::Scene::~Scene()
+{
+	myInstances.DeleteAll();
+}
+
 void Prism::Scene::Render()
 {
 	TIME_FUNCTION;
@@ -59,6 +64,26 @@ void Prism::Scene::Render()
 		myInstances[i]->Render(*myCamera);
 	}
 
+	for (int i = 0; i < myInstances.Size(); ++i)
+	{
+		myInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
+		myInstances[i]->UpdatePointLights(myPointLightData);
+		myInstances[i]->UpdateSpotLights(mySpotLightData);
+		myInstances[i]->Render(*myCamera);
+	}
+}
+
+void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
+{
+	Render();
+
+	for (int i = 0; i < someBulletInstances.Size(); ++i)
+	{
+		someBulletInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
+		someBulletInstances[i]->UpdatePointLights(myPointLightData);
+		someBulletInstances[i]->UpdateSpotLights(mySpotLightData);
+		someBulletInstances[i]->Render(*myCamera);
+	}
 }
 
 void Prism::Scene::AddInstance(Instance* aInstance)

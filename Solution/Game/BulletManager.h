@@ -5,8 +5,9 @@
 
 struct BulletData // holds the data for one type of bullet
 {
-	eBulletType myType;
 	CU::GrowingArray<Entity*> myBullets;
+	eBulletType myType;
+	float mySpeed;
 	int myBulletCounter;
 	int myMaxBullet;
 };
@@ -14,6 +15,7 @@ struct BulletData // holds the data for one type of bullet
 namespace Prism
 {
 	class Camera;
+	class Instance;
 }
 
 namespace tinyxml2
@@ -21,25 +23,23 @@ namespace tinyxml2
 	class XMLElement;
 }
 
-class BulletManager : Subscriber
+class BulletManager : public Subscriber
 {
 public:
 	BulletManager();
 	~BulletManager();
 
+	void ReadFromXML(const std::string aFilePath);
 	void Update(float aDeltaTime);
-
-	void Render(Prism::Camera* aCamera);
-
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
-	void ReadFromXML(class XMLReader& aXMLReader, tinyxml2::XMLElement* aBulletElement);
-
-	void ActivateBoxBullet(CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward);
+	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
 private:
+	void ActivateBoxBullet(const CU::Matrix44<float>& anOrientation);
 
-	BulletData myBoxBulletData;
+	BulletData* myBoxBulletData;
+	CU::GrowingArray<Prism::Instance*> myInstances;
 
 };
 

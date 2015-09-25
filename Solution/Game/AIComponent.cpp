@@ -3,7 +3,6 @@
 #include "Constants.h"
 #include <Vector.h>
 #include "Entity.h"
-#include "RefreshOrientationMessage.h"
 
 void AIComponent::Init()
 {
@@ -12,14 +11,15 @@ void AIComponent::Init()
 
 void AIComponent::Update(float aDeltaTime)
 {
-	FollowOwnDecision(aDeltaTime);
+	
 
 	if (myEntityToFollow == nullptr)
 	{
+		FollowOwnDecision(aDeltaTime);
 	}
 	else
 	{
-		//FollowEntity(aDeltaTime);
+		FollowEntity(aDeltaTime);
 	}
 }
 
@@ -32,6 +32,10 @@ void AIComponent::MakeDecision()
 {
 	myDecision = rand() % 9;
 	myTimeToNextDecision = 1.f;
+	if (myDecision == 2 || myDecision == 8)
+	{
+		Shoot(100.f);
+	}
 }
 
 void AIComponent::FollowEntity(float aDeltaTime)

@@ -9,6 +9,7 @@ public:
 	~BulletComponent();
 	
 	void Update(float aDeltaTime) override;
+	void Init(const float& aMaxTime);
 
 	static int GetID();
 

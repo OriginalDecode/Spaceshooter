@@ -32,14 +32,12 @@ namespace Prism
 		void InitCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
 		void InitLightCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
 				, CU::Vector4f aColour = { 1.f, 1.f, 1.f, 1.f });
-		void InitSkyblox(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
+
 		void AddChild(Model* aChild);
 		void InitGeometry(const MeshData& aMeshData);
 
 		Effect* GetEffect();
 		void SetEffect(Effect* aEffect);
-
-		bool GetIsSkybox() const;
 
 		void Render(const CU::Matrix44<float>& aOrientation);
 
@@ -58,7 +56,7 @@ namespace Prism
 		CU::GrowingArray<int> myVerticeIndices;
 		CU::GrowingArray<D3D11_INPUT_ELEMENT_DESC*> myVertexFormat;
 		bool myIsNULLObject;
-		bool myIsSkybox;
+		bool myIsSkySphere;
 
 		VertexIndexWrapper* myIndexBaseData;
 		IndexBufferWrapper* myIndexBuffer;
@@ -70,9 +68,4 @@ namespace Prism
 		CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 		CU::Matrix44f myOrientation;
 	};
-}
-
-inline bool Prism::Model::GetIsSkybox() const
-{
-	return myIsSkybox;
 }

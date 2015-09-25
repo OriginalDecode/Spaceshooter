@@ -5,21 +5,15 @@
 class BulletMessage : public Message
 {
 public:
-	BulletMessage(eBulletType aType, CU::Vector3<float> aVelocity, CU::Vector3<float> aPosition, CU::Vector3<float> aForward);
-	~BulletMessage();
+	BulletMessage(const eBulletType& aType, const CU::Matrix44<float>& anOrientation);
 
 	const eBulletType& GetBulletType() const;
-	const CU::Vector3<float>& GetVelocity() const;
-	const CU::Vector3<float>& GetPosition() const;
-	const CU::Vector3<float>& GetForward() const;
+	const CU::Matrix44<float>& GetOrientation() const;
 
 private:
 
+	CU::Matrix44<float> myOrientation;
 	eBulletType myType;
-
-	CU::Vector3<float> myVelocity;
-	CU::Vector3<float> myPosition;
-	CU::Vector3<float> myForward;
 };
 
 inline const eBulletType& BulletMessage::GetBulletType() const
@@ -27,17 +21,7 @@ inline const eBulletType& BulletMessage::GetBulletType() const
 	return myType;
 }
 
-inline const CU::Vector3<float>& BulletMessage::GetVelocity() const
+inline const CU::Matrix44<float>& BulletMessage::GetOrientation() const
 {
-	return myVelocity;
-}
-
-inline const CU::Vector3<float>& BulletMessage::GetPosition() const
-{
-	return myPosition;
-}
-
-inline const CU::Vector3<float>& BulletMessage::GetForward() const
-{
-	return myForward;
+	return myOrientation;
 }
