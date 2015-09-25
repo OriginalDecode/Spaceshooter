@@ -18,10 +18,11 @@ namespace CommonUtilities
 namespace Prism
 {
 	class Camera;
+	class DebugMenu;
 	class Font;
+	class FrameTimeDebugger;
 	class Text;
 
-	class FrameTimeDebugger;
 
 	class DebugDataDisplay
 	{
@@ -41,7 +42,9 @@ namespace Prism
 		void ToggleCPUUsage();
 		void ToggleFrameTime();
 
-		void Update(const CU::InputWrapper& aInputWrapper);
+		void Update(CU::InputWrapper& aInputWrapper);
+
+		DebugMenu* GetDebugMenu();
 
 	private:
 		enum eBitSetEnum
@@ -73,6 +76,7 @@ namespace Prism
 		std::stringstream myStringStream;
 
 		FrameTimeDebugger* myFrameDebugger;
+		DebugMenu* myDebugMenu;
 	};
 }
 
@@ -96,3 +100,7 @@ inline void Prism::DebugDataDisplay::ToggleFrameTime()
 	myBoolContainer[eBitSetEnum::FRAME_TIME].flip();
 }
 
+inline Prism::DebugMenu* Prism::DebugDataDisplay::GetDebugMenu()
+{
+	return myDebugMenu;
+}

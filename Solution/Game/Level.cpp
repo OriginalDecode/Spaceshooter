@@ -9,6 +9,7 @@
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "EntityFactory.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
@@ -28,6 +29,8 @@
 
 Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML)
 {
+	myEntityFactory = new EntityFactory();
+	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
 	myBulletManager = aBulletManager;
 	myShowPointLightCube = false;
@@ -75,25 +78,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 		for (int i = 0; i < 50; ++i)
 		{
 			Entity* enemy = new Entity();
-			enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-				"Data/effect/NoTextureEffect.fx");
-
+			//enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+			//	"Data/effect/NoTextureEffect.fx");
+			myEntityFactory->CopyEntity(enemy, "defaultEnemy");
 
 			enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
 
-
-			enemy->AddComponent<AIComponent>()->Init();
-			enemy->AddComponent<ShootingComponent>();
-
-			int chanceToFollowPlayer = rand() % 100;
-
-			if (chanceToFollowPlayer > 75)
-			{
-				enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
-			}
-
-			enemy->AddComponent<CollisionComponent>()->Initiate(3);
 			myEntities.Add(enemy);
 		}
 	}
@@ -101,7 +92,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	{
 		WATCH_FILE("Data/script/level1.xml", Level::ReadXML);
 
-		ReadXML("Data/script/level1.xml");
+		ReadXML(aFileName);
 	}
 
 	myCockPit = new Entity();
@@ -198,11 +189,11 @@ void Level::LogicUpdate(float aDeltaTime)
 		myEntities[i]->Update(aDeltaTime);
 	}
 
-	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 	//if (CheckCollision() == true)
 	//{
 	//	myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
 	//}
+	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 }
 
 void Level::OnResize(int aWidth, int aHeight)
@@ -220,7 +211,17 @@ bool Level::CheckCollision()
 				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
 				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 			{
-				if (myEntities[i] == myPlayer || myEntities[j] == myPlayer)
+				if (myEntities[i] == myPlayer)
+				{
+					return true;
+				}
+
+			}
+			if (CommonUtilities::Intersection::SphereVsSphere
+				(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
+				, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
+			{
+				if (myEntities[i] == myPlayer)
 				{
 					return true;
 				}
@@ -236,41 +237,22 @@ void Level::ReadXML(const std::string& aFile)
 	XMLReader reader;
 	reader.OpenDocument(aFile);
 	tinyxml2::XMLElement* levelReader = reader.FindFirstChild("level");
+	//tinyxml2::XMLElement* gameObjectsReader = reader.FindFirstChild(levelReader, "GameObjects");
 
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelReader, "entity"); entityElement != nullptr; entityElement = reader.FindNextElement(entityElement, "entity"))
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelReader, "enemy"); entityElement != nullptr; entityElement = reader.FindNextElement(entityElement, "enemy"))
 	{
 		Entity* newEntity = new Entity();
+
+		myEntityFactory->CopyEntity(newEntity, "defaultEnemy");
 
 		tinyxml2::XMLElement* positionReader = reader.FindFirstChild(entityElement, "position");
 		CU::Vector3<float> entityPosition;
 		reader.ReadAttribute(positionReader, "posX", entityPosition.x);
-		reader.ReadAttribute(positionReader, "posX", entityPosition.y);
-		reader.ReadAttribute(positionReader, "posX", entityPosition.z);
+		reader.ReadAttribute(positionReader, "posY", entityPosition.y);
+		reader.ReadAttribute(positionReader, "posZ", entityPosition.z);
 
 		newEntity->myOrientation.SetPos(entityPosition);
 
-		tinyxml2::XMLElement* graphicsComponentReader = reader.FindFirstChild(entityElement, "graphicsComponent");
-		if (graphicsComponentReader != nullptr)
-		{
-			std::string entityModelPath, entityShaderPath;
-			reader.ReadAttribute(graphicsComponentReader, "modelSrc", entityModelPath);
-			reader.ReadAttribute(graphicsComponentReader, "shaderSrc", entityShaderPath);
-			newEntity->AddComponent<GraphicsComponent>()->Init(entityModelPath.c_str(), entityShaderPath.c_str());
-		}
-
-		tinyxml2::XMLElement* aiComponentElement = reader.FindFirstChild(entityElement, "graphicsComponent");
-
-		newEntity->AddComponent<AIComponent>()->Init();
-		newEntity->AddComponent<ShootingComponent>();
-
-		int chanceToFollowPlayer = rand() % 100;
-
-		if (chanceToFollowPlayer > 75)
-		{
-			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
-		}
-
-		newEntity->AddComponent<CollisionComponent>()->Initiate(3);
 		myEntities.Add(newEntity);
 	}
 

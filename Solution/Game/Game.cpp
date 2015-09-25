@@ -5,6 +5,7 @@
 #include <Camera.h>
 #include "ColoursForBG.h"
 #include "Constants.h"
+#include <DebugMenu.h>
 #include <DebugDataDisplay.h>
 #include <FileWatcher.h>
 #include <Font.h>
@@ -44,6 +45,13 @@ bool Game::Init(HWND& aHwnd)
 	myStateStack.PushMainGameState(myGame);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
+
+
+	ADD_FUNCTION_TO_RADIAL_MENU("Toggle FPS", Prism::DebugDataDisplay::ToggleFrameTime, Prism::Engine::GetInstance()->GetDebugDisplay());
+	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Graph", Prism::DebugDataDisplay::ToggleFunctionTimers, Prism::Engine::GetInstance()->GetDebugDisplay());
+	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Mem", Prism::DebugDataDisplay::ToggleMemoryUsage, Prism::Engine::GetInstance()->GetDebugDisplay());
+	ADD_FUNCTION_TO_RADIAL_MENU("Toggle CPU", Prism::DebugDataDisplay::ToggleCPUUsage, Prism::Engine::GetInstance()->GetDebugDisplay());
+	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Wireframe", Prism::Engine::ToggleWireframe, Prism::Engine::GetInstance());
 
 	GAME_LOG("Init Successful");
 	return true;

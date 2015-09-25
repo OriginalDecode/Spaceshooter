@@ -64,13 +64,6 @@ void Prism::Scene::Render()
 		myInstances[i]->Render(*myCamera);
 	}
 
-	for (int i = 0; i < myInstances.Size(); ++i)
-	{
-		myInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
-		myInstances[i]->UpdatePointLights(myPointLightData);
-		myInstances[i]->UpdateSpotLights(mySpotLightData);
-		myInstances[i]->Render(*myCamera);
-	}
 }
 
 void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)

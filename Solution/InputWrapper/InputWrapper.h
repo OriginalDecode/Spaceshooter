@@ -31,6 +31,8 @@ namespace CommonUtilities
 		bool KeyIsPressed(unsigned int aKey) const; //Returns true if specified key is down 
 
 		void Update();
+		void PauseDeltaRecording();
+		void ResumeDeltaRecording();
 
 	private:
 		void CapturePreviousState();
@@ -47,5 +49,7 @@ namespace CommonUtilities
 		CommonUtilities::Vector2<float> myMousePos;
 
 		HWND myWindowHandler;
+
+		bool myIsRecordingDeltas;
 	};
 }

@@ -26,10 +26,12 @@ namespace Prism
 
 		void Init(Font* aFont);
 
-		void Render(const char* aString, const float aDrawX, const float aDrawY, const float aScale = 1.f);
+		void Render(const char* aString, const float aDrawX, const float aDrawY
+			, const CU::Vector4<float>& aColor = CU::Vector4<float>(1.f, 1.f, 1.f, 1.f), const float aScale = 1.f);
 
 
-		const float& GetTextWidth() const;
+		float GetTextWidth() const;
+		CU::Vector2<float> GetTextSize(const char* aString) const;
 
 	private:
 		void InitSentence();
@@ -43,16 +45,19 @@ namespace Prism
 
 
 		void CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, 
-				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
+				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV,
+				const CU::Vector4<float>& aColor);
 		void CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, 
-				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV);
+				const int aIndex, const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, 
+				const CU::Vector4<float>& aColor);
 
-		void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale);
+		void UpdateSentence(const char* aString, const float aDrawX, const float aDrawY,
+			const CU::Vector4<float>& aColor, const float aScale);
 
 		Font* myFont;
 		Effect* myEffect;
 		ID3D11InputLayout* myVertexLayout;
-		CU::GrowingArray<VertexPosUV> myVertices;
+		CU::GrowingArray<VertexPosColorUV> myVertices;
 		CU::GrowingArray<int> myVerticeIndices;
 
 		VertexBufferWrapper* myVertexBuffer;
@@ -74,10 +79,7 @@ namespace Prism
 		float myLastDrawX;
 		float myLastDrawY;
 		float myLastScale;
-	};
-}
 
-inline const float& Prism::Text::GetTextWidth() const
-{
-	return myTextWidth;
+		float myCharSpacing;
+	};
 }

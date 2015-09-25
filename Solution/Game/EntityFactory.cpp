@@ -1,10 +1,12 @@
 #include "stdafx.h"
 
 #include "AIComponent.h"
+#include "CollisionComponent.h"
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "GraphicsComponent.h"
 #include <Instance.h>
+#include "ShootingComponent.h"
 #include <XMLReader.h>
 
 EntityData::EntityData()
@@ -56,6 +58,14 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		{
 			LoadAIComponent(newEntity, e);
 		}
+		else if (std::strcmp(e->Name(), "ShootingComponent") == 0)
+		{
+			LoadShootingComponent(newEntity, e);
+		}
+		else if (std::strcmp(e->Name(), "CollisionComponent") == 0)
+		{
+			LoadCollisionComponent(newEntity, e);
+		}
 	}
 	if (entityName != "")
 	{
@@ -67,8 +77,33 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 
 void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aAIComponentElement)
 {
-	aEntityToAddTo;
-	aAIComponentElement;
+	aEntityToAddTo.myEntity->AddComponent<AIComponent>();
+	for (tinyxml2::XMLElement* e = aAIComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(e->Name(), "FollowEntity") == 0)
+		{
+			std::string targetName = e->Attribute("targetName");
+			int chanceToFollow = e->IntAttribute("chanceToFollow");
+
+			aEntityToAddTo.myTargetName = targetName;
+			aEntityToAddTo.myChanceToFollow = chanceToFollow;
+		}
+	}
+}
+
+void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aCollisionComponenetElement)
+{
+	aEntityToAddTo.myEntity->AddComponent<CollisionComponent>();
+	
+	for (tinyxml2::XMLElement* e = aCollisionComponenetElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(e->Name(), "CollisionSphere") == 0)
+		{
+			float radius = e->FloatAttribute("radius");
+
+			aEntityToAddTo.myCollisionSphereRadius = radius;
+		}
+	}
 }
 
 void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aGraphicsComponentElement)
@@ -101,13 +136,12 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::
 		}
 	}
 }
-//
-//Entity* EntityFactory::GetEntity(const std::string& aEntityTag)
-//{
-//	auto it = myEntities.find(aEntityTag);
-//
-//	return it->second;
-//}
+
+void EntityFactory::LoadShootingComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aShootingComponenetElement)
+{
+	aEntityToAddTo.myEntity->AddComponent<ShootingComponent>();
+	aShootingComponenetElement;
+}
 
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
 {
@@ -116,7 +150,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 
 	if (sourceEntity->GetComponent<GraphicsComponent>() != nullptr)
 	{
-		aTargetEntity->AddComponent<GraphicsComponent>()->GetInstance();
+		aTargetEntity->AddComponent<GraphicsComponent>();
 		switch (it->second.myGraphicsType)
 		{
 		case eEntityDataGraphicsType::MODEL:
@@ -129,6 +163,34 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			break;
 		default:
 			break;
+		}
+	}
+	if (sourceEntity->GetComponent<AIComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<AIComponent>();
+		
+		//TODO: this will work when AIComponent
+		/*if (it->second.myChanceToFollow > 0)
+		{
+			int chanceToFollowPlayer = rand() % 100;
+
+			if (chanceToFollowPlayer > it->second.myChanceToFollow)
+			{
+				aTargetEntity->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			}
+		}*/
+	}
+	if (sourceEntity->GetComponent<ShootingComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<ShootingComponent>();
+	}
+	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<CollisionComponent>();
+		
+		if (it->second.myCollisionSphereRadius > 0)
+		{
+			aTargetEntity->GetComponent<CollisionComponent>()->Initiate(it->second.myCollisionSphereRadius);
 		}
 	}
 }
