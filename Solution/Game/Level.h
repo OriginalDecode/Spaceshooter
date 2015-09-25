@@ -19,7 +19,7 @@ class Entity;
 class Level
 {
 public:
-	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager);
+	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML);
 	~Level();
 
 	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);
@@ -37,6 +37,7 @@ public:
 	inline bool GetRenderStuff() const;
 
 private:
+	void ReadXML(const std::string& aFile);
 	Prism::Instance* mySkySphere;
 
 	Prism::Scene* myScene;

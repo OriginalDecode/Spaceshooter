@@ -6,6 +6,9 @@
 #include <EffectContainer.h>
 #include <Instance.h>
 #include <Model.h>
+#include "ModelLoader.h"
+#include <ModelProxy.h>
+
 
 GraphicsComponent::GraphicsComponent()
 	: myInstance(nullptr)
@@ -14,8 +17,8 @@ GraphicsComponent::GraphicsComponent()
 
 void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 {
-	Prism::Model* model = Prism::Engine::GetInstance()->LoadModel(aModelPath
-		, Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(aModelPath
+		, aEffectPath);
 
 	myInstance = new Prism::Instance(*model);
 	myInstance->SetOrientationPointer(myEntity->myOrientation);
@@ -23,16 +26,14 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 
 void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
 {
-	Prism::Model* model = new Prism::Model();
-	model->InitGeometry(aMeshData);
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadGeometry(aMeshData);
 
 	myInstance = new Prism::Instance(*model);
 }
 
 void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 {
-	Prism::Model* model = new Prism::Model();
-	model->InitCube(aWidth, aHeight, aDepth);
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadCube(aWidth, aHeight, aDepth);
 
 	myInstance = new Prism::Instance(*model);
 }

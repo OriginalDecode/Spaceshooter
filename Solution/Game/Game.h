@@ -36,5 +36,4 @@ private:
 	MainMenuState* myMainMenu;
 	InGameState* myGame;
 
-
 };

@@ -22,8 +22,6 @@ Game::Game()
 	PostMaster::Create();
 	Prism::Audio::AudioInterface::CreateInstance();
 	myInputWrapper = new CU::InputWrapper();
-
-	//ShowCursor(false);
 }
 
 Game::~Game()
@@ -42,7 +40,7 @@ bool Game::Init(HWND& aHwnd)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	myStateStack.SetInputWrapper(myInputWrapper);
-	myGame = new InGameState;
+	myGame = new InGameState();
 	myStateStack.PushMainGameState(myGame);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
@@ -59,8 +57,10 @@ bool Game::Destroy()
 bool Game::Update()
 {
 	Prism::Audio::AudioInterface::GetInstance()->Update();
+	BEGIN_TIME_BLOCK("Game::Update");
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
+	
 
 	if (myStateStack.UpdateCurrentState() == false)
 	{
@@ -84,5 +84,3 @@ void Game::OnResize(int aWidth, int aHeight)
 {
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);
 }
-
-

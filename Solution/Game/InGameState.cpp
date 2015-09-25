@@ -29,7 +29,7 @@ void InGameState::InitState(CU::InputWrapper* anInputWrapper)
 	myStateStatus = eStateStatus::eKeepState;
 	myInputWrapper = anInputWrapper;
 	myBulletManager = new BulletManager;
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, myBulletManager);
+	myLevel = new Level("Data/script/level1.xml", myInputWrapper, myBulletManager, true);
 }
 
 void InGameState::EndState()

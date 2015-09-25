@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include <Instance.h>
 #include <Model.h>
+#include <ModelLoader.h>
 
 CollisionComponent::~CollisionComponent()
 {
@@ -15,10 +16,10 @@ CollisionComponent::~CollisionComponent()
 void CollisionComponent::Initiate(float someRadius)
 {
 	SetRadius(someRadius);
-	Prism::Model* model;
-	model = new Prism::Model();
-	model->InitLightCube(someRadius, someRadius, someRadius);
+
 	myShouldShow = true;
+
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadLightCube(someRadius, someRadius, someRadius);
 	myInstance = new Prism::Instance(*model);
 
 }

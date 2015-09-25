@@ -9,6 +9,7 @@
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
+#include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
 #include "Instance.h"
@@ -16,14 +17,16 @@
 #include "InputComponent.h"
 #include <Intersection.h>
 #include "Level.h"
-#include "Model.h"
+#include "ModelLoader.h"
+#include "ModelProxy.h"
 #include "PointLight.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include <sstream>
+#include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager)
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML)
 {
 	myInputWrapper = aInputWrapper;
 	myBulletManager = aBulletManager;
@@ -47,50 +50,58 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
-
-	for (int i = 0; i < 10; ++i)
+	if (aShouldTestXML == false)
 	{
-		Entity* astroids = new Entity();
-		//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-		//	"Data/effect/NoTextureEffect.fx");
-
-		astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
-			"Data/effect/BasicEffect.fx");
-		astroids->AddComponent<CollisionComponent>()->Initiate(15);
-
-		astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100),
-			static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
-
-
-		//astroids->AddComponent<AIComponent>()->Init();
-		//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
-
-		myEntities.Add(astroids);
-	}
-
-	for (int i = 0; i < 50; ++i)
-	{
-		Entity* enemy = new Entity();
-		enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			"Data/effect/NoTextureEffect.fx");
-
-
-		enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
-			static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
-
-
-		enemy->AddComponent<AIComponent>()->Init();
-		enemy->AddComponent<ShootingComponent>();
-
-		int chanceToFollowPlayer = rand() % 100;
-
-		if (chanceToFollowPlayer > 75)
+		for (int i = 0; i < 10; ++i)
 		{
-			enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			Entity* astroids = new Entity();
+			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+			//	"Data/effect/NoTextureEffect.fx");
+
+			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
+				"Data/effect/BasicEffect.fx");
+			astroids->AddComponent<CollisionComponent>()->Initiate(15);
+
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100),
+				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+
+
+			//astroids->AddComponent<AIComponent>()->Init();
+			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+
+			myEntities.Add(astroids);
 		}
 
-		enemy->AddComponent<CollisionComponent>()->Initiate(3);
-		myEntities.Add(enemy);
+		for (int i = 0; i < 50; ++i)
+		{
+			Entity* enemy = new Entity();
+			enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+				"Data/effect/NoTextureEffect.fx");
+
+
+			enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
+				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
+
+
+			enemy->AddComponent<AIComponent>()->Init();
+			enemy->AddComponent<ShootingComponent>();
+
+			int chanceToFollowPlayer = rand() % 100;
+
+			if (chanceToFollowPlayer > 75)
+			{
+				enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			}
+
+			enemy->AddComponent<CollisionComponent>()->Initiate(3);
+			myEntities.Add(enemy);
+		}
+	}
+	else
+	{
+		WATCH_FILE("Data/script/level1.xml", Level::ReadXML);
+
+		ReadXML("Data/script/level1.xml");
 	}
 
 	myCockPit = new Entity();
@@ -135,8 +146,8 @@ Level::~Level()
 
 void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName)
 {
-	Prism::Model* skySphere = Prism::Engine::GetInstance()->LoadModel("Data/resources/model/skybox/skySphere_test.fbx",
-		Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SkyboxEffect.fx"));
+	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		aModelFilePath, aEffectFileName);
 
 	mySkySphere = new Prism::Instance(*skySphere);
 }
@@ -217,4 +228,44 @@ bool Level::CheckCollision()
 		}
 	}
 	return false;
+}
+
+void Level::ReadXML(const std::string& aFile)
+{
+	Sleep(10);
+	XMLReader reader;
+	reader.OpenDocument(aFile);
+	tinyxml2::XMLElement* levelReader = reader.FindFirstChild("level");
+	for (tinyxml2::XMLElement* entityReader = reader.FindFirstChild(levelReader, "enemy"); entityReader != nullptr; entityReader = reader.FindNextElement(entityReader, "enemy"))
+	{
+		Entity* newEntity = new Entity();
+
+		tinyxml2::XMLElement* positionReader = reader.FindFirstChild("position");
+		CU::Vector3<float> entityPosition;
+		reader.ReadAttribute(positionReader, "posX", entityPosition.x);
+		reader.ReadAttribute(positionReader, "posX", entityPosition.y);
+		reader.ReadAttribute(positionReader, "posX", entityPosition.z);
+
+		newEntity->myOrientation.SetPos(entityPosition);
+
+		std::string entityModelPath;
+		newEntity->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+			"Data/effect/NoTextureEffect.fx");
+
+
+		newEntity->AddComponent<AIComponent>()->Init();
+		newEntity->AddComponent<ShootingComponent>();
+
+		int chanceToFollowPlayer = rand() % 100;
+
+		if (chanceToFollowPlayer > 75)
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+		}
+
+		newEntity->AddComponent<CollisionComponent>()->Initiate(3);
+		myEntities.Add(newEntity);
+	}
+
+
 }
