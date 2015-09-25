@@ -96,6 +96,7 @@
     <ClInclude Include="GraphicsComponent.h" />
     <ClInclude Include="GUIComponent.h" />
     <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
@@ -117,6 +118,7 @@
     <ClCompile Include="GraphicsComponent.cpp" />
     <ClCompile Include="GUIComponent.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />

@@ -47,6 +47,7 @@
     <ClCompile Include="CollisionComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -107,6 +108,7 @@
     <ClInclude Include="ColoursForBG.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Level.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
