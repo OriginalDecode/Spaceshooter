@@ -85,18 +85,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 			enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
 
-
-			enemy->AddComponent<AIComponent>()->Init();
-			enemy->AddComponent<ShootingComponent>();
-
-			int chanceToFollowPlayer = rand() % 100;
-
-			if (chanceToFollowPlayer > 75)
-			{
-				enemy->GetComponent<AIComponent>()->SetEntityToFollow(player);
-			}
-
-			enemy->AddComponent<CollisionComponent>()->Initiate(3);
 			myEntities.Add(enemy);
 		}
 	}
