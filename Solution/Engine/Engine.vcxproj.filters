@@ -6,17 +6,10 @@
       <Filter>Precompile</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Instance.cpp" />
     <ClCompile Include="DirectX.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="TextureContainer.cpp" />
-    <ClCompile Include="Surface.cpp" />
-    <ClCompile Include="Effect.cpp" />
-    <ClCompile Include="EffectContainer.cpp" />
     <ClCompile Include="FBX\FbxLoader.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
@@ -25,10 +18,10 @@
     </ClCompile>
     <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="Font.cpp">
-      <Filter>Text</Filter>
+      <Filter>Rendering\Text</Filter>
     </ClCompile>
     <ClCompile Include="Text.cpp">
-      <Filter>Text</Filter>
+      <Filter>Rendering\Text</Filter>
     </ClCompile>
     <ClCompile Include="DebugDataDisplay.cpp">
       <Filter>DebugServices</Filter>
@@ -40,7 +33,7 @@
       <Filter>DebugServices</Filter>
     </ClCompile>
     <ClCompile Include="FontContainer.cpp">
-      <Filter>Text</Filter>
+      <Filter>Rendering\Text</Filter>
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
       <Filter>Lights</Filter>
@@ -55,7 +48,30 @@
     <ClCompile Include="SystemMonitor.cpp">
       <Filter>DebugServices</Filter>
     </ClCompile>
-    <ClCompile Include="Model2D.cpp" />
+    <ClCompile Include="Instance.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Model2D.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Surface.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureContainer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectContainer.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -63,9 +79,6 @@
       <Filter>Precompile</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Instance.h" />
-    <ClInclude Include="Vertices.h" />
     <ClInclude Include="DirectX.h">
       <Filter>DirectX</Filter>
     </ClInclude>
@@ -85,23 +98,18 @@
       <Filter>DirectX</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Texture.h" />
-    <ClInclude Include="TextureContainer.h" />
-    <ClInclude Include="Surface.h" />
-    <ClInclude Include="EffectContainer.h" />
     <ClInclude Include="FBX\FbxLoader.h">
       <Filter>FBX</Filter>
     </ClInclude>
     <ClInclude Include="FBXFactory.h">
       <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h" />
     <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="Font.h">
-      <Filter>Text</Filter>
+      <Filter>Rendering\Text</Filter>
     </ClInclude>
     <ClInclude Include="Text.h">
-      <Filter>Text</Filter>
+      <Filter>Rendering\Text</Filter>
     </ClInclude>
     <ClInclude Include="DebugDataDisplay.h">
       <Filter>DebugServices</Filter>
@@ -113,7 +121,7 @@
       <Filter>DebugServices</Filter>
     </ClInclude>
     <ClInclude Include="FontContainer.h">
-      <Filter>Text</Filter>
+      <Filter>Rendering\Text</Filter>
     </ClInclude>
     <ClInclude Include="VTuneApi.h">
       <Filter>DebugServices</Filter>
@@ -139,7 +147,33 @@
     <ClInclude Include="SystemMonitor.h">
       <Filter>DebugServices</Filter>
     </ClInclude>
-    <ClInclude Include="Model2D.h" />
+    <ClInclude Include="Instance.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Model2D.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertices.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Surface.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureContainer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="EffectContainer.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
+      <Filter>Rendering</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
@@ -154,11 +188,14 @@
     <Filter Include="FBX">
       <UniqueIdentifier>{923b2b8b-c8a5-41fb-891a-0d4653b552b2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Text">
-      <UniqueIdentifier>{baf2e884-b972-4bc8-9638-b545b2737981}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DebugServices">
       <UniqueIdentifier>{351a3e6e-50d2-43e1-823e-641c1538baa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering">
+      <UniqueIdentifier>{bf7322d7-2e84-4f42-a427-99331b06f309}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Text">
+      <UniqueIdentifier>{baf2e884-b972-4bc8-9638-b545b2737981}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
