@@ -92,7 +92,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	{
 		WATCH_FILE("Data/script/level1.xml", Level::ReadXML);
 
-		ReadXML("Data/script/level1.xml");
+		ReadXML(aFileName);
 	}
 
 	myCockPit = new Entity();
@@ -237,41 +237,22 @@ void Level::ReadXML(const std::string& aFile)
 	XMLReader reader;
 	reader.OpenDocument(aFile);
 	tinyxml2::XMLElement* levelReader = reader.FindFirstChild("level");
+	//tinyxml2::XMLElement* gameObjectsReader = reader.FindFirstChild(levelReader, "GameObjects");
 
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelReader, "entity"); entityElement != nullptr; entityElement = reader.FindNextElement(entityElement, "entity"))
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelReader, "enemy"); entityElement != nullptr; entityElement = reader.FindNextElement(entityElement, "enemy"))
 	{
 		Entity* newEntity = new Entity();
+
+		myEntityFactory->CopyEntity(newEntity, "defaultEnemy");
 
 		tinyxml2::XMLElement* positionReader = reader.FindFirstChild(entityElement, "position");
 		CU::Vector3<float> entityPosition;
 		reader.ReadAttribute(positionReader, "posX", entityPosition.x);
-		reader.ReadAttribute(positionReader, "posX", entityPosition.y);
-		reader.ReadAttribute(positionReader, "posX", entityPosition.z);
+		reader.ReadAttribute(positionReader, "posY", entityPosition.y);
+		reader.ReadAttribute(positionReader, "posZ", entityPosition.z);
 
 		newEntity->myOrientation.SetPos(entityPosition);
 
-		tinyxml2::XMLElement* graphicsComponentReader = reader.FindFirstChild(entityElement, "graphicsComponent");
-		if (graphicsComponentReader != nullptr)
-		{
-			std::string entityModelPath, entityShaderPath;
-			reader.ReadAttribute(graphicsComponentReader, "modelSrc", entityModelPath);
-			reader.ReadAttribute(graphicsComponentReader, "shaderSrc", entityShaderPath);
-			newEntity->AddComponent<GraphicsComponent>()->Init(entityModelPath.c_str(), entityShaderPath.c_str());
-		}
-
-		tinyxml2::XMLElement* aiComponentElement = reader.FindFirstChild(entityElement, "graphicsComponent");
-
-		newEntity->AddComponent<AIComponent>()->Init();
-		newEntity->AddComponent<ShootingComponent>();
-
-		int chanceToFollowPlayer = rand() % 100;
-
-		if (chanceToFollowPlayer > 75)
-		{
-			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
-		}
-
-		newEntity->AddComponent<CollisionComponent>()->Initiate(3);
 		myEntities.Add(newEntity);
 	}
 
