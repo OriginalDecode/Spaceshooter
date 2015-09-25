@@ -9,6 +9,7 @@
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "EntityFactory.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
@@ -28,6 +29,8 @@
 
 Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML)
 {
+	myEntityFactory = new EntityFactory();
+	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
 	myBulletManager = aBulletManager;
 	myShowPointLightCube = false;
@@ -75,9 +78,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 		for (int i = 0; i < 50; ++i)
 		{
 			Entity* enemy = new Entity();
-			enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-				"Data/effect/NoTextureEffect.fx");
-
+			//enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+			//	"Data/effect/NoTextureEffect.fx");
+			myEntityFactory->CopyEntity(enemy, "defaultEnemy");
 
 			enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });

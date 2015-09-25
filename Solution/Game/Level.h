@@ -15,6 +15,7 @@ class BulletManager;
 class CU::InputWrapper;
 
 class Entity;
+class EntityFactory;
 
 class Level
 {
@@ -51,6 +52,7 @@ private:
 
 	CU::InputWrapper* myInputWrapper;
 
+	EntityFactory* myEntityFactory;
 
 	BulletManager* myBulletManager;
 
