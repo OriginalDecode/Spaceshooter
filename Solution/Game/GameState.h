@@ -14,7 +14,7 @@ public:
 
 	const bool& IsLetThroughRender() const;
 
-private:
+protected:
 
 	eStateStatus myStateStatus;
 	bool myIsLetThrough;

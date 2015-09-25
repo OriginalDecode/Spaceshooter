@@ -1,5 +1,7 @@
+#include "stdafx.h"
 #include "StateStackProxy.h"
 #include "StateStack.h"
+#include "GameState.h"
 
 StateStackProxy::StateStackProxy(StateStack& aStateStack) : myStateStack(aStateStack)
 {

@@ -59,6 +59,7 @@
     <ClCompile Include="MainMenuState.cpp">
       <Filter>StateStack\States</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
@@ -137,6 +138,7 @@
     <ClInclude Include="MainMenuState.h">
       <Filter>StateStack\States</Filter>
     </ClInclude>
+    <ClInclude Include="Level.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

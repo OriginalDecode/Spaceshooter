@@ -15,7 +15,8 @@ void MainMenuState::InitState()
 {
 	myBackground = new Prism::Model2D;
 	myBackground->Init("Data/resources/texture/seafloor.dds", { 640.f, 640.f });
-	myCamera = new Prism::Camera(CU::Matrix44<float>());
+	CU::Matrix44<float> orientation;
+	myCamera = new Prism::Camera(orientation);
 }
 
 void MainMenuState::EndState()
@@ -26,7 +27,7 @@ void MainMenuState::EndState()
 
 const eStateStatus& MainMenuState::Update()
 {
-
+	return myStateStatus;
 }
 
 void MainMenuState::Render()

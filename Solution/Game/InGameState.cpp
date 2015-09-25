@@ -21,7 +21,7 @@ void InGameState::EndState()
 
 const eStateStatus& InGameState::Update()
 {
-
+	return myStateStatus;
 }
 
 void InGameState::Render()

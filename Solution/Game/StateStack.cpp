@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "StateStack.h"
 #include <DL_Assert.h>
 #include "GameState.h"

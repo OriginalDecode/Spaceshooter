@@ -98,6 +98,7 @@
     <ClInclude Include="GUIComponent.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
@@ -124,6 +125,7 @@
     <ClCompile Include="GUIComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
