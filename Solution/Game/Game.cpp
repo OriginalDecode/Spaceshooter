@@ -115,6 +115,7 @@ bool Game::Init(HWND& aHwnd)
 
 
 		enemy->AddComponent<AIComponent>()->Init();
+		enemy->AddComponent<ShootingComponent>()->Init();
 
 		int chanceToFollowPlayer = rand() % 100;
 
@@ -204,10 +205,10 @@ bool Game::Update()
 
 	LogicUpdate(deltaTime);
 		std::stringstream ss;
-	if (CheckCollision() == true)
-	{
-		myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
-	}
+	//if (CheckCollision() == true)
+	//{
+	//	myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
+	//}
 
 	mySkybox->SetPosition(myCamera->GetOrientation().GetPos());
 

@@ -32,6 +32,10 @@ void AIComponent::MakeDecision()
 {
 	myDecision = rand() % 9;
 	myTimeToNextDecision = 1.f;
+	if (myDecision == 2 || myDecision == 8)
+	{
+		Shoot(100.f);
+	}
 }
 
 void AIComponent::FollowEntity(float aDeltaTime)
