@@ -68,7 +68,7 @@ void SetupWindow(int aWidth, int aHeight)
 void Render()
 {
 	Prism::Engine::GetInstance()->Render();
-	locScene.Render();
+//	locScene.Render();
 }
 
 void Update()

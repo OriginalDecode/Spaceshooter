@@ -137,14 +137,13 @@ void Prism::Text::InitBlendState()
 void Prism::Text::Render(const char* aString
 	, const float aDrawX, const float aDrawY, const float aScale)
 {
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	Engine::GetInstance()->DisableWireframe();
+
 	UpdateSentence(aString, aDrawX, aDrawY, aScale);
 
 	if (myHasText == false)
 		return;
-
-	
-
-	Engine::GetInstance()->DisableZBuffer();
 
 	float blendFactor[4];
 	blendFactor[0] = 0.f;
@@ -177,6 +176,9 @@ void Prism::Text::Render(const char* aString
 	}
 
 	Engine::GetInstance()->EnableZBuffer();
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+		Engine::GetInstance()->EnableWireframe();
+
 }
 
 void Prism::Text::SetupVertexBuffer()

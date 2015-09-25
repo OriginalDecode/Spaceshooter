@@ -20,6 +20,7 @@ namespace CommonUtilities
 
 		//3D
 		bool PointInsideSphere(Sphere aSphere, CommonUtilities::Vector3<float> aPoint);
+		bool SphereVsSphere(Sphere aSphere, Sphere aOtherSphere);
 		bool PointInsideAABB(AABB aAABB, CommonUtilities::Vector3<float> aPoint);
 		bool LineVsSphere(LineSegment3D aLineSegment3D, Sphere aSphere, CommonUtilities::Vector3<float>& aIntersectionPoint);
 		int PlaneVsSphere(CommonUtilities::Plane<float> aPlane, Sphere aSphere);
@@ -60,7 +61,7 @@ namespace CommonUtilities
 		CommonUtilities::Line<float> line2(aLine2.myStartPos, aLine2.myEndPos); 
 
 
-  		float numX = line2.myABC.y * line1.myABC.z - line1.myABC.y * line2.myABC.z;
+		float numX = line2.myABC.y * line1.myABC.z - line1.myABC.y * line2.myABC.z;
 		float denX = line1.myABC.x * line2.myABC.y - line2.myABC.x * line1.myABC.y;
 
 		float numY = line1.myABC.x * line2.myABC.z - line2.myABC.x * line1.myABC.z;
@@ -142,6 +143,15 @@ namespace CommonUtilities
 	inline bool Intersection::PointInsideSphere(Sphere aSphere, CommonUtilities::Vector3<float> aPoint)
 	{
 		if (CommonUtilities::Length2(aPoint - aSphere.myCenterPosition) < aSphere.myRadiusSquared)
+		{
+			return true;
+		}
+		return false;
+	}
+
+	inline bool Intersection::SphereVsSphere(Sphere aSphere, Sphere aOtherSphere)
+	{
+		if (CU::Length2(aOtherSphere.myCenterPosition - aSphere.myCenterPosition) < aSphere.myRadiusSquared)
 		{
 			return true;
 		}

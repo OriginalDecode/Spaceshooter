@@ -51,7 +51,14 @@ namespace Prism
 
 		void ToggleWireframe();
 
+		void EnableWireframe();
+		void DisableWireframe();
+
+
 		void SetClearColor(const CU::Vector4<float>& aClearColor);
+
+		bool myWireframeShouldShow;
+
 	private:
 		Engine();
 		~Engine();
@@ -59,6 +66,7 @@ namespace Prism
 		bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
 
 		bool myWireframeIsOn;
+
 
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;
