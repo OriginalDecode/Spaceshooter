@@ -18,6 +18,7 @@ Prism::Text::Text()
 	, myLastDrawX(-999.f)
 	, myLastDrawY(-999.f)
 	, myLastScale(-999.f)
+	, myCharSpacing(17.f)
 {
 	myVertexBufferDesc = new D3D11_BUFFER_DESC();
 	myIndexBufferDesc = new D3D11_BUFFER_DESC();
@@ -45,7 +46,8 @@ void Prism::Text::Init(Font* aFont)
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	D3DX11_PASS_DESC passDesc;
@@ -70,7 +72,7 @@ void Prism::Text::Init(Font* aFont)
 void Prism::Text::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
-	myVertexBuffer->myStride = sizeof(VertexPosUV);
+	myVertexBuffer->myStride = sizeof(VertexPosColorUV);
 	myVertexBuffer->myByteOffset = 0;
 	myVertexBuffer->myStartSlot = 0;
 	myVertexBuffer->myNumberOfBuffers = 1;
@@ -134,9 +136,9 @@ void Prism::Text::InitBlendState()
 }
 
 void Prism::Text::Render(const char* aString
-	, const float aDrawX, const float aDrawY, const float aScale)
+	, const float aDrawX, const float aDrawY, const CU::Vector4<float>& aColor, const float aScale)
 {
-	UpdateSentence(aString, aDrawX, aDrawY, aScale);
+	UpdateSentence(aString, aDrawX, aDrawY, aColor, aScale);
 
 	if (myHasText == false)
 		return;
@@ -178,6 +180,24 @@ void Prism::Text::Render(const char* aString
 	Engine::GetInstance()->EnableZBuffer();
 }
 
+
+CU::Vector2<float> Prism::Text::GetTextSize(const char* aString) const
+{
+	int numOfLetters = static_cast<int>(strlen(aString));
+	CU::Vector2<float> size;
+
+
+	size.x += (myCharSize.x - myCharSpacing) * numOfLetters;
+	size.y = myCharSize.y;
+
+	return size;
+}
+
+float Prism::Text::GetTextWidth() const
+{
+	return myTextWidth;
+}
+
 void Prism::Text::SetupVertexBuffer()
 {
 	TIME_FUNCTION
@@ -185,7 +205,7 @@ void Prism::Text::SetupVertexBuffer()
 	if (myVertexBuffer->myVertexBuffer != nullptr)
 		myVertexBuffer->myVertexBuffer->Release();
 
-	myVertexBufferDesc->ByteWidth = sizeof(VertexPosUV) * myVertices.Size();
+	myVertexBufferDesc->ByteWidth = sizeof(VertexPosColorUV) * myVertices.Size();
 	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
 
 
@@ -217,11 +237,12 @@ void Prism::Text::SetupIndexBuffer()
 
 
 void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, 
-		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
+	const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, const CU::Vector4<float>& aColor)
 {
 	int index = aIndex;
 
-	VertexPosUV vert;
+	VertexPosColorUV vert;
+	vert.myCol = aColor;
 	vert.myPos.z = aDrawPos.z;
 
 	//TopLeft
@@ -253,11 +274,12 @@ void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float
 }
 
 void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex,
-		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
+	const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, const CU::Vector4<float>& aColor)
 {
 	int index = aIndex;
 
-	VertexPosUV vert;
+	VertexPosColorUV vert;
+	vert.myCol = aColor;
 	vert.myPos.z = aDrawPos.z;
 
 	//TopLeft
@@ -287,15 +309,16 @@ void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const floa
 }
 
 
-void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY,
+	const CU::Vector4<float>& aColor, const float aScale)
 {
 	TIME_FUNCTION
 
-		if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX
-			&& aDrawY == myLastDrawY && aScale == myLastScale)
-		{
-		return;
-		}
+	if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX
+		&& aDrawY == myLastDrawY && aScale == myLastScale)
+	{
+	return;
+	}
 
 	myLastText = aString;
 	myLastDrawX = aDrawX;
@@ -316,14 +339,14 @@ void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const 
 	{
 		Font::CharacterData charData = myFont->GetCharData(aString[i]);
 
-		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
+		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV, aColor);
 		index += 3;
 
-		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
+		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV, aColor);
 		index += 3;
 
 
-		drawX += myCharSize.x - 17.f;
+		drawX += myCharSize.x - myCharSpacing;
 		z -= 0.001f;
 	}
 

@@ -19,6 +19,9 @@ private:
 	void ReadXML(const std::string& aFile);
 
 	void Rotate(float aDeltaTime);
+	void ToggleCameraLock();
+
+
 	CU::InputWrapper* myInputWrapper;
 
 
@@ -27,4 +30,5 @@ private:
 	float myRotationSpeed;
 	float myMovementSpeed;
 	float myMaxSteeringSpeed;
+	bool myCameraIsLocked;
 };

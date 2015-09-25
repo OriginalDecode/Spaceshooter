@@ -56,6 +56,9 @@
       <Filter>DebugServices</Filter>
     </ClCompile>
     <ClCompile Include="Model2D.cpp" />
+    <ClCompile Include="DebugMenu.cpp">
+      <Filter>DebugServices</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -140,6 +143,9 @@
       <Filter>DebugServices</Filter>
     </ClInclude>
     <ClInclude Include="Model2D.h" />
+    <ClInclude Include="DebugMenu.h">
+      <Filter>DebugServices</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
