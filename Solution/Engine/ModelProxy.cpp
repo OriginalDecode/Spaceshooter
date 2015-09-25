@@ -1,0 +1,35 @@
+#include "stdafx.h"
+
+#include "Model.h"
+#include "ModelProxy.h"
+
+namespace Prism
+{
+	ModelProxy::ModelProxy()
+		: myModel(nullptr)
+	{
+	}
+
+	void ModelProxy::Render(const CU::Matrix44<float>& aOrientation)
+	{
+		if (myModel != nullptr)
+		{
+			myModel->Render(aOrientation);
+		}
+	}
+
+	void ModelProxy::SetModel(Model* aModel)
+	{
+		myModel = aModel;
+	}
+
+	Effect* ModelProxy::GetEffect()
+	{
+		return myModel->GetEffect();
+	}
+
+	void ModelProxy::SetEffect(Effect* aEffect)
+	{
+		myModel->SetEffect(aEffect);
+	}
+}

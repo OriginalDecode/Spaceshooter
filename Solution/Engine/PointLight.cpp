@@ -2,6 +2,7 @@
 
 #include "Camera.h"
 #include "Instance.h"
+#include "ModelLoader.h"
 #include "Model.h"
 #include "PointLight.h"
 
@@ -10,9 +11,7 @@ namespace Prism
 
 	void PointLight::Initiate()
 	{
-		Model* model;
-		model = new Model();
-		model->InitLightCube(1, 1, 1);
+		ModelProxy* model = Engine::GetInstance()->GetModelLoader()->LoadLightCube(1, 1, 1);
 		myInstance = new Instance(*model);
 	}
 
