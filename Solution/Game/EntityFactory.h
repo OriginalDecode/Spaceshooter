@@ -19,12 +19,16 @@ struct EntityData
 
 	Entity* myEntity;
 
-	std::string myModelFile;
 	std::string myEffectFile;
+	std::string myModelFile;
+	std::string myTargetName;
 
-	float myWidth;
-	float myHeight;
+	float myCollisionSphereRadius;
 	float myDepth;
+	float myHeight;
+	float myWidth;
+
+	int myChanceToFollow;
 
 	eEntityDataGraphicsType myGraphicsType;
 };
@@ -41,6 +45,8 @@ private:
 
 	void LoadAIComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aAIComponentElement);
 	void LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aGraphicsComponentElement);
+	void LoadShootingComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aShootingComponenetElement);
+	void LoadCollisionComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aCollisionComponenetElement);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 };
