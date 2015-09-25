@@ -6,19 +6,8 @@ namespace CommonUtilities
 	class InputWrapper;
 }
 
-namespace Prism
-{
-	class Camera;
-	class DirectionalLight;
-	class Model;
-	class PointLight;
-	class Scene;
-	class Text;
-	class Instance;
-};
-
-class Entity;
 class BulletManager;
+class Level;
 
 class Game
 {
@@ -44,18 +33,10 @@ private:
 
 	CU::InputWrapper* myInputWrapper;
 
-	Prism::Instance* mySkybox;
 
-	Prism::Scene* myScene;
-	Prism::Camera* myCamera;
-	Prism::DirectionalLight* myLight;
-	Prism::PointLight* myPointLight;
-	CU::Matrix44<float> myWorldMatrix;
-	CU::GrowingArray<Entity*> myEntities;
-	Entity* myPlayer;
-	Entity* myCockPit;
 	BulletManager* myBulletManager;
 
-	bool myRenderStuff;
-	bool myShowPointLightCube;
+	Level* myLevel;
+
+
 };
