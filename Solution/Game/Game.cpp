@@ -43,7 +43,7 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, myBulletManager);
+	myLevel = new Level("Data/script/level1.xml", myInputWrapper, myBulletManager, true);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
