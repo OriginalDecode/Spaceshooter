@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include <d3dx11effect.h>
 #include <D3D11.h>
+#include <d3dx11effect.h>
 #include "DebugDataDisplay.h"
 #include "Camera.h"
 #include "Effect.h"
@@ -19,6 +19,7 @@ Prism::Text::Text()
 	, myLastDrawX(-999.f)
 	, myLastDrawY(-999.f)
 	, myLastScale(-999.f)
+	, myCharSpacing(17.f)
 {
 	myVertexBufferDesc = new D3D11_BUFFER_DESC();
 	myIndexBufferDesc = new D3D11_BUFFER_DESC();
@@ -46,7 +47,8 @@ void Prism::Text::Init(Font* aFont)
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
 	D3DX11_PASS_DESC passDesc;
@@ -71,7 +73,7 @@ void Prism::Text::Init(Font* aFont)
 void Prism::Text::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
-	myVertexBuffer->myStride = sizeof(VertexPosUV);
+	myVertexBuffer->myStride = sizeof(VertexPosColorUV);
 	myVertexBuffer->myByteOffset = 0;
 	myVertexBuffer->myStartSlot = 0;
 	myVertexBuffer->myNumberOfBuffers = 1;
@@ -135,15 +137,22 @@ void Prism::Text::InitBlendState()
 }
 
 void Prism::Text::Render(const char* aString
-	, const float aDrawX, const float aDrawY, const float aScale)
+	, const float aDrawX, const float aDrawY, const CU::Vector4<float>& aColor, const float aScale)
 {
-	if (Engine::GetInstance()->myWireframeShouldShow == true)
-	Engine::GetInstance()->DisableWireframe();
 
-	UpdateSentence(aString, aDrawX, aDrawY, aScale);
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	{
+		Engine::GetInstance()->DisableWireframe();
+	}
+
+	UpdateSentence(aString, aDrawX, aDrawY, aColor, aScale);
 
 	if (myHasText == false)
 		return;
+
+
+
+	Engine::GetInstance()->DisableZBuffer();
 
 	float blendFactor[4];
 	blendFactor[0] = 0.f;
@@ -176,19 +185,39 @@ void Prism::Text::Render(const char* aString
 	}
 
 	Engine::GetInstance()->EnableZBuffer();
-	if (Engine::GetInstance()->myWireframeShouldShow == true)
-		Engine::GetInstance()->EnableWireframe();
 
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	{
+		Engine::GetInstance()->EnableWireframe();
+	}
+}
+
+
+CU::Vector2<float> Prism::Text::GetTextSize(const char* aString) const
+{
+	int numOfLetters = static_cast<int>(strlen(aString));
+	CU::Vector2<float> size;
+
+
+	size.x += (myCharSize.x - myCharSpacing) * numOfLetters;
+	size.y = myCharSize.y;
+
+	return size;
+}
+
+float Prism::Text::GetTextWidth() const
+{
+	return myTextWidth;
 }
 
 void Prism::Text::SetupVertexBuffer()
 {
 	TIME_FUNCTION
 
-	if (myVertexBuffer->myVertexBuffer != nullptr)
-		myVertexBuffer->myVertexBuffer->Release();
+		if (myVertexBuffer->myVertexBuffer != nullptr)
+			myVertexBuffer->myVertexBuffer->Release();
 
-	myVertexBufferDesc->ByteWidth = sizeof(VertexPosUV) * myVertices.Size();
+	myVertexBufferDesc->ByteWidth = sizeof(VertexPosColorUV) * myVertices.Size();
 	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
 
 
@@ -203,15 +232,15 @@ void Prism::Text::SetupIndexBuffer()
 {
 	TIME_FUNCTION
 
-	if (myIndexBuffer->myIndexBuffer != nullptr)
-		myIndexBuffer->myIndexBuffer->Release();
+		if (myIndexBuffer->myIndexBuffer != nullptr)
+			myIndexBuffer->myIndexBuffer->Release();
 
 	myIndexBufferDesc->ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
 	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
 
-	
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData, 
-			&myIndexBuffer->myIndexBuffer);
+
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData,
+		&myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
 		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Text::SetupIndexBuffer", MB_ICONWARNING);
@@ -219,12 +248,13 @@ void Prism::Text::SetupIndexBuffer()
 }
 
 
-void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex, 
-		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
+void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex,
+	const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, const CU::Vector4<float>& aColor)
 {
 	int index = aIndex;
 
-	VertexPosUV vert;
+	VertexPosColorUV vert;
+	vert.myCol = aColor;
 	vert.myPos.z = aDrawPos.z;
 
 	//TopLeft
@@ -256,11 +286,12 @@ void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float
 }
 
 void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex,
-		const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV)
+	const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, const CU::Vector4<float>& aColor)
 {
 	int index = aIndex;
 
-	VertexPosUV vert;
+	VertexPosColorUV vert;
+	vert.myCol = aColor;
 	vert.myPos.z = aDrawPos.z;
 
 	//TopLeft
@@ -290,7 +321,8 @@ void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const floa
 }
 
 
-void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY, const float aScale)
+void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY,
+	const CU::Vector4<float>& aColor, const float aScale)
 {
 	TIME_FUNCTION
 
@@ -319,14 +351,14 @@ void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const 
 	{
 		Font::CharacterData charData = myFont->GetCharData(aString[i]);
 
-		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
+		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV, aColor);
 		index += 3;
 
-		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV);
+		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV, aColor);
 		index += 3;
 
 
-		drawX += myCharSize.x - 17.f;
+		drawX += myCharSize.x - myCharSpacing;
 		z -= 0.001f;
 	}
 

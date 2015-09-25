@@ -59,6 +59,12 @@ void Prism::GraphRenderer::Render(const CU::GrowingArray<float>& aDataArray
 {
 	TIME_FUNCTION
 
+
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	{
+		Engine::GetInstance()->DisableWireframe();
+	}
+
 	if (aNewData == true)
 	{
 		BuildBuffers(aDataArray, aTopLeftDrawPos, aGraphSize, aMaxValue);
@@ -92,6 +98,11 @@ void Prism::GraphRenderer::Render(const CU::GrowingArray<float>& aDataArray
 	}
 
 	Engine::GetInstance()->EnableZBuffer();
+
+	if (Engine::GetInstance()->myWireframeShouldShow == true)
+	{
+		Engine::GetInstance()->EnableWireframe();
+	}
 }
 
 void Prism::GraphRenderer::InitVertexBuffer()

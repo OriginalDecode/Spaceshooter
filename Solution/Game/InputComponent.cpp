@@ -3,6 +3,8 @@
 #include <AudioInterface.h>
 #include "ComponentEnums.h"
 #include "Constants.h"
+#include <DebugMenu.h>
+#include <DebugDataDisplay.h>
 #include <Engine.h>
 #include "Entity.h"
 #include "InputComponent.h"
@@ -12,11 +14,6 @@
 #include <sstream>
 #include <Macros.h>
 
-
-InputComponent::InputComponent()
-{
-}
-
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
 	myInputWrapper = &aInputWrapper;
@@ -25,10 +22,11 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myRotationSpeed = 0.f;
 	myMovementSpeed = 0.f;
 	myMaxSteeringSpeed = 0;
+	myCameraIsLocked = false;
 
-
-	//Prism::Engine::GetInstance()->GetFileWatcher().WatchFile("Data/script/player.xml", std::bind(&InputComponent::ReadXML, this, "Data/script/player.xml"));
 	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
+
+	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Camera Lock", InputComponent::ToggleCameraLock, this);
 
 	ReadXML("Data/script/player.xml");
 }
@@ -75,8 +73,12 @@ void InputComponent::Update(float aDeltaTime)
 		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
-	myCursorPosition.x += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
-	myCursorPosition.y += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
+	if (myCameraIsLocked == false)
+	{
+		myCursorPosition.x += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
+		myCursorPosition.y += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
+	}
+	
 
 	myCursorPosition.x = clip(myCursorPosition.x, -1, 1);
 	myCursorPosition.y = clip(myCursorPosition.y, -1, 1);
@@ -165,4 +167,11 @@ void InputComponent::Rotate(float aDeltaTime)
 	}
 
 	RotateZ(myRotationSpeed * aDeltaTime);
+}
+
+void InputComponent::ToggleCameraLock()
+{
+	myCameraIsLocked = !myCameraIsLocked;
+	myCursorPosition.x = 0.f;
+	myCursorPosition.y = 0.f;
 }
