@@ -12,15 +12,16 @@ private:
 	void MakeDecision();
 
 	void FollowEntity(float aDeltaTime);
+	void GetNewOrientation(const CU::Vector3<float>& aVelocity);
+
 	void FollowOwnDecision(float aDeltaTime);
+
 
 	float myTimeToNextDecision;
 	int myDecision;
 	
 	Entity* myEntityToFollow;
 
-	float myRotX;
-	float myRotY;
-	float myRotZ;
+	CU::Vector3<float> myOrientation;
 };
 

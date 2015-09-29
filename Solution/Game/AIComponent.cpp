@@ -11,8 +11,6 @@ void AIComponent::Init()
 
 void AIComponent::Update(float aDeltaTime)
 {
-	
-
 	if (myEntityToFollow == nullptr)
 	{
 		FollowOwnDecision(aDeltaTime);
@@ -40,28 +38,42 @@ void AIComponent::MakeDecision()
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	CU::Vector3<float> newForward = CU::GetNormalized(
-		myEntityToFollow->myOrientation.GetPos() - myEntity->myOrientation.GetPos());
-	CU::Vector3<float> rotAxis = CU::Cross(myEntity->myOrientation.GetForward(), newForward);
+	CU::Vector3<float> velocity;
+	float maxSpeed = 50;
+	float radius = 10;
 
-	float rotAngle = acosf(CU::Dot(myEntity->myOrientation.GetForward(), newForward)) * aDeltaTime;
+	velocity = myEntityToFollow->myOrientation.GetPos() - myEntity->myOrientation.GetPos();
 
-	if (rotAngle < 0.1f)
+	if (CU::Length(velocity) < radius)
 	{
-		RotateX(rotAngle);
+		return;
 	}
-	else if (rotAngle > 3.f)
+
+	float timeToTargetInSeconds = 1.f;
+
+	velocity /= timeToTargetInSeconds;
+
+	if (CU::Length(velocity) > maxSpeed)
 	{
-		RotateX(rotAngle);
+		CU::Normalize(velocity);
+		velocity *= maxSpeed;
 	}
-	else
+
+	GetNewOrientation(velocity);
+
+	SetRotation(CU::Matrix44<float>::CreateRotateAroundY(myOrientation.x));
+	//RotateY(myOrientation);
+	Move(velocity * aDeltaTime);
+}
+
+void AIComponent::GetNewOrientation(const CU::Vector3<float>& aVelocity)
+{
+	if (CU::Length(aVelocity) > 0)
 	{
-		Rotate(CU::Matrix44<float>::RotateAroundAxis(rotAxis, rotAngle));
+		myOrientation.x = atan2(aVelocity.x, aVelocity.z);
 	}
 
 	
-
-	MoveForward(50.f * aDeltaTime);
 }
 
 void AIComponent::FollowOwnDecision(float aDeltaTime)
