@@ -13,6 +13,7 @@
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
+#include "HealthComponent.h"
 #include "Instance.h"
 #include <InputWrapper.h>
 #include "InputComponent.h"
@@ -39,12 +40,14 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
 	myEntities.Init(4);
+	myDeadEntities.Init(4);
 
 	Entity* player = new Entity();
 
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
+	player->AddComponent<HealthComponent>()->Init(100);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -53,8 +56,8 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
-	if (aShouldTestXML == false)
-	{
+	//if (aShouldTestXML == false)
+	//{
 		for (int i = 0; i < 10; ++i)
 		{
 			Entity* astroids = new Entity();
@@ -67,6 +70,8 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100),
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+
+			astroids->AddComponent<HealthComponent>()->Init(1);
 
 
 			//astroids->AddComponent<AIComponent>()->Init();
@@ -87,13 +92,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 		//
 		//	myEntities.Add(enemy);
 		//}
-	}
-	else
-	{
-		WATCH_FILE("Data/script/level1.xml", Level::ReadXML);
-
-		ReadXML(aFileName);
-	}
+	//}
+	//else
+	//{
+	//	WATCH_FILE("Data/script/level1.xml", Level::ReadXML);
+	//
+	//	ReadXML(aFileName);
+	//}
 
 	myCockPit = new Entity();
 	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
@@ -180,6 +185,8 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
 	Prism::Engine::GetInstance()->PrintDebugText(ss2.str().c_str(), CU::Vector2<float>(0, -30));
 	Prism::Engine::GetInstance()->PrintDebugText(ss3.str().c_str(), CU::Vector2<float>(0, -60));
+
+	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 100.f, -100.f });
 }
 
 void Level::LogicUpdate(float aDeltaTime)
@@ -191,9 +198,9 @@ void Level::LogicUpdate(float aDeltaTime)
 
 	//if (CheckCollision() == true)
 	//{
-	//	myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
+	//	//myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
 	//}
-	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
+	//mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 }
 
 void Level::OnResize(int aWidth, int aHeight)
@@ -203,26 +210,30 @@ void Level::OnResize(int aWidth, int aHeight)
 
 bool Level::CheckCollision()
 {
-	for (int i = 0; i < myEntities.Size(); ++i)
+	for (int i = myEntities.Size() - 1; i >= 0; --i)
 	{
-		for (int j = 0; j < myEntities.Size(); ++j)
+		for (int j = myEntities.Size() - 1; j >= 0; --j)
 		{
-			if (CommonUtilities::Intersection::SphereVsSphere
-				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
-			{
-				if (myEntities[i] == myPlayer)
-				{
-					return true;
-				}
-
-			}
+			//if (CommonUtilities::Intersection::SphereVsSphere
+			//	(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
+			//	, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
+			//{
+			//	if (myEntities[i] == myPlayer)
+			//	{
+			//		return true;
+			//	}
+			//
+			//}
 			if (CommonUtilities::Intersection::SphereVsSphere
 				(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
 				, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 			{
 				if (myEntities[i] == myPlayer)
 				{
+					myPlayer->GetComponent<HealthComponent>()->RemoveHealth(1);
+
+					myDeadEntities.Add(myEntities[j]);
+					myEntities.RemoveCyclicAtIndex(j);
 					return true;
 				}
 			}

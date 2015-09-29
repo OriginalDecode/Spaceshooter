@@ -69,6 +69,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	std::string type;
 	CU::Vector3<float> size;
 	float totalLife = 0.f;
+	int damage = 0;
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "x", size.x);
@@ -76,6 +77,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "z", size.z);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
 
 	bulletData->myBulletCounter = 0;
 	bulletData->myBullets.Init(bulletData->myMaxBullet);
@@ -86,7 +88,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 		newEntity->AddComponent<GraphicsComponent>()->InitCube(size.x, size.y, size.z);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		newEntity->AddComponent<PhysicsComponent>();
-		newEntity->AddComponent<BulletComponent>()->Init(totalLife);
+		newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
 		bulletData->myBullets.Add(newEntity);
 	}
 
