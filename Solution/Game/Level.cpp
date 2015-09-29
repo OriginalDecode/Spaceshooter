@@ -5,6 +5,7 @@
 #include "BulletManager.h"
 #include <Camera.h>
 #include "CollisionComponent.h"
+#include <CommonHelper.h>
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -24,6 +25,7 @@
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include <sstream>
+#include <string>
 #include <XMLReader.h>
 
 
@@ -92,7 +94,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	}
 	else
 	{
-		WATCH_FILE("Data/script/level1.xml", Level::ReadXML);
+		WATCH_FILE(aFileName, Level::ReadXML);
 
 		ReadXML(aFileName);
 	}
@@ -101,8 +103,8 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
 	//	"Data/effect/NoTextureEffect.fx");
 	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
-	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
-		"Data/effect/NoTextureEffect.fx");
+	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
+		, "Data/effect/NoTextureEffect.fx");
 	myCockPit->GetComponent<GraphicsComponent>()->GetInstance()->SetOrientationPointer(myPlayer->myOrientation);
 	myCockPit->AddComponent<CollisionComponent>()->Initiate(0);
 	myEntities.Add(myCockPit);
@@ -238,20 +240,40 @@ void Level::ReadXML(const std::string& aFile)
 	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFile);
-	tinyxml2::XMLElement* levelReader = reader.FindFirstChild("level");
+	tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("root");
+	levelElement = reader.ForceFindFirstChild(levelElement, "scene");
 	//tinyxml2::XMLElement* gameObjectsReader = reader.FindFirstChild(levelReader, "GameObjects");
 
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelReader, "enemy"); entityElement != nullptr; entityElement = reader.FindNextElement(entityElement, "enemy"))
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
+		entityElement = reader.FindNextElement(entityElement, "enemy"))
 	{
 		Entity* newEntity = new Entity();
+		std::string enemyType;
+		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
+		myEntityFactory->CopyEntity(newEntity, enemyType);
 
-		myEntityFactory->CopyEntity(newEntity, "defaultEnemy");
-
-		tinyxml2::XMLElement* positionReader = reader.FindFirstChild(entityElement, "position");
 		CU::Vector3<float> entityPosition;
-		reader.ReadAttribute(positionReader, "posX", entityPosition.x);
-		reader.ReadAttribute(positionReader, "posY", entityPosition.y);
-		reader.ReadAttribute(positionReader, "posZ", entityPosition.z);
+		reader.ForceReadAttribute(entityElement, "positionX", entityPosition.x);
+		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
+		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
+
+		newEntity->myOrientation.SetPos(entityPosition);
+
+		myEntities.Add(newEntity);
+	}
+
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
+		entityElement = reader.FindNextElement(entityElement, "prop"))
+	{
+		Entity* newEntity = new Entity();
+		std::string propType;
+		reader.ForceReadAttribute(entityElement, "propType", propType);
+		myEntityFactory->CopyEntity(newEntity, propType);
+
+		CU::Vector3<float> entityPosition;
+		reader.ForceReadAttribute(entityElement, "positionX", entityPosition.x);
+		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
+		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
 
 		newEntity->myOrientation.SetPos(entityPosition);
 
