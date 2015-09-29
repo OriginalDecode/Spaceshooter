@@ -52,19 +52,19 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		std::string childName = e->Name();
 		if (std::strcmp(e->Name(), "GraphicsComponent") == 0)
 		{
-			LoadGraphicsComponent(newEntity, e);
+			LoadGraphicsComponent(newEntity, entityDocument, e);
 		}
 		else if (std::strcmp(e->Name(), "AIComponent") == 0)
 		{
-			LoadAIComponent(newEntity, e);
+			LoadAIComponent(newEntity, entityDocument, e);
 		}
 		else if (std::strcmp(e->Name(), "ShootingComponent") == 0)
 		{
-			LoadShootingComponent(newEntity, e);
+			LoadShootingComponent(newEntity, entityDocument, e);
 		}
 		else if (std::strcmp(e->Name(), "CollisionComponent") == 0)
 		{
-			LoadCollisionComponent(newEntity, e);
+			LoadCollisionComponent(newEntity, entityDocument, e);
 		}
 	}
 	if (entityName != "")
@@ -75,15 +75,18 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	entityDocument.CloseDocument();
 }
 
-void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aAIComponentElement)
+void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aAIComponentElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<AIComponent>();
 	for (tinyxml2::XMLElement* e = aAIComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (std::strcmp(e->Name(), "FollowEntity") == 0)
 		{
-			std::string targetName = e->Attribute("targetName");
-			int chanceToFollow = e->IntAttribute("chanceToFollow");
+			std::string targetName = "";
+			int chanceToFollow = 0;
+
+			aDocument.ForceReadAttribute(e, "targetName", targetName);
+			aDocument.ForceReadAttribute(e, "chanceToFollow", chanceToFollow);
 
 			aEntityToAddTo.myTargetName = targetName;
 			aEntityToAddTo.myChanceToFollow = chanceToFollow;
@@ -91,7 +94,7 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, tinyxml2::XMLEle
 	}
 }
 
-void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aCollisionComponenetElement)
+void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aCollisionComponenetElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<CollisionComponent>();
 	
@@ -99,14 +102,16 @@ void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, tinyxml2:
 	{
 		if (std::strcmp(e->Name(), "CollisionSphere") == 0)
 		{
-			float radius = e->FloatAttribute("radius");
+			float radius = 0;
+
+			aDocument.ForceReadAttribute(e, "radius", radius);
 
 			aEntityToAddTo.myCollisionSphereRadius = radius;
 		}
 	}
 }
 
-void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aGraphicsComponentElement)
+void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aGraphicsComponentElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<GraphicsComponent>();
 
@@ -114,8 +119,11 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::
 	{
 		if (std::strcmp(e->Name(), "Model") == 0)
 		{
-			std::string modelFile = e->Attribute("modelFile");
-			std::string effectFile = e->Attribute("effectFile");
+			std::string modelFile = "";
+			std::string effectFile = "";
+
+			aDocument.ForceReadAttribute(e, "modelFile", modelFile);
+			aDocument.ForceReadAttribute(e, "effectFile", effectFile);
 
 			aEntityToAddTo.myModelFile = modelFile;
 			aEntityToAddTo.myEffectFile = effectFile;
@@ -128,6 +136,10 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::
 			float height = e->FloatAttribute("height");
 			float depth = e->FloatAttribute("depth");
 
+			aDocument.ForceReadAttribute(e, "width", width);
+			aDocument.ForceReadAttribute(e, "height", height);
+			aDocument.ForceReadAttribute(e, "depth", depth);
+
 			aEntityToAddTo.myWidth = width;
 			aEntityToAddTo.myHeight = height;
 			aEntityToAddTo.myDepth = depth;
@@ -137,10 +149,11 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::
 	}
 }
 
-void EntityFactory::LoadShootingComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aShootingComponenetElement)
+void EntityFactory::LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<ShootingComponent>();
 	aShootingComponenetElement;
+	aDocument;
 }
 
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
