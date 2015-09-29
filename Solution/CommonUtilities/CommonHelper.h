@@ -10,5 +10,12 @@ namespace CommonUtilities
 		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 		return data;
 	}
+
+	inline std::string ToLower(const char* aString)
+	{
+		std::string data = aString;
+		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+		return data;
+	}
 }
 namespace CU = CommonUtilities;
