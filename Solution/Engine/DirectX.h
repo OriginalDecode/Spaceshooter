@@ -68,10 +68,12 @@ namespace Prism
 
 inline ID3D11Device* Prism::DirectX::GetDevice()
 {
+	DL_ASSERT_EXP(myDevice != nullptr, "DirectX: myDevice is nullptr, HOW?!");
 	return myDevice;
 }
 
 inline ID3D11DeviceContext* Prism::DirectX::GetContex()
 {
+	DL_ASSERT_EXP(myContext != nullptr, "DirectX: myContex is nullptr, HOW?!");
 	return myContext;
 }

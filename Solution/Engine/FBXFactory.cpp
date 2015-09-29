@@ -153,6 +153,12 @@ Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect
 
 Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffect)
 {
+	if (myLoadedModels.find(aFilePath) != myLoadedModels.end())
+	{
+		return myLoadedModels[aFilePath];
+	}
+
+
 	FBXData* found = 0;
 	for (FBXData* data : myFBXData)
 	{ 
@@ -180,6 +186,9 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 
 
 	Model* returnModel = CreateModel(modelData, aEffect);
+
+	myLoadedModels[aFilePath] = returnModel;
+
 	return returnModel;
 }
 

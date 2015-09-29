@@ -62,8 +62,15 @@ void Prism::Model::Init()
 
 		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 
-		InitVertexBuffer();
-		InitIndexBuffer();
+		if (InitVertexBuffer() == false)
+		{
+			DL_ASSERT("Model::Init() failed to InitVertexBuffer()");
+		}
+
+		if (InitIndexBuffer() == false)
+		{
+			DL_ASSERT("Model::Init() failed to InitIndexBuffer()");
+		}
 	}
 
 	for (int i = 0; i < myChilds.Size(); ++i)
@@ -136,6 +143,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	if (myEffect == nullptr)
 	{
 		DL_MESSAGE_BOX("Failed to GetEffect", "InitCube", MB_ICONWARNING);
+		DL_ASSERT("InitCube: Failed to GetEffect, myEffect is nullptr.");
 	}
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
