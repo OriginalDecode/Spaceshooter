@@ -32,7 +32,7 @@
 Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML)
 {
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
-
+	myScene = new Prism::Scene();
 	myEntityFactory = new EntityFactory();
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
@@ -108,7 +108,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myCockPit->GetComponent<GraphicsComponent>()->GetInstance()->SetOrientationPointer(myPlayer->myOrientation);
 	myCockPit->AddComponent<CollisionComponent>()->Initiate(0);
 	myEntities.Add(myCockPit);
-	myScene = new Prism::Scene();
 	myScene->SetCamera(myCamera);
 	myScene->AddLight(myLight);
 
@@ -126,8 +125,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
-
-
 
 }
 
@@ -242,7 +239,28 @@ void Level::ReadXML(const std::string& aFile)
 	reader.OpenDocument(aFile);
 	tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("root");
 	levelElement = reader.ForceFindFirstChild(levelElement, "scene");
-	//tinyxml2::XMLElement* gameObjectsReader = reader.FindFirstChild(levelReader, "GameObjects");
+
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "directionallight"); entityElement != nullptr;
+		entityElement = reader.FindNextElement(entityElement, "directionallight"))
+	{
+		Prism::DirectionalLight* newDirLight = new Prism::DirectionalLight();
+
+		CU::Vector3<float> lightDirection;
+		reader.ForceReadAttribute(entityElement, "directionX", lightDirection.x);
+		reader.ForceReadAttribute(entityElement, "directionY", lightDirection.y);
+		reader.ForceReadAttribute(entityElement, "directionZ", lightDirection.z);
+		newDirLight->SetDir(lightDirection);
+
+		CU::Vector4<float> lightColor;
+		reader.ForceReadAttribute(entityElement, "colourR", lightColor.myR);
+		reader.ForceReadAttribute(entityElement, "colourG", lightColor.myG);
+		reader.ForceReadAttribute(entityElement, "colourB", lightColor.myB);
+		reader.ForceReadAttribute(entityElement, "colourA", lightColor.myA);
+		newDirLight->SetColor(lightColor);
+
+		myScene->AddLight(newDirLight);
+	}
+
 
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "enemy"))
@@ -257,7 +275,7 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
 		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
 
-		newEntity->myOrientation.SetPos(entityPosition);
+		newEntity->myOrientation.SetPos(entityPosition*10.f);
 
 		myEntities.Add(newEntity);
 	}
@@ -275,7 +293,7 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
 		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
 
-		newEntity->myOrientation.SetPos(entityPosition);
+		newEntity->myOrientation.SetPos(entityPosition*10.f);
 
 		myEntities.Add(newEntity);
 	}
