@@ -38,12 +38,15 @@ namespace Prism
 		{
 			ModelProxy* myProxy;
 			eLoadType myLoadType;
-			std::string myModelPath;
-			std::string myEffectPath;
+			std::string myModelPath = "";
+			std::string myEffectPath = "";
 			CU::Vector3<float> mySize;
 			CU::Vector4<float> myColor;
 			MeshData myMeshData;
 		};
+
+		void WaitUntilCopyIsAllowed();
+		void WaitUntilAddIsAllowed();
 
 		CU::GrowingArray<LoadData> myModelsToLoad;
 		volatile bool myCanAddToLoadArray;

@@ -58,6 +58,8 @@ void StartEngine(int* aHwnd)
 	SetWindowLong(locEngineWindowHandler, GWL_STYLE, WS_POPUP);
 	SetWindowPos(locEngineWindowHandler, HWND_TOP, 0, 0, locWindowSetup.myScreenWidth, 
 		locWindowSetup.myScreenHeight, SWP_SHOWWINDOW);
+
+	locCamera->OnResize(locWindowSetup.myScreenWidth, locWindowSetup.myScreenHeight);
 }
 
 void SetupWindow(int aWidth, int aHeight)

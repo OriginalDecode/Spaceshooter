@@ -1,6 +1,7 @@
 #pragma once
 
 class Entity;
+class XMLReader;
 
 namespace tinyxml2
 {
@@ -38,15 +39,14 @@ class EntityFactory
 public:
 	void LoadEntites(const std::string& aEntityRootPath);
 
-	//Entity* GetEntity(const std::string& aEntityTag);
 	void CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag);
 private:
 	void LoadEntity(const std::string& aEntityPath);
 
-	void LoadAIComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aAIComponentElement);
-	void LoadGraphicsComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aGraphicsComponentElement);
-	void LoadShootingComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aShootingComponenetElement);
-	void LoadCollisionComponent(EntityData& aEntityToAddTo, tinyxml2::XMLElement* aCollisionComponenetElement);
+	void LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aAIComponentElement);
+	void LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aGraphicsComponentElement);
+	void LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement);
+	void LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aCollisionComponenetElement);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 };

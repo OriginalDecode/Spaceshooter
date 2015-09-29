@@ -25,6 +25,11 @@ namespace Prism
 
 	Effect* ModelProxy::GetEffect()
 	{
+		if (myModel == nullptr)
+		{
+			return nullptr;
+		}
+
 		return myModel->GetEffect();
 	}
 
