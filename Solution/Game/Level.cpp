@@ -262,5 +262,23 @@ void Level::ReadXML(const std::string& aFile)
 		myEntities.Add(newEntity);
 	}
 
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
+		entityElement = reader.FindNextElement(entityElement, "prop"))
+	{
+		Entity* newEntity = new Entity();
+		std::string propType;
+		reader.ForceReadAttribute(entityElement, "propType", propType);
+		myEntityFactory->CopyEntity(newEntity, propType);
+
+		CU::Vector3<float> entityPosition;
+		reader.ForceReadAttribute(entityElement, "positionX", entityPosition.x);
+		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
+		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
+
+		newEntity->myOrientation.SetPos(entityPosition);
+
+		myEntities.Add(newEntity);
+	}
+
 
 }
