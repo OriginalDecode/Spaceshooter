@@ -23,6 +23,8 @@ public:
 	void Update(float aDeltaTime) override;
 
 	void ReceiveMessage(const ShootMessage& aMessage) override;
+	//void ReceiveMessage(const InputMessage& aMessage) override;
+
 	void Init(CU::Vector3<float> aSpawningPointOffset);
 
 	void ReadFromXML(const std::string aFilePath);
@@ -31,11 +33,13 @@ public:
 
 	static int GetID();
 
+	void SetCurrentWeaponID(const unsigned short& anID);
+
 private:
 
 	CU::GrowingArray<WeaponData> myWeapons;
 
-	unsigned int myCurrentWeapon;
+	unsigned short myCurrentWeaponID;
 	CU::Vector3<float> mySpawningPointOffset;
 };
 
@@ -49,3 +53,12 @@ inline int ShootingComponent::GetID()
 	return 4;
 }
 
+inline void ShootingComponent::SetCurrentWeaponID(const unsigned short& anID)
+{
+	myCurrentWeaponID = anID;
+	
+	if (anID > myWeapons.Size())
+	{
+		myCurrentWeaponID = myWeapons.Size();
+	}
+}

@@ -40,6 +40,7 @@ private:
 	void ActivateBoxBullet(const CU::Matrix44<float>& anOrientation);
 
 	BulletData* myBoxBulletData;
+	BulletData* myBoxBullet2Data;
 
 	// temps!!
 	CU::GrowingArray<Prism::Instance*> myInstances;
