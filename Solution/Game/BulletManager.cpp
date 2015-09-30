@@ -7,12 +7,14 @@
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
 #include "BulletComponent.h"
+#include "CollisionComponent.h"
 #include <Engine.h>
 #include <FileWatcher.h>
 
 BulletManager::BulletManager()
 {
 	myInstances.Init(8);
+	myEntities.Init(8);
 	myBoxBulletData = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
@@ -69,6 +71,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	std::string type;
 	CU::Vector3<float> size;
 	float totalLife = 0.f;
+	float sphereRadius = 0.f;
 	int damage = 0;
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
@@ -78,6 +81,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "sphere"), "radius", sphereRadius);
 
 	bulletData->myBulletCounter = 0;
 	bulletData->myBullets.Init(bulletData->myMaxBullet);
@@ -89,6 +93,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		newEntity->AddComponent<PhysicsComponent>();
 		newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
+		newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
 		bulletData->myBullets.Add(newEntity);
 	}
 
@@ -139,4 +144,19 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 	}
 
 	return myInstances;
+}
+
+CU::GrowingArray<Entity*>& BulletManager::GetEntities()
+{
+	myEntities.RemoveAll();
+
+	for (int i = 0; i < myBoxBulletData->myMaxBullet; i++)
+	{
+		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		{
+			myEntities.Add(myBoxBulletData->myBullets[i]);
+		}
+	}
+
+	return myEntities;
 }

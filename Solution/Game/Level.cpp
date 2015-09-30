@@ -14,6 +14,7 @@
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
+#include "HealthComponent.h"
 #include "Instance.h"
 #include <InputWrapper.h>
 #include "InputComponent.h"
@@ -49,6 +50,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
+	player->AddComponent<HealthComponent>()->Init(100);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -184,6 +186,8 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
 	Prism::Engine::GetInstance()->PrintDebugText(ss2.str().c_str(), CU::Vector2<float>(0, -30));
 	Prism::Engine::GetInstance()->PrintDebugText(ss3.str().c_str(), CU::Vector2<float>(0, -60));
+
+	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
 }
 
 void Level::LogicUpdate(float aDeltaTime)
@@ -193,10 +197,10 @@ void Level::LogicUpdate(float aDeltaTime)
 		myEntities[i]->Update(aDeltaTime);
 	}
 
-	//if (CheckCollision() == true)
-	//{
-	//	myPlayer->myOrientation.SetPos(CU::Vector4<float>(10, 10, 10, 1));
-	//}
+	if (CheckCollision() == true)
+	{
+		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(1);
+	}
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 }
 
@@ -211,23 +215,26 @@ bool Level::CheckCollision()
 	{
 		for (int j = 0; j < myEntities.Size(); ++j)
 		{
-			if (CommonUtilities::Intersection::SphereVsSphere
-				(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-				, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
+			if (myEntities[i]->GetComponent<CollisionComponent>() != nullptr && myEntities[j]->GetComponent<CollisionComponent>() != nullptr)
 			{
-				if (myEntities[i] == myPlayer)
+				if (CommonUtilities::Intersection::SphereVsSphere
+					(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
+					, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 				{
-					return true;
-				}
+					if (myEntities[i] == myPlayer)
+					{
+						return true;
+					}
 
-			}
-			if (CommonUtilities::Intersection::SphereVsSphere
-				(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
-				, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
-			{
-				if (myEntities[i] == myPlayer)
+				}
+				if (CommonUtilities::Intersection::SphereVsSphere
+					(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
+					, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 				{
-					return true;
+					if (myEntities[i] == myPlayer)
+					{
+						return true;
+					}
 				}
 			}
 		}
