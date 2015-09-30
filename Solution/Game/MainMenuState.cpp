@@ -2,22 +2,25 @@
 #include "MainMenuState.h"
 #include <Model2D.h>
 #include <Camera.h>
+#include <InputWrapper.h>
 
-MainMenuState::MainMenuState()
+MainMenuState::MainMenuState(CU::InputWrapper* anInputWrapper)
 {
+	myInputWrapper = anInputWrapper;
 }
 
 MainMenuState::~MainMenuState()
 {
 }
 
-void MainMenuState::InitState(CU::InputWrapper* anInputWrapper)
+void MainMenuState::InitState()
 {
-	myInputWrapper = anInputWrapper;
 	myBackground = new Prism::Model2D;
-	myBackground->Init("Data/resources/texture/seafloor.dds", { 640.f, 640.f });
+	myBackground->Init("Data/resources/texture/seafloor.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x), 
+		float(Prism::Engine::GetInstance()->GetWindowSize().y) });
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
+	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
 }
 
 void MainMenuState::EndState()
@@ -28,12 +31,19 @@ void MainMenuState::EndState()
 
 const eStateStatus MainMenuState::Update()
 {
-	return myStateStatus;
+	if (myInputWrapper->KeyDown(DIK_ESCAPE))
+	{
+		return eStateStatus::ePopMainState;
+	}
+
+	Render();
+
+	return eKeepState;
 }
 
 void MainMenuState::Render()
 {
-	myBackground->Render(*myCamera, 0.f, 0.f);
+	myBackground->Render(*myCamera, 0.f, -100.f);
 }
 
 void MainMenuState::ResumeState()
@@ -43,5 +53,5 @@ void MainMenuState::ResumeState()
 
 void MainMenuState::OnResize(int aWidth, int aHeight)
 {
-
+	myCamera->OnResize(aWidth, aHeight);
 }
