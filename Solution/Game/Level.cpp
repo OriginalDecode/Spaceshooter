@@ -58,7 +58,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
 	{
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 50; ++i)
 		{
 			Entity* astroids = new Entity();
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
@@ -66,7 +66,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
 				"Data/effect/BasicEffect.fx");
-			astroids->AddComponent<CollisionComponent>()->Initiate(15);
+			astroids->AddComponent<CollisionComponent>()->Initiate(1);
 
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100),
 				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });

@@ -27,6 +27,10 @@ private:
 	float mySteeringModifier;
 	float myRotationSpeed;
 	float myMovementSpeed;
+	float myMaxMovementSpeed;
+	float myMinMovementSpeed;
 	float myMaxSteeringSpeed;
+	float myAcceleration;
+
 	bool myCameraIsLocked;
 };

@@ -17,7 +17,6 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
 	myInputWrapper = &aInputWrapper;
 
-	
 	myRotationSpeed = 0.f;
 	myMovementSpeed = 0.f;
 	myMaxSteeringSpeed = 0;
@@ -34,30 +33,17 @@ void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		//myMovementSpeed = 50.f;
-		MoveForward(50.f * aDeltaTime);
-		
+		myMovementSpeed += myAcceleration * aDeltaTime;
 	}
-	/*else
-	{
-		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
-		if (myMovementSpeed <= 0.f)
-		{
-			myMovementSpeed = 0.f;
-		}
-	}*/
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		MoveBackward(50.f * aDeltaTime);
+		myMovementSpeed -= myAcceleration * aDeltaTime;
 	}
-	if (myInputWrapper->KeyIsPressed(DIK_A))
-	{
-		MoveLeft(50.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_D))
-	{
-		MoveRight(50.f * aDeltaTime);
-	}
+
+	//myMovementSpeed = CU::Clip(myMovementSpeed, 2, 50);
+	
+	MoveForward(myMovementSpeed * aDeltaTime);
+	
 
 	Rotate(aDeltaTime);
 
@@ -119,8 +105,11 @@ void InputComponent::ReadXML(const std::string& aFile)
 	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFile);
-	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
-	reader.ReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "acceleration", myAcceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "maxMovementSpeed", myMaxMovementSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "minMovementSpeed", myMinMovementSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
 }
 
 void InputComponent::Rotate(float aDeltaTime)
