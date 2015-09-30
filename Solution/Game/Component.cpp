@@ -13,6 +13,6 @@ void Component::ReceiveMessage(const ShootMessage&)
 {
 }
 
-void Component::ReceiveMessage(const InputMessage& aMessage)
+void Component::ReceiveMessage(const SteeringTargetMessage&)
 {
 }

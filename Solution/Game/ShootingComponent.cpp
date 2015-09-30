@@ -63,10 +63,10 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 	}
 }
 
-void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
-{
-	SetCurrentWeaponID(aMessage.GetKey());
-}
+//void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
+//{
+//	SetCurrentWeaponID(aMessage.GetKey());
+//}
 
 void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
 {

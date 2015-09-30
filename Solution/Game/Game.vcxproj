@@ -112,6 +112,7 @@
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StateStackProxy.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SteeringTargetMessage.h" />
     <ClInclude Include="Subscriber.h" />
   </ItemGroup>
   <ItemGroup>

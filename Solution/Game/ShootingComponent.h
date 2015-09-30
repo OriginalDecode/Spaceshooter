@@ -23,7 +23,7 @@ public:
 	void Update(float aDeltaTime) override;
 
 	void ReceiveMessage(const ShootMessage& aMessage) override;
-	void ReceiveMessage(const InputMessage& aMessage) override;
+	//void ReceiveMessage(const InputMessage& aMessage) override;
 
 	void Init(CU::Vector3<float> aSpawningPointOffset);
 

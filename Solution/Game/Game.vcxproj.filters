@@ -64,9 +64,6 @@
     <ClCompile Include="ShootMessage.cpp">
       <Filter>Components\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="InputMessage.cpp">
-      <Filter>Components\Messages</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletEnums.h" />
@@ -148,7 +145,7 @@
     <ClInclude Include="ShootMessage.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="InputMessage.h">
+    <ClInclude Include="SteeringTargetMessage.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
   </ItemGroup>
@@ -166,7 +163,7 @@
       <UniqueIdentifier>{944ca525-7824-48c8-aa6f-4fdb18700910}</UniqueIdentifier>
     </Filter>
     <Filter Include="Components\Messages">
-      <UniqueIdentifier>{43ea6918-fe18-4ac0-a9ea-37412aa6a8bd}</UniqueIdentifier>
+      <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
