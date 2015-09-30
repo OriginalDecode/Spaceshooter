@@ -72,21 +72,24 @@ void ShootingComponent::ReadFromXML(const std::string aFilePath)
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);
 
-	// for each weapon
 	tinyxml2::XMLElement* weaponElement = reader.FindFirstChild("weapon");
-
-	WeaponData weaponData;
-
-	std::string type;
-	reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
-	reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData.myCoolDownTime);
-	reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
-	weaponData.myCurrentTime = weaponData.myCoolDownTime;
-
-	if (type == "testGun")
+	for (; weaponElement != nullptr; weaponElement = reader.FindNextElement(weaponElement))
 	{
-		weaponData.myBulletType = eBulletType::BOX_BULLET;
-	}
 
-	myWeapons.Add(weaponData);
+		WeaponData weaponData;
+
+		std::string type;
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData.myCoolDownTime);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
+		weaponData.myCurrentTime = weaponData.myCoolDownTime;
+
+		if (type == "testGun")
+		{
+			weaponData.myBulletType = eBulletType::BOX_BULLET;
+		}
+
+		myWeapons.Add(weaponData);
+	}
+	myCurrentWeapon = 0;
 }

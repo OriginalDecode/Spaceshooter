@@ -18,10 +18,7 @@ BulletManager::BulletManager()
 	myBoxBulletData = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
-	// move to weapon factory:
-	
 	ReadFromXML("Data/script/weapon.xml");
-	//for (; bulletElement != nullptr; bulletElement = reader.FindNextElement(bulletElement))
 	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);
 }
 
@@ -69,15 +66,15 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	BulletData* bulletData = new BulletData;
 
 	std::string type;
-	CU::Vector3<float> size;
+	std::string modelPath;
+	std::string shaderPath;
 	float totalLife = 0.f;
 	float sphereRadius = 0.f;
 	int damage = 0;
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "model"), "path", modelPath);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "shader"), "path", shaderPath);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "x", size.x);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "y", size.y);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "z", size.z);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
@@ -89,7 +86,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
 		Entity* newEntity = new Entity();
-		newEntity->AddComponent<GraphicsComponent>()->InitCube(size.x, size.y, size.z);
+		newEntity->AddComponent<GraphicsComponent>()->InitCube(5.f, 5.f, 5.f);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		newEntity->AddComponent<PhysicsComponent>();
 		newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
