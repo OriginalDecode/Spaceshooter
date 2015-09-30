@@ -209,6 +209,11 @@ bool Level::CheckCollision()
 {
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
+		if (myEntities[i] != myPlayer)
+		{
+			continue;
+		}
+
 		for (int j = 0; j < myEntities.Size(); ++j)
 		{
 			if (myEntities[i]->GetComponent<CollisionComponent>() != nullptr && myEntities[j]->GetComponent<CollisionComponent>() != nullptr)
@@ -217,20 +222,14 @@ bool Level::CheckCollision()
 					(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
 					, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 				{
-					if (myEntities[i] == myPlayer)
-					{
-						return true;
-					}
-
+					return true;
 				}
 				if (CommonUtilities::Intersection::SphereVsSphere
 					(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
 					, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
 				{
-					if (myEntities[i] == myPlayer)
-					{
-						return true;
-					}
+
+					return true;
 				}
 			}
 		}

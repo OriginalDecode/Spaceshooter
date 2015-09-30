@@ -9,7 +9,7 @@
 #include <TimerManager.h>
 
 
-//#define THREADED_LOADING
+#define THREADED_LOADING
 
 namespace Prism
 {
