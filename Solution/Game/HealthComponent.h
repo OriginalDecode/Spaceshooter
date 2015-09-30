@@ -13,6 +13,8 @@ public:
 
 	bool IsAlive() const;
 
+	const unsigned short& GetHealth() const;
+
 private:
 
 	unsigned short myMaxHealth;
@@ -22,4 +24,9 @@ private:
 inline bool HealthComponent::IsAlive() const
 {
 	return (myCurrentHealth != 0);
+}
+
+inline const unsigned short& HealthComponent::GetHealth() const
+{
+	return myCurrentHealth;
 }

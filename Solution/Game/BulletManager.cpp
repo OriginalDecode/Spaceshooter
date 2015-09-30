@@ -7,19 +7,18 @@
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
 #include "BulletComponent.h"
+#include "CollisionComponent.h"
 #include <Engine.h>
 #include <FileWatcher.h>
 
 BulletManager::BulletManager()
 {
 	myInstances.Init(8);
+	myEntities.Init(8);
 	myBoxBulletData = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
-	// move to weapon factory:
-	
 	ReadFromXML("Data/script/weapon.xml");
-	//for (; bulletElement != nullptr; bulletElement = reader.FindNextElement(bulletElement))
 	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);
 }
 
@@ -67,15 +66,19 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	BulletData* bulletData = new BulletData;
 
 	std::string type;
-	CU::Vector3<float> size;
+	std::string modelPath;
+	std::string shaderPath;
 	float totalLife = 0.f;
+	float sphereRadius = 0.f;
+	int damage = 0;
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "model"), "path", modelPath);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "shader"), "path", shaderPath);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "x", size.x);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "y", size.y);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "size"), "z", size.z);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
 	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
+	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "sphere"), "radius", sphereRadius);
 
 	bulletData->myBulletCounter = 0;
 	bulletData->myBullets.Init(bulletData->myMaxBullet);
@@ -83,10 +86,11 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
 		Entity* newEntity = new Entity();
-		newEntity->AddComponent<GraphicsComponent>()->InitCube(size.x, size.y, size.z);
+		newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		newEntity->AddComponent<PhysicsComponent>();
-		newEntity->AddComponent<BulletComponent>()->Init(totalLife);
+		newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
+		newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
 		bulletData->myBullets.Add(newEntity);
 	}
 
@@ -137,4 +141,19 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 	}
 
 	return myInstances;
+}
+
+CU::GrowingArray<Entity*>& BulletManager::GetEntities()
+{
+	myEntities.RemoveAll();
+
+	for (int i = 0; i < myBoxBulletData->myMaxBullet; i++)
+	{
+		if (myBoxBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		{
+			myEntities.Add(myBoxBulletData->myBullets[i]);
+		}
+	}
+
+	return myEntities;
 }

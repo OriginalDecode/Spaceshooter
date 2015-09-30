@@ -46,7 +46,10 @@ private:
 	Prism::DirectionalLight* myLight;
 	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
+
 	CU::GrowingArray<Entity*> myEntities;
+	CU::GrowingArray<Entity*> myDeadEntities;
+
 	Entity* myPlayer;
 	Entity* myCockPit;
 

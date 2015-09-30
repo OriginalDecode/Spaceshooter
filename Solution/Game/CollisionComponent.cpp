@@ -17,7 +17,7 @@ void CollisionComponent::Initiate(float someRadius)
 {
 	SetRadius(someRadius);
 
-	myShouldShow = true;
+	myShouldShow = false;
 
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadLightCube(
 		someRadius * 2.f, someRadius * 2.f, someRadius * 2.f);

@@ -34,12 +34,16 @@ public:
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
+	CU::GrowingArray<Entity*>& GetEntities();
 
 private:
 	void ActivateBoxBullet(const CU::Matrix44<float>& anOrientation);
 
 	BulletData* myBoxBulletData;
+
+	// temps!!
 	CU::GrowingArray<Prism::Instance*> myInstances;
+	CU::GrowingArray<Entity*> myEntities;
 
 };
 

@@ -8,6 +8,7 @@ struct WeaponData
 	float myCoolDownTime;
 	float myCurrentTime;
 	int mySpread;
+	int myID;
 };
 
 class Entity;
@@ -26,12 +27,22 @@ public:
 
 	void ReadFromXML(const std::string aFilePath);
 
+	void AddWeapon(WeaponData aWeapon);
+
 	static int GetID();
 
 private:
-	WeaponData* myCurrentWeapon;
+
+	CU::GrowingArray<WeaponData> myWeapons;
+
+	unsigned int myCurrentWeapon;
 	CU::Vector3<float> mySpawningPointOffset;
 };
+
+inline void ShootingComponent::AddWeapon(WeaponData aWeapon)
+{
+	myWeapons.Add(aWeapon);
+}
 
 inline int ShootingComponent::GetID()
 {
