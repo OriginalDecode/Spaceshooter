@@ -520,11 +520,9 @@ void Prism::Model::SetEffect(Effect* aEffect)
 
 void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 {
-	TIME_FUNCTION;
-
-
 	if (myIsNULLObject == false)
 	{
+		TIME_FUNCTION;
 
 		float blendFactor[4];
 		blendFactor[0] = 0.f;
