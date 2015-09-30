@@ -10,7 +10,7 @@ class GameState
 {
 public:
 
-	virtual void InitState(CU::InputWrapper* anInputWrapper) = 0;
+	virtual void InitState() = 0;
 	virtual void EndState() = 0;
 	
 	virtual const eStateStatus Update() = 0;

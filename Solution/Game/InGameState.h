@@ -15,9 +15,11 @@ class Level;
 class InGameState : public GameState
 {
 public:
+
+	InGameState(CU::InputWrapper* anInputWrapper);
 	~InGameState();
 
-	void InitState(CU::InputWrapper* anInputWrapper) override;
+	void InitState() override;
 	void EndState() override;
 
 	const eStateStatus Update() override;

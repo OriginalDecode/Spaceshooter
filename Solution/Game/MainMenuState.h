@@ -10,10 +10,10 @@ namespace Prism
 class MainMenuState : public GameState
 {
 public:
-	MainMenuState();
+	MainMenuState(CU::InputWrapper* anInputWrapper);
 	~MainMenuState();
 
-	void InitState(CU::InputWrapper* anInputWrapper) override;
+	void InitState() override;
 	void EndState() override;
 
 	const eStateStatus Update() override;

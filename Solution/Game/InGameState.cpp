@@ -18,20 +18,25 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
+InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+{
+	myInputWrapper = anInputWrapper;
+}
+
 InGameState::~InGameState()
 {
 	delete myBulletManager;
 	delete myCollisionManager;
 }
 
-void InGameState::InitState(CU::InputWrapper* anInputWrapper)
+void InGameState::InitState()
 {
 	myStateStatus = eStateStatus::eKeepState;
-	myInputWrapper = anInputWrapper;
 	myBulletManager = new BulletManager;
 	myCollisionManager = new CollisionManager();
 	myBulletManager->SetCollisionManager(myCollisionManager);
 	myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
+	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 
 void InGameState::EndState()
