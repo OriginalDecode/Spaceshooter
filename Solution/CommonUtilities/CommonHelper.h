@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <string>
+#include "Macros.h"
 
 namespace CommonUtilities
 {
@@ -16,6 +17,11 @@ namespace CommonUtilities
 		std::string data = aString;
 		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 		return data;
+	}
+
+	inline float Clip(float aNumber, float aLower, float aUpper)
+	{
+		return MAX(aLower, MIN(aNumber, aUpper));
 	}
 }
 namespace CU = CommonUtilities;

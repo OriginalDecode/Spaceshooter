@@ -5,7 +5,6 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "GraphicsComponent.h"
-#include <CommonHelper.h>
 #include <Instance.h>
 #include "ShootingComponent.h"
 #include <XMLReader.h>
