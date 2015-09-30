@@ -64,9 +64,6 @@
     <ClCompile Include="ShootMessage.cpp">
       <Filter>Components\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="SteeringTargetMessage.cpp">
-      <Filter>Components\Messages</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletEnums.h" />
