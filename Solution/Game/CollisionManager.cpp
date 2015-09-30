@@ -65,3 +65,14 @@ void CollisionManager::Update()
 		}
 	}
 }
+
+void CollisionManager::CleanUp()
+{
+	for (int i = myEnemies.Size() - 1; i >= 0; --i)
+	{
+		if (myEnemies[i]->GetEntity()->GetAlive() == false)
+		{
+			myEnemies.RemoveCyclicAtIndex(i);
+		}
+	}
+}

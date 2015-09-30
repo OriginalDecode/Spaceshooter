@@ -1,27 +1,27 @@
 #include "stdafx.h"
-#include "InGameState.h"
+
 #include <AudioInterface.h>
 #include "BulletManager.h"
 #include <Camera.h>
+#include "CollisionManager.h"
 #include "ColoursForBG.h"
 #include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <FileWatcher.h>
 #include <Font.h>
 #include <GeometryGenerator.h>
+#include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
+#include "PostMaster.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
-#include "PostMaster.h"
 #include <Vector.h>
-
-InGameState::InGameState()
-{
-}
 
 InGameState::~InGameState()
 {
+	delete myBulletManager;
+	delete myCollisionManager;
 }
 
 void InGameState::InitState(CU::InputWrapper* anInputWrapper)
@@ -29,18 +29,21 @@ void InGameState::InitState(CU::InputWrapper* anInputWrapper)
 	myStateStatus = eStateStatus::eKeepState;
 	myInputWrapper = anInputWrapper;
 	myBulletManager = new BulletManager;
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, myBulletManager, false);
+	myCollisionManager = new CollisionManager();
+	myBulletManager->SetCollisionManager(myCollisionManager);
+	myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
 }
 
 void InGameState::EndState()
 {
-	delete myBulletManager;
 }
 
 const eStateStatus InGameState::Update()
 {
-	BEGIN_TIME_BLOCK("Game::Update");
+	BEGIN_TIME_BLOCK("InGameState::Update");
 	
+	myCollisionManager->CleanUp();
+
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 
 	if (deltaTime > 1.0f / 10.0f)
@@ -71,7 +74,7 @@ const eStateStatus InGameState::Update()
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
-	END_TIME_BLOCK("Game::Update");
+	END_TIME_BLOCK("InGameState::Update");
 
 
 	Render();

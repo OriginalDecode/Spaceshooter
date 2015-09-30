@@ -13,6 +13,7 @@ class Component;
 class Entity
 {
 public:
+	Entity();
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -26,11 +27,16 @@ public:
 	template <typename T>
 	void SendMessage(const T& aMessage);
 
+
+
 	CU::Matrix44<float> myOrientation;
 	Prism::Camera* myCamera;
 
+	bool GetAlive() const;
+	void Kill();
 private:
 	std::unordered_map<int, Component*> myComponents;
+	bool myAlive;
 };
 
 template <typename T>
@@ -63,3 +69,9 @@ void Entity::SendMessage(const T& aMessage)
 		it->second->ReceiveMessage(aMessage);
 	}
 }
+
+inline bool Entity::GetAlive() const
+{
+	return myAlive;
+}
+

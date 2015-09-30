@@ -9,12 +9,12 @@ namespace CommonUtilities
 }
 
 class BulletManager;
+class CollisionManager;
 class Level;
 
 class InGameState : public GameState
 {
 public:
-	InGameState();
 	~InGameState();
 
 	void InitState(CU::InputWrapper* anInputWrapper) override;
@@ -33,6 +33,7 @@ private:
 	bool CheckCollision();
 
 	BulletManager* myBulletManager;
+	CollisionManager* myCollisionManager;
 	Level* myLevel;
 };
 

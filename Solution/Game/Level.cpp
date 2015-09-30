@@ -30,7 +30,10 @@
 #include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML)
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager& aBulletManager
+		, CollisionManager& aCollisionManager, bool aShouldTestXML)
+	: myBulletManager(aBulletManager)
+	, myCollisionManager(aCollisionManager)
 {
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
 	myScene = new Prism::Scene();
@@ -43,8 +46,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
-	myCollisionManager = new CollisionManager();
-	aBulletManager->SetCollisionManager(myCollisionManager);
+
 
 	myEntities.Init(4);
 
@@ -54,7 +56,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
 	player->AddComponent<HealthComponent>()->Init(100);
-	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::PLAYER);
+	myCollisionManager.Add(player->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::PLAYER);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -85,7 +87,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			myEntities.Add(astroids);
 
-			myCollisionManager->Add(astroids->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::ENEMY);
+			myCollisionManager.Add(astroids->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::ENEMY);
 		}
 
 		//for (int i = 0; i < 50; ++i)
@@ -161,7 +163,7 @@ void Level::Render()
 
 	if (myRenderStuff)
 	{
-		myScene->Render(myBulletManager->GetInstances());
+		myScene->Render(myBulletManager.GetInstances());
 	}
 
 	if (myShowPointLightCube == true)
@@ -196,8 +198,21 @@ void Level::Render()
 
 void Level::LogicUpdate(float aDeltaTime)
 {
-	for (int i = 0; i < myEntities.Size(); ++i)
+	for (int i = myEntities.Size() - 1; i >= 0; --i)
 	{
+		if (myEntities[i]->GetAlive() == false)
+		{
+			GraphicsComponent* gfxComp = myEntities[i]->GetComponent<GraphicsComponent>();
+
+			if (gfxComp != nullptr)
+			{
+				myScene->RemoveInstance(gfxComp->GetInstance());
+			}
+
+			myEntities.DeleteCyclicAtIndex(i);
+			continue;
+		}
+
 		myEntities[i]->Update(aDeltaTime);
 	}
 
@@ -206,7 +221,7 @@ void Level::LogicUpdate(float aDeltaTime)
 		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(1);
 	}
 
-	myCollisionManager->Update();
+	myCollisionManager.Update();
 
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 }
