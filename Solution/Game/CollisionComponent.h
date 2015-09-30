@@ -55,5 +55,5 @@ inline void CollisionComponent::SetRadius(float someRadius)
 
 inline Sphere CollisionComponent::GetSphere()
 {
-		return mySphere;
+	return mySphere;
 }

@@ -22,6 +22,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myRollSpeed = 0.f;
 	myMovementSpeed = 0.f;
 	myMaxSteeringSpeed = 0;
+	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
 
 	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
@@ -56,9 +57,9 @@ void InputComponent::Update(float aDeltaTime)
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
-	
+
 	MoveForward(myMovementSpeed * aDeltaTime);
-	
+
 
 	Roll(aDeltaTime);
 
@@ -138,6 +139,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "acceleration", myRollAcceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "deacceleration", myRollDeacceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
 }
 
 void InputComponent::Roll(float aDeltaTime)
@@ -150,6 +152,8 @@ void InputComponent::Roll(float aDeltaTime)
 	{
 		myRollSpeed -= myRollAcceleration * aDeltaTime;
 	}
+
+	myRollSpeed = CU::Clip(myRollSpeed, -myMaxRollSpeed, myMaxRollSpeed);
 
 	if (myRollSpeed > 0.f)
 	{

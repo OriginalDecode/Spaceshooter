@@ -53,9 +53,10 @@ void CollisionManager::Update()
 	{
 		for (int e = myEnemies.Size() - 1; e >= 0; --e)
 		{
-			if (CU::Intersection::SphereVsSphere(myPlayerBullets[i]->GetSphere(), myEnemies[e]->GetSphere()) == true)
+			Entity& enemy = *myEnemies[e]->GetEntity();
+			if (enemy.GetAlive() == true 
+				&& CU::Intersection::SphereVsSphere(myPlayerBullets[i]->GetSphere(), myEnemies[e]->GetSphere()) == true)
 			{
-				Entity& enemy = *myEnemies[e]->GetEntity();
 				Entity& bullet = *myPlayerBullets[i]->GetEntity();
 				enemy.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
 				bullet.GetComponent<BulletComponent>()->SetIsActive(false);

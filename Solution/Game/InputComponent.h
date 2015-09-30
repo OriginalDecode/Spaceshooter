@@ -29,6 +29,7 @@ private:
 	float mySteeringDeacceleration;
 	float mySteeringDeaccelerationLowerLimit;
 	float myRollSpeed;
+	float myMaxRollSpeed;
 	float myRollAcceleration;
 	float myRollDeacceleration;
 	float myMovementSpeed;
