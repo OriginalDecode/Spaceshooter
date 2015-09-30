@@ -73,7 +73,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 			//	"Data/effect/NoTextureEffect.fx");
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-				"Data/effect/NoTextureEffect.fx");
+				"Data/effect/BasicEffect.fx");
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
