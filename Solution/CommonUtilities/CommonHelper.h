@@ -1,7 +1,6 @@
 #pragma once
 #include <algorithm>
 #include <string>
-#include "Macros.h"
 
 namespace CommonUtilities
 {
@@ -21,7 +20,7 @@ namespace CommonUtilities
 
 	inline float Clip(float aNumber, float aLower, float aUpper)
 	{
-		return MAX(aLower, MIN(aNumber, aUpper));
+		return fmax(aLower, fmin(aNumber, aUpper));
 	}
 }
 namespace CU = CommonUtilities;
