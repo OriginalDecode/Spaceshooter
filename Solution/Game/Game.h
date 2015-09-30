@@ -2,8 +2,9 @@
 #include <Matrix.h>
 #include <GrowingArray.h>
 #include "StateStack.h"
-#include "MainMenuState.h"
-#include "InGameState.h"
+
+class MainMenuState;
+class InGameState;
 
 namespace CommonUtilities
 {
@@ -35,5 +36,9 @@ private:
 	
 	MainMenuState* myMainMenu;
 	InGameState* myGame;
+
+	bool myLockMouse;
+
+	CU::Vector2<int> myWindowSize;
 
 };
