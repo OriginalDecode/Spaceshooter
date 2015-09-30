@@ -72,9 +72,12 @@ namespace ModelViewer
             modelFileBrowser.ShowDialog();
             myCurrentModelFilePath = modelFileBrowser.FileName;
 
-            myModelFolderPath = myCurrentModelFilePath.Replace(modelFileBrowser.SafeFileName, "");
-            Properties.Settings.Default.DefaultModelFolderDirectory = myModelFolderPath;
-            Properties.Settings.Default.Save();
+            if (myCurrentModelFilePath != "")
+            {
+                myModelFolderPath = myCurrentModelFilePath.Replace(modelFileBrowser.SafeFileName, "");
+                Properties.Settings.Default.DefaultModelFolderDirectory = myModelFolderPath;
+                Properties.Settings.Default.Save();
+            }
 
             modelFileBrowser.InitialDirectory = myModelFolderPath;
         }
