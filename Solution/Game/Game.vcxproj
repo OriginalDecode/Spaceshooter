@@ -100,6 +100,7 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="InputMessage.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Message.h" />
@@ -129,6 +130,7 @@
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="InputMessage.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />

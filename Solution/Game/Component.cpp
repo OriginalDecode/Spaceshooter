@@ -12,3 +12,7 @@ void Component::Update(float)
 void Component::ReceiveMessage(const ShootMessage&)
 {
 }
+
+void Component::ReceiveMessage(const InputMessage& aMessage)
+{
+}

@@ -4,6 +4,7 @@
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
 #include "ShootMessage.h"
+#include "InputMessage.h"
 #include "PostMaster.h"
 #include "BulletMessage.h"
 #include <FileWatcher.h>
@@ -16,7 +17,7 @@ ShootingComponent::ShootingComponent()
 	myWeapons.Init(4);
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
-	myCurrentWeapon = 0;
+	myCurrentWeaponID = 0;
 }
 
 ShootingComponent::~ShootingComponent()
@@ -25,27 +26,27 @@ ShootingComponent::~ShootingComponent()
 
 void ShootingComponent::Update(float aDeltaTime)
 {
-	if (myWeapons[myCurrentWeapon].myCurrentTime >= myWeapons[myCurrentWeapon].myCoolDownTime)
+	if (myWeapons[myCurrentWeaponID].myCurrentTime >= myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
-		myWeapons[myCurrentWeapon].myCurrentTime = myWeapons[myCurrentWeapon].myCoolDownTime;
+		myWeapons[myCurrentWeaponID].myCurrentTime = myWeapons[myCurrentWeaponID].myCoolDownTime;
 	}
 	else
 	{
-		myWeapons[myCurrentWeapon].myCurrentTime += aDeltaTime;
+		myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime;
 	}
 }
 
 void ShootingComponent::ReceiveMessage(const ShootMessage&)
 {
-	if (myWeapons[myCurrentWeapon].myCurrentTime == myWeapons[myCurrentWeapon].myCoolDownTime)
+	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
 		CU::Matrix44<float> orientation = myEntity->myOrientation;
 		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f));
 
-		if (myWeapons[myCurrentWeapon].mySpread > 0)
+		if (myWeapons[myCurrentWeaponID].mySpread > 0)
 		{
-			float randomSpreadX = float((rand() % (myWeapons[myCurrentWeapon].mySpread * 2)) - myWeapons[myCurrentWeapon].mySpread) / 100.f;
-			float randomSpreadY = float((rand() % (myWeapons[myCurrentWeapon].mySpread * 2)) - myWeapons[myCurrentWeapon].mySpread) / 100.f;
+			float randomSpreadX = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
+			float randomSpreadY = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
 			
 			CU::Matrix44<float> rotation;
 			rotation.myMatrix[8] = randomSpreadX;
@@ -58,8 +59,13 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 		}
 
 		PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, orientation));
-		myWeapons[myCurrentWeapon].myCurrentTime = 0.f;
+		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
+}
+
+void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
+{
+	SetCurrentWeaponID(aMessage.GetKey());
 }
 
 void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
@@ -88,8 +94,12 @@ void ShootingComponent::ReadFromXML(const std::string aFilePath)
 		{
 			weaponData.myBulletType = eBulletType::BOX_BULLET;
 		}
+		else if (type == "testGun2")
+		{
+			weaponData.myBulletType = eBulletType::SUPER_DEATH_LASER;
+		}
 
 		myWeapons.Add(weaponData);
 	}
-	myCurrentWeapon = 0;
+	myCurrentWeaponID = 0;
 }

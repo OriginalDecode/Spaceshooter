@@ -3,6 +3,7 @@
 
 class Entity;
 class ShootMessage;
+class InputMessage;
 
 class Component
 {
@@ -10,6 +11,7 @@ public:
 	virtual void Init();
 	virtual void Update(float aDeltaTime);
 	virtual void ReceiveMessage(const ShootMessage& aMessage);
+	virtual void ReceiveMessage(const InputMessage& aMessage);
 
 	void SetEntity(Entity* aEntity);
 

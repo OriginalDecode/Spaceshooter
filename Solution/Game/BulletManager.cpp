@@ -16,6 +16,7 @@ BulletManager::BulletManager()
 	myInstances.Init(8);
 	myEntities.Init(8);
 	myBoxBulletData = nullptr;
+	myBoxBullet2Data = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
 	ReadFromXML("Data/script/weapon.xml");
@@ -60,56 +61,78 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 {
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);
-	tinyxml2::XMLElement* bulletElement = reader.FindFirstChild("weapon");
-	bulletElement = reader.FindFirstChild(bulletElement, "projectile");
 
-	BulletData* bulletData = new BulletData;
-
-	std::string type;
-	std::string modelPath;
-	std::string shaderPath;
-	float totalLife = 0.f;
-	float sphereRadius = 0.f;
-	int damage = 0;
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "model"), "path", modelPath);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "shader"), "path", shaderPath);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
-	reader.ReadAttribute(reader.FindFirstChild(bulletElement, "sphere"), "radius", sphereRadius);
-
-	bulletData->myBulletCounter = 0;
-	bulletData->myBullets.Init(bulletData->myMaxBullet);
-
-	for (int i = 0; i < bulletData->myMaxBullet; i++)
+	tinyxml2::XMLElement* weaponElement = reader.FindFirstChild("weapon");
+	for (; weaponElement != nullptr; weaponElement = reader.FindNextElement(weaponElement))
 	{
-		Entity* newEntity = new Entity();
-		newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
-		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
-		newEntity->AddComponent<PhysicsComponent>();
-		newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
-		newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
-		bulletData->myBullets.Add(newEntity);
-	}
 
-	if (type == "box")
-	{
-		if (myBoxBulletData != nullptr)
+		tinyxml2::XMLElement* bulletElement = reader.FindFirstChild(weaponElement, "projectile");
+
+		BulletData* bulletData = new BulletData;
+
+		std::string type;
+		std::string modelPath;
+		std::string shaderPath;
+		float totalLife = 0.f;
+		float sphereRadius = 0.f;
+		int damage = 0;
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "model"), "path", modelPath);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "shader"), "path", shaderPath);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
+		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "sphere"), "radius", sphereRadius);
+
+		bulletData->myBulletCounter = 0;
+		bulletData->myBullets.Init(bulletData->myMaxBullet);
+
+		for (int i = 0; i < bulletData->myMaxBullet; i++)
 		{
-			for (int i = 0; i < myBoxBulletData->myBullets.Size(); i++)
-			{
-				delete myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-			}
-
-			myBoxBulletData->myBullets.DeleteAll();
-			delete myBoxBulletData;
-			myBoxBulletData = nullptr;
+			Entity* newEntity = new Entity();
+			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
+			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
+			newEntity->AddComponent<PhysicsComponent>();
+			newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
+			newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
+			bulletData->myBullets.Add(newEntity);
 		}
 
-		bulletData->myType = eBulletType::BOX_BULLET;
-		myBoxBulletData = bulletData;
+		if (type == "box")
+		{
+			if (myBoxBulletData != nullptr)
+			{
+				for (int i = 0; i < myBoxBulletData->myBullets.Size(); i++)
+				{
+					delete myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+				}
+
+				myBoxBulletData->myBullets.DeleteAll();
+				delete myBoxBulletData;
+				myBoxBulletData = nullptr;
+			}
+
+			bulletData->myType = eBulletType::BOX_BULLET;
+			myBoxBulletData = bulletData;
+		}
+		else if (type == "box2")
+		{
+			if (myBoxBulletData != nullptr)
+			{
+				for (int i = 0; i < myBoxBulletData->myBullets.Size(); i++)
+				{
+					delete myBoxBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+				}
+
+				myBoxBulletData->myBullets.DeleteAll();
+				delete myBoxBulletData;
+				myBoxBulletData = nullptr;
+			}
+
+			bulletData->myType = eBulletType::SUPER_DEATH_LASER;
+			myBoxBulletData = bulletData;
+		}
 	}
 }
 
