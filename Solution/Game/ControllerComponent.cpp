@@ -40,6 +40,12 @@ void ControllerComponent::MoveBackward(float aDistance)
 		+ myEntity->myOrientation.GetForward() * (-aDistance));
 }
 
+void ControllerComponent::Move(const CU::Vector3<float>& aDirection)
+{
+	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos()
+		+ aDirection);
+}
+
 void ControllerComponent::RotateX(float aAmount)
 {
 	myEntity->myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aAmount) * myEntity->myOrientation;
@@ -60,6 +66,13 @@ void ControllerComponent::Rotate(const CU::Matrix44<float>& aRotation)
 	CU::Vector4<float> pos = myEntity->myOrientation.GetPos();
 	myEntity->myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
 	myEntity->myOrientation = aRotation * myEntity->myOrientation;
+	myEntity->myOrientation.SetPos(pos);
+}
+
+void ControllerComponent::SetRotation(const CU::Matrix44<float>& aRotation)
+{
+	CU::Vector4<float> pos = myEntity->myOrientation.GetPos();
+	myEntity->myOrientation = aRotation;
 	myEntity->myOrientation.SetPos(pos);
 }
 

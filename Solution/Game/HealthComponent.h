@@ -11,10 +11,9 @@ public:
 	void AddHealth(const unsigned short& aHealthToAdd);
 	void RemoveHealth(const unsigned short& aHealthToRemove);
 
-	const bool IsAlive() const;
-	const unsigned short& GetHealth() const;
+	bool IsAlive() const;
 
-	static int GetID();
+	const unsigned short& GetHealth() const;
 
 private:
 
@@ -22,7 +21,7 @@ private:
 	unsigned short myCurrentHealth;
 };
 
-inline const bool HealthComponent::IsAlive() const
+inline bool HealthComponent::IsAlive() const
 {
 	return (myCurrentHealth != 0);
 }
@@ -30,9 +29,4 @@ inline const bool HealthComponent::IsAlive() const
 inline const unsigned short& HealthComponent::GetHealth() const
 {
 	return myCurrentHealth;
-}
-
-inline int HealthComponent::GetID()
-{
-	return 8;
 }

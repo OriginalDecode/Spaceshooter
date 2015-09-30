@@ -11,10 +11,12 @@ public:
 	void MoveRight(float aDistance);
 	void MoveForward(float aDistance);
 	void MoveBackward(float aDistance);
+	void Move(const CU::Vector3<float>& aDirection);
 	void RotateX(float aAmount);
 	void RotateY(float aAmount);
 	void RotateZ(float aAmount);
 	void Rotate(const CU::Matrix44<float>& aRotation);
+	void SetRotation(const CU::Matrix44<float>& aRotation);
 	void Shoot(float aSpeed);
 
 	static int GetID();

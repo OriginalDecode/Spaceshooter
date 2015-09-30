@@ -5,7 +5,6 @@
 #include "BulletManager.h"
 #include <Camera.h>
 #include "CollisionComponent.h"
-#include <CommonHelper.h>
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -61,22 +60,21 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
 	{
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			Entity* astroids = new Entity();
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			//	"Data/effect/NoTextureEffect.fx");
 
-			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/asteroid__large_placeholder.fbx",
-				"Data/effect/BasicEffect.fx");
-			astroids->AddComponent<CollisionComponent>()->Initiate(15);
+			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
+				"Data/effect/NoTextureEffect.fx");
+			//astroids->AddComponent<CollisionComponent>()->Initiate(15);
 
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 200 - 100),
-				static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 200 - 100) });
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ 30.f, 0.f, 100.f });
 
 
-			//astroids->AddComponent<AIComponent>()->Init();
-			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			astroids->AddComponent<AIComponent>()->Init();
+			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
 			myEntities.Add(astroids);
 		}
@@ -322,8 +320,6 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
 
 		newEntity->myOrientation.SetPos(entityPosition*10.f);
-
-		
 
 		myEntities.Add(newEntity);
 	}
