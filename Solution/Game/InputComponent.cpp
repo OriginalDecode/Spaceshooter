@@ -70,7 +70,7 @@ void InputComponent::Update(float aDeltaTime)
 	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
 		Shoot(30000.f * aDeltaTime);
-		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
 	if (myCameraIsLocked == false)

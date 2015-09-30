@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera2D.h" />
+    <ClInclude Include="CommonHelper.h" />
     <ClInclude Include="CommonUtilitiesTestClass.h" />
     <ClInclude Include="Fov90Frustum.h" />
     <ClInclude Include="Greater.h" />

@@ -25,74 +25,78 @@ namespace Prism
 	{
 		while (myIsRunning == true)
 		{
-			CU::GrowingArray<LoadData> loadArray;
-			if (myCanCopyArray == true)
+			WaitUntilCopyIsAllowed();
+			myCanAddToLoadArray = false;
+
+			if (myModelsToLoad.Size() == 0)
 			{
-				myCanAddToLoadArray = false;
-				loadArray = myModelsToLoad;
-				myModelsToLoad.RemoveAll();
 				myCanAddToLoadArray = true;
+				std::this_thread::yield();
+				continue;
 			}
+
+			CU::GrowingArray<LoadData> loadArray;
+			loadArray = myModelsToLoad;
+			myModelsToLoad.RemoveAll();
+			myCanAddToLoadArray = true;
 			
 
-			if (loadArray.Size() == 0)
+			for (int i = 0; i < loadArray.Size(); ++i)
 			{
-				Sleep(500);
-			}
-			else
-			{
-				for (int i = 0; i < loadArray.Size(); ++i)
+				eLoadType loadType = loadArray[i].myLoadType;
+
+				Model* model = nullptr;
+				switch (loadType)
 				{
-					eLoadType loadType = loadArray[i].myLoadType;
+				case Prism::ModelLoader::eLoadType::MODEL:
+				{
+					CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 
-					Model* model = nullptr;
-					switch (loadType)
-					{
-					case Prism::ModelLoader::eLoadType::MODEL:
-					{
-						CU::TimerManager::GetInstance()->StartTimer("LoadModel");
+					model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
+						Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
+					model->Init();
 
-						model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
-							Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
-						model->Init();
-
-						int elapsed = static_cast<int>(
-							CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
-						RESOURCE_LOG("Model \"%s\" took %d ms to load", loadArray[i].myModelPath.c_str(), elapsed);
-						break;
-					}
-					case Prism::ModelLoader::eLoadType::POLYGON:
-					{
-						model = new Prism::Model();
-						model->InitPolygon();
-						break;
-					}
-					case Prism::ModelLoader::eLoadType::CUBE:
-					{
-						model = new Prism::Model();
-						model->InitCube(loadArray[i].mySize.x, loadArray[i].mySize.y, loadArray[i].mySize.z);
-						break;
-					}
-					case Prism::ModelLoader::eLoadType::LIGHT_CUBE:
-					{
-						model = new Prism::Model();
-						model->InitLightCube(loadArray[i].mySize.x, loadArray[i].mySize.y,
-							loadArray[i].mySize.z, loadArray[i].myColor);
-						break;
-					}
-					case Prism::ModelLoader::eLoadType::GEOMETRY:
-					{
-						model = new Prism::Model();
-						model->InitGeometry(loadArray[i].myMeshData);
-						break;
-					}
-					default:
-						DL_ASSERT("ModelLoader tried to load something that dint have a specified LoadType!!!");
-						break;
-					}
-
-					loadArray[i].myProxy->SetModel(model);
+					int elapsed = static_cast<int>(
+						CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
+					RESOURCE_LOG("Model \"%s\" took %d ms to load", loadArray[i].myModelPath.c_str(), elapsed);
+					break;
 				}
+				case Prism::ModelLoader::eLoadType::POLYGON:
+				{
+					model = new Prism::Model();
+					model->InitPolygon();
+					break;
+				}
+				case Prism::ModelLoader::eLoadType::CUBE:
+				{
+					model = new Prism::Model();
+					model->InitCube(loadArray[i].mySize.x, loadArray[i].mySize.y, loadArray[i].mySize.z);
+					break;
+				}
+				case Prism::ModelLoader::eLoadType::LIGHT_CUBE:
+				{
+					model = new Prism::Model();
+					model->InitLightCube(loadArray[i].mySize.x, loadArray[i].mySize.y,
+						loadArray[i].mySize.z, loadArray[i].myColor);
+					break;
+				}
+				case Prism::ModelLoader::eLoadType::GEOMETRY:
+				{
+					model = new Prism::Model();
+					model->InitGeometry(loadArray[i].myMeshData);
+					break;
+				}
+				default:
+					DL_ASSERT("ModelLoader tried to load something that dint have a specified LoadType!!!");
+					break;
+				}
+
+				if (model == nullptr)
+				{
+					DL_MESSAGE_BOX("Failed to Load model", "ModelLoader->Error", MB_ICONWARNING);
+				}
+
+				loadArray[i].myProxy->SetModel(model);
 			}
 		}
 	}
@@ -104,12 +108,12 @@ namespace Prism
 
 	ModelProxy* ModelLoader::LoadModel(const std::string& aModelPath, const std::string& aEffectPath)
 	{
-		while (myCanAddToLoadArray == false)
-			; //Should be an empty whileloop!
+		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
 
 		ModelProxy* proxy = new ModelProxy();
+		proxy->SetModel(nullptr);
 
 		LoadData newData;
 		newData.myProxy = proxy;
@@ -126,11 +130,11 @@ namespace Prism
 
 	ModelProxy* ModelLoader::LoadPolygon()
 	{
-		while (myCanAddToLoadArray == false)
-			; //Should be an empty whileloop!
+		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
 		ModelProxy* proxy = new ModelProxy();
+		proxy->SetModel(nullptr);
 
 		LoadData newData;
 		newData.myProxy = proxy;
@@ -146,11 +150,11 @@ namespace Prism
 
 	ModelProxy* ModelLoader::LoadCube(float aWidth, float aHeight, float aDepth)
 	{
-		while (myCanAddToLoadArray == false)
-			; //Should be an empty whileloop!
+		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
 		ModelProxy* proxy = new ModelProxy();
+		proxy->SetModel(nullptr);
 
 		LoadData newData;
 		newData.myProxy = proxy;
@@ -167,11 +171,11 @@ namespace Prism
 	ModelProxy* ModelLoader::LoadLightCube(float aWidth, float aHeight, float aDepth
 		, CU::Vector4f aColour)
 	{
-		while (myCanAddToLoadArray == false)
-			; //Should be an empty whileloop!
+		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
 		ModelProxy* proxy = new ModelProxy();
+		proxy->SetModel(nullptr);
 
 		LoadData newData;
 		newData.myProxy = proxy;
@@ -188,8 +192,7 @@ namespace Prism
 
 	ModelProxy* ModelLoader::LoadGeometry(const MeshData& aMeshData)
 	{
-		while (myCanAddToLoadArray == false)
-			; //Should be an empty whileloop!
+		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
 		ModelProxy* proxy = new ModelProxy();
@@ -205,4 +208,17 @@ namespace Prism
 
 		return proxy;
 	}
+
+	void ModelLoader::WaitUntilCopyIsAllowed()
+	{
+		while (myCanCopyArray == false)
+			; //Should be an empty whileloop!
+	}
+
+	void ModelLoader::WaitUntilAddIsAllowed()
+	{
+		while (myCanAddToLoadArray == false)
+			; //Should be an empty whileloop!
+	}
+
 }

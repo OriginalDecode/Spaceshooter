@@ -46,13 +46,31 @@ void Prism::Model::Init()
 		D3DX11_PASS_DESC passDesc;
 		HRESULT hr = S_OK;
 		hr = myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
+
+		if (hr != S_OK)
+		{
+			DL_MESSAGE_BOX("Model->Init(): Failed to GetDesc", "Model->Init Error", MB_ICONWARNING);
+		}
+
 		hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, size, 
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 
+		if (hr != S_OK)
+		{
+			DL_MESSAGE_BOX("Model->Init(): Failed to CreateInputLayout", "Model->Init Error", MB_ICONWARNING);
+		}
+
 		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 
-		InitVertexBuffer();
-		InitIndexBuffer();
+		if (InitVertexBuffer() == false)
+		{
+			DL_ASSERT("Model::Init() failed to InitVertexBuffer()");
+		}
+
+		if (InitIndexBuffer() == false)
+		{
+			DL_ASSERT("Model::Init() failed to InitIndexBuffer()");
+		}
 	}
 
 	for (int i = 0; i < myChilds.Size(); ++i)
@@ -64,6 +82,11 @@ void Prism::Model::Init()
 void Prism::Model::InitPolygon()
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/PolygonEffect.fx");
+
+	if (myEffect == nullptr)
+	{
+		DL_MESSAGE_BOX("Failed to GetEffect", "InitPolygon", MB_ICONWARNING);
+	}
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -116,6 +139,12 @@ void Prism::Model::InitPolygon()
 void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/CubeEffect.fx");
+
+	if (myEffect == nullptr)
+	{
+		DL_MESSAGE_BOX("Failed to GetEffect", "InitCube", MB_ICONWARNING);
+		DL_ASSERT("InitCube: Failed to GetEffect, myEffect is nullptr.");
+	}
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -265,6 +294,11 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/CubeColored.fx");
 
+	if (myEffect == nullptr)
+	{
+		DL_MESSAGE_BOX("Failed to GetEffect", "InitLightCube", MB_ICONWARNING);
+	}
+
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -412,6 +446,11 @@ void Prism::Model::InitGeometry(const MeshData& aMeshData)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/GeometryEffect.fx");
 	
+	if (myEffect == nullptr)
+	{
+		DL_MESSAGE_BOX("Failed to GetEffect", "InitGeometry", MB_ICONWARNING);
+	}
+
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },

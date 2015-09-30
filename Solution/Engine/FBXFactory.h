@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <unordered_map>
 
 struct ModelData;
 
@@ -28,5 +29,6 @@ class Effect;
 			std::string myPath;
 		};
 		std::vector<FBXData*> myFBXData;
+		std::unordered_map<std::string, Model*> myLoadedModels;
 	};
 }

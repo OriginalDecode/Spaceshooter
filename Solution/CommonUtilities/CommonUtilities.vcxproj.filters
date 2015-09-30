@@ -103,6 +103,7 @@
     <ClInclude Include="Lesser.h">
       <Filter>Heap</Filter>
     </ClInclude>
+    <ClInclude Include="CommonHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Math">

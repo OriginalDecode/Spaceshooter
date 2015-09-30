@@ -22,7 +22,10 @@ bool Prism::Effect::Init(const std::string& aEffectFile)
 	//	myEffect = nullptr;
 	//}
 
-	ReloadShader(aEffectFile);
+	if (ReloadShader(aEffectFile) == false)
+	{
+		return false;
+	}
 
 	for (int i = 0; i < myEffectListeners.Size(); ++i)
 	{
@@ -91,7 +94,7 @@ void Prism::Effect::UpdateTime(const float aDeltaTime)
 }
 
 
-void Prism::Effect::ReloadShader(const std::string& aFile)
+bool Prism::Effect::ReloadShader(const std::string& aFile)
 {
 	Sleep(100);
 
@@ -131,43 +134,39 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 		if (FAILED(hr))
 		{
 			DL_MESSAGE_BOX("Cant Create Effect", "Effect Error", MB_ICONWARNING);
-			return;
+			return false;
 		}
 
 		compiledShader->Release();
 	}
 	
 
-
-	
-
-
 	myTechnique = myEffect->GetTechniqueByName("Render");
 	if (myTechnique->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get Technique", "Effect Error", MB_ICONWARNING);
-		return;
+		return false;
 	}
 
 	myWorldMatrixVariable = myEffect->GetVariableByName("World")->AsMatrix();
 	if (myWorldMatrixVariable->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get WorldMatrix", "Effect Error", MB_ICONWARNING);
-		return;
+		return false;
 	}
 
 	myViewMatrixVariable = myEffect->GetVariableByName("View")->AsMatrix();
 	if (myViewMatrixVariable->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get ViewMatrix", "Effect Error", MB_ICONWARNING);
-		return;
+		return false;
 	}
 
 	myProjectionMatrixVariable = myEffect->GetVariableByName("Projection")->AsMatrix();
 	if (myProjectionMatrixVariable->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get ProjectionMatrix", "Effect Error", MB_ICONWARNING);
-		return;
+		return false;
 	}
 
 	myTotalTimeVariable = nullptr;
@@ -194,4 +193,6 @@ void Prism::Effect::ReloadShader(const std::string& aFile)
 	{
 		mySpotLightVariable = nullptr;
 	}
+
+	return true;
 }

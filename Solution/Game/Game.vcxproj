@@ -97,6 +97,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="GraphicsComponent.h" />
     <ClInclude Include="GUIComponent.h" />
+    <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="Level.h" />
@@ -125,6 +126,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
     <ClCompile Include="GUIComponent.cpp" />
+    <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="Level.cpp" />

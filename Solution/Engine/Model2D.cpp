@@ -36,6 +36,11 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 	myTextureSize = aTextureSize;
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SpriteEffect.fx");
 
+	if (myEffect == nullptr)
+	{
+		DL_MESSAGE_BOX("Failed to GetEffect", "Model2D::Init", MB_ICONWARNING);
+	}
+
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },

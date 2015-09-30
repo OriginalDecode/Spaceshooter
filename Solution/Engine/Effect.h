@@ -39,7 +39,7 @@ namespace Prism
 
 
 		void AddListener(EffectListener* aListener);
-		void ReloadShader(const std::string& aFile);
+		bool ReloadShader(const std::string& aFile);
 
 	private:
 		ID3DX11Effect* myEffect;

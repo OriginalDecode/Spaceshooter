@@ -133,7 +133,7 @@ bool Prism::DirectX::D3DSetup()
 
 bool Prism::DirectX::D3DRenderTargetSetup()
 {
-	ID3D11Texture2D* backBuffer;
+	ID3D11Texture2D* backBuffer = nullptr;
 	mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
 
 	myDevice->CreateRenderTargetView(backBuffer, NULL, &myRenderTargetView);
