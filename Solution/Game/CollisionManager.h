@@ -25,7 +25,7 @@ public:
 	void Add(CollisionComponent* aComponent, eCollisionEnum aEnum);
 
 	void Update();
-
+	void CleanUp();
 
 private:
 

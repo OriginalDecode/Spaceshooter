@@ -28,10 +28,10 @@ void HealthComponent::AddHealth(const unsigned short& aHealthToAdd)
 
 void HealthComponent::RemoveHealth(const unsigned short& aHealthToRemove)
 {
-	if (myCurrentHealth < aHealthToRemove)
+	if (myCurrentHealth <= aHealthToRemove)
 	{
 		myCurrentHealth = 0;
-		myEntity->myOrientation.SetPos({ 9999.f, 0.f, 0.f, 0.f });
+		myEntity->Kill();
 	}
 	else
 	{

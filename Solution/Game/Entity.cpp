@@ -3,6 +3,12 @@
 #include "Component.h"
 #include "Entity.h"
 
+Entity::Entity()
+	: myAlive(true)
+{
+
+}
+
 Entity::~Entity()
 {
 	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
@@ -20,4 +26,11 @@ void Entity::Update(float aDeltaTime)
 	{
 		it->second->Update(aDeltaTime);
 	}
+}
+
+void Entity::Kill()
+{
+	DL_ASSERT_EXP(myAlive == true, "Tried to kill an entity thats allready dead.");
+
+	myAlive = false;
 }

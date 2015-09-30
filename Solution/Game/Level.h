@@ -20,7 +20,8 @@ class EntityFactory;
 class Level
 {
 public:
-	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML);
+	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager& aBulletManager
+		, CollisionManager& aCollisionManager, bool aShouldTestXML);
 	~Level();
 
 	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);
@@ -38,7 +39,9 @@ public:
 	inline bool GetRenderStuff() const;
 
 private:
+	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
+
 	Prism::Instance* mySkySphere;
 
 	Prism::Scene* myScene;
@@ -57,8 +60,8 @@ private:
 
 	EntityFactory* myEntityFactory;
 
-	BulletManager* myBulletManager;
-	CollisionManager* myCollisionManager;
+	BulletManager& myBulletManager;
+	CollisionManager& myCollisionManager;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;
