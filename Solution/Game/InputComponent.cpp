@@ -8,6 +8,7 @@
 #include <Engine.h>
 #include "Entity.h"
 #include "InputComponent.h"
+#include "InputMessage.h"
 #include <InputWrapper.h>
 #include <FileWatcher.h>
 #include <XMLReader.h>
@@ -39,6 +40,19 @@ void InputComponent::Update(float aDeltaTime)
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		myMovementSpeed -= myAcceleration * aDeltaTime;
+	}
+
+	if (myInputWrapper->KeyIsPressed(DIK_1))
+	{
+		myEntity->SendMessage(InputMessage(0));
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_2))
+	{
+		myEntity->SendMessage(InputMessage(1));
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_3))
+	{
+		myEntity->SendMessage(InputMessage(2));
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);

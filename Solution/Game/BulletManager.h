@@ -34,17 +34,18 @@ public:
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
-	CU::GrowingArray<Entity*>& GetEntities();
 
 private:
-	void ActivateBoxBullet(const CU::Matrix44<float>& anOrientation);
+	void ActivateMachinegunBullet(const CU::Matrix44<float>& anOrientation);
+	void ActivateSniperBullet(const CU::Matrix44<float>& anOrientation);
+	void ActivatePlasmaBullet(const CU::Matrix44<float>& anOrientation);
 
-	BulletData* myBoxBulletData;
-	BulletData* myBoxBullet2Data;
+	BulletData* myMachinegunBulletData;
+	BulletData* mySniperBulletData;
+	BulletData* myPlasmaBulletData;
 
-	// temps!!
+	// temp!!
 	CU::GrowingArray<Prism::Instance*> myInstances;
-	CU::GrowingArray<Entity*> myEntities;
 
 };
 

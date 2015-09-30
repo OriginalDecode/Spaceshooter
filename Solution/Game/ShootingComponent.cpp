@@ -58,15 +58,15 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 			orientation.SetPos(pos);
 		}
 
-		PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, orientation));
+		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation));
 		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }
 
-//void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
-//{
-//	SetCurrentWeaponID(aMessage.GetKey());
-//}
+void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
+{
+	SetCurrentWeaponID(aMessage.GetKey());
+}
 
 void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
 {
@@ -90,13 +90,17 @@ void ShootingComponent::ReadFromXML(const std::string aFilePath)
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
 		weaponData.myCurrentTime = weaponData.myCoolDownTime;
 
-		if (type == "testGun")
+		if (type == "machinegun")
 		{
-			weaponData.myBulletType = eBulletType::BOX_BULLET;
+			weaponData.myBulletType = eBulletType::MACHINGUN_BULLET;
 		}
-		else if (type == "testGun2")
+		else if (type == "sniper")
 		{
-			weaponData.myBulletType = eBulletType::SUPER_DEATH_LASER;
+			weaponData.myBulletType = eBulletType::SNIPER_BULLET;
+		}
+		else if (type == "plasma")
+		{
+			weaponData.myBulletType = eBulletType::PLASMA_BULLET;
 		}
 
 		myWeapons.Add(weaponData);

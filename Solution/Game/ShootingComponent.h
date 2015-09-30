@@ -23,7 +23,7 @@ public:
 	void Update(float aDeltaTime) override;
 
 	void ReceiveMessage(const ShootMessage& aMessage) override;
-	//void ReceiveMessage(const InputMessage& aMessage) override;
+	void ReceiveMessage(const InputMessage& aMessage) override;
 
 	void Init(CU::Vector3<float> aSpawningPointOffset);
 
@@ -37,7 +37,7 @@ public:
 
 private:
 
-	CU::GrowingArray<WeaponData> myWeapons;
+	CU::GrowingArray<WeaponData, unsigned short> myWeapons;
 
 	unsigned short myCurrentWeaponID;
 	CU::Vector3<float> mySpawningPointOffset;
