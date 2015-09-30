@@ -13,12 +13,13 @@
 #include <FileWatcher.h>
 
 BulletManager::BulletManager()
+	: myInstances(8)
+	, myBulletDatas(8)
+	, myMachinegunBulletData(nullptr)
+	, mySniperBulletData(nullptr)
+	, myPlasmaBulletData(nullptr)
+	, myCollisionManager(nullptr)
 {
-	myInstances.Init(8);
-	myMachinegunBulletData = nullptr;
-	mySniperBulletData = nullptr;
-	myPlasmaBulletData = nullptr;
-	myCollisionManager = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
 	ReadFromXML("Data/script/weapon.xml");
@@ -27,67 +28,17 @@ BulletManager::BulletManager()
 
 BulletManager::~BulletManager()
 {
-	if (myMachinegunBulletData != nullptr)
+	for (int i = 0; i < myBulletDatas.Size(); ++i)
 	{
-		for (int i = 0; i < myMachinegunBulletData->myBullets.Size(); i++)
-		{
-			delete myMachinegunBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-		}
-
-		myMachinegunBulletData->myBullets.DeleteAll();
-		delete myMachinegunBulletData;
-		myMachinegunBulletData = nullptr;
-	}
-
-	if (mySniperBulletData != nullptr)
-	{
-		for (int i = 0; i < mySniperBulletData->myBullets.Size(); i++)
-		{
-			delete mySniperBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-		}
-
-		mySniperBulletData->myBullets.DeleteAll();
-		delete mySniperBulletData;
-		mySniperBulletData = nullptr;
-	}
-
-	if (myPlasmaBulletData != nullptr)
-	{
-		for (int i = 0; i < myPlasmaBulletData->myBullets.Size(); i++)
-		{
-			delete myPlasmaBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-		}
-
-		myPlasmaBulletData->myBullets.DeleteAll();
-		delete myPlasmaBulletData;
-		myPlasmaBulletData = nullptr;
+		DeleteWeaponData(myBulletDatas[i]);
 	}
 }
 
 void BulletManager::Update(float aDeltaTime)
 {
-	for (int i = 0; i < myMachinegunBulletData->myMaxBullet; i++)
+	for (int i = 0; i < myBulletDatas.Size(); ++i)
 	{
-		if (myMachinegunBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
-		{
-			myMachinegunBulletData->myBullets[i]->Update(aDeltaTime);
-		}
-	}
-
-	for (int i = 0; i < mySniperBulletData->myMaxBullet; i++)
-	{
-		if (mySniperBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
-		{
-			mySniperBulletData->myBullets[i]->Update(aDeltaTime);
-		}
-	}
-
-	for (int i = 0; i < myPlasmaBulletData->myMaxBullet; i++)
-	{
-		if (myPlasmaBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
-		{
-			myPlasmaBulletData->myBullets[i]->Update(aDeltaTime);
-		}
+		UpdateBullet(myBulletDatas[i], aDeltaTime);
 	}
 }
 
@@ -95,15 +46,15 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	if (aMessage.GetBulletType() == eBulletType::MACHINGUN_BULLET)
 	{
-		ActivateMachinegunBullet(aMessage.GetOrientation());
+		ActivateBullet(myMachinegunBulletData, aMessage.GetOrientation());
 	}
 	else if (aMessage.GetBulletType() == eBulletType::SNIPER_BULLET)
 	{
-		ActivateSniperBullet(aMessage.GetOrientation());
+		ActivateBullet(mySniperBulletData, aMessage.GetOrientation());
 	}
 	else if (aMessage.GetBulletType() == eBulletType::PLASMA_BULLET)
 	{
-		ActivatePlasmaBullet(aMessage.GetOrientation());
+		ActivateBullet(myPlasmaBulletData, aMessage.GetOrientation());
 	}
 }
 
@@ -115,7 +66,6 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 	tinyxml2::XMLElement* weaponElement = reader.FindFirstChild("weapon");
 	for (; weaponElement != nullptr; weaponElement = reader.FindNextElement(weaponElement))
 	{
-
 		tinyxml2::XMLElement* bulletElement = reader.FindFirstChild(weaponElement, "projectile");
 
 		BulletData* bulletData = new BulletData;
@@ -151,103 +101,69 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 
 		if (type == "machinegun")
 		{
-			if (myMachinegunBulletData != nullptr)
-			{
-				for (int i = 0; i < myMachinegunBulletData->myBullets.Size(); i++)
-				{
-					delete myMachinegunBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-				}
-
-				myMachinegunBulletData->myBullets.DeleteAll();
-				delete myMachinegunBulletData;
-				myMachinegunBulletData = nullptr;
-			}
-
+			DeleteWeaponData(myMachinegunBulletData);
 			bulletData->myType = eBulletType::MACHINGUN_BULLET;
 			myMachinegunBulletData = bulletData;
 		}
 		else if (type == "sniper")
 		{
-			if (mySniperBulletData != nullptr)
-			{
-				for (int i = 0; i < mySniperBulletData->myBullets.Size(); i++)
-				{
-					delete mySniperBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-				}
-
-				mySniperBulletData->myBullets.DeleteAll();
-				delete mySniperBulletData;
-				mySniperBulletData = nullptr;
-			}
-
+			DeleteWeaponData(mySniperBulletData);
 			bulletData->myType = eBulletType::SNIPER_BULLET;
 			mySniperBulletData = bulletData;
 		}
 		else if (type == "plasma")
 		{
-			if (myPlasmaBulletData != nullptr)
-			{
-				for (int i = 0; i < myPlasmaBulletData->myBullets.Size(); i++)
-				{
-					delete myPlasmaBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-				}
-
-				myPlasmaBulletData->myBullets.DeleteAll();
-				delete myPlasmaBulletData;
-				myPlasmaBulletData = nullptr;
-			}
-
+			DeleteWeaponData(myPlasmaBulletData);
 			bulletData->myType = eBulletType::PLASMA_BULLET;
 			myPlasmaBulletData = bulletData;
 		}
+		myBulletDatas.Add(bulletData);
 	}
 }
 
-void BulletManager::ActivateMachinegunBullet(const CU::Matrix44<float>& anOrientation)
+void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation)
 {
 	DL_ASSERT_EXP(myCollisionManager != nullptr, "Tried to Activate Bullet without a Collisionmanager");
 
-	Entity& bullet = *myMachinegunBulletData->myBullets[myMachinegunBulletData->myBulletCounter];
+	Entity& bullet = *aWeaponData->myBullets[aWeaponData->myBulletCounter];
 
 	bullet.GetComponent<PhysicsComponent>()->Init(anOrientation,
-		anOrientation.GetForward() * myMachinegunBulletData->mySpeed);
+		anOrientation.GetForward() * aWeaponData->mySpeed);
 	bullet.GetComponent<BulletComponent>()->SetIsActive(true);
 
 	myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
 
-	myMachinegunBulletData->myBulletCounter++;
+	aWeaponData->myBulletCounter++;
 
-	if (myMachinegunBulletData->myBulletCounter >= myMachinegunBulletData->myMaxBullet)
+	if (aWeaponData->myBulletCounter >= aWeaponData->myMaxBullet)
 	{
-		myMachinegunBulletData->myBulletCounter = 0;
+		aWeaponData->myBulletCounter = 0;
 	}
 }
 
-void BulletManager::ActivateSniperBullet(const CU::Matrix44<float>& anOrientation)
+void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime)
 {
-	mySniperBulletData->myBullets[mySniperBulletData->myBulletCounter]->GetComponent<PhysicsComponent>()->Init(anOrientation,
-		anOrientation.GetForward() * mySniperBulletData->mySpeed);
-	mySniperBulletData->myBullets[mySniperBulletData->myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
-
-	mySniperBulletData->myBulletCounter++;
-
-	if (mySniperBulletData->myBulletCounter >= mySniperBulletData->myMaxBullet)
+	for (int i = 0; i < aWeaponData->myMaxBullet; ++i)
 	{
-		mySniperBulletData->myBulletCounter = 0;
+		if (aWeaponData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		{
+			aWeaponData->myBullets[i]->Update(aDeltaTime);
+		}
 	}
 }
 
-void BulletManager::ActivatePlasmaBullet(const CU::Matrix44<float>& anOrientation)
+void BulletManager::DeleteWeaponData(BulletData* aWeaponData)
 {
-	myPlasmaBulletData->myBullets[myPlasmaBulletData->myBulletCounter]->GetComponent<PhysicsComponent>()->Init(anOrientation,
-		anOrientation.GetForward() * myPlasmaBulletData->mySpeed);
-	myPlasmaBulletData->myBullets[myPlasmaBulletData->myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
-
-	myPlasmaBulletData->myBulletCounter++;
-
-	if (myPlasmaBulletData->myBulletCounter >= myPlasmaBulletData->myMaxBullet)
+	if (aWeaponData != nullptr)
 	{
-		myPlasmaBulletData->myBulletCounter = 0;
+		for (int i = 0; i < aWeaponData->myBullets.Size(); ++i)
+		{
+			delete aWeaponData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+		}
+
+		aWeaponData->myBullets.DeleteAll();
+		delete aWeaponData;
+		aWeaponData = nullptr;
 	}
 }
 
@@ -255,29 +171,15 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 {
 	myInstances.RemoveAll();
 
-	for (int i = 0; i < myMachinegunBulletData->myMaxBullet; i++)
+	for (int i = 0; i < myBulletDatas.Size(); ++i)
 	{
-		if (myMachinegunBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
 		{
-			myInstances.Add(myMachinegunBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance());
+			if (myBulletDatas[i]->myBullets[j]->GetComponent<BulletComponent>()->GetIActive() == true)
+			{
+				myInstances.Add(myBulletDatas[i]->myBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
+			}
 		}
 	}
-
-	for (int i = 0; i < mySniperBulletData->myMaxBullet; i++)
-	{
-		if (mySniperBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
-		{
-			myInstances.Add(mySniperBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance());
-		}
-	}
-
-	for (int i = 0; i < myPlasmaBulletData->myMaxBullet; i++)
-	{
-		if (myPlasmaBulletData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
-		{
-			myInstances.Add(myPlasmaBulletData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance());
-		}
-	}
-
 	return myInstances;
 }
