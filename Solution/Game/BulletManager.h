@@ -23,6 +23,8 @@ namespace tinyxml2
 	class XMLElement;
 }
 
+class CollisionManager;
+
 class BulletManager : public Subscriber
 {
 public:
@@ -32,6 +34,8 @@ public:
 	void ReadFromXML(const std::string aFilePath);
 	void Update(float aDeltaTime);
 	void ReceiveMessage(const BulletMessage& aMessage) override;
+
+	void SetCollisionManager(CollisionManager* aCollisionManager);
 
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
@@ -44,8 +48,14 @@ private:
 	BulletData* mySniperBulletData;
 	BulletData* myPlasmaBulletData;
 
+	CollisionManager* myCollisionManager;
+
 	// temp!!
 	CU::GrowingArray<Prism::Instance*> myInstances;
 
 };
 
+inline void BulletManager::SetCollisionManager(CollisionManager* aCollisionManager)
+{
+	myCollisionManager = aCollisionManager;
+}

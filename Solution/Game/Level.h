@@ -12,8 +12,8 @@ namespace Prism
 };
 
 class BulletManager;
+class CollisionManager;
 class CU::InputWrapper;
-
 class Entity;
 class EntityFactory;
 
@@ -58,6 +58,7 @@ private:
 	EntityFactory* myEntityFactory;
 
 	BulletManager* myBulletManager;
+	CollisionManager* myCollisionManager;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;

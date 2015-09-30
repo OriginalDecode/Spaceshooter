@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BulletManager.h"
 #include <Camera.h>
+#include "CollisionManager.h"
 #include <Instance.h>
 #include "PostMaster.h"
 #include <XMLReader.h>
@@ -17,6 +18,7 @@ BulletManager::BulletManager()
 	myMachinegunBulletData = nullptr;
 	mySniperBulletData = nullptr;
 	myPlasmaBulletData = nullptr;
+	myCollisionManager = nullptr;
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
 	ReadFromXML("Data/script/weapon.xml");
@@ -203,9 +205,15 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 
 void BulletManager::ActivateMachinegunBullet(const CU::Matrix44<float>& anOrientation)
 {
-	myMachinegunBulletData->myBullets[myMachinegunBulletData->myBulletCounter]->GetComponent<PhysicsComponent>()->Init(anOrientation, 
+	DL_ASSERT_EXP(myCollisionManager != nullptr, "Tried to Activate Bullet without a Collisionmanager");
+
+	Entity& bullet = *myMachinegunBulletData->myBullets[myMachinegunBulletData->myBulletCounter];
+
+	bullet.GetComponent<PhysicsComponent>()->Init(anOrientation,
 		anOrientation.GetForward() * myMachinegunBulletData->mySpeed);
-	myMachinegunBulletData->myBullets[myMachinegunBulletData->myBulletCounter]->GetComponent<BulletComponent>()->SetIsActive(true);
+	bullet.GetComponent<BulletComponent>()->SetIsActive(true);
+
+	myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
 
 	myMachinegunBulletData->myBulletCounter++;
 

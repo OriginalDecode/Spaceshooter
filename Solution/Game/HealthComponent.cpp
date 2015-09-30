@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "HealthComponent.h"
+#include "Entity.h"
 
 HealthComponent::HealthComponent()
 {
@@ -30,6 +31,7 @@ void HealthComponent::RemoveHealth(const unsigned short& aHealthToRemove)
 	if (myCurrentHealth < aHealthToRemove)
 	{
 		myCurrentHealth = 0;
+		myEntity->myOrientation.SetPos({ 9999.f, 0.f, 0.f, 0.f });
 	}
 	else
 	{

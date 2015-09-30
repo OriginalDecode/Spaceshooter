@@ -5,6 +5,7 @@
 #include "BulletManager.h"
 #include <Camera.h>
 #include "CollisionComponent.h"
+#include "CollisionManager.h"
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -42,6 +43,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
 	myLight->SetDir({ 0.f, 0.5f, -1.f });
 
+	myCollisionManager = new CollisionManager();
+	aBulletManager->SetCollisionManager(myCollisionManager);
+
 	myEntities.Init(4);
 
 	Entity* player = new Entity();
@@ -50,6 +54,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
 	player->AddComponent<HealthComponent>()->Init(100);
+	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::PLAYER);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -73,11 +78,14 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 
+			astroids->AddComponent<HealthComponent>()->Init(100);
 
 			//astroids->AddComponent<AIComponent>()->Init();
 			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
 			myEntities.Add(astroids);
+
+			myCollisionManager->Add(astroids->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::ENEMY);
 		}
 
 		//for (int i = 0; i < 50; ++i)
@@ -197,6 +205,9 @@ void Level::LogicUpdate(float aDeltaTime)
 	{
 		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(1);
 	}
+
+	myCollisionManager->Update();
+
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 }
 
@@ -209,14 +220,12 @@ bool Level::CheckCollision()
 {
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
-
 		if (CommonUtilities::Intersection::SphereVsSphere
 			(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
 			, myPlayer->GetComponent<CollisionComponent>()->GetSphere()) == true)
 		{
 			return true;
 		}
-
 	}
 	return false;
 }

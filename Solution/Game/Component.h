@@ -16,6 +16,7 @@ public:
 	virtual void ReceiveMessage(const SteeringTargetMessage& aMessage);
 
 	void SetEntity(Entity* aEntity);
+	Entity* GetEntity();
 
 	static int GetID();
 
@@ -31,4 +32,9 @@ inline int Component::GetID()
 inline void Component::SetEntity(Entity* aEntity)
 {
 	myEntity = aEntity;
+}
+
+inline Entity* Component::GetEntity()
+{
+	return myEntity;
 }
