@@ -12,7 +12,6 @@
 #include <FileWatcher.h>
 #include <XMLReader.h>
 #include <sstream>
-#include <Macros.h>
 
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
@@ -29,11 +28,6 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Camera Lock", InputComponent::ToggleCameraLock, this);
 
 	ReadXML("Data/script/player.xml");
-}
-
-float clip(float n, float lower, float upper) 
-{
-	return MAX(lower, MIN(n, upper));
 }
 
 void InputComponent::Update(float aDeltaTime)
@@ -75,13 +69,13 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myCameraIsLocked == false)
 	{
-		myCursorPosition.x += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
-		myCursorPosition.y += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
+		myCursorPosition.x += static_cast<float>(CU::Clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
+		myCursorPosition.y += static_cast<float>(CU::Clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
 	}
 	
 
-	myCursorPosition.x = clip(myCursorPosition.x, -1, 1);
-	myCursorPosition.y = clip(myCursorPosition.y, -1, 1);
+	myCursorPosition.x = CU::Clip(myCursorPosition.x, -1, 1);
+	myCursorPosition.y = CU::Clip(myCursorPosition.y, -1, 1);
 
 	std::string tempX = std::to_string(myCursorPosition.x);
 	SetWindowTextA(GetActiveWindow(), tempX.c_str());

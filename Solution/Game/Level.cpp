@@ -5,7 +5,6 @@
 #include "BulletManager.h"
 #include <Camera.h>
 #include "CollisionComponent.h"
-#include <CommonHelper.h>
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -315,8 +314,6 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
 
 		newEntity->myOrientation.SetPos(entityPosition*10.f);
-
-		
 
 		myEntities.Add(newEntity);
 	}
