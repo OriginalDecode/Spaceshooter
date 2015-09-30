@@ -68,7 +68,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/NoTextureEffect.fx");
-			//astroids->AddComponent<CollisionComponent>()->Initiate(15);
+			astroids->AddComponent<CollisionComponent>()->Initiate(15);
 
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
@@ -209,30 +209,14 @@ bool Level::CheckCollision()
 {
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
-		if (myEntities[i] != myPlayer)
+
+		if (CommonUtilities::Intersection::SphereVsSphere
+			(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
+			, myPlayer->GetComponent<CollisionComponent>()->GetSphere()) == true)
 		{
-			continue;
+			return true;
 		}
 
-		for (int j = 0; j < myEntities.Size(); ++j)
-		{
-			if (myEntities[i]->GetComponent<CollisionComponent>() != nullptr && myEntities[j]->GetComponent<CollisionComponent>() != nullptr)
-			{
-				if (CommonUtilities::Intersection::SphereVsSphere
-					(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-					, myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()) == true)
-				{
-					return true;
-				}
-				if (CommonUtilities::Intersection::SphereVsSphere
-					(myEntities[j]->GetComponent<CollisionComponent>()->GetSphere()
-					, myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()) == true)
-				{
-
-					return true;
-				}
-			}
-		}
 	}
 	return false;
 }
