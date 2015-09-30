@@ -23,7 +23,7 @@ public:
 private:
 
 	Prism::Model2D* myCrosshair;
-	Prism::Model2D* myMousePointer;
+	Prism::Model2D* mySteeringTarget;
 	Prism::Camera* myCamera;
 };
 
