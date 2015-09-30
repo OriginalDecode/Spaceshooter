@@ -30,7 +30,6 @@ public:
 	void LogicUpdate(float aDeltaTime);
 
 	void OnResize(int aWidth, int aHeigth);
-	bool CheckCollision();
 
 	inline void SetShowLightCube(bool aBool);
 	inline bool GetShowLightCube() const;

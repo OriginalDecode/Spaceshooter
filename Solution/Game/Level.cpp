@@ -75,7 +75,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/NoTextureEffect.fx");
-			astroids->AddComponent<CollisionComponent>()->Initiate(15);
+			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
@@ -216,10 +216,6 @@ void Level::LogicUpdate(float aDeltaTime)
 		myEntities[i]->Update(aDeltaTime);
 	}
 
-	if (CheckCollision() == true)
-	{
-		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(1);
-	}
 
 	myCollisionManager.Update();
 
@@ -229,20 +225,6 @@ void Level::LogicUpdate(float aDeltaTime)
 void Level::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
-}
-
-bool Level::CheckCollision()
-{
-	for (int i = 0; i < myEntities.Size(); ++i)
-	{
-		if (CommonUtilities::Intersection::SphereVsSphere
-			(myEntities[i]->GetComponent<CollisionComponent>()->GetSphere()
-			, myPlayer->GetComponent<CollisionComponent>()->GetSphere()) == true)
-		{
-			return true;
-		}
-	}
-	return false;
 }
 
 void Level::ReadXML(const std::string& aFile)
