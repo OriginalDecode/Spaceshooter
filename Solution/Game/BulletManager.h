@@ -3,7 +3,7 @@
 #include "BulletMessage.h"
 #include "Subscriber.h"
 
-struct BulletData // holds the data for one type of bullet
+struct BulletData
 {
 	CU::GrowingArray<Entity*> myBullets;
 	eBulletType myType;

@@ -9,6 +9,7 @@ struct WeaponData
 	float myCurrentTime;
 	int mySpread;
 	int myID;
+	CU::Vector3<float> myPosition;
 };
 
 class Entity;
@@ -24,8 +25,6 @@ public:
 
 	void ReceiveMessage(const ShootMessage& aMessage) override;
 	void ReceiveMessage(const InputMessage& aMessage) override;
-
-	void Init(CU::Vector3<float> aSpawningPointOffset);
 
 	void ReadFromXML(const std::string aFilePath);
 

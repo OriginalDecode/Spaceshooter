@@ -23,6 +23,7 @@ public:
 	~CollisionManager();
 
 	void Add(CollisionComponent* aComponent, eCollisionEnum aEnum);
+	void Remove(CollisionComponent* aComponent, eCollisionEnum aEnum);
 
 	void Update();
 	void CleanUp();

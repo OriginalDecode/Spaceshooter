@@ -47,8 +47,32 @@ void CollisionManager::Add(CollisionComponent* aComponent, eCollisionEnum aEnum)
 	}
 }
 
+
+void CollisionManager::Remove(CollisionComponent* aComponent, eCollisionEnum aEnum)
+{
+	switch (aEnum)
+	{
+	case eCollisionEnum::PLAYER:
+		DL_ASSERT("Tried to Remove PLAYER from CollisionManager.");
+		break;
+	case eCollisionEnum::ENEMY:
+		myEnemies.RemoveCyclic(aComponent);
+		break;
+	case eCollisionEnum::PLAYER_BULLET:
+		myPlayerBullets.RemoveCyclic(aComponent);
+		break;
+	case eCollisionEnum::ENEMY_BULLET:
+		break;
+	case eCollisionEnum::TRIGGER:
+		break;
+	default:
+		break;
+	}
+}
+
 void CollisionManager::Update()
 {
+
 	for (int i = myPlayerBullets.Size() - 1; i >= 0; --i)
 	{
 		for (int e = myEnemies.Size() - 1; e >= 0; --e)
@@ -59,7 +83,7 @@ void CollisionManager::Update()
 			{
 				Entity& bullet = *myPlayerBullets[i]->GetEntity();
 				enemy.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
-				bullet.GetComponent<BulletComponent>()->SetIsActive(false);
+				bullet.GetComponent<BulletComponent>()->SetActive(false);
 				myPlayerBullets.RemoveCyclicAtIndex(i);
 				break;
 			}
