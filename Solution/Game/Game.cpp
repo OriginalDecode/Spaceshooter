@@ -75,6 +75,7 @@ bool Game::Update()
 	if (myInputWrapper->KeyUp(DIK_O) == true)
 	{
 		myLockMouse = !myLockMouse;
+		ShowCursor(!myLockMouse);
 	}
 
 	if (myLockMouse == true)
