@@ -40,7 +40,7 @@ void InputComponent::Update(float aDeltaTime)
 		myMovementSpeed -= myAcceleration * aDeltaTime;
 	}
 
-	//myMovementSpeed = CU::Clip(myMovementSpeed, 2, 50);
+	myMovementSpeed = CU::Clip(myMovementSpeed, 2, 50);
 	
 	MoveForward(myMovementSpeed * aDeltaTime);
 	
