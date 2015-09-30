@@ -19,9 +19,9 @@ void CollisionComponent::Initiate(float someRadius)
 
 	myShouldShow = false;
 
-	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadLightCube(someRadius, someRadius, someRadius);
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadLightCube(
+		someRadius * 2.f, someRadius * 2.f, someRadius * 2.f);
 	myInstance = new Prism::Instance(*model);
-
 }
 
 void CollisionComponent::Update(float aDeltaTime)

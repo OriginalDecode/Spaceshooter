@@ -23,7 +23,14 @@ Prism::Effect* Prism::EffectContainer::GetEffect(const std::string& aFilePath)
 void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 {
 	Effect* newEffect = new Effect();
-	newEffect->Init(aFilePath);
+	
+	if (newEffect->Init(aFilePath) == false)
+	{
+		std::stringstream ss;
+		ss << "Failed to Init Effect: " << aFilePath.c_str() << std::endl;
+		DL_MESSAGE_BOX(ss.str().c_str(), "EffectContainer::LoadEffect", MB_ICONWARNING);
+		return;
+	}
 
 	Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(myCubeMap);
 	ID3DX11EffectShaderResourceVariable* shaderVar = newEffect->GetEffect()->GetVariableByName("CubeMap")->AsShaderResource();
@@ -33,6 +40,8 @@ void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 		shaderVar->SetResource(tex->GetShaderView());
 	}
 
+
+	DL_ASSERT_EXP(newEffect != nullptr, "newEffect is nullpter in LoadEffect, HOW?");
 
 	myEffects[aFilePath] = newEffect;
 
