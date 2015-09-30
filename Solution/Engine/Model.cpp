@@ -60,8 +60,6 @@ void Prism::Model::Init()
 			DL_MESSAGE_BOX("Model->Init(): Failed to CreateInputLayout", "Model->Init Error", MB_ICONWARNING);
 		}
 
-		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-
 		if (InitVertexBuffer() == false)
 		{
 			DL_ASSERT("Model::Init() failed to InitVertexBuffer()");
@@ -102,8 +100,6 @@ void Prism::Model::InitPolygon()
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitPolygon", MB_ICONWARNING);
 	}
-
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 
 	CU::GrowingArray<VertexPosColor> vertices;
 	vertices.Init(3);
@@ -161,8 +157,6 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitCube", MB_ICONWARNING);
 	}
-
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 
 	
 #pragma region Vertices
@@ -313,8 +307,6 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 	{
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitLightCube", MB_ICONWARNING);
 	}
-
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 
 
 #pragma region Vertices
@@ -467,9 +459,6 @@ void Prism::Model::InitGeometry(const MeshData& aMeshData)
 		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitGeometry", MB_ICONWARNING);
 	}
 
-
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-	
 	CU::GrowingArray<VertexPosNormColor> vertices;
 	vertices.Init(aMeshData.myVertices.Size());
 	for (int i = 0; i < aMeshData.myVertices.Size(); ++i)
