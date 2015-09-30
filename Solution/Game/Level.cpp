@@ -40,7 +40,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myEntityFactory = new EntityFactory();
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
-	myBulletManager = aBulletManager;
 	myShowPointLightCube = false;
 	myLight = new Prism::DirectionalLight();
 	myLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
