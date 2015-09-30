@@ -1,7 +1,8 @@
 #include "stdafx.h"
+#include <Camera.h>
 #include "GUIComponent.h"
 #include <Model2D.h>
-#include <Camera.h>
+#include "SteeringTargetMessage.h"
 
 GUIComponent::GUIComponent()
 {
@@ -20,8 +21,14 @@ GUIComponent::~GUIComponent()
 	myCrosshair = nullptr;
 }
 
-void GUIComponent::Render(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos)
+void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
-	mySteeringTarget->Render(*myCamera, aMousePos.x, -aMousePos.y);
-	myCrosshair->Render(*myCamera, aScreenCenter.x / 2.f, -(aScreenCenter.y / 2.f));
+	mySteeringTarget->Render(*myCamera, aWindowSize.x / 2.f + mySteeringTargetPosition.x
+		, -aWindowSize.y / 2.f - mySteeringTargetPosition.y);
+	myCrosshair->Render(*myCamera, aWindowSize.x / 2.f, -(aWindowSize.y / 2.f));
+}
+
+void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)
+{
+	mySteeringTargetPosition = aMessage.GetPosition();
 }

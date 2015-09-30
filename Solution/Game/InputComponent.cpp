@@ -12,6 +12,7 @@
 #include <FileWatcher.h>
 #include <XMLReader.h>
 #include <sstream>
+#include "SteeringTargetMessage.h"
 
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
@@ -104,6 +105,8 @@ void InputComponent::Update(float aDeltaTime)
 
 	RotateX(yRotation);
 	RotateY(xRotation);
+
+	myEntity->SendMessage<SteeringTargetMessage>(SteeringTargetMessage(mySteering));
 }
 
 void InputComponent::ReadXML(const std::string& aFile)
