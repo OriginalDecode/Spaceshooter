@@ -25,6 +25,7 @@ private:
 
 	CU::Vector2<float> mySteering;
 	float mySteeringModifier;
+	float mySteeringDeltaClip;
 	float mySteeringDeacceleration;
 	float mySteeringDeaccelerationLowerLimit;
 	float myRollSpeed;

@@ -55,8 +55,8 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myCameraIsLocked == false)
 	{
-		mySteering.x += myInputWrapper->GetMouseDX();
-		mySteering.y += myInputWrapper->GetMouseDY();
+		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
+		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
 	}
 
 	if (mySteering.x > mySteeringDeaccelerationLowerLimit)
@@ -115,6 +115,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "maxMovementSpeed", myMaxMovementSpeed);
 	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "minMovementSpeed", myMinMovementSpeed);
 	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deltaClip", mySteeringDeltaClip);
 	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deacceleration", mySteeringDeacceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deaccelerationLowerLimit", mySteeringDeaccelerationLowerLimit);
 	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
