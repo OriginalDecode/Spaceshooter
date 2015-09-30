@@ -40,10 +40,13 @@ public:
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
 private:
-	void ActivateMachinegunBullet(const CU::Matrix44<float>& anOrientation);
-	void ActivateSniperBullet(const CU::Matrix44<float>& anOrientation);
-	void ActivatePlasmaBullet(const CU::Matrix44<float>& anOrientation);
 
+	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation);
+	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
+
+	void DeleteWeaponData(BulletData* aWeaponData);
+
+	CU::GrowingArray<BulletData*> myBulletDatas;
 	BulletData* myMachinegunBulletData;
 	BulletData* mySniperBulletData;
 	BulletData* myPlasmaBulletData;
