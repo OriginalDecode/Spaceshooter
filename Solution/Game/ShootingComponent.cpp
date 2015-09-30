@@ -41,7 +41,8 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
 		CU::Matrix44<float> orientation = myEntity->myOrientation;
-		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f));
+		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+			+ (myWeapons[myCurrentWeaponID].myPosition * myEntity->myOrientation));
 
 		if (myWeapons[myCurrentWeaponID].mySpread > 0)
 		{
@@ -68,11 +69,6 @@ void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
 	SetCurrentWeaponID(aMessage.GetKey());
 }
 
-void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
-{
-	mySpawningPointOffset = aSpawningPointOffset;
-}
-
 void ShootingComponent::ReadFromXML(const std::string aFilePath)
 {
 	XMLReader reader;
@@ -88,6 +84,9 @@ void ShootingComponent::ReadFromXML(const std::string aFilePath)
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData.myCoolDownTime);
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "x", weaponData.myPosition.x);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "y", weaponData.myPosition.y);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "z", weaponData.myPosition.z);
 		weaponData.myCurrentTime = weaponData.myCoolDownTime;
 
 		if (type == "machinegun")

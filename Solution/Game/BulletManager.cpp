@@ -126,12 +126,18 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	DL_ASSERT_EXP(myCollisionManager != nullptr, "Tried to Activate Bullet without a Collisionmanager");
 
 	Entity& bullet = *aWeaponData->myBullets[aWeaponData->myBulletCounter];
+	if (bullet.GetComponent<BulletComponent>()->GetActive() == false)
+	{
+		myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
+	}
+
 
 	bullet.GetComponent<PhysicsComponent>()->Init(anOrientation,
 		anOrientation.GetForward() * aWeaponData->mySpeed);
-	bullet.GetComponent<BulletComponent>()->SetIsActive(true);
+	bullet.GetComponent<BulletComponent>()->SetActive(true);
+	bullet.GetComponent<CollisionComponent>()->Update(0.5f);
 
-	myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
+	
 
 	aWeaponData->myBulletCounter++;
 
@@ -145,9 +151,14 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 {
 	for (int i = 0; i < aWeaponData->myMaxBullet; ++i)
 	{
-		if (aWeaponData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		if (aWeaponData->myBullets[i]->GetComponent<BulletComponent>()->GetActive() == true)
 		{
 			aWeaponData->myBullets[i]->Update(aDeltaTime);
+
+			if (aWeaponData->myBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
+			{
+				myCollisionManager->Remove(aWeaponData->myBullets[i]->GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
+			}
 		}
 	}
 }
@@ -175,7 +186,7 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 	{
 		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
 		{
-			if (myBulletDatas[i]->myBullets[j]->GetComponent<BulletComponent>()->GetIActive() == true)
+			if (myBulletDatas[i]->myBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
 			{
 				myInstances.Add(myBulletDatas[i]->myBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
 			}

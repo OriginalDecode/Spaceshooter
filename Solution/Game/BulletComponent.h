@@ -13,16 +13,16 @@ public:
 
 	static int GetID();
 
-	void SetMaxLifeTime(const float& aMaxTime);
-	void SetIsActive(const bool& aIsActive);
-	const bool& GetIActive();
-	const unsigned short& GetDamage() const;
+	void SetMaxLifeTime(float aMaxTime);
+	void SetActive(bool aActive);
+	bool GetActive() const;
+	unsigned short GetDamage() const;
 
 private:
 	eBulletType myType;
 	float myCurrentLifeTime;
 	float myMaxLifeTime;
-	bool myIsActive;
+	bool myActive;
 	unsigned short myDamage;
 	// damage, radius, etc
 };
@@ -32,22 +32,22 @@ inline int BulletComponent::GetID()
 	return 5;
 }
 
-inline void BulletComponent::SetMaxLifeTime(const float& aMaxTime)
+inline void BulletComponent::SetMaxLifeTime(float aMaxTime)
 {
 	myMaxLifeTime = aMaxTime;
 }
 
-inline void BulletComponent::SetIsActive(const bool& aIsActive)
+inline void BulletComponent::SetActive(bool aActive)
 {
-	myIsActive = aIsActive;
+	myActive = aActive;
 }
 
-inline const bool& BulletComponent::GetIActive()
+inline bool BulletComponent::GetActive() const
 {
-	return myIsActive;
+	return myActive;
 }
 
-inline const unsigned short& BulletComponent::GetDamage() const
+inline unsigned short BulletComponent::GetDamage() const
 {
 	return myDamage;
 }

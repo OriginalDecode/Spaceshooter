@@ -43,9 +43,10 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myStateStack.SetInputWrapper(myInputWrapper);
-	myGame = new InGameState();
+	myMainMenu = new MainMenuState(myInputWrapper);
+	myGame = new InGameState(myInputWrapper);
 	myStateStack.PushMainGameState(myGame);
+	//myStateStack.PushMainGameState(myMainMenu);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
