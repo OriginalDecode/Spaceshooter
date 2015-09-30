@@ -16,9 +16,9 @@ namespace CommonUtilities
 
 		void Init(HWND aHwnd, HINSTANCE aHInstance, DWORD aKeyCoopFlags, DWORD aMouseCoopFlags);
 
-		double GetMouseDX() const;
-		double GetMouseDY() const;
-		double GetMouseDZ() const; //scrollwheel
+		float GetMouseDX() const;
+		float GetMouseDY() const;
+		float GetMouseDZ() const; //scrollwheel
 
 		const CommonUtilities::Vector2<float>& GetMousePosition() const;
 

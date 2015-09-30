@@ -58,7 +58,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
 	{
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 220; ++i)
 		{
 			Entity* astroids = new Entity();
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
@@ -68,11 +68,12 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 				"Data/effect/NoTextureEffect.fx");
 			//astroids->AddComponent<CollisionComponent>()->Initiate(15);
 
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ 30.f, 0.f, 100.f });
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
+				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 
 
-			astroids->AddComponent<AIComponent>()->Init();
-			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			//astroids->AddComponent<AIComponent>()->Init();
+			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
 			myEntities.Add(astroids);
 		}
