@@ -11,13 +11,16 @@ CollisionManager::CollisionManager()
 	: myPlayer(nullptr)
 	, myEnemies(16)
 	, myPlayerBullets(16)
+	, myEnemyBullets(16)
 	, myPlayerFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
+	, myEnemyBulletFilter(0)
 {
 
 	myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
 	myPlayerBulletFilter = eEntityType::ENEMY;
+	myEnemyBulletFilter = eEntityType::PLAYER;
 }
 
 
@@ -89,6 +92,20 @@ void CollisionManager::Update()
 				myPlayerBullets.RemoveCyclicAtIndex(i);
 				break;
 			}
+		}
+	}
+
+	for (int i = myEnemyBullets.Size() - 1; i >= 0; --i)
+	{
+		Entity& bullet = myEnemyBullets[i]->GetEntity();
+		Entity& player = myPlayer->GetEntity();
+
+		if (player.GetAlive() == true
+			&& CU::Intersection::SphereVsSphere(myPlayer->GetSphere(), myEnemyBullets[i]->GetSphere()) == true)
+		{
+			player.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
+			bullet.GetComponent<BulletComponent>()->SetActive(false);
+			myEnemyBullets.RemoveCyclicAtIndex(i);
 		}
 	}
 }

@@ -23,9 +23,11 @@ private:
 	int myPlayerFilter;
 	int myEnemyFilter;
 	int myPlayerBulletFilter;
+	int myEnemyBulletFilter;
 
 	CollisionComponent* myPlayer;
 	CU::GrowingArray<CollisionComponent*> myEnemies;
 	CU::GrowingArray<CollisionComponent*> myPlayerBullets;
+	CU::GrowingArray<CollisionComponent*> myEnemyBullets;
 };
 
