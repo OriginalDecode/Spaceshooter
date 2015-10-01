@@ -107,6 +107,9 @@
     <ClInclude Include="stdafx.h">
       <Filter>Precompile</Filter>
     </ClInclude>
+    <ClInclude Include="TinyXML2\stdafx.h">
+      <Filter>Precompile\tinyXML</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Math">
@@ -136,6 +139,9 @@
     <Filter Include="Precompile">
       <UniqueIdentifier>{5cd0f21b-eebe-4a7f-a40e-24766a0f7791}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Precompile\tinyXML">
+      <UniqueIdentifier>{472f4762-8806-4791-b313-b061e3a25205}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommonUtilitiesTestClass.cpp" />
@@ -156,6 +162,9 @@
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Precompile</Filter>
+    </ClCompile>
+    <ClCompile Include="TinyXML2\stdafx.cpp">
+      <Filter>Precompile\tinyXML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
