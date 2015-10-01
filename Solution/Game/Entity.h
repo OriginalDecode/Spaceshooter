@@ -13,7 +13,18 @@ class Component;
 class Entity
 {
 public:
-	Entity();
+	enum class eType
+	{
+		NOT_USED,
+		PLAYER,
+		ENEMY,
+		PLAYER_BULLET,
+		ENEMY_BULLET,
+		TRIGGER,
+		PROP,
+	};
+
+	Entity(eType aType);
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -35,8 +46,11 @@ public:
 	bool GetAlive() const;
 	void Kill();
 private:
+	void operator=(Entity&) = delete;
+
 	std::unordered_map<int, Component*> myComponents;
 	bool myAlive;
+	const eType myType;
 };
 
 template <typename T>

@@ -53,7 +53,6 @@ private:
 	CU::GrowingArray<Entity*> myDeadEntities;
 
 	Entity* myPlayer;
-	Entity* myCockPit;
 
 	CU::InputWrapper* myInputWrapper;
 

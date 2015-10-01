@@ -90,7 +90,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 
 		for (int i = 0; i < bulletData->myMaxBullet; i++)
 		{
-			Entity* newEntity = new Entity();
+			Entity* newEntity = new Entity(Entity::eType::PLAYER_BULLET);
 			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
 			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 			newEntity->AddComponent<PhysicsComponent>();

@@ -49,8 +49,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 	myEntities.Init(4);
 
-	Entity* player = new Entity();
-
+	Entity* player = new Entity(Entity::eType::PLAYER);
+	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
+		, "Data/effect/NoTextureEffect.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
@@ -62,23 +63,23 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->myCamera = myCamera;
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
+	
 
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
 	{
 		for (int i = 0; i < 220; ++i)
 		{
-			Entity* astroids = new Entity();
+			Entity* astroids = new Entity(Entity::eType::PROP);
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			//	"Data/effect/NoTextureEffect.fx");
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/BasicEffect.fx");
-			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
-
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 
+			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
 			//astroids->AddComponent<AIComponent>()->Init();
@@ -109,15 +110,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 		ReadXML(aFileName);
 	}
 
-	myCockPit = new Entity();
-	//myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx",
-	//	"Data/effect/NoTextureEffect.fx");
-	//myCockPit->GetComponent<GraphicsComponent>()->SetPosition({ 0,0, -10 });
-	myCockPit->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
-		, "Data/effect/NoTextureEffect.fx");
-	myCockPit->GetComponent<GraphicsComponent>()->GetInstance()->SetOrientationPointer(myPlayer->myOrientation);
-	myCockPit->AddComponent<CollisionComponent>()->Initiate(0);
-	myEntities.Add(myCockPit);
 	myScene->SetCamera(myCamera);
 	myScene->AddLight(myLight);
 
@@ -259,7 +251,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "enemy"))
 	{
-		Entity* newEntity = new Entity();
+		Entity* newEntity = new Entity(Entity::eType::ENEMY);
 		std::string enemyType;
 		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
 		myEntityFactory->CopyEntity(newEntity, enemyType);
@@ -277,7 +269,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "prop"))
 	{
-		Entity* newEntity = new Entity();
+		Entity* newEntity = new Entity(Entity::eType::PROP);
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
@@ -296,7 +288,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "trigger"))
 	{
-		Entity* newEntity = new Entity();
+		Entity* newEntity = new Entity(Entity::eType::TRIGGER);
 		float entityRadius;
 		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
 		myEntityFactory->CopyEntity(newEntity, "trigger");
