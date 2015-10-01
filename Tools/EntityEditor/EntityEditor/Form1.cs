@@ -37,6 +37,13 @@ namespace EntityEditor
 
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             DL_Debug.GetInstance.Init("EntityEditorLog");
+
+            if (myCurrentEntityFolderPath == "")
+            {
+                myCurrentEntityFolderPath = Directory.GetCurrentDirectory();
+                Properties.Settings.Default.DefaultEntityFolderPath = myCurrentEntityFolderPath;
+                Properties.Settings.Default.Save();
+            }
         }
 
         public static string Reverse(string s)
@@ -331,6 +338,9 @@ namespace EntityEditor
             {
                 saveEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             }
+            saveEntityFile.AddExtension = true;
+            saveEntityFile.DefaultExt = ".xml";
+            saveEntityFile.Filter = "XML file (*.xml)|*.xml";
             saveEntityFile.ShowDialog();
 
             myCurrentEntityFilePath = saveEntityFile.FileName;
