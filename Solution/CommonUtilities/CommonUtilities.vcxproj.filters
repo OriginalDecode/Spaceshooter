@@ -104,6 +104,9 @@
       <Filter>Heap</Filter>
     </ClInclude>
     <ClInclude Include="CommonHelper.h" />
+    <ClInclude Include="stdafx.h">
+      <Filter>Precompile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Math">
@@ -130,6 +133,9 @@
     <Filter Include="Heap">
       <UniqueIdentifier>{c9ed97bf-c812-4aa5-8e66-c6e1c1d24690}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Precompile">
+      <UniqueIdentifier>{5cd0f21b-eebe-4a7f-a40e-24766a0f7791}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CommonUtilitiesTestClass.cpp" />
@@ -147,6 +153,9 @@
     </ClCompile>
     <ClCompile Include="XMLReader.cpp">
       <Filter>TinyXML2</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Precompile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
