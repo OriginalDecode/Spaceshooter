@@ -1,5 +1,6 @@
-#include "Timer.h"
+#include "stdafx.h"
 
+#include "Timer.h"
 
 CommonUtilities::Timer::Timer()
 {

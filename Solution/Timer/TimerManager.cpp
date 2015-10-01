@@ -1,8 +1,9 @@
-#include "TimerManager.h"
+#include "stdafx.h"
 
-#include <Windows.h>
 #include <assert.h>
 #include "Time.h"
+#include "TimerManager.h"
+#include <Windows.h>
 
 CommonUtilities::TimerManager* CommonUtilities::TimerManager::myInstance = nullptr;
 
