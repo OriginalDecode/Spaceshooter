@@ -229,24 +229,27 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "directionallight"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "directionallight"))
 	{
+		tinyxml2::XMLElement* directionalElement = reader.ForceFindFirstChild(entityElement, "rotation");
+
 		Prism::DirectionalLight* newDirLight = new Prism::DirectionalLight();
 
 		CU::Vector3<float> lightDirection;
-		reader.ForceReadAttribute(entityElement, "directionX", lightDirection.x);
-		reader.ForceReadAttribute(entityElement, "directionY", lightDirection.y);
-		reader.ForceReadAttribute(entityElement, "directionZ", lightDirection.z);
+		reader.ForceReadAttribute(directionalElement, "X", lightDirection.x);
+		reader.ForceReadAttribute(directionalElement, "Y", lightDirection.y);
+		reader.ForceReadAttribute(directionalElement, "Z", lightDirection.z);
 		newDirLight->SetDir(lightDirection);
 
+		directionalElement = reader.ForceFindFirstChild(entityElement, "color");
+
 		CU::Vector4<float> lightColor;
-		reader.ForceReadAttribute(entityElement, "colourR", lightColor.myR);
-		reader.ForceReadAttribute(entityElement, "colourG", lightColor.myG);
-		reader.ForceReadAttribute(entityElement, "colourB", lightColor.myB);
-		reader.ForceReadAttribute(entityElement, "colourA", lightColor.myA);
+		reader.ForceReadAttribute(directionalElement, "R", lightColor.myR);
+		reader.ForceReadAttribute(directionalElement, "G", lightColor.myG);
+		reader.ForceReadAttribute(directionalElement, "B", lightColor.myB);
+		reader.ForceReadAttribute(directionalElement, "A", lightColor.myA);
 		newDirLight->SetColor(lightColor);
 
 		myScene->AddLight(newDirLight);
 	}
-
 
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "enemy"))
@@ -256,12 +259,28 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
 		myEntityFactory->CopyEntity(newEntity, enemyType);
 
-		CU::Vector3<float> entityPosition;
-		reader.ForceReadAttribute(entityElement, "positionX", entityPosition.x);
-		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
-		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
+		tinyxml2::XMLElement* enemyElement = reader.ForceFindFirstChild(entityElement, "position");
+		CU::Vector3<float> enemyPosition;
+		reader.ForceReadAttribute(enemyElement, "X", enemyPosition.x);
+		reader.ForceReadAttribute(enemyElement, "Y", enemyPosition.y);
+		reader.ForceReadAttribute(enemyElement, "Z", enemyPosition.z);
+		newEntity->myOrientation.SetPos(enemyPosition*10.f);
 
-		newEntity->myOrientation.SetPos(entityPosition*10.f);
+		enemyElement = reader.ForceFindFirstChild(entityElement, "rotation");
+		CU::Vector3<float> enemyRotation;
+		reader.ForceReadAttribute(enemyElement, "X", enemyRotation.x);
+		reader.ForceReadAttribute(enemyElement, "Y", enemyRotation.y);
+		reader.ForceReadAttribute(enemyElement, "Z", enemyRotation.z);
+
+		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(enemyRotation.x) * newEntity->myOrientation;
+		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(enemyRotation.y) * newEntity->myOrientation;
+		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(enemyRotation.z) * newEntity->myOrientation;
+		
+		float health = 0;
+		reader.ForceReadAttribute(entityElement, "hp", health);
+		newEntity->AddComponent<HealthComponent>()->Init(health);
+		newEntity->AddComponent<CollisionComponent>()->Initiate(7.5f);
+		myCollisionManager.Add(newEntity->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::ENEMY);
 
 		myEntities.Add(newEntity);
 	}
@@ -273,18 +292,27 @@ void Level::ReadXML(const std::string& aFile)
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
+	
+		tinyxml2::XMLElement* propElement = reader.ForceFindFirstChild(entityElement, "position");
+		CU::Vector3<float> propPosition;
+		reader.ForceReadAttribute(propElement, "X", propPosition.x);
+		reader.ForceReadAttribute(propElement, "Y", propPosition.y);
+		reader.ForceReadAttribute(propElement, "Z", propPosition.z);
+		newEntity->myOrientation.SetPos(propPosition*10.f);
 
-		CU::Vector3<float> entityPosition;
-		reader.ForceReadAttribute(entityElement, "positionX", entityPosition.x);
-		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
-		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
+		propElement = reader.ForceFindFirstChild(entityElement, "rotation");
+		CU::Vector3<float> propRotation;
+		reader.ForceReadAttribute(propElement, "X", propRotation.x);
+		reader.ForceReadAttribute(propElement, "Y", propRotation.y);
+		reader.ForceReadAttribute(propElement, "Z", propRotation.z);
 
-		newEntity->myOrientation.SetPos(entityPosition*10.f);
+		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(propRotation.x) * newEntity->myOrientation;
+		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(propRotation.y) * newEntity->myOrientation;
+		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
 
 		myEntities.Add(newEntity);
 	}
-
-
+	
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "trigger"))
 	{
@@ -295,12 +323,12 @@ void Level::ReadXML(const std::string& aFile)
 
 		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
 
-		CU::Vector3<float> entityPosition;
-		reader.ForceReadAttribute(entityElement, "positionX", entityPosition.x);
-		reader.ForceReadAttribute(entityElement, "positionY", entityPosition.y);
-		reader.ForceReadAttribute(entityElement, "positionZ", entityPosition.z);
-
-		newEntity->myOrientation.SetPos(entityPosition*10.f);
+		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
+		CU::Vector3<float> triggerPosition;
+		reader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
+		reader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
+		reader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
+		newEntity->myOrientation.SetPos(triggerPosition*10.f);
 
 		myEntities.Add(newEntity);
 	}
