@@ -35,7 +35,7 @@ void InGameState::InitState()
 	myBulletManager = new BulletManager;
 	myCollisionManager = new CollisionManager();
 	myBulletManager->SetCollisionManager(myCollisionManager);
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
+	myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, true);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 
