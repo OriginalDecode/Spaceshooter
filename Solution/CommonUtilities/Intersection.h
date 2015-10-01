@@ -151,7 +151,8 @@ namespace CommonUtilities
 
 	inline bool Intersection::SphereVsSphere(Sphere aSphere, Sphere aOtherSphere)
 	{
-		if (CU::Length2(aOtherSphere.myCenterPosition - aSphere.myCenterPosition) < aSphere.myRadiusSquared)
+		if (CU::Length2(aOtherSphere.myCenterPosition - aSphere.myCenterPosition) 
+			< (aSphere.myRadius + aOtherSphere.myRadius) * (aSphere.myRadius + aOtherSphere.myRadius))
 		{
 			return true;
 		}

@@ -11,19 +11,22 @@ namespace Prism
 class GUIComponent : public Component
 {
 public:
-	GUIComponent();
+	GUIComponent(Entity& aEntity);
 	~GUIComponent();
 
-	void Render(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos);
+	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 
 	void SetCamera(Prism::Camera* aCamera);
 
 	static int GetID();
+	void ReceiveMessage(const SteeringTargetMessage& aMessage) override;
 
 private:
 
 	Prism::Model2D* myCrosshair;
-	Prism::Model2D* myMousePointer;
+	Prism::Model2D* mySteeringTarget;
+	CU::Vector2<float> mySteeringTargetPosition;
+
 	Prism::Camera* myCamera;
 };
 

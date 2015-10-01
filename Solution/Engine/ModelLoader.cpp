@@ -8,6 +8,9 @@
 #include "FBXFactory.h"
 #include <TimerManager.h>
 
+
+#define THREADED_LOADING
+
 namespace Prism
 {
 	ModelLoader::ModelLoader()
@@ -23,6 +26,9 @@ namespace Prism
 
 	void ModelLoader::Run()
 	{
+#ifndef THREADED_LOADING
+		return;
+#else
 		while (myIsRunning == true)
 		{
 			WaitUntilCopyIsAllowed();
@@ -99,6 +105,7 @@ namespace Prism
 				loadArray[i].myProxy->SetModel(model);
 			}
 		}
+#endif
 	}
 
 	void ModelLoader::Shutdown()
@@ -108,6 +115,7 @@ namespace Prism
 
 	ModelProxy* ModelLoader::LoadModel(const std::string& aModelPath, const std::string& aEffectPath)
 	{
+#ifdef THREADED_LOADING
 		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
@@ -126,10 +134,30 @@ namespace Prism
 		myCanCopyArray = true;
 
 		return proxy;
+#else
+		ModelProxy* proxy = new ModelProxy();
+		
+		CU::TimerManager::GetInstance()->StartTimer("LoadModel");
+
+		Model* model = myModelFactory->LoadModel(aModelPath.c_str(),
+			Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
+		model->Init();
+
+		int elapsed = static_cast<int>(
+			CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
+		RESOURCE_LOG("Model \"%s\" took %d ms to load", aModelPath.c_str(), elapsed);
+
+		proxy->SetModel(model);
+
+		return proxy;
+#endif
+		
 	}
 
 	ModelProxy* ModelLoader::LoadPolygon()
 	{
+
+#ifdef THREADED_LOADING
 		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
@@ -146,10 +174,21 @@ namespace Prism
 		myCanCopyArray = true;
 
 		return proxy;
+#else
+		ModelProxy* proxy = new ModelProxy();
+		Model* model = new Prism::Model();
+		model->InitPolygon();
+
+		proxy->SetModel(model);
+
+		return proxy;
+#endif
+		
 	}
 
 	ModelProxy* ModelLoader::LoadCube(float aWidth, float aHeight, float aDepth)
 	{
+#ifdef THREADED_LOADING
 		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
@@ -166,11 +205,21 @@ namespace Prism
 		myCanCopyArray = true;
 
 		return proxy;
+#else
+		ModelProxy* proxy = new ModelProxy();
+		Model* model = new Prism::Model();
+		model->InitCube(aWidth, aHeight, aDepth);
+
+		proxy->SetModel(model);
+
+		return proxy;
+#endif
 	}
 
 	ModelProxy* ModelLoader::LoadLightCube(float aWidth, float aHeight, float aDepth
 		, CU::Vector4f aColour)
 	{
+#ifdef THREADED_LOADING
 		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
@@ -188,10 +237,20 @@ namespace Prism
 		myCanCopyArray = true;
 
 		return proxy;
+#else
+		ModelProxy* proxy = new ModelProxy();
+		Model* model = new Prism::Model();
+		model->InitLightCube(aWidth, aHeight, aDepth, aColour);
+
+		proxy->SetModel(model);
+
+		return proxy;
+#endif	
 	}
 
 	ModelProxy* ModelLoader::LoadGeometry(const MeshData& aMeshData)
 	{
+#ifdef THREADED_LOADING
 		WaitUntilAddIsAllowed();
 
 		myCanCopyArray = false;
@@ -207,6 +266,16 @@ namespace Prism
 		myCanCopyArray = true;
 
 		return proxy;
+#else
+		ModelProxy* proxy = new ModelProxy();
+		Model* model = new Prism::Model();
+		model->InitGeometry(aMeshData);
+
+		proxy->SetModel(model);
+
+		return proxy;
+#endif
+		
 	}
 
 	void ModelLoader::WaitUntilCopyIsAllowed()

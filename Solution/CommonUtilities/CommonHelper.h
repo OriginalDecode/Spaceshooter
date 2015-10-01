@@ -17,5 +17,10 @@ namespace CommonUtilities
 		std::transform(data.begin(), data.end(), data.begin(), ::tolower);
 		return data;
 	}
+
+	inline float Clip(float aNumber, float aLower, float aUpper)
+	{
+		return fmax(aLower, fmin(aNumber, aUpper));
+	}
 }
 namespace CU = CommonUtilities;

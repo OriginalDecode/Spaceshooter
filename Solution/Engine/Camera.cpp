@@ -30,7 +30,7 @@ namespace Prism
 			, static_cast<float>(aHeight), 0.1f, 1000.f);
 
 
-		XMMATRIX projection = XMMatrixPerspectiveFovLH(XM_PI * 0.4f, static_cast<float>(aWidth / aHeight), 0.1f, 1000.f);
+		XMMATRIX projection = XMMatrixPerspectiveFovLH(XM_PI * 0.5f, static_cast<float>(aWidth) / aHeight, 0.1f, 1000.f);
 		XMFLOAT4X4 proj;
 		XMStoreFloat4x4(&proj, projection);
 		myProjectionMatrix.Init(reinterpret_cast<float*>(proj.m));

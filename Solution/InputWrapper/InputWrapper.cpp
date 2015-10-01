@@ -130,16 +130,17 @@ bool CommonUtilities::InputWrapper::MouseUp(int aButton) const
 	return ((myMouseState.rgbButtons[aButton] & 0x80) == 0 && (myPreviousMouseState.rgbButtons[aButton] & 0x80) != 0);
 }
 
-double CommonUtilities::InputWrapper::GetMouseDX() const
+float CommonUtilities::InputWrapper::GetMouseDX() const
 {
-	return static_cast<double>(myMouseState.lX);
-}
-double CommonUtilities::InputWrapper::GetMouseDY() const
-{
-	return static_cast<double>(myMouseState.lY);
+	return static_cast<float>(myMouseState.lX);
 }
 
-double CommonUtilities::InputWrapper::GetMouseDZ() const
+float CommonUtilities::InputWrapper::GetMouseDY() const
 {
-	return static_cast<double>(myMouseState.lZ);
+	return static_cast<float>(myMouseState.lY);
+}
+
+float CommonUtilities::InputWrapper::GetMouseDZ() const
+{
+	return static_cast<float>(myMouseState.lZ);
 }

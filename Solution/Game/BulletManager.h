@@ -3,7 +3,7 @@
 #include "BulletMessage.h"
 #include "Subscriber.h"
 
-struct BulletData // holds the data for one type of bullet
+struct BulletData
 {
 	CU::GrowingArray<Entity*> myBullets;
 	eBulletType myType;
@@ -23,6 +23,8 @@ namespace tinyxml2
 	class XMLElement;
 }
 
+class CollisionManager;
+
 class BulletManager : public Subscriber
 {
 public:
@@ -33,13 +35,30 @@ public:
 	void Update(float aDeltaTime);
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
+	void SetCollisionManager(CollisionManager* aCollisionManager);
+
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
 private:
-	void ActivateBoxBullet(const CU::Matrix44<float>& anOrientation);
 
-	BulletData* myBoxBulletData;
+	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation);
+	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
+
+	void DeleteWeaponData(BulletData* aWeaponData);
+
+	CU::GrowingArray<BulletData*> myBulletDatas;
+	BulletData* myMachinegunBulletData;
+	BulletData* mySniperBulletData;
+	BulletData* myPlasmaBulletData;
+
+	CollisionManager* myCollisionManager;
+
+	// temp!!
 	CU::GrowingArray<Prism::Instance*> myInstances;
 
 };
 
+inline void BulletManager::SetCollisionManager(CollisionManager* aCollisionManager)
+{
+	myCollisionManager = aCollisionManager;
+}

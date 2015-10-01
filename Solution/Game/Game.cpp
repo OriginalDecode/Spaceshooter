@@ -11,14 +11,17 @@
 #include <Font.h>
 #include "Game.h"
 #include <GeometryGenerator.h>
+#include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
+#include "MainMenuState.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
 #include <Vector.h>
 
 Game::Game()
+	: myLockMouse(true)
 {
 	PostMaster::Create();
 	Prism::Audio::AudioInterface::CreateInstance();
@@ -40,9 +43,10 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myStateStack.SetInputWrapper(myInputWrapper);
-	myGame = new InGameState();
+	myMainMenu = new MainMenuState(myInputWrapper);
+	myGame = new InGameState(myInputWrapper);
 	myStateStack.PushMainGameState(myGame);
+	//myStateStack.PushMainGameState(myMainMenu);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
@@ -68,7 +72,17 @@ bool Game::Update()
 	BEGIN_TIME_BLOCK("Game::Update");
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
-	
+
+	if (myInputWrapper->KeyUp(DIK_O) == true)
+	{
+		myLockMouse = !myLockMouse;
+		ShowCursor(!myLockMouse);
+	}
+
+	if (myLockMouse == true)
+	{
+		SetCursorPos(myWindowSize.x / 2, myWindowSize.y / 2);
+	}
 
 	if (myStateStack.UpdateCurrentState() == false)
 	{
@@ -90,5 +104,7 @@ void Game::UnPause()
 
 void Game::OnResize(int aWidth, int aHeight)
 {
+	myWindowSize.x = aWidth;
+	myWindowSize.y = aHeight;
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);
 }

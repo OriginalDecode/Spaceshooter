@@ -3,11 +3,12 @@
 #include "Component.h"
 #include "Entity.h"
 
-Entity::Entity()
-	:myEntityIsActive(false)
+Entity::Entity(eType aType)
+	: myAlive(true)
+	, myType(aType)
 {
-}
 
+}
 
 Entity::~Entity()
 {
@@ -26,4 +27,11 @@ void Entity::Update(float aDeltaTime)
 	{
 		it->second->Update(aDeltaTime);
 	}
+}
+
+void Entity::Kill()
+{
+	DL_ASSERT_EXP(myAlive == true, "Tried to kill an entity thats allready dead.");
+
+	myAlive = false;
 }

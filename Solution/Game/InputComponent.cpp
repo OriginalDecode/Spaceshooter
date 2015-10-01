@@ -8,20 +8,27 @@
 #include <Engine.h>
 #include "Entity.h"
 #include "InputComponent.h"
+#include "InputMessage.h"
 #include <InputWrapper.h>
 #include <FileWatcher.h>
 #include <XMLReader.h>
 #include <sstream>
-#include <Macros.h>
+#include "SteeringTargetMessage.h"
+
+InputComponent::InputComponent(Entity& aEntity)
+	: ControllerComponent(aEntity)
+{
+
+}
 
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
 	myInputWrapper = &aInputWrapper;
 
-	
-	myRotationSpeed = 0.f;
+	myRollSpeed = 0.f;
 	myMovementSpeed = 0.f;
 	myMaxSteeringSpeed = 0;
+	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
 
 	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
@@ -31,41 +38,36 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	ReadXML("Data/script/player.xml");
 }
 
-float clip(float n, float lower, float upper) 
-{
-	return MAX(lower, MIN(n, upper));
-}
-
 void InputComponent::Update(float aDeltaTime)
 {
 	if (myInputWrapper->KeyIsPressed(DIK_W))
 	{
-		//myMovementSpeed = 50.f;
-		MoveForward(50.f * aDeltaTime);
-		
+		myMovementSpeed += myAcceleration * aDeltaTime;
 	}
-	/*else
-	{
-		myMovementSpeed -= (globalPi * 5) * aDeltaTime;
-		if (myMovementSpeed <= 0.f)
-		{
-			myMovementSpeed = 0.f;
-		}
-	}*/
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		MoveBackward(50.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_A))
-	{
-		MoveLeft(50.f * aDeltaTime);
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_D))
-	{
-		MoveRight(50.f * aDeltaTime);
+		myMovementSpeed -= myAcceleration * aDeltaTime;
 	}
 
-	Rotate(aDeltaTime);
+	if (myInputWrapper->KeyIsPressed(DIK_1))
+	{
+		myEntity.SendMessage(InputMessage(0));
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_2))
+	{
+		myEntity.SendMessage(InputMessage(1));
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_3))
+	{
+		myEntity.SendMessage(InputMessage(2));
+	}
+
+	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
+
+	MoveForward(myMovementSpeed * aDeltaTime);
+
+
+	Roll(aDeltaTime);
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
@@ -75,49 +77,57 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myCameraIsLocked == false)
 	{
-		myCursorPosition.x += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDX()), -20.f, 20.f)) * aDeltaTime;
-		myCursorPosition.y += static_cast<float>(clip(static_cast<float>(myInputWrapper->GetMouseDY()), -20.f, 20.f)) * aDeltaTime;
+		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
+		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
 	}
-	
 
-	myCursorPosition.x = clip(myCursorPosition.x, -1, 1);
-	myCursorPosition.y = clip(myCursorPosition.y, -1, 1);
+	if (mySteering.x > mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.x -= mySteeringDeacceleration * fabs(mySteering.x) * aDeltaTime;
+		if (mySteering.x < 0.f)
+		{
+			mySteering.x = 0.f;
+		}
+	}
+	else if (mySteering.x < -mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.x += mySteeringDeacceleration * fabs(mySteering.x) * aDeltaTime;
+		if (mySteering.x > 0.f)
+		{
+			mySteering.x = 0.f;
+		}
+	}
 
-	std::string tempX = std::to_string(myCursorPosition.x);
+	if (mySteering.y > mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.y -= mySteeringDeacceleration * fabs(mySteering.y) * aDeltaTime;
+		if (mySteering.y < 0.f)
+		{
+			mySteering.y = 0.f;
+		}
+	}
+	else if (mySteering.y < -mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.y += mySteeringDeacceleration * fabs(mySteering.y) * aDeltaTime;
+		if (mySteering.y > 0.f)
+		{
+			mySteering.y = 0.f;
+		}
+	}
+
+	std::string tempX = std::to_string(mySteering.x);
+	tempX += ", " + std::to_string(mySteering.y);
 	SetWindowTextA(GetActiveWindow(), tempX.c_str());
 
+	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
+	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
 
-	float negateX = myCursorPosition.x > 0.0f ? 1.0f : -1.0f;
-	float negateY = myCursorPosition.y > 0.0f ? 1.0f : -1.0f;
-
-	float x = myCursorPosition.x;
-	float y = myCursorPosition.y;
-
-
-	float xRotation = (fabs((x + (x*0.1f) ) * mySteeringModifier)  * negateX) * aDeltaTime;
-	float yRotation = (fabs((y + (y*0.1f)) * mySteeringModifier)  * negateY) * aDeltaTime;
-
-	if (xRotation > myMaxSteeringSpeed)
-	{
-		xRotation = myMaxSteeringSpeed;
-	}
-	if (xRotation < -myMaxSteeringSpeed)
-	{
-		xRotation = -myMaxSteeringSpeed;
-	}
-
-	if (yRotation > myMaxSteeringSpeed)
-	{
-		yRotation = myMaxSteeringSpeed;
-	}
-	if (yRotation < -myMaxSteeringSpeed)
-	{
-		yRotation = -myMaxSteeringSpeed;
-	}
 
 
 	RotateX(yRotation);
 	RotateY(xRotation);
+
+	myEntity.SendMessage<SteeringTargetMessage>(SteeringTargetMessage(mySteering));
 }
 
 void InputComponent::ReadXML(const std::string& aFile)
@@ -125,53 +135,55 @@ void InputComponent::ReadXML(const std::string& aFile)
 	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFile);
-	reader.ReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
-	reader.ReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "acceleration", myAcceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "maxMovementSpeed", myMaxMovementSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "minMovementSpeed", myMinMovementSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deltaClip", mySteeringDeltaClip);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deacceleration", mySteeringDeacceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deaccelerationLowerLimit", mySteeringDeaccelerationLowerLimit);
+	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "acceleration", myRollAcceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "deacceleration", myRollDeacceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
 }
 
-void InputComponent::Rotate(float aDeltaTime)
+void InputComponent::Roll(float aDeltaTime)
 {
-	if (myInputWrapper->KeyIsPressed(DIK_Q))
+	if (myInputWrapper->KeyIsPressed(DIK_Q) || myInputWrapper->KeyIsPressed(DIK_A))
 	{
-		myRotationSpeed += (globalPi * 10) * aDeltaTime;
+		myRollSpeed += myRollAcceleration * aDeltaTime;
 	}
-	if (myInputWrapper->KeyIsPressed(DIK_E))
+	if (myInputWrapper->KeyIsPressed(DIK_E) || myInputWrapper->KeyIsPressed(DIK_D))
 	{
-		myRotationSpeed -= (globalPi * 10) * aDeltaTime;
-	}
-
-	if (myRotationSpeed > globalPi * 2)
-	{
-		myRotationSpeed = globalPi * 2;
-	}
-	if (myRotationSpeed < -(globalPi)* 2)
-	{
-		myRotationSpeed = -(globalPi)* 2;
+		myRollSpeed -= myRollAcceleration * aDeltaTime;
 	}
 
-	if (myRotationSpeed > 0.f)
+	myRollSpeed = CU::Clip(myRollSpeed, -myMaxRollSpeed, myMaxRollSpeed);
+
+	if (myRollSpeed > 0.f)
 	{
-		myRotationSpeed -= (globalPi * 5) * aDeltaTime;
-		if (myRotationSpeed < 0.f)
+		myRollSpeed -= myRollDeacceleration * aDeltaTime;
+		if (myRollSpeed < 0.f)
 		{
-			myRotationSpeed = 0.f;
+			myRollSpeed = 0.f;
 		}
 	}
-	else if (myRotationSpeed < 0.f)
+	else if (myRollSpeed < 0.f)
 	{
-		myRotationSpeed += (globalPi * 5) * aDeltaTime;
-		if (myRotationSpeed > 0.f)
+		myRollSpeed += myRollDeacceleration * aDeltaTime;
+		if (myRollSpeed > 0.f)
 		{
-			myRotationSpeed = 0.f;
+			myRollSpeed = 0.f;
 		}
 	}
 
-	RotateZ(myRotationSpeed * aDeltaTime);
+	RotateZ(myRollSpeed * aDeltaTime);
 }
 
 void InputComponent::ToggleCameraLock()
 {
 	myCameraIsLocked = !myCameraIsLocked;
-	myCursorPosition.x = 0.f;
-	myCursorPosition.y = 0.f;
+	mySteering.x = 0.f;
+	mySteering.y = 0.f;
 }

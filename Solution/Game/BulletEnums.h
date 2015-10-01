@@ -1,6 +1,7 @@
 #pragma once
 enum class eBulletType
 {
-	BOX_BULLET,
-	SUPER_DEATH_LASER
+	MACHINGUN_BULLET,
+	SNIPER_BULLET,
+	PLASMA_BULLET,
 };

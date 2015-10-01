@@ -14,7 +14,7 @@ namespace Prism
 class CollisionComponent : public Component
 {
 public:
-	
+	CollisionComponent(Entity& aEntity);
 	~CollisionComponent();
 	void Initiate(float someRadius);
 	void Update(float aDeltaTime) override;
@@ -55,5 +55,5 @@ inline void CollisionComponent::SetRadius(float someRadius)
 
 inline Sphere CollisionComponent::GetSphere()
 {
-		return mySphere;
+	return mySphere;
 }

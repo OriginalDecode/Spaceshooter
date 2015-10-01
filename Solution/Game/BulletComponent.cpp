@@ -1,28 +1,26 @@
 #include "stdafx.h"
 #include "BulletComponent.h"
 
-BulletComponent::BulletComponent()
+BulletComponent::BulletComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 	myCurrentLifeTime = 0.f;
-	myIsActive = false;
-}
-
-BulletComponent::~BulletComponent()
-{
+	myActive = false;
 }
 
 void BulletComponent::Update(float aDeltaTime)
 {
 	if (myCurrentLifeTime >= myMaxLifeTime)
 	{
-		myIsActive = false;
+		myActive = false;
 		myCurrentLifeTime = 0.f;
 	}
 	myCurrentLifeTime += aDeltaTime;
 }
 
-void BulletComponent::Init(const float& aMaxTime)
+void BulletComponent::Init(const float& aMaxTime, const unsigned short& aDamage)
 {
-	myIsActive = false;
+	myActive = false;
 	myMaxLifeTime = aMaxTime;
+	myDamage = aDamage;
 }

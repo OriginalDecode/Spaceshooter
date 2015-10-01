@@ -1,27 +1,35 @@
 #include "stdafx.h"
+#include <Camera.h>
 #include "GUIComponent.h"
 #include <Model2D.h>
-#include <Camera.h>
+#include "SteeringTargetMessage.h"
 
-GUIComponent::GUIComponent()
+GUIComponent::GUIComponent(Entity& aEntity)
+	: Component(aEntity)
 {
-	myMousePointer = new Prism::Model2D;
+	mySteeringTarget = new Prism::Model2D;
 	myCrosshair = new Prism::Model2D;
 	myCrosshair->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f }); // the size scales the pic
-	myMousePointer->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f });
+	mySteeringTarget->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f });
 	myCamera = nullptr;
 }
 
 GUIComponent::~GUIComponent()
 {
-	delete myMousePointer;
+	delete mySteeringTarget;
 	delete myCrosshair;
-	myMousePointer = nullptr;
+	mySteeringTarget = nullptr;
 	myCrosshair = nullptr;
 }
 
-void GUIComponent::Render(const CU::Vector2<int> aScreenCenter, const CU::Vector2<float> aMousePos)
+void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
-	myMousePointer->Render(*myCamera, aMousePos.x, -aMousePos.y);
-	myCrosshair->Render(*myCamera, aScreenCenter.x / 2.f, -(aScreenCenter.y / 2.f));
+	mySteeringTarget->Render(*myCamera, aWindowSize.x / 2.f + mySteeringTargetPosition.x
+		, -aWindowSize.y / 2.f - mySteeringTargetPosition.y);
+	myCrosshair->Render(*myCamera, aWindowSize.x / 2.f, -(aWindowSize.y / 2.f));
+}
+
+void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)
+{
+	mySteeringTargetPosition = aMessage.GetPosition();
 }

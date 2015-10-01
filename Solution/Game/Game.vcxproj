@@ -85,6 +85,7 @@
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
     <ClInclude Include="CollisionComponent.h" />
+    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEnums.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="HealthComponent.h" />
     <ClInclude Include="InGameState.h" />
     <ClInclude Include="InputComponent.h" />
+    <ClInclude Include="InputMessage.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Message.h" />
@@ -111,6 +113,7 @@
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StateStackProxy.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SteeringTargetMessage.h" />
     <ClInclude Include="Subscriber.h" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +122,7 @@
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletMessage.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -129,6 +133,7 @@
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="InputMessage.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />

@@ -13,7 +13,18 @@ class Component;
 class Entity
 {
 public:
-	Entity();
+	enum class eType
+	{
+		NOT_USED,
+		PLAYER,
+		ENEMY,
+		PLAYER_BULLET,
+		ENEMY_BULLET,
+		TRIGGER,
+		PROP,
+	};
+
+	Entity(eType aType);
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -27,21 +38,25 @@ public:
 	template <typename T>
 	void SendMessage(const T& aMessage);
 
+
+
 	CU::Matrix44<float> myOrientation;
 	Prism::Camera* myCamera;
 
+	bool GetAlive() const;
+	void Kill();
 private:
+	void operator=(Entity&) = delete;
+
 	std::unordered_map<int, Component*> myComponents;
-
-	bool myEntityIsActive;
-
+	bool myAlive;
+	const eType myType;
 };
 
 template <typename T>
 T* Entity::AddComponent()
 {
-	T* component = new T();
-	component->SetEntity(this);
+	T* component = new T(*this);
 	myComponents[T::GetID()] = component;
 	return component;
 }
@@ -67,3 +82,9 @@ void Entity::SendMessage(const T& aMessage)
 		it->second->ReceiveMessage(aMessage);
 	}
 }
+
+inline bool Entity::GetAlive() const
+{
+	return myAlive;
+}
+

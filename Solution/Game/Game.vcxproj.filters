@@ -40,9 +40,6 @@
     <ClCompile Include="BulletMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="ShootMessage.cpp">
-      <Filter>PostMaster\Messages</Filter>
-    </ClCompile>
     <ClCompile Include="PostMaster.cpp">
       <Filter>PostMaster</Filter>
     </ClCompile>
@@ -63,6 +60,13 @@
     </ClCompile>
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ShootMessage.cpp">
+      <Filter>Components\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="InputMessage.cpp">
+      <Filter>Components\Messages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,9 +119,6 @@
     <ClInclude Include="Message.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="ShootMessage.h">
-      <Filter>PostMaster\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="PostMaster.h">
       <Filter>PostMaster</Filter>
     </ClInclude>
@@ -145,6 +146,16 @@
     <ClInclude Include="HealthComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="ShootMessage.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="SteeringTargetMessage.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="InputMessage.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -158,6 +169,9 @@
     </Filter>
     <Filter Include="StateStack">
       <UniqueIdentifier>{944ca525-7824-48c8-aa6f-4fdb18700910}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Messages">
+      <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

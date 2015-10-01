@@ -5,13 +5,12 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "GraphicsComponent.h"
-#include <CommonHelper.h>
 #include <Instance.h>
 #include "ShootingComponent.h"
 #include <XMLReader.h>
 
 EntityData::EntityData()
-	: myEntity(new Entity())
+	: myEntity(new Entity(Entity::eType::NOT_USED))
 {
 }
 

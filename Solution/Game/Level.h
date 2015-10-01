@@ -12,15 +12,16 @@ namespace Prism
 };
 
 class BulletManager;
+class CollisionManager;
 class CU::InputWrapper;
-
 class Entity;
 class EntityFactory;
 
 class Level
 {
 public:
-	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager* aBulletManager, bool aShouldTestXML);
+	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, BulletManager& aBulletManager
+		, CollisionManager& aCollisionManager, bool aShouldTestXML);
 	~Level();
 
 	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);
@@ -29,7 +30,6 @@ public:
 	void LogicUpdate(float aDeltaTime);
 
 	void OnResize(int aWidth, int aHeigth);
-	bool CheckCollision();
 
 	inline void SetShowLightCube(bool aBool);
 	inline bool GetShowLightCube() const;
@@ -38,7 +38,9 @@ public:
 	inline bool GetRenderStuff() const;
 
 private:
+	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
+
 	Prism::Instance* mySkySphere;
 
 	Prism::Scene* myScene;
@@ -46,15 +48,18 @@ private:
 	Prism::DirectionalLight* myLight;
 	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
+
 	CU::GrowingArray<Entity*> myEntities;
+	CU::GrowingArray<Entity*> myDeadEntities;
+
 	Entity* myPlayer;
-	Entity* myCockPit;
 
 	CU::InputWrapper* myInputWrapper;
 
 	EntityFactory* myEntityFactory;
 
-	BulletManager* myBulletManager;
+	BulletManager& myBulletManager;
+	CollisionManager& myCollisionManager;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;

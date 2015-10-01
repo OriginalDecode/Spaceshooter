@@ -17,6 +17,7 @@ bool globalIsResizing = false;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 {
+	ShowCursor(false);
 	DL_Debug::Debug::Create();
 	CU::TimerManager::Create();
 
@@ -96,7 +97,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 				break;
 			}
 
-			//SetCursorPos(globalClientWidth / 2, globalClientHeight / 2);
 
 			Prism::Engine::GetInstance()->Render();
 		}

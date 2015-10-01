@@ -4,6 +4,7 @@
 #include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
 #include "ShootMessage.h"
+#include "InputMessage.h"
 #include "PostMaster.h"
 #include "BulletMessage.h"
 #include <FileWatcher.h>
@@ -11,41 +12,39 @@
 
 #define PI 3.14159265359f
 
-ShootingComponent::ShootingComponent()
+ShootingComponent::ShootingComponent(Entity& aEntity)
+	: Component(aEntity)
 {
+	myWeapons.Init(4);
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
-}
-
-ShootingComponent::~ShootingComponent()
-{
-	delete myCurrentWeapon;
-	myCurrentWeapon = nullptr;
+	myCurrentWeaponID = 0;
 }
 
 void ShootingComponent::Update(float aDeltaTime)
 {
-	if (myCurrentWeapon->myCurrentTime >= myCurrentWeapon->myCoolDownTime)
+	if (myWeapons[myCurrentWeaponID].myCurrentTime >= myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
-		myCurrentWeapon->myCurrentTime = myCurrentWeapon->myCoolDownTime;
+		myWeapons[myCurrentWeaponID].myCurrentTime = myWeapons[myCurrentWeaponID].myCoolDownTime;
 	}
 	else
 	{
-		myCurrentWeapon->myCurrentTime += aDeltaTime;
+		myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime;
 	}
 }
 
 void ShootingComponent::ReceiveMessage(const ShootMessage&)
 {
-	if (myCurrentWeapon->myCurrentTime == myCurrentWeapon->myCoolDownTime)
+	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
-		CU::Matrix44<float> orientation = myEntity->myOrientation;
-		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f));
+		CU::Matrix44<float> orientation = myEntity.myOrientation;
+		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+			+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
 
-		if (myCurrentWeapon->mySpread > 0)
+		if (myWeapons[myCurrentWeaponID].mySpread > 0)
 		{
-			float randomSpreadX = float((rand() % (myCurrentWeapon->mySpread * 2)) - myCurrentWeapon->mySpread) / 100.f;
-			float randomSpreadY = float((rand() % (myCurrentWeapon->mySpread * 2)) - myCurrentWeapon->mySpread) / 100.f;
+			float randomSpreadX = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
+			float randomSpreadY = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
 			
 			CU::Matrix44<float> rotation;
 			rotation.myMatrix[8] = randomSpreadX;
@@ -57,40 +56,50 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 			orientation.SetPos(pos);
 		}
 
-		PostMaster::GetInstance()->SendMessage(BulletMessage(eBulletType::BOX_BULLET, orientation));
-		myCurrentWeapon->myCurrentTime = 0.f;
+		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation));
+		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }
 
-void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
+void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
 {
-	mySpawningPointOffset = aSpawningPointOffset;
+	SetCurrentWeaponID(aMessage.GetKey());
 }
 
 void ShootingComponent::ReadFromXML(const std::string aFilePath)
 {
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);
+
 	tinyxml2::XMLElement* weaponElement = reader.FindFirstChild("weapon");
-
-	if (myCurrentWeapon != nullptr)
+	for (; weaponElement != nullptr; weaponElement = reader.FindNextElement(weaponElement))
 	{
-		delete myCurrentWeapon;
 
-		myCurrentWeapon = nullptr;
+		WeaponData weaponData;
+
+		std::string type;
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData.myCoolDownTime);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "x", weaponData.myPosition.x);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "y", weaponData.myPosition.y);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "z", weaponData.myPosition.z);
+		weaponData.myCurrentTime = weaponData.myCoolDownTime;
+
+		if (type == "machinegun")
+		{
+			weaponData.myBulletType = eBulletType::MACHINGUN_BULLET;
+		}
+		else if (type == "sniper")
+		{
+			weaponData.myBulletType = eBulletType::SNIPER_BULLET;
+		}
+		else if (type == "plasma")
+		{
+			weaponData.myBulletType = eBulletType::PLASMA_BULLET;
+		}
+
+		myWeapons.Add(weaponData);
 	}
-
-	WeaponData* weaponData = new WeaponData;
-
-	std::string type;
-	reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
-	reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData->myCoolDownTime);
-	reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData->mySpread);
-	weaponData->myCurrentTime = weaponData->myCoolDownTime;
-
-	if (type == "testGun")
-	{
-		weaponData->myBulletType = eBulletType::BOX_BULLET;
-		myCurrentWeapon = weaponData;
-	}
+	myCurrentWeaponID = 0;
 }
