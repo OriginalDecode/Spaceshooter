@@ -1,5 +1,5 @@
 #pragma once
-#include "BulletEnums.h"
+#include "Enums.h"
 #include "Message.h"
 
 class BulletMessage : public Message

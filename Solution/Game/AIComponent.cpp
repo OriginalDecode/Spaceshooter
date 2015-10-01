@@ -44,7 +44,7 @@ void AIComponent::MakeDecision()
 	myTimeToNextDecision = 1.f;
 	if (myDecision == 2 || myDecision == 8)
 	{
-		Shoot(100.f);
+		Shoot();
 	}
 }
 

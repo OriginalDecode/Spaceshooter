@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "BulletEnums.h"
+#include "Enums.h"
 
 class BulletComponent : public Component
 {

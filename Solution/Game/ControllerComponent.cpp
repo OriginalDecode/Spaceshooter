@@ -82,8 +82,8 @@ void ControllerComponent::SetRotation(const CU::Matrix44<float>& aRotation)
 	myEntity.myOrientation.SetPos(pos);
 }
 
-void ControllerComponent::Shoot(float aSpeed)
+void ControllerComponent::Shoot()
 {
-	ShootMessage msg(aSpeed);
+	ShootMessage msg;
 	myEntity.SendMessage(msg);
 }
