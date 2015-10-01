@@ -7,7 +7,8 @@ class BulletMessage : public Message
 public:
 	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType);
 
-	const eBulletType& GetBulletType() const;
+	eBulletType GetBulletType() const;
+	eEntityType GetEntityType() const;
 	const CU::Matrix44<float>& GetOrientation() const;
 
 private:
@@ -17,9 +18,14 @@ private:
 	const eEntityType myEntityType;
 };
 
-inline const eBulletType& BulletMessage::GetBulletType() const
+inline eBulletType BulletMessage::GetBulletType() const
 {
 	return myType;
+}
+
+inline eEntityType BulletMessage::GetEntityType() const
+{
+	return myEntityType;
 }
 
 inline const CU::Matrix44<float>& BulletMessage::GetOrientation() const

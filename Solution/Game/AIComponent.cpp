@@ -30,6 +30,7 @@ void AIComponent::Update(float aDeltaTime)
 	else
 	{
 		FollowEntity(aDeltaTime);
+		Shoot();
 	}
 }
 

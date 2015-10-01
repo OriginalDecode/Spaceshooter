@@ -10,6 +10,7 @@ enum class eBulletType
 	MACHINGUN_BULLET,
 	SNIPER_BULLET,
 	PLASMA_BULLET,
+	COUNT,
 };
 
 enum eEntityType //Collision manager needs this as ints!

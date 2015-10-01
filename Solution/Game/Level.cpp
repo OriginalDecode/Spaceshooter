@@ -70,7 +70,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	{
 		for (int i = 0; i < 220; ++i)
 		{
-			Entity* astroids = new Entity(eEntityType::PROP);
+			Entity* astroids = new Entity(eEntityType::ENEMY);
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			//	"Data/effect/NoTextureEffect.fx");
 
@@ -82,8 +82,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
-			//astroids->AddComponent<AIComponent>()->Init();
+			astroids->AddComponent<AIComponent>()->Init();
 			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			astroids->AddComponent<ShootingComponent>();
 
 			myEntities.Add(astroids);
 
