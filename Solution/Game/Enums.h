@@ -11,3 +11,14 @@ enum class eBulletType
 	SNIPER_BULLET,
 	PLASMA_BULLET,
 };
+
+enum eEntityType //Collision manager needs this as ints!
+{
+	NOT_USED = -1,
+	PLAYER = 1,
+	ENEMY = 2,
+	PLAYER_BULLET = 4,
+	ENEMY_BULLET = 8,
+	TRIGGER = 16,
+	PROP = 32,
+};

@@ -16,8 +16,8 @@ CollisionManager::CollisionManager()
 	, myPlayerBulletFilter(0)
 {
 
-	myPlayerFilter = eCollisionEnum::ENEMY | eCollisionEnum::ENEMY_BULLET | eCollisionEnum::TRIGGER;
-	myPlayerBulletFilter = eCollisionEnum::ENEMY;
+	myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
+	myPlayerBulletFilter = eEntityType::ENEMY;
 }
 
 
@@ -25,47 +25,49 @@ CollisionManager::~CollisionManager()
 {
 }
 
-void CollisionManager::Add(CollisionComponent* aComponent, eCollisionEnum aEnum)
+void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 {
 	switch (aEnum)
 	{
-	case eCollisionEnum::PLAYER:
+	case eEntityType::PLAYER:
 		myPlayer = aComponent;
 		break;
-	case eCollisionEnum::ENEMY:
+	case eEntityType::ENEMY:
 		myEnemies.Add(aComponent);
 		break;
-	case eCollisionEnum::PLAYER_BULLET:
+	case eEntityType::PLAYER_BULLET:
 		myPlayerBullets.Add(aComponent);
 		break;
-	case eCollisionEnum::ENEMY_BULLET:
+	case eEntityType::ENEMY_BULLET:
 		break;
-	case eCollisionEnum::TRIGGER:
+	case eEntityType::TRIGGER:
 		break;
 	default:
+		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
 		break;
 	}
 }
 
 
-void CollisionManager::Remove(CollisionComponent* aComponent, eCollisionEnum aEnum)
+void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 {
 	switch (aEnum)
 	{
-	case eCollisionEnum::PLAYER:
+	case eEntityType::PLAYER:
 		DL_ASSERT("Tried to Remove PLAYER from CollisionManager.");
 		break;
-	case eCollisionEnum::ENEMY:
+	case eEntityType::ENEMY:
 		myEnemies.RemoveCyclic(aComponent);
 		break;
-	case eCollisionEnum::PLAYER_BULLET:
+	case eEntityType::PLAYER_BULLET:
 		myPlayerBullets.RemoveCyclic(aComponent);
 		break;
-	case eCollisionEnum::ENEMY_BULLET:
+	case eEntityType::ENEMY_BULLET:
 		break;
-	case eCollisionEnum::TRIGGER:
+	case eEntityType::TRIGGER:
 		break;
 	default:
+		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
 		break;
 	}
 }

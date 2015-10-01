@@ -10,7 +10,7 @@
 #include <XMLReader.h>
 
 EntityData::EntityData()
-	: myEntity(new Entity(Entity::eType::NOT_USED))
+	: myEntity(new Entity(eEntityType::NOT_USED))
 {
 }
 
