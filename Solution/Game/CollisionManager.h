@@ -16,7 +16,8 @@ public:
 	void Remove(CollisionComponent* aComponent, eEntityType aEnum);
 
 	void Update();
-	void CleanUp();
+	void CleanUp(); //Run at start of every frame
+	void Reset(); //Run after each level
 
 private:
 

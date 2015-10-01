@@ -75,7 +75,13 @@ const eStateStatus InGameState::Update()
 
 	if (myLevel->LogicUpdate(deltaTime) == false)
 	{
-		return eStateStatus::ePopMainState;
+		myCollisionManager->Reset();
+		myBulletManager->Reset();
+
+		delete myLevel;
+		myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
+		OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
+		//return eStateStatus::ePopMainState;
 	}
 
 

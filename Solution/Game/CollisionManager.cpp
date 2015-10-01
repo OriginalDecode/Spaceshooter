@@ -42,6 +42,7 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 		myPlayerBullets.Add(aComponent);
 		break;
 	case eEntityType::ENEMY_BULLET:
+		myEnemyBullets.Add(aComponent);
 		break;
 	case eEntityType::TRIGGER:
 		break;
@@ -66,7 +67,7 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		myPlayerBullets.RemoveCyclic(aComponent);
 		break;
 	case eEntityType::ENEMY_BULLET:
-		myEnemyBullets.Add(aComponent);
+		myEnemyBullets.RemoveCyclic(aComponent);
 		break;
 	case eEntityType::TRIGGER:
 		break;
@@ -115,9 +116,17 @@ void CollisionManager::CleanUp()
 {
 	for (int i = myEnemies.Size() - 1; i >= 0; --i)
 	{
-		if (myEnemies[i]->GetEntity().GetAlive() == false)
+		if ( myEnemies[i]->GetEntity().GetAlive() == false)
 		{
 			myEnemies.RemoveCyclicAtIndex(i);
 		}
 	}
+}
+
+void CollisionManager::Reset()
+{
+	myPlayer = nullptr;
+	myEnemies.RemoveAll();
+	myPlayerBullets.RemoveAll();
+	myEnemyBullets.RemoveAll();
 }

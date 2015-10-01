@@ -244,3 +244,18 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 	}
 	return myInstances;
 }
+
+void BulletManager::Reset()
+{
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
+	{
+		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
+		{
+			myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->SetActive(false);
+			myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->SetActive(false);
+		}
+
+		myBulletDatas[i]->myPlayerBulletCounter = 0;
+		myBulletDatas[i]->myEnemyBulletCounter = 0;
+	}
+}
