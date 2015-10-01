@@ -14,6 +14,7 @@ namespace Prism
 	{
 	public:
 		ModelLoader();
+		~ModelLoader();
 
 		void Run();
 		void Shutdown();
@@ -54,5 +55,7 @@ namespace Prism
 		volatile bool myIsRunning;
 
 		FBXFactory* myModelFactory;
+		std::unordered_map<std::string, Model*> myFBXModels;
+		CU::GrowingArray<Model*> myNonFXBModels;
 	};
 }

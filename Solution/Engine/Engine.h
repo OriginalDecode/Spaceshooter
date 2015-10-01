@@ -31,6 +31,7 @@ namespace Prism
 	{
 	public:
 		static bool Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo);
+		static void Destroy();
 		static Engine* GetInstance();
 		void Shutdown();
 		void Render();
@@ -70,7 +71,7 @@ namespace Prism
 		~Engine();
 		bool Init(HWND& aHwnd, WNDPROC aWndProc);
 		bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
-
+		
 		bool myWireframeIsOn;
 
 

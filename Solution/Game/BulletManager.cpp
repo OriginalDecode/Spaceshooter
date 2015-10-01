@@ -18,6 +18,11 @@ BulletManager::BulletManager()
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
+	{
+		myBulletDatas[i] = nullptr;
+	}
+
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);
 }

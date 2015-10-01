@@ -7,6 +7,8 @@ namespace Prism
 	class TextureContainer
 	{
 	public:
+		~TextureContainer();
+
 		Texture* GetTexture(const std::string& aFileName);
 
 	private:

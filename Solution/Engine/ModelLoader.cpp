@@ -14,14 +14,25 @@
 namespace Prism
 {
 	ModelLoader::ModelLoader()
+		: myModelsToLoad(4)
+		, myNonFXBModels(4)
+		, myIsRunning(true)
+		, myCanAddToLoadArray(true)
+		, myCanCopyArray(true)
+		, myModelFactory(new FBXFactory())
 	{
-		myModelsToLoad.Init(4);
+	}
 
-		myIsRunning = true;
-		myCanAddToLoadArray = true;
-		myCanCopyArray = true;
+	ModelLoader::~ModelLoader()
+	{
 
-		myModelFactory = new FBXFactory();
+		for (auto it = myFBXModels.begin(); it != myFBXModels.end(); ++it)
+		{
+			delete it->second;
+		}
+
+		myNonFXBModels.DeleteAll();
+		myFBXModels.clear();
 	}
 
 	void ModelLoader::Run()
@@ -58,9 +69,19 @@ namespace Prism
 				{
 					CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 
-					model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
-						Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
-					model->Init();
+					if (myFBXModels.find(loadArray[i].myModelPath) != myFBXModels.end())
+					{
+						model = myFBXModels[loadArray[i].myModelPath];
+					}
+					else
+					{
+						model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
+							Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
+						model->Init();
+
+						myFBXModels[loadArray[i].myModelPath] = model;
+					}
+
 
 					int elapsed = static_cast<int>(
 						CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
@@ -71,12 +92,16 @@ namespace Prism
 				{
 					model = new Prism::Model();
 					model->InitPolygon();
+
+					myNonFXBModels.Add(model);
 					break;
 				}
 				case Prism::ModelLoader::eLoadType::CUBE:
 				{
 					model = new Prism::Model();
 					model->InitCube(loadArray[i].mySize.x, loadArray[i].mySize.y, loadArray[i].mySize.z);
+
+					myNonFXBModels.Add(model);
 					break;
 				}
 				case Prism::ModelLoader::eLoadType::LIGHT_CUBE:
@@ -84,12 +109,16 @@ namespace Prism
 					model = new Prism::Model();
 					model->InitLightCube(loadArray[i].mySize.x, loadArray[i].mySize.y,
 						loadArray[i].mySize.z, loadArray[i].myColor);
+
+					myNonFXBModels.Add(model);
 					break;
 				}
 				case Prism::ModelLoader::eLoadType::GEOMETRY:
 				{
 					model = new Prism::Model();
 					model->InitGeometry(loadArray[i].myMeshData);
+
+					myNonFXBModels.Add(model);
 					break;
 				}
 				default:
