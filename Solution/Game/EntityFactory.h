@@ -37,6 +37,8 @@ struct EntityData
 class EntityFactory
 {
 public:
+	~EntityFactory();
+
 	void LoadEntites(const std::string& aEntityRootPath);
 
 	void CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag);

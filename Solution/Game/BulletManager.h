@@ -43,6 +43,8 @@ public:
 
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
+	void Reset();
+
 private:
 
 	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType);

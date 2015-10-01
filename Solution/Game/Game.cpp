@@ -40,6 +40,9 @@ Game::~Game()
 bool Game::Init(HWND& aHwnd)
 {
 
+	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
+
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 

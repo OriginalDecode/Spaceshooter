@@ -125,6 +125,7 @@ void AIComponent::FollowOwnDecision(float aDeltaTime)
 		MakeDecision();
 	}
 
+		
 	switch (myDecision)
 	{
 	case 0:

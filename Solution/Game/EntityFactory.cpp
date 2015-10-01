@@ -14,6 +14,16 @@ EntityData::EntityData()
 {
 }
 
+EntityFactory::~EntityFactory()
+{
+	for (auto it = myEntities.begin(); it != myEntities.end(); ++it)
+	{
+		delete it->second.myEntity;
+	}
+
+	myEntities.clear();
+}
+
 void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 {
 	XMLReader rootDocument;

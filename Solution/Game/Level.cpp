@@ -27,6 +27,7 @@
 #include "ShootingComponent.h"
 #include <sstream>
 #include <string>
+#include <SpotLight.h>
 #include <XMLReader.h>
 
 
@@ -41,11 +42,16 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
 	myShowPointLightCube = false;
-	myLight = new Prism::DirectionalLight();
-	myLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
-	myLight->SetDir({ 0.f, 0.5f, -1.f });
+	
 
+	myDirectionalLights.Init(4);
+	myPointLights.Init(4);
+	mySpotLights.Init(4);
 
+	Prism::DirectionalLight* dirLight = new Prism::DirectionalLight();
+	dirLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
+	dirLight->SetDir({ 0.f, 0.5f, -1.f });
+	myDirectionalLights.Add(dirLight);
 
 	myEntities.Init(4);
 
@@ -55,7 +61,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
-	player->AddComponent<HealthComponent>()->Init(100);
+	player->AddComponent<HealthComponent>()->Init(1);
 	myCollisionManager.Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	myPlayer = player;
@@ -71,15 +77,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 		for (int i = 0; i < 220; ++i)
 		{
 			Entity* astroids = new Entity(eEntityType::ENEMY);
-			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			//	"Data/effect/NoTextureEffect.fx");
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/BasicEffect.fx");
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 
-			astroids->AddComponent<CollisionComponent>()->Initiate(75.f);
+			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
 			astroids->AddComponent<AIComponent>()->Init();
@@ -90,19 +94,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			myCollisionManager.Add(astroids->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 		}
-
-		//for (int i = 0; i < 50; ++i)
-		//{
-		//	Entity* enemy = new Entity();
-		//	//enemy->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-		//	//	"Data/effect/NoTextureEffect.fx");
-		//	myEntityFactory->CopyEntity(enemy, "defaultEnemy");
-		//
-		//	enemy->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 150 - 50),
-		//		static_cast<float>(rand() % 200 - 100), static_cast<float>(rand() % 150 - 50) });
-		//
-		//	myEntities.Add(enemy);
-		//}
 	}
 	else
 	{
@@ -112,7 +103,21 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	}
 
 	myScene->SetCamera(myCamera);
-	myScene->AddLight(myLight);
+
+	for (int i = 0; i < myDirectionalLights.Size(); ++i)
+	{
+		myScene->AddLight(myDirectionalLights[i]);
+	}
+
+	for (int i = 0; i < myPointLights.Size(); ++i)
+	{
+		myScene->AddLight(myPointLights[i]);
+	}
+
+	for (int i = 0; i < mySpotLights.Size(); ++i)
+	{
+		myScene->AddLight(mySpotLights[i]);
+	}
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -125,10 +130,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	}
 
 	myRenderStuff = true;
-
-	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
-	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
-
 }
 
 
@@ -137,6 +138,13 @@ Level::~Level()
 	delete myCamera;
 	delete myScene;
 	myEntities.DeleteAll();
+
+	delete mySkySphere;
+	delete myEntityFactory;
+	
+	myDirectionalLights.DeleteAll();
+	myPointLights.DeleteAll();
+	mySpotLights.DeleteAll();
 }
 
 void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName)
@@ -156,11 +164,6 @@ void Level::Render()
 	if (myRenderStuff)
 	{
 		myScene->Render(myBulletManager.GetInstances());
-	}
-
-	if (myShowPointLightCube == true)
-	{
-		myPointLight->Render(myCamera);
 	}
 
 	for (int i = 0; i < myEntities.Size(); ++i)
@@ -214,6 +217,11 @@ bool Level::LogicUpdate(float aDeltaTime)
 	}
 
 
+	if (myInputWrapper->KeyDown(DIK_N))
+	{
+		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10);
+	}
+
 	myCollisionManager.Update();
 
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
@@ -256,7 +264,8 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(directionalElement, "A", lightColor.myA);
 		newDirLight->SetColor(lightColor);
 
-		myScene->AddLight(newDirLight);
+		//myScene->AddLight(newDirLight);
+		myDirectionalLights.Add(newDirLight);
 	}
 
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;

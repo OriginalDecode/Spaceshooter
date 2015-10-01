@@ -7,6 +7,7 @@ namespace Prism
 	class Model;
 	class PointLight;
 	class Scene;
+	class SpotLight;
 	class Text;
 	class Instance;
 };
@@ -45,12 +46,14 @@ private:
 
 	Prism::Scene* myScene;
 	Prism::Camera* myCamera;
-	Prism::DirectionalLight* myLight;
-	Prism::PointLight* myPointLight;
 	CU::Matrix44<float> myWorldMatrix;
 
 	CU::GrowingArray<Entity*> myEntities;
 	CU::GrowingArray<Entity*> myDeadEntities;
+
+	CU::GrowingArray<Prism::DirectionalLight*> myDirectionalLights;
+	CU::GrowingArray<Prism::PointLight*> myPointLights;
+	CU::GrowingArray<Prism::SpotLight*> mySpotLights;
 
 	Entity* myPlayer;
 
