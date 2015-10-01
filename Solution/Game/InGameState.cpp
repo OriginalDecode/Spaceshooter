@@ -73,7 +73,11 @@ const eStateStatus InGameState::Update()
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
-	LogicUpdate(deltaTime);
+	if (myLevel->LogicUpdate(deltaTime) == false)
+	{
+		return eStateStatus::ePopMainState;
+	}
+
 
 	myBulletManager->Update(deltaTime);
 
@@ -110,11 +114,6 @@ void InGameState::Render()
 void InGameState::ResumeState()
 {
 
-}
-
-void InGameState::LogicUpdate(const float aDeltaTime)
-{
-	myLevel->LogicUpdate(aDeltaTime);
 }
 
 void InGameState::OnResize(int aWidth, int aHeight)

@@ -27,7 +27,7 @@ public:
 	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);
 
 	void Render();
-	void LogicUpdate(float aDeltaTime);
+	bool LogicUpdate(float aDeltaTime);
 
 	void OnResize(int aWidth, int aHeigth);
 

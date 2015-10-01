@@ -79,7 +79,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 
-			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
+			astroids->AddComponent<CollisionComponent>()->Initiate(75.f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
 			astroids->AddComponent<AIComponent>()->Init();
@@ -188,8 +188,13 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
 }
 
-void Level::LogicUpdate(float aDeltaTime)
+bool Level::LogicUpdate(float aDeltaTime)
 {
+	if (myPlayer->GetAlive() == false)
+	{
+		return false;
+	}
+
 	for (int i = myEntities.Size() - 1; i >= 0; --i)
 	{
 		if (myEntities[i]->GetAlive() == false)
@@ -212,6 +217,8 @@ void Level::LogicUpdate(float aDeltaTime)
 	myCollisionManager.Update();
 
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
+
+	return true;
 }
 
 void Level::OnResize(int aWidth, int aHeight)

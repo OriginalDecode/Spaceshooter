@@ -66,6 +66,7 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		myPlayerBullets.RemoveCyclic(aComponent);
 		break;
 	case eEntityType::ENEMY_BULLET:
+		myEnemyBullets.Add(aComponent);
 		break;
 	case eEntityType::TRIGGER:
 		break;
