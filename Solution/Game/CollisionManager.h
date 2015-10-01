@@ -1,29 +1,19 @@
 #pragma once
 
+#include "Enums.h"
 #include <GrowingArray.h>
-
-
 
 class CollisionComponent;
 
 class CollisionManager
 {
 public:
-	enum eCollisionEnum
-	{
-		PLAYER = 1,
-		ENEMY = 2,
-		PLAYER_BULLET = 4,
-		ENEMY_BULLET = 8,
-		TRIGGER = 16,
-
-	};
 
 	CollisionManager();
 	~CollisionManager();
 
-	void Add(CollisionComponent* aComponent, eCollisionEnum aEnum);
-	void Remove(CollisionComponent* aComponent, eCollisionEnum aEnum);
+	void Add(CollisionComponent* aComponent, eEntityType aEnum);
+	void Remove(CollisionComponent* aComponent, eEntityType aEnum);
 
 	void Update();
 	void CleanUp();

@@ -49,14 +49,14 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 	myEntities.Init(4);
 
-	Entity* player = new Entity(Entity::eType::PLAYER);
+	Entity* player = new Entity(eEntityType::PLAYER);
 	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
 		, "Data/effect/NoTextureEffect.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->AddComponent<CollisionComponent>()->Initiate(0);
 	player->AddComponent<HealthComponent>()->Init(100);
-	myCollisionManager.Add(player->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::PLAYER);
+	myCollisionManager.Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	myPlayer = player;
 	myEntities.Add(player);
@@ -70,7 +70,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 	{
 		for (int i = 0; i < 220; ++i)
 		{
-			Entity* astroids = new Entity(Entity::eType::PROP);
+			Entity* astroids = new Entity(eEntityType::PROP);
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 			//	"Data/effect/NoTextureEffect.fx");
 
@@ -87,7 +87,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, Bull
 
 			myEntities.Add(astroids);
 
-			myCollisionManager.Add(astroids->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::ENEMY);
+			myCollisionManager.Add(astroids->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 		}
 
 		//for (int i = 0; i < 50; ++i)
@@ -251,7 +251,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "enemy"))
 	{
-		Entity* newEntity = new Entity(Entity::eType::ENEMY);
+		Entity* newEntity = new Entity(eEntityType::ENEMY);
 		std::string enemyType;
 		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
 		myEntityFactory->CopyEntity(newEntity, enemyType);
@@ -269,7 +269,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "prop"))
 	{
-		Entity* newEntity = new Entity(Entity::eType::PROP);
+		Entity* newEntity = new Entity(eEntityType::PROP);
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
@@ -288,7 +288,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "trigger"))
 	{
-		Entity* newEntity = new Entity(Entity::eType::TRIGGER);
+		Entity* newEntity = new Entity(eEntityType::TRIGGER);
 		float entityRadius;
 		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
 		myEntityFactory->CopyEntity(newEntity, "trigger");

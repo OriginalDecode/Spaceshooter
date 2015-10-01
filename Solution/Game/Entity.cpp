@@ -3,7 +3,7 @@
 #include "Component.h"
 #include "Entity.h"
 
-Entity::Entity(eType aType)
+Entity::Entity(eEntityType aType)
 	: myAlive(true)
 	, myType(aType)
 {

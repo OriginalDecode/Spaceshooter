@@ -56,7 +56,8 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 			orientation.SetPos(pos);
 		}
 
-		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation));
+		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
+			, myEntity.GetType()));
 		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }

@@ -90,7 +90,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 
 		for (int i = 0; i < bulletData->myMaxBullet; i++)
 		{
-			Entity* newEntity = new Entity(Entity::eType::PLAYER_BULLET);
+			Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET);
 			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
 			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 			newEntity->AddComponent<PhysicsComponent>();
@@ -128,7 +128,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	Entity& bullet = *aWeaponData->myBullets[aWeaponData->myBulletCounter];
 	if (bullet.GetComponent<BulletComponent>()->GetActive() == false)
 	{
-		myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
+		myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), eEntityType::PLAYER_BULLET);
 	}
 
 
@@ -157,7 +157,8 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (aWeaponData->myBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
 			{
-				myCollisionManager->Remove(aWeaponData->myBullets[i]->GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
+				myCollisionManager->Remove(aWeaponData->myBullets[i]->GetComponent<CollisionComponent>()
+					, eEntityType::PLAYER_BULLET);
 			}
 		}
 	}
