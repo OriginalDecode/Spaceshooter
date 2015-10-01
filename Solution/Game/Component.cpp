@@ -1,6 +1,12 @@
 #include "stdafx.h"
 #include "Component.h"
 
+Component::Component(Entity& aEntity)
+	: myEntity(aEntity)
+{
+
+}
+
 void Component::Init()
 {
 }

@@ -17,9 +17,7 @@ class Entity;
 class ShootingComponent : public Component
 {
 public:
-
-	ShootingComponent();
-	~ShootingComponent();
+	ShootingComponent(Entity& aEntity);
 
 	void Update(float aDeltaTime) override;
 

@@ -7,6 +7,12 @@
 #include <Model.h>
 #include <ModelLoader.h>
 
+CollisionComponent::CollisionComponent(Entity& aEntity)
+	: Component(aEntity)
+{
+
+}
+
 CollisionComponent::~CollisionComponent()
 {
 	delete myInstance;
@@ -26,7 +32,7 @@ void CollisionComponent::Initiate(float someRadius)
 
 void CollisionComponent::Update(float aDeltaTime)
 {
-	mySphere.myCenterPosition = myEntity->myOrientation.GetPos();
+	mySphere.myCenterPosition = myEntity.myOrientation.GetPos();
 	myInstance->SetPosition(mySphere.myCenterPosition);
 }
 

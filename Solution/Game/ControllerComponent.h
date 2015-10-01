@@ -5,6 +5,8 @@
 class ControllerComponent : public Component
 {
 public:
+	ControllerComponent(Entity& aEntity);
+
 	void MoveUp(float aDistance);
 	void MoveDown(float aDistance);
 	void MoveLeft(float aDistance);

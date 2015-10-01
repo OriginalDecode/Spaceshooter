@@ -1,14 +1,11 @@
 #include "stdafx.h"
 #include "BulletComponent.h"
 
-BulletComponent::BulletComponent()
+BulletComponent::BulletComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 	myCurrentLifeTime = 0.f;
 	myActive = false;
-}
-
-BulletComponent::~BulletComponent()
-{
 }
 
 void BulletComponent::Update(float aDeltaTime)

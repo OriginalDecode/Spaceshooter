@@ -14,7 +14,7 @@ namespace Prism
 class CollisionComponent : public Component
 {
 public:
-	
+	CollisionComponent(Entity& aEntity);
 	~CollisionComponent();
 	void Initiate(float someRadius);
 	void Update(float aDeltaTime) override;

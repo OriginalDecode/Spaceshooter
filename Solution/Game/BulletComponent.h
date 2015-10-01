@@ -5,8 +5,7 @@
 class BulletComponent : public Component
 {
 public:
-	BulletComponent();
-	~BulletComponent();
+	BulletComponent(Entity& aEntity);
 	
 	void Update(float aDeltaTime) override;
 	void Init(const float& aMaxTime, const unsigned short& aDamage);

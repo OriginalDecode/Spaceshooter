@@ -42,8 +42,7 @@ private:
 template <typename T>
 T* Entity::AddComponent()
 {
-	T* component = new T();
-	component->SetEntity(this);
+	T* component = new T(*this);
 	myComponents[T::GetID()] = component;
 	return component;
 }

@@ -2,11 +2,8 @@
 #include "HealthComponent.h"
 #include "Entity.h"
 
-HealthComponent::HealthComponent()
-{
-}
-
-HealthComponent::~HealthComponent()
+HealthComponent::HealthComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 }
 
@@ -31,7 +28,7 @@ void HealthComponent::RemoveHealth(const unsigned short& aHealthToRemove)
 	if (myCurrentHealth <= aHealthToRemove)
 	{
 		myCurrentHealth = 0;
-		myEntity->Kill();
+		myEntity.Kill();
 	}
 	else
 	{

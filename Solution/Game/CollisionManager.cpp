@@ -77,11 +77,11 @@ void CollisionManager::Update()
 	{
 		for (int e = myEnemies.Size() - 1; e >= 0; --e)
 		{
-			Entity& enemy = *myEnemies[e]->GetEntity();
+			Entity& enemy = myEnemies[e]->GetEntity();
 			if (enemy.GetAlive() == true 
 				&& CU::Intersection::SphereVsSphere(myPlayerBullets[i]->GetSphere(), myEnemies[e]->GetSphere()) == true)
 			{
-				Entity& bullet = *myPlayerBullets[i]->GetEntity();
+				Entity& bullet = myPlayerBullets[i]->GetEntity();
 				enemy.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
 				bullet.GetComponent<BulletComponent>()->SetActive(false);
 				myPlayerBullets.RemoveCyclicAtIndex(i);
@@ -95,7 +95,7 @@ void CollisionManager::CleanUp()
 {
 	for (int i = myEnemies.Size() - 1; i >= 0; --i)
 	{
-		if (myEnemies[i]->GetEntity()->GetAlive() == false)
+		if (myEnemies[i]->GetEntity().GetAlive() == false)
 		{
 			myEnemies.RemoveCyclicAtIndex(i);
 		}

@@ -4,6 +4,12 @@
 #include <Vector.h>
 #include "Entity.h"
 
+AIComponent::AIComponent(Entity& aEntity)
+	: ControllerComponent(aEntity)
+{
+
+}
+
 void AIComponent::Init()
 {
 	myEntityToFollow = nullptr;
@@ -74,7 +80,7 @@ AIComponent::SteeringOutput AIComponent::CalcualteSteering()
 	SteeringOutput output;
 
 
-	CU::Vector3<float> direction = myEntityToFollow->myOrientation.GetPos() - myEntity->myOrientation.GetPos();
+	CU::Vector3<float> direction = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 	float distance = CU::Length(direction);
 
 	if (distance < myTargetRadius)

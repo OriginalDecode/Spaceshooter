@@ -4,6 +4,8 @@
 class AIComponent : public ControllerComponent
 {
 public:
+	AIComponent(Entity& aEntity);
+
 	void Init();
 	void Update(float aDeltaTime) override;
 

@@ -12,16 +12,13 @@
 
 #define PI 3.14159265359f
 
-ShootingComponent::ShootingComponent()
+ShootingComponent::ShootingComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 	myWeapons.Init(4);
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
 	myCurrentWeaponID = 0;
-}
-
-ShootingComponent::~ShootingComponent()
-{
 }
 
 void ShootingComponent::Update(float aDeltaTime)
@@ -40,9 +37,9 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 {
 	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
-		CU::Matrix44<float> orientation = myEntity->myOrientation;
+		CU::Matrix44<float> orientation = myEntity.myOrientation;
 		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-			+ (myWeapons[myCurrentWeaponID].myPosition * myEntity->myOrientation));
+			+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
 
 		if (myWeapons[myCurrentWeaponID].mySpread > 0)
 		{
