@@ -8,6 +8,6 @@
 #include <cstring>
 #include "GrowingArray.h"
 #include <string>
-#include "TinyXML2\tinyxml2.h"
+#include "tinyxml2.h"
 #include <vector>
 #include "Vector.h"

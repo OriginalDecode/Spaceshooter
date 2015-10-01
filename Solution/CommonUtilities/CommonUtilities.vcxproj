@@ -112,8 +112,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="StaticArray.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="TinyXML2\stdafx.h" />
-    <ClInclude Include="TinyXML2\tinyxml2.h" />
+    <ClInclude Include="tinyxml2.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Vector2decl.h" />
@@ -130,8 +129,7 @@
     <ClCompile Include="CommonUtilitiesTestClass.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="TinyXML2\stdafx.cpp" />
-    <ClCompile Include="TinyXML2\tinyxml2.cpp" />
+    <ClCompile Include="tinyxml2.cpp" />
     <ClCompile Include="XMLFunctions.cpp" />
     <ClCompile Include="XMLReader.cpp" />
   </ItemGroup>

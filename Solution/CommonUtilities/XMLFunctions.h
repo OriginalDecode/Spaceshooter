@@ -1,5 +1,5 @@
 #pragma once
-#include "TinyXML2\tinyxml2.h"
+#include "tinyxml2.h"
 #include "..\DL_Debug\DL_Debug.h"
 #include <algorithm>
 #include <string>
