@@ -25,14 +25,7 @@ namespace Prism
 
 	ModelLoader::~ModelLoader()
 	{
-
-		for (auto it = myFBXModels.begin(); it != myFBXModels.end(); ++it)
-		{
-			delete it->second;
-		}
-
 		myNonFXBModels.DeleteAll();
-		myFBXModels.clear();
 	}
 
 	void ModelLoader::Run()
@@ -69,18 +62,9 @@ namespace Prism
 				{
 					CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 
-					if (myFBXModels.find(loadArray[i].myModelPath) != myFBXModels.end())
-					{
-						model = myFBXModels[loadArray[i].myModelPath];
-					}
-					else
-					{
-						model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
-							Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
-						model->Init();
-
-						myFBXModels[loadArray[i].myModelPath] = model;
-					}
+					model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
+						Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
+					model->Init();
 
 
 					int elapsed = static_cast<int>(
