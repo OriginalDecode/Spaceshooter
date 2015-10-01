@@ -276,11 +276,11 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(enemyRotation.y) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(enemyRotation.z) * newEntity->myOrientation;
 		
-		float health = 0;
+		int health = 0;
 		reader.ForceReadAttribute(entityElement, "hp", health);
 		newEntity->AddComponent<HealthComponent>()->Init(health);
 		newEntity->AddComponent<CollisionComponent>()->Initiate(7.5f);
-		myCollisionManager.Add(newEntity->GetComponent<CollisionComponent>(), CollisionManager::eCollisionEnum::ENEMY);
+		myCollisionManager.Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 
 		myEntities.Add(newEntity);
 	}
