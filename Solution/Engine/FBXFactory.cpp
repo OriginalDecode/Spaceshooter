@@ -20,6 +20,11 @@ Prism::FBXFactory::FBXFactory()
 	myLoader = new FBXLoader();
 }
 	
+Prism::FBXFactory::~FBXFactory()
+{
+	delete myLoader;
+}
+
 void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aEffect)
 {
 	VertexIndexWrapper* indexWrapper = new VertexIndexWrapper();
@@ -153,9 +158,9 @@ Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect
 
 Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffect)
 {
-	if (myLoadedModels.find(aFilePath) != myLoadedModels.end())
+	if (myModels.find(aFilePath) != myModels.end())
 	{
-		return myLoadedModels[aFilePath];
+		return myModels[aFilePath];
 	}
 
 
@@ -187,7 +192,7 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 
 	Model* returnModel = CreateModel(modelData, aEffect);
 
-	myLoadedModels[aFilePath] = returnModel;
+	myModels[aFilePath] = returnModel;
 
 	return returnModel;
 }

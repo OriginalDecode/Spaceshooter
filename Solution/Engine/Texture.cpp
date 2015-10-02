@@ -4,6 +4,12 @@
 #include <DL_Debug.h>
 #include "Texture.h"
 
+
+Prism::Texture::~Texture()
+{
+	myTexture->Release();
+}
+
 bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 {
 	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice(), aFilePath.c_str()

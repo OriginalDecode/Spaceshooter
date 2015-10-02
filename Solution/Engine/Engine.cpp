@@ -42,6 +42,7 @@ namespace Prism
 		delete myFontContainer;
 		delete myDebugDataDisplay;
 		delete myFileWatcher;
+		delete myModelLoader;
 	}
 
 	bool Engine::Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo)
@@ -49,6 +50,12 @@ namespace Prism
 		myInstance = new Engine();
 		myInstance->mySetupInfo = &aSetupInfo;
 		return myInstance->Init(aHwnd, aWndProc);
+	}
+
+	void Engine::Destroy()
+	{
+		delete myInstance;
+		myInstance = nullptr;
 	}
 
 	Engine* Engine::GetInstance()

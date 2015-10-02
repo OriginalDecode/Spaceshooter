@@ -8,12 +8,20 @@
 #include <Model.h>
 #include "ModelLoader.h"
 #include <ModelProxy.h>
+#include <Scene.h>
 
 
 GraphicsComponent::GraphicsComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myInstance(nullptr)
 {
+}
+
+GraphicsComponent::~GraphicsComponent()
+{
+	myEntity.GetScene().RemoveInstance(myInstance);
+	delete myInstance;
+	myInstance = nullptr;
 }
 
 void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
@@ -49,4 +57,9 @@ void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 {
 	myEntity.myOrientation.SetPos(aPosition);
 	myInstance->SetOrientation(myEntity.myOrientation);
+}
+
+void GraphicsComponent::SetScale(const CU::Vector3<float>& aScale)
+{
+	myInstance->SetScale(aScale);
 }

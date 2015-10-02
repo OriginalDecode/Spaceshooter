@@ -13,7 +13,7 @@ public:
 	MainMenuState(CU::InputWrapper* anInputWrapper);
 	~MainMenuState();
 
-	void InitState() override;
+	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
 
 	const eStateStatus Update() override;

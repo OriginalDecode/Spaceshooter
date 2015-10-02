@@ -16,10 +16,10 @@ class InGameState : public GameState
 {
 public:
 
-	InGameState(CU::InputWrapper* anInputWrapper);
+	InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFilePath, bool aUseXML);
 	~InGameState();
 
-	void InitState() override;
+	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
 
 	const eStateStatus Update() override;
@@ -30,12 +30,11 @@ public:
 
 private:
 
-	void LogicUpdate(const float aDeltaTime);
-
 	bool CheckCollision();
 
-	BulletManager* myBulletManager;
-	CollisionManager* myCollisionManager;
+	std::string myLevelFilePath;
+	bool myUseXML;
+	
 	Level* myLevel;
 };
 

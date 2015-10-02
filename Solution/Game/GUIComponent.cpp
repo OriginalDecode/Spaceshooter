@@ -77,11 +77,12 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	if (radius.x != 0 && radius.y != 0)
 	{
 		length = CU::Length(radius);
+		CU::Normalize(radius);
 	}
+
 	if (length > 400.f)
 	{
 		myCurrentWaypointSprite = myArrow;
-		CU::Normalize(radius);
 		newRenderPos.x = radius.x * 400.f + (aWindowSize.x / 2.f);
 		newRenderPos.y = -(radius.y * 400.f + (aWindowSize.y / 2.f));
 	}
@@ -92,7 +93,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	if (circleAroundPoint < 0.f)
 	{
 		myCurrentWaypointSprite = myArrow;
-		CU::Normalize(radius);
 		newRenderPos.x = -radius.x * 400.f + (aWindowSize.x / 2.f);
 		newRenderPos.y = -(-radius.y * 400.f + (aWindowSize.y / 2.f));
 	}

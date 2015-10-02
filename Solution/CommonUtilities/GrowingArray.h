@@ -95,8 +95,8 @@ namespace CommonUtilities
 	GA_TEMPLATE
 	inline GA_TYPE::~GrowingArray()
 	{
-		//delete[] myData;
-		//myIsInit = false;
+		delete[] myData;
+		myIsInit = false;
 	}
 
 	GA_TEMPLATE

@@ -3,6 +3,9 @@
 #include <Model2D.h>
 #include <Camera.h>
 #include <InputWrapper.h>
+#include "StateStackProxy.h"
+#include "PostMaster.h"
+#include "GameStateMessage.h"
 
 MainMenuState::MainMenuState(CU::InputWrapper* anInputWrapper)
 {
@@ -13,14 +16,17 @@ MainMenuState::~MainMenuState()
 {
 }
 
-void MainMenuState::InitState()
+void MainMenuState::InitState(StateStackProxy* aStateStackProxy)
 {
+	myStateStack = aStateStackProxy;
+	
 	myBackground = new Prism::Model2D;
 	myBackground->Init("Data/resources/texture/seafloor.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x), 
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) });
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
+
 }
 
 void MainMenuState::EndState()
@@ -31,9 +37,14 @@ void MainMenuState::EndState()
 
 const eStateStatus MainMenuState::Update()
 {
-	if (myInputWrapper->KeyDown(DIK_ESCAPE))
+	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
 		return eStateStatus::ePopMainState;
+	}
+
+	if (myInputWrapper->KeyDown(DIK_L) == true)
+	{
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::LEVEL_SELECT_STATE));
 	}
 
 	Render();

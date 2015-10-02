@@ -4,10 +4,9 @@
 #include <cassert>
 #include "Vector3decl.h"
 
-#define Vector3f Vector3<float>
 namespace CommonUtilities
 {
-
+	typedef Vector3<float> Vector3f;
 	template <typename T>
 	Vector3<T>::Vector3(T aX = 0, T aY = 0, T aZ = 0)
 	{

@@ -18,24 +18,23 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFilePath, bool aUseXML)
 {
 	myInputWrapper = anInputWrapper;
+	myLevelFilePath = aLevelFilePath;
+	myUseXML = aUseXML;
 }
 
 InGameState::~InGameState()
 {
-	delete myBulletManager;
-	delete myCollisionManager;
+	delete myLevel;
 }
 
-void InGameState::InitState()
+void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
+	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
-	myBulletManager = new BulletManager;
-	myCollisionManager = new CollisionManager();
-	myBulletManager->SetCollisionManager(myCollisionManager);
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, true);
+	myLevel = new Level(myLevelFilePath, myInputWrapper, myUseXML);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 
@@ -46,8 +45,6 @@ void InGameState::EndState()
 const eStateStatus InGameState::Update()
 {
 	BEGIN_TIME_BLOCK("InGameState::Update");
-	
-	myCollisionManager->CleanUp();
 
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 
@@ -73,9 +70,16 @@ const eStateStatus InGameState::Update()
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
-	LogicUpdate(deltaTime);
+	if (myLevel->LogicUpdate(deltaTime) == false)
+	{
+		delete myLevel;
+		myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
+		OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
+		//return eStateStatus::ePopMainState;
+	}
 
-	myBulletManager->Update(deltaTime);
+
+	
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
@@ -110,11 +114,6 @@ void InGameState::Render()
 void InGameState::ResumeState()
 {
 
-}
-
-void InGameState::LogicUpdate(const float aDeltaTime)
-{
-	myLevel->LogicUpdate(aDeltaTime);
 }
 
 void InGameState::OnResize(int aWidth, int aHeight)

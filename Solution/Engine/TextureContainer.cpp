@@ -3,6 +3,17 @@
 #include "Texture.h"
 #include "TextureContainer.h"
 
+
+Prism::TextureContainer::~TextureContainer()
+{
+	for (auto it = myTextures.begin(); it != myTextures.end(); ++it)
+	{
+		delete it->second;
+	}
+
+	myTextures.clear();
+}
+
 Prism::Texture* Prism::TextureContainer::GetTexture(const std::string& aFileName)
 {
 	auto it = myTextures.find(aFileName);

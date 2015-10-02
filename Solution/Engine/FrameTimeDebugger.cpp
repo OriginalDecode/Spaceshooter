@@ -19,7 +19,30 @@ namespace Prism
 		, myFrameTimeIndex(0)
 		, myFrameCounter(0)
 	{
+		for (int i = 0; i < NUM_FRAMES_TO_RECORD; ++i)
+		{
+			for (auto it = myFrameDatas[i].begin(); it != myFrameDatas[i].end(); ++it)
+			{
+				it->second.myNameText = nullptr;
+				it->second.myTimeText = nullptr;
+			}
+		}
+	}
 
+	FrameTimeDebugger::~FrameTimeDebugger()
+	{
+		for (int i = 0; i < NUM_FRAMES_TO_RECORD; ++i)
+		{
+			for (auto it = myFrameDatas[i].begin(); it != myFrameDatas[i].end(); ++it)
+			{
+				delete it->second.myNameText;
+				delete it->second.myTimeText;
+			}
+
+			myFrameDatas[i].clear();
+		}
+
+		delete myGraphRenderer;
 	}
 
 	void FrameTimeDebugger::Init()

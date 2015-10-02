@@ -29,17 +29,26 @@ Prism::Text::Text()
 
 Prism::Text::~Text()
 {
-	myVertexBuffer->myVertexBuffer->Release();
-	myIndexBuffer->myIndexBuffer->Release();
+	if (myVertexBuffer->myVertexBuffer != nullptr)
+	{
+		myVertexBuffer->myVertexBuffer->Release();
+	}
+	delete myVertexBuffer;
+
+	if (myIndexBuffer->myIndexBuffer != nullptr)
+	{
+		myIndexBuffer->myIndexBuffer->Release();
+	}
+	delete myIndexBuffer;
 
 	delete myVertexBufferDesc;
 	delete myIndexBufferDesc;
 	delete myInitData;
+	delete mySurface;
 }
 
 void Prism::Text::Init(Font* aFont)
 {
-
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/FontEffect.fx");
 	myFont = aFont;
 	myCharSize = myFont->GetCharSize();

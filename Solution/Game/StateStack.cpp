@@ -8,20 +8,18 @@ StateStack::StateStack()
 	myMainIndex = -1;
 	mySubIndex = -1;
 	myGameStates.Init(16);
+
+	myStateStackProxy = new StateStackProxy(*this);
 }
 
 StateStack::~StateStack()
 {
+	delete myStateStackProxy;
 }
 
 void StateStack::PopSubGameState()
 {
 	DL_ASSERT_EXP(myGameStates.Size() > 0, "Can't pop an empty stack.");
-
-	//if (mySubIndex == 0)
-	//{
-	//	return;
-	//}
 
 	myGameStates[myMainIndex][mySubIndex]->EndState();
 
@@ -65,7 +63,8 @@ void StateStack::PushSubGameState(GameState* aSubGameState)
 	DL_ASSERT_EXP(myMainIndex < 20 && mySubIndex < 20, "Can't add more than 20 states, it's unreasonable!");
 
 	myGameStates[myMainIndex].Add(aSubGameState);
-	aSubGameState->InitState();
+
+	aSubGameState->InitState(myStateStackProxy);
 
 	mySubIndex = myGameStates[myMainIndex].Size() - 1;
 }

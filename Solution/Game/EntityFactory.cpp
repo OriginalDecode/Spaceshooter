@@ -6,12 +6,30 @@
 #include "EntityFactory.h"
 #include "GraphicsComponent.h"
 #include <Instance.h>
+#include <Scene.h>
 #include "ShootingComponent.h"
 #include <XMLReader.h>
 
-EntityData::EntityData()
-	: myEntity(new Entity(eEntityType::NOT_USED))
+EntityData::EntityData(Prism::Scene& aDummyScene)
+	: myEntity(new Entity(eEntityType::NOT_USED, aDummyScene))
 {
+}
+
+EntityFactory::EntityFactory()
+{
+	myDummyScene = new Prism::Scene();
+}
+
+EntityFactory::~EntityFactory()
+{
+	for (auto it = myEntities.begin(); it != myEntities.end(); ++it)
+	{
+		delete it->second.myEntity;
+	}
+
+	myEntities.clear();
+
+	delete myDummyScene;
 }
 
 void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
@@ -39,7 +57,7 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	XMLReader entityDocument;
 	entityDocument.OpenDocument(aEntityPath);
 
-	EntityData newEntity;
+	EntityData newEntity(*myDummyScene);
 
 	tinyxml2::XMLElement* rootElement = entityDocument.FindFirstChild("Entity");
 

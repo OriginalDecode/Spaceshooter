@@ -44,6 +44,6 @@ void CollisionComponent::ReceiveMessage(const ShootMessage& aMessage)
 
 void CollisionComponent::Render(Prism::Camera* aCamera)
 {
-	//if (myShouldShow == true)
+	if (myShouldShow == true)
 		myInstance->Render(*aCamera);
 }

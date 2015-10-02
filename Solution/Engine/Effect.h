@@ -12,6 +12,7 @@ struct ID3DX11EffectTechnique;
 struct ID3DX11EffectMatrixVariable;
 struct ID3DX11EffectVariable;
 struct ID3DX11EffectScalarVariable;
+struct ID3DX11EffectVectorVariable;
 
 namespace Prism
 {
@@ -26,6 +27,7 @@ namespace Prism
 		ID3DX11EffectTechnique* GetTechnique();
 		const std::string& GetFileName() const;
 		bool Init(const std::string& aEffectFile);
+		void SetScaleVector(const CU::Vector3<float>& aScaleVector);
 		void SetWorldMatrix(const CU::Matrix44<float>& aWorldMatrix);
 		void SetViewMatrix(const CU::Matrix44<float>& aViewMatrix);
 		void SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix);
@@ -43,18 +45,20 @@ namespace Prism
 
 	private:
 		ID3DX11Effect* myEffect;
-		ID3DX11EffectMatrixVariable* myProjectionMatrixVariable;
 		ID3DX11EffectTechnique* myTechnique;
+
+		ID3DX11EffectMatrixVariable* myProjectionMatrixVariable;
 		ID3DX11EffectMatrixVariable* myViewMatrixVariable;
 		ID3DX11EffectMatrixVariable* myWorldMatrixVariable;
+
 		ID3DX11EffectScalarVariable* myEyePositionVariable;
 		ID3DX11EffectScalarVariable* myTotalTimeVariable;
 
+		ID3DX11EffectVectorVariable* myScaleVectorVariable;
 
 		ID3DX11EffectVariable* myDirectionalLightVariable;
 		ID3DX11EffectVariable* myPointLightVariable;
 		ID3DX11EffectVariable* mySpotLightVariable;
-
 
 		std::string myFileName;
 

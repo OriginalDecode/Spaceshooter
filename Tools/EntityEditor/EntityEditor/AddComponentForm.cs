@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSharpUtilities;
 
 namespace EntityEditor
 {
@@ -78,7 +79,7 @@ namespace EntityEditor
 
             if (ACF_CB_ComponentType.Items.Count == 0)
             {
-                MessageBox.Show("You already have one of each component in the entity.", 
+                DL_Debug.GetInstance.DL_MessageBox("You already have one of each component in the entity.", 
                     "Error: Could not Add Component", MessageBoxButtons.OK);
                 DestroyWindowsForm();
             }

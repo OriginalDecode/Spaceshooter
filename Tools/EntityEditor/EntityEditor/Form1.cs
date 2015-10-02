@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using CSharpUtilities;
 
 namespace EntityEditor
 {
@@ -35,6 +36,14 @@ namespace EntityEditor
             InitializeComponent();
 
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
+            DL_Debug.GetInstance.Init("EntityEditorLog");
+
+            if (myCurrentEntityFolderPath == "")
+            {
+                myCurrentEntityFolderPath = Directory.GetCurrentDirectory();
+                Properties.Settings.Default.DefaultEntityFolderPath = myCurrentEntityFolderPath;
+                Properties.Settings.Default.Save();
+            }
         }
 
         public static string Reverse(string s)
@@ -264,7 +273,7 @@ namespace EntityEditor
         private void saveEntityToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
-            MessageBox.Show("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
+            DL_Debug.GetInstance.DL_MessageBox("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
                     "Save Successfull!", MessageBoxButtons.OK);
         }
 
@@ -309,6 +318,9 @@ namespace EntityEditor
             {
                 saveEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             }
+            saveEntityFile.AddExtension = true;
+            saveEntityFile.DefaultExt = ".xml";
+            saveEntityFile.Filter = "XML file (*.xml)|*.xml";
             saveEntityFile.ShowDialog();
 
             myCurrentEntityFilePath = saveEntityFile.FileName;
@@ -326,15 +338,25 @@ namespace EntityEditor
             {
                 saveEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             }
+            saveEntityFile.AddExtension = true;
+            saveEntityFile.DefaultExt = ".xml";
+            saveEntityFile.Filter = "XML file (*.xml)|*.xml";
             saveEntityFile.ShowDialog();
 
             myCurrentEntityFilePath = saveEntityFile.FileName;
             Properties.Settings.Default.DefaultEntityFileName = myCurrentEntityFilePath;
             Properties.Settings.Default.Save();
 
-            myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
-            MessageBox.Show("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
-                    "Save Successfull!", MessageBoxButtons.OK);
+            if (myCurrentEntityFilePath != "")
+            {
+                myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
+                DL_Debug.GetInstance.DL_MessageBox("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
+                        "Save Successfull!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                DL_Debug.GetInstance.DL_ErrorMessage("Could not save the file, because it missing a name.");
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
-#include "Time.h"
+#include "stdafx.h"
+
 #include <stdlib.h>
+#include "Time.h"
 #include <time.h>
 
 CommonUtilities::Time::Time(CommonUtilities::TimeUnit aMicroSeconds, CommonUtilities::TimeUnit aFrameMicroSeconds)

@@ -5,6 +5,7 @@
 #include <istream>
 #include <atlstr.h>
 #include <TimerManager.h>
+//#include <vld.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath);
@@ -102,11 +103,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 		}
 	}
 
-	Prism::Engine::GetInstance()->Shutdown();
 	globalGame->Destroy();
 	delete globalGame;
 	globalGame = nullptr;
 
+	Prism::Engine::GetInstance()->Shutdown();
+	Prism::Engine::Destroy();
 	return 0;
 }
 

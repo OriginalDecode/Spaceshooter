@@ -30,6 +30,7 @@ void AIComponent::Update(float aDeltaTime)
 	else
 	{
 		FollowEntity(aDeltaTime);
+		Shoot();
 	}
 }
 
@@ -124,6 +125,7 @@ void AIComponent::FollowOwnDecision(float aDeltaTime)
 		MakeDecision();
 	}
 
+		
 	switch (myDecision)
 	{
 	case 0:

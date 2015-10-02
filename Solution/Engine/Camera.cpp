@@ -25,7 +25,7 @@ namespace Prism
 		reader.OpenDocument("Data/script/camera.xml");
 		tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("camera");
 		reader.ForceReadAttribute(levelElement, "fov", myFOV);
-		myFOV *= 3.14159 / 180.f;
+		myFOV *= 3.14159f / 180.f;
 		OnResize(Engine::GetInstance()->GetWindowSize().x, Engine::GetInstance()->GetWindowSize().y);
 	}
 

@@ -41,16 +41,16 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\VisualLeakDetector\;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\Libs3rdParty\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\VisualLeakDetector\;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(SolutionDir)..\Libs3rdParty\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
