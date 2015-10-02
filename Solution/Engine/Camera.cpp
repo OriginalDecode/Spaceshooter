@@ -1,19 +1,16 @@
 #include "stdafx.h"
-
 #include "Camera.h"
-#include <Fov90Frustum.h>
+#include "FileWatcher.h"
 #include <xnamath.h>
-
+#include <XMLReader.h>
 
 namespace Prism
 {
 	Camera::Camera(CU::Matrix44f& aPlayerMatrix)
 		: myOrientation(aPlayerMatrix)
 	{
-		//OnResize(800, 600);
-
-		//myOrientation.SetPos(CU::Vector3<float>(0.f, 0.f, -25.f));
-
+		WATCH_FILE("Data/script/camera.xml", Camera::ReadXML);
+		ReadXML("Data/script/camera.xml");
 	}
 
 
@@ -21,15 +18,28 @@ namespace Prism
 	{
 	}
 
+	void Camera::ReadXML(const std::string& aFileName)
+	{
+		Sleep(10);
+		XMLReader reader;
+		reader.OpenDocument("Data/script/camera.xml");
+		tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("camera");
+		reader.ForceReadAttribute(levelElement, "fov", myFOV);
+		myFOV *= 3.14159f / 180.f;
+		OnResize(Engine::GetInstance()->GetWindowSize().x, Engine::GetInstance()->GetWindowSize().y);
+	}
+
 	void Camera::OnResize(const int aWidth, const int aHeight)
 	{
-		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(aWidth)
-			, static_cast<float>(aHeight), 0.1f, 1000.f);
+		//myProjectionMatrix = CU::Matrix44<float>::CreateProjectionMatrixLH(0.1f, 1000.f, static_cast<float>(aWidth / aHeight), XM_PI * 0.4f);
+		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(aWidth), static_cast<float>(aHeight), 0.1f, 1000.f);
 
 
-		XMMATRIX projection = XMMatrixPerspectiveFovLH(XM_PI * 0.5f, static_cast<float>(aWidth) / aHeight, 0.1f, 1000.f);
+
+		XMMATRIX projection = XMMatrixPerspectiveFovLH(myFOV, static_cast<float>(aWidth) / aHeight, 0.1f, 1000.f);
 		XMFLOAT4X4 proj;
 		XMStoreFloat4x4(&proj, projection);
+		
 		myProjectionMatrix.Init(reinterpret_cast<float*>(proj.m));
 	}
 
@@ -66,7 +76,7 @@ namespace Prism
 
 	void Camera::RotateX(const float aDegrees)
 	{
-		TIME_FUNCTION;
+		TIME_FUNCTION
 
 		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
@@ -76,7 +86,7 @@ namespace Prism
 
 	void Camera::RotateY(const float aDegrees)
 	{
-		TIME_FUNCTION;
+		TIME_FUNCTION
 
 		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
@@ -86,7 +96,7 @@ namespace Prism
 
 	void Camera::RotateZ(const float aDegrees)
 	{
-		TIME_FUNCTION;
+		TIME_FUNCTION
 
 		myPosition = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
@@ -96,17 +106,17 @@ namespace Prism
 
 	void Camera::MoveForward(const float aDistance)
 	{
-		TIME_FUNCTION;
+		TIME_FUNCTION
 
-		myPosition += myOrientation.GetForward() * aDistance;
+			myPosition += myOrientation.GetForward() * aDistance;
 		myOrientation.SetPos(myPosition);
 	}
 
 	void Camera::MoveRight(const float aDistance)
 	{
-		TIME_FUNCTION;
+		TIME_FUNCTION
 
-		myPosition += myOrientation.GetRight() * aDistance;
+			myPosition += myOrientation.GetRight() * aDistance;
 		myOrientation.SetPos(myPosition);
 	}
 }

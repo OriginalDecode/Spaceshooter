@@ -115,9 +115,9 @@ void InputComponent::Update(float aDeltaTime)
 		}
 	}
 
-	std::string tempX = std::to_string(mySteering.x);
-	tempX += ", " + std::to_string(mySteering.y);
-	SetWindowTextA(GetActiveWindow(), tempX.c_str());
+	//std::string tempX = std::to_string(mySteering.x);
+	//tempX += ", " + std::to_string(mySteering.y);
+	//SetWindowTextA(GetActiveWindow(), tempX.c_str());
 
 	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
 	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;

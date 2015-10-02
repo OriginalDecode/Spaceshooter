@@ -28,7 +28,10 @@
 #include <sstream>
 #include <string>
 #include <SpotLight.h>
+
 #include "WeaponFactory.h"
+#include "WaypointMessage.h"
+
 #include <XMLReader.h>
 
 
@@ -78,7 +81,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
 	{
-		for (int i = 0; i < 220; ++i)
+		static int numberOfEnemies = 0;
+		++numberOfEnemies;
+		for (int i = 0; i < numberOfEnemies; ++i)
 		{
 			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
 
@@ -91,7 +96,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
 			astroids->AddComponent<AIComponent>()->Init();
-			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 			astroids->AddComponent<ShootingComponent>();
 
 			myEntities.Add(astroids);
@@ -187,6 +192,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
+		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+		{
+			myPlayer->SendMessage<WaypointMessage>(WaypointMessage(myEntities[i]->myOrientation.GetPos()));
+		}
 	}
 
 

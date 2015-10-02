@@ -35,6 +35,11 @@ namespace CommonUtilities
 	template <typename T>
 	void Normalize(Vector3<T>& aVector)
 	{
+		if (aVector.x == 0 && aVector.y == 0 && aVector.z == 0)
+		{
+			DL_DEBUG("Warning: Normalize zero vector.");
+			return;
+		}
 		aVector = GetNormalized(aVector);
 	}
 
