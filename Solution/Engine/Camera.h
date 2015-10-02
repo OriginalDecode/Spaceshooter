@@ -9,6 +9,8 @@ namespace Prism
 		Camera(CU::Matrix44f& aPlayerMatrix);
 		~Camera();
 
+		void ReadXML(const std::string& aFileName);
+
 		void OnResize(const int aWidth, const int aHeight);
 
 		const CU::Matrix44<float>& GetOrientation() const;
@@ -26,6 +28,7 @@ namespace Prism
 		void MoveForward(const float aDistance);
 		void MoveRight(const float aDistance);
 
+
 	private:
 		void operator= (const Camera&) = delete;
 
@@ -33,6 +36,7 @@ namespace Prism
 		CU::Matrix44<float> myProjectionMatrix;
 		CU::Matrix44<float> myOrthogonalMatrix;
 		CU::Vector3<float> myPosition;
+		float myFOV;
 	};
 
 }

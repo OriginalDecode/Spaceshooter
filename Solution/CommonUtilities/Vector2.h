@@ -14,12 +14,12 @@ namespace CommonUtilities
 		y = aY;
 	}
 
-	template <typename T>
-	Vector2<T>::Vector2(Vector3<T> aVector3)
-	{
-		x = aVector3.x;
-		y = aVector3.y;
-	}
+	//template <typename T>
+	//Vector2<T>::Vector2(Vector3<T> aVector3)
+	//{
+	//	x = aVector3.x;
+	//	y = aVector3.y;
+	//}
 
 	template <typename T>
 	Vector2<T>::~Vector2()

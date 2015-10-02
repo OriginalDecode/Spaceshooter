@@ -27,6 +27,7 @@
 #include "ShootingComponent.h"
 #include <sstream>
 #include <string>
+#include "WaypointMessage.h"
 #include <XMLReader.h>
 
 
@@ -205,7 +206,13 @@ void Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
+		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+		{
+			myPlayer->SendMessage<WaypointMessage>(WaypointMessage(myEntities[i]->myOrientation.GetPos()));
+		}
 	}
+
+	
 
 
 	myCollisionManager.Update();
@@ -275,7 +282,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(enemyRotation.x) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(enemyRotation.y) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(enemyRotation.z) * newEntity->myOrientation;
-		
+
 		int health = 0;
 		reader.ForceReadAttribute(entityElement, "hp", health);
 		newEntity->AddComponent<HealthComponent>()->Init(health);
@@ -292,7 +299,7 @@ void Level::ReadXML(const std::string& aFile)
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
-	
+
 		tinyxml2::XMLElement* propElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> propPosition;
 		reader.ForceReadAttribute(propElement, "X", propPosition.x);
@@ -328,6 +335,7 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
 		reader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
 		reader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
+
 		newEntity->myOrientation.SetPos(triggerPosition*10.f);
 
 		myEntities.Add(newEntity);

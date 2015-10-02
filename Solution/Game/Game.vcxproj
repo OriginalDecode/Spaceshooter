@@ -114,6 +114,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SteeringTargetMessage.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="WaypointMessage.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
