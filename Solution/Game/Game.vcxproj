@@ -91,6 +91,7 @@
     <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="EnemiesTargetMessage.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Enums.h" />
