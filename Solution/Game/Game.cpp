@@ -51,10 +51,10 @@ bool Game::Init(HWND& aHwnd)
 
 	myMainMenu = new MainMenuState(myInputWrapper);
 	myLevelSelect = new LevelSelectState(myInputWrapper);
-	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
-	myStateStack.PushMainGameState(myGame);
+	//myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
+	//myStateStack.PushMainGameState(myGame);
 
-	//myStateStack.PushMainGameState(myMainMenu);
+	myStateStack.PushMainGameState(myMainMenu);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 

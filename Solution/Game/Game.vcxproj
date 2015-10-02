@@ -83,6 +83,7 @@
     <ClInclude Include="BulletComponent.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="ColoursForBG.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelSelectState.h" />
     <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
@@ -123,6 +125,7 @@
     <ClCompile Include="BulletComponent.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletMessage.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -140,6 +143,7 @@
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelSelectState.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="Menu.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />

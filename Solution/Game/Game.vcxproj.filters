@@ -74,6 +74,12 @@
     <ClCompile Include="PowerUpComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -170,6 +176,12 @@
     <ClInclude Include="PowerUpComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -186,6 +198,9 @@
     </Filter>
     <Filter Include="Components\Messages">
       <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu">
+      <UniqueIdentifier>{3c49dabf-7354-41ee-aa94-d9589cd2300e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
