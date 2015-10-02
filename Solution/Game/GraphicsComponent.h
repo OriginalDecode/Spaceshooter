@@ -22,6 +22,7 @@ public:
 	static int GetID();
 
 	void SetPosition(const CU::Vector3<float>& aPosition);
+	void SetScale(const CU::Vector3<float>& aScale);
 
 private:
 	Prism::Instance* myInstance;

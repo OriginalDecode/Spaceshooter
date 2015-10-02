@@ -11,6 +11,7 @@
 Prism::Instance::Instance(ModelProxy& aModel)
 	: myProxy(aModel)
 	, myOrientationPointer(nullptr)
+	, myScale({1,1,1})
 {
 
 }
@@ -21,6 +22,7 @@ void Prism::Instance::Render(Camera& aCamera)
 	{
 		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+		myProxy.GetEffect()->SetScaleVector(myScale);
 
 		if (myOrientationPointer != nullptr)
 		{
@@ -39,6 +41,7 @@ void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& a
 	{
 		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+		myProxy.GetEffect()->SetScaleVector(myScale);
 
 		if (myOrientationPointer != nullptr)
 		{
@@ -78,6 +81,12 @@ void Prism::Instance::SetEffect(const std::string& aEffectFile)
 	{
 		myProxy.SetEffect(Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectFile));
 	}
+}
+
+void Prism::Instance::SetScale(const CU::Vector3<float>& aScaleVector)
+{
+	myScale = aScaleVector;
+	
 }
 
 void Prism::Instance::PerformRotationLocal(CU::Matrix44<float>& aRotation)

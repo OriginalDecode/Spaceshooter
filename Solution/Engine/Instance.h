@@ -26,6 +26,8 @@ namespace Prism
 
 		void SetEffect(const std::string& aEffectFile);
 
+		void SetScale(const CU::Vector3<float>& aScaleVector);
+
 		void PerformRotationLocal(CU::Matrix44<float>& aRotation);
 		void PerformRotationWorld(CU::Matrix44<float>& aRotation);
 		void PerformTransformation(CU::Matrix44<float>& aTransformation);
@@ -43,6 +45,7 @@ namespace Prism
 		ModelProxy& myProxy;
 		CU::Matrix44<float> myOrientation;
 		CU::Matrix44<float>* myOrientationPointer;
+		CU::Vector3<float> myScale;
 		CU::Vector3<float> myPosition;
 	};
 }
