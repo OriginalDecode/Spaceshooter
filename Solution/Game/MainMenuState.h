@@ -7,8 +7,6 @@ namespace Prism
 	class Camera;
 }
 
-class LevelSelectState;
-
 class MainMenuState : public GameState
 {
 public:
@@ -28,7 +26,5 @@ private:
 
 	Prism::Model2D* myBackground;
 	Prism::Camera* myCamera;
-
-	LevelSelectState* myLevelSelectState;
 };
 

@@ -6,6 +6,7 @@
 
 class MainMenuState;
 class InGameState;
+class LevelSelectState;
 
 namespace CommonUtilities
 {
@@ -28,6 +29,8 @@ public:
 	void UnPause();
 	void OnResize(int aWidth, int aHeight);
 
+	void ReceiveMessage(const GameStateMessage& aMessage) override;
+
 private:
 	void operator=(Game& aApp) = delete;
 
@@ -37,6 +40,7 @@ private:
 	
 	MainMenuState* myMainMenu;
 	InGameState* myGame;
+	LevelSelectState* myLevelSelect;
 
 	bool myLockMouse;
 

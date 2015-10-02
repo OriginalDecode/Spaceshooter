@@ -4,6 +4,8 @@
 #include <Camera.h>
 #include <InputWrapper.h>
 #include "StateStackProxy.h"
+#include "PostMaster.h"
+#include "GameStateMessage.h"
 
 LevelSelectState::LevelSelectState(CU::InputWrapper* anInputWrapper)
 {
@@ -35,12 +37,16 @@ const eStateStatus LevelSelectState::Update()
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		return eStateStatus::ePopMainState;
+		return eStateStatus::ePopSubState;
 	}
 
 	if (myInputWrapper->KeyDown(DIK_1) == true)
 	{
-		
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml"));
+	}
+	else if (myInputWrapper->KeyDown(DIK_2) == true)
+	{
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml", false));
 	}
 
 	Render();

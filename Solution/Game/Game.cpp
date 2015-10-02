@@ -19,6 +19,8 @@
 #include <VTuneApi.h>
 #include "PostMaster.h"
 #include <Vector.h>
+#include "GameStateMessage.h"
+#include "LevelSelectState.h"
 
 Game::Game()
 	: myLockMouse(true)
@@ -39,6 +41,7 @@ Game::~Game()
 
 bool Game::Init(HWND& aHwnd)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
@@ -47,8 +50,10 @@ bool Game::Init(HWND& aHwnd)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	myMainMenu = new MainMenuState(myInputWrapper);
-	myGame = new InGameState(myInputWrapper);
+	myLevelSelect = new LevelSelectState(myInputWrapper);
+	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
 	myStateStack.PushMainGameState(myGame);
+
 	//myStateStack.PushMainGameState(myMainMenu);
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
@@ -110,4 +115,21 @@ void Game::OnResize(int aWidth, int aHeight)
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);
+}
+
+void Game::ReceiveMessage(const GameStateMessage& aMessage)
+{
+	switch (aMessage.GetGameState())
+	{
+	case eGameState::INGAME_STATE:
+		myGame = new InGameState(myInputWrapper, aMessage.GetFilePath(), aMessage.myUseXML);
+		myStateStack.PushMainGameState(myGame);
+		break;
+	case eGameState::MAIN_MENU_STATE:
+		myStateStack.PushMainGameState(myMainMenu);
+		break;
+	case eGameState::LEVEL_SELECT_STATE:
+		myStateStack.PushSubGameState(myLevelSelect);
+		break;
+	}
 }
