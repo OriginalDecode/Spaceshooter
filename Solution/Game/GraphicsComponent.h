@@ -12,6 +12,7 @@ class GraphicsComponent : public Component
 {
 public:
 	GraphicsComponent(Entity& aEntity);
+	~GraphicsComponent();
 
 	void Init(const char* aModelPath, const char* aEffectPath);
 	void InitGeometry(const Prism::MeshData& aMeshData);
@@ -24,7 +25,6 @@ public:
 
 private:
 	Prism::Instance* myInstance;
-
 };
 
 inline Prism::Instance* GraphicsComponent::GetInstance()

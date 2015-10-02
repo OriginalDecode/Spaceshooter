@@ -20,6 +20,11 @@ Prism::FBXFactory::FBXFactory()
 	myLoader = new FBXLoader();
 }
 	
+Prism::FBXFactory::~FBXFactory()
+{
+	delete myLoader;
+}
+
 void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aEffect)
 {
 	VertexIndexWrapper* indexWrapper = new VertexIndexWrapper();

@@ -15,6 +15,7 @@ class Effect;
 	{
 	public:
 		FBXFactory();
+		~FBXFactory();
 
 		Model* LoadModel(const char* aFilePath, Effect* aEffect);
 	private:

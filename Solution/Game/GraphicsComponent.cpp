@@ -8,12 +8,20 @@
 #include <Model.h>
 #include "ModelLoader.h"
 #include <ModelProxy.h>
+#include <Scene.h>
 
 
 GraphicsComponent::GraphicsComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myInstance(nullptr)
 {
+}
+
+GraphicsComponent::~GraphicsComponent()
+{
+	myEntity.GetScene().RemoveInstance(myInstance);
+	delete myInstance;
+	myInstance = nullptr;
 }
 
 void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)

@@ -3,9 +3,10 @@
 #include "Component.h"
 #include "Entity.h"
 
-Entity::Entity(eEntityType aType)
+Entity::Entity(eEntityType aType, Prism::Scene& aScene)
 	: myAlive(true)
 	, myType(aType)
+	, myScene(aScene)
 {
 
 }
