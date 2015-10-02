@@ -51,7 +51,7 @@ bool Game::Init(HWND& aHwnd)
 
 	myMainMenu = new MainMenuState(myInputWrapper);
 	myLevelSelect = new LevelSelectState(myInputWrapper);
-	myGame = new InGameState(myInputWrapper);
+	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
 	myStateStack.PushMainGameState(myGame);
 
 	//myStateStack.PushMainGameState(myMainMenu);
@@ -122,7 +122,7 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::INGAME_STATE:
-		myGame = new InGameState(myInputWrapper);
+		myGame = new InGameState(myInputWrapper, aMessage.GetFilePath(), aMessage.myUseXML);
 		myStateStack.PushMainGameState(myGame);
 		break;
 	case eGameState::MAIN_MENU_STATE:

@@ -18,9 +18,11 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFilePath, bool aUseXML)
 {
 	myInputWrapper = anInputWrapper;
+	myLevelFilePath = aLevelFilePath;
+	myUseXML = aUseXML;
 }
 
 InGameState::~InGameState()
@@ -32,7 +34,7 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
+	myLevel = new Level(myLevelFilePath, myInputWrapper, myUseXML);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 

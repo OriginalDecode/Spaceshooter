@@ -42,7 +42,11 @@ const eStateStatus LevelSelectState::Update()
 
 	if (myInputWrapper->KeyDown(DIK_1) == true)
 	{
-		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::INGAME_STATE));
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml"));
+	}
+	else if (myInputWrapper->KeyDown(DIK_2) == true)
+	{
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml", false));
 	}
 
 	Render();
