@@ -27,7 +27,7 @@ InGameState::InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFil
 
 InGameState::~InGameState()
 {
-
+	delete myLevel;
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
