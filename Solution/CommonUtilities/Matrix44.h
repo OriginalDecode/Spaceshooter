@@ -5,10 +5,11 @@
 #include "Matrix33.h"
 #include <cmath>
 
-#define Matrix44f Matrix44<float>
 
 namespace CommonUtilities
 {
+	typedef Matrix44<float> Matrix44f;
+	
 	template <typename T>
 	Matrix44<T>::Matrix44()
 	{

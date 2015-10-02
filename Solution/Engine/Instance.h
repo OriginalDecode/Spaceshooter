@@ -15,6 +15,7 @@ namespace Prism
 	{
 	public:
 		Instance(ModelProxy& aModel);
+		~Instance();
 
 		void Render(Camera& aCamera);
 		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
@@ -25,6 +26,8 @@ namespace Prism
 		void SetOrientation(const CU::Matrix44<float>& aOrientation);
 
 		void SetEffect(const std::string& aEffectFile);
+
+		void SetScale(const CU::Vector3<float>& aScaleVector);
 
 		void PerformRotationLocal(CU::Matrix44<float>& aRotation);
 		void PerformRotationWorld(CU::Matrix44<float>& aRotation);
@@ -43,6 +46,7 @@ namespace Prism
 		ModelProxy& myProxy;
 		CU::Matrix44<float> myOrientation;
 		CU::Matrix44<float>* myOrientationPointer;
+		CU::Vector3<float> myScale;
 		CU::Vector3<float> myPosition;
 	};
 }

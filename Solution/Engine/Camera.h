@@ -1,6 +1,13 @@
 #pragma once
 #include <Matrix44.h>
 
+namespace CommonUtilities
+{
+	namespace Intersection
+	{
+		class Fov90Frustum;
+	}
+}
 namespace Prism
 {
 	class Camera
@@ -33,6 +40,8 @@ namespace Prism
 		CU::Matrix44<float> myProjectionMatrix;
 		CU::Matrix44<float> myOrthogonalMatrix;
 		CU::Vector3<float> myPosition;
+		
+
 	};
 
 }

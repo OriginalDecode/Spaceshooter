@@ -71,6 +71,9 @@
     <ClCompile Include="GameStateMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUpComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -163,6 +166,9 @@
     </ClInclude>
     <ClInclude Include="GameStateMessage.h">
       <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
