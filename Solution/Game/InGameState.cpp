@@ -25,18 +25,14 @@ InGameState::InGameState(CU::InputWrapper* anInputWrapper)
 
 InGameState::~InGameState()
 {
-	delete myBulletManager;
-	delete myCollisionManager;
+
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
-	myBulletManager = new BulletManager;
-	myCollisionManager = new CollisionManager();
-	myBulletManager->SetCollisionManager(myCollisionManager);
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
+	myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 
@@ -47,8 +43,6 @@ void InGameState::EndState()
 const eStateStatus InGameState::Update()
 {
 	BEGIN_TIME_BLOCK("InGameState::Update");
-	
-	myCollisionManager->CleanUp();
 
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 
@@ -76,17 +70,14 @@ const eStateStatus InGameState::Update()
 
 	if (myLevel->LogicUpdate(deltaTime) == false)
 	{
-		myCollisionManager->Reset();
-		myBulletManager->Reset();
-
 		delete myLevel;
-		myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
+		myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
 		OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 		//return eStateStatus::ePopMainState;
 	}
 
 
-	myBulletManager->Update(deltaTime);
+	
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 

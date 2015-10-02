@@ -20,6 +20,7 @@ namespace Prism
 {
 	class Camera;
 	class Instance;
+	class Scene;
 }
 
 namespace tinyxml2
@@ -32,20 +33,17 @@ class CollisionManager;
 class BulletManager : public Subscriber
 {
 public:
-	BulletManager();
+	BulletManager(CollisionManager& aCollisionManager, Prism::Scene& aScene);
 	~BulletManager();
 
 	void ReadFromXML(const std::string aFilePath);
 	void Update(float aDeltaTime);
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
-	void SetCollisionManager(CollisionManager* aCollisionManager);
-
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
-	void Reset();
-
 private:
+	void operator=(BulletManager&) = delete;
 
 	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType);
 	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
@@ -54,14 +52,10 @@ private:
 
 	CU::StaticArray<BulletData*, static_cast<int>(eBulletType::COUNT)> myBulletDatas;
 
-	CollisionManager* myCollisionManager;
+	CollisionManager& myCollisionManager;
+	Prism::Scene& myScene;
 
 	// temp!!
 	CU::GrowingArray<Prism::Instance*> myInstances;
 
 };
-
-inline void BulletManager::SetCollisionManager(CollisionManager* aCollisionManager)
-{
-	myCollisionManager = aCollisionManager;
-}

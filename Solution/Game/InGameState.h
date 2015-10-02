@@ -32,8 +32,7 @@ private:
 
 	bool CheckCollision();
 
-	BulletManager* myBulletManager;
-	CollisionManager* myCollisionManager;
+	
 	Level* myLevel;
 };
 
