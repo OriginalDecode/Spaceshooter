@@ -10,8 +10,18 @@
 #include <XMLReader.h>
 
 EntityData::EntityData()
-	: myEntity(new Entity(Entity::eType::NOT_USED))
+	: myEntity(new Entity(eEntityType::NOT_USED))
 {
+}
+
+EntityFactory::~EntityFactory()
+{
+	for (auto it = myEntities.begin(); it != myEntities.end(); ++it)
+	{
+		delete it->second.myEntity;
+	}
+
+	myEntities.clear();
 }
 
 void EntityFactory::LoadEntites(const std::string& aEntityRootPath)

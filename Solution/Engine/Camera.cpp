@@ -14,14 +14,11 @@ namespace Prism
 
 		//myOrientation.SetPos(CU::Vector3<float>(0.f, 0.f, -25.f));
 
-		myFrustum = new CU::Intersection::Fov90Frustum(0.1f, 1000.f);
 	}
 
 
 	Camera::~Camera()
 	{
-		delete myFrustum;
-		myFrustum = nullptr;
 	}
 
 	void Camera::OnResize(const int aWidth, const int aHeight)

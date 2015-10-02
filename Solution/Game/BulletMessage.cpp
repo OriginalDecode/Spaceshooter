@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "BulletMessage.h"
 
-BulletMessage::BulletMessage(const eBulletType& aType, const CU::Matrix44<float>& anOrientation)
+BulletMessage::BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType)
+	: myType(aType)
+	, myOrientation(anOrientation)
+	, myEntityType(aEntityType)
 {
 	myMessageType = eMessageType::ACTIVATE_BULLET;
-	myType = aType;
-	myOrientation = anOrientation;
 }

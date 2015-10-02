@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "XMLFunctions.h"
 
 static std::string locFilename;

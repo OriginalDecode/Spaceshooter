@@ -41,7 +41,6 @@ namespace Prism
 		CU::Matrix44<float> myOrthogonalMatrix;
 		CU::Vector3<float> myPosition;
 		
-		CU::Intersection::Fov90Frustum* myFrustum;
 
 	};
 

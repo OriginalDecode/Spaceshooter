@@ -30,8 +30,6 @@ public:
 
 private:
 
-	void LogicUpdate(const float aDeltaTime);
-
 	bool CheckCollision();
 
 	BulletManager* myBulletManager;

@@ -21,6 +21,14 @@ Prism::DebugDataDisplay::DebugDataDisplay()
 {
 }
 
+Prism::DebugDataDisplay::~DebugDataDisplay()
+{
+	delete myFrameDebugger;
+	delete myDebugMenu;
+
+	delete myText;
+}
+
 void Prism::DebugDataDisplay::Init()
 {
 	myText = new Text();

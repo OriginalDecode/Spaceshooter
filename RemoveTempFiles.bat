@@ -6,3 +6,4 @@ del Solution\ProjectName.sdf
 rd /s /q Tools\LogReader\LogReader\LogReader\obj
 rd /s /q Tools\ModelViewer\ModelViewer\obj
 rd /s /q Tools\EntityEditor\EntityEditor\obj
+rd /s /q Tools\CSharpUtilities\CSharpUtilities\obj
