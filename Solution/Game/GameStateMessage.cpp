@@ -1,12 +1,8 @@
 #include "stdafx.h"
 #include "GameStateMessage.h"
 
-
-GameStateMessage::GameStateMessage()
+GameStateMessage::GameStateMessage(eGameState aGameState)
+	: myGameState(aGameState)
 {
-}
-
-
-GameStateMessage::~GameStateMessage()
-{
+	myMessageType = eMessageType::GAME_STATE;
 }

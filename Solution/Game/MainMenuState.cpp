@@ -3,8 +3,9 @@
 #include <Model2D.h>
 #include <Camera.h>
 #include <InputWrapper.h>
-#include "LevelSelectState.h"
 #include "StateStackProxy.h"
+#include "PostMaster.h"
+#include "GameStateMessage.h"
 
 MainMenuState::MainMenuState(CU::InputWrapper* anInputWrapper)
 {
@@ -18,7 +19,6 @@ MainMenuState::~MainMenuState()
 void MainMenuState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myStateStack = aStateStackProxy;
-	myLevelSelectState = new LevelSelectState(myInputWrapper);
 	
 	myBackground = new Prism::Model2D;
 	myBackground->Init("Data/resources/texture/seafloor.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x), 
@@ -44,7 +44,7 @@ const eStateStatus MainMenuState::Update()
 
 	if (myInputWrapper->KeyDown(DIK_L) == true)
 	{
-		myStateStack->PushMainGameState(myLevelSelectState);
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::LEVEL_SELECT_STATE));
 	}
 
 	Render();
