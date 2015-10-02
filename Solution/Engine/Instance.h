@@ -15,6 +15,7 @@ namespace Prism
 	{
 	public:
 		Instance(ModelProxy& aModel);
+		~Instance();
 
 		void Render(Camera& aCamera);
 		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);

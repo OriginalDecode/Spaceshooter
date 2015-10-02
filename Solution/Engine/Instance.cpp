@@ -16,6 +16,11 @@ Prism::Instance::Instance(ModelProxy& aModel)
 
 }
 
+Prism::Instance::~Instance()
+{
+	delete &myProxy;
+}
+
 void Prism::Instance::Render(Camera& aCamera)
 {
 	if (myProxy.IsLoaded())
