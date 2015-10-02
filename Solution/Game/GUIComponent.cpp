@@ -20,7 +20,10 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myArrow->Init("Data/resources/texture/arrow.dds", { 64, 64 });;
 	myCurrentWaypointSprite = nullptr;
 	myCamera = nullptr;
-}
+
+	myEnemiesPosition.Init(8);
+	myEnemiesCursor = new Prism::Model2D;
+}	 
 
 GUIComponent::~GUIComponent()
 {
@@ -102,6 +105,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	SetWindowTextA(GetActiveWindow(), tempX.c_str());
 
 	myCurrentWaypointSprite->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+
 }
 
 void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)

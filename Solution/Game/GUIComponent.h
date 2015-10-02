@@ -1,6 +1,8 @@
 #pragma once
 #include "Component.h"
+#include <GrowingArray.h>
 #include <Vector.h>
+
 
 namespace Prism
 {
@@ -30,6 +32,9 @@ private:
 	Prism::Model2D* mySteeringTarget;
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
+
+	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
+	Prism::Model2D* myEnemiesCursor;
 
 	Prism::Camera* myCamera;
 };
