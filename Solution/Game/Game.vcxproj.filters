@@ -79,6 +79,12 @@
     <ClCompile Include="WeaponFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -180,6 +186,12 @@
     <ClInclude Include="WeaponFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -199,6 +211,9 @@
     </Filter>
     <Filter Include="Factory">
       <UniqueIdentifier>{1d3706a1-acdf-4335-87b6-47c342d72b14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu">
+      <UniqueIdentifier>{68ea7691-d69e-485f-ae6c-d1155b8383fb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
