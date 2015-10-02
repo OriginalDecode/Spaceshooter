@@ -28,6 +28,7 @@
 #include <sstream>
 #include <string>
 #include <SpotLight.h>
+#include "WaypointMessage.h"
 #include <XMLReader.h>
 
 
@@ -182,6 +183,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
+		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+		{
+			myPlayer->SendMessage<WaypointMessage>(WaypointMessage(myEntities[i]->myOrientation.GetPos()));
+		}
 	}
 
 
