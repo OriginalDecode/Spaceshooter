@@ -23,11 +23,6 @@ CollisionManager::CollisionManager()
 	myEnemyBulletFilter = eEntityType::PLAYER;
 }
 
-
-CollisionManager::~CollisionManager()
-{
-}
-
 void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 {
 	switch (aEnum)
@@ -121,12 +116,4 @@ void CollisionManager::CleanUp()
 			myEnemies.RemoveCyclicAtIndex(i);
 		}
 	}
-}
-
-void CollisionManager::Reset()
-{
-	myPlayer = nullptr;
-	myEnemies.RemoveAll();
-	myPlayerBullets.RemoveAll();
-	myEnemyBullets.RemoveAll();
 }

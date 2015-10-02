@@ -8,15 +8,21 @@ namespace tinyxml2
 	class XMLElement;
 }
 
+namespace Prism
+{
+	Scene;
+}
+
 enum class eEntityDataGraphicsType
 {
 	MODEL,
 	CUBE
 };
 
+
 struct EntityData
 {
-	EntityData();
+	EntityData(Prism::Scene& aDummyScene);
 
 	Entity* myEntity;
 
@@ -37,6 +43,7 @@ struct EntityData
 class EntityFactory
 {
 public:
+	EntityFactory();
 	~EntityFactory();
 
 	void LoadEntites(const std::string& aEntityRootPath);
@@ -51,5 +58,7 @@ private:
 	void LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aCollisionComponenetElement);
 
 	std::unordered_map<std::string, EntityData> myEntities;
+
+	Prism::Scene* myDummyScene;
 };
 

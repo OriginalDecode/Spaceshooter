@@ -13,12 +13,12 @@
 #define PI 3.14159265359f
 
 ShootingComponent::ShootingComponent(Entity& aEntity)
-	: Component(aEntity)
+	: myWeapons(8)
+	, myCurrentWeaponID(0)
+	, Component(aEntity)
 {
-	myWeapons.Init(4);
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
-	myCurrentWeaponID = 0;
 }
 
 void ShootingComponent::Update(float aDeltaTime)
@@ -69,6 +69,7 @@ void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
 
 void ShootingComponent::ReadFromXML(const std::string aFilePath)
 {
+	myWeapons.RemoveAll();
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);
 

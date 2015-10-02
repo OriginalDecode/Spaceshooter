@@ -6,6 +6,7 @@
 namespace Prism
 {
 	class Camera;
+	class Scene;
 }
 
 class Component;
@@ -14,7 +15,7 @@ class Component;
 class Entity
 {
 public:
-	Entity(eEntityType aType);
+	Entity(eEntityType aType, Prism::Scene& aScene);
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -36,11 +37,15 @@ public:
 	eEntityType GetType() const;
 	bool GetAlive() const;
 	void Kill();
+
+	Prism::Scene& GetScene();
+
 private:
 	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
 	bool myAlive;
 	const eEntityType myType;
+	Prism::Scene& myScene;
 };
 
 template <typename T>
@@ -83,3 +88,7 @@ inline bool Entity::GetAlive() const
 	return myAlive;
 }
 
+inline Prism::Scene& Entity::GetScene()
+{
+	return myScene;
+}

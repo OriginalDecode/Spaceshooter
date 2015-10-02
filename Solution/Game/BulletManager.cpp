@@ -12,9 +12,10 @@
 #include <Engine.h>
 #include <FileWatcher.h>
 
-BulletManager::BulletManager()
+BulletManager::BulletManager(CollisionManager& aCollisionManager, Prism::Scene& aScene)
 	: myInstances(8)
-	, myCollisionManager(nullptr)
+	, myCollisionManager(aCollisionManager)
+	, myScene(aScene)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
 
@@ -33,6 +34,8 @@ BulletManager::~BulletManager()
 	{
 		DeleteWeaponData(myBulletDatas[i]);
 	}
+
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::ACTIVATE_BULLET, this);
 }
 
 void BulletManager::Update(float aDeltaTime)
@@ -81,7 +84,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 
 		for (int i = 0; i < bulletData->myMaxBullet; i++)
 		{
-			Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET);
+			Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene);
 			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
 			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 			newEntity->AddComponent<PhysicsComponent>();
@@ -95,7 +98,7 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 		bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
 		for (int i = 0; i < bulletData->myMaxBullet; i++)
 		{
-			Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET);
+			Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene);
 			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
 			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 			newEntity->AddComponent<PhysicsComponent>();
@@ -127,8 +130,6 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
 	, eEntityType aEntityType)
 {
-	DL_ASSERT_EXP(myCollisionManager != nullptr, "Tried to Activate Bullet without a Collisionmanager");
-
 	Entity* bullet = nullptr;
 	if (aEntityType == eEntityType::PLAYER)
 	{
@@ -145,11 +146,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	{
 		if (aEntityType == eEntityType::PLAYER)
 		{
-			myCollisionManager->Add(bullet->GetComponent<CollisionComponent>(), eEntityType::PLAYER_BULLET);
+			myCollisionManager.Add(bullet->GetComponent<CollisionComponent>(), eEntityType::PLAYER_BULLET);
 		}
 		else if (aEntityType == eEntityType::ENEMY)
 		{
-			myCollisionManager->Add(bullet->GetComponent<CollisionComponent>(), eEntityType::ENEMY_BULLET);
+			myCollisionManager.Add(bullet->GetComponent<CollisionComponent>(), eEntityType::ENEMY_BULLET);
 		}
 	}
 
@@ -189,7 +190,7 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (aWeaponData->myPlayerBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
 			{
-				myCollisionManager->Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
+				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
 			}
 		}
@@ -200,7 +201,7 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (aWeaponData->myEnemyBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
 			{
-				myCollisionManager->Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
+				myCollisionManager.Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::ENEMY_BULLET);
 			}
 		}
@@ -211,21 +212,12 @@ void BulletManager::DeleteWeaponData(BulletData* aWeaponData)
 {
 	if (aWeaponData != nullptr)
 	{
-		for (int i = 0; i < aWeaponData->myPlayerBullets.Size(); ++i)
-		{
-			delete aWeaponData->myPlayerBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-		}
 		aWeaponData->myPlayerBullets.DeleteAll();
-
-		for (int i = 0; i < aWeaponData->myEnemyBullets.Size(); ++i)
-		{
-			delete aWeaponData->myEnemyBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
-		}
 		aWeaponData->myEnemyBullets.DeleteAll();
-
-		delete aWeaponData;
-		aWeaponData = nullptr;
 	}
+
+	delete aWeaponData;
+	aWeaponData = nullptr;
 }
 
 CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
@@ -248,19 +240,4 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 		}
 	}
 	return myInstances;
-}
-
-void BulletManager::Reset()
-{
-	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
-	{
-		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
-		{
-			myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->SetActive(false);
-			myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->SetActive(false);
-		}
-
-		myBulletDatas[i]->myPlayerBulletCounter = 0;
-		myBulletDatas[i]->myEnemyBulletCounter = 0;
-	}
 }
