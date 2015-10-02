@@ -21,6 +21,7 @@ namespace Prism
 	{
 	public:
 		FrameTimeDebugger();
+		~FrameTimeDebugger();
 
 		void Init();
 

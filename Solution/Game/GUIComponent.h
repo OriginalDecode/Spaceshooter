@@ -11,7 +11,7 @@ namespace Prism
 class GUIComponent : public Component
 {
 public:
-	GUIComponent();
+	GUIComponent(Entity& aEntity);
 	~GUIComponent();
 
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);

@@ -1,6 +1,6 @@
 #pragma once
 #include "Component.h"
-#include "BulletEnums.h"
+#include "Enums.h"
 
 struct WeaponData
 {
@@ -9,6 +9,7 @@ struct WeaponData
 	float myCurrentTime;
 	int mySpread;
 	int myID;
+	CU::Vector3<float> myPosition;
 };
 
 class Entity;
@@ -16,16 +17,12 @@ class Entity;
 class ShootingComponent : public Component
 {
 public:
-
-	ShootingComponent();
-	~ShootingComponent();
+	ShootingComponent(Entity& aEntity);
 
 	void Update(float aDeltaTime) override;
 
 	void ReceiveMessage(const ShootMessage& aMessage) override;
 	void ReceiveMessage(const InputMessage& aMessage) override;
-
-	void Init(CU::Vector3<float> aSpawningPointOffset);
 
 	void ReadFromXML(const std::string aFilePath);
 

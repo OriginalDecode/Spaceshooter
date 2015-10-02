@@ -1,4 +1,5 @@
 #pragma once
+#include "Enums.h"
 #include <unordered_map>
 #undef SendMessage
 
@@ -13,7 +14,7 @@ class Component;
 class Entity
 {
 public:
-	Entity();
+	Entity(eEntityType aType);
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -32,18 +33,20 @@ public:
 	CU::Matrix44<float> myOrientation;
 	Prism::Camera* myCamera;
 
+	eEntityType GetType() const;
 	bool GetAlive() const;
 	void Kill();
 private:
+	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
 	bool myAlive;
+	const eEntityType myType;
 };
 
 template <typename T>
 T* Entity::AddComponent()
 {
-	T* component = new T();
-	component->SetEntity(this);
+	T* component = new T(*this);
 	myComponents[T::GetID()] = component;
 	return component;
 }
@@ -68,6 +71,11 @@ void Entity::SendMessage(const T& aMessage)
 	{
 		it->second->ReceiveMessage(aMessage);
 	}
+}
+
+inline eEntityType Entity::GetType() const
+{
+	return myType;
 }
 
 inline bool Entity::GetAlive() const

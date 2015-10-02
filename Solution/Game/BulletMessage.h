@@ -1,24 +1,31 @@
 #pragma once
-#include "BulletEnums.h"
+#include "Enums.h"
 #include "Message.h"
 
 class BulletMessage : public Message
 {
 public:
-	BulletMessage(const eBulletType& aType, const CU::Matrix44<float>& anOrientation);
+	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType);
 
-	const eBulletType& GetBulletType() const;
+	eBulletType GetBulletType() const;
+	eEntityType GetEntityType() const;
 	const CU::Matrix44<float>& GetOrientation() const;
 
 private:
-
+	void operator=(BulletMessage&) = delete;
 	CU::Matrix44<float> myOrientation;
-	eBulletType myType;
+	const eBulletType myType;
+	const eEntityType myEntityType;
 };
 
-inline const eBulletType& BulletMessage::GetBulletType() const
+inline eBulletType BulletMessage::GetBulletType() const
 {
 	return myType;
+}
+
+inline eEntityType BulletMessage::GetEntityType() const
+{
+	return myEntityType;
 }
 
 inline const CU::Matrix44<float>& BulletMessage::GetOrientation() const

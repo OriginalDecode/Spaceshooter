@@ -3,7 +3,8 @@
 #include "Entity.h"
 #include "PhysicsComponent.h"
 
-PhysicsComponent::PhysicsComponent()
+PhysicsComponent::PhysicsComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 	myVelocity = { 0, 0, 0 };
 }
@@ -11,12 +12,10 @@ PhysicsComponent::PhysicsComponent()
 void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float> aVelocity)
 {
 	myVelocity = aVelocity;
-	myEntity->myOrientation = anOrientation;
+	myEntity.myOrientation = anOrientation;
 }
 
 void PhysicsComponent::Update(float aDeltaTime)
 {
-	myEntity->myOrientation.SetPos(myEntity->myOrientation.GetPos() + aDeltaTime * myVelocity);
-	int apa = 5;
-	++apa;
+	myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() + aDeltaTime * myVelocity);
 }

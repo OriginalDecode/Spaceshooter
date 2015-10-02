@@ -4,7 +4,8 @@
 #include <Model2D.h>
 #include "SteeringTargetMessage.h"
 
-GUIComponent::GUIComponent()
+GUIComponent::GUIComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 	mySteeringTarget = new Prism::Model2D;
 	myCrosshair = new Prism::Model2D;

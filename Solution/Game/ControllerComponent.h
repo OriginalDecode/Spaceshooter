@@ -5,6 +5,8 @@
 class ControllerComponent : public Component
 {
 public:
+	ControllerComponent(Entity& aEntity);
+
 	void MoveUp(float aDistance);
 	void MoveDown(float aDistance);
 	void MoveLeft(float aDistance);
@@ -17,7 +19,7 @@ public:
 	void RotateZ(float aAmount);
 	void Rotate(const CU::Matrix44<float>& aRotation);
 	void SetRotation(const CU::Matrix44<float>& aRotation);
-	void Shoot(float aSpeed);
+	void Shoot();
 
 	static int GetID();
 };

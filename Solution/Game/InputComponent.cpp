@@ -15,6 +15,12 @@
 #include <sstream>
 #include "SteeringTargetMessage.h"
 
+InputComponent::InputComponent(Entity& aEntity)
+	: ControllerComponent(aEntity)
+{
+
+}
+
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 {
 	myInputWrapper = &aInputWrapper;
@@ -45,15 +51,15 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myInputWrapper->KeyIsPressed(DIK_1))
 	{
-		myEntity->SendMessage(InputMessage(0));
+		myEntity.SendMessage(InputMessage(0));
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_2))
 	{
-		myEntity->SendMessage(InputMessage(1));
+		myEntity.SendMessage(InputMessage(1));
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_3))
 	{
-		myEntity->SendMessage(InputMessage(2));
+		myEntity.SendMessage(InputMessage(2));
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
@@ -65,7 +71,7 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
-		Shoot(30000.f * aDeltaTime);
+		Shoot();
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 
@@ -121,7 +127,7 @@ void InputComponent::Update(float aDeltaTime)
 	RotateX(yRotation);
 	RotateY(xRotation);
 
-	myEntity->SendMessage<SteeringTargetMessage>(SteeringTargetMessage(mySteering));
+	myEntity.SendMessage<SteeringTargetMessage>(SteeringTargetMessage(mySteering));
 }
 
 void InputComponent::ReadXML(const std::string& aFile)

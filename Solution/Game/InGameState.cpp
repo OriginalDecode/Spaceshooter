@@ -73,7 +73,17 @@ const eStateStatus InGameState::Update()
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
-	LogicUpdate(deltaTime);
+	if (myLevel->LogicUpdate(deltaTime) == false)
+	{
+		myCollisionManager->Reset();
+		myBulletManager->Reset();
+
+		delete myLevel;
+		myLevel = new Level("Data/script/level1.xml", myInputWrapper, *myBulletManager, *myCollisionManager, false);
+		OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
+		//return eStateStatus::ePopMainState;
+	}
+
 
 	myBulletManager->Update(deltaTime);
 
@@ -110,11 +120,6 @@ void InGameState::Render()
 void InGameState::ResumeState()
 {
 
-}
-
-void InGameState::LogicUpdate(const float aDeltaTime)
-{
-	myLevel->LogicUpdate(aDeltaTime);
 }
 
 void InGameState::OnResize(int aWidth, int aHeight)

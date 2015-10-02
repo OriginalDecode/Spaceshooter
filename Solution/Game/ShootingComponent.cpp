@@ -12,16 +12,13 @@
 
 #define PI 3.14159265359f
 
-ShootingComponent::ShootingComponent()
+ShootingComponent::ShootingComponent(Entity& aEntity)
 	: myWeapons(8)
 	, myCurrentWeaponID(0)
+	, Component(aEntity)
 {
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
-}
-
-ShootingComponent::~ShootingComponent()
-{
 }
 
 void ShootingComponent::Update(float aDeltaTime)
@@ -40,8 +37,9 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 {
 	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
-		CU::Matrix44<float> orientation = myEntity->myOrientation;
-		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f));
+		CU::Matrix44<float> orientation = myEntity.myOrientation;
+		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+			+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
 
 		if (myWeapons[myCurrentWeaponID].mySpread > 0)
 		{
@@ -58,7 +56,8 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 			orientation.SetPos(pos);
 		}
 
-		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation));
+		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
+			, myEntity.GetType()));
 		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }
@@ -66,11 +65,6 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
 {
 	SetCurrentWeaponID(aMessage.GetKey());
-}
-
-void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
-{
-	mySpawningPointOffset = aSpawningPointOffset;
 }
 
 void ShootingComponent::ReadFromXML(const std::string aFilePath)
@@ -89,6 +83,9 @@ void ShootingComponent::ReadFromXML(const std::string aFilePath)
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData.myCoolDownTime);
 		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "x", weaponData.myPosition.x);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "y", weaponData.myPosition.y);
+		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "z", weaponData.myPosition.z);
 		weaponData.myCurrentTime = weaponData.myCoolDownTime;
 
 		if (type == "machinegun")

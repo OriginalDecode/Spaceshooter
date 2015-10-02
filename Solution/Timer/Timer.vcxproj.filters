@@ -4,10 +4,21 @@
     <ClInclude Include="TimerManager.h" />
     <ClInclude Include="Time.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="stdafx.h">
+      <Filter>Precompile</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Time.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="TimerManager.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Precompile</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Precompile">
+      <UniqueIdentifier>{fcf947f4-963c-4cd4-a954-6b8bc27d52d2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

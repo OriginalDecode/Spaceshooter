@@ -14,13 +14,14 @@
 
 BulletManager::BulletManager()
 	: myInstances(8)
-	, myBulletDatas(8)
-	, myMachinegunBulletData(nullptr)
-	, mySniperBulletData(nullptr)
-	, myPlasmaBulletData(nullptr)
 	, myCollisionManager(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::ACTIVATE_BULLET, this);
+
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
+	{
+		myBulletDatas[i] = nullptr;
+	}
 
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);
@@ -28,7 +29,7 @@ BulletManager::BulletManager()
 
 BulletManager::~BulletManager()
 {
-	for (int i = 0; i < myBulletDatas.Size(); ++i)
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
 	{
 		DeleteWeaponData(myBulletDatas[i]);
 	}
@@ -36,7 +37,7 @@ BulletManager::~BulletManager()
 
 void BulletManager::Update(float aDeltaTime)
 {
-	for (int i = 0; i < myBulletDatas.Size(); ++i)
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
 	{
 		UpdateBullet(myBulletDatas[i], aDeltaTime);
 	}
@@ -44,18 +45,8 @@ void BulletManager::Update(float aDeltaTime)
 
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
-	if (aMessage.GetBulletType() == eBulletType::MACHINGUN_BULLET)
-	{
-		ActivateBullet(myMachinegunBulletData, aMessage.GetOrientation());
-	}
-	else if (aMessage.GetBulletType() == eBulletType::SNIPER_BULLET)
-	{
-		ActivateBullet(mySniperBulletData, aMessage.GetOrientation());
-	}
-	else if (aMessage.GetBulletType() == eBulletType::PLASMA_BULLET)
-	{
-		ActivateBullet(myPlasmaBulletData, aMessage.GetOrientation());
-	}
+	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
+		, aMessage.GetEntityType());
 }
 
 void BulletManager::ReadFromXML(const std::string aFilePath)
@@ -85,59 +76,106 @@ void BulletManager::ReadFromXML(const std::string aFilePath)
 		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
 		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "sphere"), "radius", sphereRadius);
 
-		bulletData->myBulletCounter = 0;
-		bulletData->myBullets.Init(bulletData->myMaxBullet);
+		bulletData->myPlayerBulletCounter = 0;
+		bulletData->myPlayerBullets.Init(bulletData->myMaxBullet);
 
 		for (int i = 0; i < bulletData->myMaxBullet; i++)
 		{
-			Entity* newEntity = new Entity();
+			Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET);
 			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
 			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 			newEntity->AddComponent<PhysicsComponent>();
 			newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
 			newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
-			bulletData->myBullets.Add(newEntity);
+			bulletData->myPlayerBullets.Add(newEntity);
 		}
+
+
+		bulletData->myEnemyBulletCounter = 0;
+		bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
+		for (int i = 0; i < bulletData->myMaxBullet; i++)
+		{
+			Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET);
+			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
+			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
+			newEntity->AddComponent<PhysicsComponent>();
+			newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
+			newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
+			bulletData->myEnemyBullets.Add(newEntity);
+		}
+
+
 
 		if (type == "machinegun")
 		{
-			DeleteWeaponData(myMachinegunBulletData);
 			bulletData->myType = eBulletType::MACHINGUN_BULLET;
-			myMachinegunBulletData = bulletData;
 		}
 		else if (type == "sniper")
 		{
-			DeleteWeaponData(mySniperBulletData);
 			bulletData->myType = eBulletType::SNIPER_BULLET;
-			mySniperBulletData = bulletData;
 		}
 		else if (type == "plasma")
 		{
-			DeleteWeaponData(myPlasmaBulletData);
 			bulletData->myType = eBulletType::PLASMA_BULLET;
-			myPlasmaBulletData = bulletData;
 		}
-		myBulletDatas.Add(bulletData);
+
+		DeleteWeaponData(myBulletDatas[static_cast<int>(bulletData->myType)]);
+		myBulletDatas[static_cast<int>(bulletData->myType)] = bulletData;
 	}
 }
 
-void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation)
+void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
+	, eEntityType aEntityType)
 {
 	DL_ASSERT_EXP(myCollisionManager != nullptr, "Tried to Activate Bullet without a Collisionmanager");
 
-	Entity& bullet = *aWeaponData->myBullets[aWeaponData->myBulletCounter];
-
-	bullet.GetComponent<PhysicsComponent>()->Init(anOrientation,
-		anOrientation.GetForward() * aWeaponData->mySpeed);
-	bullet.GetComponent<BulletComponent>()->SetIsActive(true);
-
-	myCollisionManager->Add(bullet.GetComponent<CollisionComponent>(), CollisionManager::PLAYER_BULLET);
-
-	aWeaponData->myBulletCounter++;
-
-	if (aWeaponData->myBulletCounter >= aWeaponData->myMaxBullet)
+	Entity* bullet = nullptr;
+	if (aEntityType == eEntityType::PLAYER)
 	{
-		aWeaponData->myBulletCounter = 0;
+		bullet = aWeaponData->myPlayerBullets[aWeaponData->myPlayerBulletCounter];
+	}
+	else if (aEntityType == eEntityType::ENEMY)
+	{
+		bullet = aWeaponData->myEnemyBullets[aWeaponData->myEnemyBulletCounter];
+	}
+
+	DL_ASSERT_EXP(bullet != nullptr, "Non Player/Enemy cant activate bullets!");
+
+	if (bullet->GetComponent<BulletComponent>()->GetActive() == false)
+	{
+		if (aEntityType == eEntityType::PLAYER)
+		{
+			myCollisionManager->Add(bullet->GetComponent<CollisionComponent>(), eEntityType::PLAYER_BULLET);
+		}
+		else if (aEntityType == eEntityType::ENEMY)
+		{
+			myCollisionManager->Add(bullet->GetComponent<CollisionComponent>(), eEntityType::ENEMY_BULLET);
+		}
+	}
+
+
+	bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
+		anOrientation.GetForward() * aWeaponData->mySpeed);
+	bullet->GetComponent<BulletComponent>()->SetActive(true);
+	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
+
+	
+
+	if (aEntityType == eEntityType::PLAYER)
+	{
+		aWeaponData->myPlayerBulletCounter++;
+		if (aWeaponData->myPlayerBulletCounter >= aWeaponData->myMaxBullet)
+		{
+			aWeaponData->myPlayerBulletCounter = 0;
+		}
+	}
+	else if (aEntityType == eEntityType::ENEMY)
+	{
+		aWeaponData->myEnemyBulletCounter++;
+		if (aWeaponData->myEnemyBulletCounter >= aWeaponData->myMaxBullet)
+		{
+			aWeaponData->myEnemyBulletCounter = 0;
+		}
 	}
 }
 
@@ -145,9 +183,26 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 {
 	for (int i = 0; i < aWeaponData->myMaxBullet; ++i)
 	{
-		if (aWeaponData->myBullets[i]->GetComponent<BulletComponent>()->GetIActive() == true)
+		if (aWeaponData->myPlayerBullets[i]->GetComponent<BulletComponent>()->GetActive() == true)
 		{
-			aWeaponData->myBullets[i]->Update(aDeltaTime);
+			aWeaponData->myPlayerBullets[i]->Update(aDeltaTime);
+
+			if (aWeaponData->myPlayerBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
+			{
+				myCollisionManager->Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
+					, eEntityType::PLAYER_BULLET);
+			}
+		}
+
+		if (aWeaponData->myEnemyBullets[i]->GetComponent<BulletComponent>()->GetActive() == true)
+		{
+			aWeaponData->myEnemyBullets[i]->Update(aDeltaTime);
+
+			if (aWeaponData->myEnemyBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
+			{
+				myCollisionManager->Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
+					, eEntityType::ENEMY_BULLET);
+			}
 		}
 	}
 }
@@ -156,12 +211,18 @@ void BulletManager::DeleteWeaponData(BulletData* aWeaponData)
 {
 	if (aWeaponData != nullptr)
 	{
-		for (int i = 0; i < aWeaponData->myBullets.Size(); ++i)
+		for (int i = 0; i < aWeaponData->myPlayerBullets.Size(); ++i)
 		{
-			delete aWeaponData->myBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+			delete aWeaponData->myPlayerBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
 		}
+		aWeaponData->myPlayerBullets.DeleteAll();
 
-		aWeaponData->myBullets.DeleteAll();
+		for (int i = 0; i < aWeaponData->myEnemyBullets.Size(); ++i)
+		{
+			delete aWeaponData->myEnemyBullets[i]->GetComponent<GraphicsComponent>()->GetInstance();
+		}
+		aWeaponData->myEnemyBullets.DeleteAll();
+
 		delete aWeaponData;
 		aWeaponData = nullptr;
 	}
@@ -171,15 +232,35 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 {
 	myInstances.RemoveAll();
 
-	for (int i = 0; i < myBulletDatas.Size(); ++i)
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
 	{
 		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
 		{
-			if (myBulletDatas[i]->myBullets[j]->GetComponent<BulletComponent>()->GetIActive() == true)
+			if (myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
 			{
-				myInstances.Add(myBulletDatas[i]->myBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
+				myInstances.Add(myBulletDatas[i]->myPlayerBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
+			}
+
+			if (myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
+			{
+				myInstances.Add(myBulletDatas[i]->myEnemyBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
 			}
 		}
 	}
 	return myInstances;
+}
+
+void BulletManager::Reset()
+{
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
+	{
+		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
+		{
+			myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->SetActive(false);
+			myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->SetActive(false);
+		}
+
+		myBulletDatas[i]->myPlayerBulletCounter = 0;
+		myBulletDatas[i]->myEnemyBulletCounter = 0;
+	}
 }

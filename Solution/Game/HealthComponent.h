@@ -4,8 +4,7 @@
 class HealthComponent : public Component
 {
 public:
-	HealthComponent();
-	~HealthComponent();
+	HealthComponent(Entity& aEntity);
 
 	void Init(const unsigned short& aMaxHealth);
 	void AddHealth(const unsigned short& aHealthToAdd);

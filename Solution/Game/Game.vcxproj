@@ -81,7 +81,6 @@
   <ItemGroup>
     <ClInclude Include="AIComponent.h" />
     <ClInclude Include="BulletComponent.h" />
-    <ClInclude Include="BulletEnums.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
     <ClInclude Include="CollisionComponent.h" />
@@ -139,7 +138,6 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
-    <ClCompile Include="ShootMessage.cpp" />
     <ClCompile Include="StateStack.cpp" />
     <ClCompile Include="StateStackProxy.cpp" />
     <ClCompile Include="stdafx.cpp">

@@ -11,7 +11,7 @@ namespace Prism
 class GraphicsComponent : public Component
 {
 public:
-	GraphicsComponent();
+	GraphicsComponent(Entity& aEntity);
 
 	void Init(const char* aModelPath, const char* aEffectPath);
 	void InitGeometry(const Prism::MeshData& aMeshData);

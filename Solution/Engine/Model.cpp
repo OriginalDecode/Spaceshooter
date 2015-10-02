@@ -22,13 +22,33 @@ Prism::Model::Model()
 	myVertexFormat.Init(2);
 	myIsNULLObject = true;
 	myIsSkySphere = false;
+
+	myVertexBuffer = nullptr;
+	myIndexBuffer = nullptr;
+	myVertexBaseData = nullptr;
+	myIndexBaseData = nullptr;
 }
 
 Prism::Model::~Model()
 {
-	myVertexBuffer->myVertexBuffer->Release();
-	myIndexBuffer->myIndexBuffer->Release();
+	myChilds.DeleteAll();
+
+	if (myVertexBuffer != nullptr && myVertexBuffer->myVertexBuffer != nullptr)
+	{
+		myVertexBuffer->myVertexBuffer->Release();
+	}
+	delete myVertexBuffer;
+
+	if (myIndexBuffer != nullptr && myIndexBuffer->myIndexBuffer != nullptr)
+	{
+		myIndexBuffer->myIndexBuffer->Release();
+	}
+	delete myIndexBuffer;
+
+	delete myVertexBaseData;
+	delete myIndexBaseData;
 	mySurfaces.DeleteAll();
+	
 }
 
 void Prism::Model::Init()
@@ -59,6 +79,8 @@ void Prism::Model::Init()
 		{
 			DL_MESSAGE_BOX("Model->Init(): Failed to CreateInputLayout", "Model->Init Error", MB_ICONWARNING);
 		}
+
+		delete vertexDesc;
 
 		if (InitVertexBuffer() == false)
 		{

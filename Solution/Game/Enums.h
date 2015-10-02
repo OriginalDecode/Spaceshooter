@@ -4,3 +4,22 @@ enum class eMessageType
 {
 	ACTIVATE_BULLET
 };
+
+enum class eBulletType
+{
+	MACHINGUN_BULLET,
+	SNIPER_BULLET,
+	PLASMA_BULLET,
+	COUNT,
+};
+
+enum eEntityType //Collision manager needs this as ints!
+{
+	NOT_USED = -1,
+	PLAYER = 1,
+	ENEMY = 2,
+	PLAYER_BULLET = 4,
+	ENEMY_BULLET = 8,
+	TRIGGER = 16,
+	PROP = 32,
+};

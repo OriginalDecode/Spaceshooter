@@ -3,8 +3,9 @@
 #include "Component.h"
 #include "Entity.h"
 
-Entity::Entity()
+Entity::Entity(eEntityType aType)
 	: myAlive(true)
+	, myType(aType)
 {
 
 }

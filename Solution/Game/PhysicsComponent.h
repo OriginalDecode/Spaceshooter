@@ -4,7 +4,7 @@
 class PhysicsComponent : public Component
 {
 public:
-	PhysicsComponent();
+	PhysicsComponent(Entity& aEntity);
 
 	void Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float> aVelocity = {0.f, 0.f, 0.f} );
 	void Update(float aDeltaTime);

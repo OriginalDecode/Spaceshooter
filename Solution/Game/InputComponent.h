@@ -9,6 +9,8 @@ namespace CommonUtilities
 class InputComponent : public ControllerComponent
 {
 public:
+	InputComponent(Entity& aEntity);
+
 	void Init(CU::InputWrapper& aInputWrapper);
 	void Update(float aDeltaTime) override;
 

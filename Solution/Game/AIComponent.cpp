@@ -4,6 +4,12 @@
 #include <Vector.h>
 #include "Entity.h"
 
+AIComponent::AIComponent(Entity& aEntity)
+	: ControllerComponent(aEntity)
+{
+
+}
+
 void AIComponent::Init()
 {
 	myEntityToFollow = nullptr;
@@ -24,6 +30,7 @@ void AIComponent::Update(float aDeltaTime)
 	else
 	{
 		FollowEntity(aDeltaTime);
+		Shoot();
 	}
 }
 
@@ -38,7 +45,7 @@ void AIComponent::MakeDecision()
 	myTimeToNextDecision = 1.f;
 	if (myDecision == 2 || myDecision == 8)
 	{
-		Shoot(100.f);
+		Shoot();
 	}
 }
 
@@ -74,7 +81,7 @@ AIComponent::SteeringOutput AIComponent::CalcualteSteering()
 	SteeringOutput output;
 
 
-	CU::Vector3<float> direction = myEntityToFollow->myOrientation.GetPos() - myEntity->myOrientation.GetPos();
+	CU::Vector3<float> direction = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 	float distance = CU::Length(direction);
 
 	if (distance < myTargetRadius)
@@ -118,6 +125,7 @@ void AIComponent::FollowOwnDecision(float aDeltaTime)
 		MakeDecision();
 	}
 
+		
 	switch (myDecision)
 	{
 	case 0:

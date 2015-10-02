@@ -28,6 +28,7 @@ namespace Prism
 	{
 	public:
 		DebugDataDisplay();
+		~DebugDataDisplay();
 
 		void Init();
 
