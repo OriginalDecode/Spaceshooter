@@ -28,8 +28,9 @@ InGameState::~InGameState()
 
 }
 
-void InGameState::InitState()
+void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
+	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
 	myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove

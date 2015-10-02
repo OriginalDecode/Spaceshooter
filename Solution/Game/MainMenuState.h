@@ -7,13 +7,15 @@ namespace Prism
 	class Camera;
 }
 
+class LevelSelectState;
+
 class MainMenuState : public GameState
 {
 public:
 	MainMenuState(CU::InputWrapper* anInputWrapper);
 	~MainMenuState();
 
-	void InitState() override;
+	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
 
 	const eStateStatus Update() override;
@@ -26,5 +28,7 @@ private:
 
 	Prism::Model2D* myBackground;
 	Prism::Camera* myCamera;
+
+	LevelSelectState* myLevelSelectState;
 };
 

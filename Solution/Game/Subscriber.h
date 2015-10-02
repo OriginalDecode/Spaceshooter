@@ -2,6 +2,7 @@
 
 class Message;
 class BulletMessage;
+class GameStateMessage;
 
 class Subscriber
 {
@@ -11,5 +12,6 @@ public:
 
 	virtual void ReceiveMessage(const Message& aMessage);
 	virtual void ReceiveMessage(const BulletMessage& aMessage);
+	virtual void ReceiveMessage(const GameStateMessage& aMessage);
 };
 

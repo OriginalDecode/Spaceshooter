@@ -1,23 +1,17 @@
 #pragma once
 #include "GameState.h"
-#include <Matrix.h>
-#include <GrowingArray.h>
 
-namespace CommonUtilities
+namespace Prism
 {
-	class InputWrapper;
+	class Model2D;
+	class Camera;
 }
 
-class BulletManager;
-class CollisionManager;
-class Level;
-
-class InGameState : public GameState
+class LevelSelectState : public GameState
 {
 public:
-
-	InGameState(CU::InputWrapper* anInputWrapper);
-	~InGameState();
+	LevelSelectState(CU::InputWrapper* anInputWrapper);
+	~LevelSelectState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
@@ -30,9 +24,7 @@ public:
 
 private:
 
-	bool CheckCollision();
-
-	
-	Level* myLevel;
+	Prism::Model2D* myBackground;
+	Prism::Camera* myCamera;
 };
 

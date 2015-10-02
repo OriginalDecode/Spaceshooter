@@ -95,6 +95,7 @@
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameStateMessage.h" />
     <ClInclude Include="GraphicsComponent.h" />
     <ClInclude Include="GUIComponent.h" />
     <ClInclude Include="HealthComponent.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="InputMessage.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelSelectState.h" />
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
@@ -128,6 +130,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameStateMessage.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
     <ClCompile Include="GUIComponent.cpp" />
     <ClCompile Include="HealthComponent.cpp" />
@@ -135,6 +138,7 @@
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="InputMessage.cpp" />
     <ClCompile Include="Level.cpp" />
+    <ClCompile Include="LevelSelectState.cpp" />
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
