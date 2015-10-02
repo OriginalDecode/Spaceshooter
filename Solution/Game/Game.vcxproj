@@ -106,6 +106,7 @@
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
+    <ClInclude Include="PowerUpComponent.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootMessage.h" />
     <ClInclude Include="StateEnums.h" />
@@ -137,6 +138,7 @@
     <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
+    <ClCompile Include="PowerUpComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="StateStack.cpp" />
     <ClCompile Include="StateStackProxy.cpp" />

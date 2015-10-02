@@ -65,6 +65,9 @@
     <ClCompile Include="InputMessage.cpp">
       <Filter>Components\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUpComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -151,6 +154,9 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="InputMessage.h">
       <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
