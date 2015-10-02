@@ -13,11 +13,11 @@
 #define PI 3.14159265359f
 
 ShootingComponent::ShootingComponent()
+	: myWeapons(8)
+	, myCurrentWeaponID(0)
 {
-	myWeapons.Init(4);
 	ReadFromXML("Data/script/weapon.xml");
 	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
-	myCurrentWeaponID = 0;
 }
 
 ShootingComponent::~ShootingComponent()
@@ -75,6 +75,7 @@ void ShootingComponent::Init(CU::Vector3<float> aSpawningPointOffset)
 
 void ShootingComponent::ReadFromXML(const std::string aFilePath)
 {
+	myWeapons.RemoveAll();
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);
 
