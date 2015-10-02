@@ -28,6 +28,7 @@
 #include <sstream>
 #include <string>
 #include <SpotLight.h>
+#include "WeaponFactory.h"
 #include <XMLReader.h>
 
 
@@ -37,6 +38,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myScene = new Prism::Scene();
 	myEntityFactory = new EntityFactory();
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
+	myWeaponFactory = new WeaponFactory();
+	myWeaponFactory->LoadWeapons("Data/weapons/WeaponList.xml");
+	myWeaponFactory->LoadProjectiles("Data/weapons/projectiles/ProjectileList.xml");
 	myInputWrapper = aInputWrapper;
 	myShowPointLightCube = false;
 
@@ -141,6 +145,7 @@ Level::~Level()
 
 	delete mySkySphere;
 	delete myEntityFactory;
+	delete myWeaponFactory;
 	delete myBulletManager;
 	delete myCollisionManager;
 	
