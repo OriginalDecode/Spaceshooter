@@ -5,7 +5,7 @@
 #include <istream>
 #include <atlstr.h>
 #include <TimerManager.h>
-#include <vld.h>
+//#include <vld.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath);
