@@ -76,6 +76,9 @@
     <ClCompile Include="EntityFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="WeaponFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -172,6 +175,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="EntityFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
