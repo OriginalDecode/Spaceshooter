@@ -29,8 +29,9 @@ InGameState::~InGameState()
 	delete myCollisionManager;
 }
 
-void InGameState::InitState()
+void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
+	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
 	myBulletManager = new BulletManager;
 	myCollisionManager = new CollisionManager();

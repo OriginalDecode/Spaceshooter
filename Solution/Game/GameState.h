@@ -1,16 +1,19 @@
 #pragma once
 #include "StateEnums.h"
+#include "StateStackProxy.h"
 
 namespace CommonUtilities
 {
 	class InputWrapper;
 }
 
+class StateStackProxy;
+
 class GameState
 {
 public:
 
-	virtual void InitState() = 0;
+	virtual void InitState(StateStackProxy* aStateStackProxy) = 0;
 	virtual void EndState() = 0;
 	
 	virtual const eStateStatus Update() = 0;
@@ -23,6 +26,7 @@ public:
 protected:
 
 	CU::InputWrapper* myInputWrapper;
+	StateStackProxy* myStateStack;
 	eStateStatus myStateStatus;
 	bool myIsLetThrough;
 };

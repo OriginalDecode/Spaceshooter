@@ -2,6 +2,7 @@
 #include <Matrix.h>
 #include <GrowingArray.h>
 #include "StateStack.h"
+#include "Subscriber.h"
 
 class MainMenuState;
 class InGameState;
@@ -13,7 +14,7 @@ namespace CommonUtilities
 
 class BulletManager;
 
-class Game
+class Game : public Subscriber
 {
 public:
 	Game();

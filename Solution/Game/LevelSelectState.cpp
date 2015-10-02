@@ -1,50 +1,46 @@
 #include "stdafx.h"
-#include "MainMenuState.h"
+#include "LevelSelectState.h"
 #include <Model2D.h>
 #include <Camera.h>
 #include <InputWrapper.h>
-#include "LevelSelectState.h"
 #include "StateStackProxy.h"
 
-MainMenuState::MainMenuState(CU::InputWrapper* anInputWrapper)
+LevelSelectState::LevelSelectState(CU::InputWrapper* anInputWrapper)
 {
 	myInputWrapper = anInputWrapper;
 }
 
-MainMenuState::~MainMenuState()
+LevelSelectState::~LevelSelectState()
 {
 }
 
-void MainMenuState::InitState(StateStackProxy* aStateStackProxy)
+void LevelSelectState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myStateStack = aStateStackProxy;
-	myLevelSelectState = new LevelSelectState(myInputWrapper);
-	
 	myBackground = new Prism::Model2D;
-	myBackground->Init("Data/resources/texture/seafloor.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x), 
+	myBackground->Init("Data/resources/texture/skyTest.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) });
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
-
 }
 
-void MainMenuState::EndState()
+void LevelSelectState::EndState()
 {
 	delete myBackground;
 	delete myCamera;
 }
 
-const eStateStatus MainMenuState::Update()
+const eStateStatus LevelSelectState::Update()
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
 		return eStateStatus::ePopMainState;
 	}
 
-	if (myInputWrapper->KeyDown(DIK_L) == true)
+	if (myInputWrapper->KeyDown(DIK_1) == true)
 	{
-		myStateStack->PushMainGameState(myLevelSelectState);
+		
 	}
 
 	Render();
@@ -52,17 +48,17 @@ const eStateStatus MainMenuState::Update()
 	return eKeepState;
 }
 
-void MainMenuState::Render()
+void LevelSelectState::Render()
 {
 	myBackground->Render(*myCamera, 0.f, -100.f);
 }
 
-void MainMenuState::ResumeState()
+void LevelSelectState::ResumeState()
 {
 
 }
 
-void MainMenuState::OnResize(int aWidth, int aHeight)
+void LevelSelectState::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
 }

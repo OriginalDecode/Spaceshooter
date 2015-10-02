@@ -18,3 +18,7 @@ void Subscriber::ReceiveMessage(const Message&)
 void Subscriber::ReceiveMessage(const BulletMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const GameStateMessage&)
+{
+}

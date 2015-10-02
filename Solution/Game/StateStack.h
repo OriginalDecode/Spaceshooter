@@ -7,6 +7,7 @@ namespace CommonUtilities
 }
 
 class GameState;
+class StateStackProxy;
 
 class StateStack
 {
@@ -33,6 +34,7 @@ private:
 	int mySubIndex;
 
 	CU::InputWrapper* myInputWrapper;
+	StateStackProxy* myStateStackProxy;
 };
 
 inline void StateStack::SetInputWrapper(CU::InputWrapper* anInputWrapper)

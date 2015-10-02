@@ -65,6 +65,12 @@
     <ClCompile Include="InputMessage.cpp">
       <Filter>Components\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="LevelSelectState.cpp">
+      <Filter>StateStack</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -151,6 +157,12 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="InputMessage.h">
       <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelSelectState.h">
+      <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

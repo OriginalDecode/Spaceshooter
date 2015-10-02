@@ -19,7 +19,7 @@ public:
 	InGameState(CU::InputWrapper* anInputWrapper);
 	~InGameState();
 
-	void InitState() override;
+	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
 
 	const eStateStatus Update() override;
