@@ -16,6 +16,7 @@ public:
 	GUIComponent(Entity& aEntity);
 	~GUIComponent();
 
+	void Update(float aDeltaTime) override;
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 
 	void SetCamera(Prism::Camera* aCamera);
@@ -23,7 +24,8 @@ public:
 	static int GetID();
 	void ReceiveMessage(const SteeringTargetMessage& aMessage) override;
 	void ReceiveMessage(const WaypointMessage& aMessage) override;
-
+	void ReceiveMessage(const EnemiesTargetMessage& aMessage) override;
+	
 private:
 	Prism::Model2D* myCurrentWaypointSprite;
 	Prism::Model2D* myArrow;

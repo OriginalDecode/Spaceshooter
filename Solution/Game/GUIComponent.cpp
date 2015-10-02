@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <Camera.h>
 #include "Constants.h"
+#include "EnemiesTargetMessage.h"
 #include "GUIComponent.h"
 #include <Model2D.h>
 #include "SteeringTargetMessage.h"
@@ -37,6 +38,12 @@ GUIComponent::~GUIComponent()
 	myWaypoint = nullptr;
 	myArrow = nullptr;
 	myCurrentWaypointSprite = nullptr;
+}
+
+void GUIComponent::Update(float aDeltaTime)
+{
+	aDeltaTime;
+	
 }
 
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
@@ -100,12 +107,69 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		newRenderPos.y = -(-radius.y * 400.f + (aWindowSize.y / 2.f));
 	}
 
-
-	std::string tempX = std::to_string(length);
-	SetWindowTextA(GetActiveWindow(), tempX.c_str());
-
 	myCurrentWaypointSprite->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 
+	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
+	{
+		CU::Vector3<float> toEnemy = myEnemiesPosition[i] - myCamera->GetOrientation().GetPos();
+		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
+		if (CU::Length(toEnemy) != 0)
+		{
+			CU::Normalize(toEnemy);
+		}
+		if (CU::Length(forward) != 0)
+		{
+			CU::Normalize(forward);
+		}
+
+		float circleAroundPoint = (CU::Dot(toEnemy, forward));
+
+		CU::Matrix44<float> renderPos;
+		renderPos.SetPos(myEnemiesPosition[i]);
+		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
+		renderPos = renderPos * myCamera->GetProjection();
+
+		CU::Vector3<float> newRenderPos = renderPos.GetPos();
+		newRenderPos /= renderPos.GetPos4().w;
+
+		newRenderPos.x += 1;
+		newRenderPos.x /= 2.f;
+		newRenderPos.x *= aWindowSize.x;
+		newRenderPos.y += 1;
+		newRenderPos.y /= 2.f;
+		newRenderPos.y *= aWindowSize.y;
+		newRenderPos.y -= aWindowSize.y;
+
+		CU::Vector2<float> radius(aWindowSize.x / 2.f, aWindowSize.y / 2.f);
+		radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
+		float length = 0;
+		if (radius.x != 0 && radius.y != 0)
+		{
+			length = CU::Length(radius);
+			CU::Normalize(radius);
+		}
+
+		if (length > 400.f)
+		{
+			myEnemiesCursor = myArrow;
+			newRenderPos.x = radius.x * 400.f + (aWindowSize.x / 2.f);
+			newRenderPos.y = -(radius.y * 400.f + (aWindowSize.y / 2.f));
+		}
+		else
+		{
+			myEnemiesCursor = myWaypoint;
+		}
+		if (circleAroundPoint < 0.f)
+		{
+			myEnemiesCursor = myArrow;
+			newRenderPos.x = -radius.x * 400.f + (aWindowSize.x / 2.f);
+			newRenderPos.y = -(-radius.y * 400.f + (aWindowSize.y / 2.f));
+		}
+
+		myEnemiesCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+	}
+
+	myEnemiesPosition.RemoveAll();
 }
 
 void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)
@@ -116,4 +180,9 @@ void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)
 void GUIComponent::ReceiveMessage(const WaypointMessage& aMessage)
 {
 	myWaypointPosition = aMessage.GetPosition();
+}
+
+void GUIComponent::ReceiveMessage(const EnemiesTargetMessage& aMessage)
+{
+	myEnemiesPosition.Add(aMessage.GetPosition());
 }
