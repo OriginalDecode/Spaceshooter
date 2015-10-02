@@ -19,6 +19,7 @@ void AIComponent::Init()
 	mySlowRadius = 100;
 	myTargetRadius = 50;
 	myTimeToTarget = 1.f;
+	myTimeToNextDecision = 1.f;
 }
 
 void AIComponent::Update(float aDeltaTime)
@@ -29,8 +30,17 @@ void AIComponent::Update(float aDeltaTime)
 	}
 	else
 	{
+		myTimeToNextDecision -= aDeltaTime;
 		FollowEntity(aDeltaTime);
-		Shoot();
+
+		CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+		
+		CU::Normalize(toTarget);
+		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
+		{
+			myTimeToNextDecision = 3.f;
+			Shoot();
+		}
 	}
 }
 
