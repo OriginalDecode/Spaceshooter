@@ -7,6 +7,7 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "DirectionalLight.h"
+#include "EnemiesTargetMessage.h"
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
@@ -28,7 +29,6 @@
 #include <sstream>
 #include <string>
 #include <SpotLight.h>
-
 #include "WeaponFactory.h"
 #include "WaypointMessage.h"
 
@@ -196,10 +196,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 		{
 			myPlayer->SendMessage<WaypointMessage>(WaypointMessage(myEntities[i]->myOrientation.GetPos()));
 		}
-		//if (myEntities[i]->GetType() == eEntityType::ENEMY)
-		//{
-		//	myPlayer->SendMessage(<EnemyMessage>(EnemyMessage(myEntities[i]->myOrientation.GetPos()));
-		//}
+		if (myEntities[i]->GetType() == eEntityType::ENEMY)
+		{
+			myPlayer->SendMessage<EnemiesTargetMessage>(EnemiesTargetMessage(myEntities[i]->myOrientation.GetPos()));
+		}
 	}
 
 

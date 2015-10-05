@@ -2,12 +2,15 @@
 
 #include "AIComponent.h"
 #include "CollisionComponent.h"
+#include "BulletComponent.h"
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "GraphicsComponent.h"
+#include "HealthComponent.h"
 #include <Instance.h>
 #include <Scene.h>
 #include "ShootingComponent.h"
+#include "PhysicsComponent.h"
 #include <XMLReader.h>
 
 EntityData::EntityData(Prism::Scene& aDummyScene)
@@ -84,6 +87,14 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		{
 			LoadCollisionComponent(newEntity, entityDocument, e);
 		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PhysicsComponent").c_str()) == 0)
+		{
+			LoadPhysicsComponent(newEntity, entityDocument, e);
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("BulletComponent").c_str()) == 0)
+		{
+			LoadBulletComponent(newEntity, entityDocument, e);
+		}
 	}
 	if (entityName != "")
 	{
@@ -108,6 +119,30 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 
 			aEntityToAddTo.myTargetName = targetName;
 			aEntityToAddTo.myChanceToFollow = chanceToFollow;
+		}
+	}
+}
+
+void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aBulletComponentElement)
+{
+	aEntityToAddTo.myEntity->AddComponent<BulletComponent>();
+	for (tinyxml2::XMLElement* e = aBulletComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("lifeTime").c_str()) == 0)
+		{
+			float lifeTime = 0;
+
+			aDocument.ForceReadAttribute(e, "value", lifeTime);
+
+			aEntityToAddTo.myMaxTime = lifeTime;
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("damage").c_str()) == 0)
+		{
+			int damage = 0;
+
+			aDocument.ForceReadAttribute(e, "value", damage);
+
+			aEntityToAddTo.myDamage = static_cast<unsigned short>(damage);
 		}
 	}
 }
@@ -174,6 +209,30 @@ void EntityFactory::LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader&
 	aDocument;
 }
 
+void EntityFactory::LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aHealthComponentElement)
+{
+	aEntityToAddTo.myEntity->AddComponent<HealthComponent>();
+
+	for (tinyxml2::XMLElement* e = aHealthComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Health").c_str()) == 0)
+		{
+			int life = 0;
+
+			aDocument.ForceReadAttribute(e, "value", life);
+
+			aEntityToAddTo.myLife = static_cast<unsigned short>(life);
+		}
+	}
+}
+
+void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement)
+{
+	aEntityToAddTo.myEntity->AddComponent<PhysicsComponent>();
+	aDocument;
+	aPhysicsComponentElement;
+}
+
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
 {
 	auto it = myEntities.find(aEntityTag);
@@ -223,5 +282,14 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		{
 			aTargetEntity->GetComponent<CollisionComponent>()->Initiate(it->second.myCollisionSphereRadius);
 		}
+	}
+	if (sourceEntity->GetComponent<HealthComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<HealthComponent>();
+		aTargetEntity->GetComponent<HealthComponent>()->Init(it->second.myLife);
+	}
+	if (sourceEntity->GetComponent<PhysicsComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<PhysicsComponent>();
 	}
 }
