@@ -39,7 +39,7 @@ void AIComponent::Update(float aDeltaTime)
 		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
 		{
 			myTimeToNextDecision = 3.f;
-			Shoot();
+			//Shoot();
 		}
 	}
 }
@@ -61,8 +61,9 @@ void AIComponent::MakeDecision()
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	SteeringOutput steering = CalcualteSteering();
-
+	CalcualteSteering(aDeltaTime);
+	return;
+/*
 	Move(myVelocity * aDeltaTime);
 
 	myVelocity += steering.myLinear * aDeltaTime;
@@ -75,56 +76,46 @@ void AIComponent::FollowEntity(float aDeltaTime)
 
 	GetNewOrientation(myVelocity);
 
-	SetRotation(CU::Matrix44<float>::CreateRotateAroundY(myOrientation.x));
+	SetRotation(CU::Matrix44<float>::CreateRotateAroundY(myOrientation.x));*/
 }
 
 void AIComponent::GetNewOrientation(const CU::Vector3<float>& aVelocity)
 {
-	if (CU::Length(aVelocity) > 0)
-	{
-		myOrientation.x = atan2(aVelocity.x, aVelocity.z);
-	}
+	//if (CU::Length(aVelocity) > 0)
+	//{
+	//	myOrientation.x = atan2(aVelocity.x, aVelocity.z);
+	//}
 }
 
-AIComponent::SteeringOutput AIComponent::CalcualteSteering()
+void AIComponent::CalcualteSteering(float aDeltaTime)
 {
-	SteeringOutput output;
+	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 
+	CU::Normalize(toTarget);
+	
+	toTarget = toTarget * myEntity.myOrientation;
 
-	CU::Vector3<float> direction = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-	float distance = CU::Length(direction);
+	CU::Vector3<float> forward = myEntity.myOrientation.GetForward();
 
-	if (distance < myTargetRadius)
+	forward = forward * myEntity.myOrientation;
+
+	int dir = 1;
+
+	if (toTarget.x < 0)
 	{
-		return output;
+		dir = -1;
 	}
 
-	float targetSpeed;
-	if (distance < mySlowRadius)
-	{
-		targetSpeed = myMaxSpeed;
-	}
-	else
-	{
-		targetSpeed = myMaxSpeed * distance / mySlowRadius;
-	}
+	CU::Matrix44<float> rotate = CU::Matrix44<float>::CreateRotateAroundY(acosf(CU::Dot(forward, toTarget))
+		* dir);
 
-	CU::Vector3<float> targetVelocity = direction;
-	CU::Normalize(targetVelocity);
-	targetVelocity *= targetSpeed;
+	myEntity.myOrientation = rotate * myEntity.myOrientation;
 
-	output.myLinear = targetVelocity - myVelocity;
-	output.myLinear /= myTimeToTarget;
-
-	if (CU::Length(output.myLinear) > myMaxAcceleration)
-	{
-		CU::Normalize(output.myLinear);
-		output.myLinear *= myMaxAcceleration;
-	}
-
-	output.myAngular = { 0, 0, 0 };
-
-	return output;
+	//if (CU::Length(output.myLinear) > myMaxAcceleration)
+	//{
+	//	CU::Normalize(output.myLinear);
+	//	output.myLinear *= myMaxAcceleration;
+	//}
 }
 
 void AIComponent::FollowOwnDecision(float aDeltaTime)

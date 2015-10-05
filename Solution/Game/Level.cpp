@@ -89,9 +89,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/BasicEffect.fx");
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-
+			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
+			//	, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ 0, 70.f, 0 });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
