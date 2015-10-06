@@ -3,7 +3,7 @@
 #include "PowerUpComponent.h"
 #include "PowerUpNote.h"
 
-void PowerUpComponent::ReceiveMessage(const PowerUpNote& aMessage)
+void PowerUpComponent::ReceiveNote(const PowerUpNote& aMessage)
 {
 	//if (aMessage.GetType() == ePowerUpType::FIRERATEBOOST)
 	//{
