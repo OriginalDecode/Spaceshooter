@@ -5,7 +5,7 @@
 #include "GUIComponent.h"
 #include <Model2D.h>
 #include "SteeringTargetNote.h"
-#include "WaypointMessage.h"
+#include "WaypointNote.h"
 
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -174,15 +174,15 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)
 {
-	mySteeringTargetPosition = aMessage.GetPosition();
+	mySteeringTargetPosition = aMessage.myPosition;
 }
 
-void GUIComponent::ReceiveNote(const WaypointMessage& aMessage)
+void GUIComponent::ReceiveNote(const WaypointNote& aMessage)
 {
-	myWaypointPosition = aMessage.GetPosition();
+	myWaypointPosition = aMessage.myPosition;
 }
 
 void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
 {
-	myEnemiesPosition.Add(aMessage.GetPosition());
+	myEnemiesPosition.Add(aMessage.myPosition);
 }
