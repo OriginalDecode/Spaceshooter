@@ -4,8 +4,9 @@
 class PowerUpComponent : public Component
 {
 public:
-
-	void ReceiveNote(const PowerUpNote& aMessage) override;
+	PowerUpComponent(Entity& aEntity);
+	void ReceiveNote(const PowerUpNote& aNote) override;
+	void ReceiveNote(const CollisionNote& aNote) override;
 
 	static int GetID();
 

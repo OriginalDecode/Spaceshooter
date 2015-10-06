@@ -3,27 +3,30 @@
 #include "BulletComponent.h"
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include "CollisionNote.h"
 #include "Entity.h"
 #include "HealthComponent.h"
 #include <Intersection.h>
 
 CollisionManager::CollisionManager()
-	: myPlayer(nullptr)
+	: myPlayers(1)
 	, myEnemies(16)
 	, myPlayerBullets(16)
 	, myEnemyBullets(16)
 	, myTriggers(16)
+	, myProps(16)
 	, myPlayerFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
 	, myEnemyBulletFilter(0)
 	, myTriggerFilter(0)
+	, myPropFilter(0)
 {
-
-	myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
+	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
 	myPlayerBulletFilter = eEntityType::ENEMY;
 	myEnemyBulletFilter = eEntityType::PLAYER;
 	myTriggerFilter = eEntityType::PLAYER;
+	//myEnemyFilter = eEntityType::PLAYER;
 }
 
 void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
@@ -31,7 +34,7 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 	switch (aEnum)
 	{
 	case eEntityType::PLAYER:
-		myPlayer = aComponent;
+		myPlayers.Add(aComponent);
 		break;
 	case eEntityType::ENEMY:
 		myEnemies.Add(aComponent);
@@ -57,7 +60,7 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 	switch (aEnum)
 	{
 	case eEntityType::PLAYER:
-		DL_ASSERT("Tried to Remove PLAYER from CollisionManager.");
+		myPlayers.RemoveCyclic(aComponent);
 		break;
 	case eEntityType::ENEMY:
 		myEnemies.RemoveCyclic(aComponent);
@@ -79,35 +82,25 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 
 void CollisionManager::Update()
 {
+	for (int i = myPlayers.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myPlayers[i], myPlayerFilter);
+	}
+	for (int i = myEnemies.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myEnemies[i], myEnemyFilter);
+	}
 	for (int i = myPlayerBullets.Size() - 1; i >= 0; --i)
 	{
-		for (int e = myEnemies.Size() - 1; e >= 0; --e)
-		{
-			Entity& enemy = myEnemies[e]->GetEntity();
-			if (enemy.GetAlive() == true 
-				&& CU::Intersection::SphereVsSphere(myPlayerBullets[i]->GetSphere(), myEnemies[e]->GetSphere()) == true)
-			{
-				Entity& bullet = myPlayerBullets[i]->GetEntity();
-				enemy.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
-				bullet.GetComponent<BulletComponent>()->SetActive(false);
-				myPlayerBullets.RemoveCyclicAtIndex(i);
-				break;
-			}
-		}
+		CheckAllCollisions(myPlayerBullets[i], myPlayerBulletFilter);
 	}
-
 	for (int i = myEnemyBullets.Size() - 1; i >= 0; --i)
 	{
-		Entity& bullet = myEnemyBullets[i]->GetEntity();
-		Entity& player = myPlayer->GetEntity();
-
-		if (player.GetAlive() == true
-			&& CU::Intersection::SphereVsSphere(myPlayer->GetSphere(), myEnemyBullets[i]->GetSphere()) == true)
-		{
-			player.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
-			bullet.GetComponent<BulletComponent>()->SetActive(false);
-			myEnemyBullets.RemoveCyclicAtIndex(i);
-		}
+		CheckAllCollisions(myEnemyBullets[i], myEnemyBulletFilter);
+	}
+	for (int i = myTriggers.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myTriggers[i], myTriggerFilter);
 	}
 }
 
@@ -129,35 +122,46 @@ void CollisionManager::CleanUp()
 	}
 }
 
-void CollisionManager::CheckCollision(CollisionComponent* aComponent, int aFilter)
+void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aFilter)
 {
-	//Entity& entity = aComponent->GetEntity();
-	//
-	//if (aFilter & eEntityType::PLAYER)
-	//{
-	//	Entity& player = myPlayer->GetEntity();
+	Entity& entity = aComponent->GetEntity();
+	
+	if (aFilter & eEntityType::PLAYER)
+	{
+		CheckCollision(aComponent, myPlayers);
+	}
+	if (aFilter & eEntityType::ENEMY)
+	{
+		CheckCollision(aComponent, myEnemies);
+	}
+	if (aFilter & eEntityType::PLAYER_BULLET)
+	{
+		CheckCollision(aComponent, myPlayerBullets);
+	}
+	if (aFilter & eEntityType::ENEMY_BULLET)
+	{
+		CheckCollision(aComponent, myEnemyBullets);
+	}
+	if (aFilter & eEntityType::TRIGGER)
+	{
+		CheckCollision(aComponent, myTriggers);
+	}
+	if (aFilter & eEntityType::PROP)
+	{
+		CheckCollision(aComponent, myProps);
+	}
+}
 
-	//	if (player.GetAlive() == true
-	//		&& CU::Intersection::SphereVsSphere(myPlayer->GetSphere(), aComponent->GetSphere()) == true)
-	//	{
-	//		entity.SendMessage()
-	//	}
-	//}
-
-	//for (int i = myPlayerBullets.Size() - 1; i >= 0; --i)
-	//{
-	//	for (int e = myEnemies.Size() - 1; e >= 0; --e)
-	//	{
-	//		Entity& enemy = myEnemies[e]->GetEntity();
-	//		if (enemy.GetAlive() == true
-	//			&& CU::Intersection::SphereVsSphere(myPlayerBullets[i]->GetSphere(), myEnemies[e]->GetSphere()) == true)
-	//		{
-	//			Entity& bullet = myPlayerBullets[i]->GetEntity();
-	//			enemy.GetComponent<HealthComponent>()->RemoveHealth(bullet.GetComponent<BulletComponent>()->GetDamage());
-	//			bullet.GetComponent<BulletComponent>()->SetActive(false);
-	//			myPlayerBullets.RemoveCyclicAtIndex(i);
-	//			break;
-	//		}
-	//	}
-	//}
+void CollisionManager::CheckCollision(CollisionComponent* aComponent
+	, CU::GrowingArray<CollisionComponent*>& someOtherComponents)
+{
+	for (int i = someOtherComponents.Size() - 1; i >= 0; --i)
+	{
+		Entity& theOther = someOtherComponents[i]->GetEntity();
+		if (CU::Intersection::SphereVsSphere(aComponent->GetSphere(), someOtherComponents[i]->GetSphere()) == true)
+		{
+			aComponent->GetEntity().SendNote(CollisionNote(theOther, *this));
+			break;
+		}
+	}
 }
