@@ -5,8 +5,8 @@
 
 void PowerUpComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 {
-	if (aMessage.GetType() == ePowerUpType::FIRERATEBOOST)
-	{
-		//PostMaster::GetInstance()->SendMessage(msg);
-	}
+	//if (aMessage.GetType() == ePowerUpType::FIRERATEBOOST)
+	//{
+	//	//PostMaster::GetInstance()->SendMessage(msg);
+	//}
 }
