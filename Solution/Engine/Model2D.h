@@ -25,6 +25,7 @@ namespace Prism
 
 		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
 		void Render(const Camera& aCamera, const float aDrawX, const float aDrawY);
+		void Rotate(float aRadian);
 
 	private:
 

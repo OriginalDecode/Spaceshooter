@@ -1,8 +1,6 @@
 #pragma once
 #include "Enums.h"
 #include <unordered_map>
-#include "PowerUpMessage.h"
-#undef SendMessage
 
 namespace Prism
 {
@@ -28,8 +26,7 @@ public:
 	T* GetComponent();
 
 	template <typename T>
-	void SendMessage(const T& aMessage);
-
+	void SendNote(const T& aNote);
 
 
 	CU::Matrix44<float> myOrientation;
@@ -41,15 +38,12 @@ public:
 
 	Prism::Scene& GetScene();
 
-	void SetPowerUpType(ePowerUpType someType);
-	
 private:
 	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
 	bool myAlive;
 	const eEntityType myType;
 	Prism::Scene& myScene;
-	ePowerUpType myPowerUpType;
 };
 
 template <typename T>
@@ -74,11 +68,11 @@ T* Entity::GetComponent()
 }
 
 template <typename T>
-void Entity::SendMessage(const T& aMessage)
+void Entity::SendNote(const T& aMessage)
 {
 	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
 	{
-		it->second->ReceiveMessage(aMessage);
+		it->second->ReceiveNote(aMessage);
 	}
 }
 

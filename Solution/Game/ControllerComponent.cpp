@@ -2,7 +2,7 @@
 
 #include "ControllerComponent.h"
 #include "Entity.h"
-#include "ShootMessage.h"
+#include "ShootNote.h"
 #include "ShootingComponent.h"
 
 ControllerComponent::ControllerComponent(Entity& aEntity)
@@ -86,6 +86,6 @@ void ControllerComponent::SetRotation(const CU::Matrix44<float>& aRotation)
 void ControllerComponent::Shoot()
 {
 	DL_ASSERT_EXP(myEntity.GetComponent<ShootingComponent>() != nullptr, "Cant Shoot without ShootingComponent");
-	ShootMessage msg;
-	myEntity.SendMessage(msg);
+	ShootNote note;
+	myEntity.SendNote(note);
 }

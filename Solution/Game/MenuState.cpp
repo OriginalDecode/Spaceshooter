@@ -40,12 +40,10 @@ const eStateStatus MenuState::Update()
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		return eStateStatus::ePopSubState;
+		return eStateStatus::ePopMainState;
 	}
 
 	myMenu->Update(myInputWrapper);
-
-	Render();
 
 	return eKeepState;
 }

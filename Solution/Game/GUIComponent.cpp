@@ -1,25 +1,34 @@
 #include "stdafx.h"
 #include <Camera.h>
 #include "Constants.h"
-#include "EnemiesTargetMessage.h"
+#include "EnemiesTargetNote.h"
 #include "GUIComponent.h"
 #include <Model2D.h>
-#include "SteeringTargetMessage.h"
-#include "WaypointMessage.h"
+#include "SteeringTargetNote.h"
+#include <sstream>
+#include "WaypointNote.h"
+
+#define CIRCLERADIUS 400.f
 
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 {
+	myReticle = new Prism::Model2D;
 	mySteeringTarget = new Prism::Model2D;
 	myCrosshair = new Prism::Model2D;
-	myWaypoint = new Prism::Model2D;
-	myCurrentWaypointSprite = new Prism::Model2D;
-	myArrow = new Prism::Model2D;
-	myCrosshair->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f }); // the size scales the pic
-	mySteeringTarget->Init("Data/resources/texture/crosshair.dds", { 64.f, 64.f });
-	myWaypoint->Init("Data/resources/texture/enemy_marker.dds", { 64, 64 });
-	myArrow->Init("Data/resources/texture/arrow.dds", { 64, 64 });;
-	myCurrentWaypointSprite = nullptr;
+	myEnemyMarker = new Prism::Model2D;
+	myCurrentWaypoint = new Prism::Model2D;
+	myEnemyArrow = new Prism::Model2D;
+	myWaypointMarker = new Prism::Model2D;
+	myWaypointArrow = new Prism::Model2D;
+	myReticle->Init("Data/resources/texture/UI/Navigation_Circle.dds", { 512.f, 512.f });
+	myCrosshair->Init("Data/resources/texture/UI/Shoting_Crosshair.dds", { 256.f, 256.f }); // the size scales the pic
+	mySteeringTarget->Init("Data/resources/texture/UI/Stearing_Crosshair.dds", { 64.f, 64.f });
+	myEnemyMarker->Init("Data/resources/texture/UI/Navigation_Marker_Enemy.dds", { 64, 64 });
+	myEnemyArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Enemy.dds", { 64, 64 });
+	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", { 64, 64 });
+	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", { 64, 64 });
+	myCurrentWaypoint = nullptr;
 	myCamera = nullptr;
 
 	myEnemiesPosition.Init(8);
@@ -30,14 +39,18 @@ GUIComponent::~GUIComponent()
 {
 	delete mySteeringTarget;
 	delete myCrosshair;
-	delete myWaypoint;
-	delete myArrow;
-	delete myCurrentWaypointSprite;
+	delete myEnemyMarker;
+	delete myEnemyArrow;
+	delete myCurrentWaypoint;
+	delete myWaypointArrow;
+	delete myWaypointMarker;
+	myWaypointMarker = nullptr;
+	myWaypointArrow = nullptr;
 	mySteeringTarget = nullptr;
 	myCrosshair = nullptr;
-	myWaypoint = nullptr;
-	myArrow = nullptr;
-	myCurrentWaypointSprite = nullptr;
+	myEnemyMarker = nullptr;
+	myEnemyArrow = nullptr;
+	myCurrentWaypoint = nullptr;
 }
 
 void GUIComponent::Update(float aDeltaTime)
@@ -48,11 +61,14 @@ void GUIComponent::Update(float aDeltaTime)
 
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
-	mySteeringTarget->Render(*myCamera, aWindowSize.x / 2.f + mySteeringTargetPosition.x
-		, -aWindowSize.y / 2.f - mySteeringTargetPosition.y);
-	myCrosshair->Render(*myCamera, aWindowSize.x / 2.f, -(aWindowSize.y / 2.f));
-
+	float halfHeight = aWindowSize.y * 0.5f;
+	float halfWidth = aWindowSize.x * 0.5f;
+	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
+		, -halfHeight - mySteeringTargetPosition.y);
+	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
+	std::stringstream lengthToWaypoint;
 	CU::Vector3<float> toWaypoint = myWaypointPosition - myCamera->GetOrientation().GetPos();
+	lengthToWaypoint << static_cast<int>(CU::Length(toWaypoint));
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toWaypoint) != 0)
 	{
@@ -81,7 +97,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	newRenderPos.y *= aWindowSize.y;
 	newRenderPos.y -= aWindowSize.y;
 
-	CU::Vector2<float> radius(aWindowSize.x / 2.f, aWindowSize.y / 2.f);
+	CU::Vector2<float> radius(halfWidth, halfHeight);
 	radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
 	float length = 0;
 	if (radius.x != 0 && radius.y != 0)
@@ -90,24 +106,25 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CU::Normalize(radius);
 	}
 
-	if (length > 400.f)
+	if (length > CIRCLERADIUS)
 	{
-		myCurrentWaypointSprite = myArrow;
-		newRenderPos.x = radius.x * 400.f + (aWindowSize.x / 2.f);
-		newRenderPos.y = -(radius.y * 400.f + (aWindowSize.y / 2.f));
+		myCurrentWaypoint = myWaypointArrow;
+		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
+		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
 	}
 	else
 	{
-		myCurrentWaypointSprite = myWaypoint;
+		myCurrentWaypoint = myWaypointMarker;
 	}
 	if (circleAroundPoint < 0.f)
 	{
-		myCurrentWaypointSprite = myArrow;
-		newRenderPos.x = -radius.x * 400.f + (aWindowSize.x / 2.f);
-		newRenderPos.y = -(-radius.y * 400.f + (aWindowSize.y / 2.f));
+		myCurrentWaypoint = myWaypointArrow;
+		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
+		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 	}
 
-	myCurrentWaypointSprite->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+	Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
+	myCurrentWaypoint->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 
 	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
 	{
@@ -140,7 +157,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		newRenderPos.y *= aWindowSize.y;
 		newRenderPos.y -= aWindowSize.y;
 
-		CU::Vector2<float> radius(aWindowSize.x / 2.f, aWindowSize.y / 2.f);
+		CU::Vector2<float> radius(halfWidth, halfHeight);
 		radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
 		float length = 0;
 		if (radius.x != 0 && radius.y != 0)
@@ -149,40 +166,42 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 			CU::Normalize(radius);
 		}
 
-		if (length > 400.f)
+		if (length > CIRCLERADIUS)
 		{
-			myEnemiesCursor = myArrow;
-			newRenderPos.x = radius.x * 400.f + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(radius.y * 400.f + (aWindowSize.y / 2.f));
+			myEnemiesCursor = myEnemyArrow;
+			newRenderPos.x = radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
+			newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
 		}
 		else
 		{
-			myEnemiesCursor = myWaypoint;
+			myEnemiesCursor = myEnemyMarker;
 		}
 		if (circleAroundPoint < 0.f)
 		{
-			myEnemiesCursor = myArrow;
-			newRenderPos.x = -radius.x * 400.f + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(-radius.y * 400.f + (aWindowSize.y / 2.f));
+			myEnemiesCursor = myEnemyArrow;
+			newRenderPos.x = -radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
+			newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 		}
 
 		myEnemiesCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 	}
 
+	myReticle->Render(*myCamera, halfWidth, -halfHeight);
+
 	myEnemiesPosition.RemoveAll();
 }
 
-void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)
+void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)
 {
-	mySteeringTargetPosition = aMessage.GetPosition();
+	mySteeringTargetPosition = aMessage.myPosition;
 }
 
-void GUIComponent::ReceiveMessage(const WaypointMessage& aMessage)
+void GUIComponent::ReceiveNote(const WaypointNote& aMessage)
 {
-	myWaypointPosition = aMessage.GetPosition();
+	myWaypointPosition = aMessage.myPosition;
 }
 
-void GUIComponent::ReceiveMessage(const EnemiesTargetMessage& aMessage)
+void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
 {
-	myEnemiesPosition.Add(aMessage.GetPosition());
+	myEnemiesPosition.Add(aMessage.myPosition);
 }
