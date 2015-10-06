@@ -51,11 +51,11 @@ bool Game::Init(HWND& aHwnd)
 
 	myMainMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
 	myLevelSelect = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
-	//myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
-	//myStateStack.PushMainGameState(myGame);
+	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
+	myStateStack.PushMainGameState(myGame);
 
-	myStateStack.PushMainGameState(myMainMenu);
-	myLockMouse = false;
+	//myStateStack.PushMainGameState(myMainMenu);
+	//myLockMouse = false;
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
