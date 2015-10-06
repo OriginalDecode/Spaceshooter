@@ -192,6 +192,9 @@
     <ClInclude Include="SteeringTargetNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
+    <ClInclude Include="WaypointNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

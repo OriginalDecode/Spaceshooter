@@ -69,7 +69,7 @@ void ShootingComponent::ReceiveNote(const ShootNote&)
 
 void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 {
-	SetCurrentWeaponID(aMessage.GetKey());
+	SetCurrentWeaponID(aMessage.myKey);
 }
 
 void ShootingComponent::ReadFromXML(const std::string aFilePath)

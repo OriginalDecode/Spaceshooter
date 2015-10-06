@@ -2,12 +2,14 @@
 #include "ComponentEnums.h"
 
 class Entity;
-class EnemiesTargetNote;
-class ShootNote;
-class InputNote;
-class SteeringTargetNote;
-class WaypointMessage;
-class PowerUpNote;
+
+struct EnemiesTargetNote;
+struct ShootNote;
+struct InputNote;
+struct SteeringTargetNote;
+struct PowerUpNote;
+struct WaypointNote;
+
 
 class Component
 {
@@ -19,10 +21,10 @@ public:
 	virtual void ReceiveNote(const ShootNote& aMessage);
 	virtual void ReceiveNote(const InputNote& aMessage);
 	virtual void ReceiveNote(const SteeringTargetNote& aMessage);
-	virtual void ReceiveNote(const WaypointMessage& aMessage);
 	virtual void ReceiveNote(const EnemiesTargetNote& aMessage);
 	virtual void ReceiveNote(const PowerUpNote& aMessage);
 
+	virtual void ReceiveNote(const WaypointNote& aMessage);
 
 	Entity& GetEntity();
 

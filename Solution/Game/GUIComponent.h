@@ -23,7 +23,7 @@ public:
 
 	static int GetID();
 	void ReceiveNote(const SteeringTargetNote& aMessage) override;
-	void ReceiveNote(const WaypointMessage& aMessage) override;
+	void ReceiveNote(const WaypointNote& aMessage) override;
 	void ReceiveNote(const EnemiesTargetNote& aMessage) override;
 	
 private:

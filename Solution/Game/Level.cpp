@@ -30,7 +30,7 @@
 #include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
-#include "WaypointMessage.h"
+#include "WaypointNote.h"
 
 #include <XMLReader.h>
 
@@ -197,7 +197,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEntities[i]->Update(aDeltaTime);
 		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
 		{
-			myPlayer->SendNote<WaypointMessage>(WaypointMessage(myEntities[i]->myOrientation.GetPos()));
+			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
 		}
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
 		{

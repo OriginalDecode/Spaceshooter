@@ -27,7 +27,7 @@ void Component::ReceiveNote(const SteeringTargetNote&)
 {
 }
 
-void Component::ReceiveNote(const WaypointMessage&)
+void Component::ReceiveNote(const WaypointNote&)
 {
 }
 

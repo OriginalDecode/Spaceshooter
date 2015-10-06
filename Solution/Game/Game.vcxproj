@@ -121,6 +121,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SteeringTargetNote.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="WaypointNote.h" />
     <ClInclude Include="WeaponFactory.h" />
   </ItemGroup>
   <ItemGroup>
