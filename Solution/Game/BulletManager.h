@@ -52,7 +52,7 @@ private:
 
 	void LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, const std::string& aProjectilePath);
 
-	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType);
+	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, const float& aEnititySpeed);
 	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
 
 	void DeleteWeaponData(BulletData* aWeaponData);
