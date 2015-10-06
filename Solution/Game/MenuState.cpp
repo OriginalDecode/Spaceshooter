@@ -45,8 +45,6 @@ const eStateStatus MenuState::Update()
 
 	myMenu->Update(myInputWrapper);
 
-	Render();
-
 	return eKeepState;
 }
 

@@ -55,7 +55,7 @@ bool Game::Init(HWND& aHwnd)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
 	myMainMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
-	myLevelSelect = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
+	myLevelSelect = new MenuState("Data/script/levelSelect.xml", myInputWrapper);
 	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
 
 	if (startInMeu == false)
@@ -109,6 +109,8 @@ bool Game::Update()
 	{
 		return false;
 	}
+	myStateStack.RenderCurrentState();
+
 
 	return true;
 }
@@ -145,7 +147,10 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		break;
 	case eGameState::LEVEL_SELECT_STATE:
 		myLockMouse = false;
+		myLevelSelect = new MenuState("Data/script/levelSelect.xml", myInputWrapper);
 		myStateStack.PushMainGameState(myLevelSelect);
+		break;
+	case eGameState::POP_STATE:
 		break;
 	}
 }
