@@ -1,8 +1,10 @@
 #include "stdafx.h"
 #include "AIComponent.h"
 #include "Constants.h"
-#include <Vector.h>
+#include <Engine.h>
 #include "Entity.h"
+#include <sstream>
+#include <Vector.h>
 
 AIComponent::AIComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
@@ -14,12 +16,9 @@ void AIComponent::Init()
 {
 	myEntityToFollow = nullptr;
 
-	myMaxSpeed = 400;
-	myMaxAcceleration = 40;
-	mySlowRadius = 100;
-	myTargetRadius = 50;
-	myTimeToTarget = 1.f;
 	myTimeToNextDecision = 1.f;
+	mySpeed = 80.f;
+	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
 }
 
 void AIComponent::Update(float aDeltaTime)
@@ -39,7 +38,7 @@ void AIComponent::Update(float aDeltaTime)
 		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
 		{
 			myTimeToNextDecision = 3.f;
-			//Shoot();
+			Shoot();
 		}
 	}
 }
@@ -61,69 +60,44 @@ void AIComponent::MakeDecision()
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	CalcualteSteering(aDeltaTime);
-	return;
-/*
-	Move(myVelocity * aDeltaTime);
+	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 
-	myVelocity += steering.myLinear * aDeltaTime;
+	myVelocity += toTarget * aDeltaTime;
 
-	if (CU::Length(myVelocity) > myMaxSpeed)
-	{
-		CU::Normalize(myVelocity);
-		myVelocity *= myMaxSpeed;
-	}
+	CU::Normalize(myVelocity);
 
-	GetNewOrientation(myVelocity);
-
-	SetRotation(CU::Matrix44<float>::CreateRotateAroundY(myOrientation.x));*/
-}
-
-void AIComponent::GetNewOrientation(const CU::Vector3<float>& aVelocity)
-{
-	//if (CU::Length(aVelocity) > 0)
-	//{
-	//	myOrientation.x = atan2(aVelocity.x, aVelocity.z);
-	//}
-}
-
-void AIComponent::CalcualteSteering(float aDeltaTime)
-{
-	CU::Vector3<float> toTarget3D = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-
-	//CU::Normalize(toTarget);
-	
-	toTarget3D = toTarget3D * myEntity.myOrientation;
-
-	CU::Vector2<float> toTarget(toTarget3D.x, toTarget3D.z);
+	CU::Vector3<float> up(0, 1.f, 0);
+	up = up * myEntity.myOrientation;
 
 	CU::Normalize(toTarget);
 
-	CU::Vector3<float> forward3D = myEntity.myOrientation.GetForward();
+	up = up + toTarget * aDeltaTime;
 
-	forward3D = forward3D * myEntity.myOrientation;
-	CU::Vector2<float> forward(forward3D.x, forward3D.z);
+	CU::Normalize(up);
 
-	CU::Normalize(forward);
+	CU::Vector3<float> right = CU::Cross(up, myVelocity);
+	up = CU::Cross(myVelocity, right);
 
-	int dir = 1;
+	right = CU::Cross(up, myVelocity);
 
-	if (toTarget.x < 0)
-	{
-		dir = -1;
-	}
+	myEntity.myOrientation.myMatrix[0] = right.x;
+	myEntity.myOrientation.myMatrix[1] = right.y;
+	myEntity.myOrientation.myMatrix[2] = right.z;
+	myEntity.myOrientation.myMatrix[3] = 0;
 
+	myEntity.myOrientation.myMatrix[4] = up.x;
+	myEntity.myOrientation.myMatrix[5] = up.y;
+	myEntity.myOrientation.myMatrix[6] = up.z;
+	myEntity.myOrientation.myMatrix[7] = 0;
 
-	CU::Matrix44<float> rotate = CU::Matrix44<float>::CreateRotateAroundY(acosf(CU::Clip(CU::Dot(forward, toTarget), -1.f, 1.f))
-		* dir * aDeltaTime);
+	myEntity.myOrientation.myMatrix[8] = myVelocity.x;
+	myEntity.myOrientation.myMatrix[9] = myVelocity.y;
+	myEntity.myOrientation.myMatrix[10] = myVelocity.z;
+	myEntity.myOrientation.myMatrix[11] = 0;
 
-	myEntity.myOrientation = rotate * myEntity.myOrientation;
+	myVelocity *= mySpeed;
 
-	//if (CU::Length(output.myLinear) > myMaxAcceleration)
-	//{
-	//	CU::Normalize(output.myLinear);
-	//	output.myLinear *= myMaxAcceleration;
-	//}
+	myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() + aDeltaTime * myVelocity);
 }
 
 void AIComponent::FollowOwnDecision(float aDeltaTime)
