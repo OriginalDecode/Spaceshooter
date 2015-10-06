@@ -60,16 +60,11 @@ namespace Prism
 				{
 				case Prism::ModelLoader::eLoadType::MODEL:
 				{
-					CU::TimerManager::GetInstance()->StartTimer("LoadModel");
-
+					
 					model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
 						Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
 					model->Init();
-
-
-					int elapsed = static_cast<int>(
-						CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
-					RESOURCE_LOG("Model \"%s\" took %d ms to load", loadArray[i].myModelPath.c_str(), elapsed);
+					
 					break;
 				}
 				case Prism::ModelLoader::eLoadType::POLYGON:

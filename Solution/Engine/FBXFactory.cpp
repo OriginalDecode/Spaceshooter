@@ -9,6 +9,7 @@
 #include "VertexBufferWrapper.h"
 #include "VertexDataWrapper.h"
 #include "VertexIndexWrapper.h"
+#include <TimerManager.h>
 
 
 Prism::FBXFactory::FBXFactory()
@@ -163,7 +164,7 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 		return myModels[aFilePath];
 	}
 
-
+	CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 	FBXData* found = 0;
 	for (FBXData* data : myFBXData)
 	{ 
@@ -194,6 +195,9 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 
 	myModels[aFilePath] = returnModel;
 
+	int elapsed = static_cast<int>(
+		CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
+	RESOURCE_LOG("Model \"%s\" took %d ms to load", aFilePath, elapsed);
 	return returnModel;
 }
 
