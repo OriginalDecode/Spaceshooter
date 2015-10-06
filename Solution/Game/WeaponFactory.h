@@ -14,15 +14,11 @@ struct WeaponDataType
 
 struct ProjectileDataType
 {
-	std::string myEffectPath;
-	std::string myModelPath;
 	std::string myType;
+	std::string myEntityType;
 
 	int myMaxBullet;
 
-	float myCollisionSphereRadius;
-	float myDamage;
-	float myLifeTime;
 	float mySpeed;
 };
 

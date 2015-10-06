@@ -86,6 +86,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="PowerUpMessage.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEnums.h" />
@@ -105,9 +106,8 @@
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="InputMessage.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="LevelSelectState.h" />
-    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
@@ -143,9 +143,8 @@
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="InputMessage.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="LevelSelectState.cpp" />
-    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />

@@ -4,9 +4,8 @@
 #include "StateStack.h"
 #include "Subscriber.h"
 
-class MainMenuState;
+class MenuState;
 class InGameState;
-class LevelSelectState;
 
 namespace CommonUtilities
 {
@@ -38,9 +37,9 @@ private:
 
 	StateStack myStateStack;
 	
-	MainMenuState* myMainMenu;
+	MenuState* myMainMenu;
+	MenuState* myLevelSelect;
 	InGameState* myGame;
-	LevelSelectState* myLevelSelect;
 
 	bool myLockMouse;
 

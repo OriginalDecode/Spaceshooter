@@ -1,16 +1,19 @@
 #include "stdafx.h"
+#include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
+#include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include <Engine.h>
+#include "Entity.h"
+#include "EntityFactory.h"
+#include <FileWatcher.h>
+#include "GraphicsComponent.h"
 #include <Instance.h>
 #include "PostMaster.h"
-#include <XMLReader.h>
-#include "GraphicsComponent.h"
 #include "PhysicsComponent.h"
-#include "BulletComponent.h"
-#include "CollisionComponent.h"
-#include <Engine.h>
-#include <FileWatcher.h>
+#include "WeaponFactory.h"
+#include <XMLReader.h>
 
 BulletManager::BulletManager(CollisionManager& aCollisionManager, Prism::Scene& aScene)
 	: myInstances(8)
@@ -24,8 +27,8 @@ BulletManager::BulletManager(CollisionManager& aCollisionManager, Prism::Scene& 
 		myBulletDatas[i] = nullptr;
 	}
 
-	ReadFromXML("Data/script/weapon.xml");
-	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);
+	/*ReadFromXML("Data/script/weapon.xml");
+	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);*/
 }
 
 BulletManager::~BulletManager()
@@ -42,7 +45,10 @@ void BulletManager::Update(float aDeltaTime)
 {
 	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
 	{
-		UpdateBullet(myBulletDatas[i], aDeltaTime);
+		if (myBulletDatas[i] != nullptr)
+		{
+			UpdateBullet(myBulletDatas[i], aDeltaTime);
+		}
 	}
 }
 
@@ -52,79 +58,79 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 		, aMessage.GetEntityType());
 }
 
-void BulletManager::ReadFromXML(const std::string aFilePath)
+void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
+		const std::string& aProjectileList)
 {
-	XMLReader reader;
-	reader.OpenDocument(aFilePath);
+	XMLReader rootDocument;
+	rootDocument.OpenDocument(aProjectileList);
+	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
 
-	tinyxml2::XMLElement* weaponElement = reader.FindFirstChild("weapon");
-	for (; weaponElement != nullptr; weaponElement = reader.FindNextElement(weaponElement))
+	for (tinyxml2::XMLElement* e = rootDocument.FindFirstChild(rootElement); e != nullptr;
+		e = rootDocument.FindNextElement(e))
 	{
-		tinyxml2::XMLElement* bulletElement = reader.FindFirstChild(weaponElement, "projectile");
-
-		BulletData* bulletData = new BulletData;
-
-		std::string type;
-		std::string modelPath;
-		std::string shaderPath;
-		float totalLife = 0.f;
-		float sphereRadius = 0.f;
-		int damage = 0;
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "model"), "path", modelPath);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "shader"), "path", shaderPath);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "type"), "value", type);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "maxAmount"), "value", bulletData->myMaxBullet);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "lifeTime"), "value", totalLife);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "speed"), "value", bulletData->mySpeed);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "damage"), "value", damage);
-		reader.ReadAttribute(reader.FindFirstChild(bulletElement, "sphere"), "radius", sphereRadius);
-
-		bulletData->myPlayerBulletCounter = 0;
-		bulletData->myPlayerBullets.Init(bulletData->myMaxBullet);
-
-		for (int i = 0; i < bulletData->myMaxBullet; i++)
+		std::string projectilePath = "";
+		rootDocument.ForceReadAttribute(e, "src", projectilePath);
+		if (projectilePath != "")
 		{
-			Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene);
-			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
-			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
-			newEntity->AddComponent<PhysicsComponent>();
-			newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
-			newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
-			bulletData->myPlayerBullets.Add(newEntity);
+			LoadProjectile(aWeaponFactory, aEntityFactory, projectilePath);
 		}
-
-
-		bulletData->myEnemyBulletCounter = 0;
-		bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
-		for (int i = 0; i < bulletData->myMaxBullet; i++)
-		{
-			Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene);
-			newEntity->AddComponent<GraphicsComponent>()->Init(modelPath.c_str(), shaderPath.c_str());
-			newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
-			newEntity->AddComponent<PhysicsComponent>();
-			newEntity->AddComponent<BulletComponent>()->Init(totalLife, static_cast<unsigned short>(damage));
-			newEntity->AddComponent<CollisionComponent>()->Initiate(sphereRadius);
-			bulletData->myEnemyBullets.Add(newEntity);
-		}
-
-
-
-		if (type == "machinegun")
-		{
-			bulletData->myType = eBulletType::MACHINGUN_BULLET;
-		}
-		else if (type == "sniper")
-		{
-			bulletData->myType = eBulletType::SNIPER_BULLET;
-		}
-		else if (type == "plasma")
-		{
-			bulletData->myType = eBulletType::PLASMA_BULLET;
-		}
-
-		DeleteWeaponData(myBulletDatas[static_cast<int>(bulletData->myType)]);
-		myBulletDatas[static_cast<int>(bulletData->myType)] = bulletData;
 	}
+
+	rootDocument.CloseDocument();
+}
+
+void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
+		const std::string& aProjectilePath)
+{
+	std::string projectileLoaderType;
+	XMLReader rootDocument;
+	rootDocument.OpenDocument(aProjectilePath);
+	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("Projectile");
+	rootDocument.ForceReadAttribute(rootElement, "type", projectileLoaderType);
+	rootDocument.CloseDocument();
+
+	BulletData* bulletData = new BulletData;
+	ProjectileDataType projectileDataType = aWeaponFactory->GetProjectile(projectileLoaderType);
+
+
+	bulletData->myMaxBullet = projectileDataType.myMaxBullet;
+	bulletData->mySpeed = projectileDataType.mySpeed;
+
+	bulletData->myPlayerBulletCounter = 0;
+	bulletData->myPlayerBullets.Init(bulletData->myMaxBullet);
+
+	for (int i = 0; i < bulletData->myMaxBullet; i++)
+	{
+		Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene);
+		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
+		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
+		bulletData->myPlayerBullets.Add(newEntity);
+	}
+
+	bulletData->myEnemyBulletCounter = 0;
+	bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
+	for (int i = 0; i < bulletData->myMaxBullet; i++)
+	{
+		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene);
+		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
+		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
+		bulletData->myEnemyBullets.Add(newEntity);
+	}
+
+	if (projectileDataType.myType == "machinegun")
+	{
+		bulletData->myType = eBulletType::MACHINGUN_BULLET;
+	}
+	else if (projectileDataType.myType == "sniper")
+	{
+		bulletData->myType = eBulletType::SNIPER_BULLET;
+	}
+	else if (projectileDataType.myType == "plasma")
+	{
+		bulletData->myType = eBulletType::PLASMA_BULLET;
+	}
+	DeleteWeaponData(myBulletDatas[static_cast<int>(bulletData->myType)]);
+	myBulletDatas[static_cast<int>(bulletData->myType)] = bulletData;
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
@@ -226,16 +232,19 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 
 	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
 	{
-		for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
+		if (myBulletDatas[i] != nullptr)
 		{
-			if (myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
+			for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
 			{
-				myInstances.Add(myBulletDatas[i]->myPlayerBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
-			}
+				if (myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
+				{
+					myInstances.Add(myBulletDatas[i]->myPlayerBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
+				}
 
-			if (myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
-			{
-				myInstances.Add(myBulletDatas[i]->myEnemyBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
+				if (myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
+				{
+					myInstances.Add(myBulletDatas[i]->myEnemyBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
+				}
 			}
 		}
 	}
