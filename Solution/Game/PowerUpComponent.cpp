@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "PowerUpComponent.h"
-#include "PowerUpMessage.h"
+#include "PowerUpNote.h"
 
-void PowerUpComponent::ReceiveMessage(const PowerUpMessage& aMessage)
+void PowerUpComponent::ReceiveNote(const PowerUpNote& aMessage)
 {
 	//if (aMessage.GetType() == ePowerUpType::FIRERATEBOOST)
 	//{

@@ -8,12 +8,12 @@
 #include <Engine.h>
 #include "Entity.h"
 #include "InputComponent.h"
-#include "InputMessage.h"
+#include "InputNote.h"
 #include <InputWrapper.h>
 #include <FileWatcher.h>
 #include <XMLReader.h>
 #include <sstream>
-#include "SteeringTargetMessage.h"
+#include "SteeringTargetNote.h"
 
 InputComponent::InputComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
@@ -51,15 +51,15 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myInputWrapper->KeyIsPressed(DIK_1))
 	{
-		myEntity.SendMessage(InputMessage(0));
+		myEntity.SendNote(InputNote(0));
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_2))
 	{
-		myEntity.SendMessage(InputMessage(1));
+		myEntity.SendNote(InputNote(1));
 	}
 	if (myInputWrapper->KeyIsPressed(DIK_3))
 	{
-		myEntity.SendMessage(InputMessage(2));
+		myEntity.SendNote(InputNote(2));
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
@@ -127,7 +127,7 @@ void InputComponent::Update(float aDeltaTime)
 	RotateX(yRotation);
 	RotateY(xRotation);
 
-	myEntity.SendMessage<SteeringTargetMessage>(SteeringTargetMessage(mySteering));
+	myEntity.SendNote<SteeringTargetNote>(SteeringTargetNote(mySteering));
 }
 
 void InputComponent::ReadXML(const std::string& aFile)

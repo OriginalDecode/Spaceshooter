@@ -36,12 +36,6 @@ void CollisionComponent::Update(float aDeltaTime)
 	myInstance->SetPosition(mySphere.myCenterPosition);
 }
 
-
-void CollisionComponent::ReceiveMessage(const ShootMessage& aMessage)
-{
-
-}
-
 void CollisionComponent::Render(Prism::Camera* aCamera)
 {
 	if (myShouldShow == true)

@@ -134,7 +134,10 @@ void Prism::Model2D::InitBlendState()
 
 void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const float aDrawY)
 {
-	Update(aDrawX, aDrawY);
+	if (aDrawX != myLastDrawX && aDrawY != myLastDrawY)
+	{
+		Update(aDrawX, aDrawY);
+	}
 
 	Engine::GetInstance()->DisableZBuffer();
 
@@ -216,11 +219,6 @@ void Prism::Model2D::OnEffectLoad()
 void Prism::Model2D::Update(const float aDrawX, const float aDrawY)
 {
 	TIME_FUNCTION
-
-	if (aDrawX == myLastDrawX && aDrawY == myLastDrawY)
-	{
-		return;
-	}
 
 	myLastDrawX = aDrawX;
 	myLastDrawY = aDrawY;
