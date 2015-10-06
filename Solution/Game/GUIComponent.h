@@ -27,9 +27,12 @@ public:
 	void ReceiveNote(const EnemiesTargetNote& aMessage) override;
 	
 private:
-	Prism::Model2D* myCurrentWaypointSprite;
-	Prism::Model2D* myArrow;
-	Prism::Model2D* myWaypoint;
+	Prism::Model2D* myReticle;
+	Prism::Model2D* myCurrentWaypoint;
+	Prism::Model2D* myEnemyArrow;
+	Prism::Model2D* myEnemyMarker;
+	Prism::Model2D* myWaypointMarker;
+	Prism::Model2D* myWaypointArrow;
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
 	CU::Vector2<float> mySteeringTargetPosition;
