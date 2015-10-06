@@ -6,7 +6,6 @@
 #include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
-#include "CommonHelper.h"
 #include "DirectionalLight.h"
 #include "EnemiesTargetNote.h"
 #include "EffectContainer.h"
@@ -25,7 +24,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "PointLight.h"
-#include "PowerUpMessage.h"
+#include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include <sstream>
@@ -98,6 +97,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
+			astroids->AddComponent<PowerUpComponent>()->Init();
 
 			astroids->AddComponent<AIComponent>()->Init();
 			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
@@ -375,29 +375,6 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
 		reader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
 		newEntity->myOrientation.SetPos(triggerPosition*10.f);
-
-		
-		triggerElement = reader.ForceFindFirstChild(entityElement, "powerUpType");
-
-		std::string someName;
-		reader.ForceReadAttribute(triggerElement, "type", CU::ToLower(someName));
-		if (someName == "firerateboost")
-		{
-			newEntity->SetPowerUpType(ePowerUpType::FIRERATEBOOST);
-		}
-		if (someName == "shieldboost")
-		{
-			newEntity->SetPowerUpType(ePowerUpType::SHIELDBOOST);
-		}
-		if (someName == "healthkit_01")
-		{
-			newEntity->SetPowerUpType(ePowerUpType::HEALTHKIT_01);
-		}
-		if (someName == "healthkit_02")
-		{
-			newEntity->SetPowerUpType(ePowerUpType::HEALTHKIT_02);
-		}
-
 
 		myEntities.Add(newEntity);
 	}
