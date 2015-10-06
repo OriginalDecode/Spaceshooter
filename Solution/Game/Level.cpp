@@ -67,6 +67,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 		, "Data/effect/NoTextureEffect.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<HealthComponent>()->Init(1);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
