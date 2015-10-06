@@ -292,4 +292,12 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	{
 		aTargetEntity->AddComponent<PhysicsComponent>();
 	}
+	if (sourceEntity->GetComponent<BulletComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<BulletComponent>();
+		if (it->second.myMaxTime > 0 && it->second.myDamage > 0)
+		{
+			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage);
+		}
+	}
 }
