@@ -14,12 +14,12 @@ namespace CommonUtilities
 		y = aY;
 	}
 
-	template <typename T>
-	Vector2<T>::Vector2(Vector3<T> aVector3)
-	{
-		x = aVector3.x;
-		y = aVector3.y;
-	}
+	//template <typename T>
+	//Vector2<T>::Vector2(Vector3<T> aVector3)
+	//{
+	//	x = aVector3.x;
+	//	y = aVector3.y;
+	//}
 
 	template <typename T>
 	Vector2<T>::~Vector2()
@@ -48,7 +48,10 @@ namespace CommonUtilities
 	Vector2<T> GetNormalized(const Vector2<T>& aVector)
 	{
 		T length = Length(aVector);
-		assert(length != 0 && "Division by zero.");
+		if (length == 0)
+		{
+			return Vector2<T>();
+		}
 		return Vector2<T>(aVector / length);
 	}
 

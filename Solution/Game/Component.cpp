@@ -26,3 +26,11 @@ void Component::ReceiveMessage(const InputMessage& aMessage)
 void Component::ReceiveMessage(const SteeringTargetMessage&)
 {
 }
+
+void Component::ReceiveMessage(const WaypointMessage&)
+{
+}
+
+void Component::ReceiveMessage(const EnemiesTargetMessage&)
+{
+}

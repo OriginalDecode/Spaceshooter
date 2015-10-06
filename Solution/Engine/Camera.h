@@ -1,13 +1,6 @@
 #pragma once
 #include <Matrix44.h>
 
-namespace CommonUtilities
-{
-	namespace Intersection
-	{
-		class Fov90Frustum;
-	}
-}
 namespace Prism
 {
 	class Camera
@@ -15,6 +8,8 @@ namespace Prism
 	public:
 		Camera(CU::Matrix44f& aPlayerMatrix);
 		~Camera();
+
+		void ReadXML(const std::string& aFileName);
 
 		void OnResize(const int aWidth, const int aHeight);
 
@@ -33,6 +28,7 @@ namespace Prism
 		void MoveForward(const float aDistance);
 		void MoveRight(const float aDistance);
 
+
 	private:
 		void operator= (const Camera&) = delete;
 
@@ -40,8 +36,7 @@ namespace Prism
 		CU::Matrix44<float> myProjectionMatrix;
 		CU::Matrix44<float> myOrthogonalMatrix;
 		CU::Vector3<float> myPosition;
-		
-
+		float myFOV;
 	};
 
 }

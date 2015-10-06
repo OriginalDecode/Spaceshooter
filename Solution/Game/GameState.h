@@ -13,6 +13,8 @@ class GameState
 {
 public:
 
+	virtual ~GameState();
+
 	virtual void InitState(StateStackProxy* aStateStackProxy) = 0;
 	virtual void EndState() = 0;
 	
@@ -30,6 +32,11 @@ protected:
 	eStateStatus myStateStatus;
 	bool myIsLetThrough;
 };
+
+inline GameState::~GameState()
+{
+
+}
 
 inline const bool& GameState::IsLetThroughRender() const
 {

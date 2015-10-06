@@ -2,9 +2,11 @@
 #include "ComponentEnums.h"
 
 class Entity;
+class EnemiesTargetMessage;
 class ShootMessage;
 class InputMessage;
 class SteeringTargetMessage;
+class WaypointMessage;
 
 class Component
 {
@@ -16,6 +18,8 @@ public:
 	virtual void ReceiveMessage(const ShootMessage& aMessage);
 	virtual void ReceiveMessage(const InputMessage& aMessage);
 	virtual void ReceiveMessage(const SteeringTargetMessage& aMessage);
+	virtual void ReceiveMessage(const WaypointMessage& aMessage);
+	virtual void ReceiveMessage(const EnemiesTargetMessage& aMessage);
 
 	Entity& GetEntity();
 

@@ -1,26 +1,41 @@
 #pragma once
-#include "Enums.h"
 
-struct WeaponData
+struct WeaponDataType
 {
-	eBulletType myBulletType;
+	std::string myBulletType;
+	std::string myType;
+
+	int mySpread;
+
 	float myCoolDownTime;
 	float myCurrentTime;
-	int mySpread;
-	int myID;
 	CU::Vector3<float> myPosition;
+};
+
+struct ProjectileDataType
+{
+	std::string myType;
+	std::string myEntityType;
+
+	int myMaxBullet;
+
+	float mySpeed;
 };
 
 class WeaponFactory
 {
 public:
-	WeaponFactory();
-	~WeaponFactory();
-
+	void LoadProjectiles(const std::string& aRootFilePath);
 	void LoadWeapons(const std::string& aRootFilePath);
 
-	WeaponData GetWeapon(const std::string& aWeaponName);
+	ProjectileDataType GetProjectile(const std::string& aProjectileType);
+	WeaponDataType GetWeapon(const std::string& aWeaponName);
+
 private:
-	std::unordered_map<std::string, WeaponData> myWeaponsTypes;
+	void LoadProjectile(const std::string& aProjectileFilePath);
+	void LoadWeapon(const std::string& aWeaponFilePath);
+
+	std::unordered_map<std::string, ProjectileDataType> myProjectileTypes;
+	std::unordered_map<std::string, WeaponDataType> myWeaponsTypes;
 };
 
