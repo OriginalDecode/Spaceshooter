@@ -34,3 +34,7 @@ void Component::ReceiveMessage(const WaypointMessage&)
 void Component::ReceiveMessage(const EnemiesTargetMessage&)
 {
 }
+
+void Component::ReceiveMessage(const PowerUpMessage&)
+{
+}

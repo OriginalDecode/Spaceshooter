@@ -86,6 +86,7 @@
     <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="PowerUpMessage.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="ComponentEnums.h" />

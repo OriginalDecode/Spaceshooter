@@ -167,6 +167,9 @@
     <ClInclude Include="EnemiesTargetMessage.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUpMessage.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

@@ -7,6 +7,7 @@ class ShootMessage;
 class InputMessage;
 class SteeringTargetMessage;
 class WaypointMessage;
+class PowerUpMessage;
 
 class Component
 {
@@ -20,6 +21,8 @@ public:
 	virtual void ReceiveMessage(const SteeringTargetMessage& aMessage);
 	virtual void ReceiveMessage(const WaypointMessage& aMessage);
 	virtual void ReceiveMessage(const EnemiesTargetMessage& aMessage);
+	virtual void ReceiveMessage(const PowerUpMessage& aMessage);
+
 
 	Entity& GetEntity();
 
@@ -35,7 +38,6 @@ inline int Component::GetID()
 {
 	return -1;
 }
-
 
 inline Entity& Component::GetEntity()
 {
