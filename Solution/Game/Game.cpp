@@ -69,6 +69,7 @@ bool Game::Init(HWND& aHwnd)
 	}
 
 
+
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
 
@@ -149,8 +150,6 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		myLockMouse = false;
 		myLevelSelect = new MenuState("Data/script/levelSelect.xml", myInputWrapper);
 		myStateStack.PushMainGameState(myLevelSelect);
-		break;
-	case eGameState::POP_STATE:
 		break;
 	}
 }

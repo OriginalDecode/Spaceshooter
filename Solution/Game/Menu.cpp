@@ -49,13 +49,14 @@ Menu::~Menu()
 
 void Menu::Render(Prism::Camera* aCamera, CU::InputWrapper* anInputWrapper)
 {
-	myBackground->Render(*aCamera, 0.f, 0.f);
-	myCrosshair->Render(*aCamera, anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y);
+	myBackground->Render(*aCamera, (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2));
 
 	for (int i = 0; i < myButtons.Size(); i++)
 	{
 		myButtons[i]->Render(aCamera);
 	}
+
+	myCrosshair->Render(*aCamera, anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y);
 }
 
 void Menu::Update(CU::InputWrapper* anInputWrapper)
@@ -66,5 +67,13 @@ void Menu::Update(CU::InputWrapper* anInputWrapper)
 	for (int i = 0; i < myButtons.Size(); i++)
 	{
 		myButtons[i]->Update(mousePos, isMouseClicked);
+	}
+}
+
+void Menu::OnResize(int aWidth, int aHeight)
+{
+	if (myBackground != nullptr)
+	{
+		myBackground->SetSize( { float(aWidth), float(aHeight) });
 	}
 }
