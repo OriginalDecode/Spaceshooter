@@ -71,7 +71,7 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
-		Shoot();
+		Shoot(myMovementSpeed);
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 

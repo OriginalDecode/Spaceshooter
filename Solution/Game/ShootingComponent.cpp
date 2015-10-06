@@ -38,7 +38,7 @@ void ShootingComponent::Update(float aDeltaTime)
 	}
 }
 
-void ShootingComponent::ReceiveNote(const ShootNote&)
+void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 {
 	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
@@ -62,7 +62,7 @@ void ShootingComponent::ReceiveNote(const ShootNote&)
 		}
 
 		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-			, myEntity.GetType()));
+			, myEntity.GetType(), aShootNote.mySpeedMultiplier));
 		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }

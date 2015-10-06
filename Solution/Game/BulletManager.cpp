@@ -26,9 +26,6 @@ BulletManager::BulletManager(CollisionManager& aCollisionManager, Prism::Scene& 
 	{
 		myBulletDatas[i] = nullptr;
 	}
-
-	/*ReadFromXML("Data/script/weapon.xml");
-	WATCH_FILE("Data/script/weapon.xml", BulletManager::ReadFromXML);*/
 }
 
 BulletManager::~BulletManager()
@@ -55,7 +52,7 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType());
+		, aMessage.GetEntityType(), aMessage.GetSpeedMultiplier());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -134,7 +131,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
-	, eEntityType aEntityType)
+	, eEntityType aEntityType, const float& aEnititySpeed)
 {
 	Entity* bullet = nullptr;
 	if (aEntityType == eEntityType::PLAYER)
@@ -162,7 +159,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 
 	bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
-		anOrientation.GetForward() * aWeaponData->mySpeed);
+		anOrientation.GetForward() * (aWeaponData->mySpeed + aEnititySpeed));
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
 

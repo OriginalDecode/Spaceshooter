@@ -41,10 +41,12 @@ Game::~Game()
 
 bool Game::Init(HWND& aHwnd)
 {
-	bool startInMeu = false;
+	bool startInMenu = false;
+	bool readLevelFromXml = false;
 	XMLReader reader;
 	reader.OpenDocument("Data/script/options.xml");
-	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMeu);
+	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
+	reader.ReadAttribute(reader.FindFirstChild("readLevelFromXml"), "bool", readLevelFromXml);
 
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -56,9 +58,9 @@ bool Game::Init(HWND& aHwnd)
 
 	myMainMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
 	myLevelSelect = new MenuState("Data/script/levelSelect.xml", myInputWrapper);
-	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
+	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", readLevelFromXml);
 
-	if (startInMeu == false)
+	if (startInMenu == false)
 	{
 		myStateStack.PushMainGameState(myGame);
 	}
