@@ -192,6 +192,9 @@
     <ClInclude Include="MenuState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionMessage.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
