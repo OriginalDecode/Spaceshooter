@@ -49,7 +49,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
-	
+	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
 
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);

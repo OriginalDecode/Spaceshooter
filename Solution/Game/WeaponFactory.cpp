@@ -63,38 +63,22 @@ void WeaponFactory::LoadProjectile(const std::string& aProjectileFilePath)
 
 	ProjectileDataType projectileType;
 
-	projectileDocument.ForceReadAttribute(rootElement, "name", projectileType.myType);
+	projectileDocument.ForceReadAttribute(rootElement, "type", projectileType.myType);
 
 	for (tinyxml2::XMLElement* e = projectileDocument.FindFirstChild(rootElement); e != nullptr;
 		e = projectileDocument.FindNextElement(e))
 	{
-		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("model").c_str()) == 0)
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Entity").c_str()) == 0)
 		{
-			projectileDocument.ForceReadAttribute(e, "path", projectileType.myModelPath);
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("effect").c_str()) == 0)
-		{
-			projectileDocument.ForceReadAttribute(e, "path", projectileType.myEffectPath);
+			projectileDocument.ForceReadAttribute(e, "type", projectileType.myEntityType);
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("maxAmount").c_str()) == 0)
 		{
 			projectileDocument.ForceReadAttribute(e, "value", projectileType.myMaxBullet);
 		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("lifeTime").c_str()) == 0)
-		{
-			projectileDocument.ForceReadAttribute(e, "value", projectileType.myLifeTime);
-		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("speed").c_str()) == 0)
 		{
 			projectileDocument.ForceReadAttribute(e, "value", projectileType.mySpeed);
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("damage").c_str()) == 0)
-		{
-			projectileDocument.ForceReadAttribute(e, "value", projectileType.myDamage);
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("sphere").c_str()) == 0)
-		{
-			projectileDocument.ForceReadAttribute(e, "radius", projectileType.myCollisionSphereRadius);
 		}
 	}
 
