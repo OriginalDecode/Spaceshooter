@@ -65,15 +65,12 @@
     <ClCompile Include="InputMessage.cpp">
       <Filter>Components\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="LevelSelectState.cpp">
-      <Filter>StateStack</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStateMessage.cpp">
-      <Filter>PostMaster\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="PowerUpComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
+    <ClCompile Include="Button.cpp" />
+    <ClCompile Include="GameStateMessage.cpp" />
+    <ClCompile Include="LevelSelectState.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="PowerUpComponent.cpp" />
+    <ClCompile Include="WeaponFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -161,14 +158,14 @@
     <ClInclude Include="InputMessage.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="LevelSelectState.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
-    <ClInclude Include="GameStateMessage.h">
-      <Filter>PostMaster\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerUpComponent.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="Button.h" />
+    <ClInclude Include="GameStateMessage.h" />
+    <ClInclude Include="LevelSelectState.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="PowerUpComponent.h" />
+    <ClInclude Include="WeaponFactory.h" />
+    <ClInclude Include="EnemiesTargetMessage.h">
+      <Filter>Components\Messages</Filter>
     </ClInclude>
     <ClInclude Include="PowerUpMessage.h">
       <Filter>Components\Messages</Filter>

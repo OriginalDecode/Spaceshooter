@@ -29,6 +29,8 @@ namespace tinyxml2
 }
 
 class CollisionManager;
+class EntityFactory;
+class WeaponFactory;
 
 class BulletManager : public Subscriber
 {
@@ -36,7 +38,10 @@ public:
 	BulletManager(CollisionManager& aCollisionManager, Prism::Scene& aScene);
 	~BulletManager();
 
-	void ReadFromXML(const std::string aFilePath);
+
+	void LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
+			const std::string& aProjectileList);
+
 	void Update(float aDeltaTime);
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
@@ -44,6 +49,8 @@ public:
 
 private:
 	void operator=(BulletManager&) = delete;
+
+	void LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, const std::string& aProjectilePath);
 
 	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType);
 	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);

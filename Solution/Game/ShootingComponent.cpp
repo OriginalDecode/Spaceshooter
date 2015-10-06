@@ -1,13 +1,14 @@
 #include "stdafx.h"
-#include "ShootingComponent.h"
+#include "BulletMessage.h"
 #include "Entity.h"
+#include <FileWatcher.h>
 #include "GraphicsComponent.h"
-#include "PhysicsComponent.h"
-#include "ShootMessage.h"
 #include "InputMessage.h"
 #include "PostMaster.h"
-#include "BulletMessage.h"
-#include <FileWatcher.h>
+#include "PhysicsComponent.h"
+#include "ShootingComponent.h"
+#include "ShootMessage.h"
+#include "WeaponFactory.h"
 #include <XMLReader.h>
 
 #define PI 3.14159265359f
@@ -16,20 +17,24 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	: myWeapons(8)
 	, myCurrentWeaponID(0)
 	, Component(aEntity)
+	, myHasWeapon(false)
 {
-	ReadFromXML("Data/script/weapon.xml");
-	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);
+	/*ReadFromXML("Data/script/weapon.xml");
+	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);*/
 }
 
 void ShootingComponent::Update(float aDeltaTime)
 {
-	if (myWeapons[myCurrentWeaponID].myCurrentTime >= myWeapons[myCurrentWeaponID].myCoolDownTime)
+	if (myHasWeapon == true)
 	{
-		myWeapons[myCurrentWeaponID].myCurrentTime = myWeapons[myCurrentWeaponID].myCoolDownTime;
-	}
-	else
-	{
-		myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime;
+		if (myWeapons[myCurrentWeaponID].myCurrentTime >= myWeapons[myCurrentWeaponID].myCoolDownTime)
+		{
+			myWeapons[myCurrentWeaponID].myCurrentTime = myWeapons[myCurrentWeaponID].myCoolDownTime;
+		}
+		else
+		{
+			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime;
+		}
 	}
 }
 
@@ -104,4 +109,33 @@ void ShootingComponent::ReadFromXML(const std::string aFilePath)
 		myWeapons.Add(weaponData);
 	}
 	myCurrentWeaponID = 0;
+}
+
+void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
+{
+	WeaponData newWeapon;
+
+	newWeapon.myCoolDownTime = aWeapon.myCoolDownTime;
+	newWeapon.myCurrentTime = aWeapon.myCoolDownTime;
+	newWeapon.myPosition = aWeapon.myPosition;
+	newWeapon.mySpread = aWeapon.mySpread;
+	newWeapon.myType = aWeapon.myType;
+
+	if (aWeapon.myBulletType == "machinegun")
+	{
+		newWeapon.myBulletType = eBulletType::MACHINGUN_BULLET;
+	}
+	else if (aWeapon.myBulletType == "sniper")
+	{
+		newWeapon.myBulletType = eBulletType::SNIPER_BULLET;
+	}
+	else if (aWeapon.myBulletType == "plasma")
+	{
+		newWeapon.myBulletType = eBulletType::PLASMA_BULLET;
+	}
+
+	newWeapon.myID = static_cast<int>(newWeapon.myBulletType);
+	myCurrentWeaponID = newWeapon.myID;
+	myWeapons.Add(newWeapon);
+	myHasWeapon = true;
 }

@@ -7,6 +7,7 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "DirectionalLight.h"
+#include "EnemiesTargetMessage.h"
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
@@ -28,6 +29,9 @@
 #include <sstream>
 #include <string>
 #include <SpotLight.h>
+#include "WeaponFactory.h"
+#include "WaypointMessage.h"
+
 #include <XMLReader.h>
 
 
@@ -37,12 +41,15 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myScene = new Prism::Scene();
 	myEntityFactory = new EntityFactory();
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
+	myWeaponFactory = new WeaponFactory();
+	myWeaponFactory->LoadWeapons("Data/weapons/WeaponList.xml");
+	myWeaponFactory->LoadProjectiles("Data/weapons/projectiles/ProjectileList.xml");
 	myInputWrapper = aInputWrapper;
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
-	
+	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
 
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
@@ -60,6 +67,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 		, "Data/effect/NoTextureEffect.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<HealthComponent>()->Init(1);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
@@ -74,20 +82,23 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
 	{
-		for (int i = 0; i < 220; ++i)
+		static int numberOfEnemies = 0;
+		++numberOfEnemies;
+		for (int i = 0; i < numberOfEnemies; ++i)
 		{
 			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
-
+			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/placeholder_asteroid_large.fbx",
+			//		"Data/effect/BasicEffect.fx");
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/BasicEffect.fx");
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-
+			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
+			//	, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 
 			astroids->AddComponent<AIComponent>()->Init();
-			//astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 			astroids->AddComponent<ShootingComponent>();
 
 			myEntities.Add(astroids);
@@ -141,6 +152,7 @@ Level::~Level()
 
 	delete mySkySphere;
 	delete myEntityFactory;
+	delete myWeaponFactory;
 	delete myBulletManager;
 	delete myCollisionManager;
 	
@@ -182,6 +194,14 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
+		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+		{
+			myPlayer->SendMessage<WaypointMessage>(WaypointMessage(myEntities[i]->myOrientation.GetPos()));
+		}
+		if (myEntities[i]->GetType() == eEntityType::ENEMY)
+		{
+			myPlayer->SendMessage<EnemiesTargetMessage>(EnemiesTargetMessage(myEntities[i]->myOrientation.GetPos()));
+		}
 	}
 
 

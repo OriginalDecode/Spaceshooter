@@ -5,14 +5,17 @@
 struct WeaponData
 {
 	eBulletType myBulletType;
-	float myCoolDownTime;
-	float myCurrentTime;
 	int mySpread;
 	int myID;
+	float myCoolDownTime;
+	float myCurrentTime;
 	CU::Vector3<float> myPosition;
+	std::string myType;
 };
 
 class Entity;
+
+struct WeaponDataType;
 
 class ShootingComponent : public Component
 {
@@ -27,6 +30,7 @@ public:
 	void ReadFromXML(const std::string aFilePath);
 
 	void AddWeapon(WeaponData aWeapon);
+	void AddWeapon(const WeaponDataType& aWeapon);
 
 	static int GetID();
 
@@ -38,6 +42,8 @@ private:
 
 	unsigned short myCurrentWeaponID;
 	CU::Vector3<float> mySpawningPointOffset;
+
+	bool myHasWeapon;
 };
 
 inline void ShootingComponent::AddWeapon(WeaponData aWeapon)
@@ -54,8 +60,8 @@ inline void ShootingComponent::SetCurrentWeaponID(const unsigned short& anID)
 {
 	myCurrentWeaponID = anID;
 	
-	if (anID > myWeapons.Size())
+	if (anID >= myWeapons.Size())
 	{
-		myCurrentWeaponID = myWeapons.Size();
+		myCurrentWeaponID = myWeapons.Size() - 1;
 	}
 }

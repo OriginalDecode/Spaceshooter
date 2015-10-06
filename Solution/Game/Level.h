@@ -17,6 +17,7 @@ class CollisionManager;
 class CU::InputWrapper;
 class Entity;
 class EntityFactory;
+class WeaponFactory;
 
 class Level
 {
@@ -59,6 +60,7 @@ private:
 	CU::InputWrapper* myInputWrapper;
 
 	EntityFactory* myEntityFactory;
+	WeaponFactory* myWeaponFactory;
 
 	BulletManager* myBulletManager;
 	CollisionManager* myCollisionManager;

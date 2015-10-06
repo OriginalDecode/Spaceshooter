@@ -4,7 +4,7 @@
 #include "StateStack.h"
 #include "Subscriber.h"
 
-class MainMenuState;
+class MenuState;
 class InGameState;
 
 namespace CommonUtilities
@@ -28,6 +28,8 @@ public:
 	void UnPause();
 	void OnResize(int aWidth, int aHeight);
 
+	void ReceiveMessage(const GameStateMessage& aMessage) override;
+
 private:
 	void operator=(Game& aApp) = delete;
 
@@ -35,7 +37,8 @@ private:
 
 	StateStack myStateStack;
 	
-	MainMenuState* myMainMenu;
+	MenuState* myMainMenu;
+	MenuState* myLevelSelect;
 	InGameState* myGame;
 
 	bool myLockMouse;

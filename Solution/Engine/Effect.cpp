@@ -36,6 +36,11 @@ bool Prism::Effect::Init(const std::string& aEffectFile)
 
 }
 
+void Prism::Effect::SetScaleVector(const CU::Vector3<float>& aScaleVector)
+{
+	myScaleVectorVariable->SetFloatVector(&aScaleVector.x);
+}
+
 void Prism::Effect::SetWorldMatrix(const CU::Matrix44<float>& aWorldMatrix)
 {
 	myWorldMatrixVariable->SetMatrix(&aWorldMatrix.myMatrix[0]);
@@ -146,6 +151,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	{
 		DL_MESSAGE_BOX("Failed to get Technique", "Effect Error", MB_ICONWARNING);
 		return false;
+	}
+
+	myScaleVectorVariable = myEffect->GetVariableByName("Scale")->AsVector();
+	if (myScaleVectorVariable->IsValid() == false)
+	{
+		myScaleVectorVariable = nullptr;
 	}
 
 	myWorldMatrixVariable = myEffect->GetVariableByName("World")->AsMatrix();

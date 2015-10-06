@@ -10,19 +10,13 @@ public:
 	void Update(float aDeltaTime) override;
 
 	void SetEntityToFollow(Entity* aEntity);
+
 private:
-
-	struct SteeringOutput
-	{
-		CU::Vector3<float> myLinear;
-		CU::Vector3<float> myAngular;
-	};
-
 	void MakeDecision();
 
 	void FollowEntity(float aDeltaTime);
 	void GetNewOrientation(const CU::Vector3<float>& aVelocity);
-	SteeringOutput CalcualteSteering();
+	void CalcualteSteering(float aDeltaTime);
 
 	void FollowOwnDecision(float aDeltaTime);
 
@@ -33,9 +27,11 @@ private:
 	
 	Entity* myEntityToFollow;
 
-	CU::Vector3<float> myOrientation;
-	CU::Vector3<float> myAcceleration;
-	CU::Vector3<float> myVelocity;
+	//CU::Vector3<float> myOrientation;
+	//CU::Vector3<float> myAcceleration;
+	//CU::Vector3<float> myVelocity;
+
+	float mySpeed;
 
 	float myMaxSpeed;
 	float myMaxAcceleration;

@@ -18,21 +18,23 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFilePath, bool aUseXML)
 {
 	myInputWrapper = anInputWrapper;
+	myLevelFilePath = aLevelFilePath;
+	myUseXML = aUseXML;
 }
 
 InGameState::~InGameState()
 {
-
+	delete myLevel;
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
-	myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
+	myLevel = new Level(myLevelFilePath, myInputWrapper, myUseXML);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 
@@ -71,7 +73,7 @@ const eStateStatus InGameState::Update()
 	if (myLevel->LogicUpdate(deltaTime) == false)
 	{
 		delete myLevel;
-		myLevel = new Level("Data/script/level1.xml", myInputWrapper, false);
+		myLevel = new Level("Data/script/level1.xml", myInputWrapper, myUseXML);
 		OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 		//return eStateStatus::ePopMainState;
 	}

@@ -83,6 +83,7 @@
     <ClInclude Include="BulletComponent.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
+    <ClInclude Include="Button.h" />
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="PowerUpMessage.h" />
@@ -91,6 +92,7 @@
     <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ControllerComponent.h" />
+    <ClInclude Include="EnemiesTargetMessage.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Enums.h" />
@@ -104,8 +106,8 @@
     <ClInclude Include="InputComponent.h" />
     <ClInclude Include="InputMessage.h" />
     <ClInclude Include="Level.h" />
-    <ClInclude Include="LevelSelectState.h" />
-    <ClInclude Include="MainMenuState.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuState.h" />
     <ClInclude Include="Message.h" />
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
@@ -118,12 +120,14 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SteeringTargetMessage.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="WeaponFactory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
     <ClCompile Include="BulletComponent.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletMessage.cpp" />
+    <ClCompile Include="Button.cpp" />
     <ClCompile Include="CollisionComponent.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
@@ -139,8 +143,8 @@
     <ClCompile Include="InputComponent.cpp" />
     <ClCompile Include="InputMessage.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="LevelSelectState.cpp" />
-    <ClCompile Include="MainMenuState.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuState.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />
@@ -152,6 +156,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Subscriber.cpp" />
+    <ClCompile Include="WeaponFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Audio\Audio.vcxproj">
