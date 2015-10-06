@@ -170,6 +170,9 @@
     <ClInclude Include="PowerUpComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUpMessage.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
