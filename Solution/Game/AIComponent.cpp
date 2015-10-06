@@ -89,15 +89,22 @@ void AIComponent::GetNewOrientation(const CU::Vector3<float>& aVelocity)
 
 void AIComponent::CalcualteSteering(float aDeltaTime)
 {
-	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+	CU::Vector3<float> toTarget3D = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+
+	//CU::Normalize(toTarget);
+	
+	toTarget3D = toTarget3D * myEntity.myOrientation;
+
+	CU::Vector2<float> toTarget(toTarget3D.x, toTarget3D.z);
 
 	CU::Normalize(toTarget);
-	
-	toTarget = toTarget * myEntity.myOrientation;
 
-	CU::Vector3<float> forward = myEntity.myOrientation.GetForward();
+	CU::Vector3<float> forward3D = myEntity.myOrientation.GetForward();
 
-	forward = forward * myEntity.myOrientation;
+	forward3D = forward3D * myEntity.myOrientation;
+	CU::Vector2<float> forward(forward3D.x, forward3D.z);
+
+	CU::Normalize(forward);
 
 	int dir = 1;
 
@@ -106,8 +113,9 @@ void AIComponent::CalcualteSteering(float aDeltaTime)
 		dir = -1;
 	}
 
-	CU::Matrix44<float> rotate = CU::Matrix44<float>::CreateRotateAroundY(acosf(CU::Dot(forward, toTarget))
-		* dir);
+
+	CU::Matrix44<float> rotate = CU::Matrix44<float>::CreateRotateAroundY(acosf(CU::Clip(CU::Dot(forward, toTarget), -1.f, 1.f))
+		* dir * aDeltaTime);
 
 	myEntity.myOrientation = rotate * myEntity.myOrientation;
 

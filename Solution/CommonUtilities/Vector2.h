@@ -48,7 +48,10 @@ namespace CommonUtilities
 	Vector2<T> GetNormalized(const Vector2<T>& aVector)
 	{
 		T length = Length(aVector);
-		assert(length != 0 && "Division by zero.");
+		if (length == 0)
+		{
+			return Vector2<T>();
+		}
 		return Vector2<T>(aVector / length);
 	}
 

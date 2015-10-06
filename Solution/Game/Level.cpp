@@ -86,12 +86,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 		for (int i = 0; i < numberOfEnemies; ++i)
 		{
 			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
-
+			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/placeholder_asteroid_large.fbx",
+			//		"Data/effect/BasicEffect.fx");
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
 				"Data/effect/BasicEffect.fx");
 			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 			//	, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ 0, 70.f, 0 });
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
 

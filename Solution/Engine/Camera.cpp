@@ -36,7 +36,7 @@ namespace Prism
 
 
 
-		XMMATRIX projection = XMMatrixPerspectiveFovLH(myFOV, static_cast<float>(aWidth) / aHeight, 0.1f, 1000.f);
+		XMMATRIX projection = XMMatrixPerspectiveFovLH(myFOV, static_cast<float>(aWidth) / aHeight, 0.1f, 2500.f);
 		XMFLOAT4X4 proj;
 		XMStoreFloat4x4(&proj, projection);
 		
