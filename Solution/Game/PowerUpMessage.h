@@ -2,10 +2,12 @@
 
 enum class ePowerUpType
 {
-	FIRERATEBOOST,
+	NO_POWERUP = -1,
+	FIRERATEBOOST = 0,
 	SHIELDBOOST,
 	HEALTHKIT_01,
 	HEALTHKIT_02,
+
 
 };
 

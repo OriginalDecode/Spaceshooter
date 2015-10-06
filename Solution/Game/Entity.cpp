@@ -7,6 +7,7 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene)
 	: myAlive(true)
 	, myType(aType)
 	, myScene(aScene)
+	, myPowerUpType(ePowerUpType::NO_POWERUP)
 {
 
 }
@@ -35,4 +36,9 @@ void Entity::Kill()
 	DL_ASSERT_EXP(myAlive == true, "Tried to kill an entity thats allready dead.");
 
 	myAlive = false;
+}
+
+void Entity::SetPowerUpType(ePowerUpType someType)
+{
+	myPowerUpType = someType;
 }

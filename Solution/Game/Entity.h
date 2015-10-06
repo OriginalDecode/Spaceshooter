@@ -1,6 +1,7 @@
 #pragma once
 #include "Enums.h"
 #include <unordered_map>
+#include "PowerUpMessage.h"
 #undef SendMessage
 
 namespace Prism
@@ -40,12 +41,15 @@ public:
 
 	Prism::Scene& GetScene();
 
+	void SetPowerUpType(ePowerUpType someType);
+	
 private:
 	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
 	bool myAlive;
 	const eEntityType myType;
 	Prism::Scene& myScene;
+	ePowerUpType myPowerUpType;
 };
 
 template <typename T>

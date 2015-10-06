@@ -3,10 +3,6 @@
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
 
-void PowerUpComponent::ReceiveMessage(const PowerUpMessage& aMessage)
+void PowerUpComponent::ReceiveMessage(const PowerUpMessage&)
 {
-	//if (aMessage.GetType() == ePowerUpType::FIRERATEBOOST)
-	//{
-	//	//PostMaster::GetInstance()->SendMessage(msg);
-	//}
 }
