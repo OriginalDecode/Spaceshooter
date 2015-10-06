@@ -29,7 +29,7 @@ private:
 
 	//CU::Vector3<float> myOrientation;
 	//CU::Vector3<float> myAcceleration;
-	//CU::Vector3<float> myVelocity;
+	CU::Vector3<float> myVelocity;
 
 	float mySpeed;
 
