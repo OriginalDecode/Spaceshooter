@@ -175,22 +175,22 @@
       <Filter>StateStack</Filter>
     </ClInclude>
     <ClInclude Include="CollisionNote.h">
-      <Filter>Components\Messages</Filter>
+      <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="EnemiesTargetNote.h">
-      <Filter>Components\Messages</Filter>
+      <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="InputNote.h">
-      <Filter>Components\Messages</Filter>
+      <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="PowerUpNote.h">
-      <Filter>Components\Messages</Filter>
+      <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="ShootNote.h">
-      <Filter>Components\Messages</Filter>
+      <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="SteeringTargetNote.h">
-      <Filter>Components\Messages</Filter>
+      <Filter>Components\Notes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,14 +206,14 @@
     <Filter Include="StateStack">
       <UniqueIdentifier>{944ca525-7824-48c8-aa6f-4fdb18700910}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\Messages">
-      <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Factory">
       <UniqueIdentifier>{9109ce6f-2b1b-46d4-818f-580bd816ed4b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Menu">
       <UniqueIdentifier>{27df0495-3834-44ea-9f48-020a880d7bfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Notes">
+      <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
