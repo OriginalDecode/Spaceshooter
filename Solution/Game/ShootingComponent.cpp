@@ -3,11 +3,11 @@
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
-#include "InputMessage.h"
+#include "InputNote.h"
 #include "PostMaster.h"
 #include "PhysicsComponent.h"
 #include "ShootingComponent.h"
-#include "ShootMessage.h"
+#include "ShootNote.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -38,7 +38,7 @@ void ShootingComponent::Update(float aDeltaTime)
 	}
 }
 
-void ShootingComponent::ReceiveMessage(const ShootMessage&)
+void ShootingComponent::ReceiveNote(const ShootNote&)
 {
 	if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
@@ -67,7 +67,7 @@ void ShootingComponent::ReceiveMessage(const ShootMessage&)
 	}
 }
 
-void ShootingComponent::ReceiveMessage(const InputMessage& aMessage)
+void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 {
 	SetCurrentWeaponID(aMessage.GetKey());
 }

@@ -22,9 +22,9 @@ public:
 	void SetCamera(Prism::Camera* aCamera);
 
 	static int GetID();
-	void ReceiveMessage(const SteeringTargetMessage& aMessage) override;
-	void ReceiveMessage(const WaypointMessage& aMessage) override;
-	void ReceiveMessage(const EnemiesTargetMessage& aMessage) override;
+	void ReceiveNote(const SteeringTargetNote& aMessage) override;
+	void ReceiveNote(const WaypointMessage& aMessage) override;
+	void ReceiveNote(const EnemiesTargetNote& aMessage) override;
 	
 private:
 	Prism::Model2D* myCurrentWaypointSprite;

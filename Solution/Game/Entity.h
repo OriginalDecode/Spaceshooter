@@ -1,7 +1,6 @@
 #pragma once
 #include "Enums.h"
 #include <unordered_map>
-#undef SendMessage
 
 namespace Prism
 {
@@ -27,8 +26,7 @@ public:
 	T* GetComponent();
 
 	template <typename T>
-	void SendMessage(const T& aMessage);
-
+	void SendNote(const T& aNote);
 
 
 	CU::Matrix44<float> myOrientation;
@@ -70,11 +68,11 @@ T* Entity::GetComponent()
 }
 
 template <typename T>
-void Entity::SendMessage(const T& aMessage)
+void Entity::SendNote(const T& aMessage)
 {
 	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
 	{
-		it->second->ReceiveMessage(aMessage);
+		it->second->ReceiveNote(aMessage);
 	}
 }
 

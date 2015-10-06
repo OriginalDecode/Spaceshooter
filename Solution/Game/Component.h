@@ -2,12 +2,12 @@
 #include "ComponentEnums.h"
 
 class Entity;
-class EnemiesTargetMessage;
-class ShootMessage;
-class InputMessage;
-class SteeringTargetMessage;
+class EnemiesTargetNote;
+class ShootNote;
+class InputNote;
+class SteeringTargetNote;
 class WaypointMessage;
-class PowerUpMessage;
+class PowerUpNote;
 
 class Component
 {
@@ -16,12 +16,12 @@ public:
 
 	virtual void Init();
 	virtual void Update(float aDeltaTime);
-	virtual void ReceiveMessage(const ShootMessage& aMessage);
-	virtual void ReceiveMessage(const InputMessage& aMessage);
-	virtual void ReceiveMessage(const SteeringTargetMessage& aMessage);
-	virtual void ReceiveMessage(const WaypointMessage& aMessage);
-	virtual void ReceiveMessage(const EnemiesTargetMessage& aMessage);
-	virtual void ReceiveMessage(const PowerUpMessage& aMessage);
+	virtual void ReceiveNote(const ShootNote& aMessage);
+	virtual void ReceiveNote(const InputNote& aMessage);
+	virtual void ReceiveNote(const SteeringTargetNote& aMessage);
+	virtual void ReceiveNote(const WaypointMessage& aMessage);
+	virtual void ReceiveNote(const EnemiesTargetNote& aMessage);
+	virtual void ReceiveNote(const PowerUpNote& aMessage);
 
 
 	Entity& GetEntity();

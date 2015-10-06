@@ -19,8 +19,6 @@ public:
 	void Initiate(float someRadius);
 	void Update(float aDeltaTime) override;
 
-	void ReceiveMessage(const ShootMessage& aMessage) override;
-
 	void SetRadius(float someRadius = 0);
 	Sphere GetSphere();
 

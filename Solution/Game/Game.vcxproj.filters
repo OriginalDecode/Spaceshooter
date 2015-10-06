@@ -58,9 +58,6 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="InputMessage.cpp">
-      <Filter>Components\Messages</Filter>
-    </ClCompile>
     <ClCompile Include="PowerUpComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -155,22 +152,7 @@
     <ClInclude Include="HealthComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="ShootMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="SteeringTargetMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="InputMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemiesTargetMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="PowerUpMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="PowerUpComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -192,7 +174,22 @@
     <ClInclude Include="MenuState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
-    <ClInclude Include="CollisionMessage.h">
+    <ClInclude Include="CollisionNote.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemiesTargetNote.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="InputNote.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpNote.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootNote.h">
+      <Filter>Components\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="SteeringTargetNote.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,11 +9,11 @@ enum class ePowerUpType
 
 };
 
-class PowerUpMessage
+class PowerUpNote
 {
 public:
 
-	PowerUpMessage(ePowerUpType someType, float someDuration, int someShieldStrength
+	PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
 		, int someHealthRecover, int someFireRateMultiplier);
 
 	const ePowerUpType GetType();
@@ -32,7 +32,7 @@ private:
 
 };
 
-inline PowerUpMessage::PowerUpMessage(ePowerUpType someType, float someDuration, int someShieldStrength
+inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
 		, int someHealthRecover, int someFireRateMultiplier)
 	: myType(someType)
 	, myDuration(someDuration)
@@ -42,27 +42,27 @@ inline PowerUpMessage::PowerUpMessage(ePowerUpType someType, float someDuration,
 {
 }
 
-inline const ePowerUpType  PowerUpMessage::GetType()
+inline const ePowerUpType  PowerUpNote::GetType()
 {
 	return myType;
 }
 
-inline const int  PowerUpMessage::GetShieldStrength()
+inline const int  PowerUpNote::GetShieldStrength()
 {
 	return myShieldStrength;
 }
 
-inline const int  PowerUpMessage::GetFireRateMultiplier()
+inline const int  PowerUpNote::GetFireRateMultiplier()
 {
 	return myFireRateMultiplier;
 }
 
-inline const int  PowerUpMessage::GetHealthRecover()
+inline const int  PowerUpNote::GetHealthRecover()
 {
 	return myHealthRecover;
 }
 
-inline const float  PowerUpMessage::GetDuration()
+inline const float  PowerUpNote::GetDuration()
 {
 	return myDuration;
 }

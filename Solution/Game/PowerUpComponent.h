@@ -5,7 +5,7 @@ class PowerUpComponent : public Component
 {
 public:
 
-	void ReceiveMessage(const PowerUpMessage& aMessage) override;
+	void ReceiveMessage(const PowerUpNote& aMessage) override;
 
 	static int GetID();
 

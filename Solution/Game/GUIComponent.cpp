@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include <Camera.h>
 #include "Constants.h"
-#include "EnemiesTargetMessage.h"
+#include "EnemiesTargetNote.h"
 #include "GUIComponent.h"
 #include <Model2D.h>
-#include "SteeringTargetMessage.h"
+#include "SteeringTargetNote.h"
 #include "WaypointMessage.h"
 
 GUIComponent::GUIComponent(Entity& aEntity)
@@ -172,17 +172,17 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemiesPosition.RemoveAll();
 }
 
-void GUIComponent::ReceiveMessage(const SteeringTargetMessage& aMessage)
+void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)
 {
 	mySteeringTargetPosition = aMessage.GetPosition();
 }
 
-void GUIComponent::ReceiveMessage(const WaypointMessage& aMessage)
+void GUIComponent::ReceiveNote(const WaypointMessage& aMessage)
 {
 	myWaypointPosition = aMessage.GetPosition();
 }
 
-void GUIComponent::ReceiveMessage(const EnemiesTargetMessage& aMessage)
+void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
 {
 	myEnemiesPosition.Add(aMessage.GetPosition());
 }
