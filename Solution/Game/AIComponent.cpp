@@ -16,13 +16,8 @@ void AIComponent::Init()
 {
 	myEntityToFollow = nullptr;
 
-	myMaxSpeed = 400;
-	myMaxAcceleration = 40;
-	mySlowRadius = 100;
-	myTargetRadius = 50;
-	myTimeToTarget = 1.f;
 	myTimeToNextDecision = 1.f;
-	mySpeed = 25.f;
+	mySpeed = 80.f;
 	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
 }
 
@@ -43,7 +38,7 @@ void AIComponent::Update(float aDeltaTime)
 		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
 		{
 			myTimeToNextDecision = 3.f;
-			//Shoot();
+			Shoot();
 		}
 	}
 }
@@ -65,17 +60,23 @@ void AIComponent::MakeDecision()
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	//CalcualteSteering(aDeltaTime);
 	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 
 	myVelocity += toTarget * aDeltaTime;
 
 	CU::Normalize(myVelocity);
 
-	CU::Vector3<float> right(1.f, 0, 0);
-	right = right * myEntity.myOrientation;
+	CU::Vector3<float> up(0, 1.f, 0);
+	up = up * myEntity.myOrientation;
 
-	CU::Vector3<float> up = CU::Cross(myVelocity, right);
+	CU::Normalize(toTarget);
+
+	up = up + toTarget * aDeltaTime;
+
+	CU::Normalize(up);
+
+	CU::Vector3<float> right = CU::Cross(up, myVelocity);
+	up = CU::Cross(myVelocity, right);
 
 	right = CU::Cross(up, myVelocity);
 
@@ -97,112 +98,6 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	myVelocity *= mySpeed;
 
 	myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() + aDeltaTime * myVelocity);
-	return;
-/*
-	Move(myVelocity * aDeltaTime);
-
-	myVelocity += steering.myLinear * aDeltaTime;
-
-	if (CU::Length(myVelocity) > myMaxSpeed)
-	{
-		CU::Normalize(myVelocity);
-		myVelocity *= myMaxSpeed;
-	}
-
-	GetNewOrientation(myVelocity);
-
-	SetRotation(CU::Matrix44<float>::CreateRotateAroundY(myOrientation.x));*/
-}
-
-void AIComponent::GetNewOrientation(const CU::Vector3<float>& aVelocity)
-{
-	//if (CU::Length(aVelocity) > 0)
-	//{
-	//	myOrientation.x = atan2(aVelocity.x, aVelocity.z);
-	//}
-}
-
-void AIComponent::CalcualteSteering(float aDeltaTime)
-{
-	CU::Vector3<float> toTarget3D = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-
-	toTarget3D = toTarget3D * myEntity.myOrientation;
-	//myEntity.myOrientation.SetPos({ 0, 0, 0, 1 });
-	CU::Vector3<float> forward3D = myEntity.myOrientation.GetForward();
-	forward3D = forward3D * myEntity.myOrientation;
-
-	forward3D.x = 0;
-	forward3D.y = 0;
-	forward3D.z = 1.f;
-
-	std::stringstream ss1;
-	std::stringstream ss2;
-	ss1 << "Forward: " << forward3D.x << " " << forward3D.y << " " << forward3D.z << "\n";
-	ss2 << "toTarget3D: " << toTarget3D.x << " " << toTarget3D.y << " " << toTarget3D.z << std::endl;
-
-	//else //pitch
-	{
-		ss1 << "pitch";
-		CU::Vector2<float> toTarget(toTarget3D.y, toTarget3D.z);
-
-		CU::Normalize(toTarget);
-
-
-		CU::Vector2<float> forward(forward3D.y, forward3D.z);
-
-		CU::Normalize(forward);
-
-		float dirAlpha = forward.x * toTarget.y - forward.y * toTarget.x;
-
-		int dir = -1;
-
-		if (dirAlpha > 0)
-		{
-			dir = 1;
-		}
-
-		CU::Matrix44<float> rotate = CU::Matrix44<float>::CreateRotateAroundX(acosf(CU::Clip(CU::Dot(forward, toTarget), -1.f, 1.f))
-			* dir);
-
-		myEntity.myOrientation = rotate * myEntity.myOrientation;
-	}
-
-	////if (fabs(toTarget3D.x) > fabs(toTarget3D.y)) // yaw
-	//{
-	//	ss1 << "yaw";
-	//	CU::Vector2<float> toTarget(toTarget3D.x, toTarget3D.z);
-
-	//	CU::Normalize(toTarget);
-
-
-	//	CU::Vector2<float> forward(forward3D.x, forward3D.z);
-
-	//	CU::Normalize(forward);
-
-	//	float dirAlpha = forward.x * toTarget.y - forward.y * toTarget.x;
-
-	//	int dir = 1;
-
-	//	if (dirAlpha > 0)
-	//	{
-	//		dir = -1;
-	//	}
-
-	//	CU::Matrix44<float> rotate = CU::Matrix44<float>::CreateRotateAroundY(acosf(CU::Clip(CU::Dot(forward, toTarget), -1.f, 1.f))
-	//		* dir * aDeltaTime);
-
-	//	myEntity.myOrientation = rotate * myEntity.myOrientation;
-	//}
-
-
-	Prism::Engine::GetInstance()->PrintDebugText(ss1.str(), { 500.f, -500.f });
-	Prism::Engine::GetInstance()->PrintDebugText(ss2.str(), { 500.f, -530.f });
-
-	//if (CU::Length(output.myLinear) > myMaxAcceleration)
-	//{
-	//	CU::Normalize(output.myLinear);
-	//	output.myLinear *= myMaxAcceleration;
-	//}
 }
 
 void AIComponent::FollowOwnDecision(float aDeltaTime)
