@@ -24,6 +24,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "PointLight.h"
+#include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include <sstream>
@@ -96,6 +97,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
+			astroids->AddComponent<PowerUpComponent>()->Init();
 
 			astroids->AddComponent<AIComponent>()->Init();
 			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);

@@ -10,12 +10,13 @@ public:
 	void Update(float aDeltaTime) override;
 	void Init(const float& aMaxTime, const unsigned short& aDamage);
 
+	void ReceiveNote(const CollisionNote& aNote) override;
+
 	static int GetID();
 
 	void SetMaxLifeTime(float aMaxTime);
 	void SetActive(bool aActive);
 	bool GetActive() const;
-	unsigned short GetDamage() const;
 
 private:
 	eBulletType myType;
@@ -44,9 +45,4 @@ inline void BulletComponent::SetActive(bool aActive)
 inline bool BulletComponent::GetActive() const
 {
 	return myActive;
-}
-
-inline unsigned short BulletComponent::GetDamage() const
-{
-	return myDamage;
 }

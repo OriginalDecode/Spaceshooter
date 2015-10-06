@@ -3,11 +3,12 @@
 
 class Entity;
 
+struct CollisionNote;
 struct EnemiesTargetNote;
-struct ShootNote;
 struct InputNote;
-struct SteeringTargetNote;
 struct PowerUpNote;
+struct ShootNote;
+struct SteeringTargetNote;
 struct WaypointNote;
 
 
@@ -18,12 +19,13 @@ public:
 
 	virtual void Init();
 	virtual void Update(float aDeltaTime);
-	virtual void ReceiveNote(const ShootNote& aMessage);
-	virtual void ReceiveNote(const InputNote& aMessage);
-	virtual void ReceiveNote(const SteeringTargetNote& aMessage);
-	virtual void ReceiveNote(const EnemiesTargetNote& aMessage);
-	virtual void ReceiveNote(const PowerUpNote& aMessage);
 
+	virtual void ReceiveNote(const CollisionNote& aMessage);
+	virtual void ReceiveNote(const EnemiesTargetNote& aMessage);
+	virtual void ReceiveNote(const InputNote& aMessage);
+	virtual void ReceiveNote(const PowerUpNote& aMessage);
+	virtual void ReceiveNote(const ShootNote& aMessage);
+	virtual void ReceiveNote(const SteeringTargetNote& aMessage);
 	virtual void ReceiveNote(const WaypointNote& aMessage);
 
 	Entity& GetEntity();

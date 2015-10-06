@@ -18,18 +18,21 @@ public:
 	void CleanUp();
 
 private:
-	void CheckCollision(CollisionComponent* aComponent, int aFilter);
+	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);
+	void CheckCollision(CollisionComponent* aComponent, CU::GrowingArray<CollisionComponent*>& someOtherComponents);
 
 	int myPlayerFilter;
 	int myEnemyFilter;
 	int myPlayerBulletFilter;
 	int myEnemyBulletFilter;
 	int myTriggerFilter;
+	int myPropFilter;
 
-	CollisionComponent* myPlayer;
+	CU::GrowingArray<CollisionComponent*> myPlayers;
 	CU::GrowingArray<CollisionComponent*> myEnemies;
 	CU::GrowingArray<CollisionComponent*> myPlayerBullets;
 	CU::GrowingArray<CollisionComponent*> myEnemyBullets;
 	CU::GrowingArray<CollisionComponent*> myTriggers;
+	CU::GrowingArray<CollisionComponent*> myProps;
 };
 
