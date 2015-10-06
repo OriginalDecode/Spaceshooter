@@ -14,13 +14,12 @@
 #include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
-#include "MainMenuState.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
 #include <Vector.h>
 #include "GameStateMessage.h"
-#include "LevelSelectState.h"
+#include "MenuState.h"
 
 Game::Game()
 	: myLockMouse(true)
@@ -41,6 +40,7 @@ Game::~Game()
 
 bool Game::Init(HWND& aHwnd)
 {
+
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
@@ -49,12 +49,13 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myMainMenu = new MainMenuState(myInputWrapper);
-	myLevelSelect = new LevelSelectState(myInputWrapper);
-	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
-	myStateStack.PushMainGameState(myGame);
+	myMainMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
+	myLevelSelect = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
+	//myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", false);
+	//myStateStack.PushMainGameState(myGame);
 
-	//myStateStack.PushMainGameState(myMainMenu);
+	myStateStack.PushMainGameState(myMainMenu);
+	myLockMouse = false;
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
@@ -122,13 +123,16 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::INGAME_STATE:
+		myLockMouse = true;
 		myGame = new InGameState(myInputWrapper, aMessage.GetFilePath(), aMessage.myUseXML);
 		myStateStack.PushMainGameState(myGame);
 		break;
 	case eGameState::MAIN_MENU_STATE:
+		myLockMouse = false;
 		myStateStack.PushMainGameState(myMainMenu);
 		break;
 	case eGameState::LEVEL_SELECT_STATE:
+		myLockMouse = false;
 		myStateStack.PushSubGameState(myLevelSelect);
 		break;
 	}

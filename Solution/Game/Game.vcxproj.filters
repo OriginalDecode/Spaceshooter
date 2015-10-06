@@ -51,9 +51,6 @@
     <ClCompile Include="StateStack.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenuState.cpp">
-      <Filter>StateStack</Filter>
-    </ClCompile>
     <ClCompile Include="InGameState.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="InputMessage.cpp">
       <Filter>Components\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelSelectState.cpp">
-      <Filter>StateStack</Filter>
     </ClCompile>
     <ClCompile Include="GameStateMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
@@ -84,6 +78,9 @@
     </ClCompile>
     <ClCompile Include="Button.cpp">
       <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuState.cpp">
+      <Filter>StateStack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +146,6 @@
     <ClInclude Include="StateEnums.h">
       <Filter>StateStack</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenuState.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
     <ClInclude Include="InGameState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
@@ -171,9 +165,6 @@
     <ClInclude Include="InputMessage.h">
       <Filter>Components\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="LevelSelectState.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
     <ClInclude Include="GameStateMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
@@ -191,6 +182,9 @@
     </ClInclude>
     <ClInclude Include="Button.h">
       <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>StateStack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

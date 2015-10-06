@@ -7,11 +7,13 @@ namespace Prism
 	class Camera;
 }
 
-class MainMenuState : public GameState
+class Menu;
+
+class MenuState : public GameState
 {
 public:
-	MainMenuState(CU::InputWrapper* anInputWrapper);
-	~MainMenuState();
+	MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper);
+	~MenuState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
@@ -22,9 +24,9 @@ public:
 
 	void OnResize(int aWidth, int aHeight) override;
 
-private:
+protected:
 
-	Prism::Model2D* myBackground;
+	Menu* myMenu;
 	Prism::Camera* myCamera;
 };
 
