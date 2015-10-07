@@ -37,7 +37,10 @@
 #include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML)
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML) 
+	: myEntities(16)
+	, myComplete(false)
+	, mySkySphere(nullptr)
 {
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
 	myScene = new Prism::Scene();
@@ -47,12 +50,12 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myEntityFactory = new EntityFactory(myWeaponFactory);
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
-	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
 	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
+	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
 
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
@@ -63,7 +66,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	dirLight->SetDir({ 0.f, 0.5f, -1.f });
 	myDirectionalLights.Add(dirLight);
 
-	myEntities.Init(4);
 
 	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
 	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
@@ -99,6 +101,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
+			astroids->AddComponent<PowerUpComponent>()->Init();
 
 			astroids->AddComponent<AIComponent>()->Init();
 			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
@@ -109,7 +112,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			myEntityFactory->CopyEntity(astroids, "defaultEnemy");
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-			astroids->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
 			myEntities.Add(astroids);
 
@@ -176,7 +179,7 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 {
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
-
+	delete mySkySphere;
 	mySkySphere = new Prism::Instance(*skySphere);
 }
 
@@ -186,7 +189,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	if (myPlayer->GetAlive() == false)
 	{
-		return false;
+		return true;
 	}
 
 	for (int i = myEntities.Size() - 1; i >= 0; --i)
@@ -205,10 +208,15 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
+		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+		{
+			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
+		}
 		if (myEntities[i]->GetType() == eEntityType::POWERUP)
 		{
 			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
 		}
+
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
 		{
 			myPlayer->SendNote<EnemiesTargetNote>(EnemiesTargetNote(myEntities[i]->myOrientation.GetPos()));
@@ -223,10 +231,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
-
+	myMissionManager->Update(aDeltaTime);
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 
-	return true;
+	return myComplete;
 }
 
 void Level::Render()
@@ -288,6 +296,7 @@ Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	newEntity->myOrientation.SetPos(triggerPosition*10.f);
 
 	myEntities.Add(newEntity);
+	myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::TRIGGER);
 
 	return myEntities.GetLast();
 }
@@ -335,6 +344,7 @@ void Level::ReadXML(const std::string& aFile)
 		myEntityFactory->CopyEntity(newEntity, enemyType);
 
 		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+
 		tinyxml2::XMLElement* enemyElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> enemyPosition;
 		reader.ForceReadAttribute(enemyElement, "X", enemyPosition.x);
@@ -394,7 +404,6 @@ void Level::ReadXML(const std::string& aFile)
 	{
 		AddTrigger(reader, entityElement);
 	}
-
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "powerup"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "powerup"))
 	{
@@ -434,13 +443,12 @@ void Level::ReadXML(const std::string& aFile)
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}
-		
+
 		newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
 
 
 
 		myEntities.Add(newEntity);
 	}
-
 
 }

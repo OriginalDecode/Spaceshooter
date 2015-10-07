@@ -52,7 +52,7 @@ public:
 	void RemoveEntity(Entity* aEntity);
 
 	Entity* AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement);
-
+	void CompleteLevel();
 
 private:
 	Level& operator=(Level&) = delete;
@@ -85,6 +85,7 @@ private:
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;
+	bool myComplete;
 };
 
 
@@ -111,4 +112,9 @@ inline bool Level::GetRenderStuff() const
 inline void Level::RemoveEntity(Entity* aEntity)
 {
 	myEntities.RemoveCyclic(aEntity);
+}
+
+inline void Level::CompleteLevel()
+{
+	myComplete = true;
 }

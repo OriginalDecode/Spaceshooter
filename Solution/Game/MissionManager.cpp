@@ -47,13 +47,13 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 
 void MissionManager::Update(float aDeltaTime)
 {
+	DL_ASSERT_EXP(myCurrentMission < myMissions.Size(), "CurrentMission out of bounds!");
 	if (myMissions[myCurrentMission]->Update(aDeltaTime) == true)
 	{
 		++myCurrentMission;
 		if (myCurrentMission == myMissions.Size())
 		{
-			int apa = 5;
-			apa /= 0;
+			myLevel.CompleteLevel();
 		}
 	}
 }

@@ -1,8 +1,19 @@
 #pragma once
-class WaypointComponent
+#include "Component.h"
+
+class WaypointComponent : public Component
 {
 public:
-	WaypointComponent();
-	~WaypointComponent();
+	WaypointComponent(Entity& aEntity);
+
+	void ReceiveNote(const CollisionNote& aNote) override;
+
+	static int GetID();
+
+private:
 };
 
+inline int WaypointComponent::GetID()
+{
+	return 13;
+}

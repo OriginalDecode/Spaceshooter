@@ -2,6 +2,7 @@
 #include "Entity.h"
 #include "Level.h"
 #include "WaypointMission.h"
+#include "WaypointComponent.h"
 #include "XMLReader.h"
 
 
@@ -10,7 +11,7 @@ WaypointMission::WaypointMission(Level& aLevel, XMLReader& aReader, tinyxml2::XM
 {
 	tinyxml2::XMLElement* triggerElement = aReader.ForceFindFirstChild(aElement, "trigger");
 	myTrigger = myLevel.AddTrigger(aReader, triggerElement);
-	//myTrigger->AddComponent<WaypointComponent>()->Init();
+	myTrigger->AddComponent<WaypointComponent>();
 }
 
 

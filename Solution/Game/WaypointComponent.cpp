@@ -1,12 +1,17 @@
 #include "stdafx.h"
 #include "WaypointComponent.h"
+#include "CollisionNote.h"
+#include "Entity.h"
 
-
-WaypointComponent::WaypointComponent()
+WaypointComponent::WaypointComponent(Entity& aEntity)
+	: Component(aEntity)
 {
 }
 
-
-WaypointComponent::~WaypointComponent()
+void WaypointComponent::ReceiveNote(const CollisionNote& aNote)
 {
+	if (aNote.myEntity.GetAlive() == true)
+	{
+		myEntity.Kill();
+	}
 }
