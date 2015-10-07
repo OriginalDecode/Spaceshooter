@@ -1,9 +1,11 @@
 #pragma once
 #include <Matrix.h>
+#include <GrowingArray.h>
 #include <Vector.h>
 #include <string>
 #include <thread>
 #include <Windows.h>
+
 
 
 struct ID3D11Device;
@@ -11,6 +13,14 @@ struct ID3D11DeviceContext;
 
 namespace Prism
 {
+	struct DebugText
+	{
+		std::string myText;
+		CU::Vector2<float> myPosition;
+		float myScale;
+	};
+
+
 	class Camera;
 	class DebugDataDisplay;
 	class DirectX;
@@ -95,6 +105,8 @@ namespace Prism
 		std::thread* myModelLoaderThread;
 
 		static Engine* myInstance;
+
+		CU::GrowingArray<DebugText> myDebugTexts;
 	};
 }
 
