@@ -88,27 +88,38 @@ namespace Launcher
 
         void WriteResolutionToFile(BinaryWriter aWriter)
         {
-            Int32 width = 800;
-            Int32 height = 600;
-            switch (resolutionDropdown.SelectedIndex)
-            {
-                case (int)eResolutions.R800x600:
-                    width = 800;
-                    height = 600;
-                    break;
-                case (int)eResolutions.R1280x720:
-                    width = 1280;
-                    height = 720;
-                    break;
-                case (int)eResolutions.R1650x1080:
-                    width = 1650;
-                    height = 1080;
-                    break;
-                case (int)eResolutions.R1920x1080:
-                    width = 1920;
-                    height = 1080;
-                    break;
-            }
+			bool windowed = windowedCheckbox.Checked;
+			Int32 width = 800;
+			Int32 height = 600;
+
+			if (windowed == true)
+			{
+				switch (resolutionDropdown.SelectedIndex)
+				{
+					case (int)eResolutions.R800x600:
+						width = 800;
+						height = 600;
+						break;
+					case (int)eResolutions.R1280x720:
+						width = 1280;
+						height = 720;
+						break;
+					case (int)eResolutions.R1650x1080:
+						width = 1650;
+						height = 1080;
+						break;
+					case (int)eResolutions.R1920x1080:
+						width = 1920;
+						height = 1080;
+						break;
+				}
+			}
+			else
+			{
+				Screen scr = Screen.PrimaryScreen;
+				width = scr.Bounds.Width;
+				height = scr.Bounds.Height;
+			}
 
             aWriter.Write(width);
             aWriter.Write(height);
@@ -201,5 +212,17 @@ namespace Launcher
                 windowedCheckbox.Checked = false;
             }
         }
+
+		private void windowedCheckbox_CheckedChanged(object sender, EventArgs e)
+		{
+			if(windowedCheckbox.Checked == true)
+			{
+				resolutionDropdown.Enabled = true;
+			}
+			else
+			{
+				resolutionDropdown.Enabled = false;
+			}
+		}
     }
 }
