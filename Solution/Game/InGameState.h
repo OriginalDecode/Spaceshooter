@@ -33,8 +33,6 @@ public:
 private:
 
 	bool CheckCollision();
-
-	std::string myLevelFilePath;
 	
 	Level* myLevel;
 };

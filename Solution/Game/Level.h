@@ -33,7 +33,7 @@ namespace tinyxml2
 class Level
 {
 public:
-	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML);
+	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper);
 	~Level();
 
 	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);

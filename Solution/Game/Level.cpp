@@ -37,7 +37,7 @@
 #include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML)
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
 	, myComplete(false)
 	, mySkySphere(nullptr)
@@ -74,7 +74,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	player->AddComponent<ShootingComponent>();
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
-	player->AddComponent<HealthComponent>()->Init(1000);
+	player->AddComponent<HealthComponent>()->Init(10);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	myPlayer = player;
@@ -85,46 +85,12 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 
 
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
-	if (aShouldTestXML == false)
-	{
-		static int numberOfEnemies = 4;
-		++numberOfEnemies;
-		for (int i = 0; i < numberOfEnemies; ++i)
-		{
-			/*Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
-			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/placeholder_asteroid_large.fbx",
-			//		"Data/effect/BasicEffect.fx");
-			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			"Data/effect/BasicEffect.fx");
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-			, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
-			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
-			astroids->AddComponent<HealthComponent>()->Init(100);
-			astroids->AddComponent<PowerUpComponent>()->Init();
+	
+	
+	WATCH_FILE(aFileName, Level::ReadXML);
 
-			astroids->AddComponent<AIComponent>()->Init();
-			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
-			astroids->AddComponent<ShootingComponent>();
-			astroids->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));*/
-
-			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
-			myEntityFactory->CopyEntity(astroids, "defaultEnemy");
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-
-
-			myEntities.Add(astroids);
-
-			myCollisionManager->Add(astroids->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
-		}
-	}
-	else
-	{
-		WATCH_FILE(aFileName, Level::ReadXML);
-
-		ReadXML(aFileName);
-	}
+	ReadXML(aFileName);
+	
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
