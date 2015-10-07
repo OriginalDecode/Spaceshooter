@@ -11,6 +11,7 @@ struct WeaponData
 	float myCurrentTime;
 	CU::Vector3<float> myPosition;
 	std::string myType;
+	int myMultiplier;
 };
 
 class Entity;
@@ -26,6 +27,7 @@ public:
 
 	void ReceiveNote(const ShootNote& aMessage) override;
 	void ReceiveNote(const InputNote& aMessage) override;
+	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	void ReadFromXML(const std::string aFilePath);
 

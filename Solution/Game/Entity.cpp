@@ -7,6 +7,7 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene)
 	: myAlive(true)
 	, myType(aType)
 	, myScene(aScene)
+	, myPowerUpType(ePowerUpType::NO_POWERUP)
 {
 
 }
@@ -36,3 +37,4 @@ void Entity::Kill()
 
 	myAlive = false;
 }
+

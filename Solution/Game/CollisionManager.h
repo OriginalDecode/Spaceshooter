@@ -27,12 +27,14 @@ private:
 	int myEnemyBulletFilter;
 	int myTriggerFilter;
 	int myPropFilter;
+	int myPowerUpFilter;
 
 	CU::GrowingArray<CollisionComponent*> myPlayers;
 	CU::GrowingArray<CollisionComponent*> myEnemies;
 	CU::GrowingArray<CollisionComponent*> myPlayerBullets;
 	CU::GrowingArray<CollisionComponent*> myEnemyBullets;
 	CU::GrowingArray<CollisionComponent*> myTriggers;
+	CU::GrowingArray<CollisionComponent*> myPowerUps;
 	CU::GrowingArray<CollisionComponent*> myProps;
 };
 

@@ -1,13 +1,6 @@
 #pragma once
+#include "Enums.h"
 
-enum class ePowerUpType
-{
-	FIRERATEBOOST,
-	SHIELDBOOST,
-	HEALTHKIT_01,
-	HEALTHKIT_02,
-
-};
 
 struct PowerUpNote
 {
@@ -28,6 +21,6 @@ inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int s
 	, myDuration(someDuration)
 	, myShieldStrength(someShieldStrength)
 	, myHealthRecover(someHealthRecover)
-	, myFireRateMultiplier(myFireRateMultiplier)
+	, myFireRateMultiplier(someFireRateMultiplier)
 {
 }
