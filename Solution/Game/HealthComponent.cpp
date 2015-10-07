@@ -1,6 +1,9 @@
 #include "stdafx.h"
+
 #include "HealthComponent.h"
 #include "Entity.h"
+#include "Enums.h"
+#include "PowerUpNote.h"
 
 HealthComponent::HealthComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -40,5 +43,14 @@ void HealthComponent::RemoveHealth(const unsigned short& aHealthToRemove)
 		{
 			myCurrentHealth -= aHealthToRemove;
 		}
+	}
+}
+
+void HealthComponent::ReceiveNote(const PowerUpNote& aNote)
+{
+	if (static_cast<int>(aNote.myType)  &
+		(static_cast<int>(ePowerUpType::HEALTHKIT_01) | static_cast<int>(ePowerUpType::HEALTHKIT_02)))
+	{
+		AddHealth(aNote.myHealthRecover);
 	}
 }

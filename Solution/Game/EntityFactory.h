@@ -47,6 +47,12 @@ struct EntityData
 	unsigned short myLife;
 	unsigned short myDamage;
 
+	float myDuration;
+	int myShieldStrength;
+	int myHealthToRecover; 
+	int myFireRateMultiplier;
+	ePowerUpType myPowerUpType;
+
 	eEntityDataGraphicsType myGraphicsType;
 };
 
@@ -69,6 +75,7 @@ private:
 	void LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aHealthComponentElement);
 	void LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement);
 	void LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement);
+	void LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 

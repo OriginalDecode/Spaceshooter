@@ -1,6 +1,8 @@
 #include "stdafx.h"
 
+#include "CollisionComponent.h"
 #include "CollisionNote.h"
+#include "CollisionManager.h"
 #include "Entity.h"
 #include "PowerUpComponent.h"
 #include "PowerUpNote.h"
@@ -10,29 +12,24 @@ PowerUpComponent::PowerUpComponent(Entity& aEntity)
 {
 }
 
-void PowerUpComponent::Init(ePowerUpType someType)
+void PowerUpComponent::Init(ePowerUpType someType, float someDuration, int someShieldStrength
+	, int someHealthRecover, int someFireRateMultiplier)
 {
 	myType = someType;
+	myDuration = someDuration;
+	myShieldStrength = someShieldStrength;
+	myHealthRecover = someHealthRecover;
+	myFireRateMultiplier = someFireRateMultiplier;
+
 }
 
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 {
-	if (myType == ePowerUpType::FIRERATEBOOST)
-	{
-		PowerUpNote note(myType, 20, 0, 0, 3);
-		aNote.myEntity.SendNote(note);
-	}
-	if (myType == ePowerUpType::HEALTHKIT_01)
-	{
+	PowerUpNote note(myType, myDuration, myShieldStrength, myHealthRecover, myFireRateMultiplier);
 
-	}
-	if (myType == ePowerUpType::HEALTHKIT_02)
-	{
+	aNote.myEntity.SendNote(note);
 
-	}
-	if (myType == ePowerUpType::SHIELDBOOST)
-	{
-
-	}
+	aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
+	myEntity.Kill();
 }

@@ -75,9 +75,12 @@ void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 
 void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	for (unsigned int i = 0; i < myWeapons.Size(); ++i)
+	if (aNote.myType == ePowerUpType::FIRERATEBOOST)
 	{
-		myWeapons[i].myMultiplier = aNote.myFireRateMultiplier;
+		for (unsigned int i = 0; i < myWeapons.Size(); ++i)
+		{
+			myWeapons[i].myMultiplier = aNote.myFireRateMultiplier;
+		}
 	}
 }
 

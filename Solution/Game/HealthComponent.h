@@ -10,6 +10,9 @@ public:
 	void AddHealth(const unsigned short& aHealthToAdd);
 	void RemoveHealth(const unsigned short& aHealthToRemove);
 
+	void ReceiveNote(const PowerUpNote& aNote) override;
+
+
 	bool IsAlive() const;
 
 	const unsigned short& GetHealth() const;

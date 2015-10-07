@@ -217,16 +217,9 @@ void Level::Render()
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 
-	std::stringstream ss;
-	std::stringstream ss2;
-	std::stringstream ss3;
-
-	ss << "X" << myPlayer->myOrientation.GetPos().x;
-	ss2 << "Y" << myPlayer->myOrientation.GetPos().y;
-	ss3 << "Z" << myPlayer->myOrientation.GetPos().z;
-	Prism::Engine::GetInstance()->PrintDebugText(ss.str().c_str(), CU::Vector2<float>(0, 0));
-	Prism::Engine::GetInstance()->PrintDebugText(ss2.str().c_str(), CU::Vector2<float>(0, -30));
-	Prism::Engine::GetInstance()->PrintDebugText(ss3.str().c_str(), CU::Vector2<float>(0, -60));
+	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0));
+	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().y), CU::Vector2<float>(0, -30));
+	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60));
 
 	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
 }
@@ -366,10 +359,7 @@ void Level::ReadXML(const std::string& aFile)
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene);
 		float entityRadius;
 		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
-		myEntityFactory->CopyEntity(newEntity, "powerup");
 
-		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
-		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> triggerPosition;
@@ -383,6 +373,8 @@ void Level::ReadXML(const std::string& aFile)
 		std::string powerUp;
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		CU::ToLower(powerUp);
+
+
 		if (powerUp == "healthkit_01")
 		{
 			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_01);
@@ -400,7 +392,11 @@ void Level::ReadXML(const std::string& aFile)
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}
 
-		newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
+		myEntityFactory->CopyEntity(newEntity, powerUp);
+		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
+
+		//newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
 
 
 

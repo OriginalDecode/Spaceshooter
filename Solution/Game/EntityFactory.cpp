@@ -12,6 +12,7 @@
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include "PhysicsComponent.h"
+#include "PowerUpComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -104,6 +105,10 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		{
 			LoadHealthComponent(newEntity, entityDocument, e);
 		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PowerUpComponent").c_str()) == 0)
+		{
+			LoadPowerUpComponent(newEntity, entityDocument, e);
+		}
 	}
 	if (entityName != "")
 	{
@@ -158,7 +163,7 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aCollisionComponenetElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<CollisionComponent>();
-	
+
 	for (tinyxml2::XMLElement* e = aCollisionComponenetElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("CollisionSphere").c_str()) == 0)
@@ -247,11 +252,47 @@ void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aPhysicsComponentElement;
 }
 
+void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent)
+{
+	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
+
+	for (tinyxml2::XMLElement* e = aPowerUpComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Duration").c_str()) == 0)
+		{
+			float duration = 0;
+			aDocument.ForceReadAttribute(e, "value", duration);
+			aEntityToAddTo.myDuration = duration;
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ShieldStrength").c_str()) == 0)
+		{
+			int shield = 0;
+			aDocument.ForceReadAttribute(e, "value", shield);
+			aEntityToAddTo.myShieldStrength = shield;
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthToRecover").c_str()) == 0)
+		{
+			float health = 0;
+			aDocument.ForceReadAttribute(e, "value", health);
+			aEntityToAddTo.myHealthToRecover = health;
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("FireRateMultiplier").c_str()) == 0)
+		{
+			float firerate = 0;
+			aDocument.ForceReadAttribute(e, "value", firerate);
+			aEntityToAddTo.myFireRateMultiplier = firerate;
+		}
+
+	}
+}
+
+
+
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
 {
 	auto it = myEntities.find(aEntityTag);
 	Entity* sourceEntity = it->second.myEntity;
-	
+
 	aTargetEntity->SetName(sourceEntity->GetName());
 
 	if (sourceEntity->GetComponent<GraphicsComponent>() != nullptr)
@@ -275,7 +316,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	{
 		aTargetEntity->AddComponent<AIComponent>();
 		float speed = CU::Math::RandomRange<float>(it->second.myMinSpeed, it->second.myMaxSpeed);
-		float timeToNextDecision = CU::Math::RandomRange<float>(it->second.myMinTimeToNextDecision, 
+		float timeToNextDecision = CU::Math::RandomRange<float>(it->second.myMinTimeToNextDecision,
 			it->second.myMaxTimeToNextDecision);
 		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision, it->second.myTargetName);
 	}
@@ -290,7 +331,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<CollisionComponent>();
-		
+
 		if (it->second.myCollisionSphereRadius > 0)
 		{
 			aTargetEntity->GetComponent<CollisionComponent>()->Initiate(it->second.myCollisionSphereRadius);
@@ -313,4 +354,14 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage);
 		}
 	}
+
+	if (sourceEntity->GetComponent<PowerUpComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<PowerUpComponent>();
+		
+		aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
+			, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
+
+	}
+
 }

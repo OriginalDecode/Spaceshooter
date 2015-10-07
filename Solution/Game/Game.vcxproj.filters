@@ -54,9 +54,6 @@
     <ClCompile Include="InGameState.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
-    <ClCompile Include="HealthComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="PowerUpComponent.cpp">
       <Filter>Components</Filter>
@@ -98,6 +95,9 @@
       <Filter>Mission</Filter>
     </ClCompile>
     <ClCompile Include="SurvivalMission.cpp" />
+    <ClCompile Include="HealthComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -168,9 +168,6 @@
     <ClInclude Include="GameState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
-    <ClInclude Include="HealthComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="PowerUpComponent.h">
       <Filter>Components</Filter>
@@ -236,6 +233,9 @@
       <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="SurvivalMission.h" />
+    <ClInclude Include="HealthComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
