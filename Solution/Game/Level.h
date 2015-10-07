@@ -54,6 +54,8 @@ public:
 	Entity* AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	void CompleteLevel();
 
+	int GetEnemiesAlive() const;
+
 private:
 	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
@@ -66,6 +68,7 @@ private:
 
 	CU::GrowingArray<Entity*> myEntities;
 	CU::GrowingArray<Entity*> myDeadEntities;
+	int myNrOfEnemies;
 
 	CU::GrowingArray<Prism::DirectionalLight*> myDirectionalLights;
 	CU::GrowingArray<Prism::PointLight*> myPointLights;
@@ -117,4 +120,9 @@ inline void Level::RemoveEntity(Entity* aEntity)
 inline void Level::CompleteLevel()
 {
 	myComplete = true;
+}
+
+inline int Level::GetEnemiesAlive() const
+{
+
 }
