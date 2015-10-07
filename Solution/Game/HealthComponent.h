@@ -6,7 +6,7 @@ class HealthComponent : public Component
 public:
 	HealthComponent(Entity& aEntity);
 
-	void Init(const unsigned short& aMaxHealth);
+	void Init(const unsigned short& aMaxHealth, const bool& anIsInvulnerable = false);
 	void AddHealth(const unsigned short& aHealthToAdd);
 	void RemoveHealth(const unsigned short& aHealthToRemove);
 
@@ -18,6 +18,7 @@ private:
 
 	unsigned short myMaxHealth;
 	unsigned short myCurrentHealth;
+	bool myIsInvulnerable;
 };
 
 inline bool HealthComponent::IsAlive() const

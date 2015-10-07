@@ -7,31 +7,38 @@ HealthComponent::HealthComponent(Entity& aEntity)
 {
 }
 
-void HealthComponent::Init(const unsigned short& aMaxHealth)
+void HealthComponent::Init(const unsigned short& aMaxHealth, const bool& anIsInvulnerable)
 {
 	myMaxHealth = aMaxHealth;
 	myCurrentHealth = myMaxHealth;
+	myIsInvulnerable = anIsInvulnerable;
 }
 
 void HealthComponent::AddHealth(const unsigned short& aHealthToAdd)
 {
 	myCurrentHealth += aHealthToAdd;
 
-	if (myCurrentHealth > myMaxHealth)
+	if (myIsInvulnerable == false) // testing
 	{
-		myCurrentHealth = myMaxHealth;
+		if (myCurrentHealth > myMaxHealth)
+		{
+			myCurrentHealth = myMaxHealth;
+		}
 	}
 }
 
 void HealthComponent::RemoveHealth(const unsigned short& aHealthToRemove)
 {
-	if (myCurrentHealth <= aHealthToRemove)
+	if (myIsInvulnerable == false)
 	{
-		myCurrentHealth = 0;
-		myEntity.Kill();
-	}
-	else
-	{
-		myCurrentHealth -= aHealthToRemove;
+		if (myCurrentHealth <= aHealthToRemove)
+		{
+			myCurrentHealth = 0;
+			myEntity.Kill();
+		}
+		else
+		{
+			myCurrentHealth -= aHealthToRemove;
+		}
 	}
 }
