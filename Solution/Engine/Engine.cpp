@@ -247,12 +247,13 @@ namespace Prism
 		RECT rc = { 0, 0, mySetupInfo->myScreenWidth, mySetupInfo->myScreenHeight };
 		AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-		aHwnd = CreateWindow(
+		aHwnd = CreateWindowEx(
+			WS_EX_CLIENTEDGE,
 			"DirectX Window",
 			"DirectX Window",
 			WS_OVERLAPPEDWINDOW,
-			0,
-			0,
+			-1,
+			-2,
 			rc.right - rc.left,
 			rc.bottom - rc.top,
 			NULL, 
@@ -264,6 +265,11 @@ namespace Prism
 		{
 			ENGINE_LOG("Failed to CreateWindow");
 			return FALSE;
+		}
+
+		if (mySetupInfo->myWindowed == false)
+		{
+			SetWindowLong(aHwnd, GWL_STYLE, WS_POPUP);
 		}
 
 		ENGINE_LOG("Window Setup Successful");
