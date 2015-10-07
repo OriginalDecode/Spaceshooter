@@ -8,6 +8,7 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, const std::string& aName
 	, myType(aType)
 	, myScene(aScene)
 	, myName(aName)
+	, myPowerUpType(ePowerUpType::NO_POWERUP)
 {
 
 }

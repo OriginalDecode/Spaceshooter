@@ -70,7 +70,7 @@ const eStateStatus InGameState::Update()
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
-	if (myLevel->LogicUpdate(deltaTime) == false)
+	if (myLevel->LogicUpdate(deltaTime) == true)
 	{
 		delete myLevel;
 		myLevel = new Level("Data/script/level1.xml", myInputWrapper, myUseXML);

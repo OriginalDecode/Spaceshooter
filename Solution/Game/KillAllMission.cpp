@@ -1,12 +1,15 @@
 #include "stdafx.h"
 #include "KillAllMission.h"
+#include "Level.h"
 
 
-KillAllMission::KillAllMission()
+KillAllMission::KillAllMission(Level& aLevel)
+	: myLevel(aLevel)
 {
 }
 
-
-KillAllMission::~KillAllMission()
+bool KillAllMission::Update(float aDeltaTime)
 {
+
+	return false;
 }

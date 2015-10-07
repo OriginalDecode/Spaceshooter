@@ -23,4 +23,15 @@ enum eEntityType //Collision manager needs this as ints!
 	ENEMY_BULLET = 8,
 	TRIGGER = 16,
 	PROP = 32,
+	POWERUP = 64,
+};
+
+enum class ePowerUpType
+{
+	NO_POWERUP = -1,
+	FIRERATEBOOST,
+	SHIELDBOOST,
+	HEALTHKIT_01,
+	HEALTHKIT_02,
+
 };

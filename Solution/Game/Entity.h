@@ -40,6 +40,9 @@ public:
 
 	Prism::Scene& GetScene();
 
+	void SetPowerUp(ePowerUpType someType);
+	ePowerUpType GetPowerUpType();
+
 private:
 	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
@@ -47,6 +50,7 @@ private:
 	std::string myName;
 	const eEntityType myType;
 	Prism::Scene& myScene;
+	ePowerUpType myPowerUpType;
 };
 
 template <typename T>
@@ -102,4 +106,14 @@ inline const std::string& Entity::GetName() const
 inline void Entity::SetName(const std::string& aName)
 {
 	myName = aName;
+}
+
+inline void Entity::SetPowerUp(ePowerUpType someType)
+{
+	myPowerUpType = someType;
+}
+
+inline ePowerUpType Entity::GetPowerUpType()
+{
+	return myPowerUpType;
 }

@@ -49,6 +49,7 @@ namespace Prism
 	{
 		myInstance = new Engine();
 		myInstance->mySetupInfo = &aSetupInfo;
+
 		return myInstance->Init(aHwnd, aWndProc);
 	}
 
