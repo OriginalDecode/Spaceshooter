@@ -1,11 +1,9 @@
 #include "stdafx.h"
 
-#include "BulletComponent.h"
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "CollisionNote.h"
 #include "Entity.h"
-#include "HealthComponent.h"
 #include <Intersection.h>
 
 CollisionManager::CollisionManager()
@@ -124,8 +122,6 @@ void CollisionManager::CleanUp()
 
 void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aFilter)
 {
-	Entity& entity = aComponent->GetEntity();
-	
 	if (aFilter & eEntityType::PLAYER)
 	{
 		CheckCollision(aComponent, myPlayers);

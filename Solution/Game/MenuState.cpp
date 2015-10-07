@@ -61,4 +61,5 @@ void MenuState::ResumeState()
 void MenuState::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
+	myMenu->OnResize(aWidth, aHeight);
 }

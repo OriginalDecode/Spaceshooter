@@ -19,7 +19,7 @@ public:
 	void RotateZ(float aAmount);
 	void Rotate(const CU::Matrix44<float>& aRotation);
 	void SetRotation(const CU::Matrix44<float>& aRotation);
-	void Shoot();
+	void Shoot(const float& aEnititySpeed = 0.f);
 
 	static int GetID();
 };

@@ -13,17 +13,15 @@ Button::Button()
 
 Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 {
-	CU::Vector2<float> size;
-	CU::Vector2<float> pos;
 	std::string picPath;
 	std::string picHoveredPath;
 	std::string eventType;
 
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", pos.x);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", pos.y);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", myPosition.x);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", myPosition.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "path", picPath);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeX", size.x);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", size.y);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeX", mySize.x);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", mySize.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "hoveredPicture"), "path", picHoveredPath);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "event", eventType);
 
@@ -55,14 +53,11 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	}
 	
 	myBackground = new Prism::Model2D;
-	myBackground->Init(picPath, size);
+	myBackground->Init(picPath, mySize);
 
 	myHoverBackground = new Prism::Model2D;
-	myHoverBackground->Init(picHoveredPath, size);
+	myHoverBackground->Init(picHoveredPath, mySize);
 
-
-	myPosition = pos;
-	mySize = size;
 	myIsHovered = false;
 }
 
