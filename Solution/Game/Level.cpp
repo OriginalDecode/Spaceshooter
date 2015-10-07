@@ -37,7 +37,8 @@
 #include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML)
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML) 
+	: myEntities(16)
 {
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
 	myScene = new Prism::Scene();
@@ -47,7 +48,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myWeaponFactory->LoadWeapons("Data/weapons/WeaponList.xml");
 	myWeaponFactory->LoadProjectiles("Data/weapons/projectiles/ProjectileList.xml");
 	myInputWrapper = aInputWrapper;
-	myMissionManager = new MissionManager(&myPlayer);
+	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
@@ -63,7 +64,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	dirLight->SetDir({ 0.f, 0.5f, -1.f });
 	myDirectionalLights.Add(dirLight);
 
-	myEntities.Init(4);
 
 	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
 	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
@@ -266,6 +266,27 @@ void Level::OnResize(int aWidth, int aHeight)
 	myCamera->OnResize(aWidth, aHeight);
 }
 
+Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
+{
+	Entity* newEntity = new Entity(eEntityType::TRIGGER, *myScene);
+	float entityRadius;
+	aReader.ForceReadAttribute(aElement, "radius", entityRadius);
+	myEntityFactory->CopyEntity(newEntity, "trigger");
+
+	newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+
+	tinyxml2::XMLElement* triggerElement = aReader.ForceFindFirstChild(aElement, "position");
+	CU::Vector3<float> triggerPosition;
+	aReader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
+	aReader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
+	aReader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
+	newEntity->myOrientation.SetPos(triggerPosition*10.f);
+
+	myEntities.Add(newEntity);
+
+	return myEntities.GetLast();
+}
+
 void Level::ReadXML(const std::string& aFile)
 {
 	Sleep(10);
@@ -365,21 +386,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "trigger"))
 	{
-		Entity* newEntity = new Entity(eEntityType::TRIGGER, *myScene);
-		float entityRadius;
-		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
-		myEntityFactory->CopyEntity(newEntity, "trigger");
-
-		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
-
-		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> triggerPosition;
-		reader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
-		reader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
-		reader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
-		newEntity->myOrientation.SetPos(triggerPosition*10.f);
-
-		myEntities.Add(newEntity);
+		AddTrigger(reader, entityElement);
 	}
 
 }
