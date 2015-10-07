@@ -23,6 +23,12 @@ class Entity;
 class EntityFactory;
 class MissionManager;
 class WeaponFactory;
+class XMLReader;
+
+namespace tinyxml2
+{
+	class XMLElement;
+}
 
 class Level
 {
@@ -37,11 +43,16 @@ public:
 
 	void OnResize(int aWidth, int aHeigth);
 
-	inline void SetShowLightCube(bool aBool);
-	inline bool GetShowLightCube() const;
+	void SetShowLightCube(bool aBool);
+	bool GetShowLightCube() const;
 
-	inline void SetRenderStuff(bool aBool);
-	inline bool GetRenderStuff() const;
+	void SetRenderStuff(bool aBool);
+	bool GetRenderStuff() const;
+
+	void RemoveEntity(Entity* aEntity);
+
+	Entity* AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement);
+
 
 private:
 	Level& operator=(Level&) = delete;
@@ -77,7 +88,7 @@ private:
 };
 
 
-void Level::SetShowLightCube(bool aBool)
+inline void Level::SetShowLightCube(bool aBool)
 {
 	myShowPointLightCube = aBool;
 }
@@ -95,4 +106,9 @@ inline void Level::SetRenderStuff(bool aBool)
 inline bool Level::GetRenderStuff() const
 {
 	return myRenderStuff;
+}
+
+inline void Level::RemoveEntity(Entity* aEntity)
+{
+	myEntities.RemoveCyclic(aEntity);
 }
