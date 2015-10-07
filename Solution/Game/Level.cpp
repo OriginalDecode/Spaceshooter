@@ -28,6 +28,7 @@
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
+#include "PropComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include <sstream>
@@ -357,6 +358,8 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(propRotation.x) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(propRotation.y) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
+
+		newEntity->AddComponent<PropComponent>();
 
 		myEntities.Add(newEntity);
 		myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);

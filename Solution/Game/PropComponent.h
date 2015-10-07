@@ -1,8 +1,18 @@
 #pragma once
-class PropComponent
+#include "Component.h"
+
+class CollisionNote;
+class Entity;
+
+class PropComponent : public Component
 {
 public:
-	PropComponent();
+	PropComponent(Entity& aEntity);
 	~PropComponent();
+
+	void ReceiveNote(const CollisionNote& aNote) override;
+
+private:
+
 };
 
