@@ -126,7 +126,11 @@ namespace EntityEditor.Entity
         private void WriteShootingComponent(XmlWriter aWriter)
         {
             aWriter.WriteStartElement("ShootingComponent");
+            aWriter.WriteStartElement("Weapon");
 
+            aWriter.WriteAttributeString("type", myEntityData.myShootingComponent.myWeaponType);
+
+            aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
 

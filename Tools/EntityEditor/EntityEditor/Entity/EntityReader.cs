@@ -125,6 +125,11 @@ namespace EntityEditor
             {
                 myEntityData.myShootingComponent.myIsActive = true;
             }
+            else if (aReader.Name == "Weapon")
+            {
+                aReader.MoveToAttribute("type");
+                myEntityData.myShootingComponent.myWeaponType = aReader.Value;
+            }
             else if (aReader.Name == "CollisionComponent")
             {
                 myEntityData.myCollisionComponent.myIsActive = true;
