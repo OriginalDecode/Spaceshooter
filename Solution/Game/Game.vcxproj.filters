@@ -231,7 +231,7 @@
     <ClInclude Include="WaypointMission.h">
       <Filter>Mission</Filter>
     </ClInclude>
-    <ClInclude Include="MissionStartNote.h">
+    <ClInclude Include="MissionNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
   </ItemGroup>

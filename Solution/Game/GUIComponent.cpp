@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "EnemiesTargetNote.h"
 #include "GUIComponent.h"
+#include "MissionNote.h"
 #include <Model2D.h>
 #include "SteeringTargetNote.h"
 #include <sstream>
@@ -12,6 +13,7 @@
 
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
+	, myWaypointActive(false)
 {
 	myReticle = new Prism::Model2D;
 	mySteeringTarget = new Prism::Model2D;
@@ -124,7 +126,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	}
 
 	Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
-	myCurrentWaypoint->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+	if (myWaypointActive == true)
+	{
+		myCurrentWaypoint->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+	}
 
 	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
 	{
@@ -191,6 +196,16 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemiesPosition.RemoveAll();
 }
 
+void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
+{
+	myEnemiesPosition.Add(aMessage.myPosition);
+}
+
+void GUIComponent::ReceiveNote(const MissionNote& aMessage)
+{
+	myWaypointActive = aMessage.myType == eMissionType::WAYPOINT;
+}
+
 void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)
 {
 	mySteeringTargetPosition = aMessage.myPosition;
@@ -201,7 +216,5 @@ void GUIComponent::ReceiveNote(const WaypointNote& aMessage)
 	myWaypointPosition = aMessage.myPosition;
 }
 
-void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
-{
-	myEnemiesPosition.Add(aMessage.myPosition);
-}
+
+

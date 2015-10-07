@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Entity.h"
 #include "Level.h"
-#include "MissionStartNote.h"
+#include "MissionNote.h"
 #include "WaypointComponent.h"
 #include "WaypointMission.h"
 #include "WaypointNote.h"
@@ -16,7 +16,7 @@ WaypointMission::WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aRea
 	myTrigger = myLevel.AddTrigger(aReader, triggerElement);
 	myTrigger->AddComponent<WaypointComponent>();
 
-	//aPlayer.SendNote(MissionStartNote(eMissionType::WAYPOINT));
+	aPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::START));
 }
 
 

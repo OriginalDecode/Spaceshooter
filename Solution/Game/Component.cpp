@@ -27,6 +27,10 @@ void Component::ReceiveNote(const InputNote&)
 {
 }
 
+void Component::ReceiveNote(const MissionNote& aMessage)
+{
+}
+
 void Component::ReceiveNote(const PowerUpNote&)
 {
 }

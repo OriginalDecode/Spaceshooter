@@ -41,3 +41,9 @@ enum class eMissionType
 	WAYPOINT,
 	KILL_ALL,
 };
+
+enum class eMissionEvent
+{
+	START,
+	END,
+};

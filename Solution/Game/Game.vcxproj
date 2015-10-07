@@ -91,7 +91,7 @@
     <ClInclude Include="LevelFactory.h" />
     <ClInclude Include="Mission.h" />
     <ClInclude Include="MissionManager.h" />
-    <ClInclude Include="MissionStartNote.h" />
+    <ClInclude Include="MissionNote.h" />
     <ClInclude Include="PowerUpNote.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
