@@ -31,6 +31,18 @@ namespace Prism
 
 	}
 
+	void FileWatcher::UnWatchFile(const std::string& aFile)
+	{
+		for (int i = 0; i < myFileDatas.Size(); ++i)
+		{
+			if (myFileDatas[i].myFilePath == aFile)
+			{
+				myFileDatas.RemoveCyclicAtIndex(i);
+				return;
+			}
+		}
+	}
+
 	void FileWatcher::CheckFiles()
 	{
 		for (int i = 0; i < myFileDatas.Size(); ++i)

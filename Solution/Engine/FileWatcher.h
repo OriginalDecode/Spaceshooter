@@ -2,6 +2,7 @@
 
 
 #define WATCH_FILE(FILE, FUNCTION) (Prism::Engine::GetInstance()->GetFileWatcher()->WatchFile(FILE, std::bind(&FUNCTION, this, FILE)))
+#define WATCH_FILE(FILE) (Prism::Engine::GetInstance()->GetFileWatcher()->UnWatchFile(FILE))
 
 #include <functional>
 #include <string>
@@ -14,6 +15,7 @@ namespace Prism
 		FileWatcher();
 
 		void WatchFile(const std::string& aFile, std::function<void()> aCallBack);
+		void UnWatchFile(const std::string& aFile);
 
 		void CheckFiles();
 
