@@ -21,10 +21,5 @@ public:
 	void SetRotation(const CU::Matrix44<float>& aRotation);
 	void Shoot(const float& aEnititySpeed = 0.f);
 
-	static int GetID();
 };
 
-inline int ControllerComponent::GetID()
-{
-	return 1;
-}

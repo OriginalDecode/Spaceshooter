@@ -14,6 +14,7 @@ public:
 	void Init(CU::InputWrapper& aInputWrapper);
 	void Update(float aDeltaTime) override;
 
+	static int GetID();
 private:
 	void operator=(const InputComponent&) = delete;
 	void ReadXML(const std::string& aFile);
@@ -42,3 +43,9 @@ private:
 
 	bool myCameraIsLocked;
 };
+
+
+inline int InputComponent::GetID()
+{
+	return 14;
+}

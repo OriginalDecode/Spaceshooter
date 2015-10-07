@@ -175,6 +175,14 @@ namespace Prism
 		myDebugTexts.Add(toAdd);
 	}
 
+	void Engine::PrintDebugText(float aNumber, const CU::Vector2<float>& aPosition, float aScale)
+	{
+		std::stringstream ss;
+		ss.precision(2);
+		ss << aNumber;
+		PrintDebugText(ss.str(), aPosition, aScale);
+	}
+
 	void Engine::EnableZBuffer()
 	{
 		myDirectX->EnableZBuffer();
