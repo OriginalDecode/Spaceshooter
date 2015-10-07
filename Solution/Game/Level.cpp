@@ -37,7 +37,7 @@
 #include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML)
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
 	, myComplete(false)
 	, mySkySphere(nullptr)
@@ -56,7 +56,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
 	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
 
-
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
 	mySpotLights.Init(4);
@@ -66,65 +65,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	dirLight->SetDir({ 0.f, 0.5f, -1.f });
 	myDirectionalLights.Add(dirLight);
 
-
-	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
-	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
-		, "Data/effect/NoTextureEffect.fx");
-	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	player->AddComponent<ShootingComponent>();
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
-	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
-	player->AddComponent<HealthComponent>()->Init(1000);
-	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
-
-	myPlayer = player;
-	myEntities.Add(player);
-	myCamera = new Prism::Camera(player->myOrientation);
-	player->myCamera = myCamera;
-	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
-
-
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
-	if (aShouldTestXML == false)
-	{
-		static int numberOfEnemies = 4;
-		++numberOfEnemies;
-		for (int i = 0; i < numberOfEnemies; ++i)
-		{
-			/*Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
-			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/placeholder_asteroid_large.fbx",
-			//		"Data/effect/BasicEffect.fx");
-			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-			"Data/effect/BasicEffect.fx");
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-			, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
-			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
-			astroids->AddComponent<HealthComponent>()->Init(100);
-			astroids->AddComponent<PowerUpComponent>()->Init();
+	
+	LoadPlayer();
 
-			astroids->AddComponent<AIComponent>()->Init();
-			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
-			astroids->AddComponent<ShootingComponent>();
-			astroids->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));*/
+	WATCH_FILE(aFileName, Level::ReadXML);
 
-			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
-			myEntityFactory->CopyEntity(astroids, "defaultEnemy");
-			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-
-
-			myEntities.Add(astroids);
-
-			myCollisionManager->Add(astroids->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
-		}
-	}
-	else
-	{
-		WATCH_FILE(aFileName, Level::ReadXML);
-
-		ReadXML(aFileName);
-	}
+	ReadXML(aFileName);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -476,4 +423,29 @@ Entity* Level::GetEntityWithName(const std::string& aName)
 int Level::GetEnemiesAlive() const
 {
 	return myCollisionManager->GetEnemiesAlive();
+}
+
+void Level::LoadPlayer()
+{
+	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
+	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
+		, "Data/effect/NoTextureEffect.fx");
+	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
+	player->AddComponent<ShootingComponent>();
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
+	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
+
+	XMLReader reader;
+	reader.OpenDocument("Data/script/player.xml");
+	int health = 10;
+	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
+
+	player->AddComponent<HealthComponent>()->Init(health);
+	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
+
+	myPlayer = player;
+	myEntities.Add(player);
+	myCamera = new Prism::Camera(player->myOrientation);
+	player->myCamera = myCamera;
+	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 }

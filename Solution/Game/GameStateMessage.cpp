@@ -7,10 +7,16 @@ GameStateMessage::GameStateMessage(eGameState aGameState)
 	myMessageType = eMessageType::GAME_STATE;
 }
 
-GameStateMessage::GameStateMessage(eGameState aGameState, std::string aFilePath, bool aUseXML)
+GameStateMessage::GameStateMessage(eGameState aGameState, std::string aFilePath)
 	: myGameState(aGameState)
 	, myFilePath(aFilePath)
-	, myUseXML(aUseXML)
+{
+	myMessageType = eMessageType::GAME_STATE;
+}
+
+GameStateMessage::GameStateMessage(eGameState aGameState, const int& anID)
+	: myGameState(aGameState)
+	, myID(anID)
 {
 	myMessageType = eMessageType::GAME_STATE;
 }

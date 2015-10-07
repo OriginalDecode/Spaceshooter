@@ -14,6 +14,7 @@
 #include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
+#include "LevelFactory.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include "PostMaster.h"
@@ -32,8 +33,8 @@ Game::Game()
 
 Game::~Game()
 {
-	
 	delete myInputWrapper;
+	delete myLevelFactory;
 
 	Prism::Audio::AudioInterface::Destroy();
 	PostMaster::Destroy();
@@ -42,11 +43,10 @@ Game::~Game()
 bool Game::Init(HWND& aHwnd)
 {
 	bool startInMenu = false;
-	bool readLevelFromXml = false;
+
 	XMLReader reader;
 	reader.OpenDocument("Data/script/options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
-	reader.ReadAttribute(reader.FindFirstChild("readLevelFromXml"), "bool", readLevelFromXml);
 
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -56,21 +56,20 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myMainMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
-	myLevelSelect = new MenuState("Data/script/levelSelect.xml", myInputWrapper);
-	myGame = new InGameState(myInputWrapper, "Data/script/level1.xml", readLevelFromXml);
+	myLevelFactory = new LevelFactory("Data/level/levelList.xml", myInputWrapper);
 
 	if (startInMenu == false)
 	{
+		myGame = new InGameState(myInputWrapper);
+		myGame->SetLevel(myLevelFactory->LoadLevel(1));
 		myStateStack.PushMainGameState(myGame);
 	}
 	else
 	{
-		myStateStack.PushMainGameState(myMainMenu);
+		myCurrentMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
+		myStateStack.PushMainGameState(myCurrentMenu);
 		myLockMouse = false;
 	}
-
-
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
@@ -139,19 +138,29 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 {
 	switch (aMessage.GetGameState())
 	{
-	case eGameState::INGAME_STATE:
+	case eGameState::LOAD_LEVEL:
 		myLockMouse = true;
-		myGame = new InGameState(myInputWrapper, aMessage.GetFilePath(), aMessage.myUseXML);
+		myGame = new InGameState(myInputWrapper);
+		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		myStateStack.PushMainGameState(myGame);
 		break;
-	case eGameState::MAIN_MENU_STATE:
-		myLockMouse = false;
-		myStateStack.PushMainGameState(myMainMenu);
+
+	case eGameState::CHANGE_LEVEL:
+		myLockMouse = true;
+		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		break;
-	case eGameState::LEVEL_SELECT_STATE:
-		myLockMouse = false;
-		myLevelSelect = new MenuState("Data/script/levelSelect.xml", myInputWrapper);
-		myStateStack.PushMainGameState(myLevelSelect);
+
+	case eGameState::RELOAD_LEVEL:
+		myLockMouse = true;
+		myGame->SetLevel(myLevelFactory->ReloadLevel());
 		break;
+
+	case eGameState::LOAD_MENU:
+		myLockMouse = false;
+		myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);
+		myStateStack.PushMainGameState(myCurrentMenu);
+		break;
+
+	
 	}
 }
