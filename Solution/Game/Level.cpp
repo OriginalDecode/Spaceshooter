@@ -47,7 +47,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myEntityFactory = new EntityFactory(myWeaponFactory);
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
-	myMissionManager = new MissionManager(&myPlayer);
+	myMissionManager = new MissionManager(*myPlayer, "");
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
@@ -65,7 +65,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 
 	myEntities.Init(4);
 
-	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
+	Entity* player = new Entity(eEntityType::PLAYER, *myScene, "player");
 	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
 		, "Data/effect/NoTextureEffect.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
@@ -111,7 +111,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 			astroids->AddComponent<PowerUpComponent>()->Init();
-			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
 			myEntities.Add(astroids);
 
@@ -123,6 +122,19 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 		WATCH_FILE(aFileName, Level::ReadXML);
 
 		ReadXML(aFileName);
+	}
+
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (myEntities[i]->GetComponent<AIComponent>() != nullptr)
+		{
+			std::string targetName = myEntities[i]->GetComponent<AIComponent>()->GetTargetName();
+			myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(GetEntityWithName(targetName));
+			if (targetName == "")
+			{
+				myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+			}
+		}
 	}
 
 	myScene->SetCamera(myCamera);
@@ -389,4 +401,17 @@ void Level::ReadXML(const std::string& aFile)
 		myEntities.Add(newEntity);
 	}
 
+	
+}
+
+Entity* Level::GetEntityWithName(const std::string& aName)
+{
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (CU::ToLower(myEntities[i]->GetName()) == CU::ToLower(aName))
+		{
+			return myEntities[i];
+		}
+	}
+	return nullptr;
 }
