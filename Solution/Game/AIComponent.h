@@ -6,7 +6,7 @@ class AIComponent : public ControllerComponent
 public:
 	AIComponent(Entity& aEntity);
 
-	void Init();
+	void Init(float aSpeed, float aTimeBetweenDecisions);
 	void Update(float aDeltaTime) override;
 
 	void SetEntityToFollow(Entity* aEntity);

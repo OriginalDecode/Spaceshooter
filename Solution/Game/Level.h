@@ -21,6 +21,7 @@ class BulletManager;
 class CollisionManager;
 class Entity;
 class EntityFactory;
+class MissionManager;
 class WeaponFactory;
 
 class Level
@@ -68,6 +69,8 @@ private:
 
 	BulletManager* myBulletManager;
 	CollisionManager* myCollisionManager;
+
+	MissionManager* myMissionManager;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;

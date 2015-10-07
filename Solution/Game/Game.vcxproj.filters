@@ -82,6 +82,16 @@
     <ClCompile Include="LevelFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="MissionManager.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="Mission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="KillAllMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointMission.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -201,6 +211,16 @@
     <ClInclude Include="LevelFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="MissionManager.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="Mission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="KillAllMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="WaypointMission.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -223,6 +243,9 @@
     </Filter>
     <Filter Include="Components\Notes">
       <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mission">
+      <UniqueIdentifier>{16b77b77-92bc-472f-ab0e-cc8fa26a6081}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

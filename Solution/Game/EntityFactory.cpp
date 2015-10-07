@@ -8,9 +8,11 @@
 #include "GraphicsComponent.h"
 #include "HealthComponent.h"
 #include <Instance.h>
+#include <MathHelper.h>
 #include <Scene.h>
 #include "ShootingComponent.h"
 #include "PhysicsComponent.h"
+#include "WeaponFactory.h"
 #include <XMLReader.h>
 
 EntityData::EntityData(Prism::Scene& aDummyScene)
@@ -18,7 +20,8 @@ EntityData::EntityData(Prism::Scene& aDummyScene)
 {
 }
 
-EntityFactory::EntityFactory()
+EntityFactory::EntityFactory(WeaponFactory* aWeaponFactory)
+	: myWeaponFactoryPointer(aWeaponFactory)
 {
 	myDummyScene = new Prism::Scene();
 }
@@ -95,6 +98,10 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		{
 			LoadBulletComponent(newEntity, entityDocument, e);
 		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthComponent").c_str()) == 0)
+		{
+			LoadHealthComponent(newEntity, entityDocument, e);
+		}
 	}
 	if (entityName != "")
 	{
@@ -111,14 +118,17 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("FollowEntity").c_str()) == 0)
 		{
-			std::string targetName = "";
-			int chanceToFollow = 0;
-
-			aDocument.ForceReadAttribute(e, "targetName", targetName);
-			aDocument.ForceReadAttribute(e, "chanceToFollow", chanceToFollow);
-
-			aEntityToAddTo.myTargetName = targetName;
-			aEntityToAddTo.myChanceToFollow = chanceToFollow;
+			aDocument.ForceReadAttribute(e, "targetName", aEntityToAddTo.myTargetName);
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Speed").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "min", aEntityToAddTo.myMinSpeed);
+			aDocument.ForceReadAttribute(e, "max", aEntityToAddTo.myMaxSpeed);
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("TimeToNextDecision").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "min", aEntityToAddTo.myMinTimeToNextDecision);
+			aDocument.ForceReadAttribute(e, "max", aEntityToAddTo.myMaxTimeToNextDecision);
 		}
 	}
 }
@@ -130,11 +140,7 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("lifeTime").c_str()) == 0)
 		{
-			float lifeTime = 0;
-
-			aDocument.ForceReadAttribute(e, "value", lifeTime);
-
-			aEntityToAddTo.myMaxTime = lifeTime;
+			aDocument.ForceReadAttribute(e, "value", aEntityToAddTo.myMaxTime);
 		}
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("damage").c_str()) == 0)
 		{
@@ -205,8 +211,14 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 void EntityFactory::LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<ShootingComponent>();
-	aShootingComponenetElement;
 	aDocument;
+	for (tinyxml2::XMLElement* e = aShootingComponenetElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Weapon").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "type", aEntityToAddTo.myWeaponType);
+		}
+	}
 }
 
 void EntityFactory::LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aHealthComponentElement)
@@ -258,21 +270,18 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	if (sourceEntity->GetComponent<AIComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<AIComponent>();
-		
-		//TODO: this will work when AIComponent
-		/*if (it->second.myChanceToFollow > 0)
-		{
-			int chanceToFollowPlayer = rand() % 100;
-
-			if (chanceToFollowPlayer > it->second.myChanceToFollow)
-			{
-				aTargetEntity->GetComponent<AIComponent>()->SetEntityToFollow(player);
-			}
-		}*/
+		float speed = CU::Math::RandomRange<float>(it->second.myMinSpeed, it->second.myMaxSpeed);
+		float timeToNextDecision = CU::Math::RandomRange<float>(it->second.myMinTimeToNextDecision, 
+			it->second.myMaxTimeToNextDecision);
+		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision);
 	}
 	if (sourceEntity->GetComponent<ShootingComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<ShootingComponent>();
+		if (it->second.myWeaponType != "")
+		{
+			aTargetEntity->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactoryPointer->GetWeapon(it->second.myWeaponType));
+		}
 	}
 	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
 	{

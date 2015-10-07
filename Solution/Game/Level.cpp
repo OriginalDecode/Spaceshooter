@@ -21,6 +21,7 @@
 #include "InputComponent.h"
 #include <Intersection.h>
 #include "Level.h"
+#include "MissionManager.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "PointLight.h"
@@ -40,12 +41,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 {
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
 	myScene = new Prism::Scene();
-	myEntityFactory = new EntityFactory();
-	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myWeaponFactory = new WeaponFactory();
 	myWeaponFactory->LoadWeapons("Data/weapons/WeaponList.xml");
 	myWeaponFactory->LoadProjectiles("Data/weapons/projectiles/ProjectileList.xml");
+	myEntityFactory = new EntityFactory(myWeaponFactory);
+	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
+	myMissionManager = new MissionManager(&myPlayer);
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
@@ -87,7 +89,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 		++numberOfEnemies;
 		for (int i = 0; i < numberOfEnemies; ++i)
 		{
-			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
+			/*Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/placeholder_asteroid_large.fbx",
 			//		"Data/effect/BasicEffect.fx");
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
@@ -101,7 +103,14 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			astroids->AddComponent<AIComponent>()->Init();
 			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 			astroids->AddComponent<ShootingComponent>();
-			astroids->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
+			astroids->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));*/
+
+			Entity* astroids = new Entity(eEntityType::ENEMY, *myScene);
+			myEntityFactory->CopyEntity(astroids, "defaultEnemy");
+			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
+				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
+			astroids->AddComponent<PowerUpComponent>()->Init();
+			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
 
 			myEntities.Add(astroids);
 
@@ -157,6 +166,7 @@ Level::~Level()
 	delete myWeaponFactory;
 	delete myBulletManager;
 	delete myCollisionManager;
+	delete myMissionManager;
 	
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
