@@ -68,7 +68,6 @@ private:
 
 	CU::GrowingArray<Entity*> myEntities;
 	CU::GrowingArray<Entity*> myDeadEntities;
-	int myNrOfEnemies;
 
 	CU::GrowingArray<Prism::DirectionalLight*> myDirectionalLights;
 	CU::GrowingArray<Prism::PointLight*> myPointLights;
@@ -120,9 +119,4 @@ inline void Level::RemoveEntity(Entity* aEntity)
 inline void Level::CompleteLevel()
 {
 	myComplete = true;
-}
-
-inline int Level::GetEnemiesAlive() const
-{
-
 }

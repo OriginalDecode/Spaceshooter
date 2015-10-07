@@ -35,3 +35,9 @@ enum class ePowerUpType
 	HEALTHKIT_02,
 
 };
+
+enum class eMissionType
+{
+	WAYPOINT,
+	KILL_ALL,
+};

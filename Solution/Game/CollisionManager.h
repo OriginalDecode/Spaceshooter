@@ -17,6 +17,8 @@ public:
 	void Update();
 	void CleanUp();
 
+	int GetEnemiesAlive() const;
+
 private:
 	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);
 	void CheckCollision(CollisionComponent* aComponent, CU::GrowingArray<CollisionComponent*>& someOtherComponents);
@@ -38,3 +40,7 @@ private:
 	CU::GrowingArray<CollisionComponent*> myProps;
 };
 
+inline int CollisionManager::GetEnemiesAlive() const
+{
+	return myEnemies.Size();
+}

@@ -6,6 +6,7 @@
 #include "KillAllMission.h"
 #include "Level.h"
 #include "MissionManager.h"
+#include <sstream>
 #include "WaypointMission.h"
 #include "XMLReader.h"
 
@@ -29,7 +30,7 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		type = CU::ToLower(type);
 		if (type == "waypoint")
 		{
-			WaypointMission* mission = new WaypointMission(myLevel, reader, element);
+			WaypointMission* mission = new WaypointMission(myLevel, myPlayer, reader, element);
 			myMissions.Add(mission);
 		}
 		else if (type == "killall")
@@ -49,6 +50,9 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 void MissionManager::Update(float aDeltaTime)
 {
 	DL_ASSERT_EXP(myCurrentMission < myMissions.Size(), "CurrentMission out of bounds!");
+	std::stringstream ss;
+	ss << myCurrentMission;
+	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
 	if (myMissions[myCurrentMission]->Update(aDeltaTime) == true)
 	{
 		++myCurrentMission;

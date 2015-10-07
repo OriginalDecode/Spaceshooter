@@ -68,7 +68,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
 	std::stringstream lengthToWaypoint;
 	CU::Vector3<float> toWaypoint = myWaypointPosition - myCamera->GetOrientation().GetPos();
-	lengthToWaypoint << static_cast<int>(CU::Length(toWaypoint));
+	lengthToWaypoint << myWaypointPosition.x << " " << myWaypointPosition.y << " " << myWaypointPosition.z << " " << static_cast<int>(CU::Length(toWaypoint));
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toWaypoint) != 0)
 	{

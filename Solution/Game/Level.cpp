@@ -55,7 +55,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
 	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
-	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
+
 
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
@@ -152,7 +152,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			myScene->AddInstance(gfxComp->GetInstance());
 		}
 	}
-
+	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
 	myRenderStuff = true;
 }
 
@@ -208,14 +208,11 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
-		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+
+		/*if (myEntities[i]->GetType() == eEntityType::POWERUP)
 		{
 			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
-		}
-		if (myEntities[i]->GetType() == eEntityType::POWERUP)
-		{
-			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
-		}
+		}*/
 
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
 		{
@@ -451,4 +448,9 @@ void Level::ReadXML(const std::string& aFile)
 		myEntities.Add(newEntity);
 	}
 
+}
+
+int Level::GetEnemiesAlive() const
+{
+	return myCollisionManager->GetEnemiesAlive();
 }

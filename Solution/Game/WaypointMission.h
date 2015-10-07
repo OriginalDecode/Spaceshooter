@@ -12,7 +12,7 @@ namespace tinyxml2
 class WaypointMission :	public Mission
 {
 public:
-	WaypointMission(Level& aLevel, XMLReader& aReader, tinyxml2::XMLElement* aElement);
+	WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	~WaypointMission();
 
 	bool Update(float aDeltaTime) override;
@@ -20,5 +20,6 @@ public:
 private:
 	Level& myLevel;
 	Entity* myTrigger;
+	Entity& myPlayer;
 };
 
