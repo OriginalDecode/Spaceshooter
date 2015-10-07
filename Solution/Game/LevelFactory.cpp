@@ -1,8 +1,10 @@
 #include "stdafx.h"
+#include <FileWatcher.h>
 #include "LevelFactory.h"
 #include "Level.h"
+#include "PostMaster.h"
+#include "GameStateMessage.h"
 #include <XMLReader.h>
-#include <FileWatcher.h>
 
 LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper)
 	: myInputWrapper(anInputWrapper)
@@ -11,7 +13,6 @@ LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* 
 	, myCurrentID(0)
 {
 	LoadLevelListFromXML(aLevelListPath);
-
 	WATCH_FILE(aLevelListPath, LevelFactory::LoadLevelListFromXML);
 }
 
@@ -25,15 +26,13 @@ Level* LevelFactory::LoadLevel(const int& anID)
 	{
 		DL_ASSERT("Non-existing ID in LoadLevel! ID must correspond with levelList.xml");
 	}
-
 	//if (myCurrentLevel != nullptr)
 	//{
 	//	delete myCurrentLevel;
-	//	myCurrentLevel = nullptr;
 	//}
 
+	UNWATCH_FILE(myLevelPaths[myCurrentID]);
 	myCurrentID = anID;
-
 	WATCH_FILE(myLevelPaths[myCurrentID], LevelFactory::LoadLevelFromXML);
 	
 	return ReloadLevel();
@@ -42,7 +41,6 @@ Level* LevelFactory::LoadLevel(const int& anID)
 Level* LevelFactory::ReloadLevel()
 {
 	myCurrentLevel = new Level(myLevelPaths[myCurrentID], myInputWrapper);
-
 	return myCurrentLevel;
 }
 
@@ -53,7 +51,9 @@ Level* LevelFactory::LoadNextLevel()
 		return myCurrentLevel;
 	}
 
+	UNWATCH_FILE(myLevelPaths[myCurrentID]);
 	myCurrentID++;
+	WATCH_FILE(myLevelPaths[myCurrentID], LevelFactory::LoadLevelFromXML);
 
 	return ReloadLevel();
 }
@@ -61,7 +61,6 @@ Level* LevelFactory::LoadNextLevel()
 void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 {
 	myLevelPaths.clear();
-
 	XMLReader reader;
 	reader.OpenDocument(aXMLPath);
 	std::string levelPath = "";
@@ -76,7 +75,9 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 	}
 }
 
-void LevelFactory::LoadLevelFromXML(const std::string& aXMLPath)
+void LevelFactory::LoadLevelFromXML(const std::string&)
 {
-	myCurrentLevel = new Level(aXMLPath, myInputWrapper);
+	// this just reloads the map 
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
+	//myCurrentLevel = new Level(aXMLPath, myInputWrapper);
 }
