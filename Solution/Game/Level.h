@@ -12,9 +12,13 @@ namespace Prism
 	class Instance;
 };
 
+namespace CommonUtilities
+{
+	class InputWrapper;
+}
+
 class BulletManager;
 class CollisionManager;
-class CU::InputWrapper;
 class Entity;
 class EntityFactory;
 class WeaponFactory;
