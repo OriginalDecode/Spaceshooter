@@ -4,12 +4,6 @@
 #include <Sphere.h>
 
 typedef CU::Intersection::Sphere Sphere;
-namespace Prism
-{
-	class Instance;
-	class Camera;
-}
-
 
 class CollisionComponent : public Component
 {
@@ -22,20 +16,11 @@ public:
 	void SetRadius(float someRadius = 0);
 	Sphere GetSphere();
 
-	void Render(Prism::Camera* aCamera);
-
-
 
 	static int GetID();
 
 private:
-
-	bool myShouldShow;
-
 	Sphere mySphere;
-	
-	Prism::Instance* myInstance;
-
 };
 
 
