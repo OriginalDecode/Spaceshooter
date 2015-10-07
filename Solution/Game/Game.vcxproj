@@ -88,6 +88,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
     <ClInclude Include="LevelFactory.h" />
+    <ClInclude Include="MissionManager.h" />
     <ClInclude Include="PowerUpNote.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="LevelFactory.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="MissionManager.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />

@@ -82,6 +82,7 @@
     <ClCompile Include="LevelFactory.cpp">
       <Filter>Factory</Filter>
     </ClCompile>
+    <ClCompile Include="MissionManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="LevelFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>
+    <ClInclude Include="MissionManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
