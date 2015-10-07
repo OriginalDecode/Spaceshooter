@@ -37,7 +37,7 @@
 #include <XMLReader.h>
 
 
-Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML) 
+Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML)
 	: myEntities(16)
 	, myComplete(false)
 	, mySkySphere(nullptr)
@@ -82,7 +82,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->myCamera = myCamera;
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
-	
+
 
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	if (aShouldTestXML == false)
@@ -95,9 +95,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			//astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/asteroids/placeholder_asteroid_large.fbx",
 			//		"Data/effect/BasicEffect.fx");
 			astroids->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Enemys/SM_Enemy_Ship_A.fbx",
-				"Data/effect/BasicEffect.fx");
+			"Data/effect/BasicEffect.fx");
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
-				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
+			, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
 			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
@@ -112,7 +112,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			myEntityFactory->CopyEntity(astroids, "defaultEnemy");
 			astroids->GetComponent<GraphicsComponent>()->SetPosition({ static_cast<float>(rand() % 400 - 200)
 				, static_cast<float>(rand() % 400 - 200), static_cast<float>(rand() % 400 - 200) });
-			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
+
 
 			myEntities.Add(astroids);
 
@@ -124,6 +124,20 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 		WATCH_FILE(aFileName, Level::ReadXML);
 
 		ReadXML(aFileName);
+	}
+
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (myEntities[i]->GetComponent<AIComponent>() != nullptr)
+		{
+			std::string targetName = myEntities[i]->GetComponent<AIComponent>()->GetTargetName();
+			Entity* target = GetEntityWithName(targetName);
+			myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+			if (target != nullptr)
+			{
+				myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target);
+			}
+		}
 	}
 
 	myScene->SetCamera(myCamera);
@@ -169,7 +183,7 @@ Level::~Level()
 	delete myBulletManager;
 	delete myCollisionManager;
 	delete myMissionManager;
-	
+
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
@@ -340,8 +354,6 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
 		myEntityFactory->CopyEntity(newEntity, enemyType);
 
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
-
 		tinyxml2::XMLElement* enemyElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> enemyPosition;
 		reader.ForceReadAttribute(enemyElement, "X", enemyPosition.x);
@@ -358,7 +370,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(enemyRotation.x) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(enemyRotation.y) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(enemyRotation.z) * newEntity->myOrientation;
-		
+
 		int health = 0;
 		reader.ForceReadAttribute(entityElement, "hp", health);
 		newEntity->AddComponent<HealthComponent>()->Init(health);
@@ -375,7 +387,7 @@ void Level::ReadXML(const std::string& aFile)
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
-	
+
 		tinyxml2::XMLElement* propElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> propPosition;
 		reader.ForceReadAttribute(propElement, "X", propPosition.x);
@@ -395,7 +407,7 @@ void Level::ReadXML(const std::string& aFile)
 
 		myEntities.Add(newEntity);
 	}
-	
+
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "trigger"))
 	{
@@ -422,7 +434,7 @@ void Level::ReadXML(const std::string& aFile)
 
 		triggerElement = reader.ForceFindFirstChild(entityElement, "Type");
 		std::string powerUp;
-		reader.ForceReadAttribute(triggerElement, "t", powerUp);
+		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		CU::ToLower(powerUp);
 		if (powerUp == "healthkit_01")
 		{
@@ -447,7 +459,18 @@ void Level::ReadXML(const std::string& aFile)
 
 		myEntities.Add(newEntity);
 	}
+}
 
+Entity* Level::GetEntityWithName(const std::string& aName)
+{
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (CU::ToLower(myEntities[i]->GetName()) == CU::ToLower(aName))
+		{
+			return myEntities[i];
+		}
+	}
+	return nullptr;
 }
 
 int Level::GetEnemiesAlive() const

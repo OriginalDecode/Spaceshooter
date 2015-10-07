@@ -70,6 +70,8 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	std::string entityName = "";
 	entityDocument.ForceReadAttribute(rootElement, "name", entityName);
 
+	newEntity.myEntity->SetName(entityName);
+
 	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(rootElement); e != nullptr;
 		e = entityDocument.FindNextElement(e))
 	{
@@ -249,6 +251,8 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 {
 	auto it = myEntities.find(aEntityTag);
 	Entity* sourceEntity = it->second.myEntity;
+	
+	aTargetEntity->SetName(sourceEntity->GetName());
 
 	if (sourceEntity->GetComponent<GraphicsComponent>() != nullptr)
 	{
@@ -273,7 +277,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		float speed = CU::Math::RandomRange<float>(it->second.myMinSpeed, it->second.myMaxSpeed);
 		float timeToNextDecision = CU::Math::RandomRange<float>(it->second.myMinTimeToNextDecision, 
 			it->second.myMaxTimeToNextDecision);
-		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision);
+		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision, it->second.myTargetName);
 	}
 	if (sourceEntity->GetComponent<ShootingComponent>() != nullptr)
 	{

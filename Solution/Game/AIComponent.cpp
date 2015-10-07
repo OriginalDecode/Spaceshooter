@@ -12,9 +12,11 @@ AIComponent::AIComponent(Entity& aEntity)
 
 }
 
-void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions)
+void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName)
 {
 	myEntityToFollow = nullptr;
+
+	myTargetName = aTargetName;
 
 	myTimeToNextDecision = aTimeBetweenDecisions;
 	mySpeed = aSpeed;
