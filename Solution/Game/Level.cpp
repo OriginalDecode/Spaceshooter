@@ -425,7 +425,7 @@ void Level::ReadXML(const std::string& aFile)
 
 		triggerElement = reader.ForceFindFirstChild(entityElement, "Type");
 		std::string powerUp;
-		reader.ForceReadAttribute(triggerElement, "t", powerUp);
+		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		CU::ToLower(powerUp);
 		if (powerUp == "healthkit_01")
 		{
