@@ -113,7 +113,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 			myScene->AddInstance(gfxComp->GetInstance());
 		}
 	}
-	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
+	myMissionManager = new MissionManager(*this, *myPlayer, "Data/level/level1Missions.xml");
 	myRenderStuff = true;
 }
 
