@@ -38,7 +38,3 @@ void Entity::Kill()
 	myAlive = false;
 }
 
-void Entity::SetPowerUpType(ePowerUpType someType)
-{
-	myPowerUpType = someType;
-}

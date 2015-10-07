@@ -97,7 +97,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 			//astroids->GetComponent<GraphicsComponent>()->SetPosition({ 1.f, 70.f, -10.f });
 			astroids->AddComponent<CollisionComponent>()->Initiate(7.5f);
 			astroids->AddComponent<HealthComponent>()->Init(100);
-			astroids->AddComponent<PowerUpComponent>()->Init();
 
 			astroids->AddComponent<AIComponent>()->Init();
 			astroids->GetComponent<AIComponent>()->SetEntityToFollow(player);
@@ -197,7 +196,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 
 		myEntities[i]->Update(aDeltaTime);
-		if (myEntities[i]->GetType() == eEntityType::TRIGGER)
+		if (myEntities[i]->GetType() == eEntityType::POWERUP)
 		{
 			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
 		}
@@ -368,6 +367,7 @@ void Level::ReadXML(const std::string& aFile)
 		myEntityFactory->CopyEntity(newEntity, "trigger");
 
 		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::TRIGGER);
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> triggerPosition;
@@ -378,5 +378,52 @@ void Level::ReadXML(const std::string& aFile)
 
 		myEntities.Add(newEntity);
 	}
+
+	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "powerup"); entityElement != nullptr;
+		entityElement = reader.FindNextElement(entityElement, "powerup"))
+	{
+		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene);
+		float entityRadius;
+		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
+		myEntityFactory->CopyEntity(newEntity, "powerup");
+
+		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
+
+		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
+		CU::Vector3<float> triggerPosition;
+		reader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
+		reader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
+		reader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
+		newEntity->myOrientation.SetPos(triggerPosition*10.f);
+
+
+		triggerElement = reader.ForceFindFirstChild(entityElement, "Type");
+		std::string powerUp;
+		reader.ForceReadAttribute(triggerElement, "powerup", CU::ToLower(powerUp));
+		if (powerUp == "healthkit_01")
+		{
+			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_01);
+		}
+		if (powerUp == "healthkit_02")
+		{
+			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_02);
+		}
+		if (powerUp == "shield")
+		{
+			newEntity->SetPowerUp(ePowerUpType::SHIELDBOOST);
+		}
+		if (powerUp == "firerate")
+		{
+			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
+		}
+		
+		newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
+
+
+
+		myEntities.Add(newEntity);
+	}
+
 
 }
