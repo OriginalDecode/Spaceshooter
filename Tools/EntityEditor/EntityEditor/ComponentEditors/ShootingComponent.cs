@@ -12,7 +12,11 @@ namespace EntityEditor.ComponentEditors
 {
     public partial class ShootingComponent : Form
     {
+        private ComponentEditors.ShootingComponentSubForms.EditWeaponForm myEditWeaponForm = null;
         private Entity.ShootingComponentData myShootingComponent;
+        private Entity.WeaponData myCurrentWeaponData;
+        private Entity.WeaponReader myWeaponReader = new Entity.WeaponReader();
+        private List<Entity.WeaponData> myLoadedWeaponTypes;
 
         public ShootingComponent()
         {
@@ -45,7 +49,7 @@ namespace EntityEditor.ComponentEditors
             LoadSetting();
         }
 
-         private void DestroyWindowForm(bool aSaveEntity)
+        private void DestroyWindowForm(bool aSaveEntity)
         {
             EntityEditorForm parentForm = (EntityEditorForm)this.Owner;
 
@@ -65,7 +69,24 @@ namespace EntityEditor.ComponentEditors
         //Save Load Block Start
         private void LoadSetting()
         {
+            myWeaponReader.LoadWeapons("Data/weapons/WeaponList.xml");
+            myWeaponReader.LoadBullets("Data/weapons/projectiles/ProjectileList.xml");
+
             SC_Active.Checked = myShootingComponent.myIsActive;
+
+            myLoadedWeaponTypes = myWeaponReader.GetWeaponData();
+            for (int i = 0; i < myLoadedWeaponTypes.Count; ++i)
+            {
+                SC_WeaponType.Items.Add(myLoadedWeaponTypes[i].myType);
+            }
+
+            for(int i = 0; i < SC_WeaponType.Items.Count; ++i)
+            {
+                if((string)SC_WeaponType.Items[i] == myShootingComponent.myWeaponType)
+                {
+                    
+                }
+            }
         }
 
         private void SaveSetting()
@@ -81,6 +102,27 @@ namespace EntityEditor.ComponentEditors
         private void SC_Btn_Cancel_Click(object sender, EventArgs e)
         {
             DestroyWindowForm(false);
+        }
+
+        private void SC_Btn_Edit_WeaponType_Click(object sender, EventArgs e)
+        {
+            myEditWeaponForm = new ShootingComponentSubForms.EditWeaponForm(this);
+            myEditWeaponForm.LoadSettings(myCurrentWeaponData);
+
+            myEditWeaponForm.Visible = true;
+            myEditWeaponForm.Activate();
+        }
+
+        private void SC_WeaponType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            for (int i = 0; i < myLoadedWeaponTypes.Count; ++i)
+            {
+                if(myLoadedWeaponTypes[i].myType == (string)SC_WeaponType.SelectedItem)
+                {
+                    myCurrentWeaponData = myLoadedWeaponTypes[i];
+                    break;
+                }
+            }
         }
     }
 }
