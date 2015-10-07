@@ -14,7 +14,7 @@ class Component;
 class Entity
 {
 public:
-	Entity(eEntityType aType, Prism::Scene& aScene);
+	Entity(eEntityType aType, Prism::Scene& aScene, const std::string& aName = "");
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -35,15 +35,22 @@ public:
 	eEntityType GetType() const;
 	bool GetAlive() const;
 	void Kill();
+	const std::string& GetName() const;
+	void SetName(const std::string& aName);
 
 	Prism::Scene& GetScene();
+
+	void SetPowerUp(ePowerUpType someType);
+	ePowerUpType GetPowerUpType();
 
 private:
 	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
 	bool myAlive;
+	std::string myName;
 	const eEntityType myType;
 	Prism::Scene& myScene;
+	ePowerUpType myPowerUpType;
 };
 
 template <typename T>
@@ -89,4 +96,24 @@ inline bool Entity::GetAlive() const
 inline Prism::Scene& Entity::GetScene()
 {
 	return myScene;
+}
+
+inline const std::string& Entity::GetName() const
+{
+	return myName;
+}
+
+inline void Entity::SetName(const std::string& aName)
+{
+	myName = aName;
+}
+
+inline void Entity::SetPowerUp(ePowerUpType someType)
+{
+	myPowerUpType = someType;
+}
+
+inline ePowerUpType Entity::GetPowerUpType()
+{
+	return myPowerUpType;
 }

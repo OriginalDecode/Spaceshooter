@@ -1,15 +1,17 @@
 #pragma once
 #include "Component.h"
-
+#include "Enums.h"
 class PowerUpComponent : public Component
 {
 public:
 	PowerUpComponent(Entity& aEntity);
-	void ReceiveNote(const PowerUpNote& aNote) override;
+	void Init(ePowerUpType someType);
 	void ReceiveNote(const CollisionNote& aNote) override;
 
 	static int GetID();
+private:
 
+	ePowerUpType myType;
 
 };
 

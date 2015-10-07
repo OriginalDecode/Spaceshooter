@@ -8,7 +8,7 @@ namespace EntityEditor.Entity
 {
     public struct EntityData
     {
-        public String myName;
+        public string myName;
 
         public AIComponentData myAIComponent;
         public CollisionComponentData myCollisionComponent;
@@ -26,8 +26,8 @@ namespace EntityEditor.Entity
     {
         public bool myIsActive;
 
-        public String myEffectPath;
-        public String myModelPath;
+        public string myEffectPath;
+        public string myModelPath;
     }
 
     public struct AIComponentData
@@ -38,6 +38,8 @@ namespace EntityEditor.Entity
     public struct ShootingComponentData
     {
         public bool myIsActive;
+
+        public string myWeaponType;
     }
 
     public struct CollisionComponentData

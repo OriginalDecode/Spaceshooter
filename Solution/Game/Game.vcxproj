@@ -87,7 +87,11 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
+    <ClInclude Include="KillAllMission.h" />
     <ClInclude Include="LevelFactory.h" />
+    <ClInclude Include="Mission.h" />
+    <ClInclude Include="MissionManager.h" />
+    <ClInclude Include="MissionNote.h" />
     <ClInclude Include="PowerUpNote.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
@@ -122,6 +126,9 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SteeringTargetNote.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="SurvivalMission.h" />
+    <ClInclude Include="WaypointComponent.h" />
+    <ClInclude Include="WaypointMission.h" />
     <ClInclude Include="WaypointNote.h" />
     <ClInclude Include="WeaponFactory.h" />
   </ItemGroup>
@@ -144,10 +151,13 @@
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="KillAllMission.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelFactory.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="Mission.cpp" />
+    <ClCompile Include="MissionManager.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />
@@ -159,6 +169,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Subscriber.cpp" />
+    <ClCompile Include="SurvivalMission.cpp" />
+    <ClCompile Include="WaypointComponent.cpp" />
+    <ClCompile Include="WaypointMission.cpp" />
     <ClCompile Include="WeaponFactory.cpp" />
   </ItemGroup>
   <ItemGroup>

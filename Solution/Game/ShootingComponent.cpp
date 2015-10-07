@@ -6,6 +6,7 @@
 #include "InputNote.h"
 #include "PostMaster.h"
 #include "PhysicsComponent.h"
+#include "PowerUpNote.h"
 #include "ShootingComponent.h"
 #include "ShootNote.h"
 #include "WeaponFactory.h"
@@ -33,7 +34,7 @@ void ShootingComponent::Update(float aDeltaTime)
 		}
 		else
 		{
-			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime;
+			myWeapons[myCurrentWeaponID].myCurrentTime += myWeapons[myCurrentWeaponID].myMultiplier * aDeltaTime;
 		}
 	}
 }
@@ -70,6 +71,14 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 {
 	SetCurrentWeaponID(aMessage.myKey);
+}
+
+void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
+{
+	for (unsigned int i = 0; i < myWeapons.Size(); ++i)
+	{
+		myWeapons[i].myMultiplier = aNote.myFireRateMultiplier;
+	}
 }
 
 void ShootingComponent::ReadFromXML(const std::string aFilePath)
@@ -120,6 +129,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	newWeapon.myPosition = aWeapon.myPosition;
 	newWeapon.mySpread = aWeapon.mySpread;
 	newWeapon.myType = aWeapon.myType;
+	newWeapon.myMultiplier = 1;
 
 	if (aWeapon.myBulletType == "machinegun")
 	{

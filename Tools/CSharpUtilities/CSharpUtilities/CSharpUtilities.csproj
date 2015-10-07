@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="DL_Debug.cs" />
     <Compile Include="StringUtilities.cs" />
+    <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

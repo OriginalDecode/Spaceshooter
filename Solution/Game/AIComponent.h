@@ -6,22 +6,25 @@ class AIComponent : public ControllerComponent
 public:
 	AIComponent(Entity& aEntity);
 
-	void Init();
+	void Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName);
 	void Update(float aDeltaTime) override;
 
 	void SetEntityToFollow(Entity* aEntity);
 
+	const std::string& GetTargetName() const;
 private:
-	void MakeDecision();
 	void FollowEntity(float aDeltaTime);
-	void FollowOwnDecision(float aDeltaTime);
+
+	float myTimeBetweenDecisions;
+	float mySpeed;
+	std::string myTargetName;
 
 	float myTimeToNextDecision;
-	int myDecision;
-	
 	Entity* myEntityToFollow;
-
 	CU::Vector3<float> myVelocity;
-	float mySpeed;
 };
 
+inline const std::string& AIComponent::GetTargetName() const
+{
+	return myTargetName;
+}

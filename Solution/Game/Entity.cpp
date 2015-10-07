@@ -3,10 +3,12 @@
 #include "Component.h"
 #include "Entity.h"
 
-Entity::Entity(eEntityType aType, Prism::Scene& aScene)
+Entity::Entity(eEntityType aType, Prism::Scene& aScene, const std::string& aName)
 	: myAlive(true)
 	, myType(aType)
 	, myScene(aScene)
+	, myName(aName)
+	, myPowerUpType(ePowerUpType::NO_POWERUP)
 {
 
 }

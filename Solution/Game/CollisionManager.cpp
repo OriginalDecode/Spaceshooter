@@ -13,17 +13,20 @@ CollisionManager::CollisionManager()
 	, myEnemyBullets(16)
 	, myTriggers(16)
 	, myProps(16)
+	, myPowerUps(16)
 	, myPlayerFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
 	, myEnemyBulletFilter(0)
 	, myTriggerFilter(0)
 	, myPropFilter(0)
+	, myPowerUpFilter(0)
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
 	myPlayerBulletFilter = eEntityType::ENEMY;
 	myEnemyBulletFilter = eEntityType::PLAYER;
 	myTriggerFilter = eEntityType::PLAYER;
+	myPowerUpFilter = eEntityType::PLAYER;
 	//myEnemyFilter = eEntityType::PLAYER;
 }
 
@@ -45,6 +48,9 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::TRIGGER:
 		myTriggers.Add(aComponent);
+		break;
+	case eEntityType::POWERUP:
+		myPowerUps.Add(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
@@ -71,6 +77,9 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::TRIGGER:
 		myTriggers.RemoveCyclic(aComponent);
+		break;
+	case eEntityType::POWERUP:
+		myPowerUps.RemoveCyclic(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
@@ -100,6 +109,10 @@ void CollisionManager::Update()
 	{
 		CheckAllCollisions(myTriggers[i], myTriggerFilter);
 	}
+	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myPowerUps[i], myTriggerFilter);
+	}
 }
 
 void CollisionManager::CleanUp()
@@ -116,6 +129,14 @@ void CollisionManager::CleanUp()
 		if (myTriggers[i]->GetEntity().GetAlive() == false)
 		{
 			myTriggers.RemoveCyclicAtIndex(i);
+		}
+	}
+
+	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
+	{
+		if (myPowerUps[i]->GetEntity().GetAlive() == false)
+		{
+			myPowerUps.RemoveCyclicAtIndex(i);
 		}
 	}
 }
@@ -145,6 +166,10 @@ void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aF
 	if (aFilter & eEntityType::PROP)
 	{
 		CheckCollision(aComponent, myProps);
+	}
+	if (aFilter & eEntityType::POWERUP)
+	{
+		CheckCollision(aComponent, myPowerUps);
 	}
 }
 
