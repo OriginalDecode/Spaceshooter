@@ -21,6 +21,7 @@
 #include "InputComponent.h"
 #include <Intersection.h>
 #include "Level.h"
+#include "MissionManager.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "PointLight.h"
@@ -46,6 +47,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myEntityFactory = new EntityFactory(myWeaponFactory);
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
+	myMissionManager = new MissionManager(&myPlayer);
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
@@ -165,6 +167,7 @@ Level::~Level()
 	delete myWeaponFactory;
 	delete myBulletManager;
 	delete myCollisionManager;
+	delete myMissionManager;
 	
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
