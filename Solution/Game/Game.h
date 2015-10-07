@@ -13,6 +13,7 @@ namespace CommonUtilities
 }
 
 class BulletManager;
+class LevelFactory;
 
 class Game : public Subscriber
 {
@@ -36,9 +37,9 @@ private:
 	CU::InputWrapper* myInputWrapper;
 
 	StateStack myStateStack;
-	
-	MenuState* myMainMenu;
-	MenuState* myLevelSelect;
+	LevelFactory* myLevelFactory;
+
+	MenuState* myCurrentMenu;
 	InGameState* myGame;
 
 	bool myLockMouse;

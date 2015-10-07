@@ -16,7 +16,7 @@ class InGameState : public GameState
 {
 public:
 
-	InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFilePath, bool aUseXML);
+	InGameState(CU::InputWrapper* anInputWrapper);
 	~InGameState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -28,13 +28,18 @@ public:
 
 	void OnResize(int aWidth, int aHeight) override;
 
+	void SetLevel(Level* aLevel);
+
 private:
 
 	bool CheckCollision();
 
 	std::string myLevelFilePath;
-	bool myUseXML;
 	
 	Level* myLevel;
 };
 
+inline void InGameState::SetLevel(Level* aLevel)
+{
+	myLevel = aLevel;
+}

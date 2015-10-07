@@ -27,29 +27,18 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 
 	if (eventType == "level")
 	{
-		int ID;
-		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", ID);
-		if (ID == 1)
-		{
-			myClickEvent = new GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml");
-		}
-		else if (ID == 2)
-		{
-			myClickEvent = new GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml", false);
-		}
+		int levelID;
+		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", levelID);
+		myClickEvent = new GameStateMessage(eGameState::LOAD_LEVEL, levelID);
+
 	}
 	else if (eventType == "menu")
 	{
-		int ID;
-		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", ID);
-		if (ID == 1)
-		{
-			myClickEvent = new GameStateMessage(eGameState::MAIN_MENU_STATE);
-		}
-		else if (ID == 2)
-		{
-			myClickEvent = new GameStateMessage(eGameState::LEVEL_SELECT_STATE);
-		}
+		std::string menuID;
+		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", menuID);
+	
+		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
+		
 	}
 	
 	myBackground = new Prism::Model2D;

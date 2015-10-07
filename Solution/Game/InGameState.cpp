@@ -9,6 +9,7 @@
 #include <DebugDataDisplay.h>
 #include <FileWatcher.h>
 #include <Font.h>
+#include "GameStateMessage.h"
 #include <GeometryGenerator.h>
 #include "InGameState.h"
 #include <InputWrapper.h>
@@ -18,11 +19,9 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper, std::string aLevelFilePath, bool aUseXML)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper)
 {
 	myInputWrapper = anInputWrapper;
-	myLevelFilePath = aLevelFilePath;
-	myUseXML = aUseXML;
 }
 
 InGameState::~InGameState()
@@ -34,7 +33,6 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
-	myLevel = new Level(myLevelFilePath, myInputWrapper, myUseXML);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
 }
 
@@ -53,6 +51,12 @@ const eStateStatus InGameState::Update()
 		deltaTime = 1.0f / 10.0f;
 	}
 
+	if (myLevel->LogicUpdate(deltaTime) == false)
+	{
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
+		return eStateStatus::eKeepState;
+	}
+	
 	if (myInputWrapper->KeyDown(DIK_F9))
 	{
 		myLevel->SetShowLightCube(!myLevel->GetShowLightCube());
@@ -70,13 +74,6 @@ const eStateStatus InGameState::Update()
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
 
-	if (myLevel->LogicUpdate(deltaTime) == false)
-	{
-		delete myLevel;
-		myLevel = new Level("Data/script/level1.xml", myInputWrapper, myUseXML);
-		OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
-		//return eStateStatus::ePopMainState;
-	}
 
 
 	

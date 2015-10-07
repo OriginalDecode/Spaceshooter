@@ -1,19 +1,28 @@
 #pragma once
 
+namespace CommonUtilities
+{
+	class InputWrapper;
+}
+
 class Level;
 
 class LevelFactory
 {
 public:
-	LevelFactory();
+	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper);
 	~LevelFactory();
 
-	Level* CreateLevel(const int& ID);
+	Level* LoadLevel(const int& anID);
+	Level* ReloadLevel();
 
 private:
 
+	CU::InputWrapper* myInputWrapper;
 	Level* myCurrentLevel;
 
-	CU::GrowingArray<std::string> myLevelPaths;
+	std::unordered_map<int, std::string> myLevelPaths;
+
+	int myCurrentID;
 };
 

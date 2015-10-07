@@ -3,25 +3,28 @@
 
 enum class eGameState
 {
-	MAIN_MENU_STATE,
-	LEVEL_SELECT_STATE,
-	INGAME_STATE
+	LOAD_LEVEL,
+	CHANGE_LEVEL,
+	RELOAD_LEVEL,
+	LOAD_MENU
 };
 
 class GameStateMessage : public Message
 {
 public:
 	GameStateMessage(eGameState aGameState);
-	GameStateMessage(eGameState aGameState, std::string aFilePath, bool aUseXML = true);
+	GameStateMessage(eGameState aGameState, std::string aFilePath);
+	GameStateMessage(eGameState aGameState, const int& anID);
 
 	const eGameState& GetGameState() const;
 	const std::string& GetFilePath() const;
+	const int GetID() const;
 
-	bool myUseXML; //temp
 private:
 
 	eGameState myGameState;
 	std::string myFilePath;
+	int myID;
 };
 
 inline const eGameState& GameStateMessage::GetGameState() const
@@ -32,4 +35,9 @@ inline const eGameState& GameStateMessage::GetGameState() const
 inline const std::string& GameStateMessage::GetFilePath() const
 {
 	return myFilePath;
+}
+
+inline const int GameStateMessage::GetID() const
+{
+	return myID;
 }
