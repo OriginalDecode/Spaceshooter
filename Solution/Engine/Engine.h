@@ -62,6 +62,7 @@ namespace Prism
 		const CU::Matrix44<float>& GetOrthogonalMatrix() const;
 
 		void PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale = 1.f);
+		void PrintDebugText(float aNumber, const CU::Vector2<float>& aPosition, float aScale = 1.f);
 
 		void EnableZBuffer();
 		void DisableZBuffer();

@@ -12,6 +12,8 @@ public:
 	void SetEntityToFollow(Entity* aEntity);
 
 	const std::string& GetTargetName() const;
+
+	static int GetID();
 private:
 	void FollowEntity(float aDeltaTime);
 
@@ -27,4 +29,9 @@ private:
 inline const std::string& AIComponent::GetTargetName() const
 {
 	return myTargetName;
+}
+
+inline int AIComponent::GetID()
+{
+	return 1;
 }
