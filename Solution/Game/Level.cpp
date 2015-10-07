@@ -39,6 +39,8 @@
 
 Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool aShouldTestXML) 
 	: myEntities(16)
+	, myComplete(false)
+	, mySkySphere(nullptr)
 {
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
 	myScene = new Prism::Scene();
@@ -48,12 +50,12 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper, bool
 	myEntityFactory = new EntityFactory(myWeaponFactory);
 	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
 	myInputWrapper = aInputWrapper;
-	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
 	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
+	myMissionManager = new MissionManager(*this, *myPlayer, "Data/script/level1Missions.xml");
 
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
@@ -178,7 +180,7 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 {
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
-
+	delete mySkySphere;
 	mySkySphere = new Prism::Instance(*skySphere);
 }
 
@@ -188,7 +190,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	if (myPlayer->GetAlive() == false)
 	{
-		return false;
+		return true;
 	}
 
 	for (int i = myEntities.Size() - 1; i >= 0; --i)
@@ -225,10 +227,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
-
+	myMissionManager->Update(aDeltaTime);
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 
-	return true;
+	return myComplete;
 }
 
 void Level::Render()
@@ -290,6 +292,7 @@ Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	newEntity->myOrientation.SetPos(triggerPosition*10.f);
 
 	myEntities.Add(newEntity);
+	myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::TRIGGER);
 
 	return myEntities.GetLast();
 }
