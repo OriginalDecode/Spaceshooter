@@ -97,6 +97,7 @@
     <ClCompile Include="WaypointMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="SurvivalMission.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -234,6 +235,7 @@
     <ClInclude Include="MissionNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
+    <ClInclude Include="SurvivalMission.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
