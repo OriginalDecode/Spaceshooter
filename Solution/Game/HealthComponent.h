@@ -12,10 +12,12 @@ public:
 
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
-
 	bool IsAlive() const;
 
 	const unsigned short& GetHealth() const;
+	
+	void SetInvulnerability(const bool& anIsInvulnerable);
+	const bool& GetInvulnerability() const;
 
 private:
 
@@ -32,4 +34,14 @@ inline bool HealthComponent::IsAlive() const
 inline const unsigned short& HealthComponent::GetHealth() const
 {
 	return myCurrentHealth;
+}
+
+inline void HealthComponent::SetInvulnerability(const bool& anIsInvulnerable)
+{
+	myIsInvulnerable = anIsInvulnerable;
+}
+
+inline const bool& HealthComponent::GetInvulnerability() const
+{
+	return myIsInvulnerable;
 }

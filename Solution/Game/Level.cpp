@@ -182,10 +182,16 @@ bool Level::LogicUpdate(float aDeltaTime)
 	}
 
 
-	if (myInputWrapper->KeyDown(DIK_N))
+	if (myInputWrapper->KeyDown(DIK_N) == true)
 	{
 		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10);
 	}
+
+	if (myInputWrapper->KeyDown(DIK_V) == true)
+	{
+		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
+	}
+
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
