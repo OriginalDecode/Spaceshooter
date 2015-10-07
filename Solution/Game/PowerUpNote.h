@@ -21,6 +21,6 @@ inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int s
 	, myDuration(someDuration)
 	, myShieldStrength(someShieldStrength)
 	, myHealthRecover(someHealthRecover)
-	, myFireRateMultiplier(myFireRateMultiplier)
+	, myFireRateMultiplier(someFireRateMultiplier)
 {
 }
