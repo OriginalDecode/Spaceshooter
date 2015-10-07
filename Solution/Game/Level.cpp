@@ -437,10 +437,12 @@ void Level::LoadPlayer()
 
 	XMLReader reader;
 	reader.OpenDocument("Data/script/player.xml");
-	int health = 10;
+	int health = 0;
+	bool invulnerable = false;
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
+	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
 
-	player->AddComponent<HealthComponent>()->Init(health);
+	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	myPlayer = player;
