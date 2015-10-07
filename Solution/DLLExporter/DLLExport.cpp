@@ -60,6 +60,9 @@ void StartEngine(int* aHwnd)
 		locWindowSetup.myScreenHeight, SWP_SHOWWINDOW);
 
 	locCamera->OnResize(locWindowSetup.myScreenWidth, locWindowSetup.myScreenHeight);
+
+	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
+	Prism::Engine::GetInstance()->SetClearColor({ 0.3f, 0.3f, 0.3f, 1.f });
 }
 
 void SetupWindow(int aWidth, int aHeight)
