@@ -45,6 +45,7 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 
 	}
 
+	myMissions[myCurrentMission]->Start();
 }
 
 void MissionManager::Update(float aDeltaTime)
@@ -55,10 +56,15 @@ void MissionManager::Update(float aDeltaTime)
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
 	if (myMissions[myCurrentMission]->Update(aDeltaTime) == true)
 	{
+		myMissions[myCurrentMission]->End();
 		++myCurrentMission;
 		if (myCurrentMission == myMissions.Size())
 		{
 			myLevel.CompleteLevel();
+		}
+		else
+		{
+			myMissions[myCurrentMission]->Start();
 		}
 	}
 }

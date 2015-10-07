@@ -10,3 +10,13 @@ Mission::Mission()
 Mission::~Mission()
 {
 }
+
+void Mission::Start()
+{
+
+}
+
+void Mission::End()
+{
+
+}

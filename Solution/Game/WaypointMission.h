@@ -16,6 +16,8 @@ public:
 	~WaypointMission();
 
 	bool Update(float aDeltaTime) override;
+	void Start() override;
+	void End() override;
 
 private:
 	Level& myLevel;

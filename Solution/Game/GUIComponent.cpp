@@ -125,9 +125,9 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 	}
 
-	Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
 	if (myWaypointActive == true)
 	{
+		Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
 		myCurrentWaypoint->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 	}
 
@@ -203,7 +203,14 @@ void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
 
 void GUIComponent::ReceiveNote(const MissionNote& aMessage)
 {
-	myWaypointActive = aMessage.myType == eMissionType::WAYPOINT;
+	if (aMessage.myEvent == eMissionEvent::START && aMessage.myType == eMissionType::WAYPOINT)
+	{
+		myWaypointActive = true;
+	}
+	else
+	{
+		myWaypointActive = false;
+	}
 }
 
 void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)

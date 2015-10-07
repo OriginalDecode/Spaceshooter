@@ -16,7 +16,7 @@ WaypointMission::WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aRea
 	myTrigger = myLevel.AddTrigger(aReader, triggerElement);
 	myTrigger->AddComponent<WaypointComponent>();
 
-	aPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::START));
+
 }
 
 
@@ -31,4 +31,14 @@ bool WaypointMission::Update(float aDeltaTime)
 	myPlayer.SendNote<WaypointNote>(WaypointNote(myTrigger->myOrientation.GetPos()));
 
 	return !myTrigger->GetAlive();
+}
+
+void WaypointMission::Start()
+{
+	myPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::START));
+}
+
+void WaypointMission::End()
+{
+	myPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::END));
 }
