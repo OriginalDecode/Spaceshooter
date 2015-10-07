@@ -17,6 +17,9 @@ public:
 	Level* ReloadLevel();
 	Level* LoadNextLevel();
 
+	// for filewatcher:
+	void LoadLevelListFromXML(const std::string& aXMLPath); 
+	void LoadLevelFromXML(const std::string& aXMLPath);
 private:
 
 	CU::InputWrapper* myInputWrapper;
