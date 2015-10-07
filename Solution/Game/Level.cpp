@@ -112,7 +112,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 			myScene->AddInstance(gfxComp->GetInstance());
 		}
 	}
-	myMissionManager = new MissionManager(*this, *myPlayer, "Data/level/level1Missions.xml");
 	myRenderStuff = true;
 }
 
@@ -215,14 +214,6 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 	}
 
-	for (int i = 0; i < myEntities.Size(); ++i)
-	{
-		if (myEntities[i]->GetComponent<CollisionComponent>() != nullptr)
-		{
-			myEntities[i]->GetComponent<CollisionComponent>()->Render(myCamera);
-		}
-	}
-
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 
@@ -270,7 +261,11 @@ void Level::ReadXML(const std::string& aFile)
 	levelElement = reader.ForceFindFirstChild(levelElement, "scene");
 	std::string skySphere;
 	std::string cubeMap;
+	std::string missionXML;
 
+	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "missionxml"), "source", missionXML);
+
+	myMissionManager = new MissionManager(*this, *myPlayer, missionXML);
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);
 	
