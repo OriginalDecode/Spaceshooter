@@ -23,6 +23,8 @@ public:
 
 	void Update(CU::InputWrapper* anInputWrapper);
 
+	void OnResize(int aWidth, int aHeight);
+
 private:
 
 	CU::GrowingArray<Button*> myButtons;

@@ -24,8 +24,8 @@ public:
 
 	void Update(float aDeltaTime) override;
 
-	void ReceiveMessage(const ShootMessage& aMessage) override;
-	void ReceiveMessage(const InputMessage& aMessage) override;
+	void ReceiveNote(const ShootNote& aMessage) override;
+	void ReceiveNote(const InputNote& aMessage) override;
 
 	void ReadFromXML(const std::string aFilePath);
 

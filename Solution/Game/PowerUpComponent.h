@@ -1,35 +1,21 @@
 #pragma once
 #include "Component.h"
 
-enum class ePowerUpType
-{
-	
-	
-
-
-};
-
-struct PowerUpData
-{
-
-	float myDuration;
-	float mySpeedBoost;
-	float myFireRateBoost;
-	float myDamageBoost;
-
-
-};
-
 class PowerUpComponent : public Component
 {
 public:
+	PowerUpComponent(Entity& aEntity);
+	void ReceiveNote(const PowerUpNote& aNote) override;
+	void ReceiveNote(const CollisionNote& aNote) override;
 
-	
+	static int GetID();
 
 
-private:
-
-	
 };
+
+inline int PowerUpComponent::GetID()
+{
+	return 12;
+}
 
 

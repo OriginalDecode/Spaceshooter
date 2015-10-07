@@ -86,9 +86,6 @@ const eStateStatus InGameState::Update()
 	END_TIME_BLOCK("InGameState::Update");
 
 
-	Render();
-
-
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 

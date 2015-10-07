@@ -5,7 +5,7 @@ enum class eGameState
 {
 	MAIN_MENU_STATE,
 	LEVEL_SELECT_STATE,
-	INGAME_STATE,
+	INGAME_STATE
 };
 
 class GameStateMessage : public Message

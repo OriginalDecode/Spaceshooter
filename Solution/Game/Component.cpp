@@ -15,22 +15,30 @@ void Component::Update(float)
 {
 }
 
-void Component::ReceiveMessage(const ShootMessage&)
+void Component::ReceiveNote(const CollisionNote&)
 {
 }
 
-void Component::ReceiveMessage(const InputMessage& aMessage)
+void Component::ReceiveNote(const EnemiesTargetNote&)
 {
 }
 
-void Component::ReceiveMessage(const SteeringTargetMessage&)
+void Component::ReceiveNote(const InputNote&)
 {
 }
 
-void Component::ReceiveMessage(const WaypointMessage&)
+void Component::ReceiveNote(const PowerUpNote&)
 {
 }
 
-void Component::ReceiveMessage(const EnemiesTargetMessage&)
+void Component::ReceiveNote(const ShootNote&)
+{
+}
+
+void Component::ReceiveNote(const SteeringTargetNote&)
+{
+}
+
+void Component::ReceiveNote(const WaypointNote&)
 {
 }

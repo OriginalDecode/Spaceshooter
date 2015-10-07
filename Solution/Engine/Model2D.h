@@ -25,6 +25,11 @@ namespace Prism
 
 		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
 		void Render(const Camera& aCamera, const float aDrawX, const float aDrawY);
+		void Rotate(float aRadian);
+
+		void SetSize(const CU::Vector2<float> aTextureSize);
+
+		const CU::Vector2<float>& GetSize() const;
 
 	private:
 
@@ -59,4 +64,14 @@ namespace Prism
 		float myLastDrawX;
 		float myLastDrawY;
 	};
+}
+
+inline void Prism::Model2D::SetSize(const CU::Vector2<float> aTextureSize)
+{
+	myTextureSize = aTextureSize;
+}
+
+inline const CU::Vector2<float>& Prism::Model2D::GetSize() const
+{
+	return myTextureSize;
 }

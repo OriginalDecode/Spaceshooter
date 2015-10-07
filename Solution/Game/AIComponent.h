@@ -12,31 +12,13 @@ public:
 	void SetEntityToFollow(Entity* aEntity);
 
 private:
-	void MakeDecision();
-
 	void FollowEntity(float aDeltaTime);
-	void GetNewOrientation(const CU::Vector3<float>& aVelocity);
-	void CalcualteSteering(float aDeltaTime);
 
-	void FollowOwnDecision(float aDeltaTime);
-
-
-
-	float myTimeToNextDecision;
-	int myDecision;
-	
-	Entity* myEntityToFollow;
-
-	//CU::Vector3<float> myOrientation;
-	//CU::Vector3<float> myAcceleration;
-	//CU::Vector3<float> myVelocity;
-
+	float myTimeBetweenDecisions;
 	float mySpeed;
 
-	float myMaxSpeed;
-	float myMaxAcceleration;
-	float myTargetRadius;
-	float mySlowRadius;
-	float myTimeToTarget;
+	float myTimeToNextDecision;
+	Entity* myEntityToFollow;
+	CU::Vector3<float> myVelocity;
 };
 

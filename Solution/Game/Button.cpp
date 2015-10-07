@@ -13,32 +13,51 @@ Button::Button()
 
 Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 {
-	CU::Vector2<float> size;
-	CU::Vector2<float> pos;
 	std::string picPath;
 	std::string picHoveredPath;
 	std::string eventType;
 
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", pos.x);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", pos.y);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", myPosition.x);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", myPosition.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "path", picPath);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeX", size.x);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", size.y);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeX", mySize.x);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", mySize.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "hoveredPicture"), "path", picHoveredPath);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "event", eventType);
 
-	myBackground = new Prism::Model2D;
-	myBackground->Init(picPath, size);
-
-	myHoverBackground = new Prism::Model2D;
-	myHoverBackground->Init(picHoveredPath, size);
-
 	if (eventType == "level")
 	{
-		myClickEvent = new GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml");
+		int ID;
+		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", ID);
+		if (ID == 1)
+		{
+			myClickEvent = new GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml");
+		}
+		else if (ID == 2)
+		{
+			myClickEvent = new GameStateMessage(eGameState::INGAME_STATE, "Data/script/level1.xml", false);
+		}
 	}
-	myPosition = pos;
-	mySize = size;
+	else if (eventType == "menu")
+	{
+		int ID;
+		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", ID);
+		if (ID == 1)
+		{
+			myClickEvent = new GameStateMessage(eGameState::MAIN_MENU_STATE);
+		}
+		else if (ID == 2)
+		{
+			myClickEvent = new GameStateMessage(eGameState::LEVEL_SELECT_STATE);
+		}
+	}
+	
+	myBackground = new Prism::Model2D;
+	myBackground->Init(picPath, mySize);
+
+	myHoverBackground = new Prism::Model2D;
+	myHoverBackground->Init(picHoveredPath, mySize);
+
 	myIsHovered = false;
 }
 

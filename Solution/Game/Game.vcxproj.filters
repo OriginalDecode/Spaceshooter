@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="stdafx.cpp" />
@@ -52,9 +51,6 @@
     <ClCompile Include="StateStack.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
-    <ClCompile Include="MainMenuState.cpp">
-      <Filter>StateStack</Filter>
-    </ClCompile>
     <ClCompile Include="InGameState.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
@@ -62,22 +58,36 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="CollisionManager.cpp" />
-    <ClCompile Include="InputMessage.cpp">
-      <Filter>Components\Messages</Filter>
+    <ClCompile Include="PowerUpComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Button.cpp" />
-    <ClCompile Include="GameStateMessage.cpp" />
-    <ClCompile Include="LevelSelectState.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="PowerUpComponent.cpp" />
-    <ClCompile Include="WeaponFactory.cpp" />
+    <ClCompile Include="GameStateMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuState.cpp">
+      <Filter>StateStack</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="Entity.h" />
-    <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Level.h" />
@@ -136,9 +146,6 @@
     <ClInclude Include="StateEnums.h">
       <Filter>StateStack</Filter>
     </ClInclude>
-    <ClInclude Include="MainMenuState.h">
-      <Filter>StateStack</Filter>
-    </ClInclude>
     <ClInclude Include="InGameState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
@@ -148,24 +155,51 @@
     <ClInclude Include="HealthComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="ShootMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
-    <ClInclude Include="SteeringTargetMessage.h">
-      <Filter>Components\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionManager.h" />
-    <ClInclude Include="InputMessage.h">
-      <Filter>Components\Messages</Filter>
+    <ClInclude Include="PowerUpComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Button.h" />
-    <ClInclude Include="GameStateMessage.h" />
-    <ClInclude Include="LevelSelectState.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="PowerUpComponent.h" />
-    <ClInclude Include="WeaponFactory.h" />
-    <ClInclude Include="EnemiesTargetMessage.h">
-      <Filter>Components\Messages</Filter>
+    <ClInclude Include="GameStateMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponFactory.h">
+      <Filter>Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuState.h">
+      <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="CollisionNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemiesTargetNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="InputNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShootNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="SteeringTargetNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="WaypointNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelFactory.h">
+      <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -181,7 +215,13 @@
     <Filter Include="StateStack">
       <UniqueIdentifier>{944ca525-7824-48c8-aa6f-4fdb18700910}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Components\Messages">
+    <Filter Include="Factory">
+      <UniqueIdentifier>{9109ce6f-2b1b-46d4-818f-580bd816ed4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menu">
+      <UniqueIdentifier>{27df0495-3834-44ea-9f48-020a880d7bfb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Notes">
       <UniqueIdentifier>{04c42e3a-d29f-4331-a8ec-e6c5fb421486}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

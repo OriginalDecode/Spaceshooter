@@ -40,12 +40,10 @@ const eStateStatus MenuState::Update()
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		return eStateStatus::ePopSubState;
+		return eStateStatus::ePopMainState;
 	}
 
 	myMenu->Update(myInputWrapper);
-
-	Render();
 
 	return eKeepState;
 }
@@ -63,4 +61,5 @@ void MenuState::ResumeState()
 void MenuState::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
+	myMenu->OnResize(aWidth, aHeight);
 }
