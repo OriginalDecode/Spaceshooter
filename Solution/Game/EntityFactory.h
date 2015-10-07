@@ -1,6 +1,7 @@
 #pragma once
 
 class Entity;
+class WeaponFactory;
 class XMLReader;
 
 namespace tinyxml2
@@ -29,11 +30,16 @@ struct EntityData
 	std::string myEffectFile;
 	std::string myModelFile;
 	std::string myTargetName;
+	std::string myWeaponType;
 
 	float myCollisionSphereRadius;
 	float myDepth;
 	float myHeight;
 	float myMaxTime;
+	float myMinSpeed;
+	float myMaxSpeed;
+	float myMinTimeToNextDecision;
+	float myMaxTimeToNextDecision;
 	float myWidth;
 
 	int myChanceToFollow;
@@ -47,7 +53,7 @@ struct EntityData
 class EntityFactory
 {
 public:
-	EntityFactory();
+	EntityFactory(WeaponFactory* aWeaponFactory);
 	~EntityFactory();
 
 	void LoadEntites(const std::string& aEntityRootPath);
@@ -67,5 +73,6 @@ private:
 	std::unordered_map<std::string, EntityData> myEntities;
 
 	Prism::Scene* myDummyScene;
+	WeaponFactory* myWeaponFactoryPointer;
 };
 

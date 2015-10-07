@@ -12,12 +12,12 @@ AIComponent::AIComponent(Entity& aEntity)
 
 }
 
-void AIComponent::Init()
+void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions)
 {
 	myEntityToFollow = nullptr;
 
-	myTimeToNextDecision = myTimeBetweenDecisions;
-	mySpeed = 80.f;
+	myTimeToNextDecision = aTimeBetweenDecisions;
+	mySpeed = aSpeed;
 	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
 }
 
