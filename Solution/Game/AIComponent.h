@@ -12,16 +12,13 @@ public:
 	void SetEntityToFollow(Entity* aEntity);
 
 private:
-	void MakeDecision();
 	void FollowEntity(float aDeltaTime);
-	void FollowOwnDecision(float aDeltaTime);
+
+	float myTimeBetweenDecisions;
+	float mySpeed;
 
 	float myTimeToNextDecision;
-	int myDecision;
-	
 	Entity* myEntityToFollow;
-
 	CU::Vector3<float> myVelocity;
-	float mySpeed;
 };
 

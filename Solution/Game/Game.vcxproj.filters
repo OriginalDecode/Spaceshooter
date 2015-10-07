@@ -79,6 +79,9 @@
     <ClCompile Include="MenuState.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
+    <ClCompile Include="LevelFactory.cpp">
+      <Filter>Factory</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -194,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="WaypointNote.h">
       <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelFactory.h">
+      <Filter>Factory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
