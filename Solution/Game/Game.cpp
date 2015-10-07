@@ -138,29 +138,28 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 {
 	switch (aMessage.GetGameState())
 	{
-	case eGameState::LOAD_LEVEL:
-		myLockMouse = true;
+	case eGameState::LOAD_GAME:
 		myGame = new InGameState(myInputWrapper);
 		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		myStateStack.PushMainGameState(myGame);
 		break;
 
 	case eGameState::CHANGE_LEVEL:
-		myLockMouse = true;
 		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		break;
 
 	case eGameState::RELOAD_LEVEL:
-		myLockMouse = true;
 		myGame->SetLevel(myLevelFactory->ReloadLevel());
 		break;
 
 	case eGameState::LOAD_MENU:
-		myLockMouse = false;
 		myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);
 		myStateStack.PushMainGameState(myCurrentMenu);
 		break;
 
-	
+	case eGameState::COMPLETE_LEVEL:
+		myGame->SetLevel(myLevelFactory->LoadNextLevel());
+		break;
+
 	}
 }

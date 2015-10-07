@@ -3,10 +3,11 @@
 
 enum class eGameState
 {
-	LOAD_LEVEL,
+	LOAD_GAME,
 	CHANGE_LEVEL,
 	RELOAD_LEVEL,
-	LOAD_MENU
+	LOAD_MENU,
+	COMPLETE_LEVEL
 };
 
 class GameStateMessage : public Message

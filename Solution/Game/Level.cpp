@@ -13,6 +13,7 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
+#include "GameStateMessage.h"
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
 #include "HealthComponent.h"
@@ -25,6 +26,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "PointLight.h"
+#include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
@@ -192,6 +194,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
 	}
 
+	if (myInputWrapper->KeyDown(DIK_B) == true)
+	{
+		CompleteLevel();
+	}
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
@@ -452,4 +458,9 @@ void Level::LoadPlayer()
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->myCamera = myCamera;
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
+}
+
+void Level::CompleteLevel()
+{
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_LEVEL));
 }

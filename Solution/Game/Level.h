@@ -117,8 +117,3 @@ inline void Level::RemoveEntity(Entity* aEntity)
 {
 	myEntities.RemoveCyclic(aEntity);
 }
-
-inline void Level::CompleteLevel()
-{
-	myComplete = true;
-}
