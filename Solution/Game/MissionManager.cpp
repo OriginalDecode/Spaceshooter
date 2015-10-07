@@ -7,6 +7,7 @@
 #include "Level.h"
 #include "MissionManager.h"
 #include <sstream>
+#include "SurvivalMission.h"
 #include "WaypointMission.h"
 #include "XMLReader.h"
 
@@ -30,13 +31,15 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		type = CU::ToLower(type);
 		if (type == "waypoint")
 		{
-			WaypointMission* mission = new WaypointMission(myLevel, myPlayer, reader, element);
-			myMissions.Add(mission);
+			myMissions.Add(new WaypointMission(myLevel, myPlayer, reader, element));
 		}
 		else if (type == "killall")
 		{
-			KillAllMission* mission = new KillAllMission(myLevel);
-			myMissions.Add(mission);
+			myMissions.Add(new KillAllMission(myLevel));
+		}
+		else if (type == "survival")
+		{
+			myMissions.Add(new SurvivalMission(reader, element));
 		}
 		else
 		{
@@ -44,7 +47,7 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 
 	}
-
+	reader.CloseDocument();
 	myMissions[myCurrentMission]->Start();
 }
 

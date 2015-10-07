@@ -20,7 +20,9 @@ namespace Prism
 {
 	Engine* Engine::myInstance = nullptr;
 
-	Engine::Engine() : myClearColor({ 0.8f, 0.125f, 0.8f, 1.0f })
+	Engine::Engine()
+		: myClearColor({ 0.8f, 0.125f, 0.8f, 1.0f })
+		, myDebugTexts(16)
 	{
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
@@ -80,6 +82,12 @@ namespace Prism
 
 		TIME_FUNCTION
 
+		for (int i = 0; i < myDebugTexts.Size(); ++i)
+		{
+			myDebugText->Render(myDebugTexts[i].myText.c_str(), myDebugTexts[i].myPosition.x, myDebugTexts[i].myPosition.y
+				, myDebugTexts[i].myScale);
+		}
+		myDebugTexts.RemoveAll();
 		myDirectX->Present(0, 0);
 		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, myClearColor.myA };
 		myDirectX->Clear(clearColor);
@@ -159,7 +167,12 @@ namespace Prism
 
 	void Engine::PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale)
 	{
-		myDebugText->Render(aText.c_str(), aPosition.x, aPosition.y, aScale);
+		//myDebugText->Render(aText.c_str(), aPosition.x, aPosition.y, aScale);
+		DebugText toAdd;
+		toAdd.myText = aText;
+		toAdd.myPosition = aPosition;
+		toAdd.myScale = aScale;
+		myDebugTexts.Add(toAdd);
 	}
 
 	void Engine::EnableZBuffer()

@@ -1,8 +1,23 @@
 #pragma once
-class SurvivalMission
+
+#include "Mission.h"
+class XMLReader;
+namespace tinyxml2
+{
+	class XMLElement;
+}
+
+class SurvivalMission : public Mission
 {
 public:
-	SurvivalMission();
-	~SurvivalMission();
+	SurvivalMission(XMLReader& aReader, tinyxml2::XMLElement* aElement);
+
+	bool Update(float aDeltaTime) override;
+	void Start() override;
+	void End() override;
+
+private:
+	float myTime;
+	float mySurvivalTime;
 };
 
