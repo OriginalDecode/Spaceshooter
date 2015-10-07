@@ -34,7 +34,8 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		else if (type == "killall")
 		{
-
+			KillAllMission* mission = new KillAllMission(myLevel);
+			myMissions.Add(mission);
 		}
 		else
 		{
