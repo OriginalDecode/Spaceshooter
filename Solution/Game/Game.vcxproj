@@ -118,6 +118,7 @@
     <ClInclude Include="PhysicsComponent.h" />
     <ClInclude Include="PostMaster.h" />
     <ClInclude Include="PowerUpComponent.h" />
+    <ClInclude Include="PropComponent.h" />
     <ClInclude Include="ShieldComponent.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
@@ -162,6 +163,7 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />
+    <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="StateStack.cpp" />

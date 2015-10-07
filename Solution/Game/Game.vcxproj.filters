@@ -101,6 +101,7 @@
     <ClCompile Include="ShieldComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="PropComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -242,6 +243,7 @@
     <ClInclude Include="ShieldComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="PropComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

@@ -27,6 +27,7 @@ CollisionManager::CollisionManager()
 	myEnemyBulletFilter = eEntityType::PLAYER;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
+	myPropFilter = eEntityType::PLAYER;
 	//myEnemyFilter = eEntityType::PLAYER;
 }
 
@@ -51,6 +52,9 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::POWERUP:
 		myPowerUps.Add(aComponent);
+		break;
+	case eEntityType::PROP:
+		myProps.Add(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
@@ -80,6 +84,9 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::POWERUP:
 		myPowerUps.RemoveCyclic(aComponent);
+		break;
+	case eEntityType::PROP:
+		myProps.RemoveCyclic(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
@@ -111,7 +118,11 @@ void CollisionManager::Update()
 	}
 	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
 	{
-		CheckAllCollisions(myPowerUps[i], myTriggerFilter);
+		CheckAllCollisions(myPowerUps[i], myPowerUpFilter);
+	}
+	for (int i = myProps.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myProps[i], myPropFilter);
 	}
 }
 

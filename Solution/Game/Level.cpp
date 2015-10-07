@@ -359,6 +359,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
 
 		myEntities.Add(newEntity);
+		myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);
 	}
 
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
