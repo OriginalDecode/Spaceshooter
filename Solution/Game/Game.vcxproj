@@ -125,6 +125,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="SteeringTargetNote.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="WaypointComponent.h" />
     <ClInclude Include="WaypointMission.h" />
     <ClInclude Include="WaypointNote.h" />
     <ClInclude Include="WeaponFactory.h" />
@@ -166,6 +167,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Subscriber.cpp" />
+    <ClCompile Include="WaypointComponent.cpp" />
     <ClCompile Include="WaypointMission.cpp" />
     <ClCompile Include="WeaponFactory.cpp" />
   </ItemGroup>
