@@ -19,11 +19,11 @@ bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 	{
 		RESOURCE_LOG("Failed to load: %s, trying to use debug-texture.", aFilePath.c_str());
 		hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice()
-			, "Data/resources/texture/uv_map.png", NULL, NULL, &myTexture, NULL);
-		myFileName = "Data/resources/texture/uv_map.png";
+			, "Data/resources/texture/MissingTexture.dds", NULL, NULL, &myTexture, NULL);
+		myFileName = "Data/resources/texture/MissingTexture.dds";
 		if (FAILED(hr) != S_OK)
 		{
-			DL_ASSERT("[Texture]: Failed to load debug-texture: Data/resources/texture/uv_map.png");
+			DL_ASSERT("[Texture]: Failed to load MissingTexture-texture: Data/resources/texture/MissingTexture.dds");
 		}
 	}
 
