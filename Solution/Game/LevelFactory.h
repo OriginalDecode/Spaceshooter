@@ -15,6 +15,7 @@ public:
 
 	Level* LoadLevel(const int& anID);
 	Level* ReloadLevel();
+	Level* LoadNextLevel();
 
 private:
 

@@ -52,3 +52,15 @@ Level* LevelFactory::ReloadLevel()
 
 	return myCurrentLevel;
 }
+
+Level* LevelFactory::LoadNextLevel()
+{
+	if (myLevelPaths.find(myCurrentID + 1) == myLevelPaths.end())
+	{
+		return myCurrentLevel;
+	}
+
+	myCurrentID++;
+
+	return ReloadLevel();
+}

@@ -20,3 +20,10 @@ GameStateMessage::GameStateMessage(eGameState aGameState, const int& anID)
 {
 	myMessageType = eMessageType::GAME_STATE;
 }
+
+GameStateMessage::GameStateMessage(eGameState aGameState, const bool& anIsMouseLocked)
+	: myGameState(aGameState)
+	, myMouseIsLocked(anIsMouseLocked)
+{
+	myMessageType = eMessageType::GAME_STATE;
+}

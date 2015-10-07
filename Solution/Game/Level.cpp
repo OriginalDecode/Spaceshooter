@@ -13,6 +13,7 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
+#include "GameStateMessage.h"
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
 #include "HealthComponent.h"
@@ -25,6 +26,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "PointLight.h"
+#include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
@@ -42,7 +44,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	, myComplete(false)
 	, mySkySphere(nullptr)
 {
-	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
 	myScene = new Prism::Scene();
 	myWeaponFactory = new WeaponFactory();
 	myWeaponFactory->LoadWeapons("Data/weapons/WeaponList.xml");
@@ -64,8 +65,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	dirLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
 	dirLight->SetDir({ 0.f, 0.5f, -1.f });
 	myDirectionalLights.Add(dirLight);
-
-	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	
 	LoadPlayer();
 
@@ -192,6 +191,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
 	}
 
+	if (myInputWrapper->KeyDown(DIK_B) == true)
+	{
+		CompleteLevel();
+	}
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
@@ -265,6 +268,15 @@ void Level::ReadXML(const std::string& aFile)
 	reader.OpenDocument(aFile);
 	tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("root");
 	levelElement = reader.ForceFindFirstChild(levelElement, "scene");
+	std::string skySphere;
+	std::string cubeMap;
+
+	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
+	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);
+	
+	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap(cubeMap);
+
+	SetSkySphere(skySphere, "Data/effect/SkyboxEffect.fx");
 
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "directionallight"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "directionallight"))
@@ -452,4 +464,9 @@ void Level::LoadPlayer()
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->myCamera = myCamera;
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
+}
+
+void Level::CompleteLevel()
+{
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_LEVEL));
 }

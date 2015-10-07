@@ -29,7 +29,7 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	{
 		int levelID;
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", levelID);
-		myClickEvent = new GameStateMessage(eGameState::LOAD_LEVEL, levelID);
+		myClickEvent = new GameStateMessage(eGameState::LOAD_GAME, levelID);
 
 	}
 	else if (eventType == "menu")
