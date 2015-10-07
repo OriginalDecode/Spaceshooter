@@ -56,7 +56,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
 	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
 
-
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
 	mySpotLights.Init(4);
@@ -66,31 +65,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	dirLight->SetDir({ 0.f, 0.5f, -1.f });
 	myDirectionalLights.Add(dirLight);
 
-
-	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
-	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
-		, "Data/effect/NoTextureEffect.fx");
-	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
-	player->AddComponent<ShootingComponent>();
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
-	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
-	player->AddComponent<HealthComponent>()->Init(10);
-	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
-
-	myPlayer = player;
-	myEntities.Add(player);
-	myCamera = new Prism::Camera(player->myOrientation);
-	player->myCamera = myCamera;
-	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
-
-
 	SetSkySphere("Data/resources/model/skybox/skySphere_test.fbx", "Data/effect/SkyboxEffect.fx");
 	
-	
+	LoadPlayer();
+
 	WATCH_FILE(aFileName, Level::ReadXML);
 
 	ReadXML(aFileName);
-	
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
@@ -442,4 +423,29 @@ Entity* Level::GetEntityWithName(const std::string& aName)
 int Level::GetEnemiesAlive() const
 {
 	return myCollisionManager->GetEnemiesAlive();
+}
+
+void Level::LoadPlayer()
+{
+	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
+	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
+		, "Data/effect/NoTextureEffect.fx");
+	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
+	player->AddComponent<ShootingComponent>();
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
+	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
+
+	XMLReader reader;
+	reader.OpenDocument("Data/script/player.xml");
+	int health = 10;
+	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
+
+	player->AddComponent<HealthComponent>()->Init(health);
+	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
+
+	myPlayer = player;
+	myEntities.Add(player);
+	myCamera = new Prism::Camera(player->myOrientation);
+	player->myCamera = myCamera;
+	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 }

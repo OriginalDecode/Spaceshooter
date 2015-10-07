@@ -60,6 +60,7 @@ private:
 	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
 	Entity* GetEntityWithName(const std::string& aName);
+	void LoadPlayer();
 
 	Prism::Instance* mySkySphere;
 
