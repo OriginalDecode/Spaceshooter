@@ -441,6 +441,7 @@ void Level::LoadPlayer()
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("enemyGun"));
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 
 	XMLReader reader;

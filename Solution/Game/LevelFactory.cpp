@@ -2,6 +2,7 @@
 #include "LevelFactory.h"
 #include "Level.h"
 #include <XMLReader.h>
+#include <FileWatcher.h>
 
 LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper)
 	: myInputWrapper(anInputWrapper)
@@ -9,18 +10,9 @@ LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* 
 	, myLevelPaths(8)
 	, myCurrentID(0)
 {
-	XMLReader reader;
-	reader.OpenDocument(aLevelListPath);
-	std::string levelPath = "";
-	int ID = -1;
+	LoadLevelListFromXML(aLevelListPath);
 
-	tinyxml2::XMLElement* levelElement = reader.FindFirstChild("level");
-	for (; levelElement != nullptr; levelElement = reader.FindNextElement(levelElement))
-	{
-		reader.ForceReadAttribute(levelElement, "ID", ID);
-		reader.ForceReadAttribute(levelElement, "path", levelPath);
-		myLevelPaths[ID] = levelPath;
-	}
+	WATCH_FILE(aLevelListPath, LevelFactory::LoadLevelListFromXML);
 }
 
 LevelFactory::~LevelFactory()
@@ -34,7 +26,6 @@ Level* LevelFactory::LoadLevel(const int& anID)
 		DL_ASSERT("Non-existing ID in LoadLevel! ID must correspond with levelList.xml");
 	}
 
-	// this makes the program crash..?
 	//if (myCurrentLevel != nullptr)
 	//{
 	//	delete myCurrentLevel;
@@ -42,6 +33,8 @@ Level* LevelFactory::LoadLevel(const int& anID)
 	//}
 
 	myCurrentID = anID;
+
+	WATCH_FILE(myLevelPaths[myCurrentID], LevelFactory::LoadLevelFromXML);
 	
 	return ReloadLevel();
 }
@@ -63,4 +56,27 @@ Level* LevelFactory::LoadNextLevel()
 	myCurrentID++;
 
 	return ReloadLevel();
+}
+
+void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
+{
+	myLevelPaths.clear();
+
+	XMLReader reader;
+	reader.OpenDocument(aXMLPath);
+	std::string levelPath = "";
+	int ID = -1;
+
+	tinyxml2::XMLElement* levelElement = reader.FindFirstChild("level");
+	for (; levelElement != nullptr; levelElement = reader.FindNextElement(levelElement))
+	{
+		reader.ForceReadAttribute(levelElement, "ID", ID);
+		reader.ForceReadAttribute(levelElement, "path", levelPath);
+		myLevelPaths[ID] = levelPath;
+	}
+}
+
+void LevelFactory::LoadLevelFromXML(const std::string& aXMLPath)
+{
+	myCurrentLevel = new Level(aXMLPath, myInputWrapper);
 }
