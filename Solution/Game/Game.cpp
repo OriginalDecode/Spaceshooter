@@ -161,5 +161,8 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		myGame->SetLevel(myLevelFactory->LoadNextLevel());
 		break;
 
+	case eGameState::MOUSE_LOCK:
+		myLockMouse = aMessage.GetMouseLocked();
+		break;
 	}
 }

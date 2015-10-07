@@ -26,6 +26,7 @@ void MenuState::InitState(StateStackProxy* aStateStackProxy)
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, false));
 }
 
 void MenuState::EndState()
@@ -55,7 +56,7 @@ void MenuState::Render()
 
 void MenuState::ResumeState()
 {
-
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, false));
 }
 
 void MenuState::OnResize(int aWidth, int aHeight)

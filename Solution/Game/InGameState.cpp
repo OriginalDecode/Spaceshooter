@@ -34,6 +34,7 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 }
 
 void InGameState::EndState()
@@ -106,7 +107,7 @@ void InGameState::Render()
 
 void InGameState::ResumeState()
 {
-
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 }
 
 void InGameState::OnResize(int aWidth, int aHeight)
