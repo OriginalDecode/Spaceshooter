@@ -158,7 +158,7 @@ bool Prism::DirectX::D3DSwapChainSetup()
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.OutputWindow = myHWND;
 	swapChainDesc.SampleDesc.Count = 1;
-	swapChainDesc.Windowed = mySetupInfo.myWindowed;
+	swapChainDesc.Windowed = true;
 
 	HRESULT result = D3D11CreateDeviceAndSwapChain(NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
