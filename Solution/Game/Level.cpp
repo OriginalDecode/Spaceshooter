@@ -453,6 +453,10 @@ void Level::LoadPlayer()
 	myEntities.Add(player);
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
+	float maxMetersToEnemies = 0;
+	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
+
+	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 }
 
 void Level::CompleteLevel()

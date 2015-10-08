@@ -55,6 +55,11 @@ GUIComponent::~GUIComponent()
 	myModel2DToRender = nullptr;
 }
 
+void GUIComponent::Init(float aMaxDistanceToEnemies)
+{
+	myMaxDistanceToEnemies = aMaxDistanceToEnemies;
+}
+
 void GUIComponent::Update(float aDeltaTime)
 {
 	aDeltaTime;
@@ -150,7 +155,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
 	{
-		if (CU::Length(myEnemiesPosition[i] - myCamera->GetOrientation().GetPos()) < 1000.f)
+		if (CU::Length(myEnemiesPosition[i] - myCamera->GetOrientation().GetPos()) < myMaxDistanceToEnemies)
 		{
 			CalculateAndRender(myEnemiesPosition[i], myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
 
