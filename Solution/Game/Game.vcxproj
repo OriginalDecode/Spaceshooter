@@ -127,7 +127,6 @@
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StateStackProxy.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SteeringTargetNote.h" />
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="SurvivalMission.h" />
     <ClInclude Include="WaypointComponent.h" />

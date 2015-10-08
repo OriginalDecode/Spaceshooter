@@ -23,7 +23,6 @@ public:
 
 	static int GetID();
 	void ReceiveNote(const MissionNote& aMessage) override;
-	void ReceiveNote(const SteeringTargetNote& aMessage) override;
 	void ReceiveNote(const GUINote& aNote) override;
 	
 private:

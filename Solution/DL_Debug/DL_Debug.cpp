@@ -32,6 +32,9 @@ DL_Debug::Debug::Debug()
 
 	logSetting.second = "FunctionTimer";
 	myFilterLogStatus[eFilterLog::FUNCTION_TIMER] = logSetting;
+
+	logSetting.second = "Entity";
+	myFilterLogStatus[eFilterLog::ENTITY] = logSetting;
 }
 
 

@@ -35,7 +35,6 @@
 #include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
-
 #include <XMLReader.h>
 
 
@@ -410,6 +409,7 @@ void Level::ReadXML(const std::string& aFile)
 		}
 
 		myEntityFactory->CopyEntity(newEntity, powerUp);
+		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myPlayer);
 		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 
