@@ -23,7 +23,12 @@ public:
 	void Render(Prism::Camera* aCamera);
 	void Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
 
+	void OnResize();
+
 private:
+
+	CU::Vector2<float> myOriginalPosition;
+	CU::Vector2<float> myOriginalSize;
 
 	CU::Vector2<float> myPosition;
 	CU::Vector2<float> mySize;
