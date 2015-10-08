@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Entity.h"
+#include "GUINote.h"
 #include "Level.h"
 #include "MissionNote.h"
 #include "WaypointComponent.h"
 #include "WaypointMission.h"
-#include "WaypointNote.h"
 #include "XMLReader.h"
 
 
@@ -31,7 +31,7 @@ bool WaypointMission::Update(float aDeltaTime)
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
 	engine->PrintDebugText("Current mission: GO TO WAYPOINT!", { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
 
-	myPlayer.SendNote<WaypointNote>(WaypointNote(myTrigger->myOrientation.GetPos()));
+	myPlayer.SendNote<GUINote>(GUINote(myTrigger->myOrientation.GetPos(), eGUINoteType::WAYPOINT));
 
 	return !myTrigger->GetAlive();
 }
