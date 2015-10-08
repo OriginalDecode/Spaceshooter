@@ -19,10 +19,6 @@ void Component::ReceiveNote(const CollisionNote&)
 {
 }
 
-void Component::ReceiveNote(const EnemiesTargetNote&)
-{
-}
-
 void Component::ReceiveNote(const InputNote&)
 {
 }
@@ -40,10 +36,6 @@ void Component::ReceiveNote(const ShootNote&)
 }
 
 void Component::ReceiveNote(const SteeringTargetNote&)
-{
-}
-
-void Component::ReceiveNote(const WaypointNote&)
 {
 }
 

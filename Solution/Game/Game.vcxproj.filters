@@ -200,9 +200,6 @@
     <ClInclude Include="CollisionNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
-    <ClInclude Include="EnemiesTargetNote.h">
-      <Filter>Components\Notes</Filter>
-    </ClInclude>
     <ClInclude Include="InputNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
@@ -213,9 +210,6 @@
       <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="SteeringTargetNote.h">
-      <Filter>Components\Notes</Filter>
-    </ClInclude>
-    <ClInclude Include="WaypointNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="LevelFactory.h">

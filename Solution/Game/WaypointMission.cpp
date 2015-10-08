@@ -5,7 +5,6 @@
 #include "MissionNote.h"
 #include "WaypointComponent.h"
 #include "WaypointMission.h"
-#include "WaypointNote.h"
 #include "XMLReader.h"
 
 

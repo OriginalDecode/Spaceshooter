@@ -7,7 +7,6 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "DirectionalLight.h"
-#include "EnemiesTargetNote.h"
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
@@ -36,7 +35,6 @@
 #include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
-#include "WaypointNote.h"
 
 #include <XMLReader.h>
 

@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include <Camera.h>
 #include "Constants.h"
-#include "EnemiesTargetNote.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
 #include "MissionNote.h"
 #include <Model2D.h>
 #include "SteeringTargetNote.h"
 #include <sstream>
-#include "WaypointNote.h"
 
 #define CIRCLERADIUS 400.f
 
@@ -198,11 +196,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemiesPosition.RemoveAll();
 }
 
-void GUIComponent::ReceiveNote(const EnemiesTargetNote& aMessage)
-{
-	myEnemiesPosition.Add(aMessage.myPosition);
-}
-
 void GUIComponent::ReceiveNote(const MissionNote& aMessage)
 {
 	if (aMessage.myEvent == eMissionEvent::START && aMessage.myType == eMissionType::WAYPOINT)
@@ -218,11 +211,6 @@ void GUIComponent::ReceiveNote(const MissionNote& aMessage)
 void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)
 {
 	mySteeringTargetPosition = aMessage.myPosition;
-}
-
-void GUIComponent::ReceiveNote(const WaypointNote& aMessage)
-{
-	myWaypointPosition = aMessage.myPosition;
 }
 
 void GUIComponent::ReceiveNote(const GUINote& aNote)
