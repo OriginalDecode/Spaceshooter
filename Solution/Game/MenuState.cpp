@@ -22,6 +22,7 @@ MenuState::~MenuState()
 
 void MenuState::InitState(StateStackProxy* aStateStackProxy)
 {
+	myIsLetThrough = false;
 	myStateStack = aStateStackProxy;
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
