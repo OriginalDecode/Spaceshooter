@@ -94,6 +94,7 @@
     <ClCompile Include="WaypointMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="SurvivalMission.cpp" />
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -101,8 +102,8 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PropComponent.cpp" />
-    <ClCompile Include="SurvivalMission.cpp">
-      <Filter>Mission</Filter>
+    <ClCompile Include="MessageState.cpp">
+      <Filter>StateStack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -238,6 +239,7 @@
     <ClInclude Include="MissionNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
+    <ClInclude Include="SurvivalMission.h" />
     <ClInclude Include="HealthComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -245,8 +247,8 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="PropComponent.h" />
-    <ClInclude Include="SurvivalMission.h">
-      <Filter>Mission</Filter>
+    <ClInclude Include="MessageState.h">
+      <Filter>StateStack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
