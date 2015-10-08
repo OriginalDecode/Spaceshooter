@@ -35,7 +35,6 @@
 #include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
-
 #include <XMLReader.h>
 
 
