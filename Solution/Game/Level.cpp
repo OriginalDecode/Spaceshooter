@@ -71,12 +71,12 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 
 	ReadXML(aFileName);
 
-	Entity* cube = new Entity(eEntityType::PROP, *myScene, "this is a cube");
-	cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Primitives/cube.fbx"
-		, "Data/effect/NoTextureEffect.fx");
-	cube->myOrientation.SetPos({ 300.f, 300.f, 300.f, 1.f });
-	cube->Update(1.f / 30.f);
-	myEntities.Add(cube);
+	//Entity* cube = new Entity(eEntityType::PROP, *myScene, "this is a cube");
+	//cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Primitives/cube.fbx"
+	//	, "Data/effect/NoTextureEffect.fx");
+	//cube->myOrientation.SetPos({ 300.f, 300.f, 300.f, 1.f });
+	//cube->Update(1.f / 30.f);
+	//myEntities.Add(cube);
 
 	for (int i = 0; i < myEntities.Size(); ++i)
 	{
