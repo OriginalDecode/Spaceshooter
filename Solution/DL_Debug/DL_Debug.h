@@ -16,6 +16,7 @@
 #define DIRECTX_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::DIRECTX, __VA_ARGS__)
 #define FBX_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::FBX, __VA_ARGS__)
 #define FUNCTION_TIMER_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::FUNCTION_TIMER, __VA_ARGS__)
+#define ENTITY_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::ENTITY, __VA_ARGS__)
 
 
 #include <string>
@@ -34,6 +35,7 @@ namespace DL_Debug
 		DIRECTX,
 		FBX,
 		FUNCTION_TIMER,
+		ENTITY,
 		ALL
 	};
 
