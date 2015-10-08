@@ -7,7 +7,6 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "DirectionalLight.h"
-#include "EnemiesTargetNote.h"
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "Entity.h"
@@ -16,6 +15,7 @@
 #include "GameStateMessage.h"
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
+#include "GUINote.h"
 #include "HealthComponent.h"
 #include "Instance.h"
 #include <InputWrapper.h>
@@ -35,8 +35,6 @@
 #include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
-#include "WaypointNote.h"
-
 #include <XMLReader.h>
 
 
@@ -176,7 +174,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
 		{
-			myPlayer->SendNote<EnemiesTargetNote>(EnemiesTargetNote(myEntities[i]->myOrientation.GetPos()));
+			myPlayer->SendNote<GUINote>(GUINote(myEntities[i]->myOrientation.GetPos(), eGUINoteType::ENEMY));
 		}
 	}
 

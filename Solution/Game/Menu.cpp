@@ -76,4 +76,9 @@ void Menu::OnResize(int aWidth, int aHeight)
 	{
 		myBackground->SetSize( { float(aWidth), float(aHeight) });
 	}
+
+	for (int i = 0; i < myButtons.Size(); i++)
+	{
+		myButtons[i]->OnResize();
+	}
 }

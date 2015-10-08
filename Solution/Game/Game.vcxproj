@@ -87,8 +87,10 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
+    <ClInclude Include="GUINote.h" />
     <ClInclude Include="KillAllMission.h" />
     <ClInclude Include="LevelFactory.h" />
+    <ClInclude Include="MessageState.h" />
     <ClInclude Include="Mission.h" />
     <ClInclude Include="MissionManager.h" />
     <ClInclude Include="MissionNote.h" />
@@ -98,7 +100,6 @@
     <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ControllerComponent.h" />
-    <ClInclude Include="EnemiesTargetNote.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityFactory.h" />
     <ClInclude Include="Enums.h" />
@@ -126,12 +127,10 @@
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StateStackProxy.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="SteeringTargetNote.h" />
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="SurvivalMission.h" />
     <ClInclude Include="WaypointComponent.h" />
     <ClInclude Include="WaypointMission.h" />
-    <ClInclude Include="WaypointNote.h" />
     <ClInclude Include="WeaponFactory.h" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +157,7 @@
     <ClCompile Include="LevelFactory.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="MessageState.cpp" />
     <ClCompile Include="Mission.cpp" />
     <ClCompile Include="MissionManager.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />

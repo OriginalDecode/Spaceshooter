@@ -1,9 +1,10 @@
 #include "stdafx.h"
 #include "Button.h"
-#include <Model2D.h>
 #include <Camera.h>
-#include "PostMaster.h"
+#include <Engine.h>
 #include "GameStateMessage.h"
+#include <Model2D.h>
+#include "PostMaster.h"
 #include <tinyxml2.h>
 #include <XMLReader.h>
 
@@ -17,11 +18,11 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	std::string picHoveredPath;
 	std::string eventType;
 
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", myPosition.x);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", myPosition.y);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", myOriginalPosition.x);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", myOriginalPosition.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "path", picPath);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeX", mySize.x);
-	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", mySize.y);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeX", myOriginalSize.x);
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", myOriginalSize.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "hoveredPicture"), "path", picHoveredPath);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "event", eventType);
 
@@ -30,15 +31,12 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 		int levelID;
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", levelID);
 		myClickEvent = new GameStateMessage(eGameState::LOAD_GAME, levelID);
-
 	}
 	else if (eventType == "menu")
 	{
 		std::string menuID;
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", menuID);
-	
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
-		
 	}
 	
 	myBackground = new Prism::Model2D;
@@ -48,6 +46,8 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	myHoverBackground->Init(picHoveredPath, mySize);
 
 	myIsHovered = false;
+
+	OnResize();
 }
 
 Button::~Button()
@@ -85,4 +85,18 @@ void Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPre
 		}
 		myIsHovered = true;
 	}
+}
+
+void Button::OnResize()
+{
+	float windowSizeX = Prism::Engine::GetInstance()->GetWindowSize().x;
+	float windowSizeY = Prism::Engine::GetInstance()->GetWindowSize().y;
+	float resolutionOffset = windowSizeY / windowSizeX;
+	myPosition = myOriginalPosition * resolutionOffset;
+
+	// ger lite weird resultat
+	mySize = myOriginalSize * resolutionOffset;
+
+	myBackground->SetSize(mySize);
+	myHoverBackground->SetSize(mySize);
 }

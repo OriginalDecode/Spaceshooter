@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "Entity.h"
+#include "GUINote.h"
 #include "Level.h"
 #include "MissionNote.h"
 #include "WaypointComponent.h"
 #include "WaypointMission.h"
-#include "WaypointNote.h"
 #include "XMLReader.h"
 
 
@@ -26,9 +26,12 @@ WaypointMission::~WaypointMission()
 
 bool WaypointMission::Update(float aDeltaTime)
 {
-	Prism::Engine::GetInstance()->PrintDebugText("GO TO WAYPOINT!", { 400, -400 });
 
-	myPlayer.SendNote<WaypointNote>(WaypointNote(myTrigger->myOrientation.GetPos()));
+	Prism::Engine* engine = Prism::Engine::GetInstance();
+	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
+	engine->PrintDebugText("Current mission: GO TO WAYPOINT!", { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
+
+	myPlayer.SendNote<GUINote>(GUINote(myTrigger->myOrientation.GetPos(), eGUINoteType::WAYPOINT));
 
 	return !myTrigger->GetAlive();
 }

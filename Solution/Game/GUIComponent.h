@@ -22,10 +22,8 @@ public:
 	void SetCamera(Prism::Camera* aCamera);
 
 	static int GetID();
-	void ReceiveNote(const EnemiesTargetNote& aMessage) override;
 	void ReceiveNote(const MissionNote& aMessage) override;
-	void ReceiveNote(const SteeringTargetNote& aMessage) override;
-	void ReceiveNote(const WaypointNote& aMessage) override;
+	void ReceiveNote(const GUINote& aNote) override;
 	
 private:
 	Prism::Model2D* myReticle;
@@ -41,6 +39,11 @@ private:
 
 	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
 	Prism::Model2D* myEnemiesCursor;
+
+	Prism::Model2D* myPowerUpArrow;
+	Prism::Model2D* myPowerUpMarker;
+	Prism::Model2D* myPowerUpsCursor;
+	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
 
 	Prism::Camera* myCamera;
 
