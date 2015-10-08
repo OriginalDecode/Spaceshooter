@@ -37,7 +37,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", arrowAndMarkerSize);
 	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", arrowAndMarkerSize);
 	myPowerUpMarker->Init("Data/resources/texture/UI/Navigation_Marker_Powerups.dds", arrowAndMarkerSize);
-	myPowerUpArrow->Init("Data/resources/textures/UI/Navigation_Arrow_Powerups.dds", arrowAndMarkerSize);
+	myPowerUpArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Powerups.dds", arrowAndMarkerSize);
 }	 
 
 GUIComponent::~GUIComponent()
@@ -192,7 +192,66 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		myEnemiesCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 	}
 
+	for (int i = 0; i < myPowerUpPositions.Size(); ++i)
+	{
+		CU::Vector3<float> toPowerUp = myPowerUpPositions[i] - myCamera->GetOrientation().GetPos();
+		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
+		if (CU::Length(toPowerUp) != 0)
+		{
+			CU::Normalize(toPowerUp);
+		}
+		if (CU::Length(forward) != 0)
+		{
+			CU::Normalize(forward);
+		}
+
+		float circleAroundPoint = (CU::Dot(toPowerUp, forward));
+
+		CU::Matrix44<float> renderPos;
+		renderPos.SetPos(myPowerUpPositions[i]);
+		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
+		renderPos = renderPos * myCamera->GetProjection();
+
+		CU::Vector3<float> newRenderPos = renderPos.GetPos();
+		newRenderPos /= renderPos.GetPos4().w;
+
+		newRenderPos += 1.f;
+		newRenderPos *= 0.5f;
+		newRenderPos.x *= aWindowSize.x;
+		newRenderPos.y *= aWindowSize.y;
+		newRenderPos.y -= aWindowSize.y;
+
+		CU::Vector2<float> radius(halfWidth, halfHeight);
+		radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
+		float length = 0;
+		if (radius.x != 0 && radius.y != 0)
+		{
+			length = CU::Length(radius);
+			CU::Normalize(radius);
+		}
+
+		if (length > CIRCLERADIUS)
+		{
+			myPowerUpsCursor = myPowerUpArrow;
+			newRenderPos.x = radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
+			newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
+		}
+		else
+		{
+			myPowerUpsCursor = myPowerUpMarker;
+		}
+		if (circleAroundPoint < 0.f)
+		{
+			myPowerUpsCursor = myPowerUpArrow;
+			newRenderPos.x = -radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
+			newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
+		}
+
+		myPowerUpsCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+	}
+
 	myEnemiesPosition.RemoveAll();
+	myPowerUpPositions.RemoveAll();
 }
 
 void GUIComponent::ReceiveNote(const MissionNote& aMessage)
