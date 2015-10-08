@@ -8,7 +8,8 @@ enum class eGameState
 	RELOAD_LEVEL,
 	LOAD_MENU,
 	COMPLETE_LEVEL,
-	MOUSE_LOCK
+	MOUSE_LOCK,
+	COMPLETE_GAME
 };
 
 class GameStateMessage : public Message

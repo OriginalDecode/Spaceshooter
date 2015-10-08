@@ -481,4 +481,5 @@ void Level::UpdateDebug()
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
+
 }

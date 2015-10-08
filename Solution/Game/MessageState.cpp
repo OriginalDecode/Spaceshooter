@@ -8,6 +8,7 @@
 #include "PostMaster.h"
 
 MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper)
+	: myEvent(nullptr)
 {
 	myBackground = new Prism::Model2D;
 	myBackground->Init(aTexturePath, aSize);
@@ -19,8 +20,10 @@ MessageState::~MessageState()
 {
 	delete myBackground;
 	delete myCamera;
+	delete myEvent;
 	myBackground = nullptr;
 	myCamera = nullptr;
+	myEvent = nullptr;
 }
 
 void MessageState::InitState(StateStackProxy* aStateStackProxy)
@@ -40,7 +43,10 @@ const eStateStatus MessageState::Update()
 {
 	if (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
+		if (myEvent != nullptr)
+		{
+			PostMaster::GetInstance()->SendMessage(*myEvent);
+		}
 		return eStateStatus::ePopSubState;
 	}
 

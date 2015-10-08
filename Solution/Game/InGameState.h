@@ -31,13 +31,17 @@ public:
 
 	void SetLevel(Level* aLevel);
 
+	void CompleteGame();
+
 private:
 
 	bool CheckCollision();
 	
 	Level* myLevel;
 
-	MessageState* myGameOverScreen;
+	MessageState* myMessageScreen;
+
+	bool myIsComplete;
 };
 
 inline void InGameState::SetLevel(Level* aLevel)

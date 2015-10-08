@@ -33,6 +33,7 @@ InGameState::~InGameState()
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
 	myIsLetThrough = false;
+	myIsComplete = false;
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
@@ -54,11 +55,7 @@ const eStateStatus InGameState::Update()
 		deltaTime = 1.0f / 10.0f;
 	}
 
-	if (myInputWrapper->KeyDown(DIK_F9))
-	{
-		myLevel->SetShowLightCube(!myLevel->GetShowLightCube());
-	}
-	else if (myInputWrapper->KeyDown(DIK_ESCAPE))
+	else if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
 	{
 		return eStateStatus::ePopMainState;
 	}
@@ -69,14 +66,13 @@ const eStateStatus InGameState::Update()
 
 	if (myLevel->LogicUpdate(deltaTime) == true)
 	{
-		myGameOverScreen = new MessageState("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, myInputWrapper);
-		myGameOverScreen->SetText("Game over! Press [space] to continue.");
-		myStateStack->PushSubGameState(myGameOverScreen);
+		myMessageScreen = new MessageState("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, myInputWrapper);
+		myMessageScreen->SetText("Game over! Press [space] to continue.");
+		GameStateMessage* event = new GameStateMessage(eGameState::RELOAD_LEVEL);
+		myMessageScreen->SetEvent(event);
+		myStateStack->PushSubGameState(myMessageScreen);
 		return eStateStatus::eKeepState;
 	}
-
-
-	
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 
@@ -113,4 +109,12 @@ void InGameState::ResumeState()
 void InGameState::OnResize(int aWidth, int aHeight)
 {
 	myLevel->OnResize(aWidth, aHeight);
+}
+
+void InGameState::CompleteGame()
+{
+	myMessageScreen = new MessageState("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, myInputWrapper);
+	myMessageScreen->SetText("Game won! Press [space] to continue.");
+	myStateStack->PushSubGameState(myMessageScreen);
+	myIsComplete = true;
 }
