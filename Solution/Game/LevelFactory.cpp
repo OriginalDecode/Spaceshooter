@@ -85,14 +85,22 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 	XMLReader reader;
 	reader.OpenDocument(aXMLPath);
 	std::string levelPath = "";
-	int ID = -1;
+	int ID = 0;
+	int lastID = ID - 1;
 
 	tinyxml2::XMLElement* levelElement = reader.FindFirstChild("level");
 	for (; levelElement != nullptr; levelElement = reader.FindNextElement(levelElement))
 	{
+		lastID = ID;
+		
 		reader.ForceReadAttribute(levelElement, "ID", ID);
 		reader.ForceReadAttribute(levelElement, "path", levelPath);
 		myLevelPaths[ID] = levelPath;
+
+		if (ID - 1 != lastID)
+		{
+			DL_ASSERT("Wrong ID-number in levelList.xml! The numbers should be counting up, in order.");
+		}
 	}
 }
 
