@@ -250,6 +250,9 @@
     <ClInclude Include="MessageState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
+    <ClInclude Include="GUINote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

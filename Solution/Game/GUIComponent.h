@@ -44,6 +44,7 @@ private:
 
 	Prism::Model2D* myPowerUpArrow;
 	Prism::Model2D* myPowerUpMarker;
+	Prism::Model2D* myPowerUpsCursor;
 	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
 
 	Prism::Camera* myCamera;

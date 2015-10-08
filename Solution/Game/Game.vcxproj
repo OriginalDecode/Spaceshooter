@@ -87,6 +87,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
+    <ClInclude Include="GUINote.h" />
     <ClInclude Include="KillAllMission.h" />
     <ClInclude Include="LevelFactory.h" />
     <ClInclude Include="MessageState.h" />

@@ -14,7 +14,6 @@
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
-	, myPowerUpPositions(8)
 	, myEnemiesPosition(16)
 	, myReticle(new Prism::Model2D)
 	, mySteeringTarget(new Prism::Model2D)
@@ -26,14 +25,21 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myWaypointArrow(new Prism::Model2D)
 	, myWaypointMarker(new Prism::Model2D)
 	, myCamera(nullptr)
+	, myPowerUpArrow(new Prism::Model2D)
+	, myPowerUpMarker(new Prism::Model2D)
+	, myPowerUpsCursor(nullptr)
+	, myPowerUpPositions(8)
 {
+	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/resources/texture/UI/Navigation_Circle.dds", { 1024.f, 1024.f });
 	myCrosshair->Init("Data/resources/texture/UI/Shoting_Crosshair.dds", { 256.f, 256.f }); // the size scales the pic
-	mySteeringTarget->Init("Data/resources/texture/UI/Stearing_Crosshair.dds", { 64.f, 64.f });
-	myEnemyMarker->Init("Data/resources/texture/UI/Navigation_Marker_Enemy.dds", { 64, 64 });
-	myEnemyArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Enemy.dds", { 64, 64 });
-	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", { 64, 64 });
-	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", { 64, 64 });
+	mySteeringTarget->Init("Data/resources/texture/UI/Stearing_Crosshair.dds", arrowAndMarkerSize);
+	myEnemyMarker->Init("Data/resources/texture/UI/Navigation_Marker_Enemy.dds", arrowAndMarkerSize);
+	myEnemyArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Enemy.dds", arrowAndMarkerSize);
+	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", arrowAndMarkerSize);
+	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", arrowAndMarkerSize);
+	myPowerUpMarker->Init("Data/resources/texture/UI/Navigation_Marker_Powerups.dds", arrowAndMarkerSize);
+	myPowerUpArrow->Init("Data/resources/textures/UI/Navigation_Arrow_Powerups.dds", arrowAndMarkerSize);
 }	 
 
 GUIComponent::~GUIComponent()
