@@ -42,6 +42,10 @@ private:
 	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
 	Prism::Model2D* myEnemiesCursor;
 
+	Prism::Model2D* myPowerUpArrow;
+	Prism::Model2D* myPowerUpMarker;
+	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
+
 	Prism::Camera* myCamera;
 
 	bool myWaypointActive;

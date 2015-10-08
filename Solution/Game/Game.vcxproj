@@ -89,6 +89,7 @@
     <ClInclude Include="CollisionNote.h" />
     <ClInclude Include="KillAllMission.h" />
     <ClInclude Include="LevelFactory.h" />
+    <ClInclude Include="MessageState.h" />
     <ClInclude Include="Mission.h" />
     <ClInclude Include="MissionManager.h" />
     <ClInclude Include="MissionNote.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="LevelFactory.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="MenuState.cpp" />
+    <ClCompile Include="MessageState.cpp" />
     <ClCompile Include="Mission.cpp" />
     <ClCompile Include="MissionManager.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
