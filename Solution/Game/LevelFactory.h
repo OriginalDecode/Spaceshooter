@@ -16,6 +16,9 @@ public:
 	Level* LoadLevel(const int& anID);
 	Level* ReloadLevel();
 	Level* LoadNextLevel();
+	void DeleteOldLevel();
+
+	const bool& IsLastLevel() const;
 
 	// for filewatcher:
 	void LoadLevelListFromXML(const std::string& aXMLPath); 
@@ -24,6 +27,7 @@ private:
 
 	CU::InputWrapper* myInputWrapper;
 	Level* myCurrentLevel;
+	Level* myOldLevel;
 
 	std::unordered_map<int, std::string> myLevelPaths;
 

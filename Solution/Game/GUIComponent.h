@@ -16,6 +16,8 @@ public:
 	GUIComponent(Entity& aEntity);
 	~GUIComponent();
 
+	void Init(float aMaxDistanceToEnemies);
+
 	void Update(float aDeltaTime) override;
 	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
 		, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
@@ -29,7 +31,7 @@ public:
 	
 private:
 	Prism::Model2D* myReticle;
-	Prism::Model2D* myCurrentWaypoint;
+	Prism::Model2D* myModel2DToRender;
 	Prism::Model2D* myEnemyArrow;
 	Prism::Model2D* myEnemyMarker;
 	Prism::Model2D* myWaypointMarker;
@@ -40,15 +42,13 @@ private:
 	CU::Vector3<float> myWaypointPosition;
 
 	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
-	Prism::Model2D* myEnemiesCursor;
 
 	Prism::Model2D* myPowerUpArrow;
 	Prism::Model2D* myPowerUpMarker;
-	Prism::Model2D* myPowerUpsCursor;
 	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
 
 	Prism::Camera* myCamera;
-
+	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 };
 

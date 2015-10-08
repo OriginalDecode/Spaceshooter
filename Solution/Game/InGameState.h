@@ -17,7 +17,7 @@ class InGameState : public GameState
 {
 public:
 
-	InGameState(CU::InputWrapper* anInputWrapper);
+	InGameState(CU::InputWrapper* anInputWrapper, const bool& aShowMessages = true);
 	~InGameState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -31,17 +31,18 @@ public:
 
 	void SetLevel(Level* aLevel);
 
+	void CompleteLevel();
 	void CompleteGame();
 
 private:
-
-	bool CheckCollision();
+	void ShowMessage(const std::string& aBackgroundPath, const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage = nullptr);
 	
 	Level* myLevel;
 
 	MessageState* myMessageScreen;
 
 	bool myIsComplete;
+	bool myShowMessages;
 };
 
 inline void InGameState::SetLevel(Level* aLevel)
