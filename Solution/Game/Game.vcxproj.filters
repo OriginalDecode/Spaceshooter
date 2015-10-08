@@ -102,6 +102,9 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="PropComponent.cpp" />
+    <ClCompile Include="MessageState.cpp">
+      <Filter>StateStack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -197,9 +200,6 @@
     <ClInclude Include="CollisionNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
-    <ClInclude Include="EnemiesTargetNote.h">
-      <Filter>Components\Notes</Filter>
-    </ClInclude>
     <ClInclude Include="InputNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
@@ -210,9 +210,6 @@
       <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="SteeringTargetNote.h">
-      <Filter>Components\Notes</Filter>
-    </ClInclude>
-    <ClInclude Include="WaypointNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="LevelFactory.h">
@@ -244,6 +241,12 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="PropComponent.h" />
+    <ClInclude Include="MessageState.h">
+      <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="GUINote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
