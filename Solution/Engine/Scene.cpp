@@ -61,8 +61,8 @@ void Prism::Scene::Render()
 		mySpotLightData[i].myCone = mySpotLights[i]->GetCone();
 	}
 
-	myInstances.RemoveAll();
-	myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
+	//myInstances.RemoveAll();
+	//myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
 
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
@@ -89,8 +89,8 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 
 void Prism::Scene::AddInstance(Instance* aInstance)
 {
-	//myInstances.Add(aInstance);
-	myOctree->Add(aInstance);
+	myInstances.Add(aInstance);
+	//myOctree->Add(aInstance);
 }
 
 void Prism::Scene::AddLight(DirectionalLight* aLight)
