@@ -26,6 +26,7 @@ public:
 	void ReceiveNote(const MissionNote& aMessage) override;
 	void ReceiveNote(const SteeringTargetNote& aMessage) override;
 	void ReceiveNote(const WaypointNote& aMessage) override;
+	void ReceiveNote(const GUINote& aNote) override;
 	
 private:
 	Prism::Model2D* myReticle;

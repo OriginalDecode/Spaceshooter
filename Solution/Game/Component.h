@@ -5,6 +5,7 @@ class Entity;
 
 struct CollisionNote;
 struct EnemiesTargetNote;
+struct GUINote;
 struct InputNote;
 struct MissionNote;
 struct PowerUpNote;
@@ -29,6 +30,7 @@ public:
 	virtual void ReceiveNote(const ShootNote& aMessage);
 	virtual void ReceiveNote(const SteeringTargetNote& aMessage);
 	virtual void ReceiveNote(const WaypointNote& aMessage);
+	virtual void ReceiveNote(const GUINote& aNote);
 
 	Entity& GetEntity();
 

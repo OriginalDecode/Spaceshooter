@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include "EnemiesTargetNote.h"
 #include "GUIComponent.h"
+#include "GUINote.h"
 #include "MissionNote.h"
 #include <Model2D.h>
 #include "SteeringTargetNote.h"
@@ -224,5 +225,21 @@ void GUIComponent::ReceiveNote(const WaypointNote& aMessage)
 	myWaypointPosition = aMessage.myPosition;
 }
 
+void GUIComponent::ReceiveNote(const GUINote& aNote)
+{
+	switch (aNote.myType)
+	{
+	case eGUINoteType::WAYPOINT:
+		myWaypointPosition = aNote.myPosition;
+		break;
+	case eGUINoteType::ENEMY:
+		myEnemiesPosition.Add(aNote.myPosition);
+		break;
+	case eGUINoteType::POWERUP:
+		break;
+	default:
+		break;
+	}
+}
 
 

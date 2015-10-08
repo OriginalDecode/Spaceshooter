@@ -46,3 +46,7 @@ void Component::ReceiveNote(const SteeringTargetNote&)
 void Component::ReceiveNote(const WaypointNote&)
 {
 }
+
+void Component::ReceiveNote(const GUINote& aNote)
+{
+}

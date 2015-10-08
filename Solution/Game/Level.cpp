@@ -16,6 +16,7 @@
 #include "GameStateMessage.h"
 #include "GraphicsComponent.h"
 #include "GUIComponent.h"
+#include "GUINote.h"
 #include "HealthComponent.h"
 #include "Instance.h"
 #include <InputWrapper.h>
@@ -176,7 +177,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
 		{
-			myPlayer->SendNote<EnemiesTargetNote>(EnemiesTargetNote(myEntities[i]->myOrientation.GetPos()));
+			myPlayer->SendNote<GUINote>(GUINote(myEntities[i]->myOrientation.GetPos(), eGUINoteType::ENEMY));
 		}
 	}
 
