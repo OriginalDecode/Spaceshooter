@@ -35,10 +35,6 @@ void Component::ReceiveNote(const ShootNote&)
 {
 }
 
-void Component::ReceiveNote(const SteeringTargetNote&)
-{
-}
-
 void Component::ReceiveNote(const GUINote& aNote)
 {
 }

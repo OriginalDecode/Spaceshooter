@@ -209,9 +209,6 @@
     <ClInclude Include="ShootNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
-    <ClInclude Include="SteeringTargetNote.h">
-      <Filter>Components\Notes</Filter>
-    </ClInclude>
     <ClInclude Include="LevelFactory.h">
       <Filter>Factory</Filter>
     </ClInclude>

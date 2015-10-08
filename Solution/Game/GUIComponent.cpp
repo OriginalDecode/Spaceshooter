@@ -5,7 +5,6 @@
 #include "GUINote.h"
 #include "MissionNote.h"
 #include <Model2D.h>
-#include "SteeringTargetNote.h"
 #include <sstream>
 
 #define CIRCLERADIUS 400.f
@@ -208,11 +207,6 @@ void GUIComponent::ReceiveNote(const MissionNote& aMessage)
 	}
 }
 
-void GUIComponent::ReceiveNote(const SteeringTargetNote& aMessage)
-{
-	mySteeringTargetPosition = aMessage.myPosition;
-}
-
 void GUIComponent::ReceiveNote(const GUINote& aNote)
 {
 	switch (aNote.myType)
@@ -224,6 +218,9 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		myEnemiesPosition.Add(aNote.myPosition);
 		break;
 	case eGUINoteType::POWERUP:
+		break;
+	case eGUINoteType::STEERING_TARGET:
+		mySteeringTargetPosition = { aNote.myPosition.x, aNote.myPosition.y };
 		break;
 	default:
 		break;
