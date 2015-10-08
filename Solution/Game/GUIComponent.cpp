@@ -218,6 +218,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		myEnemiesPosition.Add(aNote.myPosition);
 		break;
 	case eGUINoteType::POWERUP:
+		myPowerUpPositions.Add(aNote.myPosition);
 		break;
 	case eGUINoteType::STEERING_TARGET:
 		mySteeringTargetPosition = { aNote.myPosition.x, aNote.myPosition.y };
