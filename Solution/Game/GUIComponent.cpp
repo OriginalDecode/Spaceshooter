@@ -14,15 +14,19 @@
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
+	, myPowerUpPositions(8)
+	, myEnemiesPosition(16)
+	, myReticle(new Prism::Model2D)
+	, mySteeringTarget(new Prism::Model2D)
+	, myCrosshair(new Prism::Model2D)
+	, myEnemiesCursor(new Prism::Model2D)
+	, myEnemyMarker(new Prism::Model2D)
+	, myEnemyArrow(new Prism::Model2D)
+	, myCurrentWaypoint(nullptr)
+	, myWaypointArrow(new Prism::Model2D)
+	, myWaypointMarker(new Prism::Model2D)
+	, myCamera(nullptr)
 {
-	myReticle = new Prism::Model2D;
-	mySteeringTarget = new Prism::Model2D;
-	myCrosshair = new Prism::Model2D;
-	myEnemyMarker = new Prism::Model2D;
-	myCurrentWaypoint = new Prism::Model2D;
-	myEnemyArrow = new Prism::Model2D;
-	myWaypointMarker = new Prism::Model2D;
-	myWaypointArrow = new Prism::Model2D;
 	myReticle->Init("Data/resources/texture/UI/Navigation_Circle.dds", { 1024.f, 1024.f });
 	myCrosshair->Init("Data/resources/texture/UI/Shoting_Crosshair.dds", { 256.f, 256.f }); // the size scales the pic
 	mySteeringTarget->Init("Data/resources/texture/UI/Stearing_Crosshair.dds", { 64.f, 64.f });
@@ -30,11 +34,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myEnemyArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Enemy.dds", { 64, 64 });
 	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", { 64, 64 });
 	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", { 64, 64 });
-	myCurrentWaypoint = nullptr;
-	myCamera = nullptr;
-
-	myEnemiesPosition.Init(8);
-	myEnemiesCursor = new Prism::Model2D;
 }	 
 
 GUIComponent::~GUIComponent()
@@ -65,6 +64,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 {
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
+	myReticle->Render(*myCamera, halfWidth, -halfHeight);
 	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
 	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
@@ -91,13 +91,12 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	CU::Vector3<float> newRenderPos = renderPos.GetPos();
 	newRenderPos /= renderPos.GetPos4().w;
 
-	newRenderPos.x += 1;
-	newRenderPos.x /= 2.f;
+	newRenderPos += 1.f;
+	newRenderPos *= 0.5f;
 	newRenderPos.x *= aWindowSize.x;
-	newRenderPos.y += 1;
-	newRenderPos.y /= 2.f;
 	newRenderPos.y *= aWindowSize.y;
 	newRenderPos.y -= aWindowSize.y;
+
 
 	CU::Vector2<float> radius(halfWidth, halfHeight);
 	radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
@@ -154,11 +153,9 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CU::Vector3<float> newRenderPos = renderPos.GetPos();
 		newRenderPos /= renderPos.GetPos4().w;
 
-		newRenderPos.x += 1;
-		newRenderPos.x /= 2.f;
+		newRenderPos += 1.f;
+		newRenderPos *= 0.5f;
 		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y += 1;
-		newRenderPos.y /= 2.f;
 		newRenderPos.y *= aWindowSize.y;
 		newRenderPos.y -= aWindowSize.y;
 
@@ -190,8 +187,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 		myEnemiesCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 	}
-
-	myReticle->Render(*myCamera, halfWidth, -halfHeight);
 
 	myEnemiesPosition.RemoveAll();
 }

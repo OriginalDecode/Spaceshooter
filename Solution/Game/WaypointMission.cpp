@@ -26,7 +26,10 @@ WaypointMission::~WaypointMission()
 
 bool WaypointMission::Update(float aDeltaTime)
 {
-	Prism::Engine::GetInstance()->PrintDebugText("GO TO WAYPOINT!", { 400, -400 });
+
+	Prism::Engine* engine = Prism::Engine::GetInstance();
+	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
+	engine->PrintDebugText("Current mission: GO TO WAYPOINT!", { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
 
 	myPlayer.SendNote<WaypointNote>(WaypointNote(myTrigger->myOrientation.GetPos()));
 
