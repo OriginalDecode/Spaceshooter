@@ -23,7 +23,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myEnemyArrow = new Prism::Model2D;
 	myWaypointMarker = new Prism::Model2D;
 	myWaypointArrow = new Prism::Model2D;
-	myReticle->Init("Data/resources/texture/UI/Navigation_Circle.dds", { 512.f, 512.f });
+	myReticle->Init("Data/resources/texture/UI/Navigation_Circle.dds", { 1024.f, 1024.f });
 	myCrosshair->Init("Data/resources/texture/UI/Shoting_Crosshair.dds", { 256.f, 256.f }); // the size scales the pic
 	mySteeringTarget->Init("Data/resources/texture/UI/Stearing_Crosshair.dds", { 64.f, 64.f });
 	myEnemyMarker->Init("Data/resources/texture/UI/Navigation_Marker_Enemy.dds", { 64, 64 });
