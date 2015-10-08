@@ -66,10 +66,6 @@ const eStateStatus InGameState::Update()
 	{
 		myLevel->SetRenderStuff(!myLevel->GetRenderStuff());
 	}
-	if (myInputWrapper->KeyDown(DIK_P))
-	{
-		Prism::Engine::GetInstance()->ToggleWireframe();
-	}
 
 	if (myLevel->LogicUpdate(deltaTime) == true)
 	{
