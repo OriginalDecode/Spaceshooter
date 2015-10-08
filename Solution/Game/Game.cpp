@@ -61,8 +61,6 @@ bool Game::Init(HWND& aHwnd)
 
 	if (startInMenu == false)
 	{
-		myCurrentMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
-		myStateStack.PushMainGameState(myCurrentMenu);
 		myGame = new InGameState(myInputWrapper);
 		myGame->SetLevel(myLevelFactory->LoadLevel(1));
 		myStateStack.PushMainGameState(myGame);
