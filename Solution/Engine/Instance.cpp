@@ -65,7 +65,7 @@ void Prism::Instance::SetPosition(const CU::Vector3<float>& aPosition)
 	myOrientation.SetPos(aPosition);
 }
 
-CU::Vector3<float>& Prism::Instance::GetPosition()
+CU::Vector3<float> Prism::Instance::GetPosition()
 {
 	return myOrientation.GetPos();
 }

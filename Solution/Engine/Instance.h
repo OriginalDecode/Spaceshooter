@@ -21,7 +21,7 @@ namespace Prism
 		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
 
 		void SetPosition(const CU::Vector3<float>& aPosition);
-		CU::Vector3<float>& GetPosition();
+		CU::Vector3<float> GetPosition();
 		CU::Matrix44<float>& GetOrientation();
 		void SetOrientation(const CU::Matrix44<float>& aOrientation);
 

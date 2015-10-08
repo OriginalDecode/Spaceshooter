@@ -14,7 +14,8 @@ namespace CommonUtilities
 		~PlaneVolume();
 		void AddPlane(Plane<T > aPlane);
 		void RemovePlane(Plane<T> aPlane);
-		bool Inside(Vector3<T> aPosition);
+		bool Inside(Vector3<T> aPosition) const;
+		bool Inside(Vector3<T> aPosition, T aRadius) const;
 
 		GrowingArray<Plane<T>> myPlanes;
 	};
@@ -56,11 +57,24 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	bool PlaneVolume<T>::Inside(Vector3<T> aPosition)
+	bool PlaneVolume<T>::Inside(Vector3<T> aPosition) const
 	{
 		for (unsigned short i = 0; i < myPlanes.Size(); ++i)
 		{
 			if (myPlanes[i].Inside(aPosition) == false)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	template <typename T>
+	bool PlaneVolume<T>::Inside(Vector3<T> aPosition, T aRadius) const
+	{
+		for (unsigned short i = 0; i < myPlanes.Size(); ++i)
+		{
+			if (myPlanes[i].ClassifySpherePlane(aPosition, aRadius) > 0)
 			{
 				return false;
 			}

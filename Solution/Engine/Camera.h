@@ -3,6 +3,8 @@
 
 namespace Prism
 {
+	class Frustum;
+
 	class Camera
 	{
 	public:
@@ -14,20 +16,12 @@ namespace Prism
 		void OnResize(const int aWidth, const int aHeight);
 
 		const CU::Matrix44<float>& GetOrientation() const;
-		const CU::Vector3<float>& GetPosition() const;
 		const CU::Matrix44<float>& GetProjection() const;
 		const CU::Matrix44<float>& GetOrthogonal() const;
 
-		void SetOrientation(const CU::Matrix44<float>& aOrientation);
-		void SetPosition(const CU::Vector3<float>& aPosition);
+		void Update();
 
-		void RotateX(const float aDegrees);
-		void RotateY(const float aDegrees);
-		void RotateZ(const float aDegrees);
-
-		void MoveForward(const float aDistance);
-		void MoveRight(const float aDistance);
-
+		const Frustum& GetFrustum() const;
 
 	private:
 		void operator= (const Camera&) = delete;
@@ -35,8 +29,14 @@ namespace Prism
 		CU::Matrix44<float>& myOrientation;
 		CU::Matrix44<float> myProjectionMatrix;
 		CU::Matrix44<float> myOrthogonalMatrix;
-		CU::Vector3<float> myPosition;
+		float myNear;
+		float myFar;
 		float myFOV;
+		Frustum* myFrustum;
 	};
 
+	inline const Frustum& Camera::GetFrustum() const
+	{
+		return *myFrustum;
+	}
 }

@@ -74,7 +74,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	Entity* cube = new Entity(eEntityType::PROP, *myScene, "this is a cube");
 	cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Primitives/cube.fbx"
 		, "Data/effect/NoTextureEffect.fx");
-	cube->myOrientation.SetPos({ 50.f, 50.f, 50.f, 1.f });
+	cube->myOrientation.SetPos({ 300.f, 300.f, 300.f, 1.f });
 	cube->Update(1.f / 30.f);
 	myEntities.Add(cube);
 
@@ -191,7 +191,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myBulletManager->Update(aDeltaTime);
 	myMissionManager->Update(aDeltaTime);
 	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
-
+	myCamera->Update();
 	return myComplete;
 }
 

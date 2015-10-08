@@ -29,8 +29,8 @@ void Prism::Octree::Update()
 	//Engine::GetInstance()->PrintDebugText()
 }
 
-void Prism::Octree::GetOccupantsInAABB(const CommonUtilities::Intersection::AABB& aAABB
+void Prism::Octree::GetOccupantsInAABB(const Frustum& aFrustum
 		, CU::GrowingArray<Instance*>& aOutArray)
 {
-	myRoot->GetOccupantsInAABB(aAABB, aOutArray);
+	myRoot->GetOccupantsInAABB(aFrustum, aOutArray);
 }

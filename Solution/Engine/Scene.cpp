@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include <AABB.h>
+#include "Camera.h"
 #include "DebugDataDisplay.h"
 #include "DirectionalLight.h"
 #include "Instance.h"
@@ -10,7 +11,7 @@
 #include "SpotLight.h"
 
 Prism::Scene::Scene()
-	: myOctree(new Octree(2))
+	: myOctree(new Octree(3))
 {
 	myInstances.Init(4);
 	myDirectionalLights.Init(4);
@@ -61,7 +62,7 @@ void Prism::Scene::Render()
 	}
 
 	myInstances.RemoveAll();
-	myOctree->GetOccupantsInAABB(CU::Intersection::AABB(), myInstances);
+	myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
 
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
