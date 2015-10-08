@@ -370,12 +370,13 @@ void Level::ReadXML(const std::string& aFile)
 	{
 		AddTrigger(reader, entityElement);
 	}
+
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "powerup"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "powerup"))
 	{
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene);
 		float entityRadius;
-		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
+		reader.ReadAttribute(entityElement, "radius", entityRadius);
 
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
@@ -386,7 +387,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation.SetPos(triggerPosition*10.f);
 
 
-		triggerElement = reader.ForceFindFirstChild(entityElement, "Type");
+		triggerElement = reader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		CU::ToLower(powerUp);
