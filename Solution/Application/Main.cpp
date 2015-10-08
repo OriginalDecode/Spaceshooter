@@ -54,6 +54,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 			{
 				DL_Debug::Debug::GetInstance()->ActivateFilterLog(DL_Debug::eFilterLog::FUNCTION_TIMER);
 			}
+			else if (command == "-useEntityLog")
+			{
+				DL_Debug::Debug::GetInstance()->ActivateFilterLog(DL_Debug::eFilterLog::ENTITY);
+			}
 		}
 
 		LocalFree(realCommands);
