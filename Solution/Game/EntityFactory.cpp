@@ -71,8 +71,14 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	std::string entityName = "";
 	entityDocument.ForceReadAttribute(rootElement, "name", entityName);
 
-	newEntity.myEntity->SetName(entityName);
+	if (myEntities.find(entityName) != myEntities.end())
+	{
+		std::string errorMessage = "[EntityFactory] Entity there is already a object named " + entityName;
+		DL_ASSERT(errorMessage.c_str());
+	}
 
+	newEntity.myEntity->SetName(entityName);
+	ENTITY_LOG("Load entity %s starting", entityName.c_str());
 	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(rootElement); e != nullptr;
 		e = entityDocument.FindNextElement(e))
 	{
@@ -80,39 +86,58 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("GraphicsComponent").c_str()) == 0)
 		{
 			LoadGraphicsComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("AIComponent").c_str()) == 0)
 		{
 			LoadAIComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ShootingComponent").c_str()) == 0)
 		{
 			LoadShootingComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("CollisionComponent").c_str()) == 0)
 		{
 			LoadCollisionComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PhysicsComponent").c_str()) == 0)
 		{
 			LoadPhysicsComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("BulletComponent").c_str()) == 0)
 		{
 			LoadBulletComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthComponent").c_str()) == 0)
 		{
 			LoadHealthComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PowerUpComponent").c_str()) == 0)
 		{
 			LoadPowerUpComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
+		}
+		else
+		{
+			std::string errorMessage = "[EntityFactory]: Entity could not find the component " 
+				+ static_cast<std::string>(e->Name());
+			DL_ASSERT(errorMessage.c_str());
 		}
 	}
 	if (entityName != "")
 	{
 		myEntities.insert(std::pair<std::string, EntityData>(entityName, newEntity));
+		ENTITY_LOG("Load entity %s ending", entityName.c_str());
+	}
+	else
+	{
+		DL_ASSERT("[EntityFactory]: Entity could not be created missing a name.");
 	}
 
 	entityDocument.CloseDocument();
@@ -274,13 +299,13 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			float health = 0;
 			aDocument.ForceReadAttribute(e, "value", health);
-			aEntityToAddTo.myHealthToRecover = health;
+			aEntityToAddTo.myHealthToRecover = static_cast<int>(health);
 		}
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("FireRateMultiplier").c_str()) == 0)
 		{
 			float firerate = 0;
 			aDocument.ForceReadAttribute(e, "value", firerate);
-			aEntityToAddTo.myFireRateMultiplier = firerate;
+			aEntityToAddTo.myFireRateMultiplier = static_cast<int>(firerate);
 		}
 
 	}
@@ -363,5 +388,5 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
 
 	}
-
+	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());
 }

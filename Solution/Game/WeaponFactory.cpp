@@ -51,6 +51,11 @@ ProjectileDataType WeaponFactory::GetProjectile(const std::string& aProjectileTy
 WeaponDataType WeaponFactory::GetWeapon(const std::string& aWeaponName)
 {
 	auto it = myWeaponsTypes.find(aWeaponName);
+	if (myWeaponsTypes.find(aWeaponName) == myWeaponsTypes.end())
+	{
+		std::string errorMessage = "[WeaponFactory]: Could not find the weapon " + aWeaponName + ".";
+		DL_ASSERT(errorMessage.c_str());
+	}
 	return it->second;
 }
 

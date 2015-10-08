@@ -17,19 +17,19 @@ public:
 	~GUIComponent();
 
 	void Update(float aDeltaTime) override;
+	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
+		, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 
 	void SetCamera(Prism::Camera* aCamera);
 
 	static int GetID();
-	void ReceiveNote(const EnemiesTargetNote& aMessage) override;
 	void ReceiveNote(const MissionNote& aMessage) override;
-	void ReceiveNote(const SteeringTargetNote& aMessage) override;
-	void ReceiveNote(const WaypointNote& aMessage) override;
+	void ReceiveNote(const GUINote& aNote) override;
 	
 private:
 	Prism::Model2D* myReticle;
-	Prism::Model2D* myCurrentWaypoint;
+	Prism::Model2D* myModel2DToRender;
 	Prism::Model2D* myEnemyArrow;
 	Prism::Model2D* myEnemyMarker;
 	Prism::Model2D* myWaypointMarker;
@@ -40,7 +40,6 @@ private:
 	CU::Vector3<float> myWaypointPosition;
 
 	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
-	Prism::Model2D* myEnemiesCursor;
 
 	Prism::Model2D* myPowerUpArrow;
 	Prism::Model2D* myPowerUpMarker;

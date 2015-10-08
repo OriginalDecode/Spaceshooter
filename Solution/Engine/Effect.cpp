@@ -124,6 +124,11 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 			DL_MESSAGE_BOX((char*)compilationMsgs->GetBufferPointer(), "Effect Error", MB_ICONWARNING);
 			myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect(
 				"Data/effect/SuperUglyDebugEffect.fx")->myEffect;
+		} 
+		else 
+		{
+			std::string errorMessage = "[Effect]: Could not find the effect " + myFileName;
+			DL_ASSERT(errorMessage.c_str());
 		}
 	}
 	if (compilationMsgs != nullptr)

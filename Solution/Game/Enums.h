@@ -47,3 +47,11 @@ enum class eMissionEvent
 	START,
 	END,
 };
+
+enum class eGUINoteType
+{
+	WAYPOINT,
+	ENEMY,
+	POWERUP,
+	STEERING_TARGET,
+};

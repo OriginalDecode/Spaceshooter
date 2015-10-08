@@ -7,13 +7,13 @@
 #include <DebugDataDisplay.h>
 #include <Engine.h>
 #include "Entity.h"
+#include "GUINote.h"
 #include "InputComponent.h"
 #include "InputNote.h"
 #include <InputWrapper.h>
 #include <FileWatcher.h>
 #include <XMLReader.h>
 #include <sstream>
-#include "SteeringTargetNote.h"
 
 InputComponent::InputComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
@@ -126,7 +126,7 @@ void InputComponent::Update(float aDeltaTime)
 	RotateX(yRotation);
 	RotateY(xRotation);
 
-	myEntity.SendNote<SteeringTargetNote>(SteeringTargetNote(mySteering));
+	myEntity.SendNote<GUINote>(GUINote({ mySteering.x, mySteering.y, 0 }, eGUINoteType::STEERING_TARGET));
 }
 
 void InputComponent::ReadXML(const std::string& aFile)
