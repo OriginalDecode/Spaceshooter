@@ -10,6 +10,9 @@ public:
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
+	void Update(float aDeltaTime) override;
+	void SetPlayer(Entity* aPlayer);
+
 	static int GetID();
 private:
 
@@ -18,6 +21,7 @@ private:
 	int myShieldStrength;
 	int myHealthRecover;
 	int myFireRateMultiplier;
+	Entity* myPlayer;
 
 };
 

@@ -4,11 +4,14 @@
 #include "CollisionNote.h"
 #include "CollisionManager.h"
 #include "Entity.h"
+#include "Enums.h"
+#include "GUINote.h"
 #include "PowerUpComponent.h"
 #include "PowerUpNote.h"
 
 PowerUpComponent::PowerUpComponent(Entity& aEntity)
 	: Component(aEntity)
+	, myPlayer(nullptr)
 {
 }
 
@@ -20,9 +23,7 @@ void PowerUpComponent::Init(ePowerUpType someType, float someDuration, int someS
 	myShieldStrength = someShieldStrength;
 	myHealthRecover = someHealthRecover;
 	myFireRateMultiplier = someFireRateMultiplier;
-
 }
-
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 {
@@ -32,4 +33,14 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 
 	aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 	myEntity.Kill();
+}
+
+void PowerUpComponent::Update(float aDeltaTime)
+{
+	myPlayer->SendNote<GUINote>(GUINote(myEntity.myOrientation.GetPos(), eGUINoteType::POWERUP));
+}
+
+void PowerUpComponent::SetPlayer(Entity* aPlayer)
+{
+	myPlayer = aPlayer;
 }
