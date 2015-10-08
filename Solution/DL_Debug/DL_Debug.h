@@ -17,7 +17,8 @@
 #define FBX_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::FBX, __VA_ARGS__)
 #define FUNCTION_TIMER_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::FUNCTION_TIMER, __VA_ARGS__)
 #define ENTITY_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::ENTITY, __VA_ARGS__)
-
+#define POWERUP_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::POWERUP_L, __VA_ARGS__)
+#define COMPONENT_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::COMPONENT, __VA_ARGS__)
 
 #include <string>
 #include <fstream>
@@ -36,6 +37,8 @@ namespace DL_Debug
 		FBX,
 		FUNCTION_TIMER,
 		ENTITY,
+		POWERUP_L,
+		COMPONENT,
 		ALL
 	};
 

@@ -374,8 +374,6 @@ void Level::ReadXML(const std::string& aFile)
 	{
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene);
 		float entityRadius;
-		reader.ReadAttribute(entityElement, "radius", entityRadius);
-
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> triggerPosition;
@@ -410,7 +408,6 @@ void Level::ReadXML(const std::string& aFile)
 
 		myEntityFactory->CopyEntity(newEntity, powerUp);
 		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myPlayer);
-		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 
 		//newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());

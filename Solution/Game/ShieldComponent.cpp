@@ -25,25 +25,50 @@ void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 	
 }
 
+void ShieldComponent::DamageShield(unsigned short someDamage)
+{
+	myCooldown = 0;
+	myShieldStrength -= someDamage;
+}
+
 void ShieldComponent::Update(float aDelta)
 {
 	if (myShieldOvercharged == false)
 	{
 		if (myShieldStrength <= 0)
 		{
+			COMPONENT_LOG("Shield is depleted, setting to 0");
 			myShieldStrength = 0;
 		}
 
 		if (myShieldStrength < 100)
 		{
+			COMPONENT_LOG("Recharging shield strenght!");
 			myCooldown += aDelta;
 
 			if (myCooldown >= myReachargeTime)
 			{
+				if (myShieldStrength >= 100)
+				{
+					COMPONENT_LOG("Shield Strength reached 100. During recharge time.");
+					myShieldStrength = 100;
+					return;
+				}
 				myShieldStrength += 1;
 			}
-
 		}
 	}
+
+	if (myShieldOvercharged == true)
+	{
+		COMPONENT_LOG("Shield is overcharged.");
+		POWERUP_LOG("Shield is overcharged.");
+		if (myShieldStrength <= 100)
+		{
+			COMPONENT_LOG("Shield is 100 or lower, shield is no longer overcharged!");
+			myShieldOvercharged == false;
+		}
+	}
+
 }
 

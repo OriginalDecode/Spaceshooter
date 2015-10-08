@@ -10,7 +10,12 @@ public:
 	void Init() override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
+	void DamageShield(unsigned short someDamage);
+	int GetCurrentShieldStrength();
 	void Update(float aDelta) override;
+
+	static int GetID();
+
 
 private:
 
@@ -25,3 +30,12 @@ private:
 
 };
 
+inline int ShieldComponent::GetCurrentShieldStrength()
+{
+	return myShieldStrength;
+}
+
+inline int ShieldComponent::GetID()
+{
+	return 13;
+}
