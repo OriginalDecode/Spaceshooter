@@ -48,6 +48,7 @@ bool Game::Init(HWND& aHwnd)
 	reader.OpenDocument("Data/script/options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
 	reader.ReadAttribute(reader.FindFirstChild("canWinGame"), "bool", myCanWinGame);
+	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -61,7 +62,7 @@ bool Game::Init(HWND& aHwnd)
 
 	if (startInMenu == false)
 	{
-		myGame = new InGameState(myInputWrapper);
+		myGame = new InGameState(myInputWrapper, myShowMessages);
 		myGame->SetLevel(myLevelFactory->LoadLevel(1));
 		myStateStack.PushMainGameState(myGame);
 	}
@@ -114,6 +115,7 @@ bool Game::Update()
 	}
 	myStateStack.RenderCurrentState();
 
+	myLevelFactory->DeleteOldLevel();
 
 	return true;
 }
@@ -140,13 +142,9 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::LOAD_GAME:
-		myGame = new InGameState(myInputWrapper);
+		myGame = new InGameState(myInputWrapper, myShowMessages);
 		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		myStateStack.PushMainGameState(myGame);
-		break;
-
-	case eGameState::CHANGE_LEVEL:
-		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		break;
 
 	case eGameState::RELOAD_LEVEL:
@@ -159,15 +157,22 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		break;
 
 	case eGameState::COMPLETE_LEVEL:
+		if (myLevelFactory->IsLastLevel() == false)
+		{
+			myGame->CompleteLevel();
+		}
+		else
+		{
+			myGame->CompleteGame();
+		}
+		break;
+
+	case eGameState::LOAD_NEXT_LEVEL:
 		myGame->SetLevel(myLevelFactory->LoadNextLevel());
 		break;
 
 	case eGameState::MOUSE_LOCK:
 		myLockMouse = aMessage.GetMouseLocked();
-		break;
-
-	case eGameState::COMPLETE_GAME:
-		myGame->CompleteGame();
 		break;
 	}
 }

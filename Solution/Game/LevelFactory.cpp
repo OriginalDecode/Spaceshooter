@@ -9,6 +9,7 @@
 LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, const bool& aCanWinGame)
 	: myInputWrapper(anInputWrapper)
 	, myCurrentLevel(nullptr)
+	, myOldLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
 	, myCanWinGame(aCanWinGame)
@@ -27,11 +28,7 @@ Level* LevelFactory::LoadLevel(const int& anID)
 	{
 		DL_ASSERT("Non-existing ID in LoadLevel! ID must correspond with levelList.xml");
 	}
-	//if (myCurrentLevel != nullptr)
-	//{
-	//	delete myCurrentLevel;
-	//}
-
+	myCurrentLevel = nullptr;
 	UNWATCH_FILE(myLevelPaths[myCurrentID]);
 	myCurrentID = anID;
 	WATCH_FILE(myLevelPaths[myCurrentID], LevelFactory::LoadLevelFromXML);
@@ -41,6 +38,7 @@ Level* LevelFactory::LoadLevel(const int& anID)
 
 Level* LevelFactory::ReloadLevel()
 {
+	myOldLevel = myCurrentLevel;
 	myCurrentLevel = new Level(myLevelPaths[myCurrentID], myInputWrapper);
 	return myCurrentLevel;
 }
@@ -51,7 +49,6 @@ Level* LevelFactory::LoadNextLevel()
 	{
 		if (myCanWinGame == true)
 		{
-			PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_GAME));
 			return myCurrentLevel;
 		}
 		else
@@ -65,6 +62,21 @@ Level* LevelFactory::LoadNextLevel()
 	WATCH_FILE(myLevelPaths[myCurrentID], LevelFactory::LoadLevelFromXML);
 
 	return ReloadLevel();
+}
+
+void LevelFactory::DeleteOldLevel()
+{
+	delete myOldLevel;
+	myOldLevel = nullptr;
+}
+
+const bool& LevelFactory::IsLastLevel() const
+{
+	if (myCanWinGame == true && myLevelPaths.find(myCurrentID + 1) == myLevelPaths.end())
+	{
+		return true;
+	}
+	return false;
 }
 
 void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
@@ -88,5 +100,4 @@ void LevelFactory::LoadLevelFromXML(const std::string&)
 {
 	// this just reloads the current level 
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
-	//myCurrentLevel = new Level(aXMLPath, myInputWrapper);
 }

@@ -20,7 +20,8 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper, const bool& aShowMessages)
+	: myShowMessages(aShowMessages)
 {
 	myInputWrapper = anInputWrapper;
 }
@@ -28,6 +29,7 @@ InGameState::InGameState(CU::InputWrapper* anInputWrapper)
 InGameState::~InGameState()
 {
 	delete myLevel;
+	myLevel = nullptr;
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
@@ -36,7 +38,7 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 	myIsComplete = false;
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
-	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
+	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); 
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 }
 
@@ -66,11 +68,8 @@ const eStateStatus InGameState::Update()
 
 	if (myLevel->LogicUpdate(deltaTime) == true)
 	{
-		myMessageScreen = new MessageState("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, myInputWrapper);
-		myMessageScreen->SetText("Game over! Press [space] to continue.");
-		GameStateMessage* event = new GameStateMessage(eGameState::RELOAD_LEVEL);
-		myMessageScreen->SetEvent(event);
-		myStateStack->PushSubGameState(myMessageScreen);
+		GameStateMessage* newEvent = new GameStateMessage(eGameState::RELOAD_LEVEL);
+		ShowMessage("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, "Game over! Press [space] to continue.", newEvent);
 		return eStateStatus::eKeepState;
 	}
 
@@ -111,10 +110,30 @@ void InGameState::OnResize(int aWidth, int aHeight)
 	myLevel->OnResize(aWidth, aHeight);
 }
 
+void InGameState::CompleteLevel()
+{
+	GameStateMessage* newEvent = new GameStateMessage(eGameState::LOAD_NEXT_LEVEL);
+	ShowMessage("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, "Level complete! Press [space] to continue.", newEvent);
+}
+
 void InGameState::CompleteGame()
 {
-	myMessageScreen = new MessageState("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, myInputWrapper);
-	myMessageScreen->SetText("Game won! Press [space] to continue.");
-	myStateStack->PushSubGameState(myMessageScreen);
+	ShowMessage("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, "Game won! Press [space] to continue.");
 	myIsComplete = true;
+}
+
+void InGameState::ShowMessage(const std::string& aBackgroundPath, 
+	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
+{
+	if (myShowMessages == true)
+	{
+		myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
+		myMessageScreen->SetText(aText);
+		myMessageScreen->SetEvent(aMessage);
+		myStateStack->PushSubGameState(myMessageScreen);
+	}
+	else if (aMessage != nullptr)
+	{
+		PostMaster::GetInstance()->SendMessage(*aMessage);
+	}
 }
