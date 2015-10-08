@@ -11,6 +11,7 @@ namespace CommonUtilities
 class BulletManager;
 class CollisionManager;
 class Level;
+class MessageState;
 
 class InGameState : public GameState
 {
@@ -35,6 +36,8 @@ private:
 	bool CheckCollision();
 	
 	Level* myLevel;
+
+	MessageState* myGameOverScreen;
 };
 
 inline void InGameState::SetLevel(Level* aLevel)

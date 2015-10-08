@@ -10,7 +10,7 @@ class Level;
 class LevelFactory
 {
 public:
-	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper);
+	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, const bool& aCanWinGame = true);
 	~LevelFactory();
 
 	Level* LoadLevel(const int& anID);
@@ -28,5 +28,6 @@ private:
 	std::unordered_map<int, std::string> myLevelPaths;
 
 	int myCurrentID;
+	bool myCanWinGame;
 };
 

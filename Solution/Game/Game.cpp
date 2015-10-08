@@ -47,6 +47,7 @@ bool Game::Init(HWND& aHwnd)
 	XMLReader reader;
 	reader.OpenDocument("Data/script/options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
+	reader.ReadAttribute(reader.FindFirstChild("canWinGame"), "bool", myCanWinGame);
 
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -56,7 +57,7 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLevelFactory = new LevelFactory("Data/level/levelList.xml", myInputWrapper);
+	myLevelFactory = new LevelFactory("Data/level/levelList.xml", myInputWrapper, myCanWinGame);
 
 	if (startInMenu == false)
 	{

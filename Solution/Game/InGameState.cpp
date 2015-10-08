@@ -14,6 +14,7 @@
 #include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
+#include "MessageState.h"
 #include "PostMaster.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
@@ -31,6 +32,7 @@ InGameState::~InGameState()
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
+	myIsLetThrough = false;
 	myStateStack = aStateStackProxy;
 	myStateStatus = eStateStatus::eKeepState;
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y); // very needed here, don't remove
@@ -64,14 +66,12 @@ const eStateStatus InGameState::Update()
 	{
 		myLevel->SetRenderStuff(!myLevel->GetRenderStuff());
 	}
-	if (myInputWrapper->KeyDown(DIK_P))
-	{
-		Prism::Engine::GetInstance()->ToggleWireframe();
-	}
 
 	if (myLevel->LogicUpdate(deltaTime) == true)
 	{
-		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
+		myGameOverScreen = new MessageState("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, myInputWrapper);
+		myGameOverScreen->SetText("Game over! Press [space] to continue.");
+		myStateStack->PushSubGameState(myGameOverScreen);
 		return eStateStatus::eKeepState;
 	}
 
