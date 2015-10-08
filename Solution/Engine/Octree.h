@@ -10,6 +10,7 @@ namespace CommonUtilities
 
 namespace Prism
 {
+	class Frustum;
 	class Instance;
 	class TreeNode;
 
@@ -21,7 +22,7 @@ namespace Prism
 
 		void Add(Instance* aInstance);
 		void Update();
-		void GetOccupantsInAABB(const CommonUtilities::Intersection::AABB& aAABB, CU::GrowingArray<Instance*>& aOutArray);
+		void GetOccupantsInAABB(const Frustum& aFrustum, CU::GrowingArray<Instance*>& aOutArray);
 
 
 	private:

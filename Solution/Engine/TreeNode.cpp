@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Frustum.h"
 #include "Instance.h"
 #include <Intersection.h>
 #include "TreeNode.h"
@@ -68,7 +69,6 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 	else
 	{
 		myObjects.Add(anObject);
-		//anObject->SetDepth(myDepth);
 	}
 }
 
@@ -128,24 +128,26 @@ bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAAB
 	return true;
 }
 
-void Prism::TreeNode::GetOccupantsInAABB(const CommonUtilities::Intersection::AABB& aAABB
+void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	, CU::GrowingArray<Instance*>& aOutArray)
 {
 	for (int i = 0; i < myObjects.Size(); ++i)
 	{
-		//add check against frustum
-		aOutArray.Add(myObjects[i]);
+		if (aFrustum.Inside(myObjects[i]->GetPosition(), myObjects[i]->GetRadius()) == true)
+		{
+			aOutArray.Add(myObjects[i]);
+		}
 	}
 
 	for (int i = 0; i < 8; ++i)
 	{
 		if (myChildren[i] != nullptr)
-		//	&& CU::Intersection::AABBvsAABB(myChildren[i]->GetMinCorner()
-		//	, myChildren[i]->GetMaxCorner()
-		//	, aFrustum.GetMinCorner()
-		//	, aFrustum.GetMaxCorner()) == true)
+			//&& CU::Intersection::AABBvsAABB(myChildren[i]->GetMinCorner()
+			//, myChildren[i]->GetMaxCorner()
+			//, aFrustum.GetCornerMin()
+			//, aFrustum.GetCornerMax()) == true)
 		{
-			myChildren[i]->GetOccupantsInAABB(aAABB, aOutArray);
+			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
 		}
 	}
 }

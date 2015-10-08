@@ -10,6 +10,7 @@ namespace CommonUtilities
 		{
 		public:
 			Fov90Frustum(float aNear, float aFar);
+			bool Inside(const Vector3<float>& aPos, float aRadius) const;
 
 			CommonUtilities::PlaneVolume<float> myVolume;
 			float myNear;
@@ -17,7 +18,7 @@ namespace CommonUtilities
 		};
 	}
 
-	Intersection::Fov90Frustum::Fov90Frustum(float aNear, float aFar) :
+	inline Intersection::Fov90Frustum::Fov90Frustum(float aNear, float aFar) :
 		myVolume(CommonUtilities::GrowingArray<CommonUtilities::Plane<float>>())
 	{
 		myNear = aNear;
@@ -41,5 +42,14 @@ namespace CommonUtilities
 		myVolume.AddPlane(left);
 		myVolume.AddPlane(up);
 		myVolume.AddPlane(down);
+	}
+
+	inline bool CommonUtilities::Intersection::Fov90Frustum::Inside(const Vector3<float>& aPos, float aRadius) const
+	{
+		if (myVolume.Inside(aPos, aRadius) == true)
+		{
+			return true;
+		}
+		return false;
 	}
 }

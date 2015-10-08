@@ -533,31 +533,26 @@ namespace CommonUtilities
 	Matrix44<T> Matrix44<T>::CreateProjectionMatrixLH(T aNearZ, T aFarZ, T aAspectRatio, T aFovAngle)
 	{
 		Matrix44 temp;
-		T    SinFov;
-		T    CosFov;
-		T    Height;
-		T    Width;
+		T SinFov;
+		T CosFov;
+		T Height;
+		T Width;
 
 		SinFov = sin(0.5f * aFovAngle);
 		CosFov = cos(0.5f * aFovAngle);
 
-		Height = CosFov / SinFov;
-		Width = Height / aAspectRatio;
+		Width = CosFov / SinFov;
+		Height = Width / aAspectRatio;
 
 		T scaling = aFarZ / (aFarZ - aNearZ);
-
-		//temp.myVectorRows[0].Set(Width, 0.0f, 0.0f, 0.0f);
-		//temp.myVectorRows[1].Set(0.0f, Height, 0.0f, 0.0f);
-		//temp.myVectorRows[2].Set(0.0f, 0.0f, scaling, -scaling * aNearZ);
-		//temp.myVectorRows[3].Set(0.0f, 0.0f, 1.0f, 0.0f);
 
 		temp.myMatrix[0] = Width;
 		temp.myMatrix[5] = Height;
 		temp.myMatrix[10] = scaling;
-		temp.myMatrix[11] = 1.f;
-		temp.myMatrix[14] = -scaling * aNearZ;
-		temp.myMatrix[15] = 0;
+		temp.myMatrix[11] = 1.0f;
 
+		temp.myMatrix[14] = -scaling * aNearZ;
+		temp.myMatrix[15] = 0.0f;
 		return temp;
 	}
 

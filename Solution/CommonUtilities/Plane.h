@@ -11,12 +11,13 @@ namespace CommonUtilities
 		Plane(Vector3<T> aFirstPoint, Vector3<T> aSecondPoint, Vector3<T> aThirdPoint);
 		Plane(Vector3<T> aPoint, Vector3<T> aNormal);
 		~Plane();
-		bool operator==(const Plane<T>& aPlane);
-		bool operator!=(const Plane<T>& aPlane);
+		bool operator==(const Plane<T>& aPlane) const;
+		bool operator!=(const Plane<T>& aPlane) const;
 		void InitWith3Points(Vector3<T> aFirstPoint, Vector3<T> aSecondPoint, Vector3<T> aThirdPoint);
 		void InitWithPointAndNormal(Vector3<T> aPoint, Vector3<T> aDirection);
-		bool Inside(Vector3<T> aPosition);
-		Vector3<T> GetNormal();
+		bool Inside(Vector3<T> aPosition) const;
+		int ClassifySpherePlane(Vector3<T> aSpherePosition, float aSphereRadius) const;
+		Vector3<T> GetNormal() const;
 
 		Vector4<T> myABCD;
 	};
@@ -42,7 +43,7 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	bool Plane<T>::operator==(const Plane<T>& aPlane)
+	bool Plane<T>::operator==(const Plane<T>& aPlane) const
 	{
 		if (myABCD == aPlane.myABCD)
 		{
@@ -52,7 +53,7 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	bool Plane<T>::operator!=(const Plane<T>& aPlane)
+	bool Plane<T>::operator!=(const Plane<T>& aPlane) const
 	{
 		return !(*this == aPlane);
 	}
@@ -83,7 +84,7 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	bool Plane<T>::Inside(Vector3<T> aPosition)
+	bool Plane<T>::Inside(Vector3<T> aPosition) const
 	{
 		if (Dot(aPosition, Vector3<T>(myABCD.x, myABCD.y, myABCD.z)) < myABCD.w)
 		{
@@ -93,7 +94,28 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	Vector3<T> Plane<T>::GetNormal()
+	inline int Plane<T>::ClassifySpherePlane(Vector3<T> aSpherePosition, float aSphereRadius) const
+	{
+		float distance = Dot(GetNormal(), aSpherePosition) - myABCD.w;
+
+		// completely on the front side
+		if (distance >= aSphereRadius)
+		{
+			return 1;
+		}
+
+		// completely on the backside (aka "inside")
+		if (distance <= -aSphereRadius)
+		{
+			return -1;
+		}
+
+		//sphere intersects the plane
+		return 0;
+	}
+
+	template <typename T>
+	Vector3<T> Plane<T>::GetNormal() const
 	{
 		return Vector3<T>(myABCD.x, myABCD.y, myABCD.z);
 	}

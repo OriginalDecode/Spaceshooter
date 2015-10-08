@@ -13,6 +13,7 @@ namespace CommonUtilities
 
 namespace Prism
 {
+	class Frustum;
 	class Instance;
 
 	class TreeNode
@@ -22,7 +23,7 @@ namespace Prism
 		~TreeNode();
 
 		void InsertObjectDown(Instance* anObject);
-		void GetOccupantsInAABB(const CommonUtilities::Intersection::AABB& aAABB
+		void GetOccupantsInAABB(const Frustum& aFrustum
 			, CU::GrowingArray<Instance*>& aOutArray);
 	private:
 		void operator=(TreeNode&) = delete;
