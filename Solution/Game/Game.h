@@ -4,14 +4,13 @@
 #include "StateStack.h"
 #include "Subscriber.h"
 
-class MenuState;
-class InGameState;
-
 namespace CommonUtilities
 {
 	class InputWrapper;
 }
 
+class InGameState;
+class MenuState;
 class BulletManager;
 class LevelFactory;
 
@@ -43,6 +42,7 @@ private:
 	InGameState* myGame;
 
 	bool myLockMouse;
+	bool myCanWinGame;
 
 	CU::Vector2<int> myWindowSize;
 

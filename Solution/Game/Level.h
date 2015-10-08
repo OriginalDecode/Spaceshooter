@@ -63,6 +63,7 @@ private:
 	void ReadXML(const std::string& aFile);
 	Entity* GetEntityWithName(const std::string& aName);
 	void LoadPlayer();
+	void UpdateDebug();
 
 	Prism::Instance* mySkySphere;
 

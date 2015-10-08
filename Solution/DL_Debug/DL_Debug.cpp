@@ -35,6 +35,12 @@ DL_Debug::Debug::Debug()
 
 	logSetting.second = "Entity";
 	myFilterLogStatus[eFilterLog::ENTITY] = logSetting;
+
+	logSetting.second = "PowerUp";
+	myFilterLogStatus[eFilterLog::POWERUP_L] = logSetting;
+
+	logSetting.second = "Component";
+	myFilterLogStatus[eFilterLog::COMPONENT] = logSetting;
 }
 
 

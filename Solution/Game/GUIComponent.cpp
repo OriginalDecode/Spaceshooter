@@ -37,7 +37,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", arrowAndMarkerSize);
 	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", arrowAndMarkerSize);
 	myPowerUpMarker->Init("Data/resources/texture/UI/Navigation_Marker_Powerups.dds", arrowAndMarkerSize);
-	myPowerUpArrow->Init("Data/resources/textures/UI/Navigation_Arrow_Powerups.dds", arrowAndMarkerSize);
+	myPowerUpArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Powerups.dds", arrowAndMarkerSize);
 }	 
 
 GUIComponent::~GUIComponent()
@@ -64,31 +64,32 @@ void GUIComponent::Update(float aDeltaTime)
 	
 }
 
-void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
+void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
+	, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist)
 {
+	float halfWidth = aWindowSize.x *0.5f;
 	float halfHeight = aWindowSize.y * 0.5f;
-	float halfWidth = aWindowSize.x * 0.5f;
-	myReticle->Render(*myCamera, halfWidth, -halfHeight);
-	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
-		, -halfHeight - mySteeringTargetPosition.y);
-	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
+
+	CU::Vector3<float> toTarget = aPosition - myCamera->GetOrientation().GetPos();
 	std::stringstream lengthToWaypoint;
-	CU::Vector3<float> toWaypoint = myWaypointPosition - myCamera->GetOrientation().GetPos();
-	lengthToWaypoint << myWaypointPosition.x << " " << myWaypointPosition.y << " " << myWaypointPosition.z << " " << static_cast<int>(CU::Length(toWaypoint));
-	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
-	if (CU::Length(toWaypoint) != 0)
+	if (aShowDist == true)
 	{
-		CU::Normalize(toWaypoint);
+		lengthToWaypoint << aPosition.x << " " << aPosition.y << " " << aPosition.z << " " << static_cast<int>(CU::Length(toTarget));
+	}
+	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
+	if (CU::Length(toTarget) != 0)
+	{
+		CU::Normalize(toTarget);
 	}
 	if (CU::Length(forward) != 0)
 	{
 		CU::Normalize(forward);
 	}
 
-	float circleAroundPoint = (CU::Dot(toWaypoint, forward));
+	float circleAroundPoint = (CU::Dot(toTarget, forward));
 
-	CU::Matrix44<float> renderPos; 
-	renderPos.SetPos(myWaypointPosition);
+	CU::Matrix44<float> renderPos;
+	renderPos.SetPos(aPosition);
 	renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
 	renderPos = renderPos * myCamera->GetProjection();
 
@@ -113,86 +114,54 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (length > CIRCLERADIUS)
 	{
-		myCurrentWaypoint = myWaypointArrow;
+		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
 	}
 	else
 	{
-		myCurrentWaypoint = myWaypointMarker;
+		aCurrentModel = aMarkerModel;
 	}
 	if (circleAroundPoint < 0.f)
 	{
-		myCurrentWaypoint = myWaypointArrow;
+		aCurrentModel = aArrowModel;
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 	}
 
-	if (myWaypointActive == true)
+	if (aShowDist == true)
 	{
-		Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
-		myCurrentWaypoint->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+		if (aCurrentModel == myWaypointMarker || aCurrentModel == myWaypointArrow)
+		{
+			Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
+		}
+		aCurrentModel->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 	}
+}
+
+void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
+{
+	float halfHeight = aWindowSize.y * 0.5f;
+	float halfWidth = aWindowSize.x * 0.5f;
+	myReticle->Render(*myCamera, halfWidth, -halfHeight);
+	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
+		, -halfHeight - mySteeringTargetPosition.y);
+	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
+
+	CalculateAndRender(myWaypointPosition, myCurrentWaypoint, myWaypointArrow, myWaypointMarker, aWindowSize, myWaypointActive);
 
 	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
 	{
-		CU::Vector3<float> toEnemy = myEnemiesPosition[i] - myCamera->GetOrientation().GetPos();
-		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
-		if (CU::Length(toEnemy) != 0)
-		{
-			CU::Normalize(toEnemy);
-		}
-		if (CU::Length(forward) != 0)
-		{
-			CU::Normalize(forward);
-		}
+		CalculateAndRender(myEnemiesPosition[i], myEnemiesCursor, myEnemyArrow, myEnemyMarker, aWindowSize, true);
+	}
 
-		float circleAroundPoint = (CU::Dot(toEnemy, forward));
-
-		CU::Matrix44<float> renderPos;
-		renderPos.SetPos(myEnemiesPosition[i]);
-		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
-		renderPos = renderPos * myCamera->GetProjection();
-
-		CU::Vector3<float> newRenderPos = renderPos.GetPos();
-		newRenderPos /= renderPos.GetPos4().w;
-
-		newRenderPos += 1.f;
-		newRenderPos *= 0.5f;
-		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y *= aWindowSize.y;
-		newRenderPos.y -= aWindowSize.y;
-
-		CU::Vector2<float> radius(halfWidth, halfHeight);
-		radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
-		float length = 0;
-		if (radius.x != 0 && radius.y != 0)
-		{
-			length = CU::Length(radius);
-			CU::Normalize(radius);
-		}
-
-		if (length > CIRCLERADIUS)
-		{
-			myEnemiesCursor = myEnemyArrow;
-			newRenderPos.x = radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
-		}
-		else
-		{
-			myEnemiesCursor = myEnemyMarker;
-		}
-		if (circleAroundPoint < 0.f)
-		{
-			myEnemiesCursor = myEnemyArrow;
-			newRenderPos.x = -radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
-		}
-
-		myEnemiesCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+	for (int i = 0; i < myPowerUpPositions.Size(); ++i)
+	{
+		CalculateAndRender(myPowerUpPositions[i], myPowerUpsCursor, myPowerUpArrow, myPowerUpMarker, aWindowSize, true);
 	}
 
 	myEnemiesPosition.RemoveAll();
+	myPowerUpPositions.RemoveAll();
 }
 
 void GUIComponent::ReceiveNote(const MissionNote& aMessage)
@@ -218,6 +187,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		myEnemiesPosition.Add(aNote.myPosition);
 		break;
 	case eGUINoteType::POWERUP:
+		myPowerUpPositions.Add(aNote.myPosition);
 		break;
 	case eGUINoteType::STEERING_TARGET:
 		mySteeringTargetPosition = { aNote.myPosition.x, aNote.myPosition.y };

@@ -185,21 +185,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-
-	if (myInputWrapper->KeyDown(DIK_N) == true)
-	{
-		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10);
-	}
-
-	if (myInputWrapper->KeyDown(DIK_V) == true)
-	{
-		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
-	}
-
-	if (myInputWrapper->KeyDown(DIK_B) == true)
-	{
-		CompleteLevel();
-	}
+	UpdateDebug();
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
@@ -375,13 +361,12 @@ void Level::ReadXML(const std::string& aFile)
 	{
 		AddTrigger(reader, entityElement);
 	}
+
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "powerup"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "powerup"))
 	{
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene);
 		float entityRadius;
-		reader.ForceReadAttribute(entityElement, "radius", entityRadius);
-
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> triggerPosition;
@@ -391,7 +376,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation.SetPos(triggerPosition*10.f);
 
 
-		triggerElement = reader.ForceFindFirstChild(entityElement, "Type");
+		triggerElement = reader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		CU::ToLower(powerUp);
@@ -415,7 +400,7 @@ void Level::ReadXML(const std::string& aFile)
 		}
 
 		myEntityFactory->CopyEntity(newEntity, powerUp);
-		newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myPlayer);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 
 		//newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
@@ -473,4 +458,34 @@ void Level::LoadPlayer()
 void Level::CompleteLevel()
 {
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_LEVEL));
+}
+
+void Level::UpdateDebug()
+{
+	if (myInputWrapper->KeyDown(DIK_N) == true)
+	{
+		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10);
+	}
+	if (myInputWrapper->KeyDown(DIK_M) == true)
+	{
+		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(false);
+		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10000000);
+	}
+	if (myInputWrapper->KeyDown(DIK_V) == true)
+	{
+		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
+	}
+	if (myInputWrapper->KeyDown(DIK_B) == true)
+	{
+		CompleteLevel();
+	}
+	if (myInputWrapper->KeyDown(DIK_C))
+	{
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
+	}
+	if (myInputWrapper->KeyDown(DIK_P))
+	{
+		Prism::Engine::GetInstance()->ToggleWireframe();
+	}
+
 }

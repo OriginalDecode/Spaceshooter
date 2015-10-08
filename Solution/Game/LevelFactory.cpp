@@ -6,11 +6,12 @@
 #include "GameStateMessage.h"
 #include <XMLReader.h>
 
-LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper)
+LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, const bool& aCanWinGame)
 	: myInputWrapper(anInputWrapper)
 	, myCurrentLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
+	, myCanWinGame(aCanWinGame)
 {
 	LoadLevelListFromXML(aLevelListPath);
 	WATCH_FILE(aLevelListPath, LevelFactory::LoadLevelListFromXML);
@@ -48,7 +49,15 @@ Level* LevelFactory::LoadNextLevel()
 {
 	if (myLevelPaths.find(myCurrentID + 1) == myLevelPaths.end())
 	{
-		return myCurrentLevel;
+		if (myCanWinGame == true)
+		{
+			PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_GAME));
+			return myCurrentLevel;
+		}
+		else
+		{
+			myCurrentID = 0;
+		}
 	}
 
 	UNWATCH_FILE(myLevelPaths[myCurrentID]);
@@ -77,7 +86,7 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 
 void LevelFactory::LoadLevelFromXML(const std::string&)
 {
-	// this just reloads the map 
+	// this just reloads the current level 
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
 	//myCurrentLevel = new Level(aXMLPath, myInputWrapper);
 }
