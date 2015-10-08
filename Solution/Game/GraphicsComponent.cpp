@@ -57,15 +57,15 @@ void GraphicsComponent::Update(float aDeltaTime)
 		CU::Vector3f pos = myEntity.myOrientation.GetPos();
 		if (myEntity.GetShouldRotateX() == true)
 		{
-			myEntity.myOrientation *= CU::Matrix44f::CreateRotateAroundX(0.25f * aDeltaTime);
+			myEntity.myOrientation = CU::Matrix44f::CreateRotateAroundX(0.1f * aDeltaTime)* myEntity.myOrientation;
 		}
 		if (myEntity.GetShouldRotateY() == true)
 		{
-			myEntity.myOrientation *= CU::Matrix44f::CreateRotateAroundY(0.25f * aDeltaTime);
+			myEntity.myOrientation = CU::Matrix44f::CreateRotateAroundY(0.1f * aDeltaTime) * myEntity.myOrientation;
 		}
 		if (myEntity.GetShouldRotateZ() == true)
 		{
-			myEntity.myOrientation *= CU::Matrix44f::CreateRotateAroundZ(0.25f * aDeltaTime);
+			myEntity.myOrientation = CU::Matrix44f::CreateRotateAroundZ(0.1f * aDeltaTime)* myEntity.myOrientation;
 		}
 		myEntity.myOrientation.SetPos(pos);
 	}
