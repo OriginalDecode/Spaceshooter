@@ -56,6 +56,8 @@ public:
 
 	int GetEnemiesAlive() const;
 
+	const CU::Vector2<float>& GetScreenCenterPosition();
+
 private:
 	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
