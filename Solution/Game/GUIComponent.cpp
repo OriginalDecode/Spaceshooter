@@ -16,16 +16,14 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myReticle(new Prism::Model2D)
 	, mySteeringTarget(new Prism::Model2D)
 	, myCrosshair(new Prism::Model2D)
-	, myEnemiesCursor(new Prism::Model2D)
 	, myEnemyMarker(new Prism::Model2D)
 	, myEnemyArrow(new Prism::Model2D)
-	, myCurrentWaypoint(nullptr)
+	, myModel2DToRender(nullptr)
 	, myWaypointArrow(new Prism::Model2D)
 	, myWaypointMarker(new Prism::Model2D)
 	, myCamera(nullptr)
 	, myPowerUpArrow(new Prism::Model2D)
 	, myPowerUpMarker(new Prism::Model2D)
-	, myPowerUpsCursor(nullptr)
 	, myPowerUpPositions(8)
 {
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
@@ -46,7 +44,7 @@ GUIComponent::~GUIComponent()
 	delete myCrosshair;
 	delete myEnemyMarker;
 	delete myEnemyArrow;
-	delete myCurrentWaypoint;
+	delete myModel2DToRender;
 	delete myWaypointArrow;
 	delete myWaypointMarker;
 	myWaypointMarker = nullptr;
@@ -55,7 +53,7 @@ GUIComponent::~GUIComponent()
 	myCrosshair = nullptr;
 	myEnemyMarker = nullptr;
 	myEnemyArrow = nullptr;
-	myCurrentWaypoint = nullptr;
+	myModel2DToRender = nullptr;
 }
 
 void GUIComponent::Update(float aDeltaTime)
@@ -145,16 +143,16 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		, -halfHeight - mySteeringTargetPosition.y);
 	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
 
-	CalculateAndRender(myWaypointPosition, myCurrentWaypoint, myWaypointArrow, myWaypointMarker, aWindowSize, true);
+	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker, aWindowSize, true);
 
 	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
 	{
-		CalculateAndRender(myEnemiesPosition[i], myEnemiesCursor, myEnemyArrow, myEnemyMarker, aWindowSize, false);
+		CalculateAndRender(myEnemiesPosition[i], myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, false);
 	}
 
 	for (int i = 0; i < myPowerUpPositions.Size(); ++i)
 	{
-		CalculateAndRender(myPowerUpPositions[i], myPowerUpsCursor, myPowerUpArrow, myPowerUpMarker, aWindowSize, false);
+		CalculateAndRender(myPowerUpPositions[i], myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, false);
 	}
 
 	myEnemiesPosition.RemoveAll();

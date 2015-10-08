@@ -29,7 +29,7 @@ public:
 	
 private:
 	Prism::Model2D* myReticle;
-	Prism::Model2D* myCurrentWaypoint;
+	Prism::Model2D* myModel2DToRender;
 	Prism::Model2D* myEnemyArrow;
 	Prism::Model2D* myEnemyMarker;
 	Prism::Model2D* myWaypointMarker;
@@ -40,11 +40,9 @@ private:
 	CU::Vector3<float> myWaypointPosition;
 
 	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
-	Prism::Model2D* myEnemiesCursor;
 
 	Prism::Model2D* myPowerUpArrow;
 	Prism::Model2D* myPowerUpMarker;
-	Prism::Model2D* myPowerUpsCursor;
 	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
 
 	Prism::Camera* myCamera;
