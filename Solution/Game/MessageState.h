@@ -7,7 +7,7 @@ namespace Prism
 	class Camera;
 }
 
-class Message;
+class GameStateMessage;
 
 class MessageState : public GameState
 {
@@ -25,6 +25,7 @@ public:
 	void OnResize(int aWidth, int aHeight) override;
 
 	void SetText(const std::string& aText);
+	void SetEvent(GameStateMessage* anEvent);
 
 private:
 
@@ -33,9 +34,15 @@ private:
 
 	std::string myTextMessage;
 	CU::Vector2<float> myMessagePosition;
+	GameStateMessage* myEvent;
 };
 
 inline void MessageState::SetText(const std::string& aText)
 {
 	myTextMessage = aText;
+}
+
+inline void MessageState::SetEvent(GameStateMessage* anEvent)
+{
+	myEvent = anEvent;
 }

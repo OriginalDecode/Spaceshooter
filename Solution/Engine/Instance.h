@@ -40,6 +40,8 @@ namespace Prism
 
 		void SetOrientationPointer(CU::Matrix44<float>& aOrientation);
 
+		float GetRadius() const;
+
 	private:
 		void operator=(Instance&) = delete;
 
@@ -47,6 +49,12 @@ namespace Prism
 		CU::Matrix44<float> myOrientation;
 		CU::Matrix44<float>* myOrientationPointer;
 		CU::Vector3<float> myScale;
-		CU::Vector3<float> myPosition;
+
+		float myRadius;
 	};
+
+	inline float Instance::GetRadius() const
+	{
+		return myRadius;
+	}
 }

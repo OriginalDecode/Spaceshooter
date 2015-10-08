@@ -19,6 +19,7 @@ namespace CommonUtilities
 		bool CircleVsRect(Vector2<float> aCenter, float aRadius, Vector2<float> aRectTopLeft, Vector2<float> aRectBottomRight);
 
 		//3D
+		bool AABBvsAABB(const Vector3<float>& aMin1, const Vector3<float>& aMax1, const Vector3<float>& aMin2, const Vector3<float>& aMax2);
 		bool PointInsideSphere(Sphere aSphere, CommonUtilities::Vector3<float> aPoint);
 		bool SphereVsSphere(Sphere aSphere, Sphere aOtherSphere);
 		bool PointInsideAABB(AABB aAABB, CommonUtilities::Vector3<float> aPoint);
@@ -136,6 +137,18 @@ namespace CommonUtilities
 		{
 			return false;
 		}
+
+		return true;
+	}
+
+	inline bool Intersection::AABBvsAABB(const Vector3<float>& aMin1, const Vector3<float>& aMax1, const Vector3<float>& aMin2, const Vector3<float>& aMax2)
+	{
+		if (aMax1.x < aMin2.x) return false;
+		if (aMax1.y < aMin2.y) return false;
+		if (aMax1.z < aMin2.z) return false;
+		if (aMin1.x > aMax2.x) return false;
+		if (aMin1.y > aMax2.y) return false;
+		if (aMin1.z > aMax2.z) return false;
 
 		return true;
 	}

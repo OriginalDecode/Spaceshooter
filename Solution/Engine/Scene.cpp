@@ -1,13 +1,16 @@
 #include "stdafx.h"
 
+#include <AABB.h>
 #include "DebugDataDisplay.h"
 #include "DirectionalLight.h"
 #include "Instance.h"
+#include "Octree.h"
 #include "PointLight.h"
 #include "Scene.h"
 #include "SpotLight.h"
 
 Prism::Scene::Scene()
+	: myOctree(new Octree(2))
 {
 	myInstances.Init(4);
 	myDirectionalLights.Init(4);
@@ -22,6 +25,7 @@ Prism::Scene::Scene()
 Prism::Scene::~Scene()
 {
 	myInstances.DeleteAll();
+	delete myOctree;
 }
 
 void Prism::Scene::Render()
@@ -56,6 +60,9 @@ void Prism::Scene::Render()
 		mySpotLightData[i].myCone = mySpotLights[i]->GetCone();
 	}
 
+	myInstances.RemoveAll();
+	myOctree->GetOccupantsInAABB(CU::Intersection::AABB(), myInstances);
+
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
 		myInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
@@ -81,7 +88,8 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 
 void Prism::Scene::AddInstance(Instance* aInstance)
 {
-	myInstances.Add(aInstance);
+	//myInstances.Add(aInstance);
+	myOctree->Add(aInstance);
 }
 
 void Prism::Scene::AddLight(DirectionalLight* aLight)

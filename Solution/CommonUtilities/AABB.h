@@ -5,9 +5,8 @@ namespace CommonUtilities
 {
 	namespace Intersection
 	{
-		class AABB
+		struct AABB
 		{
-		public:
 			CommonUtilities::Vector3<float> myCenterPos;
 			CommonUtilities::Vector3<float> myExtents;
 			CommonUtilities::Vector3<float> myMinPos;

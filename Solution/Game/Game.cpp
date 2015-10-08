@@ -165,5 +165,9 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	case eGameState::MOUSE_LOCK:
 		myLockMouse = aMessage.GetMouseLocked();
 		break;
+
+	case eGameState::COMPLETE_GAME:
+		myGame->CompleteGame();
+		break;
 	}
 }

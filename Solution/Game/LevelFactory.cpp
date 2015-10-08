@@ -51,6 +51,7 @@ Level* LevelFactory::LoadNextLevel()
 	{
 		if (myCanWinGame == true)
 		{
+			PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_GAME));
 			return myCurrentLevel;
 		}
 		else
