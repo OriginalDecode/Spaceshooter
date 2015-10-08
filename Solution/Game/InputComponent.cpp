@@ -65,7 +65,6 @@ void InputComponent::Update(float aDeltaTime)
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
 	MoveForward(myMovementSpeed * aDeltaTime);
-	Prism::Engine::GetInstance()->PrintDebugText(myRollSpeed, { 500, -500 });
 	Roll(aDeltaTime);
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
