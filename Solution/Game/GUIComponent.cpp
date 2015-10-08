@@ -64,31 +64,32 @@ void GUIComponent::Update(float aDeltaTime)
 	
 }
 
-void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
+void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
+	, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist)
 {
+	float halfWidth = aWindowSize.x *0.5f;
 	float halfHeight = aWindowSize.y * 0.5f;
-	float halfWidth = aWindowSize.x * 0.5f;
-	myReticle->Render(*myCamera, halfWidth, -halfHeight);
-	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
-		, -halfHeight - mySteeringTargetPosition.y);
-	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
+
+	CU::Vector3<float> toTarget = aPosition - myCamera->GetOrientation().GetPos();
 	std::stringstream lengthToWaypoint;
-	CU::Vector3<float> toWaypoint = myWaypointPosition - myCamera->GetOrientation().GetPos();
-	lengthToWaypoint << myWaypointPosition.x << " " << myWaypointPosition.y << " " << myWaypointPosition.z << " " << static_cast<int>(CU::Length(toWaypoint));
-	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
-	if (CU::Length(toWaypoint) != 0)
+	if (aShowDist == true)
 	{
-		CU::Normalize(toWaypoint);
+		lengthToWaypoint << aPosition.x << " " << aPosition.y << " " << aPosition.z << " " << static_cast<int>(CU::Length(toTarget));
+	}
+	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
+	if (CU::Length(toTarget) != 0)
+	{
+		CU::Normalize(toTarget);
 	}
 	if (CU::Length(forward) != 0)
 	{
 		CU::Normalize(forward);
 	}
 
-	float circleAroundPoint = (CU::Dot(toWaypoint, forward));
+	float circleAroundPoint = (CU::Dot(toTarget, forward));
 
-	CU::Matrix44<float> renderPos; 
-	renderPos.SetPos(myWaypointPosition);
+	CU::Matrix44<float> renderPos;
+	renderPos.SetPos(aPosition);
 	renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
 	renderPos = renderPos * myCamera->GetProjection();
 
@@ -113,141 +114,47 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (length > CIRCLERADIUS)
 	{
-		myCurrentWaypoint = myWaypointArrow;
+		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
 	}
 	else
 	{
-		myCurrentWaypoint = myWaypointMarker;
+		aCurrentModel = aMarkerModel;
 	}
 	if (circleAroundPoint < 0.f)
 	{
-		myCurrentWaypoint = myWaypointArrow;
+		aCurrentModel = aArrowModel;
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 	}
 
-	if (myWaypointActive == true)
+	if (myWaypointActive == true && aShowDist == true)
 	{
 		Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
-		myCurrentWaypoint->Render(*myCamera, newRenderPos.x, newRenderPos.y);
 	}
+	aCurrentModel->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+}
+
+void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
+{
+	float halfHeight = aWindowSize.y * 0.5f;
+	float halfWidth = aWindowSize.x * 0.5f;
+	myReticle->Render(*myCamera, halfWidth, -halfHeight);
+	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
+		, -halfHeight - mySteeringTargetPosition.y);
+	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
+
+	CalculateAndRender(myWaypointPosition, myCurrentWaypoint, myWaypointArrow, myWaypointMarker, aWindowSize, true);
 
 	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
 	{
-		CU::Vector3<float> toEnemy = myEnemiesPosition[i] - myCamera->GetOrientation().GetPos();
-		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
-		if (CU::Length(toEnemy) != 0)
-		{
-			CU::Normalize(toEnemy);
-		}
-		if (CU::Length(forward) != 0)
-		{
-			CU::Normalize(forward);
-		}
-
-		float circleAroundPoint = (CU::Dot(toEnemy, forward));
-
-		CU::Matrix44<float> renderPos;
-		renderPos.SetPos(myEnemiesPosition[i]);
-		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
-		renderPos = renderPos * myCamera->GetProjection();
-
-		CU::Vector3<float> newRenderPos = renderPos.GetPos();
-		newRenderPos /= renderPos.GetPos4().w;
-
-		newRenderPos += 1.f;
-		newRenderPos *= 0.5f;
-		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y *= aWindowSize.y;
-		newRenderPos.y -= aWindowSize.y;
-
-		CU::Vector2<float> radius(halfWidth, halfHeight);
-		radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
-		float length = 0;
-		if (radius.x != 0 && radius.y != 0)
-		{
-			length = CU::Length(radius);
-			CU::Normalize(radius);
-		}
-
-		if (length > CIRCLERADIUS)
-		{
-			myEnemiesCursor = myEnemyArrow;
-			newRenderPos.x = radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
-		}
-		else
-		{
-			myEnemiesCursor = myEnemyMarker;
-		}
-		if (circleAroundPoint < 0.f)
-		{
-			myEnemiesCursor = myEnemyArrow;
-			newRenderPos.x = -radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
-		}
-
-		myEnemiesCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+		CalculateAndRender(myEnemiesPosition[i], myEnemiesCursor, myEnemyArrow, myEnemyMarker, aWindowSize, false);
 	}
 
 	for (int i = 0; i < myPowerUpPositions.Size(); ++i)
 	{
-		CU::Vector3<float> toPowerUp = myPowerUpPositions[i] - myCamera->GetOrientation().GetPos();
-		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
-		if (CU::Length(toPowerUp) != 0)
-		{
-			CU::Normalize(toPowerUp);
-		}
-		if (CU::Length(forward) != 0)
-		{
-			CU::Normalize(forward);
-		}
-
-		float circleAroundPoint = (CU::Dot(toPowerUp, forward));
-
-		CU::Matrix44<float> renderPos;
-		renderPos.SetPos(myPowerUpPositions[i]);
-		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
-		renderPos = renderPos * myCamera->GetProjection();
-
-		CU::Vector3<float> newRenderPos = renderPos.GetPos();
-		newRenderPos /= renderPos.GetPos4().w;
-
-		newRenderPos += 1.f;
-		newRenderPos *= 0.5f;
-		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y *= aWindowSize.y;
-		newRenderPos.y -= aWindowSize.y;
-
-		CU::Vector2<float> radius(halfWidth, halfHeight);
-		radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
-		float length = 0;
-		if (radius.x != 0 && radius.y != 0)
-		{
-			length = CU::Length(radius);
-			CU::Normalize(radius);
-		}
-
-		if (length > CIRCLERADIUS)
-		{
-			myPowerUpsCursor = myPowerUpArrow;
-			newRenderPos.x = radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
-		}
-		else
-		{
-			myPowerUpsCursor = myPowerUpMarker;
-		}
-		if (circleAroundPoint < 0.f)
-		{
-			myPowerUpsCursor = myPowerUpArrow;
-			newRenderPos.x = -radius.x * CIRCLERADIUS + (aWindowSize.x / 2.f);
-			newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
-		}
-
-		myPowerUpsCursor->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+		CalculateAndRender(myPowerUpPositions[i], myPowerUpsCursor, myPowerUpArrow, myPowerUpMarker, aWindowSize, false);
 	}
 
 	myEnemiesPosition.RemoveAll();
