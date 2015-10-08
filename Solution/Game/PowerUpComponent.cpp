@@ -41,7 +41,7 @@ void PowerUpComponent::Update(float aDeltaTime)
 	myPlayer->SendNote<GUINote>(GUINote(myEntity.myOrientation.GetPos(), eGUINoteType::POWERUP));
 
 	CU::Vector3f pos = myEntity.myOrientation.GetPos();
-	myEntity.myOrientation *= CU::Matrix44f::CreateRotateAroundZ(0.05f);
+	myEntity.myOrientation *= CU::Matrix44f::CreateRotateAroundZ(1.f* aDeltaTime);
 	myEntity.myOrientation.SetPos(pos);
 }
 

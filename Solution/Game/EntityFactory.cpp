@@ -82,7 +82,6 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		std::string errorMessage = "[EntityFactory] Entity there is already a object named " + entityName;
 		DL_ASSERT(errorMessage.c_str());
 	}
-
 	newEntity.myEntity->SetName(entityName);
 	ENTITY_LOG("Load entity %s starting", entityName.c_str());
 	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(rootElement); e != nullptr;
@@ -129,6 +128,23 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 			LoadPowerUpComponent(newEntity, entityDocument, e);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("rotate").c_str()) == 0)
+		{
+			bool rotate;
+			entityDocument.ReadAttribute(e, "value", rotate);
+			newEntity.myEntity->SetShouldRotate(rotate);
+
+			entityDocument.ReadAttribute(e, "xAxis", rotate);
+			newEntity.myEntity->SetShouldRotateX(rotate);
+
+			entityDocument.ReadAttribute(e, "yAxis", rotate);
+			newEntity.myEntity->SetShouldRotateY(rotate);
+
+			entityDocument.ReadAttribute(e, "zAxis", rotate);
+			newEntity.myEntity->SetShouldRotateZ(rotate);
+
+		}
+
 		else
 		{
 			std::string errorMessage = "[EntityFactory]: Entity could not find the component " 
@@ -326,6 +342,12 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 
 	aTargetEntity->SetName(sourceEntity->GetName());
 
+	aTargetEntity->SetShouldRotate(sourceEntity->GetShouldRotate());
+	aTargetEntity->SetShouldRotateX(sourceEntity->GetShouldRotateX());
+	aTargetEntity->SetShouldRotateY(sourceEntity->GetShouldRotateY());
+	aTargetEntity->SetShouldRotateZ(sourceEntity->GetShouldRotateZ());
+
+
 	if (sourceEntity->GetComponent<GraphicsComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<GraphicsComponent>();
@@ -394,6 +416,10 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
 
 	}
+
+
+
+
 	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());
 }
 

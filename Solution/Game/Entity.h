@@ -38,6 +38,17 @@ public:
 
 	Prism::Scene& GetScene();
 
+	void SetShouldRotate(bool aShouldRotate);
+	void SetShouldRotateX(bool aShouldRotate);
+	void SetShouldRotateY(bool aShouldRotate);
+	void SetShouldRotateZ(bool aShouldRotate);
+
+	bool GetShouldRotate();
+	bool GetShouldRotateX();
+	bool GetShouldRotateY();
+	bool GetShouldRotateZ();
+
+
 	void SetPowerUp(ePowerUpType someType);
 	ePowerUpType GetPowerUpType();
 
@@ -49,6 +60,12 @@ private:
 	const eEntityType myType;
 	Prism::Scene& myScene;
 	ePowerUpType myPowerUpType;
+
+	bool myShouldRotate;
+	bool myRotateX;
+	bool myRotateY;
+	bool myRotateZ;
+
 };
 
 template <typename T>
@@ -114,4 +131,44 @@ inline void Entity::SetPowerUp(ePowerUpType someType)
 inline ePowerUpType Entity::GetPowerUpType()
 {
 	return myPowerUpType;
+}
+
+inline void Entity::SetShouldRotate(bool aShouldRotate)
+{
+	myShouldRotate = aShouldRotate;
+}
+
+inline bool Entity::GetShouldRotate()
+{
+	return myShouldRotate;
+}
+
+inline void Entity::SetShouldRotateX(bool aShouldRotate)
+{
+	myRotateX = aShouldRotate;
+}
+
+inline bool Entity::GetShouldRotateX()
+{
+	return myRotateX;
+}
+
+inline void Entity::SetShouldRotateY(bool aShouldRotate)
+{
+	myRotateY = aShouldRotate;
+}
+
+inline bool Entity::GetShouldRotateY()
+{
+	return myRotateY;
+}
+
+inline void Entity::SetShouldRotateZ(bool aShouldRotate)
+{
+	myRotateZ = aShouldRotate;
+}
+
+inline bool Entity::GetShouldRotateZ()
+{
+	return myRotateZ;
 }
