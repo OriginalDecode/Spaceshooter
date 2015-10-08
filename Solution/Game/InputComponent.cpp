@@ -126,7 +126,6 @@ void InputComponent::Update(float aDeltaTime)
 	RotateX(yRotation);
 	RotateY(xRotation);
 
-	//myEntity.SendNote<SteeringTargetNote>(SteeringTargetNote(mySteering));
 	myEntity.SendNote<GUINote>(GUINote({ mySteering.x, mySteering.y, 0 }, eGUINoteType::STEERING_TARGET));
 }
 
