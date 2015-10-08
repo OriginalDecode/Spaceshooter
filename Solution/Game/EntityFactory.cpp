@@ -5,14 +5,17 @@
 #include "BulletComponent.h"
 #include "Entity.h"
 #include "EntityFactory.h"
+#include <FileWatcher.h>
+#include "GameStateMessage.h"
 #include "GraphicsComponent.h"
 #include "HealthComponent.h"
 #include <Instance.h>
 #include <MathHelper.h>
+#include "PhysicsComponent.h"
+#include "PostMaster.h"
+#include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
-#include "PhysicsComponent.h"
-#include "PowerUpComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -45,6 +48,8 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 	rootDocument.OpenDocument(aEntityRootPath);
 	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
 
+	WATCH_FILE(aEntityRootPath, EntityFactory::ReloadEntity);
+
 	for (tinyxml2::XMLElement* e = rootDocument.FindFirstChild(rootElement); e != nullptr;
 		e = rootDocument.FindNextElement(e))
 	{
@@ -53,6 +58,7 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 		if (entityPath != "")
 		{
 			LoadEntity(entityPath);
+			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);
 		}
 	}
 
@@ -389,4 +395,9 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 
 	}
 	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());
+}
+
+void EntityFactory::ReloadEntity(const std::string&)
+{
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
 }

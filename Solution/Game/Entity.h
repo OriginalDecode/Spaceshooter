@@ -28,9 +28,7 @@ public:
 	template <typename T>
 	void SendNote(const T& aNote);
 
-
 	CU::Matrix44<float> myOrientation;
-	Prism::Camera* myCamera;
 
 	eEntityType GetType() const;
 	bool GetAlive() const;

@@ -65,6 +65,7 @@ public:
 	void LoadEntites(const std::string& aEntityRootPath);
 
 	void CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag);
+	void ReloadEntity(const std::string&);
 private:
 	void LoadEntity(const std::string& aEntityPath);
 

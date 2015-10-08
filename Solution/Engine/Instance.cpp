@@ -12,6 +12,7 @@ Prism::Instance::Instance(ModelProxy& aModel)
 	: myProxy(aModel)
 	, myOrientationPointer(nullptr)
 	, myScale({1,1,1})
+	, myRadius(5.f)
 {
 
 }
@@ -61,13 +62,12 @@ void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& a
 
 void Prism::Instance::SetPosition(const CU::Vector3<float>& aPosition)
 {
-	myPosition = aPosition;
 	myOrientation.SetPos(aPosition);
 }
 
 CU::Vector3<float>& Prism::Instance::GetPosition()
 {
-	return myPosition;
+	return myOrientation.GetPos();
 }
 
 CU::Matrix44<float>& Prism::Instance::GetOrientation()

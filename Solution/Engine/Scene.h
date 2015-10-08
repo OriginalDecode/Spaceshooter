@@ -13,6 +13,7 @@ namespace Prism
 	class Instance;
 	class PointLight;
 	class SpotLight;
+	class Octree;
 
 	class Scene
 	{
@@ -34,6 +35,7 @@ namespace Prism
 		Camera& GetCamera();
 
 	private:
+		Octree* myOctree;
 		CU::GrowingArray<Instance*> myInstances;
 		CU::GrowingArray<DirectionalLight*> myDirectionalLights;
 		CU::GrowingArray<PointLight*> myPointLights;

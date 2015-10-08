@@ -1,4 +1,8 @@
 #include "stdafx.h"
+
+#include <FileWatcher.h>
+#include "GameStateMessage.h"
+#include "PostMaster.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -8,6 +12,8 @@ void WeaponFactory::LoadProjectiles(const std::string& aRootFilePath)
 	rootDocument.OpenDocument(aRootFilePath);
 	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
 
+	WATCH_FILE(aRootFilePath, WeaponFactory::ReloadWeapon);
+
 	for (tinyxml2::XMLElement* e = rootDocument.FindFirstChild(rootElement); e != nullptr;
 		e = rootDocument.FindNextElement(e))
 	{
@@ -16,6 +22,7 @@ void WeaponFactory::LoadProjectiles(const std::string& aRootFilePath)
 		if (projectilePath != "")
 		{
 			LoadProjectile(projectilePath);
+			WATCH_FILE(projectilePath, WeaponFactory::ReloadWeapon);
 		}
 	}
 
@@ -28,6 +35,8 @@ void WeaponFactory::LoadWeapons(const std::string& aRootFilePath)
 	rootDocument.OpenDocument(aRootFilePath);
 	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
 
+	WATCH_FILE(aRootFilePath, WeaponFactory::ReloadWeapon);
+
 	for (tinyxml2::XMLElement* e = rootDocument.FindFirstChild(rootElement); e != nullptr;
 		e = rootDocument.FindNextElement(e))
 	{
@@ -36,6 +45,7 @@ void WeaponFactory::LoadWeapons(const std::string& aRootFilePath)
 		if (weaponPath != "")
 		{
 			LoadWeapon(weaponPath);
+			WATCH_FILE(weaponPath, WeaponFactory::ReloadWeapon);
 		}
 	}
 
@@ -129,4 +139,9 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 	myWeaponsTypes.insert(std::pair<std::string, WeaponDataType>(weaponDataType.myType, weaponDataType));
 
 	weaponDocument.CloseDocument();
+}
+
+void WeaponFactory::ReloadWeapon(const std::string&)
+{
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
 }

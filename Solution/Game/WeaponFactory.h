@@ -31,6 +31,7 @@ public:
 	ProjectileDataType GetProjectile(const std::string& aProjectileType);
 	WeaponDataType GetWeapon(const std::string& aWeaponName);
 
+	void ReloadWeapon(const std::string&);
 private:
 	void LoadProjectile(const std::string& aProjectileFilePath);
 	void LoadWeapon(const std::string& aWeaponFilePath);
