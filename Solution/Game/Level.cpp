@@ -146,12 +146,13 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
 	delete mySkySphere;
-	mySkySphere = new Prism::Instance(*skySphere, myPlayer->myOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
+	mySkySphere = new Prism::Instance(*skySphere, mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
 	myCollisionManager->CleanUp();
+	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 
 	if (myPlayer->GetAlive() == false)
 	{
