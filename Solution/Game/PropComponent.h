@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 
-class CollisionNote;
+struct CollisionNote;
 class Entity;
 
 class PropComponent : public Component

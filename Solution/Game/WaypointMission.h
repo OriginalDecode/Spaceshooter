@@ -20,6 +20,9 @@ public:
 	void End() override;
 
 private:
+	bool operator=(WaypointMission&) = delete;
+
+
 	Level& myLevel;
 	Entity* myTrigger;
 	Entity& myPlayer;

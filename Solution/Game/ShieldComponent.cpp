@@ -80,7 +80,7 @@ void ShieldComponent::Update(float aDelta)
 		if (myShieldStrength <= 100)
 		{
 			COMPONENT_LOG("Shield is 100 or lower, shield is no longer overcharged!");
-			myShieldOvercharged == false;
+			myShieldOvercharged = false;
 		}
 	}
 
