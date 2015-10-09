@@ -1,4 +1,7 @@
 #include "stdafx.h"
+
+#include "Enums.h"
+#include "PowerUpNote.h"
 #include "ShieldComponent.h"
 
 
@@ -22,7 +25,11 @@ void ShieldComponent::Init()
 
 void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	
+	if (aNote.myType == ePowerUpType::SHIELDBOOST)
+	{
+		myShieldOvercharged = true;
+		myShieldStrength = 200;
+	}
 }
 
 void ShieldComponent::DamageShield(unsigned short someDamage)
