@@ -2,67 +2,93 @@
 #include "WwiseManager.h"
 
 
-namespace Prism
+CAudioInterface* CAudioInterface::myInstance = nullptr;
+CAudioInterface::CAudioInterface()
+	:myWwiseManager(nullptr)
 {
-	namespace Audio
+}
+
+CAudioInterface::~CAudioInterface()
+{
+	delete myWwiseManager;
+}
+
+bool CAudioInterface::Init(const char* aInitBank)
+{
+	myWwiseManager = new CWwiseManager();
+	return myWwiseManager->Init(aInitBank);
+}
+
+void CAudioInterface::Update()
+{
+	if (myWwiseManager)
 	{
-		AudioInterface* AudioInterface::myInstance = nullptr;
-		AudioInterface::AudioInterface()
-			:myWwiseManager(nullptr)
-		{
-		}
+		myWwiseManager->Update();
+	}
+		
+}
 
-		AudioInterface::~AudioInterface()
-		{
-			delete myWwiseManager;
-		}
+void CAudioInterface::SetRTPC(const char* aRTPC, int aValue, int anObjectID)
+{
+	if (myWwiseManager)
+	{
+		myWwiseManager->SetRTPC(aRTPC, aValue, anObjectID);
+	}
+}
 
-		bool AudioInterface::Init(const char* aInitBank)
-		{
-			myWwiseManager = new WwiseManager();
-			return myWwiseManager->Init(aInitBank);
-		}
+void CAudioInterface::SetPosition(float aX, float aY, float aZ, int aObjectID)
+{
+	if (myWwiseManager)
+	{
+		myWwiseManager->SetPosition(aX, aY, aZ, aObjectID);
+	}
+}
 
-		void AudioInterface::Update()
-		{
-			if (myWwiseManager)
-			{
-				myWwiseManager->Update();
-			}
+void CAudioInterface::SetListenerPosition(float aX, float aY, float aZ)
+{
+	if (myWwiseManager)
+	{
+		myWwiseManager->SetListenerPosition(aX, aY, aZ);
+	}
+}
 
-		}
+bool CAudioInterface::LoadBank(const char* aBankPath)
+{
+	if (myWwiseManager)
+	{
+		return myWwiseManager->LoadBank(aBankPath);
+	}
+	return false;
+}
 
-		bool AudioInterface::LoadBank(const char* aBankPath)
-		{
-			if (myWwiseManager)
-			{
-				return myWwiseManager->LoadBank(aBankPath);
-			}
-			return false;
-		}
+void CAudioInterface::UnLoadBank(const char* aBankPath)
+{
+	if (myWwiseManager)
+	{
+		return myWwiseManager->UnLoadBank(aBankPath);
+	}
+}
 
-		void AudioInterface::UnLoadBank(const char* aBankPath)
-		{
-			if (myWwiseManager)
-			{
-				return myWwiseManager->UnLoadBank(aBankPath);
-			}
-		}
+void CAudioInterface::PostEvent(const char* aEvent, int anObjectID)
+{
+	if (myWwiseManager)
+	{
+		return myWwiseManager->PostEvent(aEvent, anObjectID);
+	}
+}
 
-		void AudioInterface::PostEvent(const char* aEvent)
-		{
-			if (myWwiseManager)
-			{
-				return myWwiseManager->PostEvent(aEvent);
-			}
-		}
+void CAudioInterface::SetErrorCallBack(callback_function aErrorCallback)
+{
+	if (myWwiseManager)
+	{
+		return myWwiseManager->SetErrorCallBack(aErrorCallback);
+	}
+}
 
-		void AudioInterface::SetErrorCallBack(callback_function aErrorCallback)
-		{
-			if (myWwiseManager)
-			{
-				return myWwiseManager->SetErrorCallBack(aErrorCallback);
-			}
-		}
+void CAudioInterface::RegisterObject(int anObjectID)
+{
+	if (myWwiseManager)
+	{
+		return myWwiseManager->RegisterObject(anObjectID);
 	}
 }
