@@ -21,17 +21,11 @@ namespace Prism
 		void Render(Camera& aCamera);
 		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
 
-		//void SetPosition(const CU::Vector3<float>& aPosition);
 		CU::Vector3<float> GetPosition() const;
-		//CU::Matrix44<float>& GetOrientation();
 
 		void SetEffect(const std::string& aEffectFile);
 
 		void SetScale(const CU::Vector3<float>& aScaleVector);
-
-		//void PerformRotationLocal(CU::Matrix44<float>& aRotation);
-		//void PerformRotationWorld(CU::Matrix44<float>& aRotation);
-		//void PerformTransformation(CU::Matrix44<float>& aTransformation);
 
 		void UpdateDirectionalLights(
 			const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData);
