@@ -19,7 +19,7 @@ public:
 	void InitCube(float aWidth, float aHeight, float aDepth);
 	void Update(float aDeltaTime);
 	Prism::Instance* GetInstance();
-	static int GetID();
+	static eComponentType GetType();
 
 	void SetPosition(const CU::Vector3<float>& aPosition);
 	void SetScale(const CU::Vector3<float>& aScale);
@@ -33,8 +33,8 @@ inline Prism::Instance* GraphicsComponent::GetInstance()
 	return myInstance;
 }
 
-inline int GraphicsComponent::GetID()
+inline eComponentType GraphicsComponent::GetType()
 {
-	return 0;
+	return eComponentType::GRAPHICS;
 }
 

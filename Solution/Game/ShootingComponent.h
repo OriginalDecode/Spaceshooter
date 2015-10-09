@@ -34,7 +34,7 @@ public:
 	void AddWeapon(WeaponData aWeapon);
 	void AddWeapon(const WeaponDataType& aWeapon);
 
-	static int GetID();
+	static eComponentType GetType();
 
 	void SetCurrentWeaponID(const unsigned short& anID);
 
@@ -53,9 +53,9 @@ inline void ShootingComponent::AddWeapon(WeaponData aWeapon)
 	myWeapons.Add(aWeapon);
 }
 
-inline int ShootingComponent::GetID()
+inline eComponentType ShootingComponent::GetType()
 {
-	return 4;
+	return eComponentType::SHOOTING;
 }
 
 inline void ShootingComponent::SetCurrentWeaponID(const unsigned short& anID)

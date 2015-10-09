@@ -19,6 +19,7 @@ public:
 	void SetInvulnerability(const bool& anIsInvulnerable);
 	const bool& GetInvulnerability() const;
 
+	static eComponentType GetType();
 private:
 
 	unsigned short myMaxHealth;
@@ -44,4 +45,9 @@ inline void HealthComponent::SetInvulnerability(const bool& anIsInvulnerable)
 inline const bool& HealthComponent::GetInvulnerability() const
 {
 	return myIsInvulnerable;
+}
+
+inline eComponentType HealthComponent::GetType()
+{
+	return eComponentType::HEALTH;
 }

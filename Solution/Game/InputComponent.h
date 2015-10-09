@@ -14,7 +14,7 @@ public:
 	void Init(CU::InputWrapper& aInputWrapper);
 	void Update(float aDeltaTime) override;
 
-	static int GetID();
+	static eComponentType GetType();
 
 private:
 	void operator=(const InputComponent&) = delete;
@@ -47,7 +47,7 @@ private:
 };
 
 
-inline int InputComponent::GetID()
+inline eComponentType InputComponent::GetType()
 {
-	return 14;
+	return eComponentType::INPUT;
 }
