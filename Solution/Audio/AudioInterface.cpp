@@ -32,6 +32,30 @@ namespace Prism
 
 		}
 
+		void AudioInterface::SetRTPC(const char* aRTPC, int aValue, int anObjectID)
+		{
+			if (myWwiseManager)
+			{
+				myWwiseManager->SetRTPC(aRTPC, aValue, anObjectID);
+			}
+		}
+
+		void AudioInterface::SetPosition(float aX, float aY, float aZ, int aObjectID)
+		{
+			if (myWwiseManager)
+			{
+				myWwiseManager->SetPosition(aX, aY, aZ, aObjectID);
+			}
+		}
+
+		void AudioInterface::SetListenerPosition(float aX, float aY, float aZ)
+		{
+			if (myWwiseManager)
+			{
+				myWwiseManager->SetListenerPosition(aX, aY, aZ);
+			}
+		}
+
 		bool AudioInterface::LoadBank(const char* aBankPath)
 		{
 			if (myWwiseManager)
@@ -49,11 +73,11 @@ namespace Prism
 			}
 		}
 
-		void AudioInterface::PostEvent(const char* aEvent)
+		void AudioInterface::PostEvent(const char* aEvent, int anObjectID)
 		{
 			if (myWwiseManager)
 			{
-				return myWwiseManager->PostEvent(aEvent);
+				return myWwiseManager->PostEvent(aEvent, anObjectID);
 			}
 		}
 
@@ -62,6 +86,14 @@ namespace Prism
 			if (myWwiseManager)
 			{
 				return myWwiseManager->SetErrorCallBack(aErrorCallback);
+			}
+		}
+
+		void AudioInterface::RegisterObject(int anObjectID)
+		{
+			if (myWwiseManager)
+			{
+				return myWwiseManager->RegisterObject(anObjectID);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 #pragma once
-#include "ComponentEnums.h"
+#include "Enums.h"
 
 class Entity;
 
@@ -28,7 +28,7 @@ public:
 
 	Entity& GetEntity();
 
-	static int GetID();
+	static eComponentType GetType();
 
 protected:
 	void operator=(Component&) = delete;
@@ -36,9 +36,9 @@ protected:
 	Entity& myEntity;
 };
 
-inline int Component::GetID()
+inline eComponentType Component::GetType()
 {
-	return -1;
+	return eComponentType::NOT_USED;
 }
 
 inline Entity& Component::GetEntity()

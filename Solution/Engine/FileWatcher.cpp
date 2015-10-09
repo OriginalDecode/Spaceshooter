@@ -59,7 +59,7 @@ namespace Prism
 				}
 
 
-				FindClose(findHandle);
+				FindClose(findHandle);	
 			}
 			else
 			{

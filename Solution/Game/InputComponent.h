@@ -14,7 +14,7 @@ public:
 	void Init(CU::InputWrapper& aInputWrapper);
 	void Update(float aDeltaTime) override;
 
-	static int GetID();
+	static eComponentType GetType();
 
 private:
 	void operator=(const InputComponent&) = delete;
@@ -23,6 +23,8 @@ private:
 	void Roll(float aDeltaTime);
 	void ToggleCameraLock();
 
+	void UpdateMovement(const float& aDelta);
+	void UpdateSteering(const float& aDelta);
 
 	CU::InputWrapper* myInputWrapper;
 
@@ -42,10 +44,11 @@ private:
 	float myAcceleration;
 
 	bool myCameraIsLocked;
+	bool myBoost;
 };
 
 
-inline int InputComponent::GetID()
+inline eComponentType InputComponent::GetType()
 {
-	return 14;
+	return eComponentType::INPUT;
 }

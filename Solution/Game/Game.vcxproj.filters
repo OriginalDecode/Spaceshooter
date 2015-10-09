@@ -129,9 +129,6 @@
     <ClInclude Include="Component.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentEnums.h">
-      <Filter>Components</Filter>
-    </ClInclude>
     <ClInclude Include="ControllerComponent.h">
       <Filter>Components</Filter>
     </ClInclude>

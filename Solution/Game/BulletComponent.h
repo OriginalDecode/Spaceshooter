@@ -12,7 +12,7 @@ public:
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
-	static int GetID();
+	static eComponentType GetType();
 
 	void SetMaxLifeTime(float aMaxTime);
 	void SetActive(bool aActive);
@@ -27,9 +27,9 @@ private:
 	// damage, radius, etc
 };
 
-inline int BulletComponent::GetID()
+inline eComponentType BulletComponent::GetType()
 {
-	return 5;
+	return eComponentType::BULLET;
 }
 
 inline void BulletComponent::SetMaxLifeTime(float aMaxTime)

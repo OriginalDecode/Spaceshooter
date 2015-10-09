@@ -13,7 +13,7 @@ public:
 	void Update(float aDeltaTime) override;
 	void SetPlayer(Entity* aPlayer);
 
-	static int GetID();
+	static eComponentType GetType();
 private:
 
 	ePowerUpType myType;
@@ -25,9 +25,9 @@ private:
 
 };
 
-inline int PowerUpComponent::GetID()
+inline eComponentType PowerUpComponent::GetType()
 {
-	return 12;
+	return eComponentType::POWERUP;
 }
 
 

@@ -101,8 +101,13 @@ namespace Prism
 				return false;
 			}
 
-			AK::SoundEngine::RegisterGameObj(GAME_OBJECT_POSTEST, "Positioning Demo");
+
 			return true;
+		}
+
+		void WwiseManager::RegisterObject(int anObjectID)
+		{
+			AKRESULT result = AK::SoundEngine::RegisterGameObj(anObjectID, "GameObj");
 		}
 
 		void WwiseManager::Update()
@@ -133,9 +138,37 @@ namespace Prism
 		}
 
 
-		void WwiseManager::PostEvent(const char* aEvent)
+		void WwiseManager::PostEvent(const char* aEvent, int aObjectID)
 		{
-			AK::SoundEngine::PostEvent(aEvent, GAME_OBJECT_POSTEST);
+			AkPlayingID id = AK::SoundEngine::PostEvent(aEvent, aObjectID);
+		}
+
+		void WwiseManager::SetRTPC(const char* aRTPC, int aValue, int aObjectID)
+		{
+			AkRtpcValue val;
+			val = aValue;
+			AK::SoundEngine::SetRTPCValue(aRTPC, val, aObjectID);
+		}
+
+		void WwiseManager::SetPosition(float aX, float aY, float aZ, int aObjectID)
+		{
+			AkSoundPosition soundPos;
+			soundPos.Position.X = aX;
+			soundPos.Position.Y = aY;
+			soundPos.Position.Z = aZ;
+			soundPos.Orientation.Z = 1;
+			soundPos.Orientation.Y = soundPos.Orientation.X = 0;
+			AKRESULT result = AK::SoundEngine::SetPosition(aObjectID, soundPos);
+
+		}
+
+		void WwiseManager::SetListenerPosition(float aX, float aY, float aZ)
+		{
+			AkListenerPosition soundPos;
+			soundPos.Position.X = aX;
+			soundPos.Position.Y = aY;
+			soundPos.Position.Z = aZ;
+			AKRESULT result = AK::SoundEngine::SetListenerPosition(soundPos);
 		}
 
 		bool WwiseManager::InitWwise(AkMemSettings &in_memSettings, AkStreamMgrSettings &in_stmSettings, AkDeviceSettings &in_deviceSettings, AkInitSettings &in_initSettings, AkPlatformInitSettings &in_platformInitSettings, AkMusicSettings &in_musicInit, AkOSChar* in_szErrorBuffer, unsigned int in_unErrorBufferCharCount)

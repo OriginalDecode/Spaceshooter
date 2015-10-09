@@ -23,7 +23,7 @@ CollisionManager::CollisionManager()
 	, myPowerUpFilter(0)
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
-	myPlayerBulletFilter = eEntityType::ENEMY;
+	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP;
 	myEnemyBulletFilter = eEntityType::PLAYER;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
@@ -140,6 +140,14 @@ void CollisionManager::CleanUp()
 		if (myTriggers[i]->GetEntity().GetAlive() == false)
 		{
 			myTriggers.RemoveCyclicAtIndex(i);
+		}
+	}
+
+	for (int i = myProps.Size() - 1; i >= 0; --i)
+	{
+		if (myProps[i]->GetEntity().GetAlive() == false)
+		{
+			myProps.RemoveCyclicAtIndex(i);
 		}
 	}
 

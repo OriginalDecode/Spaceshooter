@@ -17,7 +17,7 @@ public:
 	Sphere GetSphere();
 
 
-	static int GetID();
+	static eComponentType GetType();
 
 private:
 	Sphere mySphere;
@@ -25,9 +25,9 @@ private:
 
 
 
-inline int CollisionComponent::GetID()
+inline eComponentType CollisionComponent::GetType()
 {
-	return 7;
+	return eComponentType::COLLISION;
 }
 
 inline void CollisionComponent::SetRadius(float someRadius)

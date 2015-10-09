@@ -8,7 +8,7 @@
 ControllerComponent::ControllerComponent(Entity& aEntity)
 	: Component(aEntity)
 {
-
+	myTimeBeforeMovement = 0.f;
 }
 
 void ControllerComponent::MoveUp(float aDistance)
@@ -93,4 +93,10 @@ void ControllerComponent::Shoot(const CU::Vector3<float>& aVelocity)
 void ControllerComponent::ResetMovementSpeed()
 {
 	myMovementSpeed = 0.f;
+}
+
+void ControllerComponent::DisableMovement(const float& aSeconds)
+{
+	myCanMove = false;
+	myTimeBeforeMovement = aSeconds;
 }

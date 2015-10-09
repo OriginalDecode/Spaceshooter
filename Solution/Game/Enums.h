@@ -54,3 +54,22 @@ enum class eGUINoteType
 	POWERUP,
 	STEERING_TARGET,
 };
+
+enum class eComponentType
+{
+	NOT_USED,
+	AI,
+	BULLET,
+	COLLISION,
+	CONTROLLER,
+	GRAPHICS,
+	GUI,
+	HEALTH,
+	INPUT,
+	PHYSICS,
+	POWERUP,
+	PROP,
+	SHEILD,
+	SHOOTING,
+	WAY_POINT,
+};
