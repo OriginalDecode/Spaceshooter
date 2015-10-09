@@ -47,12 +47,12 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
-		myMovementSpeed -= aDeltaTime * 30;
+		myMovementSpeed -= myAcceleration * aDeltaTime / 10;
 	}
-
+	
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		myMovementSpeed -= myAcceleration * aDeltaTime * 20;
+		myMovementSpeed -= myAcceleration * aDeltaTime;
 	}
 
 	if (myInputWrapper->KeyIsPressed(DIK_1))
@@ -70,7 +70,7 @@ void InputComponent::Update(float aDeltaTime)
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
-	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed * aDeltaTime);
+	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
 	Roll(aDeltaTime);
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
