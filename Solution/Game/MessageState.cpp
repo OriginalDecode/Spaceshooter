@@ -55,7 +55,7 @@ const eStateStatus MessageState::Update(const float&)
 
 void MessageState::Render()
 {
-	myBackground->Render(*myCamera, Prism::Engine::GetInstance()->GetWindowSize().x / 2, -Prism::Engine::GetInstance()->GetWindowSize().y / 2);
+	myBackground->Render(*myCamera, Prism::Engine::GetInstance()->GetWindowSize().x / 2.f, -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f);
 
 	if (myTextMessage != "")
 	{
