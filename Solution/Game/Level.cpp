@@ -381,22 +381,22 @@ void Level::ReadXML(const std::string& aFile)
 		triggerElement = reader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
-		CU::ToLower(powerUp);
+		//CU::ToLower(powerUp);
+
+		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', true);
+
+		//std::string powerType = CU::GetSubString(tempString, '_', false);
 
 
-		if (powerUp == "healthkit_01")
+		if (powerType == "healthkit")
 		{
-			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_01);
+			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT);
 		}
-		if (powerUp == "healthkit_02")
-		{
-			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_02);
-		}
-		if (powerUp == "shield")
+		if (powerType == "shield")
 		{
 			newEntity->SetPowerUp(ePowerUpType::SHIELDBOOST);
 		}
-		if (powerUp == "firerate")
+		if (powerType == "firerate")
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}

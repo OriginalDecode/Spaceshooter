@@ -28,11 +28,10 @@ enum eEntityType //Collision manager needs this as ints!
 
 enum class ePowerUpType
 {
-	NO_POWERUP = -1,
+	NO_POWERUP,
 	FIRERATEBOOST,
 	SHIELDBOOST,
-	HEALTHKIT_01,
-	HEALTHKIT_02,
+	HEALTHKIT,
 
 };
 
