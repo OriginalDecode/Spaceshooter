@@ -8,13 +8,13 @@
 #include "ModelProxy.h"
 
 
-Prism::Instance::Instance(ModelProxy& aModel)
+Prism::Instance::Instance(ModelProxy& aModel, eOctreeType anOctreeType)
 	: myProxy(aModel)
+	, myOctreeType(anOctreeType)
 	, myOrientationPointer(nullptr)
 	, myScale({1,1,1})
 	, myRadius(5.f)
 {
-
 }
 
 Prism::Instance::~Instance()

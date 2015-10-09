@@ -11,7 +11,8 @@ namespace tinyxml2
 
 namespace Prism
 {
-	Scene;
+	class Scene;
+	enum class eOctreeType;
 }
 
 enum class eEntityDataGraphicsType
@@ -54,6 +55,7 @@ struct EntityData
 	ePowerUpType myPowerUpType;
 
 	eEntityDataGraphicsType myGraphicsType;
+	Prism::eOctreeType myType;
 };
 
 class EntityFactory

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Camera.h"
+#include "EngineEnums.h"
 #include "Instance.h"
 #include "ModelLoader.h"
 #include "Model.h"
@@ -12,7 +13,7 @@ namespace Prism
 	void PointLight::Initiate()
 	{
 		ModelProxy* model = Engine::GetInstance()->GetModelLoader()->LoadLightCube(1, 1, 1);
-		myInstance = new Instance(*model);
+		myInstance = new Instance(*model, eOctreeType::NOT_IN_OCTREE);
 	}
 
 	void PointLight::Render(Camera* aCamera)
