@@ -28,7 +28,12 @@ namespace Prism
 			void Update();
 			bool LoadBank(const char* aBankPath);
 			void UnLoadBank(const char* aBankPath);
-			void PostEvent(const char* aEvent);
+			void PostEvent(const char* aEvent, int aObjectID);
+			void SetRTPC(const char* aRTPC, int aValue, int aObjectID);
+			void SetPosition(float aX, float aY, float aZ, int aObjectID);
+			void SetListenerPosition(float aX, float aY, float aZ);
+
+			void RegisterObject(int anObjectID);
 
 			typedef void(*callback_function)(const char*);
 			void SetErrorCallBack(callback_function aErrorCallback);
