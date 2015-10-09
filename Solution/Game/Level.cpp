@@ -357,6 +357,9 @@ void Level::ReadXML(const std::string& aFile)
 
 		newEntity->AddComponent<PropComponent>();
 
+		int health = 30;
+		newEntity->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
+
 		myEntities.Add(newEntity);
 		myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);
 	}
