@@ -10,11 +10,13 @@ namespace Prism
 	class Camera;
 	class Light;
 	class ModelProxy;
+	enum class eOctreeType;
 
 	class Instance
 	{
 	public:
-		Instance(ModelProxy& aModel);
+
+		Instance(ModelProxy& aModel, eOctreeType anOctreeType);
 		~Instance();
 
 		void Render(Camera& aCamera);
@@ -41,11 +43,13 @@ namespace Prism
 		void SetOrientationPointer(CU::Matrix44<float>& aOrientation);
 
 		float GetRadius() const;
+		eOctreeType GetOctreeType() const;
 
 	private:
 		void operator=(Instance&) = delete;
 
 		ModelProxy& myProxy;
+		const eOctreeType myOctreeType;
 		CU::Matrix44<float> myOrientation;
 		CU::Matrix44<float>* myOrientationPointer;
 		CU::Vector3<float> myScale;
@@ -56,5 +60,10 @@ namespace Prism
 	inline float Instance::GetRadius() const
 	{
 		return myRadius;
+	}
+
+	inline eOctreeType Instance::GetOctreeType() const
+	{
+		return myOctreeType;
 	}
 }
