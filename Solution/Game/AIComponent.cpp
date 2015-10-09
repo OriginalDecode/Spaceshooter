@@ -44,6 +44,15 @@ void AIComponent::Update(float aDeltaTime)
 			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
 		}
 	}
+	else
+	{
+		myTimeBeforeMovement -= aDeltaTime;
+
+		if (myTimeBeforeMovement <= 0.f)
+		{
+			myCanMove = true;
+		}
+	}
 }
 
 void AIComponent::SetEntityToFollow(Entity* aEntity)

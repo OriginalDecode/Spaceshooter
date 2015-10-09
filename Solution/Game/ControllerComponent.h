@@ -23,9 +23,11 @@ public:
 	void ResetMovementSpeed();
 
 	void SetCanMove(const bool& aCanMove);
+	void DisableMovement(const float& aSeconds);
 
 protected:
 	float myMovementSpeed;
+	float myTimeBeforeMovement;
 	bool myCanMove;
 };
 

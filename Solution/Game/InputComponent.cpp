@@ -84,6 +84,13 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
+		myTimeBeforeMovement -= aDeltaTime;
+
+		if (myTimeBeforeMovement <= 0.f)
+		{
+			myCanMove = true;
+		}
+
 		RotateX(aDeltaTime / 80);
 		RotateZ(aDeltaTime / 70);
 	}
