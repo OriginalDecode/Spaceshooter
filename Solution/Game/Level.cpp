@@ -31,6 +31,7 @@
 #include "PowerUpComponent.h"
 #include "PropComponent.h"
 #include <Scene.h>
+#include "ShieldComponent.h"
 #include "ShootingComponent.h"
 #include <sstream>
 #include <string>
@@ -214,6 +215,7 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60));
 
 	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
+	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -200.f });
 }
 
 
@@ -379,22 +381,22 @@ void Level::ReadXML(const std::string& aFile)
 		triggerElement = reader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
-		CU::ToLower(powerUp);
+		//CU::ToLower(powerUp);
+
+		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', true);
+
+		//std::string powerType = CU::GetSubString(tempString, '_', false);
 
 
-		if (powerUp == "healthkit_01")
+		if (powerType == "healthkit")
 		{
-			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_01);
+			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT);
 		}
-		if (powerUp == "healthkit_02")
-		{
-			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT_02);
-		}
-		if (powerUp == "shield")
+		if (powerType == "shield")
 		{
 			newEntity->SetPowerUp(ePowerUpType::SHIELDBOOST);
 		}
-		if (powerUp == "firerate")
+		if (powerType == "firerate")
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}
@@ -440,6 +442,7 @@ void Level::LoadPlayer()
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("plasmaGun"));
 	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
+	player->AddComponent<ShieldComponent>()->Init();
 
 	XMLReader reader;
 	reader.OpenDocument("Data/script/player.xml");
