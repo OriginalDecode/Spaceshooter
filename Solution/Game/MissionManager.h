@@ -13,6 +13,8 @@ public:
 	void Update(float aDeltaTime);
 
 private:
+	bool operator=(MissionManager&) = delete;
+
 	Level& myLevel;
 	Entity& myPlayer;
 	int myCurrentMission;

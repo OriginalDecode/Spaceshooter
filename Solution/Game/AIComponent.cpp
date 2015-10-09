@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include <Engine.h>
 #include "Entity.h"
+#include "PhysicsComponent.h"
 #include <sstream>
 #include <Vector.h>
 
@@ -36,7 +37,7 @@ void AIComponent::Update(float aDeltaTime)
 	if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
 	{
 		myTimeToNextDecision = myTimeBetweenDecisions;
-		Shoot();
+		Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
 	}
 }
 
@@ -82,7 +83,8 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	myEntity.myOrientation.myMatrix[10] = myVelocity.z;
 	myEntity.myOrientation.myMatrix[11] = 0;
 
-	myVelocity *= mySpeed;
+	myVelocity *= mySpeed / 10;
 
-	myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() + aDeltaTime * myVelocity);
+	DL_ASSERT_EXP(myEntity.GetComponent<PhysicsComponent>() != nullptr, "AI component needs physics component for movement."); // remove later
+	myEntity.GetComponent<PhysicsComponent>()->AddVelocity(myVelocity * aDeltaTime);
 }

@@ -11,6 +11,7 @@ public:
 	bool Update(float aDeltaTime) override;
 
 private:
+	bool operator=(KillAllMission&) = delete;
 	Level& myLevel;
 };
 

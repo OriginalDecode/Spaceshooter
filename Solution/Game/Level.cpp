@@ -326,7 +326,7 @@ void Level::ReadXML(const std::string& aFile)
 
 		int health = 0;
 		reader.ForceReadAttribute(entityElement, "hp", health);
-		newEntity->AddComponent<HealthComponent>()->Init(health);
+		newEntity->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
 		newEntity->AddComponent<CollisionComponent>()->Initiate(7.5f);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 
@@ -374,7 +374,6 @@ void Level::ReadXML(const std::string& aFile)
 		entityElement = reader.FindNextElement(entityElement, "powerup"))
 	{
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene, Prism::eOctreeType::STATIC);
-		float entityRadius;
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> triggerPosition;
@@ -458,7 +457,7 @@ void Level::LoadPlayer()
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
 
-	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
+	player->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health), invulnerable);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	myEntities.Add(player);
@@ -486,7 +485,7 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_M) == true)
 	{
 		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(false);
-		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10000000);
+		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(myPlayer->GetComponent<HealthComponent>()->GetHealth());
 	}
 	if (myInputWrapper->KeyDown(DIK_V) == true)
 	{
