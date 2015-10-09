@@ -18,7 +18,6 @@ private:
 	void FollowEntity(float aDeltaTime);
 
 	float myTimeBetweenDecisions;
-	float mySpeed;
 	std::string myTargetName;
 
 	float myTimeToNextDecision;

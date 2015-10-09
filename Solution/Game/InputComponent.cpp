@@ -68,9 +68,9 @@ void InputComponent::Update(float aDeltaTime)
 		myEntity.SendNote(InputNote(2));
 	}
 
+	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
-	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
 	Roll(aDeltaTime);
 
 	if (myInputWrapper->MouseIsPressed(0) == true)

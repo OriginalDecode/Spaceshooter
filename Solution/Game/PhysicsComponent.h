@@ -20,6 +20,8 @@ public:
 
 	void MoveForward(const float& aDistance);
 
+	void BounceOff(const float& anEntityWeight);
+
 private:
 	CU::Vector3<float> myVelocity;
 	unsigned short myWeight;

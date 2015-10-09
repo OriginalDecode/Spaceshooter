@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "ControllerComponent.h"
 #include "Entity.h"
 #include "PhysicsComponent.h"
 
@@ -34,5 +35,12 @@ void PhysicsComponent::Update(float aDeltaTime)
 
 void PhysicsComponent::MoveForward(const float& aDistance)
 {
-	myVelocity = myEntity.myOrientation.GetForward() * aDistance;
+	myVelocity = (myEntity.myOrientation.GetForward() * (aDistance));
+}
+
+void PhysicsComponent::BounceOff(const float& anEntityWeight)
+{
+	//myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() - myVelocity * 2.f);
+	//myVelocity = myVelocity * -anEntityWeight;
+	//myEntity.GetComponent<ControllerComponent>()->ResetMovementSpeed();
 }
