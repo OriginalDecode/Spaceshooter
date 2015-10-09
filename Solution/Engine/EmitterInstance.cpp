@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "Camera.h"
+#include <d3dx11effect.h>
 #include "EmitterInstance.h"
 #include "VertexBufferWrapper.h"
 namespace Prism
@@ -12,13 +14,38 @@ namespace Prism
 	void EmitterInstance::Initiate(EmitterData& someData)
 	{
 		myData = someData;
+		myParticles.Init(myData.myMaxSize);
+		EmittParticle();
 
-
+		myEmissionTime = myData.myEmissionRate;
+		CreateVertexBuffer();
 	}
 
 	void EmitterInstance::Render(Camera* aCamera)
 	{
+		UpdateVertexBuffer();
 
+		myData.myEffect->SetWorldMatrix(myOrientation);
+		myData.myEffect->SetViewMatrix(aCamera->GetOrientation());
+		myData.myEffect->SetProjectionMatrix(aCamera->GetProjection());
+
+		Engine::GetInstance()->GetContex()->IASetInputLayout(myData.myInputLayout);
+		Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+		Engine::GetInstance()->GetContex()->IASetVertexBuffers(
+			  myVertexWrapper->myStartSlot
+			, myVertexWrapper->myNumberOfBuffers
+			, &myVertexWrapper->myVertexBuffer
+			, &myVertexWrapper->myStride
+			, &myVertexWrapper->myByteOffset);
+
+		D3DX11_TECHNIQUE_DESC techDesc;
+		myData.myEffect->GetTechnique()->GetDesc(&techDesc);
+
+		for (UINT i = 0; i < techDesc.Passes; ++i)
+		{
+			myData.myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, Engine::GetInstance()->GetContex());
+			Engine::GetInstance()->GetContex()->Draw(myParticles.Size(), 0);
+		}
 	}
 
 	void EmitterInstance::Update()

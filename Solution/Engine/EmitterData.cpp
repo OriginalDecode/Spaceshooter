@@ -18,7 +18,7 @@ namespace Prism
 
 	void EmitterData::CreateInputLayout()
 	{
-		HRESULT hr;
+		HRESULT hr = S_OK;
 
 		D3DX11_PASS_DESC passDesc;
 		myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
