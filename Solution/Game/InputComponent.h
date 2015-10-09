@@ -44,6 +44,7 @@ private:
 	float myAcceleration;
 
 	bool myCameraIsLocked;
+	bool myBoost;
 };
 
 

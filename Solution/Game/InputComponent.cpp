@@ -30,6 +30,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myMaxSteeringSpeed = 0;
 	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
+	myBoost = false;
 	myCanMove = true;
 
 	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
@@ -41,6 +42,8 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 
 void InputComponent::Update(float aDeltaTime)
 {
+	myBoost = false;
+
 	if (myCanMove == true)
 	{
 		if (myInputWrapper->KeyIsPressed(DIK_1))
@@ -76,6 +79,11 @@ void InputComponent::Update(float aDeltaTime)
 		{
 			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
 			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
+		}
+
+		if (myInputWrapper->KeyIsPressed(DIK_LSHIFT) || myInputWrapper->KeyIsPressed(DIK_RSHIFT))
+		{
+			myBoost = true;
 		}
 
 		UpdateMovement(aDeltaTime);
@@ -183,6 +191,11 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
+
+	if (myBoost == true)
+	{
+		myMovementSpeed += myMovementSpeed;
+	}
 
 	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
 }
