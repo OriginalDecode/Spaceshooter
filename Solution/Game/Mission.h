@@ -9,5 +9,11 @@ public:
 	virtual void Start();
 	virtual void End();
 
+	virtual int GetIndex() const;
+	virtual void SetIndex(int aIndex);
+
+protected:
+	int myIndex;
+
 };
 
