@@ -23,6 +23,8 @@ private:
 	void Roll(float aDeltaTime);
 	void ToggleCameraLock();
 
+	void UpdateMovement(const float& aDelta);
+	void UpdateSteering(const float& aDelta);
 
 	CU::InputWrapper* myInputWrapper;
 

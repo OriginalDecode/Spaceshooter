@@ -31,6 +31,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myMaxSteeringSpeed = 0;
 	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
+	myCanMove = true;
 
 	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
 
@@ -41,99 +42,48 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 
 void InputComponent::Update(float aDeltaTime)
 {
-	if (myInputWrapper->KeyIsPressed(DIK_W))
+	if (myCanMove == true)
 	{
-		myMovementSpeed += myAcceleration * aDeltaTime;
+		if (myInputWrapper->KeyIsPressed(DIK_1))
+		{
+			myEntity.SendNote(InputNote(0));
+		}
+		if (myInputWrapper->KeyIsPressed(DIK_2))
+		{
+			myEntity.SendNote(InputNote(1));
+		}
+		if (myInputWrapper->KeyIsPressed(DIK_3))
+		{
+			myEntity.SendNote(InputNote(2));
+		}
+		if (myInputWrapper->KeyIsPressed(DIK_4))
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute");
+		}
+		if (myInputWrapper->KeyIsPressed(DIK_5))
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute");
+		}
+		
+		if (myInputWrapper->MouseIsPressed(0) == true)
+		{
+			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
+		}
+
+		UpdateMovement(aDeltaTime);
+		UpdateSteering(aDeltaTime);		
 	}
 	else
 	{
-		myMovementSpeed -= myAcceleration * aDeltaTime / 10;
-	}
-	
-	if (myInputWrapper->KeyIsPressed(DIK_S))
-	{
-		myMovementSpeed -= myAcceleration * aDeltaTime;
+		RotateX(aDeltaTime / 80);
+		RotateZ(aDeltaTime / 70);
 	}
 
-	if (myInputWrapper->KeyIsPressed(DIK_1))
-	{
-		myEntity.SendNote(InputNote(0));
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_2))
-	{
-		myEntity.SendNote(InputNote(1));
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_3))
-	{
-		myEntity.SendNote(InputNote(2));
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_4))
-	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute");
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_5))
-	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute");
-	}
-	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
-
-	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
 	Roll(aDeltaTime);
-
-	if (myInputWrapper->MouseIsPressed(0) == true)
-	{
-		Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
-	}
-
-	if (myCameraIsLocked == false)
-	{
-		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
-		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
-	}
-
-	if (mySteering.x > mySteeringDeaccelerationLowerLimit)
-	{
-		mySteering.x -= mySteeringDeacceleration * fabs(mySteering.x) * aDeltaTime;
-		if (mySteering.x < 0.f)
-		{
-			mySteering.x = 0.f;
-		}
-	}
-	else if (mySteering.x < -mySteeringDeaccelerationLowerLimit)
-	{
-		mySteering.x += mySteeringDeacceleration * fabs(mySteering.x) * aDeltaTime;
-		if (mySteering.x > 0.f)
-		{
-			mySteering.x = 0.f;
-		}
-	}
-
-	if (mySteering.y > mySteeringDeaccelerationLowerLimit)
-	{
-		mySteering.y -= mySteeringDeacceleration * fabs(mySteering.y) * aDeltaTime;
-		if (mySteering.y < 0.f)
-		{
-			mySteering.y = 0.f;
-		}
-	}
-	else if (mySteering.y < -mySteeringDeaccelerationLowerLimit)
-	{
-		mySteering.y += mySteeringDeacceleration * fabs(mySteering.y) * aDeltaTime;
-		if (mySteering.y > 0.f)
-		{
-			mySteering.y = 0.f;
-		}
-	}
-
-	//std::string tempX = std::to_string(mySteering.x);
-	//tempX += ", " + std::to_string(mySteering.y);
-	//SetWindowTextA(GetActiveWindow(), tempX.c_str());
 
 	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
 	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
-
-
 
 	RotateX(yRotation);
 	RotateY(xRotation);
@@ -161,16 +111,19 @@ void InputComponent::ReadXML(const std::string& aFile)
 
 void InputComponent::Roll(float aDeltaTime)
 {
-	if (myInputWrapper->KeyIsPressed(DIK_Q) || myInputWrapper->KeyIsPressed(DIK_A))
+	if (myCanMove == true)
 	{
-		myRollSpeed += myRollAcceleration * aDeltaTime;
-	}
-	if (myInputWrapper->KeyIsPressed(DIK_E) || myInputWrapper->KeyIsPressed(DIK_D))
-	{
-		myRollSpeed -= myRollAcceleration * aDeltaTime;
-	}
+		if (myInputWrapper->KeyIsPressed(DIK_Q) || myInputWrapper->KeyIsPressed(DIK_A))
+		{
+			myRollSpeed += myRollAcceleration * aDeltaTime;
+		}
+		if (myInputWrapper->KeyIsPressed(DIK_E) || myInputWrapper->KeyIsPressed(DIK_D))
+		{
+			myRollSpeed -= myRollAcceleration * aDeltaTime;
+		}
 
-	myRollSpeed = CU::Clip(myRollSpeed, -myMaxRollSpeed, myMaxRollSpeed);
+		myRollSpeed = CU::Clip(myRollSpeed, -myMaxRollSpeed, myMaxRollSpeed);
+	}
 
 	if (myRollSpeed > 0.f)
 	{
@@ -197,4 +150,68 @@ void InputComponent::ToggleCameraLock()
 	myCameraIsLocked = !myCameraIsLocked;
 	mySteering.x = 0.f;
 	mySteering.y = 0.f;
+}
+
+void InputComponent::UpdateMovement(const float& aDelta)
+{
+	if (myInputWrapper->KeyIsPressed(DIK_W))
+	{
+		myMovementSpeed += myAcceleration * aDelta;
+	}
+	else
+	{
+		myMovementSpeed -= myAcceleration * aDelta / 10;
+	}
+
+	if (myInputWrapper->KeyIsPressed(DIK_S))
+	{
+		myMovementSpeed -= myAcceleration * aDelta;
+	}
+
+	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
+
+	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
+}
+
+void InputComponent::UpdateSteering(const float& aDelta)
+{
+	if (myCameraIsLocked == false || myCanMove == false)
+	{
+		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
+		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
+	}
+
+	if (mySteering.x > mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.x -= mySteeringDeacceleration * fabs(mySteering.x) * aDelta;
+		if (mySteering.x < 0.f)
+		{
+			mySteering.x = 0.f;
+		}
+	}
+	else if (mySteering.x < -mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.x += mySteeringDeacceleration * fabs(mySteering.x) * aDelta;
+		if (mySteering.x > 0.f)
+		{
+			mySteering.x = 0.f;
+		}
+	}
+
+	if (mySteering.y > mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.y -= mySteeringDeacceleration * fabs(mySteering.y) * aDelta;
+		if (mySteering.y < 0.f)
+		{
+			mySteering.y = 0.f;
+		}
+	}
+	else if (mySteering.y < -mySteeringDeaccelerationLowerLimit)
+	{
+		mySteering.y += mySteeringDeacceleration * fabs(mySteering.y) * aDelta;
+		if (mySteering.y > 0.f)
+		{
+			mySteering.y = 0.f;
+		}
+	}
 }
