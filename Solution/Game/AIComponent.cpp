@@ -22,22 +22,27 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myTimeToNextDecision = aTimeBetweenDecisions;
 	myMovementSpeed = aSpeed;
 	myVelocity = myEntity.myOrientation.GetForward() * myMovementSpeed;
+
+	myCanMove = true;
 }
 
 void AIComponent::Update(float aDeltaTime)
 {
 	DL_ASSERT_EXP(myEntityToFollow != nullptr, "AI needs an entity to follow.");
 
-	myTimeToNextDecision -= aDeltaTime;
-	FollowEntity(aDeltaTime);
-
-	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-		
-	CU::Normalize(toTarget);
-	if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
+	if (myCanMove == true)
 	{
-		myTimeToNextDecision = myTimeBetweenDecisions;
-		Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
+		myTimeToNextDecision -= aDeltaTime;
+		FollowEntity(aDeltaTime);
+
+		CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+			
+		CU::Normalize(toTarget);
+		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
+		{
+			myTimeToNextDecision = myTimeBetweenDecisions;
+			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
+		}
 	}
 }
 

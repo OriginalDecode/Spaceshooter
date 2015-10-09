@@ -10,7 +10,7 @@
 Prism::Octree::Octree(int aMaxDepth)
 	: myMaxDepth(aMaxDepth)
 {
-	myRoot = new TreeNode(CU::Vector3<float>(0, 0, 0), 400.f, nullptr, 0, aMaxDepth);
+	myRoot = new TreeNode(CU::Vector3<float>(0, 0, 0), 10000.f, nullptr, 0, aMaxDepth);
 }
 
 Prism::Octree::~Octree()
