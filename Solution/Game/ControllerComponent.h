@@ -20,6 +20,9 @@ public:
 	void Rotate(const CU::Matrix44<float>& aRotation);
 	void SetRotation(const CU::Matrix44<float>& aRotation);
 	void Shoot(const CU::Vector3<float>& aVelocity = { 0.f, 0.f, 0.f });
+	void ResetMovementSpeed();
 
+protected:
+	float myMovementSpeed;
 };
 

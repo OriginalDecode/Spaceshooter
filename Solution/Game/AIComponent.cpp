@@ -20,8 +20,8 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myTargetName = aTargetName;
 
 	myTimeToNextDecision = aTimeBetweenDecisions;
-	mySpeed = aSpeed;
-	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
+	myMovementSpeed = aSpeed;
+	myVelocity = myEntity.myOrientation.GetForward() * myMovementSpeed;
 }
 
 void AIComponent::Update(float aDeltaTime)
@@ -83,7 +83,7 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	myEntity.myOrientation.myMatrix[10] = myVelocity.z;
 	myEntity.myOrientation.myMatrix[11] = 0;
 
-	myVelocity *= mySpeed / 10;
+	myVelocity *= myMovementSpeed / 10;
 
 	DL_ASSERT_EXP(myEntity.GetComponent<PhysicsComponent>() != nullptr, "AI component needs physics component for movement."); // remove later
 	myEntity.GetComponent<PhysicsComponent>()->AddVelocity(myVelocity * aDeltaTime);
