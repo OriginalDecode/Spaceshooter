@@ -24,6 +24,10 @@ void Prism::Octree::Add(Instance* aInstance)
 	myRoot->InsertObjectDown(aInstance);
 }
 
+void Prism::Octree::Remove(Instance* aInstance)
+{
+	myRoot->Remove(aInstance);
+}
 void Prism::Octree::Update()
 {
 	myRoot->Update();

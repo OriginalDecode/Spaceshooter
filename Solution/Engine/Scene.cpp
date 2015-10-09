@@ -123,7 +123,11 @@ void Prism::Scene::AddLight(SpotLight* aLight)
 
 void Prism::Scene::RemoveInstance(Instance* aInstance) 
 {
+#ifdef SCENE_USE_OCTREE
+	myOctree->Remove(aInstance);
+#else
 	myInstances.RemoveCyclic(aInstance);
+#endif
 }
 
 void Prism::Scene::SetCamera(Camera* aCamera)

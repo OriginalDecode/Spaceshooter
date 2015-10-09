@@ -27,11 +27,18 @@ namespace Prism
 		void Update();
 
 		void InsertObjectDown(Instance* anObject);
+		void Remove(Instance* anObject);
 		void GetOccupantsInAABB(const Frustum& aFrustum
 			, CU::GrowingArray<Instance*>& aOutArray);
 	private:
+		enum class eModifyType
+		{
+			INSERT,
+			REMOVE,
+		};
 		void operator=(TreeNode&) = delete;
 
+		void Modify(Instance* anObject, eModifyType aModifyType);
 		CU::Vector3<float> GetMinCorner() const;
 		CU::Vector3<float> GetMaxCorner() const;
 		TreeNode* SpawnChild(int anId);
@@ -52,6 +59,17 @@ namespace Prism
 		CU::GrowingArray<Instance*> myObjectsStatic;
 		bool myContainsObject;
 	};
+
+
+	inline void Prism::TreeNode::InsertObjectDown(Instance* anObject)
+	{
+		Modify(anObject, eModifyType::INSERT);
+	}
+
+	inline void Prism::TreeNode::Remove(Instance* anObject)
+	{
+		Modify(anObject, eModifyType::REMOVE);
+	}
 
 	inline CU::Vector3<float> TreeNode::GetMinCorner() const
 	{
