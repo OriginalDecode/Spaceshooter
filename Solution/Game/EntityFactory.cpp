@@ -296,8 +296,16 @@ void EntityFactory::LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& a
 void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<PhysicsComponent>();
-	aDocument;
-	aPhysicsComponentElement;
+
+	for (tinyxml2::XMLElement* e = aPhysicsComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Weight").c_str()) == 0)
+		{
+			float weight = 0;
+			aDocument.ForceReadAttribute(e, "value", weight);
+			aEntityToAddTo.myEntity->GetComponent<PhysicsComponent>()->Init(weight);
+		}
+	}
 }
 
 void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent)
