@@ -63,7 +63,7 @@ void Prism::Scene::Render()
 
 	//myInstances.RemoveAll();
 	//myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
-
+	//Engine::GetInstance()->PrintDebugText(myInstances.Size(), { 600.f, -600.f });
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
 		myInstances[i]->UpdateDirectionalLights(myDirectionalLightData);

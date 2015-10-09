@@ -17,5 +17,6 @@ private:
 	Entity& myPlayer;
 	int myCurrentMission;
 	CU::GrowingArray<Mission*> myMissions;
+	CU::GrowingArray<Mission*> myMissionsNotOrder;
 };
 

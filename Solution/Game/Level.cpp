@@ -8,7 +8,8 @@
 #include "CollisionManager.h"
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
-#include "Engine.h"
+#include <Engine.h>
+#include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
@@ -36,7 +37,6 @@
 #include <SpotLight.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
-
 
 Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
@@ -145,7 +145,7 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
 	delete mySkySphere;
-	mySkySphere = new Prism::Instance(*skySphere);
+	mySkySphere = new Prism::Instance(*skySphere, Prism::eOctreeType::NOT_IN_OCTREE);
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
@@ -224,7 +224,7 @@ void Level::OnResize(int aWidth, int aHeight)
 
 Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 {
-	Entity* newEntity = new Entity(eEntityType::TRIGGER, *myScene);
+	Entity* newEntity = new Entity(eEntityType::TRIGGER, *myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 	float entityRadius;
 	aReader.ForceReadAttribute(aElement, "radius", entityRadius);
 	myEntityFactory->CopyEntity(newEntity, "trigger");
@@ -294,7 +294,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "enemy"))
 	{
-		Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene);
+		Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
 		std::string enemyType;
 		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
 		myEntityFactory->CopyEntity(newEntity, enemyType);
@@ -328,7 +328,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "prop"))
 	{
-		Entity* newEntity = new Entity(eEntityType::PROP, *myScene);
+		Entity* newEntity = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::STATIC);
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
@@ -365,7 +365,7 @@ void Level::ReadXML(const std::string& aFile)
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "powerup"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "powerup"))
 	{
-		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene);
+		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene, Prism::eOctreeType::STATIC);
 		float entityRadius;
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
@@ -430,7 +430,7 @@ int Level::GetEnemiesAlive() const
 
 void Level::LoadPlayer()
 {
-	Entity* player = new Entity(eEntityType::PLAYER, *myScene);
+	Entity* player = new Entity(eEntityType::PLAYER, *myScene, Prism::eOctreeType::DYNAMIC);
 	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
 		, "Data/effect/NoTextureEffect.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);

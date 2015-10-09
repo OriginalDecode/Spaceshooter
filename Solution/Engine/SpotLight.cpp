@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "EngineEnums.h"
 #include "Model.h"
 #include "ModelLoader.h"
 #include "Instance.h"
@@ -12,7 +13,7 @@ namespace Prism
 	void SpotLight::Initiate()
 	{
 		ModelProxy* model = Engine::GetInstance()->GetModelLoader()->LoadLightCube(1, 1, 1);
-		myInstance = new Instance(*model);
+		myInstance = new Instance(*model, eOctreeType::NOT_IN_OCTREE);
 	}
 
 	void SpotLight::Render(Camera* aCamera)
