@@ -21,6 +21,7 @@ namespace Prism
 		~Octree();
 
 		void Add(Instance* aInstance);
+		void Remove(Instance* aInstance);
 		void Update();
 		void GetOccupantsInAABB(const Frustum& aFrustum, CU::GrowingArray<Instance*>& aOutArray);
 

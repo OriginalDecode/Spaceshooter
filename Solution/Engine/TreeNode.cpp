@@ -84,66 +84,6 @@ void Prism::TreeNode::Update()
 	myContainsObject = containsObject|| myObjectsDynamic.Size() > 0 || myObjectsStatic.Size() > 0;
 }
 
-void Prism::TreeNode::InsertObjectDown(Instance* anObject)
-{
-	bool straddle = false;
-	int childIndex = 0;
-
-	for (int i = 0; i < 3; ++i)
-	{
-		float delta = 0;
-
-		if (i == 0)
-		{
-			delta = anObject->GetPosition().x - myPosition.x;
-		}
-		else if (i == 1)
-		{
-			delta = anObject->GetPosition().y - myPosition.y;
-		}
-		else if (i == 2)
-		{
-			delta = anObject->GetPosition().z - myPosition.z;
-		}
-
-		if (abs(delta) + myHalfWidth * (myLooseness - 1.f) <= anObject->GetRadius())
-		{
-			straddle = true;
-			break;
-		}
-
-		if (delta > 0.0f)
-		{
-			childIndex |= (1 << i);
-		}
-	}
-	
-	if (straddle == false && myDepth < myMaxDepth - 1)
-	{
-		if (myChildren[childIndex] == nullptr)
-		{
-			myChildren[childIndex] = SpawnChild(childIndex);
-		}
-
-		myChildren[childIndex]->InsertObjectDown(anObject);
-	}
-	else
-	{
-		if (anObject->GetOctreeType() == eOctreeType::DYNAMIC)
-		{
-			myObjectsDynamic.Add(anObject);
-		}
-		else if (anObject->GetOctreeType() == eOctreeType::STATIC)
-		{
-			myObjectsStatic.Add(anObject);
-		}
-		else
-		{
-			DL_ASSERT("Unknown octree type.");
-		}
-	}
-}
-
 void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	, CU::GrowingArray<Instance*>& aOutArray)
 {
@@ -205,6 +145,83 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 			ss << i << " ";
 #endif
 			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
+		}
+	}
+}
+
+void Prism::TreeNode::Modify(Instance* anObject, eModifyType aModifyType)
+{
+	bool straddle = false;
+	int childIndex = 0;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		float delta = 0;
+
+		if (i == 0)
+		{
+			delta = anObject->GetPosition().x - myPosition.x;
+		}
+		else if (i == 1)
+		{
+			delta = anObject->GetPosition().y - myPosition.y;
+		}
+		else if (i == 2)
+		{
+			delta = anObject->GetPosition().z - myPosition.z;
+		}
+
+		if (abs(delta) + myHalfWidth * (myLooseness - 1.f) <= anObject->GetRadius())
+		{
+			straddle = true;
+			break;
+		}
+
+		if (delta > 0.0f)
+		{
+			childIndex |= (1 << i);
+		}
+	}
+
+	if (straddle == false && myDepth < myMaxDepth - 1)
+	{
+		if (myChildren[childIndex] == nullptr)
+		{
+			DL_ASSERT_EXP(aModifyType != eModifyType::REMOVE, "Error: TreeNode not found to remove object.");
+			myChildren[childIndex] = SpawnChild(childIndex);
+		}
+
+		myChildren[childIndex]->Modify(anObject, aModifyType);
+	}
+	else
+	{
+		if (anObject->GetOctreeType() == eOctreeType::DYNAMIC)
+		{
+			switch (aModifyType)
+			{
+			case eModifyType::INSERT:
+				myObjectsDynamic.Add(anObject);
+				break;
+			case eModifyType::REMOVE:
+				myObjectsDynamic.RemoveCyclic(anObject);
+				break;
+			}
+		}
+		else if (anObject->GetOctreeType() == eOctreeType::STATIC)
+		{
+			switch (aModifyType)
+			{
+			case eModifyType::INSERT:
+				myObjectsStatic.Add(anObject);
+				break;
+			case eModifyType::REMOVE:
+				myObjectsStatic.RemoveCyclic(anObject);
+				break;
+			}
+		}
+		else
+		{
+			DL_ASSERT("Unknown octree type.");
 		}
 	}
 }

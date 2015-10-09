@@ -67,7 +67,22 @@ void InputComponent::Update(float aDeltaTime)
 	{
 		myEntity.SendNote(InputNote(2));
 	}
-
+	if (myInputWrapper->KeyDown(DIK_4))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute");
+	}
+	if (myInputWrapper->KeyDown(DIK_5))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute");
+	}
+	if (myInputWrapper->KeyDown(DIK_6))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume");
+	}
+	if (myInputWrapper->KeyDown(DIK_7))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume");
+	}
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
 	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
