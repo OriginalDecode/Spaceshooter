@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "EngineEnums.h"
 #include "Frustum.h"
 #include "Instance.h"
 #include <Intersection.h>
@@ -14,7 +15,8 @@ Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth,
 	, myDepth(aDepth)
 	, myMaxDepth(aMaxDepth)
 	, myLooseness(1.f)
-	, myObjects(32)
+	, myObjectsDynamic(16)
+	, myObjectsStatic(16)
 {
 	myLooseWidth = myHalfWidth * myLooseness;
 }
@@ -57,6 +59,9 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 		}
 	}
 
+	int apa = 5;
+
+
 	if (straddle == false && myDepth < myMaxDepth - 1)
 	{
 		if (myChildren[childIndex] == nullptr)
@@ -68,7 +73,18 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 	}
 	else
 	{
-		myObjects.Add(anObject);
+		if (anObject->GetOctreeType() == eOctreeType::DYNAMIC)
+		{
+			myObjectsDynamic.Add(anObject);
+		}
+		else if (anObject->GetOctreeType() == eOctreeType::STATIC)
+		{
+			myObjectsStatic.Add(anObject);
+		}
+		else
+		{
+			DL_ASSERT("Unknown octree type.");
+		}
 	}
 }
 
@@ -131,21 +147,28 @@ bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAAB
 void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	, CU::GrowingArray<Instance*>& aOutArray)
 {
-	for (int i = 0; i < myObjects.Size(); ++i)
+	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
 	{
-		if (aFrustum.Inside(myObjects[i]->GetPosition(), myObjects[i]->GetRadius()) == true)
+		if (aFrustum.Inside(myObjectsDynamic[i]->GetPosition(), myObjectsDynamic[i]->GetRadius()) == true)
 		{
-			aOutArray.Add(myObjects[i]);
+			aOutArray.Add(myObjectsDynamic[i]);
+		}
+	}
+	for (int i = 0; i < myObjectsStatic.Size(); ++i)
+	{
+		if (aFrustum.Inside(myObjectsStatic[i]->GetPosition(), myObjectsStatic[i]->GetRadius()) == true)
+		{
+			aOutArray.Add(myObjectsStatic[i]);
 		}
 	}
 
 	for (int i = 0; i < 8; ++i)
 	{
-		if (myChildren[i] != nullptr)
-			//&& CU::Intersection::AABBvsAABB(myChildren[i]->GetMinCorner()
-			//, myChildren[i]->GetMaxCorner()
-			//, aFrustum.GetCornerMin()
-			//, aFrustum.GetCornerMax()) == true)
+		if (myChildren[i] != nullptr
+			&& CU::Intersection::AABBvsAABB(myChildren[i]->GetMinCorner()
+			, myChildren[i]->GetMaxCorner()
+			, aFrustum.GetCornerMin()
+			, aFrustum.GetCornerMax()) == true)
 		{
 			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
 		}
