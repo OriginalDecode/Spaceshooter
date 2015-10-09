@@ -22,7 +22,16 @@ public:
 	void Shoot(const CU::Vector3<float>& aVelocity = { 0.f, 0.f, 0.f });
 	void ResetMovementSpeed();
 
+	void SetCanMove(const bool& aCanMove);
+	void DisableMovement(const float& aSeconds);
+
 protected:
 	float myMovementSpeed;
+	float myTimeBeforeMovement;
+	bool myCanMove;
 };
 
+inline void ControllerComponent::SetCanMove(const bool& aCanMove)
+{
+	myCanMove = aCanMove;
+}

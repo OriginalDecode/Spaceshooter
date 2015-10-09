@@ -503,4 +503,14 @@ void Level::UpdateDebug()
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
+	if (myInputWrapper->KeyDown(DIK_L))
+	{
+		myPlayer->GetComponent<InputComponent>()->DisableMovement(1.f);
+	}
+
+	if (myInputWrapper->KeyDown(DIK_K))
+	{
+		myPlayer->GetComponent<InputComponent>()->DisableMovement(1.f);
+		myPlayer->GetComponent<PhysicsComponent>()->MoveForward(200.f);
+	}
 }
