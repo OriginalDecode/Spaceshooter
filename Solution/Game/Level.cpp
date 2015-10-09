@@ -44,16 +44,16 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 {
 	myScene = new Prism::Scene();
 	myWeaponFactory = new WeaponFactory();
-	myWeaponFactory->LoadWeapons("Data/weapons/WeaponList.xml");
-	myWeaponFactory->LoadProjectiles("Data/weapons/projectiles/ProjectileList.xml");
+	myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
+	myWeaponFactory->LoadProjectiles("Data/Script/LI_list_projectile.xml");
 	myEntityFactory = new EntityFactory(myWeaponFactory);
-	myEntityFactory->LoadEntites("Data/entities/EntityList.xml");
+	myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml");
 	myInputWrapper = aInputWrapper;
 	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
-	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/weapons/projectiles/ProjectileList.xml");
+	myBulletManager->LoadFromFactory(myWeaponFactory, myEntityFactory, "Data/Script/LI_list_projectile.xml");
 
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
@@ -268,7 +268,7 @@ void Level::ReadXML(const std::string& aFile)
 	
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap(cubeMap);
 
-	SetSkySphere(skySphere, "Data/effect/SkyboxEffect.fx");
+	SetSkySphere(skySphere, "Data/Resource/Shader/S_effect_skybox.fx");
 
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "directionallight"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "directionallight"))
@@ -435,8 +435,8 @@ int Level::GetEnemiesAlive() const
 void Level::LoadPlayer()
 {
 	Entity* player = new Entity(eEntityType::PLAYER, *myScene, Prism::eOctreeType::DYNAMIC);
-	player->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Player/SM_Cockpit.fbx"
-		, "Data/effect/NoTextureEffect.fx");
+	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
+		, "Data/Resource/Shader/S_effect_no_texture.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
@@ -448,7 +448,7 @@ void Level::LoadPlayer()
 	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 
 	XMLReader reader;
-	reader.OpenDocument("Data/script/player.xml");
+	reader.OpenDocument("Data/Setting/SET_player.xml");
 	int health = 0;
 	bool invulnerable = false;
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);

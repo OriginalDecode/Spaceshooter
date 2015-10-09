@@ -64,7 +64,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
-	ReadSetup(setup, "Data/bin/config.bin");
+	ReadSetup(setup, "Data/Setting/SET_config.bin");
 
 	HWND hwnd;
 

@@ -24,12 +24,13 @@ void Prism::Octree::Add(Instance* aInstance)
 	myRoot->InsertObjectDown(aInstance);
 }
 
+void Prism::Octree::Remove(Instance* aInstance)
+{
+	myRoot->Remove(aInstance);
+}
 void Prism::Octree::Update()
 {
-	//std::stringstream ss;
-	//static int numberOfNodes[7];
-	//ss << 
-	//Engine::GetInstance()->PrintDebugText()
+	myRoot->Update();
 }
 
 void Prism::Octree::GetOccupantsInAABB(const Frustum& aFrustum

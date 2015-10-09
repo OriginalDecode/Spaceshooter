@@ -34,7 +34,7 @@ Prism::Model2D::~Model2D()
 void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
 {
 	myTextureSize = aTextureSize;
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/SpriteEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_sprite.fx");
 
 	if (myEffect == nullptr)
 	{

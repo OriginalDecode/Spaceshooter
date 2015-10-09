@@ -123,7 +123,7 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		{
 			DL_MESSAGE_BOX((char*)compilationMsgs->GetBufferPointer(), "Effect Error", MB_ICONWARNING);
 			myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect(
-				"Data/effect/SuperUglyDebugEffect.fx")->myEffect;
+				"Data/Resource/Shader/S_effect_debug.fx")->myEffect;
 		} 
 		else 
 		{

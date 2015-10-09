@@ -32,11 +32,11 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
 
-	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
+	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
 
 	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Camera Lock", InputComponent::ToggleCameraLock, this);
 
-	ReadXML("Data/script/player.xml");
+	ReadXML("Data/Setting/SET_player.xml");
 }
 
 void InputComponent::Update(float aDeltaTime)
@@ -67,10 +67,17 @@ void InputComponent::Update(float aDeltaTime)
 	{
 		myEntity.SendNote(InputNote(2));
 	}
-
-	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
+	if (myInputWrapper->KeyIsPressed(DIK_4))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute");
+	}
+	if (myInputWrapper->KeyIsPressed(DIK_5))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute");
+	}
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
+	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
 	Roll(aDeltaTime);
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
