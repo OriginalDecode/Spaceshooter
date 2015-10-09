@@ -152,7 +152,6 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 bool Level::LogicUpdate(float aDeltaTime)
 {
 	myCollisionManager->CleanUp();
-	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 
 	if (myPlayer->GetAlive() == false)
 	{
@@ -186,6 +185,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i]->myOrientation.GetPos(), eGUINoteType::ENEMY));
 		}
 	}
+
+	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 
 	UpdateDebug();
 
@@ -458,7 +459,6 @@ void Level::LoadPlayer()
 	player->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health), invulnerable);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
-	myPlayer = player;
 	myEntities.Add(player);
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
@@ -466,6 +466,8 @@ void Level::LoadPlayer()
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
 
 	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
+	//player->myOrientation.SetPos({ 306, 306, 306, 1 });
+	myPlayer = player;
 }
 
 void Level::CompleteLevel()
