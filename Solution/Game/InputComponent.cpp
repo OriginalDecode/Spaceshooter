@@ -69,19 +69,19 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	if (myInputWrapper->KeyDown(DIK_4))
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute");
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
 	}
 	if (myInputWrapper->KeyDown(DIK_5))
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute");
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
 	}
 	if (myInputWrapper->KeyDown(DIK_6))
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume");
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume", 0);
 	}
 	if (myInputWrapper->KeyDown(DIK_7))
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume");
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
 	}
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
@@ -91,7 +91,7 @@ void InputComponent::Update(float aDeltaTime)
 	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
 		Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
 	}
 
 	if (myCameraIsLocked == false)
