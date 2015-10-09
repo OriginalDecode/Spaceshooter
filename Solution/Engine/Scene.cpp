@@ -15,7 +15,7 @@
 
 Prism::Scene::Scene()
 #ifdef SCENE_USE_OCTREE
-	: myOctree(new Octree(5))
+	: myOctree(new Octree(6))
 #endif
 {
 	myInstances.Init(4);

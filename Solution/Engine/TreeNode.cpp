@@ -14,8 +14,10 @@ std::stringstream ss3;
 int totalTreeNodes = 0;
 int maxNumOfDynamic = 0;
 int maxDynamicDepth = 0;
+int maxDynamicHalfWidth = 0;
 int maxNumOfStatic = 0;
 int maxStaticDepth = 0;
+int maxStaticHalfWidth = 0;
 #endif
 
 Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth, TreeNode* aParent
@@ -91,8 +93,8 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	if (myDepth == 0)
 	{
 		ss << "Total: " << totalTreeNodes;
-		ss2 << "Max Dynamic: " << maxNumOfDynamic << " depth: " << maxDynamicDepth;
-		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth;
+		ss2 << "Max Dynamic: " << maxNumOfDynamic << " depth: " << maxDynamicDepth << " halfWidth: " << maxDynamicHalfWidth;
+		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth << " halfWidth: " << maxStaticHalfWidth;
 		Engine::GetInstance()->PrintDebugText(ss.str(), { 700.f, -700.f });
 		Engine::GetInstance()->PrintDebugText(ss2.str(), { 700.f, -730.f });
 		Engine::GetInstance()->PrintDebugText(ss3.str(), { 700.f, -760.f });
@@ -111,11 +113,13 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	{
 		maxNumOfDynamic = myObjectsDynamic.Size();
 		maxDynamicDepth = myDepth;
+		maxDynamicHalfWidth = myHalfWidth;
 	}
 	if (myObjectsStatic.Size() > maxNumOfStatic)
 	{
 		maxNumOfStatic = myObjectsStatic.Size();
 		maxStaticDepth = myDepth;
+		maxStaticHalfWidth = myHalfWidth;
 	}
 #endif
 	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
