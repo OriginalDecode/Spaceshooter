@@ -383,7 +383,7 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		//CU::ToLower(powerUp);
 
-		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', true);
+		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', false);
 
 		//std::string powerType = CU::GetSubString(tempString, '_', false);
 
