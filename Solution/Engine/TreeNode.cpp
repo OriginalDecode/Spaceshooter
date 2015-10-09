@@ -34,6 +34,54 @@ Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth,
 
 Prism::TreeNode::~TreeNode()
 {
+	for (int i = 0; i < 8; ++i)
+	{
+		delete myChildren[i];
+	}
+}
+
+void Prism::TreeNode::Update()
+{
+	for (int i = myObjectsDynamic.Size() - 1; i >= 0; --i)
+	{
+		Instance* object = myObjectsDynamic[i];
+		if (myParent != nullptr && CheckEnclosed(object) == false)
+		{
+			myObjectsDynamic.RemoveCyclicAtIndex(i);
+			myParent->InsertObjectUp(object);
+		}
+		else
+		{
+			myObjectsDynamic.RemoveCyclicAtIndex(i);
+			InsertObjectDown(object);
+		}
+	}
+	
+	for (int i = 0; i < 8; ++i)
+	{
+		if (myChildren[i] != nullptr)
+		{
+			myChildren[i]->Update();
+		}
+	}
+
+	bool containsObject = false;
+
+	for (int i = 0; i < 8; ++i)
+	{
+		if (myChildren[i] != nullptr && myChildren[i]->myContainsObject == true)
+		{
+			containsObject = true;
+			break;
+		}
+		else if (myChildren[i] != nullptr)
+		{
+			delete myChildren[i];
+			myChildren[i] = nullptr;
+		}
+	}
+
+	myContainsObject = containsObject|| myObjectsDynamic.Size() > 0 || myObjectsStatic.Size() > 0;
 }
 
 void Prism::TreeNode::InsertObjectDown(Instance* anObject)
@@ -94,62 +142,6 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 			DL_ASSERT("Unknown octree type.");
 		}
 	}
-}
-
-Prism::TreeNode* Prism::TreeNode::SpawnChild(int anId)
-{
-	CU::Vector3<int> dir;
-
-	switch (anId)
-	{
-	case 0:
-		dir = CU::Vector3<int>(-1, -1, -1);
-		break;
-	case 1:
-		dir = CU::Vector3<int>(+1, -1, -1);
-		break;
-	case 2:
-		dir = CU::Vector3<int>(-1, +1, -1);
-		break;
-	case 3:
-		dir = CU::Vector3<int>(+1, +1, -1);
-		break;
-	case 4:
-		dir = CU::Vector3<int>(-1, -1, +1);
-		break;
-	case 5:
-		dir = CU::Vector3<int>(+1, -1, +1);
-		break;
-	case 6:
-		dir = CU::Vector3<int>(-1, +1, +1);
-		break;
-	case 7:
-		dir = CU::Vector3<int>(+1, +1, +1);
-		break;
-	default:
-		DL_ASSERT("bad index!");
-		break;
-	}
-
-	CU::Vector3<float> pos(myPosition);
-	pos.x += dir.x * myHalfWidth / 2.f;
-	pos.y += dir.y * myHalfWidth / 2.f;
-	pos.z += dir.z * myHalfWidth / 2.f;
-	return new TreeNode(pos, myHalfWidth / 2.f, this, myDepth + 1, myMaxDepth);
-}
-
-bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAABB)
-{
-	CU::Vector3<float> myCenter(myPosition.x, myPosition.y, myPosition.z);
-
-	CU::Vector3<float> otherCenter(aAABB.myMinPos.x + aAABB.myExtents.x / 2.f, aAABB.myMinPos.y + aAABB.myExtents.y / 2.f, aAABB.myMinPos.z + aAABB.myExtents.z / 2.f);
-
-
-	if (abs(myCenter.x - otherCenter.x) > (myHalfWidth + aAABB.myExtents.x / 2.f)) return false;
-	if (abs(myCenter.y - otherCenter.y) > (myHalfWidth + aAABB.myExtents.y / 2.f)) return false;
-	if (abs(myCenter.z - otherCenter.z) > (myHalfWidth + aAABB.myExtents.z / 2.f)) return false;
-
-	return true;
 }
 
 void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
@@ -214,5 +206,83 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 #endif
 			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
 		}
+	}
+}
+
+Prism::TreeNode* Prism::TreeNode::SpawnChild(int anId)
+{
+	CU::Vector3<int> dir;
+
+	switch (anId)
+	{
+	case 0:
+		dir = CU::Vector3<int>(-1, -1, -1);
+		break;
+	case 1:
+		dir = CU::Vector3<int>(+1, -1, -1);
+		break;
+	case 2:
+		dir = CU::Vector3<int>(-1, +1, -1);
+		break;
+	case 3:
+		dir = CU::Vector3<int>(+1, +1, -1);
+		break;
+	case 4:
+		dir = CU::Vector3<int>(-1, -1, +1);
+		break;
+	case 5:
+		dir = CU::Vector3<int>(+1, -1, +1);
+		break;
+	case 6:
+		dir = CU::Vector3<int>(-1, +1, +1);
+		break;
+	case 7:
+		dir = CU::Vector3<int>(+1, +1, +1);
+		break;
+	default:
+		DL_ASSERT("bad index!");
+		break;
+	}
+
+	CU::Vector3<float> pos(myPosition);
+	pos.x += dir.x * myHalfWidth / 2.f;
+	pos.y += dir.y * myHalfWidth / 2.f;
+	pos.z += dir.z * myHalfWidth / 2.f;
+	return new TreeNode(pos, myHalfWidth / 2.f, this, myDepth + 1, myMaxDepth);
+}
+
+bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAABB) const
+{
+	CU::Vector3<float> myCenter(myPosition.x, myPosition.y, myPosition.z);
+
+	CU::Vector3<float> otherCenter(aAABB.myMinPos.x + aAABB.myExtents.x / 2.f, aAABB.myMinPos.y + aAABB.myExtents.y / 2.f, aAABB.myMinPos.z + aAABB.myExtents.z / 2.f);
+
+
+	if (abs(myCenter.x - otherCenter.x) > (myHalfWidth + aAABB.myExtents.x / 2.f)) return false;
+	if (abs(myCenter.y - otherCenter.y) > (myHalfWidth + aAABB.myExtents.y / 2.f)) return false;
+	if (abs(myCenter.z - otherCenter.z) > (myHalfWidth + aAABB.myExtents.z / 2.f)) return false;
+
+	return true;
+}
+
+bool Prism::TreeNode::CheckEnclosed(Instance* anObject) const
+{
+	return myPosition.x - myHalfWidth < anObject->GetPosition().x - anObject->GetRadius()
+		&& myPosition.y - myHalfWidth < anObject->GetPosition().y - anObject->GetRadius()
+		&& myPosition.z - myHalfWidth < anObject->GetPosition().z - anObject->GetRadius()
+		&& myPosition.x + myHalfWidth > anObject->GetPosition().x + anObject->GetRadius()
+		&& myPosition.y + myHalfWidth > anObject->GetPosition().y + anObject->GetRadius()
+		&& myPosition.z + myHalfWidth > anObject->GetPosition().z + anObject->GetRadius();
+}
+
+void Prism::TreeNode::InsertObjectUp(Instance* anObject)
+{
+	if (myParent != nullptr && CheckEnclosed(anObject) == false)
+	{
+		myParent->InsertObjectUp(anObject);
+	}
+	else
+	{
+		InsertObjectDown(anObject);
 	}
 }
