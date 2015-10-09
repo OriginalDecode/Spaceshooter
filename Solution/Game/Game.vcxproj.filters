@@ -101,9 +101,11 @@
     <ClCompile Include="ShieldComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="MessageState.cpp">
       <Filter>StateStack</Filter>
+    </ClCompile>
+    <ClCompile Include="PropComponent.cpp">
+      <Filter>Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -237,12 +239,14 @@
     <ClInclude Include="ShieldComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="PropComponent.h" />
     <ClInclude Include="MessageState.h">
       <Filter>StateStack</Filter>
     </ClInclude>
     <ClInclude Include="GUINote.h">
       <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="PropComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
