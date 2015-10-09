@@ -15,7 +15,7 @@ namespace Prism
 		, myInteractRange(150.f)
 	{
 		myText = new Text();
-		myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
+		myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 		myMenuElements.Init(4);
 	}

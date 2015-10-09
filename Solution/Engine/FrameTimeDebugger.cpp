@@ -93,11 +93,11 @@ namespace Prism
 		
 				it->second.myNameText = new Text();
 				it->second.myNameText->Init(
-					Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
+					Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 		
 				it->second.myTimeText = new Text();
 				it->second.myTimeText->Init(
-					Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
+					Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 			}
 		
 			LARGE_INTEGER time;

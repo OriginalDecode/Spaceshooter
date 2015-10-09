@@ -31,11 +31,11 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
 
-	WATCH_FILE("Data/script/player.xml", InputComponent::ReadXML);
+	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
 
 	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Camera Lock", InputComponent::ToggleCameraLock, this);
 
-	ReadXML("Data/script/player.xml");
+	ReadXML("Data/Setting/SET_player.xml");
 }
 
 void InputComponent::Update(float aDeltaTime)

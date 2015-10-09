@@ -154,7 +154,7 @@ namespace Prism
 
 
 		myDebugText = new Text();
-		myDebugText->Init(GetFontContainer()->GetFont("Data/resources/font/font.dds"));
+		myDebugText->Init(GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);

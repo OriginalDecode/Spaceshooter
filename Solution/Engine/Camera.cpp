@@ -13,8 +13,8 @@ namespace Prism
 		, myFar(2500.f)
 	{
 		myFrustum = new Frustum(aPlayerMatrix, myNear, myFar);
-		WATCH_FILE("Data/script/camera.xml", Camera::ReadXML);
-		ReadXML("Data/script/camera.xml");
+		WATCH_FILE("Data/Setting/SET_camera.xml", Camera::ReadXML);
+		ReadXML("Data/Setting/SET_camera.xml");
 	}
 
 
@@ -27,7 +27,7 @@ namespace Prism
 	{
 		Sleep(10);
 		XMLReader reader;
-		reader.OpenDocument("Data/script/camera.xml");
+		reader.OpenDocument("Data/Setting/SET_camera.xml");
 		tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("camera");
 		reader.ForceReadAttribute(levelElement, "fov", myFOV);
 		myFOV *= 3.14159f / 180.f;

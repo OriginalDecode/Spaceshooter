@@ -49,7 +49,7 @@ Prism::Text::~Text()
 
 void Prism::Text::Init(Font* aFont)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/FontEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_font.fx");
 	myFont = aFont;
 	myCharSize = myFont->GetCharSize();
 

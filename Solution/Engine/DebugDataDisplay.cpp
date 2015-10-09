@@ -32,7 +32,7 @@ Prism::DebugDataDisplay::~DebugDataDisplay()
 void Prism::DebugDataDisplay::Init()
 {
 	myText = new Text();
-	myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/resources/font/font.dds"));
+	myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 	myFrameDebugger = new FrameTimeDebugger();
 	myFrameDebugger->Init();
