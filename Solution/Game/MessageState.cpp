@@ -39,7 +39,7 @@ void MessageState::EndState()
 {
 }
 
-const eStateStatus MessageState::Update()
+const eStateStatus MessageState::Update(const float&)
 {
 	if (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{

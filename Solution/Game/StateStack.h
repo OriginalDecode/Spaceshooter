@@ -17,7 +17,7 @@ public:
 
 	void PushSubGameState(GameState* aSubGameState);
 	void PushMainGameState(GameState* aMainGameState);
-	bool UpdateCurrentState();
+	bool UpdateCurrentState(const float& aDeltaTime);
 	void RenderCurrentState();
 	void OnResizeCurrentState(int aWidth, int aHeight);
 	void Clear();

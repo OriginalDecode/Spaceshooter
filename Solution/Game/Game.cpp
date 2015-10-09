@@ -98,6 +98,13 @@ bool Game::Update()
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 
+	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
+
+	if (deltaTime > 1.0f / 10.0f)
+	{
+		deltaTime = 1.0f / 10.0f;
+	}
+
 	if (myInputWrapper->KeyUp(DIK_O) == true)
 	{
 		myLockMouse = !myLockMouse;
@@ -109,11 +116,18 @@ bool Game::Update()
 		SetCursorPos(myWindowSize.x / 2, myWindowSize.y / 2);
 	}
 
-	if (myStateStack.UpdateCurrentState() == false)
+	if (myStateStack.UpdateCurrentState(deltaTime) == false)
 	{
 		return false;
 	}
+
+	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
+	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
+	
+	
 	myStateStack.RenderCurrentState();
+	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
 	myLevelFactory->DeleteOldLevel();
 
