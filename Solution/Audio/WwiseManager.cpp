@@ -1,8 +1,5 @@
 #include "WwiseManager.h"
 
-
-
-
 #define GAME_OBJECT_POSTEST 100
 #define DEMO_DEFAULT_POOL_SIZE 2*1024*1024
 #define DEMO_LENGINE_DEFAULT_POOL_SIZE 2*1024*1024
@@ -46,267 +43,242 @@ namespace AK_HELPER
 }
 
 CAkFilePackageLowLevelIOBlocking* m_pLowLevelIO;
-CWwiseManager::CWwiseManager()
-	:myErrorCallbck(nullptr)
+
+namespace Prism
 {
-}
-
-
-CWwiseManager::~CWwiseManager()
-{
-	AK::SoundEngine::StopAll();
-	AK::SoundEngine::UnregisterGameObj(GAME_OBJECT_POSTEST);
-	AK::SoundEngine::ClearBanks();
-	TermWwise();
-}
-
-bool CWwiseManager::Init(const char* aInitBank)
-{
-	AkMemSettings memSettings;
-	AkStreamMgrSettings stmSettings;
-	AkDeviceSettings deviceSettings;
-	AkInitSettings initSettings;
-	AkPlatformInitSettings platformInitSettings;
-	AkMusicSettings musicInit;
-
-	memSettings.uMaxNumPools = 20;
-	AK::StreamMgr::GetDefaultSettings(stmSettings);
-
-	AK::StreamMgr::GetDefaultDeviceSettings(deviceSettings);
-
-	AK::SoundEngine::GetDefaultInitSettings(initSettings);
-	initSettings.uDefaultPoolSize = DEMO_DEFAULT_POOL_SIZE;
-
-	AK::SoundEngine::GetDefaultPlatformInitSettings(platformInitSettings);
-	platformInitSettings.uLEngineDefaultPoolSize = DEMO_LENGINE_DEFAULT_POOL_SIZE;
-
-	AK::MusicEngine::GetDefaultInitSettings(musicInit);
-
-	platformInitSettings.hWnd = GetActiveWindow();
-
-	// Initialize Wwise
-	AkOSChar szError[500];
-	bool bSuccess = InitWwise(memSettings, stmSettings, deviceSettings, initSettings, platformInitSettings, musicInit, szError, (unsigned int)AK_HELPER::AK_ARRAYSIZE(szError));
-	if (!bSuccess)
+	namespace Audio
 	{
-		return false;
-	}
 
-	AkBankID bankIDInit;
-	if (AK::SoundEngine::LoadBank(aInitBank, AK_DEFAULT_POOL_ID, bankIDInit) != AK_Success)
-	{
-		return false;
-	}
-
-	
-	return true;
-}
-
-void CWwiseManager::RegisterObject(int anObjectID)
-{
-	AKRESULT result = AK::SoundEngine::RegisterGameObj(anObjectID, "GameObj");
-}
-
-void CWwiseManager::Update()
-{
-	AK::SoundEngine::RenderAudio();
-}
+		WwiseManager::WwiseManager()
+			:myErrorCallbck(nullptr)
+		{
+		}
 
 
-bool CWwiseManager::LoadBank(const char* aBankPath)
-{
-	AkBankID bankID; // Not used
-	if (AK::SoundEngine::LoadBank(aBankPath, AK_DEFAULT_POOL_ID, bankID) != AK_Success)
-	{
-		char buffer[50];
-		sprintf_s(buffer, "Could not find %s!", aBankPath);
+		WwiseManager::~WwiseManager()
+		{
+			AK::SoundEngine::StopAll();
+			AK::SoundEngine::UnregisterGameObj(GAME_OBJECT_POSTEST);
+			AK::SoundEngine::ClearBanks();
+			TermWwise();
+		}
 
-		CallError(buffer);
-		//SetLoadFileErrorMessage("Positioning_Demo.bnk");
-		return false;
-	}
-	return true;
-}
+		bool WwiseManager::Init(const char* aInitBank)
+		{
+			AkMemSettings memSettings;
+			AkStreamMgrSettings stmSettings;
+			AkDeviceSettings deviceSettings;
+			AkInitSettings initSettings;
+			AkPlatformInitSettings platformInitSettings;
+			AkMusicSettings musicInit;
+
+			memSettings.uMaxNumPools = 20;
+			AK::StreamMgr::GetDefaultSettings(stmSettings);
+
+			AK::StreamMgr::GetDefaultDeviceSettings(deviceSettings);
+
+			AK::SoundEngine::GetDefaultInitSettings(initSettings);
+			initSettings.uDefaultPoolSize = DEMO_DEFAULT_POOL_SIZE;
+
+			AK::SoundEngine::GetDefaultPlatformInitSettings(platformInitSettings);
+			platformInitSettings.uLEngineDefaultPoolSize = DEMO_LENGINE_DEFAULT_POOL_SIZE;
+
+			AK::MusicEngine::GetDefaultInitSettings(musicInit);
+
+			platformInitSettings.hWnd = GetActiveWindow();
+
+			// Initialize Wwise
+			AkOSChar szError[500];
+			bool bSuccess = InitWwise(memSettings, stmSettings, deviceSettings, initSettings, platformInitSettings, musicInit, szError, (unsigned int)AK_HELPER::AK_ARRAYSIZE(szError));
+			if (!bSuccess)
+			{
+				return false;
+			}
+
+			AkBankID bankIDInit;
+			if (AK::SoundEngine::LoadBank(aInitBank, AK_DEFAULT_POOL_ID, bankIDInit) != AK_Success)
+			{
+				return false;
+			}
+
+			AK::SoundEngine::RegisterGameObj(GAME_OBJECT_POSTEST, "Positioning Demo");
+			return true;
+		}
+
+		void WwiseManager::Update()
+		{
+			AK::SoundEngine::RenderAudio();
+		}
 
 
-void CWwiseManager::UnLoadBank(const char* aBankPath)
-{
-	AK::SoundEngine::UnloadBank(aBankPath, nullptr);
-}
+		bool WwiseManager::LoadBank(const char* aBankPath)
+		{
+			AkBankID bankID; // Not used
+			if (AK::SoundEngine::LoadBank(aBankPath, AK_DEFAULT_POOL_ID, bankID) != AK_Success)
+			{
+				char buffer[50];
+				sprintf_s(buffer, "Could not find %s!", aBankPath);
+
+				CallError(buffer);
+				//SetLoadFileErrorMessage("Positioning_Demo.bnk");
+				return false;
+			}
+			return true;
+		}
 
 
-void CWwiseManager::PostEvent(const char* aEvent, int aObjectID)
-{
-	AkPlayingID id = AK::SoundEngine::PostEvent(aEvent, aObjectID);
-}
+		void WwiseManager::UnLoadBank(const char* aBankPath)
+		{
+			AK::SoundEngine::UnloadBank(aBankPath, nullptr);
+		}
 
-void CWwiseManager::SetRTPC(const char* aRTPC, int aValue, int aObjectID)
-{
-	AkRtpcValue val;
-	val = aValue;
-	AK::SoundEngine::SetRTPCValue(aRTPC, val, aObjectID);
-}
 
-void CWwiseManager::SetPosition(float aX, float aY, float aZ, int aObjectID)
-{
-	AkSoundPosition soundPos;
-	soundPos.Position.X = aX;
-	soundPos.Position.Y = aY;
-	soundPos.Position.Z = aZ;
-	soundPos.Orientation.Z = 1;
-	soundPos.Orientation.Y = soundPos.Orientation.X = 0;
-	AKRESULT result = AK::SoundEngine::SetPosition(aObjectID, soundPos);
-	
-}
+		void WwiseManager::PostEvent(const char* aEvent)
+		{
+			AK::SoundEngine::PostEvent(aEvent, GAME_OBJECT_POSTEST);
+		}
 
-void CWwiseManager::SetListenerPosition(float aX, float aY, float aZ)
-{
-	AkListenerPosition soundPos;
-	soundPos.Position.X = aX;
-	soundPos.Position.Y = aY;
-	soundPos.Position.Z = aZ;
-	AKRESULT result = AK::SoundEngine::SetListenerPosition(soundPos);
-}
+		bool WwiseManager::InitWwise(AkMemSettings &in_memSettings, AkStreamMgrSettings &in_stmSettings, AkDeviceSettings &in_deviceSettings, AkInitSettings &in_initSettings, AkPlatformInitSettings &in_platformInitSettings, AkMusicSettings &in_musicInit, AkOSChar* in_szErrorBuffer, unsigned int in_unErrorBufferCharCount)
+		{
+			m_pLowLevelIO = new CAkFilePackageLowLevelIOBlocking();
+			//
+			// Create and initialize an instance of the default memory manager. Note
+			// that you can override the default memory manager with your own. Refer
+			// to the SDK documentation for more information.
+			//
 
-bool CWwiseManager::InitWwise(AkMemSettings &in_memSettings, AkStreamMgrSettings &in_stmSettings, AkDeviceSettings &in_deviceSettings, AkInitSettings &in_initSettings, AkPlatformInitSettings &in_platformInitSettings, AkMusicSettings &in_musicInit, AkOSChar* in_szErrorBuffer, unsigned int in_unErrorBufferCharCount)
-{
-	m_pLowLevelIO = new CAkFilePackageLowLevelIOBlocking();
-	//
-	// Create and initialize an instance of the default memory manager. Note
-	// that you can override the default memory manager with your own. Refer
-	// to the SDK documentation for more information.
-	//
+			AKRESULT res = AK::MemoryMgr::Init(&in_memSettings);
+			if (res != AK_Success)
+			{
+				CallError("Momory manager could not init!");
+				return false;
+			}
 
-	AKRESULT res = AK::MemoryMgr::Init(&in_memSettings);
-	if (res != AK_Success)
-	{
-		CallError("Momory manager could not init!");
-		return false;
-	}
+			//
+			// Create and initialize an instance of the default streaming manager. Note
+			// that you can override the default streaming manager with your own. Refer
+			// to the SDK documentation for more information.
+			//
 
-	//
-	// Create and initialize an instance of the default streaming manager. Note
-	// that you can override the default streaming manager with your own. Refer
-	// to the SDK documentation for more information.
-	//
+			// Customize the Stream Manager settings here.
 
-	// Customize the Stream Manager settings here.
+			if (!AK::StreamMgr::Create(in_stmSettings))
+			{
+				CallError("Stream manager could not init!");
+				return false;
+			}
 
-	if (!AK::StreamMgr::Create(in_stmSettings))
-	{
-		CallError("Stream manager could not init!");
-		return false;
-	}
+			// 
+			// Create a streaming device with blocking low-level I/O handshaking.
+			// Note that you can override the default low-level I/O module with your own. Refer
+			// to the SDK documentation for more information.        
+			//
 
-	// 
-	// Create a streaming device with blocking low-level I/O handshaking.
-	// Note that you can override the default low-level I/O module with your own. Refer
-	// to the SDK documentation for more information.        
-	//
+			// CAkFilePackageLowLevelIOBlocking::Init() creates a streaming device
+			// in the Stream Manager, and registers itself as the File Location Resolver.
+			res = m_pLowLevelIO->Init(in_deviceSettings);
+			if (res != AK_Success)
+			{
+				CallError("Low level IO could not init!");
+				return false;
+			}
 
-	// CAkFilePackageLowLevelIOBlocking::Init() creates a streaming device
-	// in the Stream Manager, and registers itself as the File Location Resolver.
-	res = m_pLowLevelIO->Init(in_deviceSettings);
-	if (res != AK_Success)
-	{
-		CallError("Low level IO could not init!");
-		return false;
-	}
+			//
+			// Create the Sound Engine
+			// Using default initialization parameters
+			//
 
-	//
-	// Create the Sound Engine
-	// Using default initialization parameters
-	//
+			res = AK::SoundEngine::Init(&in_initSettings, &in_platformInitSettings);
+			if (res != AK_Success)
+			{
+				CallError("Sound engine could not init!");
+				return false;
+			}
 
-	res = AK::SoundEngine::Init(&in_initSettings, &in_platformInitSettings);
-	if (res != AK_Success)
-	{
-		CallError("Sound engine could not init!");
-		return false;
-	}
+			//
+			// Initialize the music engine
+			// Using default initialization parameters
+			//
 
-	//
-	// Initialize the music engine
-	// Using default initialization parameters
-	//
-
-	res = AK::MusicEngine::Init(&in_musicInit);
-	if (res != AK_Success)
-	{
-		CallError("Music engine could not init!");
-		return false;
-	}
+			res = AK::MusicEngine::Init(&in_musicInit);
+			if (res != AK_Success)
+			{
+				CallError("Music engine could not init!");
+				return false;
+			}
 
 #ifdef _DEBUG
 #if !defined AK_OPTIMIZED && !defined INTEGRATIONDEMO_DISABLECOMM
-	//
-	// Initialize communications (not in release build!)
-	//
-	AkCommSettings commSettings;
-	AK::Comm::GetDefaultInitSettings(commSettings);
-	res = AK::Comm::Init(commSettings);
-	if (res != AK_Success)
-	{
-		CallError("AkCommSettings error!");
-	}
+			//
+			// Initialize communications (not in release build!)
+			//
+			AkCommSettings commSettings;
+			AK::Comm::GetDefaultInitSettings(commSettings);
+			res = AK::Comm::Init(commSettings);
+			if (res != AK_Success)
+			{
+				CallError("AkCommSettings error!");
+			}
 #endif // AK_OPTIMIZED
 #endif
 
-	//
-	// Register plugins
-	/// Note: This a convenience method for rapid prototyping. 
-	/// To reduce executable code size register/link only the plug-ins required by your game 
-	res = AK::SoundEngine::RegisterAllPlugins();
-	if (res != AK_Success)
-	{
-		CallError("Plugins could not register!");
-	}
+			//
+			// Register plugins
+			/// Note: This a convenience method for rapid prototyping. 
+			/// To reduce executable code size register/link only the plug-ins required by your game 
+			res = AK::SoundEngine::RegisterAllPlugins();
+			if (res != AK_Success)
+			{
+				CallError("Plugins could not register!");
+			}
 
-	return true;
-}
+			return true;
+		}
 
-void CWwiseManager::TermWwise()
-{
+		void WwiseManager::TermWwise()
+		{
 #ifdef _DEBUG
 #if !defined AK_OPTIMIZED && !defined INTEGRATIONDEMO_DISABLECOMM
-	// Terminate communications between Wwise and the game
-	AK::Comm::Term();
+			// Terminate communications between Wwise and the game
+			AK::Comm::Term();
 #endif // AK_OPTIMIZED
 #endif
-	// Terminate the music engine
-	AK::MusicEngine::Term();
+			// Terminate the music engine
+			AK::MusicEngine::Term();
 
-	// Terminate the sound engine
-	if (AK::SoundEngine::IsInitialized())
-	{
-		AK::SoundEngine::Term();
-	}
+			// Terminate the sound engine
+			if (AK::SoundEngine::IsInitialized())
+			{
+				AK::SoundEngine::Term();
+			}
 
-	// Terminate the streaming device and streaming manager
-	// CAkFilePackageLowLevelIOBlocking::Term() destroys its associated streaming device 
-	// that lives in the Stream Manager, and unregisters itself as the File Location Resolver.
-	if (AK::IAkStreamMgr::Get())
-	{
-		m_pLowLevelIO->Term();
-		AK::IAkStreamMgr::Get()->Destroy();
-	}
+			// Terminate the streaming device and streaming manager
+			// CAkFilePackageLowLevelIOBlocking::Term() destroys its associated streaming device 
+			// that lives in the Stream Manager, and unregisters itself as the File Location Resolver.
+			if (AK::IAkStreamMgr::Get())
+			{
+				m_pLowLevelIO->Term();
+				AK::IAkStreamMgr::Get()->Destroy();
+			}
 
-	// Terminate the Memory Manager
-	if (AK::MemoryMgr::IsInitialized())
-	{
-		AK::MemoryMgr::Term();
-	}
-}
+			// Terminate the Memory Manager
+			if (AK::MemoryMgr::IsInitialized())
+			{
+				AK::MemoryMgr::Term();
+			}
+		}
 
-void CWwiseManager::SetErrorCallBack(callback_function aErrorCallback)
-{
-	myErrorCallbck = aErrorCallback;
-}
+		void WwiseManager::SetErrorCallBack(callback_function aErrorCallback)
+		{
+			myErrorCallbck = aErrorCallback;
+		}
 
-void CWwiseManager::CallError(const char* aError)
-{
-	if (myErrorCallbck)
-	{
-		myErrorCallbck(aError);
+		void WwiseManager::CallError(const char* aError)
+		{
+			if (myErrorCallbck)
+			{
+				myErrorCallbck(aError);
+			}
+		}
 	}
 }

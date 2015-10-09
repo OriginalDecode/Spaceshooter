@@ -1,31 +1,33 @@
 #pragma once
 #include <functional>   // std::bind
 
-class CWwiseManager;
-class CAudioInterface
+namespace Prism
 {
-public:
-	static CAudioInterface* GetInstance(){ return myInstance; }
-	static void CreateInstance(){ myInstance = new CAudioInterface(); }
-	static void Destroy(){ delete myInstance; myInstance = nullptr; }
+	namespace Audio
+	{
+		class WwiseManager;
 
-	bool Init(const char* aInitBank);
-	bool LoadBank(const char* aBankPath);
-	void UnLoadBank(const char* aBankPath);
-	void PostEvent(const char* aEvent, int anObjectID);
-	void Update();
-	void SetRTPC(const char* aRTPC, int aValue, int anObjectID);
-	void SetPosition(float aX, float aY, float aZ, int aObjectID);
-	void SetListenerPosition(float aX, float aY, float aZ);
+		class AudioInterface
+		{
+		public:
+			static AudioInterface* GetInstance(){ return myInstance; }
+			static void CreateInstance(){ myInstance = new AudioInterface(); }
+			static void Destroy(){ delete myInstance; myInstance = nullptr; }
 
-	void RegisterObject(int anObjectID);
-	typedef void(*callback_function)(const char*);
-	void SetErrorCallBack(callback_function aErrorCallback);
-private:
-	static CAudioInterface* myInstance;
-	CAudioInterface();
-	~CAudioInterface();
+			bool Init(const char* aInitBank);
+			bool LoadBank(const char* aBankPath);
+			void UnLoadBank(const char* aBankPath);
+			void PostEvent(const char* aEvent);
+			void Update();
 
-	CWwiseManager* myWwiseManager;
-};
+			typedef void(*callback_function)(const char*);
+			void SetErrorCallBack(callback_function aErrorCallback);
+		private:
+			static AudioInterface* myInstance;
+			AudioInterface();
+			~AudioInterface();
 
+			WwiseManager* myWwiseManager;
+		};
+	}
+}
