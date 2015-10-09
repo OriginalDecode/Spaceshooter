@@ -97,7 +97,6 @@
     <ClInclude Include="PowerUpNote.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
-    <ClInclude Include="ComponentEnums.h" />
     <ClInclude Include="Constants.h" />
     <ClInclude Include="ControllerComponent.h" />
     <ClInclude Include="Entity.h" />

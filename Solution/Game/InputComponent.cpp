@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <AudioInterface.h>
-#include "ComponentEnums.h"
 #include "Constants.h"
 #include <DebugMenu.h>
 #include <DebugDataDisplay.h>
