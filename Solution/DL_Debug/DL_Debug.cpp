@@ -114,7 +114,7 @@ void DL_Debug::Debug::WriteLog(const eFilterLog aFilter, const char* aFormattedS
 	_ftime_s(&tstructMilli);
 
 	//Get VA_ARGS and store as string in buffer
-	char buffer[2048];
+	char buffer[4096];
 	va_list args;
 	va_start(args, aFormattedString);
 	vsprintf_s(buffer, aFormattedString, args);

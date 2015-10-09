@@ -63,7 +63,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 		}
 
 		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-			, myEntity.GetType(), aShootNote.myEnititySpeed));
+			, myEntity.GetType(), aShootNote.myEnitityVelocity));
 		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }

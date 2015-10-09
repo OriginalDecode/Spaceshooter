@@ -23,7 +23,7 @@ public:
 	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
 
-	const eStateStatus Update() override;
+	const eStateStatus Update(const float& aDeltaTime) override;
 	void Render() override;
 	void ResumeState() override;
 

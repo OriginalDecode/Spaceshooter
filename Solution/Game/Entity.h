@@ -6,6 +6,7 @@ namespace Prism
 {
 	class Camera;
 	class Scene;
+	enum class eOctreeType;
 }
 
 class Component;
@@ -14,7 +15,7 @@ class Component;
 class Entity
 {
 public:
-	Entity(eEntityType aType, Prism::Scene& aScene, const std::string& aName = "");
+	Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName = "");
 	~Entity();
 
 	virtual void Update(float aDeltaTime);
@@ -50,7 +51,8 @@ public:
 
 
 	void SetPowerUp(ePowerUpType someType);
-	ePowerUpType GetPowerUpType();
+	ePowerUpType GetPowerUpType() const;
+	Prism::eOctreeType GetOctreeType() const;
 
 private:
 	void operator=(Entity&) = delete;
@@ -59,6 +61,7 @@ private:
 	std::string myName;
 	const eEntityType myType;
 	Prism::Scene& myScene;
+	const Prism::eOctreeType myOctreeType;
 	ePowerUpType myPowerUpType;
 
 	bool myShouldRotate;
@@ -128,9 +131,14 @@ inline void Entity::SetPowerUp(ePowerUpType someType)
 	myPowerUpType = someType;
 }
 
-inline ePowerUpType Entity::GetPowerUpType()
+inline ePowerUpType Entity::GetPowerUpType() const
 {
 	return myPowerUpType;
+}
+
+inline Prism::eOctreeType Entity::GetOctreeType() const
+{
+	return myOctreeType;
 }
 
 inline void Entity::SetShouldRotate(bool aShouldRotate)

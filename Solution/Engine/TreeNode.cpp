@@ -1,10 +1,22 @@
 #include "stdafx.h"
 
+#include "EngineEnums.h"
 #include "Frustum.h"
 #include "Instance.h"
 #include <Intersection.h>
 #include "TreeNode.h"
 
+#ifdef SHOW_OCTREE_DEBUG
+#include <sstream>
+std::stringstream ss;
+std::stringstream ss2;
+std::stringstream ss3;
+int totalTreeNodes = 0;
+int maxNumOfDynamic = 0;
+int maxDynamicDepth = 0;
+int maxNumOfStatic = 0;
+int maxStaticDepth = 0;
+#endif
 
 Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth, TreeNode* aParent
 		, int aDepth, int aMaxDepth)
@@ -14,7 +26,8 @@ Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth,
 	, myDepth(aDepth)
 	, myMaxDepth(aMaxDepth)
 	, myLooseness(1.f)
-	, myObjects(32)
+	, myObjectsDynamic(16)
+	, myObjectsStatic(16)
 {
 	myLooseWidth = myHalfWidth * myLooseness;
 }
@@ -56,7 +69,7 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 			childIndex |= (1 << i);
 		}
 	}
-
+	
 	if (straddle == false && myDepth < myMaxDepth - 1)
 	{
 		if (myChildren[childIndex] == nullptr)
@@ -68,7 +81,18 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 	}
 	else
 	{
-		myObjects.Add(anObject);
+		if (anObject->GetOctreeType() == eOctreeType::DYNAMIC)
+		{
+			myObjectsDynamic.Add(anObject);
+		}
+		else if (anObject->GetOctreeType() == eOctreeType::STATIC)
+		{
+			myObjectsStatic.Add(anObject);
+		}
+		else
+		{
+			DL_ASSERT("Unknown octree type.");
+		}
 	}
 }
 
@@ -131,22 +155,63 @@ bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAAB
 void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	, CU::GrowingArray<Instance*>& aOutArray)
 {
-	for (int i = 0; i < myObjects.Size(); ++i)
+#ifdef SHOW_OCTREE_DEBUG
+	if (myDepth == 0)
 	{
-		if (aFrustum.Inside(myObjects[i]->GetPosition(), myObjects[i]->GetRadius()) == true)
+		ss << "Total: " << totalTreeNodes;
+		ss2 << "Max Dynamic: " << maxNumOfDynamic << " depth: " << maxDynamicDepth;
+		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth;
+		Engine::GetInstance()->PrintDebugText(ss.str(), { 700.f, -700.f });
+		Engine::GetInstance()->PrintDebugText(ss2.str(), { 700.f, -730.f });
+		Engine::GetInstance()->PrintDebugText(ss3.str(), { 700.f, -760.f });
+		ss.clear();
+		ss.str(std::string());
+		ss2.clear();
+		ss2.str(std::string());
+		ss3.clear();
+		ss3.str(std::string());
+		totalTreeNodes = 0;
+		maxNumOfDynamic = 0;
+		maxNumOfStatic = 0;
+	}
+	++totalTreeNodes;
+	if (myObjectsDynamic.Size() > maxNumOfDynamic)
+	{
+		maxNumOfDynamic = myObjectsDynamic.Size();
+		maxDynamicDepth = myDepth;
+	}
+	if (myObjectsStatic.Size() > maxNumOfStatic)
+	{
+		maxNumOfStatic = myObjectsStatic.Size();
+		maxStaticDepth = myDepth;
+	}
+#endif
+	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
+	{
+		if (aFrustum.Inside(myObjectsDynamic[i]->GetPosition(), myObjectsDynamic[i]->GetRadius()) == true)
 		{
-			aOutArray.Add(myObjects[i]);
+			aOutArray.Add(myObjectsDynamic[i]);
+		}
+	}
+	for (int i = 0; i < myObjectsStatic.Size(); ++i)
+	{
+		if (aFrustum.Inside(myObjectsStatic[i]->GetPosition(), myObjectsStatic[i]->GetRadius()) == true)
+		{
+			aOutArray.Add(myObjectsStatic[i]);
 		}
 	}
 
 	for (int i = 0; i < 8; ++i)
 	{
-		if (myChildren[i] != nullptr)
-			//&& CU::Intersection::AABBvsAABB(myChildren[i]->GetMinCorner()
-			//, myChildren[i]->GetMaxCorner()
-			//, aFrustum.GetCornerMin()
-			//, aFrustum.GetCornerMax()) == true)
+		if (myChildren[i] != nullptr
+			&& CU::Intersection::AABBvsAABB(myChildren[i]->GetMinCorner()
+			, myChildren[i]->GetMaxCorner()
+			, aFrustum.GetCornerMin()
+			, aFrustum.GetCornerMax()) == true)
 		{
+#ifdef SHOW_OCTREE_DEBUG
+			ss << i << " ";
+#endif
 			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
 		}
 	}

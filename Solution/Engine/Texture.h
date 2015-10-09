@@ -16,5 +16,7 @@ namespace Prism
 	private:
 		std::string myFileName;
 		ID3D11ShaderResourceView* myTexture;
+
+		bool IsValid(UINT aValue);
 	};
 }

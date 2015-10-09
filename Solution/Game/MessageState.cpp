@@ -39,7 +39,7 @@ void MessageState::EndState()
 {
 }
 
-const eStateStatus MessageState::Update()
+const eStateStatus MessageState::Update(const float&)
 {
 	if (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
@@ -55,7 +55,7 @@ const eStateStatus MessageState::Update()
 
 void MessageState::Render()
 {
-	myBackground->Render(*myCamera, Prism::Engine::GetInstance()->GetWindowSize().x / 2, -Prism::Engine::GetInstance()->GetWindowSize().y / 2);
+	myBackground->Render(*myCamera, Prism::Engine::GetInstance()->GetWindowSize().x / 2.f, -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f);
 
 	if (myTextMessage != "")
 	{

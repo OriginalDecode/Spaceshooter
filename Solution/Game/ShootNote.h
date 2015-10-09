@@ -2,12 +2,12 @@
 
 struct ShootNote
 {
-	ShootNote(const float& aEnititySpeed);
+	ShootNote(const CU::Vector3<float>& aVelocity);
 
-	float myEnititySpeed;
+	CU::Vector3<float> myEnitityVelocity;
 };
 
-inline ShootNote::ShootNote(const float& aEnititySpeed)
+inline ShootNote::ShootNote(const CU::Vector3<float>& aVelocity)
 {
-	myEnititySpeed = aEnititySpeed;
+	myEnitityVelocity = aVelocity;
 }

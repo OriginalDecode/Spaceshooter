@@ -5,6 +5,7 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include <Engine.h>
+#include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
@@ -52,7 +53,7 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetSpeedMultiplier());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -98,7 +99,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
-		Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene);
+		Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		bulletData->myPlayerBullets.Add(newEntity);
@@ -108,7 +109,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 	bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
-		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene);
+		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		bulletData->myEnemyBullets.Add(newEntity);
@@ -131,7 +132,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
-	, eEntityType aEntityType, const float& aEnititySpeed)
+	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity)
 {
 	Entity* bullet = nullptr;
 	if (aEntityType == eEntityType::PLAYER)
@@ -159,7 +160,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 
 	bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
-		anOrientation.GetForward() * (aWeaponData->mySpeed + aEnititySpeed));
+		(anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
 

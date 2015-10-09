@@ -11,7 +11,7 @@
 #include "SpotLight.h"
 
 Prism::Scene::Scene()
-	: myOctree(new Octree(3))
+	: myOctree(new Octree(5))
 {
 	myInstances.Init(4);
 	myDirectionalLights.Init(4);
@@ -60,10 +60,11 @@ void Prism::Scene::Render()
 		mySpotLightData[i].myRange = mySpotLights[i]->GetRange();
 		mySpotLightData[i].myCone = mySpotLights[i]->GetCone();
 	}
-
-	//myInstances.RemoveAll();
-	//myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
-
+#ifdef SCENE_USE_OCTREE
+	myInstances.RemoveAll();
+	myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
+	Engine::GetInstance()->PrintDebugText(myInstances.Size(), { 600.f, -600.f });
+#endif
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
 		myInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
@@ -89,8 +90,11 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 
 void Prism::Scene::AddInstance(Instance* aInstance)
 {
+#ifdef SCENE_USE_OCTREE
+	myOctree->Add(aInstance);
+#else
 	myInstances.Add(aInstance);
-	//myOctree->Add(aInstance);
+#endif
 }
 
 void Prism::Scene::AddLight(DirectionalLight* aLight)

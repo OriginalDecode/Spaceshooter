@@ -11,6 +11,8 @@ namespace CommonUtilities
 	}
 }
 
+#define SHOW_OCTREE_DEBUG
+
 namespace Prism
 {
 	class Frustum;
@@ -42,7 +44,8 @@ namespace Prism
 		float myLooseness;
 		float myLooseWidth;
 		TreeNode* myChildren[8];
-		CU::GrowingArray<Instance*> myObjects;
+		CU::GrowingArray<Instance*> myObjectsDynamic;
+		CU::GrowingArray<Instance*> myObjectsStatic;
 		bool myContainsObject;
 	};
 

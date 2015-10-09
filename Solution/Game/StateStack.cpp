@@ -76,10 +76,10 @@ void StateStack::PushMainGameState(GameState* aMainGameState)
 	PushSubGameState(aMainGameState);
 }
 
-bool StateStack::UpdateCurrentState()
+bool StateStack::UpdateCurrentState(const float& aDeltaTime)
 {
 	
-	switch (myGameStates[myMainIndex][mySubIndex]->Update())
+	switch (myGameStates[myMainIndex][mySubIndex]->Update(aDeltaTime))
 	{
 	case eStateStatus::ePopSubState:
 		PopSubGameState();

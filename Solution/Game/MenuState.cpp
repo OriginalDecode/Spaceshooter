@@ -38,7 +38,7 @@ void MenuState::EndState()
 	myCamera = nullptr;
 }
 
-const eStateStatus MenuState::Update()
+const eStateStatus MenuState::Update(const float&)
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{

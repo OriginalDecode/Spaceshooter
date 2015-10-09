@@ -46,18 +46,11 @@ void InGameState::EndState()
 {
 }
 
-const eStateStatus InGameState::Update()
+const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
 	BEGIN_TIME_BLOCK("InGameState::Update");
 
-	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-
-	if (deltaTime > 1.0f / 10.0f)
-	{
-		deltaTime = 1.0f / 10.0f;
-	}
-
-	else if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
+	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
 	{
 		return eStateStatus::ePopMainState;
 	}
@@ -66,20 +59,14 @@ const eStateStatus InGameState::Update()
 		myLevel->SetRenderStuff(!myLevel->GetRenderStuff());
 	}
 
-	if (myLevel->LogicUpdate(deltaTime) == true)
+	if (myLevel->LogicUpdate(aDeltaTime) == true)
 	{
 		GameStateMessage* newEvent = new GameStateMessage(eGameState::RELOAD_LEVEL);
 		ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game over! Press [space] to continue.", newEvent);
 		return eStateStatus::eKeepState;
 	}
 
-	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
-
 	END_TIME_BLOCK("InGameState::Update");
-
-
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
-	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 
 	return eStateStatus::eKeepState;
 }
@@ -92,10 +79,7 @@ void InGameState::Render()
 
 	myLevel->Render();
 
-
 	END_TIME_BLOCK("Game::Render");
-
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
 	VTUNE_EVENT_END();
 }

@@ -16,7 +16,8 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 	: myLevel(aLevel)
 	, myPlayer(aPlayer)
 	, myMissions(16)
-	, myCurrentMission(0)
+	, myCurrentMission(0) 
+	, myMissionsNotOrder(16)
 {
 	XMLReader reader;
 	reader.OpenDocument(aFileToReadFrom);
@@ -29,17 +30,25 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		std::string type;
 		reader.ForceReadAttribute(element, "type", type);
 		type = CU::ToLower(type);
+		int missionIndex = -1;
+		reader.ForceReadAttribute(element, "index", missionIndex);
 		if (type == "waypoint")
 		{
-			myMissions.Add(new WaypointMission(myLevel, myPlayer, reader, element));
+			WaypointMission* waypoint = new WaypointMission(myLevel, myPlayer, reader, element);
+			waypoint->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(waypoint);
 		}
 		else if (type == "killall")
 		{
-			myMissions.Add(new KillAllMission(myLevel));
+			KillAllMission* killAll = new KillAllMission(myLevel);
+			killAll->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(killAll);
 		}
 		else if (type == "survival")
 		{
-			myMissions.Add(new SurvivalMission(reader, element));
+			SurvivalMission* survival = new SurvivalMission(reader, element);
+			survival->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(survival);
 		}
 		else
 		{
@@ -47,6 +56,20 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 
 	}
+
+	int currentIndex = 0;
+	while (myMissions.Size() != myMissionsNotOrder.Size())
+	{
+		for (int i = 0; i < myMissionsNotOrder.Size(); ++i)
+		{
+			if (myMissionsNotOrder[i]->GetIndex() == currentIndex)
+			{
+				++currentIndex;
+				myMissions.Add(myMissionsNotOrder[i]);
+			}
+		}
+	}
+
 	reader.CloseDocument();
 	myMissions[myCurrentMission]->Start();
 }

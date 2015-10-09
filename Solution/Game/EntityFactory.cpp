@@ -3,6 +3,7 @@
 #include "AIComponent.h"
 #include "CollisionComponent.h"
 #include "BulletComponent.h"
+#include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
@@ -20,7 +21,7 @@
 #include <XMLReader.h>
 
 EntityData::EntityData(Prism::Scene& aDummyScene)
-	: myEntity(new Entity(eEntityType::NOT_USED, aDummyScene))
+	: myEntity(new Entity(eEntityType::NOT_USED, aDummyScene, Prism::eOctreeType::NOT_IN_OCTREE))
 {
 }
 
@@ -232,8 +233,8 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Model").c_str()) == 0)
 		{
-			std::string modelFile = "";
-			std::string effectFile = "";
+			std::string modelFile;
+			std::string effectFile;
 
 			aDocument.ForceReadAttribute(e, "modelFile", modelFile);
 			aDocument.ForceReadAttribute(e, "effectFile", effectFile);
@@ -295,8 +296,16 @@ void EntityFactory::LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& a
 void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement)
 {
 	aEntityToAddTo.myEntity->AddComponent<PhysicsComponent>();
-	aDocument;
-	aPhysicsComponentElement;
+
+	for (tinyxml2::XMLElement* e = aPhysicsComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Weight").c_str()) == 0)
+		{
+			float weight = 0;
+			aDocument.ForceReadAttribute(e, "value", weight);
+			aEntityToAddTo.myEntity->GetComponent<PhysicsComponent>()->Init(weight);
+		}
+	}
 }
 
 void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent)
