@@ -3,6 +3,7 @@
 
 
 Mission::Mission()
+	: myIndex(-1)
 {
 }
 
@@ -19,4 +20,14 @@ void Mission::Start()
 void Mission::End()
 {
 
+}
+
+int Mission::GetIndex() const
+{
+	return myIndex;
+}
+
+void Mission::SetIndex(int aIndex)
+{
+	myIndex = aIndex;
 }
