@@ -24,6 +24,8 @@ namespace Prism
 		TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth, TreeNode* aParent, int aDepth, int aMaxDepth);
 		~TreeNode();
 
+		void Update();
+
 		void InsertObjectDown(Instance* anObject);
 		void GetOccupantsInAABB(const Frustum& aFrustum
 			, CU::GrowingArray<Instance*>& aOutArray);
@@ -33,7 +35,9 @@ namespace Prism
 		CU::Vector3<float> GetMinCorner() const;
 		CU::Vector3<float> GetMaxCorner() const;
 		TreeNode* SpawnChild(int anId);
-		bool NodeVsAABB(const CommonUtilities::Intersection::AABB& aAABB);
+		bool NodeVsAABB(const CommonUtilities::Intersection::AABB& aAABB) const;
+		bool CheckEnclosed(Instance* anObject) const;
+		void InsertObjectUp(Instance* anObject);
 
 		const CU::Vector3<float> myPosition;
 		const float myHalfWidth;

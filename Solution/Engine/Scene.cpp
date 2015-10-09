@@ -5,13 +5,18 @@
 #include "DebugDataDisplay.h"
 #include "DirectionalLight.h"
 #include "Instance.h"
-#include "Octree.h"
 #include "PointLight.h"
 #include "Scene.h"
 #include "SpotLight.h"
 
+#ifdef SCENE_USE_OCTREE
+#include "Octree.h"
+#endif
+
 Prism::Scene::Scene()
+#ifdef SCENE_USE_OCTREE
 	: myOctree(new Octree(5))
+#endif
 {
 	myInstances.Init(4);
 	myDirectionalLights.Init(4);
@@ -26,7 +31,10 @@ Prism::Scene::Scene()
 Prism::Scene::~Scene()
 {
 	myInstances.DeleteAll();
+
+#ifdef SCENE_USE_OCTREE
 	delete myOctree;
+#endif
 }
 
 void Prism::Scene::Render()
@@ -61,6 +69,7 @@ void Prism::Scene::Render()
 		mySpotLightData[i].myCone = mySpotLights[i]->GetCone();
 	}
 #ifdef SCENE_USE_OCTREE
+	myOctree->Update();
 	myInstances.RemoveAll();
 	myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
 	Engine::GetInstance()->PrintDebugText(myInstances.Size(), { 600.f, -600.f });
