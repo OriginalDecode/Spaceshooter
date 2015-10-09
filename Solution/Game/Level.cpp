@@ -21,7 +21,6 @@
 #include "Instance.h"
 #include <InputWrapper.h>
 #include "InputComponent.h"
-#include <Intersection.h>
 #include "Level.h"
 #include "MissionManager.h"
 #include "ModelLoader.h"
