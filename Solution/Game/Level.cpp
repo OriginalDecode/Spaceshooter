@@ -438,6 +438,7 @@ void Level::LoadPlayer()
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("sniperGun"));
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("plasmaGun"));
+	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 
 	XMLReader reader;
@@ -492,5 +493,4 @@ void Level::UpdateDebug()
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
-
 }

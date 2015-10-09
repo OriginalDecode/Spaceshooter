@@ -154,6 +154,7 @@
     <ClInclude Include="EffectContainer.h" />
     <ClInclude Include="EffectListener.h" />
     <ClInclude Include="Engine.h" />
+    <ClInclude Include="EngineEnums.h" />
     <ClInclude Include="FBXFactory.h" />
     <ClInclude Include="FBX\FbxLoader.h" />
     <ClInclude Include="FileWatcher.h" />

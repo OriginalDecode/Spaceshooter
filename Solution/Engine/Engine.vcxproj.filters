@@ -204,6 +204,7 @@
       <Filter>Octree</Filter>
     </ClInclude>
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="EngineEnums.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
