@@ -66,7 +66,7 @@ private:
 	void UpdateDebug();
 
 	Prism::Instance* mySkySphere;
-
+	CU::Matrix44<float> mySkySphereOrientation;
 	Prism::Scene* myScene;
 	Prism::Camera* myCamera;
 	CU::Matrix44<float> myWorldMatrix;

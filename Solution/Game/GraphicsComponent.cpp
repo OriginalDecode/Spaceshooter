@@ -29,28 +29,26 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(aModelPath
 		, aEffectPath);
 
-	myInstance = new Prism::Instance(*model, myEntity.GetOctreeType());
-	myInstance->SetOrientationPointer(myEntity.myOrientation);
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
 }
 
 void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
 {
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadGeometry(aMeshData);
 
-	myInstance = new Prism::Instance(*model, myEntity.GetOctreeType());
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
 }
 
 void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 {
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadCube(aWidth, aHeight, aDepth);
 
-	myInstance = new Prism::Instance(*model, myEntity.GetOctreeType());
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
 }
 
 void GraphicsComponent::Update(float aDeltaTime)
 {
 	aDeltaTime;
-	myInstance->SetOrientation(myEntity.myOrientation);
 
 	if (myEntity.GetShouldRotate() == true)
 	{
@@ -74,7 +72,6 @@ void GraphicsComponent::Update(float aDeltaTime)
 void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 {
 	myEntity.myOrientation.SetPos(aPosition);
-	myInstance->SetOrientation(myEntity.myOrientation);
 }
 
 void GraphicsComponent::SetScale(const CU::Vector3<float>& aScale)

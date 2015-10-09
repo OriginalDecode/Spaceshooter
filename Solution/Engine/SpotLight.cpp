@@ -13,7 +13,7 @@ namespace Prism
 	void SpotLight::Initiate()
 	{
 		ModelProxy* model = Engine::GetInstance()->GetModelLoader()->LoadLightCube(1, 1, 1);
-		myInstance = new Instance(*model, eOctreeType::NOT_IN_OCTREE);
+		myInstance = new Instance(*model, myOrientation, eOctreeType::NOT_IN_OCTREE);
 	}
 
 	void SpotLight::Render(Camera* aCamera)

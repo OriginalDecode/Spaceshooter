@@ -147,12 +147,13 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
 	delete mySkySphere;
-	mySkySphere = new Prism::Instance(*skySphere, Prism::eOctreeType::NOT_IN_OCTREE);
+	mySkySphere = new Prism::Instance(*skySphere, mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
 	myCollisionManager->CleanUp();
+	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 
 	if (myPlayer->GetAlive() == false)
 	{
@@ -192,7 +193,6 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
 	myMissionManager->Update(aDeltaTime);
-	mySkySphere->SetPosition(myCamera->GetOrientation().GetPos());
 	myCamera->Update();
 	return myComplete;
 }
@@ -388,7 +388,7 @@ void Level::ReadXML(const std::string& aFile)
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
 		//CU::ToLower(powerUp);
 
-		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', true);
+		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', false);
 
 		//std::string powerType = CU::GetSubString(tempString, '_', false);
 

@@ -8,10 +8,10 @@
 #include "ModelProxy.h"
 
 
-Prism::Instance::Instance(ModelProxy& aModel, eOctreeType anOctreeType)
+Prism::Instance::Instance(ModelProxy& aModel, CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType)
 	: myProxy(aModel)
 	, myOctreeType(anOctreeType)
-	, myOrientationPointer(nullptr)
+	, myOrientation(anOrientation)
 	, myScale({1,1,1})
 	, myRadius(5.f)
 {
@@ -30,14 +30,7 @@ void Prism::Instance::Render(Camera& aCamera)
 		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 		myProxy.GetEffect()->SetScaleVector(myScale);
 
-		if (myOrientationPointer != nullptr)
-		{
-			myProxy.Render(*myOrientationPointer);
-		}
-		else
-		{
-			myProxy.Render(myOrientation);
-		}
+		myProxy.Render(myOrientation);
 	}
 }
 
@@ -49,35 +42,13 @@ void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& a
 		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 		myProxy.GetEffect()->SetScaleVector(myScale);
 
-		if (myOrientationPointer != nullptr)
-		{
-			myProxy.Render(*myOrientationPointer * aParentMatrix);
-		}
-		else
-		{
-			myProxy.Render(myOrientation * aParentMatrix);
-		}
+		myProxy.Render(myOrientation * aParentMatrix);
 	}
 }
 
-void Prism::Instance::SetPosition(const CU::Vector3<float>& aPosition)
-{
-	myOrientation.SetPos(aPosition);
-}
-
-CU::Vector3<float> Prism::Instance::GetPosition()
+CU::Vector3<float> Prism::Instance::GetPosition() const
 {
 	return myOrientation.GetPos();
-}
-
-CU::Matrix44<float>& Prism::Instance::GetOrientation()
-{
-	return myOrientation;
-}
-
-void Prism::Instance::SetOrientation(const CU::Matrix44<float>& aOrientation)
-{
-	myOrientation = aOrientation;
 }
 
 void Prism::Instance::SetEffect(const std::string& aEffectFile)
@@ -92,24 +63,6 @@ void Prism::Instance::SetScale(const CU::Vector3<float>& aScaleVector)
 {
 	myScale = aScaleVector;
 	
-}
-
-void Prism::Instance::PerformRotationLocal(CU::Matrix44<float>& aRotation)
-{
-	CU::Vector3<float> oldPos = myOrientation.GetPos();
-	myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
-	myOrientation = myOrientation * aRotation;
-	myOrientation.SetPos(oldPos);
-}
-
-void Prism::Instance::PerformRotationWorld(CU::Matrix44<float>& aRotation)
-{
-	myOrientation = myOrientation * aRotation;
-}
-
-void Prism::Instance::PerformTransformation(CU::Matrix44<float>& aTransformation)
-{
-	myOrientation = myOrientation * aTransformation;
 }
 
 void Prism::Instance::UpdateDirectionalLights(
@@ -137,9 +90,4 @@ void Prism::Instance::UpdateSpotLights(
 	{
 		myProxy.GetEffect()->UpdateSpotLights(someSpotLightData);
 	}
-}
-
-void Prism::Instance::SetOrientationPointer(CU::Matrix44<float>& aOrientation)
-{
-	myOrientationPointer = &aOrientation;
 }

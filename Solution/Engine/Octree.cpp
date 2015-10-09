@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "EngineEnums.h"
+#include "Instance.h"
 #include "Octree.h"
 #include <sstream>
 #include "TreeNode.h"
@@ -18,6 +20,7 @@ Prism::Octree::~Octree()
 
 void Prism::Octree::Add(Instance* aInstance)
 {
+	DL_ASSERT_EXP(aInstance->GetOctreeType() != eOctreeType::NOT_IN_OCTREE, "Can't add NOT_IN_OCTREE object to octree.");
 	myRoot->InsertObjectDown(aInstance);
 }
 
