@@ -26,6 +26,7 @@
 #include "MissionManager.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
+#include "PhysicsComponent.h"
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
@@ -215,7 +216,11 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60));
 
 	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
-	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -200.f });
+	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -120.f });
+
+	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f });
+	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f });
+	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f });
 }
 
 
@@ -443,6 +448,7 @@ void Level::LoadPlayer()
 	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();
+	player->AddComponent<PhysicsComponent>()->Init(5, { 0, 0, 0 });
 
 	XMLReader reader;
 	reader.OpenDocument("Data/script/player.xml");
