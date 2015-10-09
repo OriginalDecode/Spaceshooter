@@ -58,10 +58,7 @@ void Prism::TreeNode::InsertObjectDown(Instance* anObject)
 			childIndex |= (1 << i);
 		}
 	}
-
-	int apa = 5;
-
-
+	
 	if (straddle == false && myDepth < myMaxDepth - 1)
 	{
 		if (myChildren[childIndex] == nullptr)

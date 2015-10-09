@@ -15,33 +15,29 @@ namespace Prism
 	class Instance
 	{
 	public:
-
-		Instance(ModelProxy& aModel, eOctreeType anOctreeType);
+		Instance(ModelProxy& aModel, CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType);
 		~Instance();
 
 		void Render(Camera& aCamera);
 		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
 
-		void SetPosition(const CU::Vector3<float>& aPosition);
-		CU::Vector3<float> GetPosition();
-		CU::Matrix44<float>& GetOrientation();
-		void SetOrientation(const CU::Matrix44<float>& aOrientation);
+		//void SetPosition(const CU::Vector3<float>& aPosition);
+		CU::Vector3<float> GetPosition() const;
+		//CU::Matrix44<float>& GetOrientation();
 
 		void SetEffect(const std::string& aEffectFile);
 
 		void SetScale(const CU::Vector3<float>& aScaleVector);
 
-		void PerformRotationLocal(CU::Matrix44<float>& aRotation);
-		void PerformRotationWorld(CU::Matrix44<float>& aRotation);
-		void PerformTransformation(CU::Matrix44<float>& aTransformation);
+		//void PerformRotationLocal(CU::Matrix44<float>& aRotation);
+		//void PerformRotationWorld(CU::Matrix44<float>& aRotation);
+		//void PerformTransformation(CU::Matrix44<float>& aTransformation);
 
 		void UpdateDirectionalLights(
 			const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData);
 		void UpdatePointLights(const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData);
 		void UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData);
-
-		void SetOrientationPointer(CU::Matrix44<float>& aOrientation);
-
+		
 		float GetRadius() const;
 		eOctreeType GetOctreeType() const;
 
@@ -50,8 +46,7 @@ namespace Prism
 
 		ModelProxy& myProxy;
 		const eOctreeType myOctreeType;
-		CU::Matrix44<float> myOrientation;
-		CU::Matrix44<float>* myOrientationPointer;
+		CU::Matrix44<float>& myOrientation;
 		CU::Vector3<float> myScale;
 
 		float myRadius;
