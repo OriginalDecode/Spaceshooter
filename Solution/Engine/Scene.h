@@ -4,7 +4,7 @@
 #include "LightStructs.h"
 #include <StaticArray.h>
 
-
+//#define SCENE_USE_OCTREE
 
 namespace Prism
 {

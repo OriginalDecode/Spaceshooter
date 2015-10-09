@@ -6,11 +6,17 @@
 #include <Intersection.h>
 #include "TreeNode.h"
 
+#ifdef SHOW_OCTREE_DEBUG
 #include <sstream>
-
 std::stringstream ss;
 std::stringstream ss2;
 std::stringstream ss3;
+int totalTreeNodes = 0;
+int maxNumOfDynamic = 0;
+int maxDynamicDepth = 0;
+int maxNumOfStatic = 0;
+int maxStaticDepth = 0;
+#endif
 
 Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth, TreeNode* aParent
 		, int aDepth, int aMaxDepth)
@@ -146,16 +152,10 @@ bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAAB
 	return true;
 }
 
-int totalTreeNodes = 0;
-int maxNumOfDynamic = 0;
-int maxDynamicDepth = 0;
-int maxNumOfStatic = 0;
-int maxStaticDepth = 0;
-
-
 void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	, CU::GrowingArray<Instance*>& aOutArray)
 {
+#ifdef SHOW_OCTREE_DEBUG
 	if (myDepth == 0)
 	{
 		ss << "Total: " << totalTreeNodes;
@@ -185,6 +185,7 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 		maxNumOfStatic = myObjectsStatic.Size();
 		maxStaticDepth = myDepth;
 	}
+#endif
 	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
 	{
 		if (aFrustum.Inside(myObjectsDynamic[i]->GetPosition(), myObjectsDynamic[i]->GetRadius()) == true)
@@ -208,7 +209,9 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 			, aFrustum.GetCornerMin()
 			, aFrustum.GetCornerMax()) == true)
 		{
+#ifdef SHOW_OCTREE_DEBUG
 			ss << i << " ";
+#endif
 			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
 		}
 	}

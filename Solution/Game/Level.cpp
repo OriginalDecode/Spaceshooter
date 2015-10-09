@@ -21,11 +21,11 @@
 #include "Instance.h"
 #include <InputWrapper.h>
 #include "InputComponent.h"
-#include <Intersection.h>
 #include "Level.h"
 #include "MissionManager.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
+#include "PhysicsComponent.h"
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
@@ -33,8 +33,6 @@
 #include <Scene.h>
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
-#include <sstream>
-#include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
@@ -152,7 +150,6 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 bool Level::LogicUpdate(float aDeltaTime)
 {
 	myCollisionManager->CleanUp();
-	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 
 	if (myPlayer->GetAlive() == false)
 	{
@@ -187,6 +184,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
+
 	UpdateDebug();
 
 	myCollisionManager->Update();
@@ -215,7 +214,11 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60));
 
 	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
-	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -200.f });
+	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -120.f });
+
+	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f });
+	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f });
+	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f });
 }
 
 
@@ -320,7 +323,7 @@ void Level::ReadXML(const std::string& aFile)
 
 		int health = 0;
 		reader.ForceReadAttribute(entityElement, "hp", health);
-		newEntity->AddComponent<HealthComponent>()->Init(health);
+		newEntity->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
 		newEntity->AddComponent<CollisionComponent>()->Initiate(7.5f);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 
@@ -368,7 +371,6 @@ void Level::ReadXML(const std::string& aFile)
 		entityElement = reader.FindNextElement(entityElement, "powerup"))
 	{
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene, Prism::eOctreeType::STATIC);
-		float entityRadius;
 
 		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> triggerPosition;
@@ -443,6 +445,7 @@ void Level::LoadPlayer()
 	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();
+	player->AddComponent<PhysicsComponent>()->Init(5, { 0, 0, 0 });
 
 	XMLReader reader;
 	reader.OpenDocument("Data/script/player.xml");
@@ -451,10 +454,9 @@ void Level::LoadPlayer()
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
 
-	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
+	player->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health), invulnerable);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
-	myPlayer = player;
 	myEntities.Add(player);
 	myCamera = new Prism::Camera(player->myOrientation);
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
@@ -462,6 +464,8 @@ void Level::LoadPlayer()
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
 
 	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
+	//player->myOrientation.SetPos({ 306, 306, 306, 1 });
+	myPlayer = player;
 }
 
 void Level::CompleteLevel()
@@ -478,7 +482,7 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_M) == true)
 	{
 		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(false);
-		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(10000000);
+		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(myPlayer->GetComponent<HealthComponent>()->GetHealth());
 	}
 	if (myInputWrapper->KeyDown(DIK_V) == true)
 	{

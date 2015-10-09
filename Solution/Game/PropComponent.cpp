@@ -34,5 +34,4 @@ void PropComponent::ReceiveNote(const CollisionNote& aNote)
 		}
 	}
 	// should also bounce of prop
-	//aNote.myEntity.Kill();
 }
