@@ -32,7 +32,7 @@ namespace Prism
 		void UpdateEmitter(float aDeltaTime);
 		void UpdateParticle(float aDeltaTime);
 
-		void EmittParticle(float aDeltaTime);
+		void EmittParticle();
 
 		CU::GrowingArray<ParticleInstance> myParticles;
 		CU::Matrix44f myOrientation;

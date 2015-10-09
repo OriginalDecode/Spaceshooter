@@ -113,7 +113,7 @@ namespace Prism
 		myEmissionTime -= aDeltaTime;
 		if (myEmissionTime <= 0)
 		{
-			EmittParticle(aDeltaTime);
+			EmittParticle();
 			myEmissionTime = myData.myEmissionRate;
 		}
 		UpdateParticle(aDeltaTime);
@@ -124,7 +124,7 @@ namespace Prism
 
 	}
 
-	void EmitterInstance::EmittParticle(float aDeltaTime)
+	void EmitterInstance::EmittParticle()
 	{
 
 	}
