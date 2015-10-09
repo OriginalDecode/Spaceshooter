@@ -3,8 +3,16 @@
 #include "VertexBufferWrapper.h"
 namespace Prism
 {
+	EmitterInstance::~EmitterInstance()
+	{
+		delete myVertexWrapper;
+		myVertexWrapper = nullptr;
+	}
+
 	void EmitterInstance::Initiate(EmitterData& someData)
 	{
+		myData = someData;
+
 
 	}
 

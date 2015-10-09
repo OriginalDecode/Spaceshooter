@@ -19,6 +19,7 @@ namespace Prism
 	class EmitterInstance
 	{
 	public:
+		~EmitterInstance();
 		void Initiate(EmitterData& someData);
 		void Render(Camera* aCamera);
 		void Update();
