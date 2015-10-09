@@ -33,6 +33,8 @@ struct EntityData
 	std::string myTargetName;
 	std::string myWeaponType;
 
+	CU::Vector3f myScale;
+
 	float myCollisionSphereRadius;
 	float myDepth;
 	float myHeight;

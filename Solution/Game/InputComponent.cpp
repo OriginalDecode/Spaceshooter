@@ -64,6 +64,14 @@ void InputComponent::Update(float aDeltaTime)
 		{
 			Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute");
 		}
+		if (myInputWrapper->KeyDown(DIK_6))
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume");
+		}
+		if (myInputWrapper->KeyDown(DIK_7))
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume");
+		}
 		
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{

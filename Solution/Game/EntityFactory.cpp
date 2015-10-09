@@ -260,6 +260,12 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 
 			aEntityToAddTo.myGraphicsType = eEntityDataGraphicsType::CUBE;
 		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Scale").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "x", aEntityToAddTo.myScale.myX);
+			aDocument.ForceReadAttribute(e, "y", aEntityToAddTo.myScale.myY);
+			aDocument.ForceReadAttribute(e, "z", aEntityToAddTo.myScale.myZ);
+		}
 	}
 }
 
@@ -373,6 +379,11 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		default:
 			break;
 		}
+		if (it->second.myScale != CU::Vector3f())
+		{
+			aTargetEntity->GetComponent<GraphicsComponent>()->SetScale(it->second.myScale);
+		}
+
 	}
 	if (sourceEntity->GetComponent<AIComponent>() != nullptr)
 	{
