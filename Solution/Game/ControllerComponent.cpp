@@ -89,3 +89,8 @@ void ControllerComponent::Shoot(const CU::Vector3<float>& aVelocity)
 	ShootNote note(aVelocity);
 	myEntity.SendNote(note);
 }
+
+void ControllerComponent::ResetMovementSpeed()
+{
+	myMovementSpeed = 0.f;
+}

@@ -15,6 +15,7 @@ public:
 	void Update(float aDeltaTime) override;
 
 	static int GetID();
+
 private:
 	void operator=(const InputComponent&) = delete;
 	void ReadXML(const std::string& aFile);
@@ -35,7 +36,6 @@ private:
 	float myMaxRollSpeed;
 	float myRollAcceleration;
 	float myRollDeacceleration;
-	float myMovementSpeed;
 	float myMaxMovementSpeed;
 	float myMinMovementSpeed;
 	float myMaxSteeringSpeed;

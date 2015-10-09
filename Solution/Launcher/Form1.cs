@@ -15,7 +15,7 @@ namespace Launcher
     public partial class Form1 : Form
     {
 
-		private string myConfigPath = "Data/bin/config.bin";
+		private string myConfigPath = "Data/Setting/SET_config.bin";
 		private string myExePath = "Application_Release.exe";
 
         enum eResolutions

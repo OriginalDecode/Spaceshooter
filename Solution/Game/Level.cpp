@@ -448,7 +448,7 @@ void Level::LoadPlayer()
 	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();
-	player->AddComponent<PhysicsComponent>()->Init(5, { 0, 0, 0 });
+	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_player.xml");
