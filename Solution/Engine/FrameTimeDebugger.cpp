@@ -12,7 +12,6 @@ namespace Prism
 		: myCurrentFrameIndex(0)
 		, myFocusedFrameIndex(-1)
 		, myGraphSize(1000.f, 200.f)
-		, myGraphTopLeft( 200.f, -500.f )
 		, myLastDeltaTime(0.f)
 		, mySampleTimer(0.f)
 		, myTimeBetweenSamples(0.05f)
@@ -27,6 +26,11 @@ namespace Prism
 				it->second.myTimeText = nullptr;
 			}
 		}
+
+		myGraphTopLeft.x = (Engine::GetInstance()->GetWindowSize().x/2.f) - (myGraphSize.x / 2.f);
+		myGraphTopLeft.y = -Engine::GetInstance()->GetWindowSize().y + myGraphSize.y + 50;
+
+		myStringStream.precision(3);
 	}
 
 	FrameTimeDebugger::~FrameTimeDebugger()
@@ -161,9 +165,9 @@ namespace Prism
 		mousePos.y = -mousePos.y;
 
 		if (mousePos.x > myGraphTopLeft.x && //Left
-			mousePos.y < myGraphTopLeft.y && //Top
+			mousePos.y < myGraphTopLeft.y-25 && //Top
 			mousePos.x < myGraphTopLeft.x + myGraphSize.x && //Right
-			mousePos.y > myGraphTopLeft.y - myGraphSize.y) //Bottom
+			mousePos.y > myGraphTopLeft.y - myGraphSize.y - 25) //Bottom
 		{
 			float widthPerColum = static_cast<int>((myGraphSize.x) / myFrameTimes.Size()) + 0.75f;
 
@@ -202,17 +206,19 @@ namespace Prism
 		{ myGraphSize.x, myGraphSize.y }, 16.f, myNewGraphData);
 
 
+		FrameData* frameData = nullptr;
 		if (myFocusedFrameIndex == -1)
 		{
-			return;
+			frameData = &myFrameDatas[myCurrentFrameIndex];
 		}
-
+		else
+		{
+			frameData = &myFrameDatas[myFocusedFrameIndex];
+		}
 
 		CU::Vector2<float> drawPos = { 0.f, 0.f };
 
-		FrameData& frameData = myFrameDatas[myFocusedFrameIndex];
-
-		for (auto it = frameData.begin(); it != frameData.end(); ++it)
+		for (auto it = frameData->begin(); it != frameData->end(); ++it)
 		{
 			if (it->second.myEnabled == true)
 			{

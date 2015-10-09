@@ -70,8 +70,8 @@ namespace Prism
 
 		GraphRenderer* myGraphRenderer;
 
-		CU::Vector2<float> myGraphTopLeft;
 		CU::Vector2<float> myGraphSize;
+		CU::Vector2<float> myGraphTopLeft;
 	};
 
 	inline void FrameTimeDebugger::SetFocusedFrameIndex(int aFrameIndex)
