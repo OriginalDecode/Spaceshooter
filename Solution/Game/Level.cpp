@@ -505,7 +505,7 @@ void Level::UpdateDebug()
 	}
 	if (myInputWrapper->KeyDown(DIK_L))
 	{
-		myPlayer->GetComponent<InputComponent>()->DisableMovement(1.f);
+		myPlayer->GetComponent<InputComponent>()->DisableMovement(2.f);
 	}
 
 	if (myInputWrapper->KeyDown(DIK_K))
