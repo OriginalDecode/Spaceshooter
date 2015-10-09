@@ -5,6 +5,7 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include <Engine.h>
+#include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
@@ -98,7 +99,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
-		Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene);
+		Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		bulletData->myPlayerBullets.Add(newEntity);
@@ -108,7 +109,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 	bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
-		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene);
+		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
 		bulletData->myEnemyBullets.Add(newEntity);

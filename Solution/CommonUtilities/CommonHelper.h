@@ -22,5 +22,20 @@ namespace CommonUtilities
 	{
 		return fmax(aLower, fmin(aNumber, aUpper));
 	}
+
+	inline std::string GetSubString(std::string aStringToReadFrom, char aCharToFind, bool aReadAfterChar)
+	{
+		std::string toReturn;
+		if (aReadAfterChar == false)
+		{
+			toReturn = aStringToReadFrom.substr(0, aStringToReadFrom.find(aCharToFind));
+		}
+		else if (aReadAfterChar == true)
+		{
+			toReturn = aStringToReadFrom.substr(aStringToReadFrom.find_first_of(aCharToFind) + 1);
+		}
+
+		return toReturn;
+	}
 }
 namespace CU = CommonUtilities;

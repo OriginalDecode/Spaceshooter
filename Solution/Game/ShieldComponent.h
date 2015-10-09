@@ -25,7 +25,7 @@ private:
 	float myCooldown;
 
 
-	int myShieldStrength;
+	unsigned short myShieldStrength;
 	int myOvercharge;
 
 };
