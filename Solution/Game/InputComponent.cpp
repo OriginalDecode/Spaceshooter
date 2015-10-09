@@ -7,13 +7,14 @@
 #include <DebugDataDisplay.h>
 #include <Engine.h>
 #include "Entity.h"
+#include <FileWatcher.h>
 #include "GUINote.h"
 #include "InputComponent.h"
 #include "InputNote.h"
 #include <InputWrapper.h>
-#include <FileWatcher.h>
-#include <XMLReader.h>
+#include "PhysicsComponent.h"
 #include <sstream>
+#include <XMLReader.h>
 
 InputComponent::InputComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
@@ -44,9 +45,14 @@ void InputComponent::Update(float aDeltaTime)
 	{
 		myMovementSpeed += myAcceleration * aDeltaTime;
 	}
+	else
+	{
+		myMovementSpeed -= aDeltaTime * 30;
+	}
+
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		myMovementSpeed -= myAcceleration * aDeltaTime;
+		myMovementSpeed -= myAcceleration * aDeltaTime * 20;
 	}
 
 	if (myInputWrapper->KeyIsPressed(DIK_1))
@@ -64,12 +70,12 @@ void InputComponent::Update(float aDeltaTime)
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 
-	MoveForward(myMovementSpeed * aDeltaTime);
+	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed * aDeltaTime);
 	Roll(aDeltaTime);
 
 	if (myInputWrapper->MouseIsPressed(0) == true)
 	{
-		Shoot(myMovementSpeed);
+		Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser");
 	}
 

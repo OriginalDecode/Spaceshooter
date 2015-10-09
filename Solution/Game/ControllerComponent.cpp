@@ -83,9 +83,9 @@ void ControllerComponent::SetRotation(const CU::Matrix44<float>& aRotation)
 	myEntity.myOrientation.SetPos(pos);
 }
 
-void ControllerComponent::Shoot(const float& aSpeedMultiplier)
+void ControllerComponent::Shoot(const CU::Vector3<float>& aVelocity)
 {
 	DL_ASSERT_EXP(myEntity.GetComponent<ShootingComponent>() != nullptr, "Cant Shoot without ShootingComponent");
-	ShootNote note(aSpeedMultiplier);
+	ShootNote note(aVelocity);
 	myEntity.SendNote(note);
 }
