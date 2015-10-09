@@ -33,8 +33,6 @@
 #include <Scene.h>
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
-#include <sstream>
-#include <string>
 #include <SpotLight.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
