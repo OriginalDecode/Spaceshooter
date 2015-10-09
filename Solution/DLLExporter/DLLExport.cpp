@@ -61,7 +61,7 @@ void StartEngine(int* aHwnd)
 
 	locCamera->OnResize(locWindowSetup.myScreenWidth, locWindowSetup.myScreenHeight);
 
-	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/resources/texture/cubemapTest.dds");
+	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/Resource/Texture/CubeMap/T_cubemap_test.dds");
 	Prism::Engine::GetInstance()->SetClearColor({ 0.3f, 0.3f, 0.3f, 1.f });
 }
 
@@ -125,7 +125,7 @@ void LoadModel(const char* aModelFile, const char* aEffectFile)
 {
 	if (aEffectFile == "")
 	{
-		aEffectFile = "Data/effect/BasicEffect.fx";
+		aEffectFile = "Data/Resource/Shader/S_effect_basic.fx";
 	}
 
 	locModel = Prism::Engine::GetInstance()->DLLLoadModel(aModelFile,

@@ -26,7 +26,7 @@ Prism::GraphRenderer::~GraphRenderer()
 
 void Prism::GraphRenderer::Init()
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/GraphEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_graph.fx");
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{

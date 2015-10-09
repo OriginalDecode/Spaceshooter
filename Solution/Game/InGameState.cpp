@@ -62,7 +62,7 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 	if (myLevel->LogicUpdate(aDeltaTime) == true)
 	{
 		GameStateMessage* newEvent = new GameStateMessage(eGameState::RELOAD_LEVEL);
-		ShowMessage("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, "Game over! Press [space] to continue.", newEvent);
+		ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game over! Press [space] to continue.", newEvent);
 		return eStateStatus::eKeepState;
 	}
 
@@ -97,12 +97,12 @@ void InGameState::OnResize(int aWidth, int aHeight)
 void InGameState::CompleteLevel()
 {
 	GameStateMessage* newEvent = new GameStateMessage(eGameState::LOAD_NEXT_LEVEL);
-	ShowMessage("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, "Level complete! Press [space] to continue.", newEvent);
+	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Level complete! Press [space] to continue.", newEvent);
 }
 
 void InGameState::CompleteGame()
 {
-	ShowMessage("Data/resources/texture/menu/MainMenu/background.dds", { 600, 400 }, "Game won! Press [space] to continue.");
+	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game won! Press [space] to continue.");
 	myIsComplete = true;
 }
 

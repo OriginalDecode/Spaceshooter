@@ -26,10 +26,7 @@ void Prism::Octree::Add(Instance* aInstance)
 
 void Prism::Octree::Update()
 {
-	//std::stringstream ss;
-	//static int numberOfNodes[7];
-	//ss << 
-	//Engine::GetInstance()->PrintDebugText()
+	myRoot->Update();
 }
 
 void Prism::Octree::GetOccupantsInAABB(const Frustum& aFrustum

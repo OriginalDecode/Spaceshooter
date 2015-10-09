@@ -26,15 +26,15 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpPositions(8)
 {
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
-	myReticle->Init("Data/resources/texture/UI/Navigation_Circle.dds", { 1024.f, 1024.f });
-	myCrosshair->Init("Data/resources/texture/UI/Shoting_Crosshair.dds", { 256.f, 256.f }); // the size scales the pic
-	mySteeringTarget->Init("Data/resources/texture/UI/Stearing_Crosshair.dds", arrowAndMarkerSize);
-	myEnemyMarker->Init("Data/resources/texture/UI/Navigation_Marker_Enemy.dds", arrowAndMarkerSize);
-	myEnemyArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Enemy.dds", arrowAndMarkerSize);
-	myWaypointMarker->Init("Data/resources/texture/UI/Navigation_Marker_Waypoint.dds", arrowAndMarkerSize);
-	myWaypointArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Waypoint.dds", arrowAndMarkerSize);
-	myPowerUpMarker->Init("Data/resources/texture/UI/Navigation_Marker_Powerups.dds", arrowAndMarkerSize);
-	myPowerUpArrow->Init("Data/resources/texture/UI/Navigation_Arrow_Powerups.dds", arrowAndMarkerSize);
+	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
+	myCrosshair->Init("Data/Resource/Texture/UI/T_crosshair_shooting.dds", { 256.f, 256.f }); // the size scales the pic
+	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
+	myEnemyMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_enemy.dds", arrowAndMarkerSize);
+	myEnemyArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", arrowAndMarkerSize);
+	myWaypointMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds", arrowAndMarkerSize);
+	myWaypointArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_waypoint.dds", arrowAndMarkerSize);
+	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
+	myPowerUpArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_powerup.dds", arrowAndMarkerSize);
 }	 
 
 GUIComponent::~GUIComponent()

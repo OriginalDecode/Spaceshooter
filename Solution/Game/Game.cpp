@@ -45,20 +45,20 @@ bool Game::Init(HWND& aHwnd)
 	bool startInMenu = false;
 
 	XMLReader reader;
-	reader.OpenDocument("Data/script/options.xml");
+	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
 	reader.ReadAttribute(reader.FindFirstChild("canWinGame"), "bool", myCanWinGame);
 	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
-	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Audio/Init.bnk");
-	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Audio/SpaceShooterBank.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Resource/Sound/Init.bnk");
+	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Resource/Sound/SpaceShooterBank.bnk");
 
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLevelFactory = new LevelFactory("Data/level/levelList.xml", myInputWrapper, myCanWinGame);
+	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper, myCanWinGame);
 
 	if (startInMenu == false)
 	{
@@ -68,7 +68,7 @@ bool Game::Init(HWND& aHwnd)
 	}
 	else
 	{
-		myCurrentMenu = new MenuState("Data/script/MainMenu.xml", myInputWrapper);
+		myCurrentMenu = new MenuState("Data/Menu/MN_main_menu.xml", myInputWrapper);
 		myStateStack.PushMainGameState(myCurrentMenu);
 		myLockMouse = false;
 	}

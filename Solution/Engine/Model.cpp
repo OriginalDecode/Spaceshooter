@@ -101,7 +101,7 @@ void Prism::Model::Init()
 
 void Prism::Model::InitPolygon()
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/PolygonEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_polygon.fx");
 
 	if (myEffect == nullptr)
 	{
@@ -156,7 +156,7 @@ void Prism::Model::InitPolygon()
 
 void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/CubeEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_cube.fx");
 
 	if (myEffect == nullptr)
 	{
@@ -299,7 +299,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	surf.SetVertexCount(myVertices.Size());
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
-	surf.SetTexture("DiffuseTexture", "Data/resources/texture/seafloor.dds", true);
+	surf.SetTexture("DiffuseTexture", "Data/Resource/Texture/Debug/T_debug_seafloor.dds", true);
 
 	mySurfaces.Add(new Surface(surf));
 
@@ -308,7 +308,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 
 void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const float aDepth, CU::Vector4f aColour)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/CubeColored.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_cube_colored.fx");
 
 	if (myEffect == nullptr)
 	{
@@ -449,7 +449,7 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 	surf.SetVertexCount(myVertices.Size());
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
-	surf.SetTexture("DiffuseTexture", "Data/resources/texture/seafloor.dds", true);
+	surf.SetTexture("DiffuseTexture", "Data/Resource/Texture/Debug/T_debug_seafloor.dds", true);
 
 	mySurfaces.Add(new Surface(surf));
 
@@ -458,7 +458,7 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 
 void Prism::Model::InitGeometry(const MeshData& aMeshData)
 {
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/effect/GeometryEffect.fx");
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_geometry.fx");
 	
 	if (myEffect == nullptr)
 	{
