@@ -51,16 +51,6 @@ CU::Vector3<float> Prism::Instance::GetPosition() const
 	return myOrientation.GetPos();
 }
 
-//CU::Matrix44<float>& Prism::Instance::GetOrientation()
-//{
-//	return myOrientation;
-//}
-//
-//void Prism::Instance::SetOrientation(const CU::Matrix44<float>& aOrientation)
-//{
-//	myOrientation = aOrientation;
-//}
-
 void Prism::Instance::SetEffect(const std::string& aEffectFile)
 {
 	if (myProxy.IsLoaded())
@@ -74,24 +64,6 @@ void Prism::Instance::SetScale(const CU::Vector3<float>& aScaleVector)
 	myScale = aScaleVector;
 	
 }
-
-//void Prism::Instance::PerformRotationLocal(CU::Matrix44<float>& aRotation)
-//{
-//	CU::Vector3<float> oldPos = myOrientation.GetPos();
-//	myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
-//	myOrientation = myOrientation * aRotation;
-//	myOrientation.SetPos(oldPos);
-//}
-//
-//void Prism::Instance::PerformRotationWorld(CU::Matrix44<float>& aRotation)
-//{
-//	myOrientation = myOrientation * aRotation;
-//}
-//
-//void Prism::Instance::PerformTransformation(CU::Matrix44<float>& aTransformation)
-//{
-//	myOrientation = myOrientation * aTransformation;
-//}
 
 void Prism::Instance::UpdateDirectionalLights(
 	const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)

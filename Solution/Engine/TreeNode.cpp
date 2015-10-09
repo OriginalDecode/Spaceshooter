@@ -6,6 +6,11 @@
 #include <Intersection.h>
 #include "TreeNode.h"
 
+#include <sstream>
+
+std::stringstream ss;
+std::stringstream ss2;
+std::stringstream ss3;
 
 Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth, TreeNode* aParent
 		, int aDepth, int aMaxDepth)
@@ -141,9 +146,45 @@ bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAAB
 	return true;
 }
 
+int totalTreeNodes = 0;
+int maxNumOfDynamic = 0;
+int maxDynamicDepth = 0;
+int maxNumOfStatic = 0;
+int maxStaticDepth = 0;
+
+
 void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 	, CU::GrowingArray<Instance*>& aOutArray)
 {
+	if (myDepth == 0)
+	{
+		ss << "Total: " << totalTreeNodes;
+		ss2 << "Max Dynamic: " << maxNumOfDynamic << " depth: " << maxDynamicDepth;
+		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth;
+		Engine::GetInstance()->PrintDebugText(ss.str(), { 700.f, -700.f });
+		Engine::GetInstance()->PrintDebugText(ss2.str(), { 700.f, -730.f });
+		Engine::GetInstance()->PrintDebugText(ss3.str(), { 700.f, -760.f });
+		ss.clear();
+		ss.str(std::string());
+		ss2.clear();
+		ss2.str(std::string());
+		ss3.clear();
+		ss3.str(std::string());
+		totalTreeNodes = 0;
+		maxNumOfDynamic = 0;
+		maxNumOfStatic = 0;
+	}
+	++totalTreeNodes;
+	if (myObjectsDynamic.Size() > maxNumOfDynamic)
+	{
+		maxNumOfDynamic = myObjectsDynamic.Size();
+		maxDynamicDepth = myDepth;
+	}
+	if (myObjectsStatic.Size() > maxNumOfStatic)
+	{
+		maxNumOfStatic = myObjectsStatic.Size();
+		maxStaticDepth = myDepth;
+	}
 	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
 	{
 		if (aFrustum.Inside(myObjectsDynamic[i]->GetPosition(), myObjectsDynamic[i]->GetRadius()) == true)
@@ -167,6 +208,7 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 			, aFrustum.GetCornerMin()
 			, aFrustum.GetCornerMax()) == true)
 		{
+			ss << i << " ";
 			myChildren[i]->GetOccupantsInAABB(aFrustum, aOutArray);
 		}
 	}
