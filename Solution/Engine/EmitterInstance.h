@@ -22,17 +22,17 @@ namespace Prism
 		~EmitterInstance();
 		void Initiate(EmitterData& someData);
 		void Render(Camera* aCamera);
-		void Update();
+		void Update(float aDeltaTime);
 
 	private:
 
 		void CreateVertexBuffer();
 		void UpdateVertexBuffer();
 
-		void UpdateEmitter();
-		void UpdateParticle();
+		void UpdateEmitter(float aDeltaTime);
+		void UpdateParticle(float aDeltaTime);
 
-		void EmittParticle();
+		void EmittParticle(float aDeltaTime);
 
 		CU::GrowingArray<ParticleInstance> myParticles;
 		CU::Matrix44f myOrientation;

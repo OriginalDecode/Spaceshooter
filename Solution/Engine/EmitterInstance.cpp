@@ -48,9 +48,9 @@ namespace Prism
 		}
 	}
 
-	void EmitterInstance::Update()
+	void EmitterInstance::Update(float aDeltaTime)
 	{
-
+		UpdateEmitter(aDeltaTime);
 	}
 
 	void EmitterInstance::CreateVertexBuffer()
@@ -107,4 +107,26 @@ namespace Prism
 
 		}
 	}
+
+	void EmitterInstance::UpdateEmitter(float aDeltaTime)
+	{
+		myEmissionTime -= aDeltaTime;
+		if (myEmissionTime <= 0)
+		{
+			EmittParticle(aDeltaTime);
+			myEmissionTime = myData.myEmissionRate;
+		}
+		UpdateParticle(aDeltaTime);
+	}
+	
+	void EmitterInstance::UpdateParticle(float aDeltaTime)
+	{
+
+	}
+
+	void EmitterInstance::EmittParticle(float aDeltaTime)
+	{
+
+	}
+
 }
