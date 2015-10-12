@@ -507,10 +507,4 @@ void Level::UpdateDebug()
 	{
 		myPlayer->GetComponent<InputComponent>()->DisableMovement(2.f);
 	}
-
-	if (myInputWrapper->KeyDown(DIK_K))
-	{
-		myPlayer->GetComponent<InputComponent>()->DisableMovement(1.f);
-		myPlayer->GetComponent<PhysicsComponent>()->MoveForward(200.f);
-	}
 }
