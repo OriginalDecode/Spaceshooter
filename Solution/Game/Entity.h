@@ -74,15 +74,17 @@ private:
 template <typename T>
 T* Entity::AddComponent()
 {
+	DL_ASSERT_EXP(T::GetType() != eComponentType::NOT_USED, "Tried to add invalid component.");
+
 	T* component = new T(*this);
-	myComponents[T::GetID()] = component;
+	myComponents[static_cast<int>(T::GetType())] = component;
 	return component;
 }
 
 template <typename T>
 T* Entity::GetComponent()
 {
-	auto it = myComponents.find(T::GetID());
+	auto it = myComponents.find(static_cast<int>(T::GetType()));
 
 	if (it == myComponents.end())
 	{

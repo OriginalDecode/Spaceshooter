@@ -8,12 +8,12 @@ public:
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
-	static int GetID();
+	static eComponentType GetType();
 
 private:
 };
 
-inline int WaypointComponent::GetID()
+inline eComponentType WaypointComponent::GetType()
 {
-	return 13;
+	return eComponentType::WAY_POINT;
 }

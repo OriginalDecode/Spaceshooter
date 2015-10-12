@@ -12,7 +12,13 @@ public:
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
+	static eComponentType GetType();
 private:
 
 };
+
+inline eComponentType PropComponent::GetType()
+{
+	return eComponentType::PROP;
+}
 

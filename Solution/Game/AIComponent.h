@@ -13,7 +13,7 @@ public:
 
 	const std::string& GetTargetName() const;
 
-	static int GetID();
+	static eComponentType GetType();
 private:
 	void FollowEntity(float aDeltaTime);
 
@@ -30,7 +30,7 @@ inline const std::string& AIComponent::GetTargetName() const
 	return myTargetName;
 }
 
-inline int AIComponent::GetID()
+inline eComponentType AIComponent::GetType()
 {
-	return 1;
+	return eComponentType::AI;
 }

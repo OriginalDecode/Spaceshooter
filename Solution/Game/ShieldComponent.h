@@ -14,7 +14,7 @@ public:
 	int GetCurrentShieldStrength();
 	void Update(float aDelta) override;
 
-	static int GetID();
+	static eComponentType GetType();
 
 
 private:
@@ -35,7 +35,7 @@ inline int ShieldComponent::GetCurrentShieldStrength()
 	return myShieldStrength;
 }
 
-inline int ShieldComponent::GetID()
+inline eComponentType ShieldComponent::GetType()
 {
-	return 13;
+	return eComponentType::SHEILD;
 }

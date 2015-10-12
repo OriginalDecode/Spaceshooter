@@ -10,7 +10,7 @@ public:
 	void Init(const unsigned short aWeight = 1.f, const CU::Vector3<float> aVelocity = { 0.f, 0.f, 0.f });
 	void Update(float aDeltaTime);
 
-	static int GetID();
+	static eComponentType GetType();
 
 	const unsigned short& GetWeight() const;
 
@@ -27,9 +27,9 @@ private:
 	unsigned short myWeight;
 };
 
-inline int PhysicsComponent::GetID()
+inline eComponentType PhysicsComponent::GetType()
 {
-	return 3;
+	return eComponentType::PHYSICS;
 }
 
 inline const unsigned short& PhysicsComponent::GetWeight() const

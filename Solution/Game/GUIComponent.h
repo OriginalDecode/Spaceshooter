@@ -25,7 +25,7 @@ public:
 
 	void SetCamera(Prism::Camera* aCamera);
 
-	static int GetID();
+	static eComponentType GetType();
 	void ReceiveNote(const MissionNote& aMessage) override;
 	void ReceiveNote(const GUINote& aNote) override;
 	
@@ -52,9 +52,9 @@ private:
 	bool myWaypointActive;
 };
 
-inline int GUIComponent::GetID()
+inline eComponentType GUIComponent::GetType()
 {
-	return 6;
+	return eComponentType::GUI;
 }
 
 inline void GUIComponent::SetCamera(Prism::Camera* aCamera)
