@@ -40,7 +40,7 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		else if (type == "killall")
 		{
-			KillAllMission* killAll = new KillAllMission(myLevel);
+			KillAllMission* killAll = new KillAllMission(myLevel, reader, element);
 			killAll->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(killAll);
 		}
@@ -54,7 +54,6 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		{
 			DL_ASSERT("Missiontype not recognized. %s", type.c_str());
 		}
-
 	}
 
 	int currentIndex = 0;

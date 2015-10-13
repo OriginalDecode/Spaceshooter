@@ -9,7 +9,8 @@
 
 
 WaypointMission::WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aReader, tinyxml2::XMLElement* aElement)
-	: myLevel(aLevel)
+	: Mission(aReader, aElement)
+	, myLevel(aLevel)
 	, myPlayer(aPlayer)
 {
 	tinyxml2::XMLElement* triggerElement = aReader.ForceFindFirstChild(aElement, "trigger");

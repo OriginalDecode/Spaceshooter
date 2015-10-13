@@ -1,10 +1,13 @@
 #include "stdafx.h"
 #include "Mission.h"
 #include "Event.h"
+#include "EventFactory.h"
 
-Mission::Mission()
+Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
+	, myEventsStart(4)
 {
+	EventFactory::ReadEventNames(aReader, aElement, myEventsStart);
 }
 
 
@@ -20,7 +23,7 @@ void Mission::EventsStart()
 {
 	for (int i = 0; i < myEventsStart.Size(); ++i)
 	{
-		myEventsStart[i]->Start();
+		//myEventsStart[i]->Start();
 	}
 }
 

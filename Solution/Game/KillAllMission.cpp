@@ -4,8 +4,9 @@
 #include "Level.h"
 
 
-KillAllMission::KillAllMission(Level& aLevel)
-	: myLevel(aLevel)
+KillAllMission::KillAllMission(Level& aLevel, XMLReader& aReader, tinyxml2::XMLElement* aElement)
+	: Mission(aReader, aElement)
+	, myLevel(aLevel)
 {
 }
 
