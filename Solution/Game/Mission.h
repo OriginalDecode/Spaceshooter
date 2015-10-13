@@ -1,4 +1,8 @@
 #pragma once
+#include <GrowingArray.h>
+
+class Event;
+
 class Mission
 {
 public:
@@ -14,6 +18,7 @@ public:
 
 protected:
 	int myIndex;
+	CU::GrowingArray<Event*> myStartEvents;
 
 };
 

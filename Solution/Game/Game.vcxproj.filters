@@ -107,6 +107,15 @@
     <ClCompile Include="PropComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>Mission\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="Event.cpp">
+      <Filter>Mission\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnEnemy.cpp">
+      <Filter>Mission\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -245,6 +254,15 @@
     <ClInclude Include="PropComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="Action.h">
+      <Filter>Mission\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Mission\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnEnemy.h">
+      <Filter>Mission\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -270,6 +288,9 @@
     </Filter>
     <Filter Include="Mission">
       <UniqueIdentifier>{16b77b77-92bc-472f-ab0e-cc8fa26a6081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mission\Event">
+      <UniqueIdentifier>{9ffede5b-fc08-46a7-b508-df709188fac9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
