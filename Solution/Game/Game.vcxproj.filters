@@ -119,6 +119,9 @@
     <ClCompile Include="EventFactory.cpp">
       <Filter>Mission\Event</Filter>
     </ClCompile>
+    <ClCompile Include="EventManager.cpp">
+      <Filter>Mission\Event</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -267,6 +270,9 @@
       <Filter>Mission\Event</Filter>
     </ClInclude>
     <ClInclude Include="EventFactory.h">
+      <Filter>Mission\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
       <Filter>Mission\Event</Filter>
     </ClInclude>
   </ItemGroup>
