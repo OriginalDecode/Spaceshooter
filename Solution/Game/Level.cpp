@@ -137,6 +137,8 @@ Level::~Level()
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
+
+	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
 }
 
 void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName)
@@ -323,8 +325,8 @@ void Level::ReadXML(const std::string& aFile)
 
 		int health = 0;
 		reader.ForceReadAttribute(entityElement, "hp", health);
-		newEntity->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
-		newEntity->AddComponent<CollisionComponent>()->Initiate(7.5f);
+		newEntity->GetComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
+		newEntity->GetComponent<CollisionComponent>()->Initiate(7.5f);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 
 		myEntities.Add(newEntity);

@@ -68,4 +68,10 @@ namespace Prism
 			}
 		}
 	}
+
+	void FileWatcher::Clear()
+	{
+		myFileDatas.RemoveAll();
+	}
+
 }
