@@ -25,6 +25,8 @@ public:
 	void SetCanMove(const bool& aCanMove);
 	void DisableMovement(const float& aSeconds);
 
+	static eComponentType GetType();
+
 protected:
 	float myMovementSpeed;
 	float myTimeBeforeMovement;
@@ -34,4 +36,9 @@ protected:
 inline void ControllerComponent::SetCanMove(const bool& aCanMove)
 {
 	myCanMove = aCanMove;
+}
+
+inline eComponentType ControllerComponent::GetType()
+{
+	return eComponentType::CONTROLLER;
 }
