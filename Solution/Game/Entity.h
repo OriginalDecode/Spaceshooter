@@ -57,6 +57,7 @@ public:
 private:
 	void operator=(Entity&) = delete;
 	std::unordered_map<int, Component*> myComponents;
+	CU::GrowingArray<Component*> myComponentsArray;
 	bool myAlive;
 	std::string myName;
 	const eEntityType myType;
@@ -76,8 +77,15 @@ T* Entity::AddComponent()
 {
 	DL_ASSERT_EXP(T::GetType() != eComponentType::NOT_USED, "Tried to add invalid component.");
 
+	auto it = myComponents.find(static_cast<int>(T::GetType()));
+	if (it != myComponents.end())
+	{
+		DL_ASSERT("Tried to add a component twice to the same entity.");
+	}
+
 	T* component = new T(*this);
 	myComponents[static_cast<int>(T::GetType())] = component;
+	myComponentsArray.Add(component);
 	return component;
 }
 

@@ -10,6 +10,7 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	, myOctreeType(anOctreeType)
 	, myName(aName)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
+	, myComponentsArray(4)
 {
 }
 
@@ -22,13 +23,15 @@ Entity::~Entity()
 	}
 
 	myComponents.clear();
+
+	myComponentsArray.RemoveAll();
 }
 
 void Entity::Update(float aDeltaTime)
 {
-	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
+	for (int i = 0; i < myComponentsArray.Size(); ++i)
 	{
-		it->second->Update(aDeltaTime);
+		myComponentsArray[i]->Update(aDeltaTime);
 	}
 }
 
