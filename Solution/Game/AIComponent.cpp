@@ -39,7 +39,7 @@ void AIComponent::Update(float aDeltaTime)
 		FollowEntity(aDeltaTime);
 
 		CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-			
+
 		CU::Normalize(toTarget);
 		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
 		{
@@ -61,11 +61,38 @@ void AIComponent::Update(float aDeltaTime)
 void AIComponent::SetEntityToFollow(Entity* aEntity)
 {
 	myEntityToFollow = aEntity;
+	myFollowingEntity = true;
 }
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+	if (myFollowingEntity == true)
+	{
+		myTargetPosition = myEntityToFollow->myOrientation.GetPos();
+	}
+
+	CU::Vector3<float> toTarget;
+	toTarget = myTargetPosition - myEntity.myOrientation.GetPos();
+
+	if (CU::Length(toTarget) < 100.f)
+	{
+		CU::Vector3<float> toEntity = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+		if (CU::Length(toEntity) > 100.f)
+		{
+			myTargetPosition = myEntityToFollow->myOrientation.GetPos();
+			myFollowingEntity = true;
+		}
+		else
+		{
+			myTargetPosition = myEntityToFollow->myOrientation.GetPos()/* + myEntityToFollow->myOrientation.GetForward() * 500.f*/;
+			myTargetPosition.x += static_cast<float>(rand() % 1000) - 500.f;
+			myTargetPosition.y += static_cast<float>(rand() % 1000) - 500.f;
+			myTargetPosition.z += static_cast<float>(rand() % 1000) - 500.f;
+			
+			myFollowingEntity = false;
+		}
+	}
+
 
 	myVelocity += toTarget * aDeltaTime;
 
