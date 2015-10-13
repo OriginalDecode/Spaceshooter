@@ -1,14 +1,21 @@
 #pragma once
-#define TIME_FUNCTION Prism::Debug_BlockTimer funcTimer__(__FUNCTION__);
-#define BEGIN_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay()->StartFunctionTimer(NAME);
-#define END_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay()->EndFunctionTimer(NAME);
 
-
+#include "Defines.h"
 #include <bitset>
 #include "Debug_BlockTimer.h"
 #include "GraphRenderer.h"
 #include <sstream>
 #include <unordered_map>
+
+#ifdef ENABLE_DEBUG_TEXT
+#define TIME_FUNCTION Prism::Debug_BlockTimer funcTimer__(__FUNCTION__);
+#define BEGIN_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay()->StartFunctionTimer(NAME);
+#define END_TIME_BLOCK(NAME) Prism::Engine::GetInstance()->GetDebugDisplay()->EndFunctionTimer(NAME);
+#else
+#define TIME_FUNCTION 
+#define BEGIN_TIME_BLOCK(NAME) 
+#define END_TIME_BLOCK(NAME) 
+#endif
 
 namespace CommonUtilities
 {

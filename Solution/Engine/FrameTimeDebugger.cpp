@@ -14,7 +14,7 @@ namespace Prism
 		, myGraphSize(1000.f, 200.f)
 		, myLastDeltaTime(0.f)
 		, mySampleTimer(0.f)
-		, myTimeBetweenSamples(0.05f)
+		, myTimeBetweenSamples(0.5f)
 		, myFrameTimeIndex(0)
 		, myFrameCounter(0)
 	{
@@ -209,7 +209,12 @@ namespace Prism
 		FrameData* frameData = nullptr;
 		if (myFocusedFrameIndex == -1)
 		{
-			frameData = &myFrameDatas[myCurrentFrameIndex];
+			int renderIndex = myCurrentFrameIndex - 1;
+			if (renderIndex == -1)
+			{
+				renderIndex = NUM_FRAMES_TO_RECORD-1;
+			}
+			frameData = &myFrameDatas[renderIndex];
 		}
 		else
 		{
