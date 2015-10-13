@@ -4,10 +4,18 @@
 #include "Subscriber.h"
 #include "StaticArray.h"
 
+class BulletComponent;
 struct BulletData
 {
 	CU::GrowingArray<Entity*> myPlayerBullets;
 	CU::GrowingArray<Entity*> myEnemyBullets;
+
+	//storing the bulletcomponents so that we dont have
+	//to find the component in entity-map every frame, 
+	//which is expensive
+	CU::GrowingArray<BulletComponent*> myPlayerBulletComponents;
+	CU::GrowingArray<BulletComponent*> myEnemyBulletComponents;
+
 	eBulletType myType;
 	float mySpeed;
 	int myPlayerBulletCounter;

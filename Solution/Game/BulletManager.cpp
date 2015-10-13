@@ -96,22 +96,28 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 
 	bulletData->myPlayerBulletCounter = 0;
 	bulletData->myPlayerBullets.Init(bulletData->myMaxBullet);
+	bulletData->myPlayerBulletComponents.Init(bulletData->myMaxBullet);
 
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
 		Entity* newEntity = new Entity(eEntityType::PLAYER_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
+		
+		bulletData->myPlayerBulletComponents.Add(newEntity->GetComponent<BulletComponent>());
 		bulletData->myPlayerBullets.Add(newEntity);
 	}
 
 	bulletData->myEnemyBulletCounter = 0;
 	bulletData->myEnemyBullets.Init(bulletData->myMaxBullet);
+	bulletData->myEnemyBulletComponents.Init(bulletData->myMaxBullet);
 	for (int i = 0; i < bulletData->myMaxBullet; i++)
 	{
 		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
+
+		bulletData->myEnemyBulletComponents.Add(newEntity->GetComponent<BulletComponent>());
 		bulletData->myEnemyBullets.Add(newEntity);
 	}
 
@@ -186,24 +192,29 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime)
 {
+	BulletComponent* playerBulletComp = nullptr;
+	BulletComponent* enemyBulletComp = nullptr;
+
 	for (int i = 0; i < aWeaponData->myMaxBullet; ++i)
 	{
-		if (aWeaponData->myPlayerBullets[i]->GetComponent<BulletComponent>()->GetActive() == true)
+		playerBulletComp = aWeaponData->myPlayerBulletComponents[i];
+		if (playerBulletComp->GetActive() == true)
 		{
 			aWeaponData->myPlayerBullets[i]->Update(aDeltaTime);
 
-			if (aWeaponData->myPlayerBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
+			if (playerBulletComp->GetActive() == false)
 			{
 				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
 			}
 		}
 
-		if (aWeaponData->myEnemyBullets[i]->GetComponent<BulletComponent>()->GetActive() == true)
+		enemyBulletComp = aWeaponData->myEnemyBulletComponents[i];
+		if (enemyBulletComp->GetActive() == true)
 		{
 			aWeaponData->myEnemyBullets[i]->Update(aDeltaTime);
 
-			if (aWeaponData->myEnemyBullets[i]->GetComponent<BulletComponent>()->GetActive() == false)
+			if (enemyBulletComp->GetActive() == false)
 			{
 				myCollisionManager.Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::ENEMY_BULLET);
@@ -234,12 +245,12 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 		{
 			for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
 			{
-				if (myBulletDatas[i]->myPlayerBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
+				if (myBulletDatas[i]->myPlayerBulletComponents[j]->GetActive() == true)
 				{
 					myInstances.Add(myBulletDatas[i]->myPlayerBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
 				}
 
-				if (myBulletDatas[i]->myEnemyBullets[j]->GetComponent<BulletComponent>()->GetActive() == true)
+				if (myBulletDatas[i]->myEnemyBulletComponents[j]->GetActive() == true)
 				{
 					myInstances.Add(myBulletDatas[i]->myEnemyBullets[j]->GetComponent<GraphicsComponent>()->GetInstance());
 				}
