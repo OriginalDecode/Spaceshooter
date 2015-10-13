@@ -18,6 +18,7 @@ namespace Prism
 		void UnWatchFile(const std::string& aFile);
 
 		void CheckFiles();
+		void Clear();
 
 	private:
 		struct FileData
