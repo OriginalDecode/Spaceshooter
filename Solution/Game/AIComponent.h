@@ -22,6 +22,8 @@ private:
 
 	float myTimeToNextDecision;
 	Entity* myEntityToFollow;
+	bool myFollowingEntity;
+	CU::Vector3<float> myTargetPosition;
 	CU::Vector3<float> myVelocity;
 };
 
