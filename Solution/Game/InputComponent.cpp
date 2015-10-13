@@ -91,6 +91,8 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
+		myMovementSpeed = 0.f;
+
 		myTimeBeforeMovement -= aDeltaTime;
 
 		if (myTimeBeforeMovement <= 0.f)
@@ -129,6 +131,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "acceleration", myRollAcceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "deacceleration", myRollDeacceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
+	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "speedMultiplier", myBoostMultiplier);
 }
 
 void InputComponent::Roll(float aDeltaTime)
@@ -194,7 +197,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 
 	if (myBoost == true)
 	{
-		myMovementSpeed += myMovementSpeed;
+		myMovementSpeed *= myBoostMultiplier;
 	}
 
 	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);

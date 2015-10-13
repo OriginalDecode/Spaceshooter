@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Action.h" />
     <ClInclude Include="AIComponent.h" />
     <ClInclude Include="BulletComponent.h" />
     <ClInclude Include="BulletManager.h" />
@@ -87,6 +88,8 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventFactory.h" />
     <ClInclude Include="GUINote.h" />
     <ClInclude Include="KillAllMission.h" />
     <ClInclude Include="LevelFactory.h" />
@@ -122,6 +125,7 @@
     <ClInclude Include="ShieldComponent.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
+    <ClInclude Include="SpawnEnemy.h" />
     <ClInclude Include="StateEnums.h" />
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StateStackProxy.h" />
@@ -133,6 +137,7 @@
     <ClInclude Include="WeaponFactory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Action.cpp" />
     <ClCompile Include="AIComponent.cpp" />
     <ClCompile Include="BulletComponent.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -144,6 +149,8 @@
     <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
+    <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStateMessage.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
@@ -165,6 +172,7 @@
     <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
+    <ClCompile Include="SpawnEnemy.cpp" />
     <ClCompile Include="StateStack.cpp" />
     <ClCompile Include="StateStackProxy.cpp" />
     <ClCompile Include="stdafx.cpp">
