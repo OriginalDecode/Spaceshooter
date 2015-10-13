@@ -8,7 +8,7 @@
 #include "ModelProxy.h"
 
 
-Prism::Instance::Instance(ModelProxy& aModel, CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType)
+Prism::Instance::Instance(ModelProxy& aModel, const CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType)
 	: myProxy(aModel)
 	, myOctreeType(anOctreeType)
 	, myOrientation(anOrientation)

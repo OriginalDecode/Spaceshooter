@@ -23,6 +23,16 @@ namespace Prism
 
 		const Frustum& GetFrustum() const;
 
+		void SetOrientation(const CU::Matrix44<float>& aOrientation);
+		void SetPosition(const CU::Vector3<float>& aPosition);
+
+		void RotateX(const float aDegrees);
+		void RotateY(const float aDegrees);
+		void RotateZ(const float aDegrees);
+
+		void MoveForward(const float aDistance);
+		void MoveRight(const float aDistance);
+
 	private:
 		void operator= (const Camera&) = delete;
 

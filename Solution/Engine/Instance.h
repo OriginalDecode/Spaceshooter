@@ -15,7 +15,7 @@ namespace Prism
 	class Instance
 	{
 	public:
-		Instance(ModelProxy& aModel, CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType);
+		Instance(ModelProxy& aModel, const CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType);
 		~Instance();
 
 		void Render(Camera& aCamera);
@@ -40,7 +40,7 @@ namespace Prism
 
 		ModelProxy& myProxy;
 		const eOctreeType myOctreeType;
-		CU::Matrix44<float>& myOrientation;
+		const CU::Matrix44<float>& myOrientation;
 		CU::Vector3<float> myScale;
 
 		float myRadius;

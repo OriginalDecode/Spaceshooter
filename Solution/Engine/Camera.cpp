@@ -67,4 +67,57 @@ namespace Prism
 	{
 		myFrustum->Update();
 	}
+	void Camera::SetOrientation(const CU::Matrix44<float>& aOrientation)
+	{
+		myOrientation = aOrientation;
+	}
+
+	void Camera::SetPosition(const CU::Vector3<float>& aPosition)
+	{
+		myOrientation.SetPos(aPosition);
+	}
+
+	void Camera::RotateX(const float aDegrees)
+	{
+		TIME_FUNCTION
+
+		CU::Vector3<float> position = myOrientation.GetPos();
+		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
+		myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aDegrees * XM_PI / 180.f) * myOrientation;
+		myOrientation.SetPos(position);
+	}
+
+	void Camera::RotateY(const float aDegrees)
+	{
+		TIME_FUNCTION
+
+		CU::Vector3<float> position = myOrientation.GetPos();
+		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
+		myOrientation = CU::Matrix44<float>::CreateRotateAroundY(aDegrees * XM_PI / 180.f) * myOrientation;
+		myOrientation.SetPos(position);
+	}
+
+	void Camera::RotateZ(const float aDegrees)
+	{
+		TIME_FUNCTION
+
+		CU::Vector3<float> position = myOrientation.GetPos();
+		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
+		myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDegrees * XM_PI / 180.f) * myOrientation;
+		myOrientation.SetPos(position);
+	}
+
+	void Camera::MoveForward(const float aDistance)
+	{
+		TIME_FUNCTION
+
+		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetForward() * aDistance);
+	}
+
+	void Camera::MoveRight(const float aDistance)
+	{
+		TIME_FUNCTION
+
+		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetRight() * aDistance);
+	}
 }
