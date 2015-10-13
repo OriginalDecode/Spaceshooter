@@ -2,7 +2,8 @@
 class Action
 {
 public:
-	Action();
-	~Action();
+	virtual ~Action();
+
+	virtual void Start() = 0;
 };
 

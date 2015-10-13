@@ -1,8 +1,12 @@
 #pragma once
-class SpawnEnemy
+#include "Action.h"
+
+class SpawnEnemy : public Action
 {
 public:
 	SpawnEnemy();
 	~SpawnEnemy();
+
+	void Start() override;
 };
 

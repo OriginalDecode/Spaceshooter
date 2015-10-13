@@ -72,6 +72,7 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 
 	reader.CloseDocument();
 	myMissions[myCurrentMission]->Start();
+	myMissions[myCurrentMission]->EventsStart();
 }
 
 void MissionManager::Update(float aDeltaTime)
@@ -82,6 +83,7 @@ void MissionManager::Update(float aDeltaTime)
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
 	if (myMissions[myCurrentMission]->Update(aDeltaTime) == true)
 	{
+		myMissions[myCurrentMission]->EventsEnd();
 		myMissions[myCurrentMission]->End();
 		++myCurrentMission;
 		if (myCurrentMission == myMissions.Size())
@@ -91,6 +93,7 @@ void MissionManager::Update(float aDeltaTime)
 		else
 		{
 			myMissions[myCurrentMission]->Start();
+			myMissions[myCurrentMission]->EventsStart();
 		}
 	}
 }

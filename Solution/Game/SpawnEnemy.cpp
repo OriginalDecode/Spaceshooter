@@ -10,3 +10,8 @@ SpawnEnemy::SpawnEnemy()
 SpawnEnemy::~SpawnEnemy()
 {
 }
+
+void SpawnEnemy::Start()
+{
+
+}

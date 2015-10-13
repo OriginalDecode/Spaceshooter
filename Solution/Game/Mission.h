@@ -11,14 +11,17 @@ public:
 
 	virtual bool Update(float aDeltaTime) = 0;
 	virtual void Start();
+	void EventsStart();
 	virtual void End();
+	void EventsEnd();
 
 	virtual int GetIndex() const;
 	virtual void SetIndex(int aIndex);
 
 protected:
 	int myIndex;
-	CU::GrowingArray<Event*> myStartEvents;
+	CU::GrowingArray<Event*> myEventsStart;
+	CU::GrowingArray<Event*> myEventsEnd;
 
 };
 
