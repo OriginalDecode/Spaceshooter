@@ -507,4 +507,14 @@ void Level::UpdateDebug()
 	{
 		myPlayer->GetComponent<InputComponent>()->DisableMovement(2.f);
 	}
+	if (myInputWrapper->KeyDown(DIK_K))
+	{
+		for (int i = 0; i < myEntities.Size(); i++)
+		{
+			if (myEntities[i]->GetComponent<AIComponent>() != nullptr)
+			{
+				myEntities[i]->GetComponent<AIComponent>()->DisableMovement(10.f);
+			}
+		}
+	}
 }
