@@ -5,6 +5,7 @@
 
 
 SurvivalMission::SurvivalMission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
+	: Mission(aReader, aElement)
 {
 	tinyxml2::XMLElement* timeElement = aReader.ForceFindFirstChild(aElement, "time");
 	aReader.ForceReadAttribute(timeElement, "seconds", mySurvivalTime);
