@@ -30,6 +30,9 @@ void AIComponent::Update(float aDeltaTime)
 {
 	DL_ASSERT_EXP(myEntityToFollow != nullptr, "AI needs an entity to follow.");
 
+	DL_ASSERT_EXP(myEntity.GetComponent<PhysicsComponent>() != nullptr, "AI component needs physics component for movement."); // remove later
+	myEntity.GetComponent<PhysicsComponent>()->SetVelocity(myVelocity);
+
 	if (myCanMove == true)
 	{
 		myTimeToNextDecision -= aDeltaTime;
@@ -97,8 +100,5 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	myEntity.myOrientation.myMatrix[10] = myVelocity.z;
 	myEntity.myOrientation.myMatrix[11] = 0;
 
-	myVelocity *= myMovementSpeed / 10;
-
-	DL_ASSERT_EXP(myEntity.GetComponent<PhysicsComponent>() != nullptr, "AI component needs physics component for movement."); // remove later
-	myEntity.GetComponent<PhysicsComponent>()->AddVelocity(myVelocity * aDeltaTime);
+	myVelocity *= myMovementSpeed;
 }
