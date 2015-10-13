@@ -89,6 +89,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="EventFactory.h" />
     <ClInclude Include="GUINote.h" />
     <ClInclude Include="KillAllMission.h" />
     <ClInclude Include="LevelFactory.h" />
@@ -149,6 +150,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="EventFactory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStateMessage.cpp" />
     <ClCompile Include="GraphicsComponent.cpp" />
