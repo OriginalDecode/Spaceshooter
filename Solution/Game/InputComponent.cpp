@@ -91,6 +91,8 @@ void InputComponent::Update(float aDeltaTime)
 	}
 	else
 	{
+		myMovementSpeed = 0.f;
+
 		myTimeBeforeMovement -= aDeltaTime;
 
 		if (myTimeBeforeMovement <= 0.f)
