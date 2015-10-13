@@ -143,6 +143,9 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
+	//Prism::Engine::GetInstance()->EnableAlphaBlending();
+	Prism::Engine::GetInstance()->DisableZBuffer();
+
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
 	myReticle->Render(*myCamera, halfWidth, -halfHeight);
@@ -169,6 +172,9 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	myEnemiesPosition.RemoveAll();
 	myPowerUpPositions.RemoveAll();
+
+	Prism::Engine::GetInstance()->EnableZBuffer();
+	//Prism::Engine::GetInstance()->DisableAlpaBlending();
 }
 
 void GUIComponent::ReceiveNote(const MissionNote& aMessage)

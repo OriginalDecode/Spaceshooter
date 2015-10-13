@@ -126,23 +126,23 @@ void Prism::Text::InitSurface()
 
 void Prism::Text::InitBlendState()
 {
-	D3D11_BLEND_DESC blendDesc;
-	blendDesc.AlphaToCoverageEnable = false;
-	blendDesc.IndependentBlendEnable = false;
-	blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
-
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBlendState(&blendDesc, &myBlendState);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateBlendState", "Text::InitBlendState", MB_ICONWARNING);
-	}
+	//D3D11_BLEND_DESC blendDesc;
+	//blendDesc.AlphaToCoverageEnable = false;
+	//blendDesc.IndependentBlendEnable = false;
+	//blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	//blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	//blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	//blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	//blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+	//blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+	//blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	//blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+	//
+	//HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBlendState(&blendDesc, &myBlendState);
+	//if (FAILED(hr) != S_OK)
+	//{
+	//	DL_MESSAGE_BOX("Failed to CreateBlendState", "Text::InitBlendState", MB_ICONWARNING);
+	//}
 }
 
 void Prism::Text::Render(const char* aString
@@ -163,13 +163,13 @@ void Prism::Text::Render(const char* aString
 
 	Engine::GetInstance()->DisableZBuffer();
 
-	float blendFactor[4];
-	blendFactor[0] = 0.f;
-	blendFactor[1] = 0.f;
-	blendFactor[2] = 0.f;
-	blendFactor[3] = 0.f;
-
-	myEffect->SetBlendState(myBlendState, blendFactor);
+	//float blendFactor[4];
+	//blendFactor[0] = 0.f;
+	//blendFactor[1] = 0.f;
+	//blendFactor[2] = 0.f;
+	//blendFactor[3] = 0.f;
+	//
+	//myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetViewMatrix(myIdentityMatrix);
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetWorldMatrix(myIdentityMatrix);
