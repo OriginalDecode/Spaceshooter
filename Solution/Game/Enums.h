@@ -3,7 +3,8 @@
 enum class eMessageType
 {
 	ACTIVATE_BULLET,
-	GAME_STATE
+	GAME_STATE,
+	SPAWN_ENEMY,
 };
 
 enum class eBulletType
