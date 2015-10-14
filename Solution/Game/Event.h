@@ -6,7 +6,7 @@ class Action;
 class Event
 {
 public:
-	Event();
+	Event(const CU::GrowingArray<Action*>& someActions);
 	~Event();
 
 	void Start();

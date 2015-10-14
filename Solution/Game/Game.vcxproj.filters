@@ -122,6 +122,9 @@
     <ClCompile Include="EventManager.cpp">
       <Filter>Event</Filter>
     </ClCompile>
+    <ClCompile Include="SpawnEnemyMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -274,6 +277,9 @@
     </ClInclude>
     <ClInclude Include="EventManager.h">
       <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnEnemyMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
