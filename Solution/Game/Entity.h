@@ -1,6 +1,7 @@
 #pragma once
 #include "Enums.h"
 #include <unordered_map>
+#include <StaticArray.h>
 
 namespace Prism
 {
@@ -56,8 +57,8 @@ public:
 
 private:
 	void operator=(Entity&) = delete;
-	std::unordered_map<int, Component*> myComponents;
-	CU::GrowingArray<Component*> myComponentsArray;
+	CU::StaticArray<Component*, static_cast<int>(eComponentType::_COUNT)> myComponents;
+	
 	bool myAlive;
 	std::string myName;
 	const eEntityType myType;
@@ -77,37 +78,33 @@ T* Entity::AddComponent()
 {
 	DL_ASSERT_EXP(T::GetType() != eComponentType::NOT_USED, "Tried to add invalid component.");
 
-	auto it = myComponents.find(static_cast<int>(T::GetType()));
-	if (it != myComponents.end())
+	int index = static_cast<int>(T::GetType());
+	if (myComponents[index] != nullptr)
 	{
 		DL_ASSERT("Tried to add a component twice to the same entity.");
 	}
 
 	T* component = new T(*this);
-	myComponents[static_cast<int>(T::GetType())] = component;
-	myComponentsArray.Add(component);
+	myComponents[index] = component;
+
 	return component;
 }
 
 template <typename T>
 T* Entity::GetComponent()
 {
-	auto it = myComponents.find(static_cast<int>(T::GetType()));
-
-	if (it == myComponents.end())
-	{
-		return nullptr;
-	}
-
-	return static_cast<T*>(it->second);
+	return static_cast<T*>(myComponents[static_cast<int>(T::GetType())]);
 }
 
 template <typename T>
 void Entity::SendNote(const T& aMessage)
 {
-	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
+	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
-		it->second->ReceiveNote(aMessage);
+		if (myComponents[i] != nullptr)
+		{
+			myComponents[i]->ReceiveNote(aMessage);
+		}
 	}
 }
 
