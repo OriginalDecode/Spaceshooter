@@ -2,6 +2,7 @@
 #include "Mission.h"
 #include "Event.h"
 #include "EventFactory.h"
+#include "PostMaster.h"
 
 Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
@@ -23,7 +24,7 @@ void Mission::EventsStart()
 {
 	for (int i = 0; i < myStartEventNames.Size(); ++i)
 	{
-		//myEventsStart[i]->Start();
+		
 	}
 }
 

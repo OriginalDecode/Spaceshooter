@@ -12,6 +12,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
 #include "GraphicsComponent.h"
@@ -261,10 +262,14 @@ void Level::ReadXML(const std::string& aFile)
 	std::string skySphere;
 	std::string cubeMap;
 	std::string missionXML;
+	std::string eventXML;
 
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "missionxml"), "source", missionXML);
+	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "eventxml"), "source", eventXML);
 
 	myMissionManager = new MissionManager(*this, *myPlayer, missionXML);
+	myEventManager = new EventManager(eventXML);
+
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);
 	

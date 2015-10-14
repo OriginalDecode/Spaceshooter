@@ -8,17 +8,17 @@ EventManager::EventManager(const std::string& aXmlPath)
 {
 	XMLReader reader;
 	reader.OpenDocument(aXmlPath);
-	tinyxml2::XMLElement* element = reader.ForceFindFirstChild("root");
+	tinyxml2::XMLElement* eventElement = reader.ForceFindFirstChild("root");
 	
-	for (element = reader.FindFirstChild(element, "event"); element != nullptr;
-		element = reader.FindNextElement(element, "event"))
+	for (eventElement = reader.FindFirstChild(eventElement, "event"); eventElement != nullptr;
+		eventElement = reader.FindNextElement(eventElement, "event"))
 	{
 		std::string name;
-		reader.ForceReadAttribute(element, "name", name);
+		reader.ForceReadAttribute(eventElement, "name", name);
 
-		CU::GrowingArray<Action*> actions;
+		CU::GrowingArray<Action*> actions(8);
 
-		for (element = reader.FindFirstChild(element, "spawnEnemy"); element != nullptr;
+		for (tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "spawnEnemy"); element != nullptr;
 			element = reader.FindNextElement(element, "spawnEnemy"))
 		{
 			// move to spawnEnemy-class, then read pos, rot, scale.
@@ -37,4 +37,10 @@ EventManager::~EventManager()
 	{
 		delete it->second;
 	}
+}
+
+void EventManager::ReceiveMessage(const SpawnEnemyMessage& aMessage)
+{
+	int apa = 5;
+	apa;
 }

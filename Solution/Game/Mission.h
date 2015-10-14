@@ -28,7 +28,7 @@ public:
 protected:
 	int myIndex;
 	CU::GrowingArray<std::string> myStartEventNames;
-	CU::GrowingArray<Event*> myEventsEnd;
+	//CU::GrowingArray<Event*> myEventsEnd;
 
 };
 

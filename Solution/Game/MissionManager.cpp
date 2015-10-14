@@ -52,7 +52,8 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		else
 		{
-			DL_ASSERT("Missiontype not recognized. %s", type.c_str());
+			std::string error = "Missiontype not recognized." + type;
+			DL_ASSERT(error.c_str());
 		}
 	}
 
