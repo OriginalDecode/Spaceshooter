@@ -43,9 +43,11 @@ private:
 	float myMaxSteeringSpeed;
 	float myAcceleration;
 
-	float myBoostMultiplier;
+	float myBoostAcceleration;
 	float myCurrentBoostValue;
 	float myMaxBoostValue;
+	float myCurrentBoostCooldown;
+	float myMaxBoostCooldown;
 	
 	bool myCameraIsLocked;
 	bool myBoost;
