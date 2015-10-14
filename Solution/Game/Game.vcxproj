@@ -165,6 +165,7 @@
     <ClInclude Include="ShootNote.h" />
     <ClInclude Include="SpawnEnemy.h" />
     <ClInclude Include="SpawnEnemyMessage.h" />
+    <ClInclude Include="StartEventMessage.h" />
     <ClInclude Include="StateEnums.h" />
     <ClInclude Include="StateStack.h" />
     <ClInclude Include="StateStackProxy.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="SpawnEnemy.cpp" />
     <ClCompile Include="SpawnEnemyMessage.cpp" />
+    <ClCompile Include="StartEventMessage.cpp" />
     <ClCompile Include="StateStack.cpp" />
     <ClCompile Include="StateStackProxy.cpp" />
     <ClCompile Include="stdafx.cpp">
