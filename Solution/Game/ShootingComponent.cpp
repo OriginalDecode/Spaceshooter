@@ -20,8 +20,6 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, Component(aEntity)
 	, myHasWeapon(false)
 {
-	/*ReadFromXML("Data/script/weapon.xml");
-	WATCH_FILE("Data/script/weapon.xml", ShootingComponent::ReadFromXML);*/
 }
 
 void ShootingComponent::Update(float aDeltaTime)
@@ -82,45 +80,6 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 			myWeapons[i].myMultiplier = aNote.myFireRateMultiplier;
 		}
 	}
-}
-
-void ShootingComponent::ReadFromXML(const std::string aFilePath)
-{
-	myWeapons.RemoveAll();
-	XMLReader reader;
-	reader.OpenDocument(aFilePath);
-
-	tinyxml2::XMLElement* weaponElement = reader.FindFirstChild("weapon");
-	for (; weaponElement != nullptr; weaponElement = reader.FindNextElement(weaponElement))
-	{
-
-		WeaponData weaponData;
-
-		std::string type;
-		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "type"), "value", type);
-		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "cooldown"), "value", weaponData.myCoolDownTime);
-		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "spread"), "value", weaponData.mySpread);
-		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "x", weaponData.myPosition.x);
-		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "y", weaponData.myPosition.y);
-		reader.ReadAttribute(reader.FindFirstChild(weaponElement, "position"), "z", weaponData.myPosition.z);
-		weaponData.myCurrentTime = weaponData.myCoolDownTime;
-
-		if (type == "machinegun")
-		{
-			weaponData.myBulletType = eBulletType::MACHINGUN_BULLET;
-		}
-		else if (type == "sniper")
-		{
-			weaponData.myBulletType = eBulletType::SNIPER_BULLET;
-		}
-		else if (type == "plasma")
-		{
-			weaponData.myBulletType = eBulletType::PLASMA_BULLET;
-		}
-
-		myWeapons.Add(weaponData);
-	}
-	myCurrentWeaponID = 0;
 }
 
 void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
