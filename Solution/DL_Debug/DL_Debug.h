@@ -1,4 +1,27 @@
 #pragma once
+
+#ifdef RELEASE_BUILD
+#define DL_ASSERT(string)
+#define DL_ASSERT_EXP(expression, string)
+
+#define DL_PRINT(string)
+
+#define DL_DEBUG( ... )
+
+#define DL_MESSAGE_BOX(ERRORTEXT, TITLETEXT, TYPE)
+#define DL_WRITELOG(log, ...)
+
+
+#define ENGINE_LOG(...)
+#define GAME_LOG(...)
+#define RESOURCE_LOG(...)
+#define DIRECTX_LOG(...)
+#define FBX_LOG(...)
+#define FUNCTION_TIMER_LOG(...)
+#define ENTITY_LOG(...)
+#define POWERUP_LOG(...)
+#define COMPONENT_LOG(...)
+#else
 #define DL_ASSERT(string) DL_Debug::Debug::GetInstance()->AssertMessage(__FILE__,__LINE__,__FUNCTION__, string)
 #define DL_ASSERT_EXP(expression, string) DL_Debug::Debug::GetInstance()->AssertMessage(expression, __FILE__,__LINE__,__FUNCTION__, string)
 
@@ -19,6 +42,8 @@
 #define ENTITY_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::ENTITY, __VA_ARGS__)
 #define POWERUP_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::POWERUP_L, __VA_ARGS__)
 #define COMPONENT_LOG(...) DL_WRITELOG(DL_Debug::eFilterLog::COMPONENT, __VA_ARGS__)
+#endif
+
 
 #include <string>
 #include <fstream>

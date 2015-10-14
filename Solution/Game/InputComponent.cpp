@@ -32,6 +32,10 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
+	myCurrentBoostCooldown = 0.f;
+	myCurrentBoostValue = 0.f;
+	myMaxBoostCooldown = 0.f;
+	myMaxBoostValue = 0.f;
 
 	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
 
@@ -131,7 +135,10 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "acceleration", myRollAcceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "deacceleration", myRollDeacceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
-	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "speedMultiplier", myBoostMultiplier);
+	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "acceleration", myBoostAcceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "deacceleration", myBoostDeacceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "maxBoost", myMaxBoostValue);
+	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "cooldown", myMaxBoostCooldown);
 }
 
 void InputComponent::Roll(float aDeltaTime)
@@ -194,13 +201,39 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
+	myMovementSpeed += myCurrentBoostValue;
 
-	if (myBoost == true)
+	if (myCurrentBoostCooldown == 0.f)
 	{
-		myMovementSpeed *= myBoostMultiplier;
+		if (myBoost == true)
+		{
+			myCurrentBoostValue += aDelta * myBoostAcceleration;
+			if (myCurrentBoostValue >= myMaxBoostValue)
+			{
+				myCurrentBoostValue = myMaxBoostValue;
+				myCurrentBoostCooldown = myMaxBoostCooldown;
+			}
+		}
 	}
-
+	else
+	{
+		myCurrentBoostCooldown -= aDelta;
+		if (myCurrentBoostCooldown <= 0.f)
+		{
+			myCurrentBoostCooldown = 0.f;
+		}
+	}
+	
 	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
+
+	if (myBoost == false)
+	{
+		myCurrentBoostValue -= aDelta * myBoostDeacceleration;
+		if (myCurrentBoostValue < 0.f)
+		{
+			myCurrentBoostValue = 0.f;
+		}
+	}
 }
 
 void InputComponent::UpdateSteering(const float& aDelta)
