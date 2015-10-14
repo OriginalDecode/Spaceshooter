@@ -5,9 +5,9 @@
 
 Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
-	, myEventsStart(4)
+	, myStartEventNames(4)
 {
-	EventFactory::ReadEventNames(aReader, aElement, myEventsStart);
+	EventFactory::ReadEventNames(aReader, aElement, myStartEventNames);
 }
 
 
@@ -21,7 +21,7 @@ void Mission::Start()
 
 void Mission::EventsStart()
 {
-	for (int i = 0; i < myEventsStart.Size(); ++i)
+	for (int i = 0; i < myStartEventNames.Size(); ++i)
 	{
 		//myEventsStart[i]->Start();
 	}
