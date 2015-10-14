@@ -21,6 +21,7 @@ class BulletManager;
 class CollisionManager;
 class Entity;
 class EntityFactory;
+class EventManager;
 class MissionManager;
 class WeaponFactory;
 class XMLReader;
@@ -89,6 +90,7 @@ private:
 	CollisionManager* myCollisionManager;
 
 	MissionManager* myMissionManager;
+	EventManager* myEventManager;
 
 	bool myRenderStuff;
 	bool myShowPointLightCube;
