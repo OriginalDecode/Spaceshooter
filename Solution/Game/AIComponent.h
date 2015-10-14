@@ -1,5 +1,8 @@
 #pragma once
+
 #include "ControllerComponent.h"
+
+class PhysicsComponent;
 
 class AIComponent : public ControllerComponent
 {
@@ -25,6 +28,8 @@ private:
 	bool myFollowingEntity;
 	CU::Vector3<float> myTargetPosition;
 	CU::Vector3<float> myVelocity;
+
+	PhysicsComponent* myPhysicsComponent;
 };
 
 inline const std::string& AIComponent::GetTargetName() const
