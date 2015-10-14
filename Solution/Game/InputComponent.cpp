@@ -136,6 +136,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "deacceleration", myRollDeacceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
 	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "acceleration", myBoostAcceleration);
+	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "deacceleration", myBoostDeacceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "maxBoost", myMaxBoostValue);
 	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "cooldown", myMaxBoostCooldown);
 }
@@ -222,14 +223,17 @@ void InputComponent::UpdateMovement(const float& aDelta)
 			myCurrentBoostCooldown = 0.f;
 		}
 	}
-
-	myCurrentBoostValue -= aDelta;
-	if (myCurrentBoostValue < 0.f)
-	{
-		myCurrentBoostValue = 0.f;
-	}
-
+	
 	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
+
+	if (myBoost == false)
+	{
+		myCurrentBoostValue -= aDelta * myBoostDeacceleration;
+		if (myCurrentBoostValue < 0.f)
+		{
+			myCurrentBoostValue = 0.f;
+		}
+	}
 }
 
 void InputComponent::UpdateSteering(const float& aDelta)
