@@ -200,7 +200,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	}
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
-	myMovementSpeed += myCurrentBoostValue * myMovementSpeed * 100.f * aDelta;
+	myMovementSpeed += myCurrentBoostValue;
 
 	if (myCurrentBoostCooldown == 0.f)
 	{
@@ -222,7 +222,8 @@ void InputComponent::UpdateMovement(const float& aDelta)
 			myCurrentBoostCooldown = 0.f;
 		}
 	}
-	myCurrentBoostValue -= aDelta * 0.2f;
+
+	myCurrentBoostValue -= aDelta;
 	if (myCurrentBoostValue < 0.f)
 	{
 		myCurrentBoostValue = 0.f;
