@@ -6,6 +6,7 @@ struct WeaponDataType
 	std::string myType;
 
 	int mySpread;
+	int myBulletsPerShot;
 
 	float myCoolDownTime;
 	float myCurrentTime;

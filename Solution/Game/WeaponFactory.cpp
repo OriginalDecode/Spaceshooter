@@ -110,6 +110,7 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 	tinyxml2::XMLElement* rootElement = weaponDocument.FindFirstChild("Weapon");
 
 	WeaponDataType weaponDataType;
+	weaponDataType.myBulletsPerShot = 1;
 
 	weaponDocument.ForceReadAttribute(rootElement, "name", weaponDataType.myType);
 
@@ -123,6 +124,10 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("spread").c_str()) == 0)
 		{
 			weaponDocument.ForceReadAttribute(e, "value", weaponDataType.mySpread);
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("bulletsPerShot").c_str()) == 0)
+		{
+			weaponDocument.ForceReadAttribute(e, "value", weaponDataType.myBulletsPerShot);
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("position").c_str()) == 0)
 		{

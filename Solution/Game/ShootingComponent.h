@@ -7,6 +7,7 @@ struct WeaponData
 	eBulletType myBulletType;
 	int mySpread;
 	int myID;
+	int myBulletsPerShot;
 	float myCoolDownTime;
 	float myCurrentTime;
 	CU::Vector3<float> myPosition;
@@ -29,7 +30,6 @@ public:
 	void ReceiveNote(const InputNote& aMessage) override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
-	void AddWeapon(WeaponData aWeapon);
 	void AddWeapon(const WeaponDataType& aWeapon);
 
 	static eComponentType GetType();
@@ -45,11 +45,6 @@ private:
 
 	bool myHasWeapon;
 };
-
-inline void ShootingComponent::AddWeapon(WeaponData aWeapon)
-{
-	myWeapons.Add(aWeapon);
-}
 
 inline eComponentType ShootingComponent::GetType()
 {
