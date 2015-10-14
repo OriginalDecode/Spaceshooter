@@ -45,24 +45,27 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 		orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
 			+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
 
-		if (myWeapons[myCurrentWeaponID].mySpread > 0)
+		for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; i++)
 		{
-			float randomSpreadX = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
-			float randomSpreadY = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
-			
-			CU::Matrix44<float> rotation;
-			rotation.myMatrix[8] = randomSpreadX;
-			rotation.myMatrix[9] = randomSpreadY;
+			if (myWeapons[myCurrentWeaponID].mySpread > 0)
+			{
+				float randomSpreadX = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
+				float randomSpreadY = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
 
-			CU::Vector4<float> pos = orientation.GetPos();
-			orientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
-			orientation = rotation * orientation;
-			orientation.SetPos(pos);
+				CU::Matrix44<float> rotation;
+				rotation.myMatrix[8] = randomSpreadX;
+				rotation.myMatrix[9] = randomSpreadY;
+
+				CU::Vector4<float> pos = orientation.GetPos();
+				orientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
+				orientation = rotation * orientation;
+				orientation.SetPos(pos);
+			}
+
+			PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
+				, myEntity.GetType(), aShootNote.myEnitityVelocity));
+			myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 		}
-
-		PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-			, myEntity.GetType(), aShootNote.myEnitityVelocity));
-		myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 	}
 }
 
@@ -86,6 +89,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 {
 	WeaponData newWeapon;
 
+	newWeapon.myBulletsPerShot = aWeapon.myBulletsPerShot;
 	newWeapon.myCoolDownTime = aWeapon.myCoolDownTime;
 	newWeapon.myCurrentTime = aWeapon.myCoolDownTime;
 	newWeapon.myPosition = aWeapon.myPosition;
