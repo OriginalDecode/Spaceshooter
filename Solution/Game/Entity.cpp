@@ -10,28 +10,29 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	, myOctreeType(anOctreeType)
 	, myName(aName)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
-	, myComponentsArray(4)
 {
+	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
+	{
+		myComponents[i] = nullptr;
+	}
 }
 
 Entity::~Entity()
 {
-	for (auto it = myComponents.begin(); it != myComponents.end(); ++it)
+	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
-		delete it->second;
-		it->second = nullptr;
+		delete myComponents[i];
 	}
-
-	myComponents.clear();
-
-	myComponentsArray.RemoveAll();
 }
 
 void Entity::Update(float aDeltaTime)
 {
-	for (int i = 0; i < myComponentsArray.Size(); ++i)
+	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
-		myComponentsArray[i]->Update(aDeltaTime);
+		if (myComponents[i] != nullptr)
+		{
+			myComponents[i]->Update(aDeltaTime);
+		}
 	}
 }
 

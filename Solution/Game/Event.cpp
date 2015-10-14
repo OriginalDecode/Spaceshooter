@@ -2,13 +2,15 @@
 #include "Action.h"
 #include "Event.h"
 
-Event::Event()
+Event::Event(const CU::GrowingArray<Action*>& someActions)
+	: myActions(someActions)
 {
 }
 
 
 Event::~Event()
 {
+	myActions.DeleteAll();
 }
 
 void Event::Start()

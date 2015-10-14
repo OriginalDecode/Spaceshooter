@@ -9,6 +9,7 @@
 
 AIComponent::AIComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
+	, myPhysicsComponent(nullptr)
 {
 
 }
@@ -30,8 +31,14 @@ void AIComponent::Update(float aDeltaTime)
 {
 	DL_ASSERT_EXP(myEntityToFollow != nullptr, "AI needs an entity to follow.");
 
-	DL_ASSERT_EXP(myEntity.GetComponent<PhysicsComponent>() != nullptr, "AI component needs physics component for movement."); // remove later
-	myEntity.GetComponent<PhysicsComponent>()->SetVelocity(myVelocity);
+	if (myPhysicsComponent == nullptr)
+	{
+		myPhysicsComponent = myEntity.GetComponent<PhysicsComponent>();
+		DL_ASSERT_EXP(myPhysicsComponent != nullptr, "AI component needs physics component for movement."); // remove later
+	}
+
+	
+	myPhysicsComponent->SetVelocity(myVelocity);
 
 	if (myCanMove == true)
 	{
@@ -44,7 +51,7 @@ void AIComponent::Update(float aDeltaTime)
 		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
 		{
 			myTimeToNextDecision = myTimeBetweenDecisions;
-			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
+			Shoot(myPhysicsComponent->GetVelocity());
 		}
 	}
 	else

@@ -6,6 +6,6 @@ BulletMessage::BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOri
 	, myOrientation(anOrientation)
 	, myEntityType(aEntityType)
 	, myEntityVelocity(aEnitityVelocity)
+	, Message(eMessageType::ACTIVATE_BULLET)
 {
-	myMessageType = eMessageType::ACTIVATE_BULLET;
 }

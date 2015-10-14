@@ -5,14 +5,20 @@
 class Message
 {
 public:
-	const eMessageType GetMessageType() const;
+	Message(eMessageType aMessageType);
+	eMessageType GetMessageType() const;
 
 protected:
 	
-	eMessageType myMessageType;
+	const eMessageType myMessageType;
 };
 
-inline const eMessageType Message::GetMessageType() const
+inline Message::Message(eMessageType aMessageType)
+	:myMessageType(aMessageType)
+{
+}
+
+inline eMessageType Message::GetMessageType() const
 {
 	return myMessageType;
 }
