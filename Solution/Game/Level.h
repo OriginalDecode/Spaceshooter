@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Subscriber.h"
+
 namespace Prism
 {
 	class Camera;
@@ -31,7 +33,7 @@ namespace tinyxml2
 	class XMLElement;
 }
 
-class Level
+class Level : public Subscriber
 {
 public:
 	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper);
@@ -56,6 +58,8 @@ public:
 	void CompleteLevel();
 
 	int GetEnemiesAlive() const;
+
+	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 

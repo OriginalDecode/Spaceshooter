@@ -34,6 +34,7 @@
 #include <Scene.h>
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
+#include "SpawnEnemyMessage.h"
 #include <SpotLight.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
@@ -43,6 +44,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	, myComplete(false)
 	, mySkySphere(nullptr)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	myScene = new Prism::Scene();
 	myWeaponFactory = new WeaponFactory();
 	myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
@@ -440,6 +442,29 @@ Entity* Level::GetEntityWithName(const std::string& aName)
 int Level::GetEnemiesAlive() const
 {
 	return myCollisionManager->GetEnemiesAlive();
+}
+
+
+void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
+{
+	Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
+	myEntityFactory->CopyEntity(newEntity, aMessage.myType);
+
+	newEntity->myOrientation.SetPos(aMessage.myPosition);
+
+
+	newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(aMessage.myRotation.x) * newEntity->myOrientation;
+	newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(aMessage.myRotation.y) * newEntity->myOrientation;
+	newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(aMessage.myRotation.z) * newEntity->myOrientation;
+
+	newEntity->GetComponent<GraphicsComponent>()->SetScale(aMessage.myScale);
+
+	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
+
+	newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+	myEntities.Add(newEntity);
+
+	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
 }
 
 void Level::LoadPlayer()
