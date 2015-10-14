@@ -29,8 +29,6 @@ public:
 	void ReceiveNote(const InputNote& aMessage) override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
-	void ReadFromXML(const std::string aFilePath);
-
 	void AddWeapon(WeaponData aWeapon);
 	void AddWeapon(const WeaponDataType& aWeapon);
 
