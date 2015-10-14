@@ -11,6 +11,7 @@ namespace Prism
 
 	void FileWatcher::WatchFile(const std::string& aFile, std::function<void()> aCallBack)
 	{
+#ifndef RELEASE_BUILD
 		WIN32_FIND_DATA findData;
 		HANDLE findHandle = FindFirstFile(aFile.c_str(), &findData);
 		if (findHandle != INVALID_HANDLE_VALUE)
@@ -21,14 +22,14 @@ namespace Prism
 			newData.myFileTime = findData.ftLastWriteTime;
 			myFileDatas.Add(newData),
 
-			FindClose(findHandle);
+				FindClose(findHandle);
 		}
 		else
 		{
 			ENGINE_LOG("[FileWatcher]: Tried to watch a file that couldnt be found, %s", aFile.c_str());
 			DL_MESSAGE_BOX("Failed to watch file", "[FileWatcher]", MB_ICONWARNING);
 		}
-
+#endif
 	}
 
 	void FileWatcher::UnWatchFile(const std::string& aFile)
