@@ -11,7 +11,8 @@ public:
 	EventManager(const std::string& aXmlPath);
 	~EventManager();
 
-	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
+	void ReceiveMessage(const StartEventMessage& aMessage) override;
+	
 
 private:
 	std::unordered_map<std::string, Event*> myEvents;

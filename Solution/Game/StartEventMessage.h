@@ -1,8 +1,15 @@
 #pragma once
-class StartEventMessage
+
+#include "Message.h"
+
+class StartEventMessage : public Message
 {
 public:
-	StartEventMessage();
-	~StartEventMessage();
+	StartEventMessage(const std::string& aName);
+
+	const std::string& GetName() const;
+
+private:
+	const std::string myName;
 };
 

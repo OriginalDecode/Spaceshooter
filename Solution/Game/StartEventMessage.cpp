@@ -2,11 +2,13 @@
 #include "StartEventMessage.h"
 
 
-StartEventMessage::StartEventMessage()
+StartEventMessage::StartEventMessage(const std::string& aName)
+	: myName(aName)
+	, Message(eMessageType::START_EVENT)
 {
 }
 
-
-StartEventMessage::~StartEventMessage()
+const std::string& StartEventMessage::GetName() const
 {
+	return myName;
 }

@@ -26,3 +26,7 @@ void Subscriber::ReceiveMessage(const GameStateMessage&)
 void Subscriber::ReceiveMessage(const SpawnEnemyMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const StartEventMessage&)
+{
+}
