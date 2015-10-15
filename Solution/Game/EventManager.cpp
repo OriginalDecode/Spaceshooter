@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "CommonHelper.h"
 #include "Event.h"
 #include "EventManager.h"
 #include "PostMaster.h"
@@ -18,6 +19,7 @@ EventManager::EventManager(const std::string& aXmlPath)
 	{
 		std::string name;
 		reader.ForceReadAttribute(eventElement, "name", name);
+		name = CU::ToLower(name);
 
 		CU::GrowingArray<Action*> actions(8);
 
@@ -45,14 +47,15 @@ EventManager::~EventManager()
 
 void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
 {
-	std::unordered_map<std::string, Event*>::const_iterator it = myEvents.find(aMessage.GetName());
+	std::string eventName = CU::ToLower(aMessage.GetName());
+	std::unordered_map<std::string, Event*>::const_iterator it = myEvents.find(eventName);
 
 	if (it == myEvents.end())
 	{
-		DL_ASSERT(("Event does not exist: " + aMessage.GetName()).c_str());
+		DL_ASSERT(("Event does not exist: " + eventName).c_str());
 	}
 	else
 	{
-		myEvents[aMessage.GetName()]->Start();
+		myEvents[eventName]->Start();
 	}
 }

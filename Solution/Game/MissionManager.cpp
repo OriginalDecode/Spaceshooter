@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include "KillAllAbortMission.h"
 #include "KillAllMission.h"
+#include "KillXEnemiesMission.h"
 #include "Level.h"
 #include "MissionManager.h"
 #include <sstream>
@@ -39,6 +40,12 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			WaypointMission* waypoint = new WaypointMission(myLevel, myPlayer, reader, element);
 			waypoint->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(waypoint);
+		}
+		else if (type == "killxenemies")
+		{
+			KillXEnemiesMission* mission = new KillXEnemiesMission(myLevel, reader, element);
+			mission->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(mission);
 		}
 		else if (type == "killall")
 		{
@@ -110,8 +117,8 @@ void MissionManager::Update(float aDeltaTime)
 		}
 		else
 		{
-			myMissions[myCurrentMission]->Start();
 			myMissions[myCurrentMission]->EventsStart();
+			myMissions[myCurrentMission]->Start();
 		}
 	}
 }

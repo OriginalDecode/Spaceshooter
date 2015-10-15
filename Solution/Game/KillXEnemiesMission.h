@@ -15,10 +15,12 @@ public:
 	KillXEnemiesMission(Level& aLevel, XMLReader& aReader, tinyxml2::XMLElement* aElement);
 
 	bool Update(float aDeltaTime) override;
+	void Start() override;
 
 private:
 	bool operator=(KillXEnemiesMission&) = delete;
 	Level& myLevel;
+	int myStartEnemyCount;
 	int myEnemiesToKill;
 };
 
