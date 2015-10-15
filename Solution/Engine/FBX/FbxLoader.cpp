@@ -4,7 +4,7 @@
 #include <Vector4.h>
 #include <Matrix44.h>
 #include <DL_Assert.h>
-
+#include <CommonHelper.h>
 #pragma warning(disable : 4239 4244)
 
 #define PI 3.14159265359f
@@ -1447,16 +1447,19 @@ FbxModelData* FBXLoader::loadModel( const char* aFile )
 			
 			const FbxString lAbsFbxFileName = FbxPathUtils::Resolve(aFile);
 			const FbxString lAbsFolderName = FbxPathUtils::GetFolderName(lAbsFbxFileName);
-			
 			const FbxString lTextureFileName = lAbsFolderName + "\\" + lFileTexture->GetRelativeFileName();// FbxPathUtils::GetFileName(lFileName);
 				
+			std::string str = lFileTexture->GetFileName();
+			str = CU::GetSubString(str, "Data/", true, 1);
+			//const FbxString lResolvedFileName = CU::GetSubString( str, "Data\\",true);// lFileTexture->GetRelativeFileName();;// FbxPathUtils::Bind(lAbsFolderName, lTextureFileName);
+
 			const FbxString lResolvedFileName = lAbsFolderName + "\\" + FbxPathUtils::GetFileName(lFileName);// lFileTexture->GetRelativeFileName();;// FbxPathUtils::Bind(lAbsFolderName, lTextureFileName);
 			TextureInfo info;
 			info.myFileName = lResolvedFileName;
 			//info.myFileName += "\\";
-			info.myFileName = lFileTexture->GetRelativeFileName();
+			info.myFileName = str;
 			myLoadingModel->myTextureData->myTextures.push_back(info);
-			lFileTexture->SetFileName(lResolvedFileName);
+			lFileTexture->SetFileName(str.c_str());
 		}
 	}
 	FBX_LOG("Success!");
