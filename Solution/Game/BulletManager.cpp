@@ -133,6 +133,15 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 	{
 		bulletData->myType = eBulletType::PLASMA_BULLET;
 	}
+	else if (projectileDataType.myType == "shotgun")
+	{
+		bulletData->myType = eBulletType::SHOTGUN_BULLET;
+	}
+	else if (projectileDataType.myType == "rocket")
+	{
+		bulletData->myType = eBulletType::ROCKET_MISSILE;
+	}
+
 	DeleteWeaponData(myBulletDatas[static_cast<int>(bulletData->myType)]);
 	myBulletDatas[static_cast<int>(bulletData->myType)] = bulletData;
 }
