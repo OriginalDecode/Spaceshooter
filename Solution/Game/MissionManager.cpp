@@ -94,6 +94,11 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 	reader.CloseDocument();
 }
 
+MissionManager::~MissionManager()
+{
+	myMissions.DeleteAll();
+}
+
 void MissionManager::Init()
 {
 	myMissions[myCurrentMission]->Start();

@@ -5,6 +5,7 @@ class BulletMessage;
 class GameStateMessage;
 class SpawnEnemyMessage;
 class StartEventMessage;
+class EnemyKilledMessage;
 
 class Subscriber
 {
@@ -17,5 +18,7 @@ public:
 	virtual void ReceiveMessage(const GameStateMessage& aMessage);
 	virtual void ReceiveMessage(const SpawnEnemyMessage& aMessage);
 	virtual void ReceiveMessage(const StartEventMessage& aMessage);
+	virtual void ReceiveMessage(const EnemyKilledMessage& aMessage);
+
 };
 

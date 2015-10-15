@@ -125,6 +125,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
+    <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventFactory.h" />
     <ClInclude Include="EventManager.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
+    <ClCompile Include="EnemyKilledMessage.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Event.cpp" />
