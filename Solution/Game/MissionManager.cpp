@@ -11,7 +11,6 @@
 #include "SurvivalMission.h"
 #include "SurvivalAbortMission.h"
 #include "WaypointMission.h"
-#include "WaypointAbortMission.h"
 #include "XMLReader.h"
 
 
@@ -40,12 +39,6 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			WaypointMission* waypoint = new WaypointMission(myLevel, myPlayer, reader, element);
 			waypoint->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(waypoint);
-		}
-		else if (type == "waypointabort")
-		{
-			WaypointAbortMission* waypointAbort = new WaypointAbortMission(myLevel, myPlayer, reader, element);
-			waypointAbort->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(waypointAbort);
 		}
 		else if (type == "killall")
 		{

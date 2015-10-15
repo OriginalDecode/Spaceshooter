@@ -176,7 +176,6 @@
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="SurvivalAbortMission.h" />
     <ClInclude Include="SurvivalMission.h" />
-    <ClInclude Include="WaypointAbortMission.h" />
     <ClInclude Include="WaypointComponent.h" />
     <ClInclude Include="WaypointMission.h" />
     <ClInclude Include="WeaponFactory.h" />
@@ -234,7 +233,6 @@
     <ClCompile Include="Subscriber.cpp" />
     <ClCompile Include="SurvivalAbortMission.cpp" />
     <ClCompile Include="SurvivalMission.cpp" />
-    <ClCompile Include="WaypointAbortMission.cpp" />
     <ClCompile Include="WaypointComponent.cpp" />
     <ClCompile Include="WaypointMission.cpp" />
     <ClCompile Include="WeaponFactory.cpp" />

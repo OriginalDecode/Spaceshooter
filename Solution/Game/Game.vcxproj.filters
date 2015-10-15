@@ -142,9 +142,6 @@
     <ClCompile Include="KillXEnemiesMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
-    <ClCompile Include="WaypointAbortMission.cpp">
-      <Filter>Mission</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -316,9 +313,6 @@
       <Filter>Mission</Filter>
     </ClInclude>
     <ClInclude Include="SurvivalAbortMission.h">
-      <Filter>Mission</Filter>
-    </ClInclude>
-    <ClInclude Include="WaypointAbortMission.h">
       <Filter>Mission</Filter>
     </ClInclude>
   </ItemGroup>
