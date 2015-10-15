@@ -56,23 +56,26 @@
     <Compile Include="ComponentEditors\AIComponent.Designer.cs">
       <DependentUpon>AIComponent.cs</DependentUpon>
     </Compile>
+    <Compile Include="ComponentEditors\BasePanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ComponentEditors\CollisionComponent.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ComponentEditors\CollisionComponent.Designer.cs">
       <DependentUpon>CollisionComponent.cs</DependentUpon>
     </Compile>
-    <Compile Include="ComponentEditors\GraphicsComponent.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ComponentEditors\GraphicsComponent.Designer.cs">
-      <DependentUpon>GraphicsComponent.cs</DependentUpon>
+    <Compile Include="ComponentEditors\GraphicsComponentPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ComponentEditors\ShootingComponent.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ComponentEditors\ShootingComponent.Designer.cs">
       <DependentUpon>ShootingComponent.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ComponentEditors\ShootingComponentPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ComponentEditors\ShootingComponentSubForms\EditWeaponForm.cs">
       <SubType>Form</SubType>
@@ -108,9 +111,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ComponentEditors\CollisionComponent.resx">
       <DependentUpon>CollisionComponent.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ComponentEditors\GraphicsComponent.resx">
-      <DependentUpon>GraphicsComponent.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ComponentEditors\ShootingComponent.resx">
       <DependentUpon>ShootingComponent.cs</DependentUpon>
