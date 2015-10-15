@@ -109,6 +109,14 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	{
 		newWeapon.myBulletType = eBulletType::PLASMA_BULLET;
 	}
+	else if (aWeapon.myBulletType == "shotgun")
+	{
+		newWeapon.myBulletType = eBulletType::SHOTGUN_BULLET;
+	}
+	else if (aWeapon.myBulletType == "rocket")
+	{
+		newWeapon.myBulletType = eBulletType::ROCKET_MISSILE;
+	}
 
 	newWeapon.myID = static_cast<int>(newWeapon.myBulletType);
 	myCurrentWeaponID = newWeapon.myID;
