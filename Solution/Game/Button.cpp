@@ -58,15 +58,15 @@ Button::~Button()
 	myClickEvent = nullptr;
 }
 
-void Button::Render(Prism::Camera* aCamera)
+void Button::Render()
 {
 	if (myIsHovered == false)
 	{
-		myBackground->Render(*aCamera, myPosition.x, myPosition.y);
+		myBackground->Render(myPosition.x, myPosition.y);
 	}
 	else
 	{
-		myHoverBackground->Render(*aCamera, myPosition.x, myPosition.y);
+		myHoverBackground->Render(myPosition.x, myPosition.y);
 	}
 }
 

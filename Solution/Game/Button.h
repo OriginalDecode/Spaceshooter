@@ -20,7 +20,7 @@ public:
 	Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement);
 	~Button();
 
-	void Render(Prism::Camera* aCamera);
+	void Render();
 	void Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
 
 	void OnResize();
