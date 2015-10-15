@@ -185,6 +185,16 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 			aDocument.ForceReadAttribute(e, "min", aEntityToAddTo.myMinTimeToNextDecision);
 			aDocument.ForceReadAttribute(e, "max", aEntityToAddTo.myMaxTimeToNextDecision);
 		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("AvoidanceDistance").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "value", aEntityToAddTo.myAIAvoidanceDistance);
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("AvoidanceOffset").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "x", aEntityToAddTo.myAIAvoidancePoint.x);
+			aDocument.ForceReadAttribute(e, "y", aEntityToAddTo.myAIAvoidancePoint.y);
+			aDocument.ForceReadAttribute(e, "z", aEntityToAddTo.myAIAvoidancePoint.z);
+		}
 	}
 }
 
@@ -391,7 +401,8 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		float speed = CU::Math::RandomRange<float>(it->second.myMinSpeed, it->second.myMaxSpeed);
 		float timeToNextDecision = CU::Math::RandomRange<float>(it->second.myMinTimeToNextDecision,
 			it->second.myMaxTimeToNextDecision);
-		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision, it->second.myTargetName);
+		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision, it->second.myTargetName
+			, it->second.myAIAvoidanceDistance, it->second.myAIAvoidancePoint);
 	}
 	if (sourceEntity->GetComponent<ShootingComponent>() != nullptr)
 	{

@@ -10,11 +10,13 @@
 AIComponent::AIComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
 	, myPhysicsComponent(nullptr)
+	, myAvoidanceDistance(300.f)
 {
 
 }
 
-void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName)
+void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
+	, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint)
 {
 	myEntityToFollow = nullptr;
 
@@ -26,9 +28,8 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 
 	myCanMove = true;
 
-	myFollowingOffset.x = static_cast<float>(rand() % 700) - 350.f;
-	myFollowingOffset.y = static_cast<float>(rand() % 700) - 350.f;
-	myFollowingOffset.z = static_cast<float>(rand() % 700) - 350.f;
+	myAvoidanceDistance = aAvoidanceDistance;
+	myFollowingOffset = aAvoidancePoint;
 }
 
 void AIComponent::Update(float aDeltaTime)
@@ -85,9 +86,9 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 	float distToTarget = CU::Length(toTarget);
 
-	if (distToTarget < 400.f)
+	if (distToTarget < myAvoidanceDistance)
 	{
-		float distCoef = 1.f - (distToTarget / 400.f);
+		float distCoef = 1.f - (distToTarget / myAvoidanceDistance);
 		toTarget += myFollowingOffset * distCoef;
 	}
 

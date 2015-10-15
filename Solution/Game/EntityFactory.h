@@ -34,6 +34,7 @@ struct EntityData
 	std::string myWeaponType;
 
 	CU::Vector3f myScale;
+	CU::Vector3f myAIAvoidancePoint;
 
 	float myCollisionSphereRadius;
 	float myDepth;
@@ -43,6 +44,7 @@ struct EntityData
 	float myMaxSpeed;
 	float myMinTimeToNextDecision;
 	float myMaxTimeToNextDecision;
+	float myAIAvoidanceDistance;
 	float myWidth;
 
 	int myChanceToFollow;
