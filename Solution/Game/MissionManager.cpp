@@ -8,6 +8,7 @@
 #include "MissionManager.h"
 #include <sstream>
 #include "SurvivalMission.h"
+#include "SurvivalAbortMission.h"
 #include "WaypointMission.h"
 #include "WaypointAbortMission.h"
 #include "XMLReader.h"
@@ -41,9 +42,9 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		else if (type == "waypointabort")
 		{
-			WaypointAbortMission* waypoint = new WaypointAbortMission(myLevel, myPlayer, reader, element);
-			waypoint->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(waypoint);
+			WaypointAbortMission* waypointAbort = new WaypointAbortMission(myLevel, myPlayer, reader, element);
+			waypointAbort->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(waypointAbort);
 		}
 		else if (type == "killall")
 		{
@@ -56,6 +57,12 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			SurvivalMission* survival = new SurvivalMission(reader, element);
 			survival->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(survival);
+		}
+		else if (type == "survivalabort")
+		{
+			SurvivalAbortMission* survivalAbort = new SurvivalAbortMission(reader, element);
+			survivalAbort->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(survivalAbort);
 		}
 		else
 		{
