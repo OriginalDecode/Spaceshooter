@@ -6,6 +6,9 @@
 #include "Entity.h"
 #include <Intersection.h>
 
+#include "AIComponent.h"
+#include "HealthComponent.h"
+
 CollisionManager::CollisionManager()
 	: myPlayers(1)
 	, myEnemies(16)
@@ -202,6 +205,46 @@ void CollisionManager::CheckCollision(CollisionComponent* aComponent
 		{
 			aComponent->GetEntity().SendNote(CollisionNote(theOther, *this));
 			break;
+		}
+	}
+}
+
+void CollisionManager::DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aTime)
+{
+	Sphere sphere;
+	sphere.myCenterPosition = aCenter;
+	sphere.myRadius = aRadius;
+	sphere.myRadiusSquared = aRadius * aRadius;
+
+	for (int i = myEnemies.Size() - 1; i >= 0; --i)
+	{
+		if (CU::Intersection::SphereVsSphere(sphere, myEnemies[i]->GetSphere()) == true)
+		{
+			myEnemies[i]->GetEntity().GetComponent<AIComponent>()->DisableMovement(aTime);
+		}
+	}
+}
+
+void CollisionManager::DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage)
+{
+	Sphere sphere;
+	sphere.myCenterPosition = aCenter;
+	sphere.myRadius = aRadius;
+	sphere.myRadiusSquared = aRadius * aRadius;
+
+	for (int i = myEnemies.Size() - 1; i >= 0; --i)
+	{
+		if (CU::Intersection::SphereVsSphere(sphere, myEnemies[i]->GetSphere()) == true && myEnemies[i]->GetEntity().GetComponent<HealthComponent>()->IsAlive() == true)
+		{
+			myEnemies[i]->GetEntity().GetComponent<HealthComponent>()->RemoveHealth(aDamage);
+		}
+	}
+
+	for (int i = myProps.Size() - 1; i >= 0; --i)
+	{
+		if (CU::Intersection::SphereVsSphere(sphere, myProps[i]->GetSphere()) == true && myProps[i]->GetEntity().GetComponent<HealthComponent>()->IsAlive() == true)
+		{
+			myProps[i]->GetEntity().GetComponent<HealthComponent>()->RemoveHealth(aDamage);
 		}
 	}
 }

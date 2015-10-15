@@ -49,6 +49,7 @@ struct EntityData
 
 	int myChanceToFollow;
 
+	float myDamageRadius;
 	int myLife;
 	int myDamage;
 
