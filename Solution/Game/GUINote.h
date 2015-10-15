@@ -6,8 +6,11 @@ struct GUINote
 {
 	GUINote(const CU::Vector3<float>& aPosition, eGUINoteType aType);
 
-	CU::Vector3<float> myPosition;
-	eGUINoteType myType;
+	const CU::Vector3<float> myPosition;
+	const eGUINoteType myType;
+
+private:
+	void operator=(GUINote&) = delete;
 };
 
 inline GUINote::GUINote(const CU::Vector3<float>& aPosition, eGUINoteType aType)

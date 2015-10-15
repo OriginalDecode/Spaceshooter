@@ -528,12 +528,10 @@ void Level::UpdateDebug()
 	}
 	if (myInputWrapper->KeyDown(DIK_K))
 	{
-		for (int i = 0; i < myEntities.Size(); i++)
-		{
-			if (myEntities[i]->GetComponent<AIComponent>() != nullptr)
-			{
-				myEntities[i]->GetComponent<AIComponent>()->DisableMovement(10.f);
-			}
-		}
+		myCollisionManager->DisableEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 100.f, 10.f);
+	}
+	if (myInputWrapper->KeyDown(DIK_J))
+	{
+		myCollisionManager->DamageEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 500.f, 100);
 	}
 }

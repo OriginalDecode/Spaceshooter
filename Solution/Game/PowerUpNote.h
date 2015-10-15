@@ -7,12 +7,14 @@ struct PowerUpNote
 	PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
 		, int someHealthRecover, int someFireRateMultiplier);
 
-	ePowerUpType myType;
-	float myDuration;
-	int myShieldStrength;
-	int myHealthRecover;
-	int myFireRateMultiplier;
+	const ePowerUpType myType;
+	const float myDuration;
+	const int myShieldStrength;
+	const int myHealthRecover;
+	const int myFireRateMultiplier;
 
+private:
+	void operator=(PowerUpNote&) = delete;
 };
 
 inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength

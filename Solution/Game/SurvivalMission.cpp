@@ -23,7 +23,7 @@ bool SurvivalMission::Update(float aDeltaTime)
 
 	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
 	myTime -= aDeltaTime;
-	return myTime < 0.f;
+	return myTime <= 0.f;
 }
 
 void SurvivalMission::Start()

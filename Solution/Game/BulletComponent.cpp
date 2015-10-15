@@ -11,6 +11,7 @@ BulletComponent::BulletComponent(Entity& aEntity)
 	: Component(aEntity)
 {
 	myCurrentLifeTime = 0.f;
+	myDamageRadius = 0.f;
 	myActive = false;
 }
 
@@ -24,11 +25,12 @@ void BulletComponent::Update(float aDeltaTime)
 	myCurrentLifeTime += aDeltaTime;
 }
 
-void BulletComponent::Init(float aMaxTime, int aDamage)
+void BulletComponent::Init(float aMaxTime, int aDamage, float aDamageRadius)
 {
 	myActive = false;
 	myMaxLifeTime = aMaxTime;
 	myDamage = aDamage;
+	myDamageRadius = aDamageRadius;
 	DL_ASSERT_EXP(myDamage >= 0, "Can't have negative damage.");
 } 
 
@@ -51,5 +53,10 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 
 		myActive = false;
 		aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
+		
+		if (myDamageRadius > 0.f)
+		{
+			aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), myDamageRadius, myDamage);
+		}
 	}
 }

@@ -4,7 +4,10 @@ struct InputNote
 {
 	InputNote(unsigned int aKey);
 
-	unsigned int myKey;
+	const unsigned int myKey;
+
+private:
+	void operator=(InputNote&) = delete;
 };
 
 inline InputNote::InputNote(unsigned int aKey)
