@@ -117,6 +117,11 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	{
 		newWeapon.myBulletType = eBulletType::ROCKET_MISSILE;
 	}
+	else
+	{
+		std::string errorMessage = "[ShootingComponent] No bullet with name " + aWeapon.myBulletType;
+		DL_ASSERT(errorMessage.c_str());
+	}
 
 	newWeapon.myID = static_cast<int>(newWeapon.myBulletType);
 	myCurrentWeaponID = newWeapon.myID;
