@@ -5,6 +5,7 @@ enum class eMessageType
 	ACTIVATE_BULLET,
 	GAME_STATE,
 	SPAWN_ENEMY,
+	START_EVENT,
 };
 
 enum class eBulletType

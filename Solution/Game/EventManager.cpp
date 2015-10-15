@@ -1,11 +1,14 @@
 #include "stdafx.h"
 #include "Event.h"
 #include "EventManager.h"
+#include "PostMaster.h"
 #include "SpawnEnemy.h"
+#include "StartEventMessage.h"
 #include <XMLReader.h>
 
 EventManager::EventManager(const std::string& aXmlPath)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::START_EVENT, this);
 	XMLReader reader;
 	reader.OpenDocument(aXmlPath);
 	tinyxml2::XMLElement* eventElement = reader.ForceFindFirstChild("root");
@@ -39,8 +42,7 @@ EventManager::~EventManager()
 	}
 }
 
-void EventManager::ReceiveMessage(const SpawnEnemyMessage& aMessage)
+void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
 {
-	int apa = 5;
-	apa;
+	myEvents[aMessage.GetName()]->Start();
 }
