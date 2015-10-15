@@ -7,6 +7,9 @@ struct MissionNote
 
 	const eMissionType myType;
 	const eMissionEvent myEvent;
+
+private:
+	void operator=(MissionNote&) = delete;
 };
 
 inline MissionNote::MissionNote(eMissionType aType, eMissionEvent aEvent)
