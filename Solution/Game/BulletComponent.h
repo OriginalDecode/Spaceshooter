@@ -8,7 +8,7 @@ public:
 	BulletComponent(Entity& aEntity);
 	
 	void Update(float aDeltaTime) override;
-	void Init(const float& aMaxTime, const unsigned short& aDamage);
+	void Init(float aMaxTime, int aDamage);
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
@@ -23,7 +23,7 @@ private:
 	float myCurrentLifeTime;
 	float myMaxLifeTime;
 	bool myActive;
-	unsigned short myDamage;
+	int myDamage;
 	// damage, radius, etc
 };
 

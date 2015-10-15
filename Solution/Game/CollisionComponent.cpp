@@ -21,7 +21,7 @@ void CollisionComponent::Initiate(float someRadius)
 
 }
 
-void CollisionComponent::Update(float aDeltaTime)
+void CollisionComponent::Update(float)
 {
 	mySphere.myCenterPosition = myEntity.myOrientation.GetPos();
 }

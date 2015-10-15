@@ -34,13 +34,13 @@ public:
 
 	static eComponentType GetType();
 
-	void SetCurrentWeaponID(const unsigned short& anID);
+	void SetCurrentWeaponID(int anID);
 
 private:
 
-	CU::GrowingArray<WeaponData, unsigned short> myWeapons;
+	CU::GrowingArray<WeaponData, int> myWeapons;
 
-	unsigned short myCurrentWeaponID;
+	int myCurrentWeaponID;
 	CU::Vector3<float> mySpawningPointOffset;
 
 	bool myHasWeapon;
@@ -51,7 +51,7 @@ inline eComponentType ShootingComponent::GetType()
 	return eComponentType::SHOOTING;
 }
 
-inline void ShootingComponent::SetCurrentWeaponID(const unsigned short& anID)
+inline void ShootingComponent::SetCurrentWeaponID(int anID)
 {
 	myCurrentWeaponID = anID;
 	

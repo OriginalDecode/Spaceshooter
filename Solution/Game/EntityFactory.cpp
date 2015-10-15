@@ -213,7 +213,7 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 
 			aDocument.ForceReadAttribute(e, "value", damage);
 
-			aEntityToAddTo.myDamage = static_cast<unsigned short>(damage);
+			aEntityToAddTo.myDamage = damage;
 		}
 	}
 }
@@ -304,7 +304,7 @@ void EntityFactory::LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& a
 
 			aDocument.ForceReadAttribute(e, "value", life);
 
-			aEntityToAddTo.myLife = static_cast<unsigned short>(life);
+			aEntityToAddTo.myLife = life;
 		}
 	}
 }
@@ -319,7 +319,7 @@ void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			float weight = 0;
 			aDocument.ForceReadAttribute(e, "value", weight);
-			aEntityToAddTo.myEntity->GetComponent<PhysicsComponent>()->Init(weight);
+			aEntityToAddTo.myEntity->GetComponent<PhysicsComponent>()->Init(static_cast<int>(weight));
 		}
 	}
 }

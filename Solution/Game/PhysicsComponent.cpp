@@ -10,14 +10,14 @@ PhysicsComponent::PhysicsComponent(Entity& aEntity)
 	myVelocity = { 0, 0, 0 };
 }
 
-void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float> aVelocity, const unsigned short aWeight)
+void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float>& aVelocity, int aWeight)
 {
 	myVelocity = aVelocity;
 	myWeight = aWeight;
 	myEntity.myOrientation = anOrientation;
 }
 
-void PhysicsComponent::Init(const unsigned short aWeight, const CU::Vector3<float> aVelocity)
+void PhysicsComponent::Init(int aWeight, const CU::Vector3<float>& aVelocity)
 {
 	myVelocity = aVelocity;
 	myWeight = aWeight;
@@ -33,14 +33,14 @@ void PhysicsComponent::Update(float aDeltaTime)
 	myVelocity.z -= myVelocity.z * (aDeltaTime / 10);
 }
 
-void PhysicsComponent::MoveForward(const float& aDistance)
+void PhysicsComponent::MoveForward(float aDistance)
 {
 	myVelocity = (myEntity.myOrientation.GetForward() * (aDistance));
 }
 
-void PhysicsComponent::BounceOff(const float& anEntityWeight)
-{
-	//myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() - myVelocity * 2.f);
-	//myVelocity = myVelocity * -anEntityWeight;
-	//myEntity.GetComponent<ControllerComponent>()->ResetMovementSpeed();
-}
+//void PhysicsComponent::BounceOff(float anEntityWeight)
+//{
+//	//myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() - myVelocity * 2.f);
+//	//myVelocity = myVelocity * -anEntityWeight;
+//	//myEntity.GetComponent<ControllerComponent>()->ResetMovementSpeed();
+//}

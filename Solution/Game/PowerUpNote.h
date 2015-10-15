@@ -23,4 +23,5 @@ inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int s
 	, myHealthRecover(someHealthRecover)
 	, myFireRateMultiplier(someFireRateMultiplier)
 {
+	DL_ASSERT_EXP(myHealthRecover >= 0, "Can't recover negative health.");
 }

@@ -89,8 +89,8 @@ void Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPre
 
 void Button::OnResize()
 {
-	float windowSizeX = Prism::Engine::GetInstance()->GetWindowSize().x;
-	float windowSizeY = Prism::Engine::GetInstance()->GetWindowSize().y;
+	float windowSizeX = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
+	float windowSizeY = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().y);
 	float resolutionOffset = windowSizeY / windowSizeX;
 	myPosition = myOriginalPosition * resolutionOffset;
 

@@ -471,6 +471,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 					// This will be used as counter in the following procedures, reset to zero
 					someData->mSubMeshes[lIndex]->TriangleCount = 0;
 				}*/
+				DL_ASSERT_EXP(lOffset == lPolygonCount * 3, "Failed something in FBX loader.");
 				FBX_ASSERT(lOffset == lPolygonCount * 3);
 			}
 		}
