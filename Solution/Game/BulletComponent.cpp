@@ -50,5 +50,7 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 
 		myActive = false;
 		aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
+
+		//aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), 500.f, myDamage);
 	}
 }
