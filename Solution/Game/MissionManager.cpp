@@ -3,6 +3,7 @@
 #include "CommonHelper.h"
 #include <DL_Assert.h>
 #include "Entity.h"
+#include "KillAllAbortMission.h"
 #include "KillAllMission.h"
 #include "Level.h"
 #include "MissionManager.h"
@@ -51,6 +52,12 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			KillAllMission* killAll = new KillAllMission(myLevel, reader, element);
 			killAll->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(killAll);
+		}
+		else if (type == "killallabort")
+		{
+			KillAllAbortMission* killAllAbort = new KillAllAbortMission(myLevel, reader, element);
+			killAllAbort->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(killAllAbort);
 		}
 		else if (type == "survival")
 		{
