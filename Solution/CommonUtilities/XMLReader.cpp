@@ -271,6 +271,8 @@ bool XMLReader::ReadAttribute(const tinyxml2::XMLElement* aElementToReadFrom, co
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(string)] before Opening the document");
 
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to Read from nullptr");
+
 	if (aElementToReadFrom == nullptr)
 		return false;
 
@@ -288,6 +290,8 @@ bool XMLReader::ReadAttribute(const tinyxml2::XMLElement* aElementToReadFrom, co
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(int)] before Opening the document");
 
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to Read from nullptr");
+
 	if (aElementToReadFrom == nullptr)
 		return false;
 
@@ -301,6 +305,8 @@ bool XMLReader::ReadAttribute(const tinyxml2::XMLElement* aElementToReadFrom, co
 {
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(float)] before Opening the document");
+
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to Read from nullptr");
 
 	if (aElementToReadFrom == nullptr)
 		return false;
@@ -316,6 +322,8 @@ bool XMLReader::ReadAttribute(const tinyxml2::XMLElement* aElementToReadFrom, co
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(double)] before Opening the document");
 
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to Read from nullptr");
+
 	if (aElementToReadFrom == nullptr)
 		return false;
 
@@ -329,6 +337,8 @@ bool XMLReader::ReadAttribute(const tinyxml2::XMLElement* aElementToReadFrom, co
 {
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(bool)] before Opening the document");
+
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to Read from nullptr");
 
 	if (aElementToReadFrom == nullptr)
 		return false;
@@ -352,7 +362,10 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ForceReadAttribute(string)] before Opening the document");
 
-	if (aElementToReadFrom->FindAttribute(aAttributeToRead.c_str()) != 0)
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to ForceRead from nullptr");
+
+	if (aElementToReadFrom != nullptr 
+		&& aElementToReadFrom->FindAttribute(aAttributeToRead.c_str()) != 0)
 	{
 		aTargetVariable = aElementToReadFrom->Attribute(aAttributeToRead.c_str());
 		return true;
@@ -368,7 +381,10 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ForceReadAttribute(int)] before Opening the document");
 
-	if (aElementToReadFrom->QueryIntAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to ForceRead from nullptr");
+
+	if (aElementToReadFrom != nullptr 
+		&& aElementToReadFrom->QueryIntAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
 	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
@@ -381,7 +397,10 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(float)] before Opening the document");
 
-	if (aElementToReadFrom->QueryFloatAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to ForceRead from nullptr");
+
+	if (aElementToReadFrom != nullptr 
+		&& aElementToReadFrom->QueryFloatAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
 	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
@@ -394,7 +413,10 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(double)] before Opening the document");
 
-	if (aElementToReadFrom->QueryDoubleAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to ForceRead from nullptr");
+
+	if (aElementToReadFrom != nullptr 
+		&& aElementToReadFrom->QueryDoubleAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
 	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
@@ -407,7 +429,10 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 	if (myHasOpenedDoc == false)
 		DL_ASSERT("[XMLReader]: Tried to [ReadAttribute(bool)] before Opening the document");
 
-	if (aElementToReadFrom->QueryBoolAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
+	DL_ASSERT_EXP(aElementToReadFrom != nullptr, "[XMLReader]: Tried to ForceRead from nullptr");
+
+	if (aElementToReadFrom != nullptr 
+		&& aElementToReadFrom->QueryBoolAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
 	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());

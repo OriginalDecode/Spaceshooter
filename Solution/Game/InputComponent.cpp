@@ -116,21 +116,21 @@ void InputComponent::ReadXML(const std::string& aFile)
 	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFile);
-	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "acceleration", myAcceleration);
-	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "maxMovementSpeed", myMaxMovementSpeed);
-	reader.ForceReadAttribute(reader.FindFirstChild("movement"), "minMovementSpeed", myMinMovementSpeed);
-	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "modifier", mySteeringModifier);
-	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deltaClip", mySteeringDeltaClip);
-	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deacceleration", mySteeringDeacceleration);
-	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "deaccelerationLowerLimit", mySteeringDeaccelerationLowerLimit);
-	reader.ForceReadAttribute(reader.FindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
-	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "acceleration", myRollAcceleration);
-	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "deacceleration", myRollDeacceleration);
-	reader.ForceReadAttribute(reader.FindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
-	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "acceleration", myBoostAcceleration);
-	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "deacceleration", myBoostDeacceleration);
-	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "maxBoost", myMaxBoostValue);
-	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "cooldown", myMaxBoostCooldown);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("movement"), "acceleration", myAcceleration);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("movement"), "maxMovementSpeed", myMaxMovementSpeed);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("movement"), "minMovementSpeed", myMinMovementSpeed);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "modifier", mySteeringModifier);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "deltaClip", mySteeringDeltaClip);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "deacceleration", mySteeringDeacceleration);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "deaccelerationLowerLimit", mySteeringDeaccelerationLowerLimit);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("roll"), "acceleration", myRollAcceleration);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("roll"), "deacceleration", myRollDeacceleration);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "acceleration", myBoostAcceleration);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "deacceleration", myBoostDeacceleration);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "maxBoost", myMaxBoostValue);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "cooldown", myMaxBoostCooldown);
 	reader.CloseDocument();
 }
 
