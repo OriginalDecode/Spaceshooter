@@ -444,6 +444,8 @@ void Level::LoadPlayer()
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("sniperGun"));
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("plasmaGun"));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("shotgun"));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("rocket"));
 	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();
@@ -503,6 +505,22 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_P))
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();
+	}
+	if (myInputWrapper->KeyDown(DIK_I))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_U))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_Y))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_T))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
 	}
 	if (myInputWrapper->KeyDown(DIK_L))
 	{
