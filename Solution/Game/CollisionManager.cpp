@@ -225,7 +225,7 @@ void CollisionManager::DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, fl
 	}
 }
 
-void CollisionManager::DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aDamage)
+void CollisionManager::DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage)
 {
 	Sphere sphere;
 	sphere.myCenterPosition = aCenter;
