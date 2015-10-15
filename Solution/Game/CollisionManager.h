@@ -20,7 +20,7 @@ public:
 	int GetEnemiesAlive() const;
 
 	void DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aTime);
-	void DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aDamage);
+	void DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage);
 
 private:
 	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);

@@ -533,6 +533,6 @@ void Level::UpdateDebug()
 	}
 	if (myInputWrapper->KeyDown(DIK_J))
 	{
-		myCollisionManager->DamageEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 500.f, 100.f);
+		myCollisionManager->DamageEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 500.f, 100);
 	}
 }

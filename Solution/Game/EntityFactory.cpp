@@ -200,6 +200,7 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 
 void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aBulletComponentElement)
 {
+	aEntityToAddTo.myDamageRadius = 0.f;
 	aEntityToAddTo.myEntity->AddComponent<BulletComponent>();
 	for (tinyxml2::XMLElement* e = aBulletComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
@@ -214,6 +215,12 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 			aDocument.ForceReadAttribute(e, "value", damage);
 
 			aEntityToAddTo.myDamage = damage;
+		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("damageRadius").c_str()) == 0)
+		{
+			float radius = 0;
+			aDocument.ForceReadAttribute(e, "value", radius);
+			aEntityToAddTo.myDamageRadius = radius;
 		}
 	}
 }
@@ -435,7 +442,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		aTargetEntity->AddComponent<BulletComponent>();
 		if (it->second.myMaxTime > 0 && it->second.myDamage > 0)
 		{
-			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage);
+			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage, it->second.myDamageRadius);
 		}
 	}
 
