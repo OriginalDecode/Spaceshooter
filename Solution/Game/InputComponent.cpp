@@ -62,21 +62,13 @@ void InputComponent::Update(float aDeltaTime)
 		{
 			myEntity.SendNote(InputNote(2));
 		}
-		if (myInputWrapper->KeyDown(DIK_4))
+		if (myInputWrapper->KeyIsPressed(DIK_4))
 		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
+			myEntity.SendNote(InputNote(3));
 		}
-		if (myInputWrapper->KeyDown(DIK_5))
+		if (myInputWrapper->KeyIsPressed(DIK_5))
 		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
-		}
-		if (myInputWrapper->KeyDown(DIK_6))
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume", 0);
-		}
-		if (myInputWrapper->KeyDown(DIK_7))
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
+			myEntity.SendNote(InputNote(4));
 		}
 		
 		if (myInputWrapper->MouseIsPressed(0) == true)
