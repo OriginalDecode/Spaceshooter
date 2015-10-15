@@ -52,7 +52,7 @@ const eStateStatus MenuState::Update(const float&)
 
 void MenuState::Render()
 {
-	myMenu->Render(myCamera, myInputWrapper);
+	myMenu->Render(myInputWrapper);
 }
 
 void MenuState::ResumeState()
