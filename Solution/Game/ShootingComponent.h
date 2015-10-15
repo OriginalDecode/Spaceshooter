@@ -44,6 +44,7 @@ private:
 	CU::Vector3<float> mySpawningPointOffset;
 
 	bool myHasWeapon;
+	bool myHasEMP;
 };
 
 inline eComponentType ShootingComponent::GetType()
