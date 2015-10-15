@@ -305,40 +305,6 @@ void Level::ReadXML(const std::string& aFile)
 		myDirectionalLights.Add(newDirLight);
 	}
 
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "enemy"); entityElement != nullptr;
-		entityElement = reader.FindNextElement(entityElement, "enemy"))
-	{
-		Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
-		std::string enemyType;
-		reader.ForceReadAttribute(entityElement, "enemyType", enemyType);
-		myEntityFactory->CopyEntity(newEntity, enemyType);
-
-		tinyxml2::XMLElement* enemyElement = reader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> enemyPosition;
-		reader.ForceReadAttribute(enemyElement, "X", enemyPosition.x);
-		reader.ForceReadAttribute(enemyElement, "Y", enemyPosition.y);
-		reader.ForceReadAttribute(enemyElement, "Z", enemyPosition.z);
-		newEntity->myOrientation.SetPos(enemyPosition*10.f);
-
-		enemyElement = reader.ForceFindFirstChild(entityElement, "rotation");
-		CU::Vector3<float> enemyRotation;
-		reader.ForceReadAttribute(enemyElement, "X", enemyRotation.x);
-		reader.ForceReadAttribute(enemyElement, "Y", enemyRotation.y);
-		reader.ForceReadAttribute(enemyElement, "Z", enemyRotation.z);
-
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(enemyRotation.x) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(enemyRotation.y) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(enemyRotation.z) * newEntity->myOrientation;
-
-		int health = 0;
-		reader.ForceReadAttribute(entityElement, "hp", health);
-		newEntity->GetComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
-		newEntity->GetComponent<CollisionComponent>()->Initiate(7.5f);
-		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
-
-		myEntities.Add(newEntity);
-	}
-
 	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
 		entityElement = reader.FindNextElement(entityElement, "prop"))
 	{
