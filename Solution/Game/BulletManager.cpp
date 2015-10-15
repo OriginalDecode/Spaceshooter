@@ -141,6 +141,11 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 	{
 		bulletData->myType = eBulletType::ROCKET_MISSILE;
 	}
+	else
+	{
+		std::string errorMessage = "[BulletManager] No bullet with name " + projectileDataType.myType;
+		DL_ASSERT(errorMessage.c_str());
+	}
 
 	DeleteWeaponData(myBulletDatas[static_cast<int>(bulletData->myType)]);
 	myBulletDatas[static_cast<int>(bulletData->myType)] = bulletData;
