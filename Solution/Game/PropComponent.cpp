@@ -34,5 +34,5 @@ void PropComponent::ReceiveNote(const CollisionNote& aNote)
 		}
 	}
 	// should also bounce of prop
-	aNote.myEntity.GetComponent<PhysicsComponent>()->BounceOff(1);
+	//aNote.myEntity.GetComponent<PhysicsComponent>()->BounceOff(1);
 }

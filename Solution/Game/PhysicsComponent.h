@@ -18,9 +18,9 @@ public:
 	void AddVelocity(const CU::Vector3<float>& aVelocity);
 	const CU::Vector3<float>& GetVelocity() const;
 
-	void MoveForward(const float& aDistance);
+	void MoveForward(float aDistance);
 
-	void BounceOff(const float& anEntityWeight);
+	//void BounceOff(float anEntityWeight);
 
 private:
 	CU::Vector3<float> myVelocity;
