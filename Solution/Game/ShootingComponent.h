@@ -34,7 +34,7 @@ public:
 
 	static eComponentType GetType();
 
-	void SetCurrentWeaponID(const unsigned short& anID);
+	void SetCurrentWeaponID(unsigned short anID);
 
 private:
 
@@ -51,7 +51,7 @@ inline eComponentType ShootingComponent::GetType()
 	return eComponentType::SHOOTING;
 }
 
-inline void ShootingComponent::SetCurrentWeaponID(const unsigned short& anID)
+inline void ShootingComponent::SetCurrentWeaponID(unsigned short anID)
 {
 	myCurrentWeaponID = anID;
 	

@@ -335,7 +335,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->AddComponent<PropComponent>();
 
 		int health = 30;
-		newEntity->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health));
+		newEntity->AddComponent<HealthComponent>()->Init(health);
 
 		myEntities.Add(newEntity);
 		myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);
@@ -456,7 +456,7 @@ void Level::LoadPlayer()
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
 
-	player->AddComponent<HealthComponent>()->Init(static_cast<unsigned short>(health), invulnerable);
+	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
 	myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	myEntities.Add(player);

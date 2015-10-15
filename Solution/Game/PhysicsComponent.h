@@ -6,13 +6,13 @@ class PhysicsComponent : public Component
 public:
 	PhysicsComponent(Entity& aEntity);
 
-	void Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float> aVelocity = { 0.f, 0.f, 0.f }, const unsigned short aWeight = 1.f);
-	void Init(const unsigned short aWeight = 1.f, const CU::Vector3<float> aVelocity = { 0.f, 0.f, 0.f });
+	void Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float>& aVelocity = { 0.f, 0.f, 0.f }, unsigned short aWeight = 1);
+	void Init(unsigned short aWeight = 1, const CU::Vector3<float>& aVelocity = { 0.f, 0.f, 0.f });
 	void Update(float aDeltaTime);
 
 	static eComponentType GetType();
 
-	const unsigned short& GetWeight() const;
+	unsigned short GetWeight() const;
 
 	void SetVelocity(const CU::Vector3<float>& aVelocity);
 	void AddVelocity(const CU::Vector3<float>& aVelocity);
@@ -32,7 +32,7 @@ inline eComponentType PhysicsComponent::GetType()
 	return eComponentType::PHYSICS;
 }
 
-inline const unsigned short& PhysicsComponent::GetWeight() const
+inline unsigned short PhysicsComponent::GetWeight() const
 {
 	return myWeight;
 }

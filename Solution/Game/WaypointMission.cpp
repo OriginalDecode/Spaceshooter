@@ -25,7 +25,7 @@ WaypointMission::~WaypointMission()
 {
 }
 
-bool WaypointMission::Update(float aDeltaTime)
+bool WaypointMission::Update(float)
 {
 
 	Prism::Engine* engine = Prism::Engine::GetInstance();

@@ -8,7 +8,7 @@ public:
 	BulletComponent(Entity& aEntity);
 	
 	void Update(float aDeltaTime) override;
-	void Init(const float& aMaxTime, const unsigned short& aDamage);
+	void Init(float aMaxTime, unsigned short aDamage);
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 

@@ -24,11 +24,12 @@ void BulletComponent::Update(float aDeltaTime)
 	myCurrentLifeTime += aDeltaTime;
 }
 
-void BulletComponent::Init(const float& aMaxTime, const unsigned short& aDamage)
+void BulletComponent::Init(float aMaxTime, unsigned short aDamage)
 {
 	myActive = false;
 	myMaxLifeTime = aMaxTime;
 	myDamage = aDamage;
+	DL_ASSERT_EXP(myDamage >= 0, "Can't have negative damage.");
 } 
 
 void BulletComponent::ReceiveNote(const CollisionNote& aNote)

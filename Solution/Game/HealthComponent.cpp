@@ -11,14 +11,15 @@ HealthComponent::HealthComponent(Entity& aEntity)
 {
 }
 
-void HealthComponent::Init(const unsigned short& aMaxHealth, const bool& anIsInvulnerable)
+void HealthComponent::Init(unsigned short aMaxHealth, bool anIsInvulnerable)
 {
 	myMaxHealth = aMaxHealth;
 	myCurrentHealth = myMaxHealth;
 	myIsInvulnerable = anIsInvulnerable;
+	DL_ASSERT_EXP(myMaxHealth > 0, "Health component inited to 0 hp.");
 }
 
-void HealthComponent::AddHealth(const unsigned short& aHealthToAdd)
+void HealthComponent::AddHealth(unsigned short aHealthToAdd)
 {
 	myCurrentHealth += aHealthToAdd;
 
@@ -31,7 +32,7 @@ void HealthComponent::AddHealth(const unsigned short& aHealthToAdd)
 	}
 }
 
-void HealthComponent::RemoveHealth(const unsigned short& aHealthToRemove)
+void HealthComponent::RemoveHealth(unsigned short aHealthToRemove)
 {
 	if (myIsInvulnerable == false)
 	{
