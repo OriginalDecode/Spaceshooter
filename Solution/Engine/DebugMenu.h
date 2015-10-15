@@ -18,6 +18,7 @@ namespace Prism
 	{
 	public:
 		DebugMenu();
+		~DebugMenu();
 
 		void Update(CU::InputWrapper& aInputWrapper);
 		void Render();

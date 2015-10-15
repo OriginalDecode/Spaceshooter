@@ -21,6 +21,14 @@ namespace Prism
 	}
 
 
+	DebugMenu::~DebugMenu()
+	{
+		myMenuElements.RemoveAll();
+
+		delete myText;
+		myText = nullptr;
+	}
+
 	void DebugMenu::Update(CU::InputWrapper& aInputWrapper)
 	{
 		if (aInputWrapper.MouseDown(1))
