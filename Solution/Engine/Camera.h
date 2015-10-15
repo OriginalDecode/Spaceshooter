@@ -17,7 +17,6 @@ namespace Prism
 
 		const CU::Matrix44<float>& GetOrientation() const;
 		const CU::Matrix44<float>& GetProjection() const;
-		const CU::Matrix44<float>& GetOrthogonal() const;
 
 		void Update();
 
@@ -38,7 +37,6 @@ namespace Prism
 
 		CU::Matrix44<float>& myOrientation;
 		CU::Matrix44<float> myProjectionMatrix;
-		CU::Matrix44<float> myOrthogonalMatrix;
 		float myNear;
 		float myFar;
 		float myFOV;
