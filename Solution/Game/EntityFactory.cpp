@@ -309,7 +309,7 @@ void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			float weight = 0;
 			aDocument.ForceReadAttribute(e, "value", weight);
-			aEntityToAddTo.myEntity->GetComponent<PhysicsComponent>()->Init(static_cast<unsigned short>(weight));
+			aEntityToAddTo.myEntity->GetComponent<PhysicsComponent>()->Init(static_cast<int>(weight));
 		}
 	}
 }

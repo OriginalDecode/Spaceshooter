@@ -5,18 +5,18 @@
 struct PowerUpNote
 {
 	PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
-		, unsigned short someHealthRecover, int someFireRateMultiplier);
+		, int someHealthRecover, int someFireRateMultiplier);
 
 	ePowerUpType myType;
 	float myDuration;
 	int myShieldStrength;
-	unsigned short myHealthRecover;
+	int myHealthRecover;
 	int myFireRateMultiplier;
 
 };
 
 inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
-		, unsigned short someHealthRecover, int someFireRateMultiplier)
+		, int someHealthRecover, int someFireRateMultiplier)
 	: myType(someType)
 	, myDuration(someDuration)
 	, myShieldStrength(someShieldStrength)

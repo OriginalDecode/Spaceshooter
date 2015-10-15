@@ -10,14 +10,14 @@ PhysicsComponent::PhysicsComponent(Entity& aEntity)
 	myVelocity = { 0, 0, 0 };
 }
 
-void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float>& aVelocity, unsigned short aWeight)
+void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float>& aVelocity, int aWeight)
 {
 	myVelocity = aVelocity;
 	myWeight = aWeight;
 	myEntity.myOrientation = anOrientation;
 }
 
-void PhysicsComponent::Init(unsigned short aWeight, const CU::Vector3<float>& aVelocity)
+void PhysicsComponent::Init(int aWeight, const CU::Vector3<float>& aVelocity)
 {
 	myVelocity = aVelocity;
 	myWeight = aWeight;

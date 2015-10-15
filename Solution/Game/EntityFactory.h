@@ -47,8 +47,8 @@ struct EntityData
 
 	int myChanceToFollow;
 
-	unsigned short myLife;
-	unsigned short myDamage;
+	int myLife;
+	int myDamage;
 
 	float myDuration;
 	int myShieldStrength;

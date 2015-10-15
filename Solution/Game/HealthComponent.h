@@ -6,15 +6,15 @@ class HealthComponent : public Component
 public:
 	HealthComponent(Entity& aEntity);
 
-	void Init(unsigned short aMaxHealth, bool anIsInvulnerable = false);
-	void AddHealth(unsigned short aHealthToAdd);
-	void RemoveHealth(unsigned short aHealthToRemove);
+	void Init(int aMaxHealth, bool anIsInvulnerable = false);
+	void AddHealth(int aHealthToAdd);
+	void RemoveHealth(int aHealthToRemove);
 
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	bool IsAlive() const;
 
-	unsigned short GetHealth() const;
+	int GetHealth() const;
 	
 	void SetInvulnerability(bool anIsInvulnerable);
 	bool GetInvulnerability() const;
@@ -22,8 +22,8 @@ public:
 	static eComponentType GetType();
 private:
 
-	unsigned short myMaxHealth;
-	unsigned short myCurrentHealth;
+	int myMaxHealth;
+	int myCurrentHealth;
 	bool myIsInvulnerable;
 };
 
@@ -32,7 +32,7 @@ inline bool HealthComponent::IsAlive() const
 	return (myCurrentHealth != 0);
 }
 
-inline unsigned short HealthComponent::GetHealth() const
+inline int HealthComponent::GetHealth() const
 {
 	return myCurrentHealth;
 }

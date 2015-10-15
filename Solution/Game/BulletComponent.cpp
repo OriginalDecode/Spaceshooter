@@ -24,7 +24,7 @@ void BulletComponent::Update(float aDeltaTime)
 	myCurrentLifeTime += aDeltaTime;
 }
 
-void BulletComponent::Init(float aMaxTime, unsigned short aDamage)
+void BulletComponent::Init(float aMaxTime, int aDamage)
 {
 	myActive = false;
 	myMaxLifeTime = aMaxTime;
