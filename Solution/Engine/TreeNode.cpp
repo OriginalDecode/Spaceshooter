@@ -36,8 +36,8 @@ Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth,
 
 Prism::TreeNode::~TreeNode()
 {
-	//myObjectsDynamic.DeleteAll();
-	//myObjectsStatic.DeleteAll();
+	myObjectsDynamic.DeleteAll();
+	myObjectsStatic.DeleteAll();
 	for (int i = 0; i < 8; ++i)
 	{
 		delete myChildren[i];
