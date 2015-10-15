@@ -9,7 +9,7 @@ class MissionManager
 {
 public:
 	MissionManager(Level& aLevel, Entity& aPlayer, const std::string& aFileToReadFrom);
-	
+	void Init();
 	void Update(float aDeltaTime);
 
 private:

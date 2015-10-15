@@ -45,5 +45,14 @@ EventManager::~EventManager()
 
 void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
 {
-	myEvents[aMessage.GetName()]->Start();
+	std::unordered_map<std::string, Event*>::const_iterator it = myEvents.find(aMessage.GetName());
+
+	if (it == myEvents.end())
+	{
+		DL_ASSERT(("Event does not exist: " + aMessage.GetName()).c_str());
+	}
+	else
+	{
+		myEvents[aMessage.GetName()]->Start();
+	}
 }

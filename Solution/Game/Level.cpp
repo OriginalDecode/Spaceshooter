@@ -94,6 +94,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 		}
 	}
 
+	myMissionManager->Init();
 	myScene->SetCamera(myCamera);
 
 	for (int i = 0; i < myDirectionalLights.Size(); ++i)

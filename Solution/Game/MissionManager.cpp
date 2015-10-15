@@ -78,6 +78,10 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 	}
 
 	reader.CloseDocument();
+}
+
+void MissionManager::Init()
+{
 	myMissions[myCurrentMission]->Start();
 	myMissions[myCurrentMission]->EventsStart();
 }
