@@ -36,6 +36,7 @@ Menu::Menu(const std::string& aXMLPath)
 		Button* newButton = new Button(reader, buttonElement);
 		myButtons.Add(newButton);
 	}
+	reader.CloseDocument();
 }
 
 Menu::~Menu()

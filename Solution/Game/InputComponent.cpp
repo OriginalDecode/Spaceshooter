@@ -139,6 +139,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "deacceleration", myBoostDeacceleration);
 	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "maxBoost", myMaxBoostValue);
 	reader.ForceReadAttribute(reader.FindFirstChild("boost"), "cooldown", myMaxBoostCooldown);
+	reader.CloseDocument();
 }
 
 void InputComponent::Roll(float aDeltaTime)

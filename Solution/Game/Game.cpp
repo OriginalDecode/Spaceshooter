@@ -35,6 +35,7 @@ Game::~Game()
 {
 	delete myInputWrapper;
 	delete myLevelFactory;
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
 
 	Prism::Audio::AudioInterface::Destroy();
 	PostMaster::Destroy();
@@ -49,7 +50,7 @@ bool Game::Init(HWND& aHwnd)
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
 	reader.ReadAttribute(reader.FindFirstChild("canWinGame"), "bool", myCanWinGame);
 	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
-
+	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Resource/Sound/Init.bnk");

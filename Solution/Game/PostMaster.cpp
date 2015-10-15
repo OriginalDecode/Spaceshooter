@@ -10,6 +10,14 @@ PostMaster::PostMaster()
 
 PostMaster::~PostMaster()
 {
+	for (auto it = mySubscribers.begin(); it != mySubscribers.end(); ++it)
+	{
+		if (it->second.Size() > 0)
+		{
+			DL_ASSERT("Subscriber not unsubscribed at Postmaster-Destroy.");
+		}
+	}
+
 	mySubscribers.clear();
 }
 

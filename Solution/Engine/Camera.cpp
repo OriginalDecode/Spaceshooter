@@ -27,11 +27,12 @@ namespace Prism
 	{
 		Sleep(10);
 		XMLReader reader;
-		reader.OpenDocument("Data/Setting/SET_camera.xml");
+		reader.OpenDocument(aFileName);
 		tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("camera");
 		reader.ForceReadAttribute(levelElement, "fov", myFOV);
 		myFOV *= 3.14159f / 180.f;
 		OnResize(Engine::GetInstance()->GetWindowSize().x, Engine::GetInstance()->GetWindowSize().y);
+		reader.CloseDocument();
 	}
 
 	void Camera::OnResize(const int aWidth, const int aHeight)

@@ -9,7 +9,7 @@ public:
 	eMessageType GetMessageType() const;
 
 protected:
-	
+	void operator=(Message&) = delete;
 	const eMessageType myMessageType;
 };
 

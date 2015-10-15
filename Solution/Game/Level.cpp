@@ -126,6 +126,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 
 Level::~Level()
 {
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	delete myCamera;
 	delete myScene;
 	myEntities.DeleteAll();
@@ -136,6 +137,7 @@ Level::~Level()
 	delete myBulletManager;
 	delete myCollisionManager;
 	delete myMissionManager;
+	delete myEventManager;
 
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
@@ -387,10 +389,9 @@ void Level::ReadXML(const std::string& aFile)
 
 		//newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
 
-
-
 		myEntities.Add(newEntity);
 	}
+	reader.CloseDocument();
 }
 
 Entity* Level::GetEntityWithName(const std::string& aName)
@@ -463,6 +464,8 @@ void Level::LoadPlayer()
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
+	
+	reader.CloseDocument();
 
 	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 	//player->myOrientation.SetPos({ 306, 306, 306, 1 });

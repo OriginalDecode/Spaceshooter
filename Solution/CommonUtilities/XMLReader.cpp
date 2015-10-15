@@ -11,6 +11,11 @@ XMLReader::XMLReader()
 
 XMLReader::~XMLReader()
 {
+	if (myHasOpenedDoc == true)
+	{
+		std::string error("XML Document was not closed properly: " + myFilePath);
+		DL_ASSERT(error.c_str());
+	}
 	if (myDoc != nullptr)
 	{
 		delete myDoc;
