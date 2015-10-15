@@ -25,6 +25,10 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myVelocity = myEntity.myOrientation.GetForward() * myMovementSpeed;
 
 	myCanMove = true;
+
+	myFollowingOffset.x = static_cast<float>(rand() % 700) - 350.f;
+	myFollowingOffset.y = static_cast<float>(rand() % 700) - 350.f;
+	myFollowingOffset.z = static_cast<float>(rand() % 700) - 350.f;
 }
 
 void AIComponent::Update(float aDeltaTime)
@@ -37,8 +41,8 @@ void AIComponent::Update(float aDeltaTime)
 		DL_ASSERT_EXP(myPhysicsComponent != nullptr, "AI component needs physics component for movement."); // remove later
 	}
 
+	myVelocity = myPhysicsComponent->GetVelocity();
 	
-	myPhysicsComponent->SetVelocity(myVelocity);
 
 	if (myCanMove == true)
 	{
@@ -67,41 +71,24 @@ void AIComponent::Update(float aDeltaTime)
 		RotateX(aDeltaTime / 10);
 		RotateZ(aDeltaTime / 5);
 	}
+
+	myPhysicsComponent->SetVelocity(myVelocity);
 }
 
 void AIComponent::SetEntityToFollow(Entity* aEntity)
 {
 	myEntityToFollow = aEntity;
-	myFollowingEntity = true;
 }
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	if (myFollowingEntity == true)
-	{
-		myTargetPosition = myEntityToFollow->myOrientation.GetPos();
-	}
+	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+	float distToTarget = CU::Length(toTarget);
 
-	CU::Vector3<float> toTarget;
-	toTarget = myTargetPosition - myEntity.myOrientation.GetPos();
-
-	if (CU::Length(toTarget) < 100.f)
+	if (distToTarget < 400.f)
 	{
-		CU::Vector3<float> toEntity = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-		if (CU::Length(toEntity) > 100.f)
-		{
-			myTargetPosition = myEntityToFollow->myOrientation.GetPos();
-			myFollowingEntity = true;
-		}
-		else
-		{
-			myTargetPosition = myEntityToFollow->myOrientation.GetPos()/* + myEntityToFollow->myOrientation.GetForward() * 500.f*/;
-			myTargetPosition.x += static_cast<float>(rand() % 1000) - 500.f;
-			myTargetPosition.y += static_cast<float>(rand() % 1000) - 500.f;
-			myTargetPosition.z += static_cast<float>(rand() % 1000) - 500.f;
-			
-			myFollowingEntity = false;
-		}
+		float distCoef = 1.f - (distToTarget / 400.f);
+		toTarget += myFollowingOffset * distCoef;
 	}
 
 
