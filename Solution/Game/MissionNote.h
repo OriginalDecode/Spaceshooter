@@ -5,8 +5,8 @@ struct MissionNote
 {
 	MissionNote(eMissionType aType, eMissionEvent aEvent);
 
-	eMissionType myType;
-	eMissionEvent myEvent;
+	const eMissionType myType;
+	const eMissionEvent myEvent;
 };
 
 inline MissionNote::MissionNote(eMissionType aType, eMissionEvent aEvent)
