@@ -19,6 +19,19 @@ Prism::GraphRenderer::GraphRenderer()
 
 Prism::GraphRenderer::~GraphRenderer()
 {
+	if (myVertexBuffer != nullptr && myVertexBuffer->myVertexBuffer != nullptr)
+	{
+		myVertexBuffer->myVertexBuffer->Release();
+	}
+	delete myVertexBuffer;
+
+	if (myIndexBuffer != nullptr && myIndexBuffer->myIndexBuffer != nullptr)
+	{
+		myIndexBuffer->myIndexBuffer->Release();
+	}
+	delete myIndexBuffer;
+
+	delete mySurface;
 	delete myVertexBufferDesc;
 	delete myIndexBufferDesc;
 	delete myInitData;
