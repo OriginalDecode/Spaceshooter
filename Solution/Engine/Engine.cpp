@@ -38,6 +38,8 @@ namespace Prism
 
 	Engine::~Engine()
 	{
+		delete myDebugText;
+		myDebugText = nullptr;
 		delete myTextureContainer;
 		delete myEffectContainer;
 		delete myModelFactory;
