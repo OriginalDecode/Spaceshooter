@@ -36,6 +36,7 @@ EventManager::EventManager(const std::string& aXmlPath)
 
 EventManager::~EventManager()
 {
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::START_EVENT, this);
 	for (auto it = myEvents.begin(); it != myEvents.end(); ++it)
 	{
 		delete it->second;

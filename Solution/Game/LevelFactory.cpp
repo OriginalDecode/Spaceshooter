@@ -102,6 +102,7 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 			DL_ASSERT("Wrong ID-number in levelList.xml! The numbers should be counting up, in order.");
 		}
 	}
+	reader.CloseDocument();
 }
 
 void LevelFactory::LoadLevelFromXML(const std::string&)
