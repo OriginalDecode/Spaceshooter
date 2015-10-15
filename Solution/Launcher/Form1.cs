@@ -16,7 +16,7 @@ namespace Launcher
     {
 
 		private string myConfigPath = "Data/Setting/SET_config.bin";
-		private string myExePath = "Application_Release.exe";
+        private string[] myExePath = { "Application_Release.exe", "Application_Internal.exe", "Application_Debug.exe" };
 
         enum eResolutions
         {
@@ -73,14 +73,24 @@ namespace Launcher
                 WriterWindowedToFile(writer);
             }
 
-			if(File.Exists(myExePath) == true)
+			if(File.Exists(myExePath[0]) == true)
 			{
-				Process.Start(myExePath);
+				Process.Start(myExePath[0]);
 				Application.Exit();
 			}
+            else if (File.Exists(myExePath[1]) == true)
+            {
+                Process.Start(myExePath[1]);
+                Application.Exit();
+            }
+            else if (File.Exists(myExePath[2]) == true)
+            {
+                Process.Start(myExePath[2]);
+                Application.Exit();
+            }
 			else
 			{
-				MessageBox.Show("Could not find a Release executable :(");
+				MessageBox.Show("Could not find a Release, Internal or Debug executable :(");
 			}
 
             
