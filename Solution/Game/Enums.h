@@ -36,7 +36,7 @@ enum class ePowerUpType
 	FIRERATEBOOST,
 	SHIELDBOOST,
 	HEALTHKIT,
-
+	EMP
 };
 
 enum class eMissionType

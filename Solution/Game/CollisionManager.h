@@ -2,10 +2,11 @@
 
 #include "Enums.h"
 #include <GrowingArray.h>
+#include "Subscriber.h"
 
 class CollisionComponent;
 
-class CollisionManager
+class CollisionManager : public Subscriber
 {
 public:
 

@@ -138,6 +138,7 @@
     <ClInclude Include="Mission.h" />
     <ClInclude Include="MissionManager.h" />
     <ClInclude Include="MissionNote.h" />
+    <ClInclude Include="PowerUpMessage.h" />
     <ClInclude Include="PowerUpNote.h" />
     <ClInclude Include="ColoursForBG.h" />
     <ClInclude Include="Component.h" />
@@ -217,6 +218,7 @@
     <ClCompile Include="PhysicsComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />
+    <ClCompile Include="PowerUpMessage.cpp" />
     <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />

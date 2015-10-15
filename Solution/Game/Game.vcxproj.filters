@@ -142,6 +142,9 @@
     <ClCompile Include="KillXEnemiesMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUpMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -314,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="SurvivalAbortMission.h">
       <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
