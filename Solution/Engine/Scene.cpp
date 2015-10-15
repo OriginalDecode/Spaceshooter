@@ -30,10 +30,11 @@ Prism::Scene::Scene()
 
 Prism::Scene::~Scene()
 {
-	myInstances.DeleteAll();
 
 #ifdef SCENE_USE_OCTREE
 	delete myOctree;
+#else
+	myInstances.DeleteAll();
 #endif
 }
 

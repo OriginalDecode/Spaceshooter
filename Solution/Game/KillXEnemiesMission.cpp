@@ -9,8 +9,8 @@ KillXEnemiesMission::KillXEnemiesMission(Level& aLevel, XMLReader& aReader, tiny
 	: Mission(aReader, aElement)
 	, myLevel(aLevel)
 {
-	//tinyxml2::XMLElement* enemiesLeftElement = aReader.ForceFindFirstChild(aElement, "enemiesleft");
-	//aReader.ForceReadAttribute(enemiesLeftElement, "value", myAbortEnemiesLeft);
+	tinyxml2::XMLElement* enemiesToKillElement = aReader.ForceFindFirstChild(aElement, "enemiestokill");
+	aReader.ForceReadAttribute(enemiesToKillElement, "value", myEnemiesToKill);
 }
 
 bool KillXEnemiesMission::Update(float aDeltaTime)
