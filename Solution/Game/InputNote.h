@@ -4,7 +4,7 @@ struct InputNote
 {
 	InputNote(unsigned int aKey);
 
-	unsigned int myKey;
+	const unsigned int myKey;
 };
 
 inline InputNote::InputNote(unsigned int aKey)

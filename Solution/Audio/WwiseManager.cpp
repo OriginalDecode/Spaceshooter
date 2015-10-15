@@ -146,7 +146,7 @@ namespace Prism
 		void WwiseManager::SetRTPC(const char* aRTPC, int aValue, int aObjectID)
 		{
 			AkRtpcValue val;
-			val = aValue;
+			val = static_cast<AkRtpcValue>(aValue);
 			AK::SoundEngine::SetRTPCValue(aRTPC, val, aObjectID);
 		}
 

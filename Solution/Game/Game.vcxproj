@@ -129,7 +129,10 @@
     <ClInclude Include="EventFactory.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="GUINote.h" />
+    <ClInclude Include="KillAllAbortMission.h" />
     <ClInclude Include="KillAllMission.h" />
+    <ClInclude Include="KillXEnemiesAbortMission.h" />
+    <ClInclude Include="KillXEnemiesMission.h" />
     <ClInclude Include="LevelFactory.h" />
     <ClInclude Include="MessageState.h" />
     <ClInclude Include="Mission.h" />
@@ -171,7 +174,9 @@
     <ClInclude Include="StateStackProxy.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Subscriber.h" />
+    <ClInclude Include="SurvivalAbortMission.h" />
     <ClInclude Include="SurvivalMission.h" />
+    <ClInclude Include="WaypointAbortMission.h" />
     <ClInclude Include="WaypointComponent.h" />
     <ClInclude Include="WaypointMission.h" />
     <ClInclude Include="WeaponFactory.h" />
@@ -199,7 +204,10 @@
     <ClCompile Include="HealthComponent.cpp" />
     <ClCompile Include="InGameState.cpp" />
     <ClCompile Include="InputComponent.cpp" />
+    <ClCompile Include="KillAllAbortMission.cpp" />
     <ClCompile Include="KillAllMission.cpp" />
+    <ClCompile Include="KillXEnemiesAbortMission.cpp" />
+    <ClCompile Include="KillXEnemiesMission.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelFactory.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -224,7 +232,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Subscriber.cpp" />
+    <ClCompile Include="SurvivalAbortMission.cpp" />
     <ClCompile Include="SurvivalMission.cpp" />
+    <ClCompile Include="WaypointAbortMission.cpp" />
     <ClCompile Include="WaypointComponent.cpp" />
     <ClCompile Include="WaypointMission.cpp" />
     <ClCompile Include="WeaponFactory.cpp" />

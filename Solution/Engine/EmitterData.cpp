@@ -8,6 +8,7 @@ namespace Prism
 {
 	void EmitterData::LoadDataFile(const char* aFilePath)
 	{
+		aFilePath;
 
 		//Insert data here from XML
 

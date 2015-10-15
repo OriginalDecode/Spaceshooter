@@ -121,7 +121,7 @@ namespace Prism
 	
 	void EmitterInstance::UpdateParticle(float aDeltaTime)
 	{
-
+		aDeltaTime;
 	}
 
 	void EmitterInstance::EmittParticle()

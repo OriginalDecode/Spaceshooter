@@ -10,7 +10,7 @@ public:
 	void Init() override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
-	void DamageShield(unsigned short someDamage);
+	void DamageShield(int someDamage);
 	int GetCurrentShieldStrength();
 	void Update(float aDelta) override;
 
@@ -25,7 +25,7 @@ private:
 	float myCooldown;
 
 
-	unsigned short myShieldStrength;
+	int myShieldStrength;
 	int myOvercharge;
 
 };

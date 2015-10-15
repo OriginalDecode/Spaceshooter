@@ -32,7 +32,7 @@ void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 	}
 }
 
-void ShieldComponent::DamageShield(unsigned short someDamage)
+void ShieldComponent::DamageShield(int someDamage)
 {
 	myCooldown = 0;
 	if (someDamage >= myShieldStrength)

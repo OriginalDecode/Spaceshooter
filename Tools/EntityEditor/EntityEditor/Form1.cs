@@ -26,10 +26,12 @@ namespace EntityEditor
 
         private AddComponentForm myAddComponentForm = null;
 
-        private ComponentEditors.GraphicsComponent myGraphicsComponentSettingsForm = null;
         private ComponentEditors.AIComponent myAIComponentSettingsForm = null;
         private ComponentEditors.ShootingComponent myShootingComponentSettingsForm = null;
         private ComponentEditors.CollisionComponent myCollisionComponentSettingsForm = null;
+
+        private ComponentEditors.GraphicsComponentPanel myGraphicsComponentPanel = null;
+        private ComponentEditors.ShootingComponentPanel myShootingComponentPanel = null;
 
         public EntityEditorForm()
         {
@@ -44,13 +46,21 @@ namespace EntityEditor
                 Properties.Settings.Default.DefaultEntityFolderPath = myCurrentEntityFolderPath;
                 Properties.Settings.Default.Save();
             }
-        }
 
-        public static string Reverse(string s)
-        {
-            char[] charArray = s.ToCharArray();
-            Array.Reverse(charArray);
-            return new string(charArray);
+            Point panelLocation = new Point(10, 10);
+            Size panelSize = new Size(500, 800);
+
+            myGraphicsComponentPanel = new ComponentEditors.GraphicsComponentPanel(panelLocation, panelSize, this);
+            myShootingComponentPanel = new ComponentEditors.ShootingComponentPanel(panelLocation, panelSize, this);
+
+            PropertyPanel.Controls.Add(myGraphicsComponentPanel);
+            PropertyPanel.Controls.Add(myShootingComponentPanel);
+
+            myGraphicsComponentPanel.Hide();
+            myGraphicsComponentPanel.Load(myCurrentEntity.myGraphicsComponent);
+
+            myShootingComponentPanel.Show();
+            myShootingComponentPanel.Load(myCurrentEntity.myShootingComponent);
         }
 
         public void DisplayEntityData()
@@ -173,13 +183,21 @@ namespace EntityEditor
             }
         }
 
+        private void HideComponents()
+        {
+            myGraphicsComponentPanel.Hide();
+        }
+
         private void EditSelectedComponent(string aComponentName)
         {
+            HideComponents();
             if (aComponentName.StartsWith("Graphics") == true)
             {
-                myGraphicsComponentSettingsForm = new ComponentEditors.GraphicsComponent(this, myCurrentEntity.myGraphicsComponent);
-                myGraphicsComponentSettingsForm.Visible = true;
-                myGraphicsComponentSettingsForm.Activate();
+                //myGraphicsComponentSettingsForm = new ComponentEditors.GraphicsComponent(this, myCurrentEntity.myGraphicsComponent);
+                //myGraphicsComponentSettingsForm.Visible = true;
+                //myGraphicsComponentSettingsForm.Activate();
+                myGraphicsComponentPanel.Show();
+                myGraphicsComponentPanel.Load(myCurrentEntity.myGraphicsComponent);
                 return;
             }
             if (aComponentName.StartsWith("AI") == true)
@@ -356,6 +374,18 @@ namespace EntityEditor
             else
             {
                 DL_Debug.GetInstance.DL_ErrorMessage("Could not save the file, because it missing a name.");
+            }
+        }
+
+        private void EntityContentList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (CheckIfItemStartsWith("Name: ", EntityContentList.SelectedIndex))
+            {
+                OpenRenameEntityWindow();
+            }
+            if (CheckIfItemEndsWith("Component", EntityContentList.SelectedIndex))
+            {
+                EditSelectedComponent((string)EntityContentList.Items[EntityContentList.SelectedIndex]);
             }
         }
     }

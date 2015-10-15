@@ -234,8 +234,8 @@ void Prism::Text::SetupVertexBuffer()
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		HRESULT deviceRemovedReason = Engine::GetInstance()->GetDevice()->GetDeviceRemovedReason();
-		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Text::SetupVertexBuffer", MB_ICONWARNING);
+		//HRESULT deviceRemovedReason = Engine::GetInstance()->GetDevice()->GetDeviceRemovedReason();
+		DL_ASSERT("Failed to SetupVertexBuffer");
 	}
 }
 
@@ -254,8 +254,8 @@ void Prism::Text::SetupIndexBuffer()
 		&myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		HRESULT deviceRemovedReason = Engine::GetInstance()->GetDevice()->GetDeviceRemovedReason();
-		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Text::SetupIndexBuffer", MB_ICONWARNING);
+		//HRESULT deviceRemovedReason = Engine::GetInstance()->GetDevice()->GetDeviceRemovedReason();
+		DL_ASSERT("Failed to SetupIndexBuffer");
 	}
 }
 

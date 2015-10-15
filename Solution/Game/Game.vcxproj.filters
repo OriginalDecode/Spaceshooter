@@ -94,7 +94,6 @@
     <ClCompile Include="WaypointMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
-    <ClCompile Include="SurvivalMission.cpp" />
     <ClCompile Include="HealthComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -127,6 +126,24 @@
     </ClCompile>
     <ClCompile Include="StartEventMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="SurvivalMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="SurvivalAbortMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="KillAllAbortMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="KillXEnemiesAbortMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="KillXEnemiesMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="WaypointAbortMission.cpp">
+      <Filter>Mission</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -250,7 +267,6 @@
     <ClInclude Include="MissionNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
-    <ClInclude Include="SurvivalMission.h" />
     <ClInclude Include="HealthComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
@@ -286,6 +302,24 @@
     </ClInclude>
     <ClInclude Include="StartEventMessage.h">
       <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="SurvivalMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="KillAllAbortMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="KillXEnemiesAbortMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="KillXEnemiesMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="SurvivalAbortMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="WaypointAbortMission.h">
+      <Filter>Mission</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

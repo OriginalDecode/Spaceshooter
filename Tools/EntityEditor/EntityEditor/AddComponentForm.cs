@@ -21,8 +21,6 @@ namespace EntityEditor
 
     public partial class AddComponentForm : Form
     {
-
-        private ComponentEditors.GraphicsComponent myGraphicsComponentSettingsForm = null;
         private ComponentEditors.AIComponent myAIComponentSettingsForm = null;
         private ComponentEditors.ShootingComponent myShootingComponentSettingsForm = null;
         private ComponentEditors.CollisionComponent myCollisionComponentSettingsForm = null;
@@ -101,9 +99,10 @@ namespace EntityEditor
             }
             else if ((eComponentType)ACF_CB_ComponentType.SelectedItem == eComponentType.GraphicsComponent)
             {
-                myGraphicsComponentSettingsForm = new ComponentEditors.GraphicsComponent(this.Owner);
-                myGraphicsComponentSettingsForm.Visible = true;
-                myGraphicsComponentSettingsForm.Activate();
+                myCurrentEntity.myGraphicsComponent.myIsActive = true;
+                EntityEditorForm eForm = (EntityEditorForm)this.Owner;
+                eForm.SetGraphicsComponent(myCurrentEntity.myGraphicsComponent);
+                eForm.DisplayEntityData();
             }
             else if ((eComponentType)ACF_CB_ComponentType.SelectedItem == eComponentType.ShootingComponent)
             {

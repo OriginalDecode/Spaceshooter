@@ -18,7 +18,7 @@ public:
 	Level* LoadNextLevel();
 	void DeleteOldLevel();
 
-	const bool& IsLastLevel() const;
+	bool IsLastLevel() const;
 
 	// for filewatcher:
 	void LoadLevelListFromXML(const std::string& aXMLPath); 

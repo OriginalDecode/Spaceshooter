@@ -23,7 +23,7 @@ void Component::ReceiveNote(const InputNote&)
 {
 }
 
-void Component::ReceiveNote(const MissionNote& aMessage)
+void Component::ReceiveNote(const MissionNote&)
 {
 }
 
@@ -35,6 +35,6 @@ void Component::ReceiveNote(const ShootNote&)
 {
 }
 
-void Component::ReceiveNote(const GUINote& aNote)
+void Component::ReceiveNote(const GUINote&)
 {
 }

@@ -1,6 +1,7 @@
 #pragma once
 #include <algorithm>
 #include <string>
+#include <DL_Debug.h>
 
 namespace CommonUtilities
 {
@@ -36,6 +37,27 @@ namespace CommonUtilities
 		}
 
 		return toReturn;
+	}
+
+	inline std::string GetSubString(const std::string& aStringToReadFrom, const std::string& aWordToFind, bool aReadAfterChar
+		, int someCharsToSkip = 0)
+	{
+		std::string toReturn;
+		if (aStringToReadFrom.rfind(aWordToFind) != std::string::npos)
+		{
+			if (aReadAfterChar == false)
+			{
+				return toReturn = aStringToReadFrom.substr(0, aStringToReadFrom.rfind(aWordToFind));
+			}
+			else if (aReadAfterChar == true)
+			{
+				return toReturn = aStringToReadFrom.substr(aStringToReadFrom.rfind(aWordToFind) + (someCharsToSkip - 1));
+			}
+		}
+		//DL_DEBUG("Attempting to load : %s", aStringToReadFrom.c_str());
+		//DL_ASSERT("Failed to find texture.");
+
+		return aStringToReadFrom;
 	}
 }
 namespace CU = CommonUtilities;

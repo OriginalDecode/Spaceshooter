@@ -4,11 +4,11 @@
 #include "Level.h"
 #include "MissionNote.h"
 #include "WaypointComponent.h"
-#include "WaypointMission.h"
+#include "WaypointAbortMission.h"
 #include "XMLReader.h"
 
 
-WaypointMission::WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aReader, tinyxml2::XMLElement* aElement)
+WaypointAbortMission::WaypointAbortMission(Level& aLevel, Entity& aPlayer, XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: Mission(aReader, aElement)
 	, myLevel(aLevel)
 	, myPlayer(aPlayer)
@@ -21,11 +21,11 @@ WaypointMission::WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aRea
 }
 
 
-WaypointMission::~WaypointMission()
+WaypointAbortMission::~WaypointAbortMission()
 {
 }
 
-bool WaypointMission::Update(float)
+bool WaypointAbortMission::Update(float)
 {
 
 	Prism::Engine* engine = Prism::Engine::GetInstance();
@@ -37,12 +37,12 @@ bool WaypointMission::Update(float)
 	return !myTrigger->GetAlive();
 }
 
-void WaypointMission::Start()
+void WaypointAbortMission::Start()
 {
 	myPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::START));
 }
 
-void WaypointMission::End()
+void WaypointAbortMission::End()
 {
 	myPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::END));
 }

@@ -7,12 +7,11 @@ struct PowerUpNote
 	PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
 		, int someHealthRecover, int someFireRateMultiplier);
 
-	ePowerUpType myType;
-	float myDuration;
-	int myShieldStrength;
-	int myHealthRecover;
-	int myFireRateMultiplier;
-
+	const ePowerUpType myType;
+	const float myDuration;
+	const int myShieldStrength;
+	const int myHealthRecover;
+	const int myFireRateMultiplier;
 };
 
 inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int someShieldStrength
@@ -23,4 +22,5 @@ inline PowerUpNote::PowerUpNote(ePowerUpType someType, float someDuration, int s
 	, myHealthRecover(someHealthRecover)
 	, myFireRateMultiplier(someFireRateMultiplier)
 {
+	DL_ASSERT_EXP(myHealthRecover >= 0, "Can't recover negative health.");
 }

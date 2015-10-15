@@ -70,7 +70,7 @@ void LevelFactory::DeleteOldLevel()
 	myOldLevel = nullptr;
 }
 
-const bool& LevelFactory::IsLastLevel() const
+bool LevelFactory::IsLastLevel() const
 {
 	if (myCanWinGame == true && myLevelPaths.find(myCurrentID + 1) == myLevelPaths.end())
 	{
