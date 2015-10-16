@@ -8,7 +8,6 @@ class AIComponent : public ControllerComponent
 {
 public:
 	AIComponent(Entity& aEntity);
-	~AIComponent();
 
 	void Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
 		, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint);

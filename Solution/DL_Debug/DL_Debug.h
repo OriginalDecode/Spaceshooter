@@ -79,7 +79,7 @@ namespace DL_Debug
 		void PrintMessage(const char* aString);
 		void DebugMessage(const char *aFileName, int aLine, const char *aFunctionName, const char *aFormattedString, ...);
 		void AssertMessage(bool aAssertExpression, const char *aFileName, int aLine, const char *aFunctionName, const char *aString);
-		void AssertMessage(const char *aFileName, int aLine, const char *aFunctionName, const char *aString);
+		void AssertMessage(const char *aFileName, int aLine, const char *aFunctionName, const std::string& aString);
 		void ShowMessageBox(HWND aHwnd, LPCSTR aText, LPCSTR aTitle, UINT aType);
 
 		void ActivateFilterLog(const eFilterLog aFilter);

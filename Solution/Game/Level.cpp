@@ -359,24 +359,28 @@ void Level::ReadXML(const std::string& aFile)
 		triggerElement = reader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
 		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
-		//CU::ToLower(powerUp);
-
 		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', false);
-
-		//std::string powerType = CU::GetSubString(tempString, '_', false);
-
 
 		if (powerType == "healthkit")
 		{
 			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT);
 		}
-		if (powerType == "shield")
+		else if (powerType == "shield")
 		{
 			newEntity->SetPowerUp(ePowerUpType::SHIELDBOOST);
 		}
-		if (powerType == "firerate")
+		else if (powerType == "firerate")
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
+		}
+		else if (powerType == "emp")
+		{
+			newEntity->SetPowerUp(ePowerUpType::EMP);
+		}
+		else
+		{
+			std::string errorMessage = "[Level] There is no powerup named " + powerType;
+			DL_ASSERT(errorMessage.c_str());
 		}
 
 		myEntityFactory->CopyEntity(newEntity, powerUp);
@@ -528,6 +532,6 @@ void Level::UpdateDebug()
 	}
 	if (myInputWrapper->KeyDown(DIK_J))
 	{
-		myCollisionManager->DamageEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 500.f, 100);
+		myPlayer->GetComponent<ShootingComponent>()->ActivateEMP();
 	}
 }

@@ -14,6 +14,10 @@
 PowerUpComponent::PowerUpComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myPlayer(nullptr)
+	, myDuration(0)
+	, myShieldStrength(0)
+	, myHealthRecover(0)
+	, myFireRateMultiplier(0)
 {
 }
 
@@ -25,6 +29,12 @@ void PowerUpComponent::Init(ePowerUpType someType, float someDuration, int someS
 	myShieldStrength = someShieldStrength;
 	myHealthRecover = someHealthRecover;
 	myFireRateMultiplier = someFireRateMultiplier;
+}
+
+void PowerUpComponent::Init(ePowerUpType someType, float someDuration)
+{
+	myType = someType;
+	myDuration = someDuration;
 }
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)

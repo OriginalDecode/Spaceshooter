@@ -7,9 +7,8 @@
 SurvivalMission::SurvivalMission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: Mission(aReader, aElement)
 {
-	tinyxml2::XMLElement* timeElement = aReader.ForceFindFirstChild(aElement, "time");
-	aReader.ForceReadAttribute(timeElement, "seconds", mySurvivalTime);
-
+	tinyxml2::XMLElement* element= aReader.ForceFindFirstChild(aElement, "seconds");
+	aReader.ForceReadAttribute(element, "value", mySurvivalTime);
 }
 
 bool SurvivalMission::Update(float aDeltaTime)
