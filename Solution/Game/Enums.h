@@ -6,6 +6,7 @@ enum class eMessageType
 	GAME_STATE,
 	SPAWN_ENEMY,
 	START_EVENT,
+	POWER_UP
 };
 
 enum class eBulletType

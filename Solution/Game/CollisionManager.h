@@ -11,12 +11,15 @@ class CollisionManager : public Subscriber
 public:
 
 	CollisionManager();
+	~CollisionManager();
 
 	void Add(CollisionComponent* aComponent, eEntityType aEnum);
 	void Remove(CollisionComponent* aComponent, eEntityType aEnum);
 
 	void Update();
 	void CleanUp();
+
+	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 
 	int GetEnemiesAlive() const;
 

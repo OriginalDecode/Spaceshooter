@@ -30,3 +30,7 @@ void Subscriber::ReceiveMessage(const SpawnEnemyMessage&)
 void Subscriber::ReceiveMessage(const StartEventMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const PowerUpMessage&)
+{
+}

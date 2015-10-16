@@ -8,6 +8,8 @@
 
 #include "AIComponent.h"
 #include "HealthComponent.h"
+#include "PostMaster.h"
+#include "PowerUpMessage.h"
 
 CollisionManager::CollisionManager()
 	: myPlayers(1)
@@ -32,6 +34,12 @@ CollisionManager::CollisionManager()
 	myPowerUpFilter = eEntityType::PLAYER;
 	myPropFilter = eEntityType::PLAYER;
 	//myEnemyFilter = eEntityType::PLAYER;
+	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
+}
+
+CollisionManager::~CollisionManager()
+{
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 }
 
 void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
@@ -161,6 +169,11 @@ void CollisionManager::CleanUp()
 			myPowerUps.RemoveCyclicAtIndex(i);
 		}
 	}
+}
+
+void CollisionManager::ReceiveMessage(const PowerUpMessage& aMessage)
+{
+	DisableEnemiesWithinSphere(aMessage.GetPosition(), aMessage.GetRadius(), aMessage.GetTime());
 }
 
 void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aFilter)

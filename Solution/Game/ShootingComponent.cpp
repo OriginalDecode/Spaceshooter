@@ -9,6 +9,7 @@
 #include "PowerUpNote.h"
 #include "ShootingComponent.h"
 #include "ShootNote.h"
+#include "PowerUpMessage.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -73,7 +74,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 	}
 	else
 	{
-
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myEntity.myOrientation.GetPos(), 200.f, 5.f));
 		myHasEMP = false;
 	}
 }
