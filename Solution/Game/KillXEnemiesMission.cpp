@@ -50,7 +50,7 @@ void KillXEnemiesMission::End()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::ENEMY_KILLED, this);
 }
 
-void KillXEnemiesMission::ReceiveMessage(const EnemyKilledMessage& aMessage)
+void KillXEnemiesMission::ReceiveMessage(const EnemyKilledMessage&)
 {
 	--myEnemiesToKill;
 }
