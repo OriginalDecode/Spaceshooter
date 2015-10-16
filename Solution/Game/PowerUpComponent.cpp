@@ -29,7 +29,7 @@ void PowerUpComponent::Init(ePowerUpType someType, float someDuration, int someS
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 {
-	PowerUpNote note(ePowerUpType::EMP, myDuration, myShieldStrength, myHealthRecover, myFireRateMultiplier);
+	PowerUpNote note(myType, myDuration, myShieldStrength, myHealthRecover, myFireRateMultiplier);
 
 	aNote.myEntity.SendNote(note);
 	aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
