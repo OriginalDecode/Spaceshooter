@@ -51,9 +51,14 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
 	BEGIN_TIME_BLOCK("InGameState::Update");
 
-	if ((myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true))
+	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
 	{
-		Prism::Engine::GetInstance()->ShutdownThreadedLoading();
+		Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
+		while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
+		{
+			//wait for ModelLoader to exit its loading-loop
+		}
+
 		return eStateStatus::ePopMainState;
 	}
 	else if (myInputWrapper->KeyDown(DIK_R))
