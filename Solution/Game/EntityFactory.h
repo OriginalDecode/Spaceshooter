@@ -45,6 +45,7 @@ struct EntityData
 	float myMinTimeToNextDecision;
 	float myMaxTimeToNextDecision;
 	float myAIAvoidanceDistance;
+	eAITargetPositionMode myAITargetPositionMode = eAITargetPositionMode::NOT_USED;
 	float myWidth;
 
 	int myChanceToFollow;
@@ -61,6 +62,8 @@ struct EntityData
 	int myHealthToRecover; 
 	int myFireRateMultiplier;
 	ePowerUpType myPowerUpType;
+	std::string myUpgradeName;
+	int myUpgradeID;
 
 	eEntityDataGraphicsType myGraphicsType;
 	Prism::eOctreeType myType;

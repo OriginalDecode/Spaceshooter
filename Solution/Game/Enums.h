@@ -43,6 +43,7 @@ enum class ePowerUpType
 	FIRERATEBOOST,
 	SHIELDBOOST,
 	HEALTHKIT,
+	WEAPON_UPGRADE,
 	EMP
 };
 
@@ -84,4 +85,11 @@ enum class eComponentType
 	SHOOTING,
 	WAY_POINT,
 	_COUNT,
+};
+
+enum class eAITargetPositionMode
+{
+	NOT_USED,
+	KEEP_DISTANCE,
+	ESCAPE_THEN_RETURN,
 };

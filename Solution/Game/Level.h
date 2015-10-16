@@ -61,6 +61,7 @@ public:
 	int GetEnemiesAlive() const;
 
 	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
+	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 
