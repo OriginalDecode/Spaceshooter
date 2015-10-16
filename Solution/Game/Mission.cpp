@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Mission.h"
 #include "Event.h"
-#include "EventFactory.h"
+#include "MissionEventReader.h"
 #include "PostMaster.h"
 #include "StartEventMessage.h"
 
@@ -9,7 +9,7 @@ Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
 	, myStartEventNames(4)
 {
-	EventFactory::ReadEventNames(aReader, aElement, myStartEventNames);
+	MissionEventReader::ReadEventNames(aReader, aElement, myStartEventNames);
 }
 
 

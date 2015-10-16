@@ -9,7 +9,7 @@ namespace tinyxml2
 
 class XMLReader;
 
-class EventFactory
+class MissionEventReader
 {
 public:
 	static void ReadEventNames(XMLReader& aReader, tinyxml2::XMLElement* aElement
