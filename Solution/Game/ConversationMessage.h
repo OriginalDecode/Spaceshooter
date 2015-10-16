@@ -1,8 +1,13 @@
 #pragma once
-class ConversationMessage
+
+#include "Message.h"
+#include <string>
+
+class ConversationMessage : public Message
 {
 public:
-	ConversationMessage();
-	~ConversationMessage();
+	ConversationMessage(const std::string& aText);
+
+	const std::string myText;
 };
 

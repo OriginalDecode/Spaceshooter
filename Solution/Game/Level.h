@@ -21,6 +21,7 @@ namespace CommonUtilities
 
 class BulletManager;
 class CollisionManager;
+class ConversationManager;
 class Entity;
 class EntityFactory;
 class EventManager;
@@ -93,6 +94,7 @@ private:
 
 	BulletManager* myBulletManager;
 	CollisionManager* myCollisionManager;
+	ConversationManager* myConversationManager;
 
 	MissionManager* myMissionManager;
 	EventManager* myEventManager;

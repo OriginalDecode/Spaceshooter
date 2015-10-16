@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include <Camera.h>
 #include "Constants.h"
+#include "ConversationMessage.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
 #include "MissionNote.h"
 #include <Model2D.h>
+#include "PostMaster.h"
 #include <sstream>
 
 #define CIRCLERADIUS 400.f
@@ -24,7 +26,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpArrow(new Prism::Model2D)
 	, myPowerUpMarker(new Prism::Model2D)
 	, myPowerUpPositions(8)
+	, myConversation(" ")
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION_MESSAGE, this);
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
@@ -39,6 +43,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 GUIComponent::~GUIComponent()
 {
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION_MESSAGE, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -148,9 +153,9 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 {
 	//Prism::Engine::GetInstance()->EnableAlphaBlending();
 	Prism::Engine::GetInstance()->DisableZBuffer();
-
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
+	Prism::Engine::GetInstance()->PrintDebugText(myConversation, { halfWidth, -halfHeight - 200.f });
 	myReticle->Render(halfWidth, -halfHeight);
 	mySteeringTarget->Render(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
@@ -180,9 +185,9 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	//Prism::Engine::GetInstance()->DisableAlpaBlending();
 }
 
-void GUIComponent::ReceiveNote(const MissionNote& aMessage)
+void GUIComponent::ReceiveNote(const MissionNote& aNote)
 {
-	if (aMessage.myEvent == eMissionEvent::START && aMessage.myType == eMissionType::WAYPOINT)
+	if (aNote.myEvent == eMissionEvent::START && aNote.myType == eMissionType::WAYPOINT)
 	{
 		myWaypointActive = true;
 	}
@@ -214,3 +219,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 }
 
 
+void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
+{
+	myConversation = aMessage.myText;
+}

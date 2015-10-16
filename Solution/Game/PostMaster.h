@@ -67,4 +67,8 @@ void PostMaster::SendMessage(const Message& aMessage)
 			}
 		}
 	}
+	else if (aMessage.GetMessageType() != eMessageType::ENEMY_KILLED)
+	{
+		DL_ASSERT("Message sent without subscriber.");
+	}
 }

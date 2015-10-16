@@ -154,7 +154,12 @@
     <ClCompile Include="ConversationAction.cpp">
       <Filter>Event\Action</Filter>
     </ClCompile>
-    <ClCompile Include="ConversationManager.cpp" />
+    <ClCompile Include="Conversation.cpp">
+      <Filter>Conversation</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversationManager.cpp">
+      <Filter>Conversation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -340,7 +345,12 @@
     <ClInclude Include="ConversationAction.h">
       <Filter>Event\Action</Filter>
     </ClInclude>
-    <ClInclude Include="ConversationManager.h" />
+    <ClInclude Include="Conversation.h">
+      <Filter>Conversation</Filter>
+    </ClInclude>
+    <ClInclude Include="ConversationManager.h">
+      <Filter>Conversation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -372,6 +382,9 @@
     </Filter>
     <Filter Include="Event\Action">
       <UniqueIdentifier>{aeca4f79-9430-4590-967c-c06a81c14d9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Conversation">
+      <UniqueIdentifier>{22a691e6-fa8a-44f1-80ee-e09d4f894ba2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

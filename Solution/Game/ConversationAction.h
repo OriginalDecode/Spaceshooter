@@ -13,7 +13,7 @@ class ConversationManager;
 class ConversationAction : public Action
 {
 public:
-	ConversationAction(XMLReader& aReader, tinyxml2::XMLElement* aElement, ConversationManager& aConversationManager);
+	ConversationAction(const std::string& aName, ConversationManager& aConversationManager);
 	~ConversationAction();
 
 	void OnEnter() override;
@@ -21,15 +21,8 @@ public:
 	bool Update() override;
 
 private:
-	struct Sentence
-	{
-		Sentence(const std::string& aText) : myText(aText){}
-		const std::string myText;
-	};
-
+	void operator=(ConversationAction&) = delete;
+	const std::string myName;
 	ConversationManager& myConversationManager;
-	ConversationMessage* myMessage;
-
-	CU::GrowingArray<Sentence*> mySentences;
 };
 

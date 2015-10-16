@@ -3,6 +3,7 @@
 #include "Constants.h"
 #include <Engine.h>
 #include "Entity.h"
+#include <MathHelper.h>
 #include "PhysicsComponent.h"
 #include <sstream>
 #include <Vector.h>
@@ -14,7 +15,8 @@ AIComponent::AIComponent(Entity& aEntity)
 {
 }
 void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
-	, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint)
+	, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
+	, eAITargetPositionMode aTargetPositionMode)
 {
 	myEntityToFollow = nullptr;
 
@@ -28,6 +30,9 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 
 	myAvoidanceDistance = aAvoidanceDistance;
 	myFollowingOffset = aAvoidancePoint;
+
+	myTargetPositionMode = aTargetPositionMode;
+	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
 
 void AIComponent::Update(float aDeltaTime)
@@ -81,26 +86,17 @@ void AIComponent::SetEntityToFollow(Entity* aEntity)
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-	float distToTarget = CU::Length(toTarget);
-
-	if (distToTarget < myAvoidanceDistance)
-	{
-		float distCoef = 1.f - (distToTarget / myAvoidanceDistance);
-		toTarget += myFollowingOffset * distCoef;
-	}
-
-
-	myVelocity += toTarget * aDeltaTime;
+	CalculateToTarget(myTargetPositionMode);
+	myVelocity += myToTarget * aDeltaTime;
 
 	CU::Normalize(myVelocity);
 
 	CU::Vector3<float> up(0, 1.f, 0);
 	up = up * myEntity.myOrientation;
 
-	CU::Normalize(toTarget);
+	CU::Normalize(myToTarget);
 
-	up = up + toTarget * aDeltaTime;
+	up = up + myToTarget * aDeltaTime;
 
 	CU::Normalize(up);
 
@@ -125,4 +121,46 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	myEntity.myOrientation.myMatrix[11] = 0;
 
 	myVelocity *= myMovementSpeed;
+}
+
+void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
+{
+	if (aMode == eAITargetPositionMode::KEEP_DISTANCE)
+	{
+		myToTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+		float distToTarget = CU::Length(myToTarget);
+
+		if (distToTarget < myAvoidanceDistance)
+		{
+			float distCoef = 1.f - (distToTarget / myAvoidanceDistance);
+			myToTarget += myFollowingOffset * distCoef;
+		}
+	}
+
+	else if (aMode == eAITargetPositionMode::ESCAPE_THEN_RETURN)
+	{
+		if (myIsEscaping == false)
+		{
+			myToTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+			float distToTarget = CU::Length(myToTarget);
+
+			if (distToTarget < myAvoidanceDistance)
+			{
+				float distCoef = 1.f - (distToTarget / (myAvoidanceDistance));
+				myToTarget += myFollowingOffset * distCoef;
+				myEscapePosition = myEntityToFollow->myOrientation.GetPos() + CU::Math::RandomVector(-myFollowingOffset, myFollowingOffset);
+				myIsEscaping = true;
+			}
+		}
+		else
+		{
+			myToTarget = myEscapePosition - myEntity.myOrientation.GetPos();
+			float distToTarget = CU::Length(myToTarget);
+
+			if (distToTarget < 20)
+			{
+				myIsEscaping = false;
+			}
+		}
+	}
 }

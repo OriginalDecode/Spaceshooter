@@ -4,11 +4,12 @@
 #include <unordered_map>
 
 class Event;
+class ConversationManager;
 
 class EventManager : public Subscriber
 {
 public:
-	EventManager(const std::string& aXmlPath);
+	EventManager(const std::string& aXmlPath, ConversationManager& aConversationManager);
 	~EventManager();
 
 	void ReceiveMessage(const StartEventMessage& aMessage) override;
