@@ -73,7 +73,7 @@ void InputComponent::Update(float aDeltaTime)
 		
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
-			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity());
+			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), mySteering);
 			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
 		}
 
