@@ -42,13 +42,13 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			waypoint->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(waypoint);
 		}
-		else if (type == "killxenemies")
+		else if (type == "killx")
 		{
 			KillXEnemiesMission* mission = new KillXEnemiesMission(myLevel, reader, element);
 			mission->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(mission);
 		}
-		else if (type == "killxenemiesabort")
+		else if (type == "killxabort")
 		{
 			KillXEnemiesAbortMission* mission = new KillXEnemiesAbortMission(myLevel, reader, element);
 			mission->SetIndex(missionIndex);

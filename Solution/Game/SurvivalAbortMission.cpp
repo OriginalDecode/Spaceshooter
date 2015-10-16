@@ -7,17 +7,17 @@
 SurvivalAbortMission::SurvivalAbortMission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: Mission(aReader, aElement)
 {
-	tinyxml2::XMLElement* timeElement = aReader.ForceFindFirstChild(aElement, "time");
-	aReader.ForceReadAttribute(timeElement, "visualseconds", myVisualTimeStart);
-	aReader.ForceReadAttribute(timeElement, "realseconds", myRealTimeStart);
-
+	tinyxml2::XMLElement* element = aReader.ForceFindFirstChild(aElement, "secondsvisual");
+	aReader.ForceReadAttribute(element, "value", myVisualTimeStart);
+	element = aReader.ForceFindFirstChild(aElement, "secondsreal");
+	aReader.ForceReadAttribute(element, "value", myRealTimeStart);
 }
 
 bool SurvivalAbortMission::Update(float aDeltaTime)
 {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << "Current mission: Survive for: " << myVisualTime << " seconds";
+	ss << "Current mission: Survive for: " << myVisualTime << " seconds (abort)";
 
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
