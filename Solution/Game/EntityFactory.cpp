@@ -260,6 +260,8 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 			aEntityToAddTo.myEffectFile = effectFile;
 
 			aEntityToAddTo.myGraphicsType = eEntityDataGraphicsType::MODEL;
+
+			aEntityToAddTo.myEntity->GetComponent<GraphicsComponent>()->Init(modelFile.c_str(), effectFile.c_str());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Cube").c_str()) == 0)
 		{
@@ -276,8 +278,10 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 			aEntityToAddTo.myDepth = depth;
 
 			aEntityToAddTo.myGraphicsType = eEntityDataGraphicsType::CUBE;
+			aEntityToAddTo.myEntity->GetComponent<GraphicsComponent>()->InitCube(width, height, depth);
 		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Scale").c_str()) == 0)
+		
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Scale").c_str()) == 0)
 		{
 			aDocument.ForceReadAttribute(e, "x", aEntityToAddTo.myScale.myX);
 			aDocument.ForceReadAttribute(e, "y", aEntityToAddTo.myScale.myY);
