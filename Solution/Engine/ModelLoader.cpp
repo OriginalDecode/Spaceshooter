@@ -20,6 +20,7 @@ namespace Prism
 		, myCanCopyArray(true)
 		, myModelFactory(new FBXFactory())
 		, myIsLoading(false)
+		, myClearLoadJobs(true)
 	{
 		myBuffers[0].Init(512);
 		myBuffers[1].Init(512);
@@ -63,10 +64,12 @@ namespace Prism
 			{
 				//check in here aswell to allow early outs so we dont have to wait for 2-3 seconds to quit if
 				//we got a big load-array
-				if (myIsRunning == false)
+				if (myIsRunning == false || myClearLoadJobs == true)
 				{
 					myIsLoading = false;
-					return;
+					myClearLoadJobs = false;
+					loadArray.RemoveAll();
+					break;
 				}
 
 				eLoadType loadType = loadArray[i].myLoadType;
@@ -126,6 +129,11 @@ namespace Prism
 	void ModelLoader::Shutdown()
 	{
 		myIsRunning = false;
+	}
+
+	void ModelLoader::ClearLoadJobs()
+	{
+		myClearLoadJobs = true;
 	}
 
 	volatile bool ModelLoader::IsLoading() const

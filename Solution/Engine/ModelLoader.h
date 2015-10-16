@@ -17,6 +17,7 @@ namespace Prism
 
 		void Run();
 		void Shutdown();
+		void ClearLoadJobs();
 
 		volatile bool IsLoading() const;
 
@@ -55,6 +56,7 @@ namespace Prism
 		volatile bool myCanCopyArray;
 		volatile bool myIsRunning;
 		volatile bool myIsLoading;
+		volatile bool myClearLoadJobs;
 
 		FBXFactory* myModelFactory;
 		CU::GrowingArray<Model*> myNonFXBModels;
