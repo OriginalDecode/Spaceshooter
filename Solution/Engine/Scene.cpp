@@ -73,7 +73,9 @@ void Prism::Scene::Render()
 	myOctree->Update();
 	myInstances.RemoveAll();
 	myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
+#ifdef SHOW_OCTREE_DEBUG
 	Engine::GetInstance()->PrintDebugText(myInstances.Size(), { 600.f, -600.f });
+#endif
 #endif
 	for (int i = 0; i < myInstances.Size(); ++i)
 	{
