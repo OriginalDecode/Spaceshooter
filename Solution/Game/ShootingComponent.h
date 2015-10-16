@@ -31,6 +31,7 @@ public:
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	void AddWeapon(const WeaponDataType& aWeapon);
+	void UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID);
 
 	static eComponentType GetType();
 

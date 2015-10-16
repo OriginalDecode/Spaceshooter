@@ -74,7 +74,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 	}
 	else
 	{
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myEntity.myOrientation.GetPos(), 200.f, 5.f));
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), 200.f, 5.f));
 		myHasEMP = false;
 	}
 }
@@ -123,4 +123,31 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	myCurrentWeaponID = newWeapon.myID;
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
+}
+
+void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID)
+{
+	if (aWeaponID > myWeapons.Size())
+	{
+		std::string errorMessage = "[ShootingComponent] Tried to upgrade non existing weapon with ID " + aWeaponID;
+		DL_ASSERT(errorMessage.c_str());
+	}
+
+	myWeapons[aWeaponID].myBulletsPerShot = aWeapon.myBulletsPerShot;
+	myWeapons[aWeaponID].myCoolDownTime = aWeapon.myCoolDownTime;
+	myWeapons[aWeaponID].myCurrentTime = aWeapon.myCoolDownTime;
+	myWeapons[aWeaponID].myPosition = aWeapon.myPosition;
+	myWeapons[aWeaponID].mySpread = aWeapon.mySpread;
+	myWeapons[aWeaponID].myType = aWeapon.myType;
+	myWeapons[aWeaponID].myMultiplier = 1;
+	myWeapons[aWeaponID].myBulletType = ConvertToBulletEnum(aWeapon.myBulletType);
+
+	if (myWeapons[aWeaponID].myBulletType == eBulletType::COUNT)
+	{
+		std::string errorMessage = "[ShootingComponent] No bullet with name " + aWeapon.myBulletType;
+		DL_ASSERT(errorMessage.c_str());
+	}
+
+	myWeapons[aWeaponID].myID = aWeaponID;
+	myCurrentWeaponID = myWeapons[aWeaponID].myID;
 }
