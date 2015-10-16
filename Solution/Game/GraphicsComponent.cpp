@@ -36,13 +36,6 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
 }
 
-void GraphicsComponent::InitGeometry(const Prism::MeshData& aMeshData)
-{
-	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadGeometry(aMeshData);
-
-	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
-}
-
 void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 {
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadCube(aWidth, aHeight, aDepth);

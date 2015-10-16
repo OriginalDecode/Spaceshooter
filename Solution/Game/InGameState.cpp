@@ -10,7 +10,6 @@
 #include <FileWatcher.h>
 #include <Font.h>
 #include "GameStateMessage.h"
-#include <GeometryGenerator.h>
 #include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"

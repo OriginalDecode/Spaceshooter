@@ -16,7 +16,6 @@
     <ClCompile Include="FBXFactory.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="Font.cpp">
       <Filter>Rendering\Text</Filter>
     </ClCompile>
@@ -129,7 +128,6 @@
     <ClInclude Include="FBXFactory.h">
       <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="Font.h">
       <Filter>Rendering\Text</Filter>
     </ClInclude>
