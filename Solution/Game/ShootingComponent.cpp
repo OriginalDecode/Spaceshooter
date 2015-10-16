@@ -4,6 +4,7 @@
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "InputNote.h"
+#include <MathHelper.h>
 #include "PostMaster.h"
 #include "PhysicsComponent.h"
 #include "PowerUpNote.h"
@@ -45,16 +46,19 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 	{
 		if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 		{
-			CU::Matrix44<float> orientation = myEntity.myOrientation;
-			orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-				+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
-
 			for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; i++)
 			{
+				CU::Matrix44<float> orientation = myEntity.myOrientation;
+				orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+					+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
+
 				if (myWeapons[myCurrentWeaponID].mySpread > 0)
 				{
-					float randomSpreadX = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
-					float randomSpreadY = float((rand() % (myWeapons[myCurrentWeaponID].mySpread * 2)) - myWeapons[myCurrentWeaponID].mySpread) / 100.f;
+					float max = float(myWeapons[myCurrentWeaponID].mySpread);
+					float min = float(-myWeapons[myCurrentWeaponID].mySpread);
+
+					float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
+					float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
 
 					CU::Matrix44<float> rotation;
 					rotation.myMatrix[8] = randomSpreadX;
