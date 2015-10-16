@@ -30,7 +30,7 @@ EventManager::EventManager(const std::string& aXmlPath)
 			actions.Add(new SpawnEnemy(reader, element));
 
 		}
-		myEvents[name] = new Event(actions);
+		myEvents[name] = new Event(name, actions);
 	}
 	reader.CloseDocument();
 }

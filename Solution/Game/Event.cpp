@@ -2,11 +2,11 @@
 #include "Action.h"
 #include "Event.h"
 
-Event::Event(const CU::GrowingArray<Action*>& someActions)
-	: myActions(someActions)
+Event::Event(const std::string& aName, const CU::GrowingArray<Action*>& someActions)
+	: myName(aName)
+	, myActions(someActions)
 {
 }
-
 
 Event::~Event()
 {
