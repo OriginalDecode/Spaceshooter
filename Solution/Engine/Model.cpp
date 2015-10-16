@@ -1,7 +1,6 @@
 #include "stdafx.h"
 
 #include <d3dx11effect.h>
-#include "GeometryGenerator.h"
 #include "Effect.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -450,68 +449,6 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 	surf.SetIndexStart(0);
 	surf.SetIndexCount(myVerticeIndices.Size());
 	surf.SetTexture("DiffuseTexture", "Data/Resource/Texture/Debug/T_debug_seafloor.dds", true);
-
-	mySurfaces.Add(new Surface(surf));
-
-	myIsNULLObject = false;
-}
-
-void Prism::Model::InitGeometry(const MeshData& aMeshData)
-{
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_geometry.fx");
-	
-	if (myEffect == nullptr)
-	{
-		DL_MESSAGE_BOX("Failed to GetEffect", "InitGeometry", MB_ICONWARNING);
-	}
-
-	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	
-	D3DX11_PASS_DESC passDesc;
-	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), 
-			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "InitGeometry", MB_ICONWARNING);
-	}
-
-	CU::GrowingArray<VertexPosNormColor> vertices;
-	vertices.Init(aMeshData.myVertices.Size());
-	for (int i = 0; i < aMeshData.myVertices.Size(); ++i)
-	{
-		VertexPosNormColor vertex;
-		vertex.myPos = aMeshData.myVertices[i].myPosition;
-		vertex.myNorm = aMeshData.myVertices[i].myNormal;
-		vertex.myColor = aMeshData.myVertices[i].myColor;
-	
-		vertices.Add(vertex);
-	}
-	
-	for (int i = 0; i < aMeshData.myIndices.Size(); ++i)
-	{
-		myVerticeIndices.Add(aMeshData.myIndices[i]);
-	}
-	
-	InitVertexBaseData(vertices.Size(), VertexType::POS_NORM_COLOR, sizeof(VertexPosNormColor), 
-			reinterpret_cast<char*>(&vertices[0]));
-	InitIndexBaseData(DXGI_FORMAT_R32_UINT, myVerticeIndices.Size(), reinterpret_cast<char*>(&myVerticeIndices[0]));
-
-	InitVertexBuffer();
-	InitIndexBuffer();
-
-	Surface surf;
-	surf.SetEffect(myEffect);
-	surf.SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	surf.SetVertexStart(0);
-	surf.SetVertexCount(myVertices.Size());
-	surf.SetIndexStart(0);
-	surf.SetIndexCount(myVerticeIndices.Size());
 
 	mySurfaces.Add(new Surface(surf));
 

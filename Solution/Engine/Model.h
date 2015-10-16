@@ -34,7 +34,6 @@ namespace Prism
 				, CU::Vector4f aColour = { 1.f, 1.f, 1.f, 1.f });
 
 		void AddChild(Model* aChild);
-		void InitGeometry(const MeshData& aMeshData);
 
 		Effect* GetEffect();
 		void SetEffect(Effect* aEffect);

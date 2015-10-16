@@ -173,7 +173,6 @@
     <ClCompile Include="FontContainer.cpp" />
     <ClCompile Include="FrameTimeDebugger.cpp" />
     <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="GraphRenderer.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -218,7 +217,6 @@
     <ClInclude Include="FontContainer.h" />
     <ClInclude Include="FrameTimeDebugger.h" />
     <ClInclude Include="Frustum.h" />
-    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="GraphRenderer.h" />
     <ClInclude Include="IndexBufferWrapper.h" />
     <ClInclude Include="Instance.h" />

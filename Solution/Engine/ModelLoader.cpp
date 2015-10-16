@@ -92,14 +92,6 @@ namespace Prism
 					myNonFXBModels.Add(model);
 					break;
 				}
-				case Prism::ModelLoader::eLoadType::GEOMETRY:
-				{
-					model = new Prism::Model();
-					model->InitGeometry(loadArray[i].myMeshData);
-
-					myNonFXBModels.Add(model);
-					break;
-				}
 				default:
 					DL_ASSERT("ModelLoader tried to load something that dint have a specified LoadType!!!");
 					break;
@@ -256,35 +248,6 @@ namespace Prism
 #endif	
 	}
 
-	ModelProxy* ModelLoader::LoadGeometry(const MeshData& aMeshData)
-	{
-#ifdef THREADED_LOADING
-		WaitUntilAddIsAllowed();
-
-		myCanCopyArray = false;
-		ModelProxy* proxy = new ModelProxy();
-
-		LoadData newData;
-		newData.myProxy = proxy;
-		newData.myLoadType = eLoadType::GEOMETRY;
-		newData.myMeshData = aMeshData;
-
-		myModelsToLoad.Add(newData);
-
-		myCanCopyArray = true;
-
-		return proxy;
-#else
-		ModelProxy* proxy = new ModelProxy();
-		Model* model = new Prism::Model();
-		model->InitGeometry(aMeshData);
-
-		proxy->SetModel(model);
-
-		return proxy;
-#endif
-		
-	}
 
 	void ModelLoader::WaitUntilCopyIsAllowed()
 	{
