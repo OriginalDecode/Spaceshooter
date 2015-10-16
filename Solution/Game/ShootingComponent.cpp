@@ -111,27 +111,9 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	newWeapon.myType = aWeapon.myType;
 	newWeapon.myMultiplier = 1;
 
-	if (aWeapon.myBulletType == "machinegun")
-	{
-		newWeapon.myBulletType = eBulletType::MACHINGUN_BULLET;
-	}
-	else if (aWeapon.myBulletType == "sniper")
-	{
-		newWeapon.myBulletType = eBulletType::SNIPER_BULLET;
-	}
-	else if (aWeapon.myBulletType == "plasma")
-	{
-		newWeapon.myBulletType = eBulletType::PLASMA_BULLET;
-	}
-	else if (aWeapon.myBulletType == "shotgun")
-	{
-		newWeapon.myBulletType = eBulletType::SHOTGUN_BULLET;
-	}
-	else if (aWeapon.myBulletType == "rocket")
-	{
-		newWeapon.myBulletType = eBulletType::ROCKET_MISSILE;
-	}
-	else
+	newWeapon.myBulletType = ConvertToBulletEnum(aWeapon.myBulletType);
+
+	if (newWeapon.myBulletType == eBulletType::COUNT)
 	{
 		std::string errorMessage = "[ShootingComponent] No bullet with name " + aWeapon.myBulletType;
 		DL_ASSERT(errorMessage.c_str());

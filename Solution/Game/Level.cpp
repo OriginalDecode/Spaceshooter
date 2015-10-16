@@ -445,11 +445,9 @@ void Level::LoadPlayer()
 		, "Data/Resource/Shader/S_effect_no_texture.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("sniperGun"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("plasmaGun"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("shotgun"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("rocket"));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun1"));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("shotgun1"));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("rocket1"));
 	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();

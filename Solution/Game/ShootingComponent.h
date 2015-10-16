@@ -67,3 +67,44 @@ inline void ShootingComponent::ActivateEMP()
 {
 	myHasEMP = true;
 }
+
+inline eBulletType ConvertToBulletEnum(const std::string& aString)
+{
+	if (aString == "machinegun1")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_1;
+	}
+	else if (aString == "machinegun2")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_2;
+	}
+	else if (aString == "machinegun3")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_3;
+	}
+	else if (aString == "shotgun1")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_1;
+	}
+	else if (aString == "shotgun2")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_2;
+	}
+	else if (aString == "shotgun3")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_3;
+	}
+	else if (aString == "rocket1")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_1;
+	}
+	else if (aString == "rocket2")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_2;
+	}
+	else if (aString == "rocket3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	return eBulletType::COUNT;
+}

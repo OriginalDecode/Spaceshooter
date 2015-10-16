@@ -15,6 +15,7 @@
 #include "PhysicsComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
+#include "ShootingComponent.h"
 
 BulletManager::BulletManager(CollisionManager& aCollisionManager, Prism::Scene& aScene)
 	: myInstances(8)
@@ -121,27 +122,9 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 		bulletData->myEnemyBullets.Add(newEntity);
 	}
 
-	if (projectileDataType.myType == "machinegun")
-	{
-		bulletData->myType = eBulletType::MACHINGUN_BULLET;
-	}
-	else if (projectileDataType.myType == "sniper")
-	{
-		bulletData->myType = eBulletType::SNIPER_BULLET;
-	}
-	else if (projectileDataType.myType == "plasma")
-	{
-		bulletData->myType = eBulletType::PLASMA_BULLET;
-	}
-	else if (projectileDataType.myType == "shotgun")
-	{
-		bulletData->myType = eBulletType::SHOTGUN_BULLET;
-	}
-	else if (projectileDataType.myType == "rocket")
-	{
-		bulletData->myType = eBulletType::ROCKET_MISSILE;
-	}
-	else
+	bulletData->myType = ConvertToBulletEnum(projectileDataType.myType);
+
+	if (bulletData->myType == eBulletType::COUNT)
 	{
 		std::string errorMessage = "[BulletManager] No bullet with name " + projectileDataType.myType;
 		DL_ASSERT(errorMessage.c_str());
