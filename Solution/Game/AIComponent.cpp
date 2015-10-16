@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "AIComponent.h"
 #include "Constants.h"
+#include "EnemyKilledMessage.h"
 #include <Engine.h>
 #include "Entity.h"
 #include "PhysicsComponent.h"
+#include "PostMaster.h"
 #include <sstream>
 #include <Vector.h>
 
@@ -12,7 +14,11 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myPhysicsComponent(nullptr)
 	, myAvoidanceDistance(300.f)
 {
+}
 
+AIComponent::~AIComponent()
+{
+	PostMaster::GetInstance()->SendMessage<EnemyKilledMessage>(EnemyKilledMessage());
 }
 
 void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName

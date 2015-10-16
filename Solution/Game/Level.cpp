@@ -129,7 +129,6 @@ Level::~Level()
 {
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	delete myCamera;
-	delete myScene;
 	myEntities.DeleteAll();
 
 	delete mySkySphere;
@@ -144,6 +143,7 @@ Level::~Level()
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
 
+	delete myScene;
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
 }
 

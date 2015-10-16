@@ -4,7 +4,10 @@
 Component::Component(Entity& aEntity)
 	: myEntity(aEntity)
 {
+}
 
+Component::~Component()
+{
 }
 
 void Component::Init()
