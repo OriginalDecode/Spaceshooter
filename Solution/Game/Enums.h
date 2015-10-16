@@ -42,6 +42,7 @@ enum class ePowerUpType
 	FIRERATEBOOST,
 	SHIELDBOOST,
 	HEALTHKIT,
+	WEAPON_UPGRADE,
 	EMP
 };
 

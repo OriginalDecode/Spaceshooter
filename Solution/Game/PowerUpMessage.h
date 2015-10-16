@@ -4,19 +4,34 @@
 class PowerUpMessage : public Message
 {
 public:
-	PowerUpMessage(CU::Vector3<float> aPos, float aRadius, float aTime);
+	PowerUpMessage(ePowerUpType aType, CU::Vector3<float> aPos, float aRadius, float aTime);
+	PowerUpMessage(ePowerUpType aType, std::string anUpgrade);
 
+	ePowerUpType GetPowerupType() const;
+	std::string GetUprgade() const;
 	CU::Vector3<float> GetPosition() const;
 	float GetRadius() const;
 	float GetTime() const;
 
 private:
+	ePowerUpType myPowerupType;
+	std::string myUpgrade;
 	CU::Vector3<float> myPosition;
 	float myRadius;
 
 	float myDamage;
 	float myTime;
 };
+
+inline ePowerUpType PowerUpMessage::GetPowerupType() const
+{
+	return myPowerupType;
+}
+
+inline std::string PowerUpMessage::GetUprgade() const
+{
+	return myUpgrade;
+}
 
 inline CU::Vector3<float> PowerUpMessage::GetPosition() const
 {

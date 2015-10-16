@@ -74,7 +74,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 	}
 	else
 	{
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myEntity.myOrientation.GetPos(), 200.f, 5.f));
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), 200.f, 5.f));
 		myHasEMP = false;
 	}
 }

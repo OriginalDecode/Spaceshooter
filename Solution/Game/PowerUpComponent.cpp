@@ -8,7 +8,9 @@
 #include <Instance.h>
 #include "GUINote.h"
 #include "GraphicsComponent.h"
+#include "PostMaster.h"
 #include "PowerUpComponent.h"
+#include "PowerUpMessage.h"
 #include "PowerUpNote.h"
 
 PowerUpComponent::PowerUpComponent(Entity& aEntity)
@@ -18,6 +20,7 @@ PowerUpComponent::PowerUpComponent(Entity& aEntity)
 	, myShieldStrength(0)
 	, myHealthRecover(0)
 	, myFireRateMultiplier(0)
+	, myUpgradeName("")
 {
 }
 
@@ -37,11 +40,24 @@ void PowerUpComponent::Init(ePowerUpType someType, float someDuration)
 	myDuration = someDuration;
 }
 
+void PowerUpComponent::Init(ePowerUpType someType, std::string aUpgradeName)
+{
+	myType = someType;
+	myUpgradeName = aUpgradeName;
+}
+
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 {
-	PowerUpNote note(myType, myDuration, myShieldStrength, myHealthRecover, myFireRateMultiplier);
+	if (myType == ePowerUpType::WEAPON_UPGRADE)
+	{
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName));
+	}
+	else
+	{
+		PowerUpNote note(myType, myDuration, myShieldStrength, myHealthRecover, myFireRateMultiplier);
+		aNote.myEntity.SendNote(note);
+	}
 
-	aNote.myEntity.SendNote(note);
 	aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 	myEntity.Kill();
 }

@@ -342,6 +342,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myHealthToRecover = 0;
 	aEntityToAddTo.myFireRateMultiplier = 1;
 	aEntityToAddTo.myIsEMP = false;
+	aEntityToAddTo.myUpgradeName = "";
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 
 	for (tinyxml2::XMLElement* e = aPowerUpComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
@@ -369,6 +370,10 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 			int firerate = 0;
 			aDocument.ForceReadAttribute(e, "value", firerate);
 			aEntityToAddTo.myFireRateMultiplier = firerate;
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("WeaponUpgrade").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "EntityName", aEntityToAddTo.myUpgradeName);
 		}
 	}
 }
@@ -458,13 +463,16 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	{
 		aTargetEntity->AddComponent<PowerUpComponent>();
 		
+		if (it->second.myUpgradeName != "")
+		{
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myUpgradeName);
+		}
+		else
+		{
 		aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
 			, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
-
+		}
 	}
-
-
-
 
 	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());
 }

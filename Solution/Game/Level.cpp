@@ -30,6 +30,7 @@
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
+#include "PowerUpMessage.h"
 #include "PropComponent.h"
 #include <Scene.h>
 #include "ShieldComponent.h"
@@ -45,6 +46,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	, mySkySphere(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 	myScene = new Prism::Scene();
 	myWeaponFactory = new WeaponFactory();
 	myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
@@ -134,6 +136,7 @@ Level::~Level()
 	{ }
 
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	delete myCamera;
 	myEntities.DeleteAll();
 
@@ -378,6 +381,10 @@ void Level::ReadXML(const std::string& aFile)
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}
+		else if (powerType == "weaponUpgrade")
+		{
+			newEntity->SetPowerUp(ePowerUpType::WEAPON_UPGRADE);
+		}
 		else if (powerType == "emp")
 		{
 			newEntity->SetPowerUp(ePowerUpType::EMP);
@@ -437,6 +444,14 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	myEntities.Add(newEntity);
 
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
+}
+
+void Level::ReceiveMessage(const PowerUpMessage& aMessage)
+{
+	if (aMessage.GetPowerupType() == ePowerUpType::WEAPON_UPGRADE)
+	{
+		myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()));
+	}
 }
 
 void Level::LoadPlayer()
