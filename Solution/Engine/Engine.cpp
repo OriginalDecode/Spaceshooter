@@ -96,6 +96,11 @@ namespace Prism
 		}
 		myDebugTexts.RemoveAll();
 		myDirectX->Present(0, 0);
+
+#ifdef RELEASE_BUILD
+		myClearColor = { 0.f, 0.f, 0.f, 1.f };
+#endif
+
 		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, myClearColor.myA };
 		myDirectX->Clear(clearColor);
 
