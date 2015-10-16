@@ -7,6 +7,7 @@
 #include "ColoursForBG.h"
 #include "Constants.h"
 #include <DebugDataDisplay.h>
+#include <Engine.h>
 #include <FileWatcher.h>
 #include <Font.h>
 #include "GameStateMessage.h"
@@ -14,6 +15,7 @@
 #include <InputWrapper.h>
 #include "Level.h"
 #include "MessageState.h"
+#include <ModelLoader.h>
 #include "PostMaster.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
@@ -49,8 +51,9 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
 	BEGIN_TIME_BLOCK("InGameState::Update");
 
-	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
+	if ((myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true))
 	{
+		Prism::Engine::GetInstance()->ShutdownThreadedLoading();
 		return eStateStatus::ePopMainState;
 	}
 	else if (myInputWrapper->KeyDown(DIK_R))
