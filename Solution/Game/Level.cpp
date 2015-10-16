@@ -73,9 +73,9 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 
 	ReadXML(aFileName);
 
-	//Entity* cube = new Entity(eEntityType::PROP, *myScene, "this is a cube");
-	//cube->AddComponent<GraphicsComponent>()->Init("Data/resources/model/Primitives/cube.fbx"
-	//	, "Data/effect/NoTextureEffect.fx");
+	//Entity* cube = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::DYNAMIC, "this is a cube");
+	//cube->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Primitive/cube.fbx"
+	//	, "Data/Resource/Shader/S_effect_no_texture.fx");
 	//cube->myOrientation.SetPos({ 300.f, 300.f, 300.f, 1.f });
 	//cube->Update(1.f / 30.f);
 	//myEntities.Add(cube);
@@ -94,7 +94,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 		}
 	}
 
-	myMissionManager->Init();
+	
 	myScene->SetCamera(myCamera);
 
 	for (int i = 0; i < myDirectionalLights.Size(); ++i)
@@ -121,6 +121,8 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 			myScene->AddInstance(gfxComp->GetInstance());
 		}
 	}
+
+	myMissionManager->Init();
 	myRenderStuff = true;
 }
 
@@ -168,13 +170,6 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		if (myEntities[i]->GetAlive() == false)
 		{
-			GraphicsComponent* gfxComp = myEntities[i]->GetComponent<GraphicsComponent>();
-
-			if (gfxComp != nullptr)
-			{
-				myScene->RemoveInstance(gfxComp->GetInstance());
-			}
-
 			myEntities.DeleteCyclicAtIndex(i);
 			continue;
 		}
