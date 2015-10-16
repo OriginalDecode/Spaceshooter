@@ -14,13 +14,16 @@
 namespace Prism
 {
 	ModelLoader::ModelLoader()
-		: myModelsToLoad(4)
-		, myNonFXBModels(4)
+		: myNonFXBModels(4)
 		, myIsRunning(true)
 		, myCanAddToLoadArray(true)
 		, myCanCopyArray(true)
 		, myModelFactory(new FBXFactory())
 	{
+		myBuffers[0].Init(512);
+		myBuffers[1].Init(512);
+		myActiveBuffer = 0;
+		myInactiveBuffer = 1;
 	}
 
 	ModelLoader::~ModelLoader()
@@ -38,21 +41,24 @@ namespace Prism
 			WaitUntilCopyIsAllowed();
 			myCanAddToLoadArray = false;
 
-			if (myModelsToLoad.Size() == 0)
+			if (myBuffers[myInactiveBuffer].Size() == 0)
 			{
 				myCanAddToLoadArray = true;
 				std::this_thread::yield();
 				continue;
 			}
 
-			CU::GrowingArray<LoadData> loadArray;
-			loadArray = myModelsToLoad;
-			myModelsToLoad.RemoveAll();
-			myCanAddToLoadArray = true;
-			
+			int oldInactive = myInactiveBuffer;
+			myInactiveBuffer = myActiveBuffer;
+			myActiveBuffer = oldInactive;
+			myBuffers[myInactiveBuffer].RemoveAll();
 
+			myCanAddToLoadArray = true;
+
+			CU::GrowingArray<LoadData>& loadArray = myBuffers[myActiveBuffer];
 			for (int i = 0; i < loadArray.Size(); ++i)
 			{
+				
 				eLoadType loadType = loadArray[i].myLoadType;
 
 				Model* model = nullptr;
@@ -63,7 +69,6 @@ namespace Prism
 					
 					model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
 						Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
-					model->Init();
 					
 					break;
 				}
@@ -129,7 +134,7 @@ namespace Prism
 		newData.myModelPath = aModelPath;
 		newData.myEffectPath = aEffectPath;
 
-		myModelsToLoad.Add(newData);
+		myBuffers[myInactiveBuffer].Add(newData);
 
 		myCanCopyArray = true;
 
@@ -169,7 +174,7 @@ namespace Prism
 		newData.myLoadType = eLoadType::POLYGON;
 
 
-		myModelsToLoad.Add(newData);
+		myBuffers[myInactiveBuffer].Add(newData);
 
 		myCanCopyArray = true;
 
@@ -200,7 +205,7 @@ namespace Prism
 		newData.myLoadType = eLoadType::CUBE;
 		newData.mySize = { aWidth, aHeight, aDepth };
 
-		myModelsToLoad.Add(newData);
+		myBuffers[myInactiveBuffer].Add(newData);
 
 		myCanCopyArray = true;
 
@@ -232,7 +237,7 @@ namespace Prism
 		newData.mySize = { aWidth, aHeight, aDepth };
 		newData.myColor = aColour;
 
-		myModelsToLoad.Add(newData);
+		myBuffers[myInactiveBuffer].Add(newData);
 
 		myCanCopyArray = true;
 

@@ -46,7 +46,9 @@ namespace Prism
 		void WaitUntilCopyIsAllowed();
 		void WaitUntilAddIsAllowed();
 
-		CU::GrowingArray<LoadData> myModelsToLoad;
+		CU::GrowingArray<LoadData> myBuffers[2];
+		int myActiveBuffer;
+		int myInactiveBuffer;
 		volatile bool myCanAddToLoadArray;
 		volatile bool myCanCopyArray;
 		volatile bool myIsRunning;
