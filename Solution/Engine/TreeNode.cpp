@@ -11,13 +11,17 @@
 std::stringstream ss;
 std::stringstream ss2;
 std::stringstream ss3;
+std::stringstream ss4;
+std::stringstream ss5;
 int totalTreeNodes = 0;
 int maxNumOfDynamic = 0;
 int maxDynamicDepth = 0;
 int maxDynamicHalfWidth = 0;
+int totalDynamicObjects = 0;
 int maxNumOfStatic = 0;
 int maxStaticDepth = 0;
 int maxStaticHalfWidth = 0;
+int totalStaticObjects = 0;
 #endif
 
 Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth, TreeNode* aParent
@@ -58,7 +62,12 @@ void Prism::TreeNode::Update()
 			InsertObjectDown(object);
 		}
 	}
-	
+
+#ifdef SHOW_OCTREE_DEBUG
+	totalStaticObjects += myObjectsStatic.Size();
+	totalDynamicObjects += myObjectsDynamic.Size();
+#endif
+
 	for (int i = 0; i < 8; ++i)
 	{
 		if (myChildren[i] != nullptr)
@@ -92,21 +101,35 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 #ifdef SHOW_OCTREE_DEBUG
 	if (myDepth == 0)
 	{
+		if (totalDynamicObjects < 7)
+		{
+			int apa = 5;
+		}
 		ss << "Total: " << totalTreeNodes;
 		ss2 << "Max Dynamic: " << maxNumOfDynamic << " depth: " << maxDynamicDepth << " halfWidth: " << maxDynamicHalfWidth;
 		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth << " halfWidth: " << maxStaticHalfWidth;
+		ss4 << "Total Dynamic: " << totalDynamicObjects;
+		ss5 << "Total Static: " << totalStaticObjects;
 		Engine::GetInstance()->PrintDebugText(ss.str(), { 700.f, -700.f });
 		Engine::GetInstance()->PrintDebugText(ss2.str(), { 700.f, -730.f });
 		Engine::GetInstance()->PrintDebugText(ss3.str(), { 700.f, -760.f });
+		Engine::GetInstance()->PrintDebugText(ss4.str(), { 700.f, -790.f });
+		Engine::GetInstance()->PrintDebugText(ss5.str(), { 700.f, -820.f });
 		ss.clear();
 		ss.str(std::string());
 		ss2.clear();
 		ss2.str(std::string());
 		ss3.clear();
 		ss3.str(std::string());
+		ss4.clear();
+		ss4.str(std::string());
+		ss5.clear();
+		ss5.str(std::string());
 		totalTreeNodes = 0;
 		maxNumOfDynamic = 0;
 		maxNumOfStatic = 0;
+		totalDynamicObjects = 0;
+		totalStaticObjects = 0;
 	}
 	++totalTreeNodes;
 	if (myObjectsDynamic.Size() > maxNumOfDynamic)
@@ -121,6 +144,7 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 		maxStaticDepth = myDepth;
 		maxStaticHalfWidth = myHalfWidth;
 	}
+
 #endif
 	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
 	{
