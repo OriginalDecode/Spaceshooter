@@ -148,6 +148,9 @@
     <ClCompile Include="MissionEventReader.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="Conversation.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -326,6 +329,9 @@
     </ClInclude>
     <ClInclude Include="MissionEventReader.h">
       <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="Conversation.h">
+      <Filter>Event\Action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
