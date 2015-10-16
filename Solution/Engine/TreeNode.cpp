@@ -228,6 +228,14 @@ void Prism::TreeNode::Modify(Instance* anObject, eModifyType aModifyType)
 			switch (aModifyType)
 			{
 			case eModifyType::INSERT:
+				for (int i = 0; i < myObjectsDynamic.Size(); ++i)
+				{
+					if (myObjectsDynamic[i] == anObject)
+					{
+						DL_ASSERT("Tried to add dynamic object twice into octree");
+					}
+				}
+
 				myObjectsDynamic.Add(anObject);
 				break;
 			case eModifyType::REMOVE:
@@ -240,6 +248,14 @@ void Prism::TreeNode::Modify(Instance* anObject, eModifyType aModifyType)
 			switch (aModifyType)
 			{
 			case eModifyType::INSERT:
+				for (int i = 0; i < myObjectsStatic.Size(); ++i)
+				{
+					if (myObjectsStatic[i] == anObject)
+					{
+						DL_ASSERT("Tried to add static object twice into octree");
+					}
+				}
+
 				myObjectsStatic.Add(anObject);
 				break;
 			case eModifyType::REMOVE:
