@@ -14,7 +14,9 @@ public:
 	SpawnEnemy(XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	~SpawnEnemy();
 
-	void Start() override;
+	void OnEnter() override;
+	bool OnExit() override;
+	bool Update() override;
 
 private:
 	SpawnEnemyMessage* myMessage;

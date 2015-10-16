@@ -11,10 +11,12 @@ public:
 	~Event();
 
 	void Start();
+	bool Update();
 
 private:
 	void operator=(Event&) = delete;
 	const std::string myName;
 	CU::GrowingArray<Action*> myActions;
+	int myIndex;
 };
 

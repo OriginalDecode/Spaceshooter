@@ -8,6 +8,7 @@
 #include <XMLReader.h>
 
 EventManager::EventManager(const std::string& aXmlPath)
+	: myActiveEvents(16)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::START_EVENT, this);
 	XMLReader reader;
@@ -56,6 +57,18 @@ void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
 	}
 	else
 	{
-		myEvents[eventName]->Start();
+		myActiveEvents.Add(myEvents[eventName]);
+		myActiveEvents.GetLast()->Start();
+	}
+}
+
+void EventManager::Update()
+{
+	for (int i = myActiveEvents.Size() - 1; i >= 0; --i)
+	{
+		if (myActiveEvents[i]->Update() == true)
+		{
+			myActiveEvents.RemoveCyclicAtIndex(i);
+		}
 	}
 }
