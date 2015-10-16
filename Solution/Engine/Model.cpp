@@ -20,7 +20,7 @@ Prism::Model::Model()
 	mySurfaces.Init(4);
 	myVertexFormat.Init(2);
 	myIsNULLObject = true;
-	myIsSkySphere = false;
+	myInited = false;
 
 	myVertexBuffer = nullptr;
 	myIndexBuffer = nullptr;
@@ -52,6 +52,8 @@ Prism::Model::~Model()
 
 void Prism::Model::Init()
 {
+	DL_ASSERT_EXP(myInited == false, "Tried to Init a model twice");
+
 	if (myIsNULLObject == false)
 	{
 		const int size = myVertexFormat.Size();
@@ -96,10 +98,14 @@ void Prism::Model::Init()
 	{
 		myChilds[i]->Init();
 	}
+
+	myInited = true;
 }
 
 void Prism::Model::InitPolygon()
 {
+	DL_ASSERT_EXP(myInited == false, "Tried to Init a model twice");
+
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_polygon.fx");
 
 	if (myEffect == nullptr)
@@ -151,10 +157,14 @@ void Prism::Model::InitPolygon()
 	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
+
+	myInited = true;
 }
 
 void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth)
 {
+	DL_ASSERT_EXP(myInited == false, "Tried to Init a model twice");
+
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_cube.fx");
 
 	if (myEffect == nullptr)
@@ -303,10 +313,13 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
+	myInited = true;
 }
 
 void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const float aDepth, CU::Vector4f aColour)
 {
+	DL_ASSERT_EXP(myInited == false, "Tried to Init a model twice");
+
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_cube_colored.fx");
 
 	if (myEffect == nullptr)
@@ -453,6 +466,8 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 	mySurfaces.Add(new Surface(surf));
 
 	myIsNULLObject = false;
+
+	myInited = true;
 }
 
 void Prism::Model::AddChild(Model* aChild)

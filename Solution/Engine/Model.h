@@ -55,7 +55,7 @@ namespace Prism
 		CU::GrowingArray<int> myVerticeIndices;
 		CU::GrowingArray<D3D11_INPUT_ELEMENT_DESC*> myVertexFormat;
 		bool myIsNULLObject;
-		bool myIsSkySphere;
+		bool myInited;
 
 		VertexIndexWrapper* myIndexBaseData;
 		IndexBufferWrapper* myIndexBuffer;
