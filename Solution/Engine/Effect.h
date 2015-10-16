@@ -22,6 +22,7 @@ namespace Prism
 	{
 	public:
 		Effect();
+		~Effect();
 
 		ID3DX11Effect* GetEffect();
 		ID3DX11EffectTechnique* GetTechnique();
