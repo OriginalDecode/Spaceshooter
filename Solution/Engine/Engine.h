@@ -44,6 +44,7 @@ namespace Prism
 		static void Destroy();
 		static Engine* GetInstance();
 		void Shutdown();
+		void ShutdownThreadedLoading();
 		void Render();
 		void OnResize(int aWidth, int aHeigth);
 

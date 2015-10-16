@@ -70,12 +70,17 @@ namespace Prism
 
 	void Engine::Shutdown()
 	{
-		myModelLoader->Shutdown();
-		myModelLoaderThread->join();
-
+		
 		myDirectX->CleanD3D();
 		delete myDirectX;
 		myDirectX = nullptr;
+	}
+
+	void Engine::ShutdownThreadedLoading()
+	{
+		myModelLoader->Shutdown();
+		myModelLoaderThread->join();
+
 	}
 
 	void Engine::Render()
