@@ -41,7 +41,6 @@ private:
 	CU::GrowingArray<WeaponData, int> myWeapons;
 
 	int myCurrentWeaponID;
-	CU::Vector3<float> mySpawningPointOffset;
 
 	bool myHasWeapon;
 	bool myHasEMP;
