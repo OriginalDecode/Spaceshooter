@@ -148,12 +148,13 @@
     <ClCompile Include="MissionEventReader.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
-    <ClCompile Include="Conversation.cpp">
-      <Filter>Event\Action</Filter>
-    </ClCompile>
     <ClCompile Include="ConversationMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="ConversationAction.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="ConversationManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -333,12 +334,13 @@
     <ClInclude Include="MissionEventReader.h">
       <Filter>Mission</Filter>
     </ClInclude>
-    <ClInclude Include="Conversation.h">
-      <Filter>Event\Action</Filter>
-    </ClInclude>
     <ClInclude Include="ConversationMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="ConversationAction.h">
+      <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="ConversationManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

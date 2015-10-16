@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "CommonHelper.h"
+#include "ConversationAction.h"
 #include "Event.h"
 #include "EventManager.h"
 #include "PostMaster.h"
@@ -30,6 +31,11 @@ EventManager::EventManager(const std::string& aXmlPath)
 			// move to spawnEnemy-class, then read pos, rot, scale.
 			actions.Add(new SpawnEnemy(reader, element));
 
+		}
+		tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "conversation");
+		if (element != nullptr)
+		{
+			//actions.Add(new ConversationAction(name));
 		}
 		myEvents[name] = new Event(name, actions);
 	}
