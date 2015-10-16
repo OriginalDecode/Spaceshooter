@@ -45,6 +45,7 @@ struct EntityData
 	float myMinTimeToNextDecision;
 	float myMaxTimeToNextDecision;
 	float myAIAvoidanceDistance;
+	eAITargetPositionMode myAITargetPositionMode = eAITargetPositionMode::NOT_USED;
 	float myWidth;
 
 	int myChanceToFollow;
