@@ -126,6 +126,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
     <ClInclude Include="Conversation.h" />
+    <ClInclude Include="ConversationMessage.h" />
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="MissionEventReader.h" />
@@ -195,6 +196,7 @@
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
     <ClCompile Include="Conversation.cpp" />
+    <ClCompile Include="ConversationMessage.cpp" />
     <ClCompile Include="EnemyKilledMessage.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
