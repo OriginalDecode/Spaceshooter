@@ -80,7 +80,7 @@ void Prism::Model::Init()
 			DL_MESSAGE_BOX("Model->Init(): Failed to CreateInputLayout", "Model->Init Error", MB_ICONWARNING);
 		}
 
-		delete vertexDesc;
+		delete[] vertexDesc;
 
 		if (InitVertexBuffer() == false)
 		{

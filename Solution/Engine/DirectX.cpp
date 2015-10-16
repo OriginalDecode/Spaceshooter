@@ -11,6 +11,14 @@ Prism::DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
 	D3DSetup();
 }
 
+Prism::DirectX::~DirectX()
+{
+	if (myDepthBuffer != nullptr)
+	{
+		myDepthBuffer->Release();
+	}
+}
+
 void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned int aFlags)
 {
 	mySwapChain->Present(aSyncInterval, aFlags);

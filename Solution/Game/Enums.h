@@ -7,6 +7,7 @@ enum class eMessageType
 	SPAWN_ENEMY,
 	START_EVENT,
 	ENEMY_KILLED,
+	POWER_UP
 };
 
 enum class eBulletType

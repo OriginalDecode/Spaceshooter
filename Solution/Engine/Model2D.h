@@ -24,7 +24,7 @@ namespace Prism
 		~Model2D();
 
 		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
-		void Render(const Camera& aCamera, const float aDrawX, const float aDrawY);
+		void Render(const float aDrawX, const float aDrawY);
 		void Rotate(float aRadian);
 
 		void SetSize(const CU::Vector2<float> aTextureSize);

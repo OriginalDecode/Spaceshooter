@@ -23,12 +23,22 @@ Prism::Model2D::Model2D()
 
 Prism::Model2D::~Model2D()
 {
-	myVertexBuffer->myVertexBuffer->Release();
-	myIndexBuffer->myIndexBuffer->Release();
+	if (myVertexBuffer != nullptr && myVertexBuffer->myVertexBuffer != nullptr)
+	{
+		myVertexBuffer->myVertexBuffer->Release();
+	}
+	delete myVertexBuffer;
+
+	if (myIndexBuffer != nullptr && myIndexBuffer->myIndexBuffer != nullptr)
+	{
+		myIndexBuffer->myIndexBuffer->Release();
+	}
+	delete myIndexBuffer;
 
 	delete myVertexBufferDesc;
 	delete myIndexBufferDesc;
 	delete myInitData;
+	delete mySurface;
 }
 
 void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
@@ -132,7 +142,7 @@ void Prism::Model2D::InitBlendState()
 	}
 }
 
-void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const float aDrawY)
+void Prism::Model2D::Render(const float aDrawX, const float aDrawY)
 {
 	if (aDrawX != myLastDrawX && aDrawY != myLastDrawY)
 	{
@@ -149,7 +159,7 @@ void Prism::Model2D::Render(const Camera& aCamera, const float aDrawX, const flo
 
 	myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetViewMatrix(myIdentityMatrix);
-	myEffect->SetProjectionMatrix(aCamera.GetOrthogonal());
+	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetWorldMatrix(myIdentityMatrix);
 
 	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);

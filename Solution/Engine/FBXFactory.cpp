@@ -23,6 +23,20 @@ Prism::FBXFactory::FBXFactory()
 	
 Prism::FBXFactory::~FBXFactory()
 {
+	for (unsigned int i = 0; i < myFBXData.size(); ++i)
+	{
+		delete myFBXData[i];
+		myFBXData[i] = nullptr;
+	}
+
+	for (auto it = myModels.begin(); it != myModels.end(); ++it)
+	{
+		delete it->second;
+		it->second = nullptr;
+	}
+
+	myModels.clear();
+
 	delete myLoader;
 }
 

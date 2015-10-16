@@ -8,6 +8,17 @@
 #include "Texture.h"
 #include "TextureContainer.h"
 
+Prism::EffectContainer::~EffectContainer()
+{
+	for (auto it = myEffects.begin(); it != myEffects.end(); ++it)
+	{
+		delete it->second;
+		it->second = nullptr;
+	}
+
+	myEffects.clear();
+}
+
 Prism::Effect* Prism::EffectContainer::GetEffect(const std::string& aFilePath)
 {
 	auto it = myEffects.find(aFilePath);

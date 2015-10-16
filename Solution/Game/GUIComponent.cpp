@@ -27,25 +27,28 @@ GUIComponent::GUIComponent(Entity& aEntity)
 {
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
-	myCrosshair->Init("Data/Resource/Texture/UI/T_crosshair_shooting.dds", { 256.f, 256.f }); // the size scales the pic
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
+	myCrosshair->Init("Data/Resource/Texture/UI/T_crosshair_shooting.dds", { 256.f, 256.f }); // the size scales the pic
 	myEnemyMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_enemy.dds", arrowAndMarkerSize);
 	myEnemyArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", arrowAndMarkerSize);
-	myWaypointMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds", arrowAndMarkerSize);
 	myWaypointArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_waypoint.dds", arrowAndMarkerSize);
-	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
+	myWaypointMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds", arrowAndMarkerSize);
 	myPowerUpArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_powerup.dds", arrowAndMarkerSize);
+	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
 }	 
 
 GUIComponent::~GUIComponent()
 {
+	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
 	delete myEnemyMarker;
 	delete myEnemyArrow;
-	delete myModel2DToRender;
 	delete myWaypointArrow;
 	delete myWaypointMarker;
+	delete myPowerUpArrow;
+	delete myPowerUpMarker;
+	delete myModel2DToRender;
 	myWaypointMarker = nullptr;
 	myWaypointArrow = nullptr;
 	mySteeringTarget = nullptr;
@@ -137,7 +140,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		{
 			Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
 		}
-		aCurrentModel->Render(*myCamera, newRenderPos.x, newRenderPos.y);
+		aCurrentModel->Render(newRenderPos.x, newRenderPos.y);
 	}
 }
 
@@ -148,10 +151,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
-	myReticle->Render(*myCamera, halfWidth, -halfHeight);
-	mySteeringTarget->Render(*myCamera, halfWidth + mySteeringTargetPosition.x
+	myReticle->Render(halfWidth, -halfHeight);
+	mySteeringTarget->Render(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
-	myCrosshair->Render(*myCamera, halfWidth, -(halfHeight));
+	myCrosshair->Render(halfWidth, -(halfHeight));
 
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);

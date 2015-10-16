@@ -19,7 +19,7 @@ public:
 	Menu(const std::string& aXMLPath);
 	~Menu();
 	
-	void Render(Prism::Camera* aCamera, CU::InputWrapper* anInputWrapper);
+	void Render(CU::InputWrapper* anInputWrapper);
 
 	void Update(CU::InputWrapper* anInputWrapper);
 

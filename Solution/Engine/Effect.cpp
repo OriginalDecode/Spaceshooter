@@ -12,6 +12,12 @@
 Prism::Effect::Effect()
 {
 	myEffectListeners.Init(2);
+	myEffect = nullptr;
+}
+
+Prism::Effect::~Effect()
+{
+	myEffect->Release();
 }
 
 bool Prism::Effect::Init(const std::string& aEffectFile)

@@ -8,6 +8,8 @@ namespace Prism
 	class EffectContainer
 	{
 	public:
+		~EffectContainer();
+
 		Effect* GetEffect(const std::string& aFilePath);
 
 		void Update(const float aDeltaTime);

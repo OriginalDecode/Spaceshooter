@@ -19,6 +19,7 @@ namespace Prism
 	{
 	public:
 		DirectX(HWND& aHwnd, SetupInfo& aSetupInfo);
+		~DirectX();
 
 		void Present(const unsigned int aSyncInterval, const unsigned int aFlags);
 		void Clear(const float aClearColor[4]);
