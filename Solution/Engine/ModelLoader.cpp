@@ -19,6 +19,7 @@ namespace Prism
 		, myCanAddToLoadArray(true)
 		, myCanCopyArray(true)
 		, myModelFactory(new FBXFactory())
+		, myIsLoading(false)
 	{
 		myBuffers[0].Init(512);
 		myBuffers[1].Init(512);
@@ -44,6 +45,7 @@ namespace Prism
 			if (myBuffers[myInactiveBuffer].Size() == 0)
 			{
 				myCanAddToLoadArray = true;
+				myIsLoading = false;
 				std::this_thread::yield();
 				continue;
 			}
@@ -54,11 +56,19 @@ namespace Prism
 			myBuffers[myInactiveBuffer].RemoveAll();
 
 			myCanAddToLoadArray = true;
+			myIsLoading = true;
 
 			CU::GrowingArray<LoadData>& loadArray = myBuffers[myActiveBuffer];
 			for (int i = 0; i < loadArray.Size(); ++i)
 			{
-				
+				//check in here aswell to allow early outs so we dont have to wait for 2-3 seconds to quit if
+				//we got a big load-array
+				if (myIsRunning == false)
+				{
+					myIsLoading = false;
+					return;
+				}
+
 				eLoadType loadType = loadArray[i].myLoadType;
 
 				Model* model = nullptr;
@@ -116,6 +126,11 @@ namespace Prism
 	void ModelLoader::Shutdown()
 	{
 		myIsRunning = false;
+	}
+
+	volatile bool ModelLoader::IsLoading() const
+	{
+		return myIsLoading;
 	}
 
 	ModelProxy* ModelLoader::LoadModel(const std::string& aModelPath, const std::string& aEffectPath)
