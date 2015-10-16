@@ -3,6 +3,7 @@
 #include "GraphicsComponent.h"
 #include "Entity.h"
 #include <Engine.h>
+#include <EngineEnums.h>
 #include <EffectContainer.h>
 #include <Instance.h>
 #include <Model.h>
@@ -19,7 +20,10 @@ GraphicsComponent::GraphicsComponent(Entity& aEntity)
 
 GraphicsComponent::~GraphicsComponent()
 {
-	myEntity.GetScene().RemoveInstance(myInstance);
+	if (myEntity.GetOctreeType() != Prism::eOctreeType::NOT_IN_OCTREE)
+	{
+		myEntity.GetScene().RemoveInstance(myInstance);
+	}
 	delete myInstance;
 	myInstance = nullptr;
 }

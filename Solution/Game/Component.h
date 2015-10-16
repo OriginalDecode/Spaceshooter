@@ -15,6 +15,7 @@ class Component
 {
 public:
 	Component(Entity& aEntity);
+	virtual ~Component();
 
 	virtual void Init();
 	virtual void Update(float aDeltaTime);

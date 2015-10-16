@@ -11,6 +11,10 @@ ControllerComponent::ControllerComponent(Entity& aEntity)
 	myTimeBeforeMovement = 0.f;
 }
 
+ControllerComponent::~ControllerComponent()
+{
+}
+
 void ControllerComponent::MoveUp(float aDistance)
 {
 	myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() 
