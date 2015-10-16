@@ -5,13 +5,14 @@
 class BulletMessage : public Message
 {
 public:
-	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, 
-		eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity);
+	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, 
+		const CU::Vector3<float>& aEnitityVelocity, const CU::Vector2<float>& anEntitySteering);
 
 	eBulletType GetBulletType() const;
 	eEntityType GetEntityType() const;
 	const CU::Matrix44<float>& GetOrientation() const;
 	const CU::Vector3<float>& GetEntityVelocity() const;
+	const CU::Vector2<float>& GetEntitySteering() const;
 
 private:
 	void operator=(BulletMessage&) = delete;
@@ -19,6 +20,7 @@ private:
 	const eBulletType myType;
 	const eEntityType myEntityType;
 	const CU::Vector3<float> myEntityVelocity;
+	const CU::Vector2<float> myEntitySteering;
 };
 
 inline eBulletType BulletMessage::GetBulletType() const
@@ -39,4 +41,9 @@ inline const CU::Matrix44<float>& BulletMessage::GetOrientation() const
 inline const CU::Vector3<float>& BulletMessage::GetEntityVelocity() const
 {
 	return myEntityVelocity;
+}
+
+inline const CU::Vector2<float>& BulletMessage::GetEntitySteering() const
+{
+	return myEntitySteering;
 }

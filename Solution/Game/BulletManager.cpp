@@ -53,7 +53,7 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetEntityVelocity());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetEntitySteering());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -152,7 +152,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
-	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity)
+	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, const CU::Vector2<float>&)
 {
 	Entity* bullet = nullptr;
 	if (aEntityType == eEntityType::PLAYER)
@@ -178,9 +178,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		}
 	}
 
+	CU::Matrix44<float> orientation = anOrientation;
+	//orientation.SetPos({ orientation.GetPos().x + anEntitySteering.x, orientation.GetPos().y + anEntitySteering.y, orientation.GetPos().z, 1 });
 
-	bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
-		(anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
+	bullet->GetComponent<PhysicsComponent>()->Init(orientation,
+		(orientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
 
