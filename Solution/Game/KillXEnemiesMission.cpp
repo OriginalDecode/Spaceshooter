@@ -2,15 +2,26 @@
 #include "Engine.h"
 #include "KillXEnemiesMission.h"
 #include "Level.h"
+#include "PostMaster.h"
+#include <sstream>
 #include "XMLReader.h"
 
 
 KillXEnemiesMission::KillXEnemiesMission(Level& aLevel, XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: Mission(aReader, aElement)
 	, myLevel(aLevel)
+	, myActive(false)
 {
 	tinyxml2::XMLElement* enemiesToKillElement = aReader.ForceFindFirstChild(aElement, "enemiestokill");
-	aReader.ForceReadAttribute(enemiesToKillElement, "value", myEnemiesToKill);
+	aReader.ForceReadAttribute(enemiesToKillElement, "value", myEnemiesToKillStart);
+}
+
+KillXEnemiesMission::~KillXEnemiesMission()
+{
+	if (myActive == true)
+	{
+		PostMaster::GetInstance()->UnSubscribe(eMessageType::ENEMY_KILLED, this);
+	}
 }
 
 bool KillXEnemiesMission::Update(float aDeltaTime)
@@ -18,14 +29,28 @@ bool KillXEnemiesMission::Update(float aDeltaTime)
 	aDeltaTime;
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
-	engine->PrintDebugText("Current mission: Kill all enemies!", { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
+	std::stringstream ss;
+	ss << "Current mission: Kill " << myEnemiesToKill << " enemies.";
+	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
 
 
-	return myEnemiesToKill > myLevel.GetEnemiesAlive();
+	return myEnemiesToKill <= 0;
 }
 
 void KillXEnemiesMission::Start()
 {
+	myActive = true;
+	myEnemiesToKill = myEnemiesToKillStart;
+	PostMaster::GetInstance()->Subscribe(eMessageType::ENEMY_KILLED, this);
+}
 
-	myStartEnemyCount = myLevel.GetEnemiesAlive();
+void KillXEnemiesMission::End()
+{
+	myActive = false;
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::ENEMY_KILLED, this);
+}
+
+void KillXEnemiesMission::ReceiveMessage(const EnemyKilledMessage& aMessage)
+{
+	--myEnemiesToKill;
 }
