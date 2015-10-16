@@ -198,6 +198,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
 	myMissionManager->Update(aDeltaTime);
+	myEventManager->Update();
 	myCamera->Update();
 	return myComplete;
 }

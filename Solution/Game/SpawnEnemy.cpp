@@ -37,13 +37,23 @@ SpawnEnemy::SpawnEnemy(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	myMessage = new SpawnEnemyMessage(type, position, rotation, scale);
 }
 
-
 SpawnEnemy::~SpawnEnemy()
 {
 	delete myMessage;
 }
 
-void SpawnEnemy::Start()
+void SpawnEnemy::OnEnter()
 {
 	PostMaster::GetInstance()->SendMessage(*myMessage);
+}
+
+
+bool SpawnEnemy::OnExit()
+{
+	return true;
+}
+
+bool SpawnEnemy::Update()
+{
+	return true;
 }

@@ -13,8 +13,9 @@ public:
 
 	void ReceiveMessage(const StartEventMessage& aMessage) override;
 	
-
+	void Update();
 private:
 	std::unordered_map<std::string, Event*> myEvents;
+	CU::GrowingArray<Event*> myActiveEvents;
 };
 

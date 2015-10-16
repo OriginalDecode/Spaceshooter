@@ -66,5 +66,7 @@ namespace Prism
 		CU::GrowingArray<Model*> myChilds;
 		CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 		CU::Matrix44f myOrientation;
+
+		std::string myFilePath;
 	};
 }
