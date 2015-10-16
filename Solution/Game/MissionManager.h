@@ -12,7 +12,6 @@ public:
 	~MissionManager();
 	void Init();
 	void Update(float aDeltaTime);
-
 private:
 	bool operator=(MissionManager&) = delete;
 
@@ -22,4 +21,3 @@ private:
 	CU::GrowingArray<Mission*> myMissions;
 	CU::GrowingArray<Mission*> myMissionsNotOrder;
 };
-

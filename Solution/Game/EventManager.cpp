@@ -8,7 +8,7 @@
 #include "StartEventMessage.h"
 #include <XMLReader.h>
 
-EventManager::EventManager(const std::string& aXmlPath)
+EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aConversationManager)
 	: myActiveEvents(16)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::START_EVENT, this);
@@ -35,7 +35,7 @@ EventManager::EventManager(const std::string& aXmlPath)
 		tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "conversation");
 		if (element != nullptr)
 		{
-			//actions.Add(new ConversationAction(name));
+			actions.Add(new ConversationAction(name, aConversationManager));
 		}
 		myEvents[name] = new Event(name, actions);
 	}
@@ -64,17 +64,22 @@ void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
 	else
 	{
 		myActiveEvents.Add(myEvents[eventName]);
-		myActiveEvents.GetLast()->Start();
+		if (myActiveEvents.Size() == 1)
+		{
+			myActiveEvents.GetLast()->Start();
+		}
 	}
 }
 
 void EventManager::Update()
 {
-	for (int i = myActiveEvents.Size() - 1; i >= 0; --i)
+	if (myActiveEvents.Size() > 0 && myActiveEvents[0]->Update() == true)
 	{
-		if (myActiveEvents[i]->Update() == true)
+		myActiveEvents.RemoveNonCyclicAtIndex(0);
+		
+		if (myActiveEvents.Size() > 0)
 		{
-			myActiveEvents.RemoveCyclicAtIndex(i);
+			myActiveEvents[0]->Start();
 		}
 	}
 }

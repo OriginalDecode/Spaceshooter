@@ -1,8 +1,9 @@
 #pragma once
 #include "Component.h"
 #include <GrowingArray.h>
+#include <string>
+#include "Subscriber.h"
 #include <Vector.h>
-
 
 namespace Prism
 {
@@ -10,7 +11,7 @@ namespace Prism
 	class Camera;
 }
 
-class GUIComponent : public Component
+class GUIComponent : public Component, public Subscriber
 {
 public:
 	GUIComponent(Entity& aEntity);
@@ -26,8 +27,10 @@ public:
 	void SetCamera(Prism::Camera* aCamera);
 
 	static eComponentType GetType();
-	void ReceiveNote(const MissionNote& aMessage) override;
+	void ReceiveNote(const MissionNote& aNote) override;
 	void ReceiveNote(const GUINote& aNote) override;
+
+	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	
 private:
 	Prism::Model2D* myReticle;
@@ -50,6 +53,8 @@ private:
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
+
+	std::string myConversation;
 };
 
 inline eComponentType GUIComponent::GetType()

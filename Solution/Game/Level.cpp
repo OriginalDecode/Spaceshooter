@@ -6,6 +6,7 @@
 #include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include "ConversationManager.h"
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
 #include <Engine.h>
@@ -43,6 +44,13 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
 	, myComplete(false)
 	, mySkySphere(nullptr)
+	, myEntityFactory(nullptr)
+	, myWeaponFactory(nullptr)
+	, myBulletManager(nullptr)
+	, myCollisionManager(nullptr)
+	, myMissionManager(nullptr)
+	, myEventManager(nullptr)
+	, myConversationManager(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	myScene = new Prism::Scene();
@@ -144,6 +152,7 @@ Level::~Level()
 	delete myCollisionManager;
 	delete myMissionManager;
 	delete myEventManager;
+	delete myConversationManager;
 
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
@@ -268,12 +277,15 @@ void Level::ReadXML(const std::string& aFile)
 	std::string cubeMap;
 	std::string missionXML;
 	std::string eventXML;
+	std::string conversationXML;
 
-	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "missionxml"), "source", missionXML);
-	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "eventxml"), "source", eventXML);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "missionxml"), "source", missionXML);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "eventxml"), "source", eventXML);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "conversationxml"), "source", conversationXML);
 
+	myConversationManager = new ConversationManager(conversationXML);
 	myMissionManager = new MissionManager(*this, *myPlayer, missionXML);
-	myEventManager = new EventManager(eventXML);
+	myEventManager = new EventManager(eventXML, *myConversationManager);
 
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);

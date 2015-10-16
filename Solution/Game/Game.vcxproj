@@ -125,6 +125,7 @@
     <ClInclude Include="CollisionComponent.h" />
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CollisionNote.h" />
+    <ClInclude Include="Conversation.h" />
     <ClInclude Include="ConversationAction.h" />
     <ClInclude Include="ConversationManager.h" />
     <ClInclude Include="ConversationMessage.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="ControllerComponent.cpp" />
+    <ClCompile Include="Conversation.cpp" />
     <ClCompile Include="ConversationAction.cpp" />
     <ClCompile Include="ConversationManager.cpp" />
     <ClCompile Include="ConversationMessage.cpp" />
