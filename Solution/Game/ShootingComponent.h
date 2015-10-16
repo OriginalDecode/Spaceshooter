@@ -36,6 +36,8 @@ public:
 
 	void SetCurrentWeaponID(int anID);
 
+	void ActivateEMP(); // test function
+
 private:
 
 	CU::GrowingArray<WeaponData, int> myWeapons;
@@ -59,4 +61,9 @@ inline void ShootingComponent::SetCurrentWeaponID(int anID)
 	{
 		myCurrentWeaponID = myWeapons.Size() - 1;
 	}
+}
+
+inline void ShootingComponent::ActivateEMP()
+{
+	myHasEMP = true;
 }
