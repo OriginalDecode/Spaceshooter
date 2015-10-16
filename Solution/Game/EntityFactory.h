@@ -53,7 +53,10 @@ struct EntityData
 	int myLife;
 	int myDamage;
 
+	bool myIsEMP;
+
 	float myDuration;
+	float myEMPDuration;
 	int myShieldStrength;
 	int myHealthToRecover; 
 	int myFireRateMultiplier;

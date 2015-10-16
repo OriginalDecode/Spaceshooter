@@ -337,6 +337,11 @@ void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& 
 
 void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent)
 {
+	aEntityToAddTo.myDuration = 0.f;
+	aEntityToAddTo.myShieldStrength = 0;
+	aEntityToAddTo.myHealthToRecover = 0;
+	aEntityToAddTo.myFireRateMultiplier = 1;
+	aEntityToAddTo.myIsEMP = false;
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 
 	for (tinyxml2::XMLElement* e = aPowerUpComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
@@ -347,25 +352,24 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 			aDocument.ForceReadAttribute(e, "value", duration);
 			aEntityToAddTo.myDuration = duration;
 		}
-		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ShieldStrength").c_str()) == 0)
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ShieldStrength").c_str()) == 0)
 		{
 			int shield = 0;
 			aDocument.ForceReadAttribute(e, "value", shield);
 			aEntityToAddTo.myShieldStrength = shield;
 		}
-		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthToRecover").c_str()) == 0)
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthToRecover").c_str()) == 0)
 		{
-			float health = 0;
+			int health = 0;
 			aDocument.ForceReadAttribute(e, "value", health);
-			aEntityToAddTo.myHealthToRecover = static_cast<int>(health);
+			aEntityToAddTo.myHealthToRecover = health;
 		}
-		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("FireRateMultiplier").c_str()) == 0)
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("FireRateMultiplier").c_str()) == 0)
 		{
-			float firerate = 0;
+			int firerate = 0;
 			aDocument.ForceReadAttribute(e, "value", firerate);
-			aEntityToAddTo.myFireRateMultiplier = static_cast<int>(firerate);
+			aEntityToAddTo.myFireRateMultiplier = firerate;
 		}
-
 	}
 }
 
