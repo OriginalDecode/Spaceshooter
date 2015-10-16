@@ -129,8 +129,6 @@ bool Game::Update()
 	myStateStack.RenderCurrentState();
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
-	myLevelFactory->DeleteOldLevel();
-
 	return true;
 }
 
