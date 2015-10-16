@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "XMLReader.h"
-
+#include "CommonHelper.h"
 
 XMLReader::XMLReader()
 {
@@ -44,67 +44,67 @@ void XMLReader::OpenDocument(const std::string& aFilePath)
 		switch (error)
 		{
 		case tinyxml2::XML_NO_ATTRIBUTE:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_NO_ATTRIBUTE", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_NO_ATTRIBUTE", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_WRONG_ATTRIBUTE_TYPE:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_WRONG_ATTRIBUTE_TYPE", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_WRONG_ATTRIBUTE_TYPE", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_FILE_NOT_FOUND:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_FILE_NOT_FOUND", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_FILE_NOT_FOUND", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_FILE_COULD_NOT_BE_OPENED:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_FILE_COULD_NOT_BE_OPENED", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_FILE_COULD_NOT_BE_OPENED", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_FILE_READ_ERROR:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_FILE_READ_ERROR", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_FILE_READ_ERROR", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_ELEMENT_MISMATCH:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_ELEMENT_MISMATCH", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_ELEMENT_MISMATCH", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_ELEMENT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_ELEMENT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_ELEMENT", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_ATTRIBUTE:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_ATTRIBUTE", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_ATTRIBUTE", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_IDENTIFYING_TAG:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_IDENTIFYING_TAG", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_IDENTIFYING_TAG", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_TEXT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_TEXT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_TEXT", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_CDATA:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_CDATA", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_CDATA", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_COMMENT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_COMMENT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_COMMENT", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_DECLARATION:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_DECLARATION", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_DECLARATION", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING_UNKNOWN:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_UNKNOWN", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING_UNKNOWN", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_EMPTY_DOCUMENT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_EMPTY_DOCUMENT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_EMPTY_DOCUMENT", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_MISMATCHED_ELEMENT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_MISMATCHED_ELEMENT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_MISMATCHED_ELEMENT", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_PARSING:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_PARSING", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_CAN_NOT_CONVERT_TEXT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_CAN_NOT_CONVERT_TEXT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_CAN_NOT_CONVERT_TEXT", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_NO_TEXT_NODE:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_NO_TEXT_NODE", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_NO_TEXT_NODE", aFilePath.c_str()));
 			break;
 		case tinyxml2::XML_ERROR_COUNT:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: XML_ERROR_COUNT", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: XML_ERROR_COUNT", aFilePath.c_str()));
 			break;
 		default:
-			DL_DEBUG("Failed to Open XML File. File: %s, Error: Unknown, non of tinyxml's error codes caught it :(", aFilePath.c_str());
+			DL_ASSERT(CU::Concatenate("Failed to Open XML File. File: %s, Error: Unknown, non of tinyxml's error codes caught it :(", aFilePath.c_str()));
 			break;
 		}
 #pragma endregion
@@ -371,8 +371,7 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 		return true;
 	}
 
-	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
-	DL_ASSERT("Failed to [ForceReadAttribute(string)], check DebugLog for more info");
+	DL_ASSERT(CU::Concatenate("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str()));
 	return false;
 }
 
@@ -387,8 +386,7 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 		&& aElementToReadFrom->QueryIntAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
-	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
-	DL_ASSERT("Failed to [ForceReadAttribute(int)], check DebugLog for more info");
+	DL_ASSERT(CU::Concatenate("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str()));
 	return false;
 }
 
@@ -403,8 +401,7 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 		&& aElementToReadFrom->QueryFloatAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
-	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
-	DL_ASSERT("Failed to [ForceReadAttribute(float)], check DebugLog for more info");
+	DL_ASSERT(CU::Concatenate("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str()));
 	return false;
 }
 
@@ -419,8 +416,7 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 		&& aElementToReadFrom->QueryDoubleAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
-	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
-	DL_ASSERT("Failed to [ForceReadAttribute(double)], check DebugLog for more info");
+	DL_ASSERT(CU::Concatenate("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str()));
 	return false;
 }
 
@@ -435,8 +431,7 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 		&& aElementToReadFrom->QueryBoolAttribute(aAttributeToRead.c_str(), &aTargetVariable) == tinyxml2::XML_NO_ERROR)
 		return true;
 
-	DL_DEBUG("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str());
-	DL_ASSERT("Failed to [ForceReadAttribute(bool)], check DebugLog for more info");
+	DL_ASSERT(CU::Concatenate("Failed to read Attribute: [ %s ], from Element: [ %s ], in Document: [ %s ]", aAttributeToRead.c_str(), aElementToReadFrom->Name(), myFilePath.c_str()));
 	return false;
 }
 
@@ -451,8 +446,7 @@ void XMLReader::DebugFirstChild(const std::string& aChildName)
 {
 	if (myDoc->FirstChildElement(aChildName.c_str()) == nullptr)
 	{
-		DL_DEBUG("Failed to [ForceFindFirstChild]. Parent: [ Document ], Child: [ %s ], File: [ %s ]", aChildName.c_str(), myFilePath.c_str());
-		DL_ASSERT("Failed to [ForceFindFirstChild], check DebugLog for more info");
+		DL_ASSERT(CU::Concatenate("Failed to [ForceFindFirstChild]. Parent: [ Document ], Child: [ %s ], File: [ %s ]", aChildName.c_str(), myFilePath.c_str()));
 	}
 }
 
@@ -460,8 +454,7 @@ void XMLReader::DebugFirstChild(tinyxml2::XMLElement* aParent) const
 {
 	if (aParent->FirstChildElement() == nullptr)
 	{
-		DL_DEBUG("Failed to [ForceFindFirstChild]. Parent: [ %s ], Child: [ First ], File:  [ %s ]", aParent->Name(), myFilePath.c_str());
-		DL_ASSERT("Failed to [ForceFindFirstChild], check DebugLog for more info");
+		DL_ASSERT(CU::Concatenate("Failed to [ForceFindFirstChild]. Parent: [ %s ], Child: [ First ], File:  [ %s ]", aParent->Name(), myFilePath.c_str()));
 	}
 }
 
@@ -469,8 +462,7 @@ void XMLReader::DebugFirstChild(tinyxml2::XMLElement* aParent, const std::string
 {
 	if (aParent->FirstChildElement(aChildName.c_str()) == nullptr)
 	{
-		DL_DEBUG("Failed to [ForceFindFirstChild]. Parent: [ %s ], Child: [ %s ], File: [ %s ]", aParent->Name(), aChildName.c_str(), myFilePath.c_str());
-		DL_ASSERT("Failed to [ForceFindFirstChild], check DebugLog for more info");
+		DL_ASSERT(CU::Concatenate("Failed to [ForceFindFirstChild]. Parent: [ %s ], Child: [ %s ], File: [ %s ]", aParent->Name(), aChildName.c_str(), myFilePath.c_str()));
 	}
 }
 
@@ -478,8 +470,7 @@ void XMLReader::DebugNextElement(const std::string& aChildName)
 {
 	if (myDoc->NextSiblingElement(aChildName.c_str()) == nullptr)
 	{
-		DL_DEBUG("Failed to [ForceFindNextElement]. Parent: [ Document ], Child: [ %s ], File: [ %s ]", aChildName.c_str(), myFilePath.c_str());
-		DL_ASSERT("Failed to [ForceFindNextElement], check DebugLog for more info");
+		DL_ASSERT(CU::Concatenate("Failed to [ForceFindNextElement]. Parent: [ Document ], Child: [ %s ], File: [ %s ]", aChildName.c_str(), myFilePath.c_str()));
 	}
 }
 
@@ -487,8 +478,7 @@ void XMLReader::DebugNextElement(tinyxml2::XMLElement* aParent) const
 {
 	if (aParent->NextSiblingElement() == nullptr)
 	{
-		DL_DEBUG("Failed to [ForceFindNextElement]. Parent: [ %s ], Child: [ First ], File: [ %s ]", aParent->Name(), myFilePath.c_str());
-		DL_ASSERT("Failed to [ForceFindNextElement], check DebugLog for more info");
+		DL_ASSERT(CU::Concatenate("Failed to [ForceFindNextElement]. Parent: [ %s ], Child: [ First ], File: [ %s ]", aParent->Name(), myFilePath.c_str()));
 	}
 }
 
@@ -496,7 +486,6 @@ void XMLReader::DebugNextElement(tinyxml2::XMLElement* aParent, const std::strin
 {
 	if (aParent->NextSiblingElement(aChildName.c_str()) == nullptr)
 	{
-		DL_DEBUG("Failed to [ForceFindNextElement]. Parent: [ %s ], Child: [ %s ], File: [ %s ]", aParent->Name(), aChildName.c_str(), myFilePath.c_str());
-		DL_ASSERT("Failed to [ForceFindNextElement], check DebugLog for more info");
+		DL_ASSERT(CU::Concatenate("Failed to [ForceFindNextElement]. Parent: [ %s ], Child: [ %s ], File: [ %s ]", aParent->Name(), aChildName.c_str(), myFilePath.c_str()));
 	}
 }

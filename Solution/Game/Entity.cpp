@@ -1,7 +1,9 @@
 #include "stdafx.h"
 
 #include "Component.h"
+#include "EnemyKilledMessage.h"
 #include "Entity.h"
+#include "PostMaster.h"
 
 Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName)
 	: myAlive(true)
@@ -19,6 +21,10 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 
 Entity::~Entity()
 {
+	if (myType == eEntityType::ENEMY)
+	{
+		PostMaster::GetInstance()->SendMessage<EnemyKilledMessage>(EnemyKilledMessage());
+	}
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
 		delete myComponents[i];
