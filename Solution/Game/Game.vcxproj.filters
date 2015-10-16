@@ -106,16 +106,7 @@
     <ClCompile Include="PropComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="Action.cpp">
-      <Filter>Event</Filter>
-    </ClCompile>
     <ClCompile Include="Event.cpp">
-      <Filter>Event</Filter>
-    </ClCompile>
-    <ClCompile Include="SpawnEnemy.cpp">
-      <Filter>Event</Filter>
-    </ClCompile>
-    <ClCompile Include="EventFactory.cpp">
       <Filter>Event</Filter>
     </ClCompile>
     <ClCompile Include="EventManager.cpp">
@@ -147,6 +138,15 @@
     </ClCompile>
     <ClCompile Include="EnemyKilledMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnEnemy.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="MissionEventReader.cpp">
+      <Filter>Mission</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,16 +285,7 @@
     <ClInclude Include="PropComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="Action.h">
-      <Filter>Event</Filter>
-    </ClInclude>
     <ClInclude Include="Event.h">
-      <Filter>Event</Filter>
-    </ClInclude>
-    <ClInclude Include="SpawnEnemy.h">
-      <Filter>Event</Filter>
-    </ClInclude>
-    <ClInclude Include="EventFactory.h">
       <Filter>Event</Filter>
     </ClInclude>
     <ClInclude Include="EventManager.h">
@@ -327,6 +318,15 @@
     <ClInclude Include="EnemyKilledMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="Action.h">
+      <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnEnemy.h">
+      <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionEventReader.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -355,6 +355,9 @@
     </Filter>
     <Filter Include="Event">
       <UniqueIdentifier>{9ffede5b-fc08-46a7-b508-df709188fac9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event\Action">
+      <UniqueIdentifier>{aeca4f79-9430-4590-967c-c06a81c14d9e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

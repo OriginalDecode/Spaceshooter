@@ -127,7 +127,7 @@
     <ClInclude Include="CollisionNote.h" />
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="EventFactory.h" />
+    <ClInclude Include="MissionEventReader.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="GUINote.h" />
     <ClInclude Include="KillAllAbortMission.h" />
@@ -197,7 +197,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Event.cpp" />
-    <ClCompile Include="EventFactory.cpp" />
+    <ClCompile Include="MissionEventReader.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameStateMessage.cpp" />

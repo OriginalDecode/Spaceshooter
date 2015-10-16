@@ -1,9 +1,9 @@
 #include "stdafx.h"
-#include "EventFactory.h"
+#include "MissionEventReader.h"
 #include <string>
 #include <XMLReader.h>
 
-void EventFactory::ReadEventNames(XMLReader& aNamesReader, tinyxml2::XMLElement* aNamesElement
+void MissionEventReader::ReadEventNames(XMLReader& aNamesReader, tinyxml2::XMLElement* aNamesElement
 	, CU::GrowingArray<std::string>& someStartEventsOut)
 {
 	for (tinyxml2::XMLElement* element = aNamesReader.FindFirstChild(aNamesElement, "event"); element != nullptr;
@@ -19,7 +19,4 @@ void EventFactory::ReadEventNames(XMLReader& aNamesReader, tinyxml2::XMLElement*
 			someStartEventsOut.Add(name);
 		}
 	}
-
-
-
 }
