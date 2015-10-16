@@ -450,7 +450,7 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 {
 	if (aMessage.GetPowerupType() == ePowerUpType::WEAPON_UPGRADE)
 	{
-		myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()));
+		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
 	}
 }
 

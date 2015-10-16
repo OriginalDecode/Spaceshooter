@@ -40,17 +40,18 @@ void PowerUpComponent::Init(ePowerUpType someType, float someDuration)
 	myDuration = someDuration;
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, std::string aUpgradeName)
+void PowerUpComponent::Init(ePowerUpType someType, std::string aUpgradeName, int anUpgradeID)
 {
 	myType = someType;
 	myUpgradeName = aUpgradeName;
+	myUpgradeID = anUpgradeID;
 }
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 {
 	if (myType == ePowerUpType::WEAPON_UPGRADE)
 	{
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName));
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName, myUpgradeID));
 	}
 	else
 	{

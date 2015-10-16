@@ -8,7 +8,7 @@ public:
 	void Init(ePowerUpType someType, float someDuration, int someShieldStrength
 		, int someHealthRecover, int someFireRateMultiplier);
 	void Init(ePowerUpType someType, float someDuration);
-	void Init(ePowerUpType someType, std::string aUpgradeName);
+	void Init(ePowerUpType someType, std::string aUpgradeName, int anUpgradeID);
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
@@ -24,6 +24,7 @@ private:
 	int myShieldStrength;
 	int myHealthRecover;
 	int myFireRateMultiplier;
+	int myUpgradeID;
 	Entity* myPlayer;
 
 };

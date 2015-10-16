@@ -340,6 +340,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myDuration = 0.f;
 	aEntityToAddTo.myShieldStrength = 0;
 	aEntityToAddTo.myHealthToRecover = 0;
+	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myFireRateMultiplier = 1;
 	aEntityToAddTo.myIsEMP = false;
 	aEntityToAddTo.myUpgradeName = "";
@@ -373,7 +374,8 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("WeaponUpgrade").c_str()) == 0)
 		{
-			aDocument.ForceReadAttribute(e, "EntityName", aEntityToAddTo.myUpgradeName);
+			aDocument.ForceReadAttribute(e, "entityName", aEntityToAddTo.myUpgradeName);
+			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
 		}
 	}
 }
@@ -465,7 +467,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		
 		if (it->second.myUpgradeName != "")
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myUpgradeName);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myUpgradeName, it->second.myUpgradeID);
 		}
 		else
 		{

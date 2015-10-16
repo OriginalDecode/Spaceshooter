@@ -62,6 +62,7 @@ struct EntityData
 	int myFireRateMultiplier;
 	ePowerUpType myPowerUpType;
 	std::string myUpgradeName;
+	int myUpgradeID;
 
 	eEntityDataGraphicsType myGraphicsType;
 	Prism::eOctreeType myType;
