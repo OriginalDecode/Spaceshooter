@@ -129,6 +129,10 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 
 Level::~Level()
 {
+	Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
+	while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
+	{ }
+
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	delete myCamera;
 	myEntities.DeleteAll();

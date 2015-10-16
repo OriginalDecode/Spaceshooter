@@ -9,7 +9,6 @@
 LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, const bool& aCanWinGame)
 	: myInputWrapper(anInputWrapper)
 	, myCurrentLevel(nullptr)
-	, myOldLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
 	, myCanWinGame(aCanWinGame)
@@ -38,7 +37,7 @@ Level* LevelFactory::LoadLevel(const int& anID)
 
 Level* LevelFactory::ReloadLevel()
 {
-	myOldLevel = myCurrentLevel;
+	delete myCurrentLevel;
 	myCurrentLevel = new Level(myLevelPaths[myCurrentID], myInputWrapper);
 	return myCurrentLevel;
 }
@@ -62,12 +61,6 @@ Level* LevelFactory::LoadNextLevel()
 	WATCH_FILE(myLevelPaths[myCurrentID], LevelFactory::LoadLevelFromXML);
 
 	return ReloadLevel();
-}
-
-void LevelFactory::DeleteOldLevel()
-{
-	delete myOldLevel;
-	myOldLevel = nullptr;
 }
 
 bool LevelFactory::IsLastLevel() const
