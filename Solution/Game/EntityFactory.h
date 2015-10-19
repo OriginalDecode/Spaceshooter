@@ -56,6 +56,7 @@ struct EntityData
 
 	bool myIsEMP;
 
+	float myEMPRadius;
 	float myDuration;
 	float myEMPDuration;
 	int myShieldStrength;

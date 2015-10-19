@@ -22,6 +22,8 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, Component(aEntity)
 	, myHasWeapon(false)
 	, myHasEMP(false)
+	, myEMPRadius(0.f)
+	, myEMPDuration(0.f)
 {
 }
 
@@ -42,44 +44,42 @@ void ShootingComponent::Update(float aDeltaTime)
 
 void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 {
-	if (myHasEMP == false)
+	if (myHasEMP == false && myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 	{
-		if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
+		for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; ++i)
 		{
-			for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; i++)
+			CU::Matrix44<float> orientation = myEntity.myOrientation;
+			orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+				+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
+
+			if (myWeapons[myCurrentWeaponID].mySpread > 0)
 			{
-				CU::Matrix44<float> orientation = myEntity.myOrientation;
-				orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-					+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
+				float max = float(myWeapons[myCurrentWeaponID].mySpread);
+				float min = float(-myWeapons[myCurrentWeaponID].mySpread);
 
-				if (myWeapons[myCurrentWeaponID].mySpread > 0)
-				{
-					float max = float(myWeapons[myCurrentWeaponID].mySpread);
-					float min = float(-myWeapons[myCurrentWeaponID].mySpread);
+				float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
+				float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
 
-					float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
-					float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
+				CU::Matrix44<float> rotation;
+				rotation.myMatrix[8] = randomSpreadX;
+				rotation.myMatrix[9] = randomSpreadY;
 
-					CU::Matrix44<float> rotation;
-					rotation.myMatrix[8] = randomSpreadX;
-					rotation.myMatrix[9] = randomSpreadY;
-
-					CU::Vector4<float> pos = orientation.GetPos();
-					orientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
-					orientation = rotation * orientation;
-					orientation.SetPos(pos);
-				}
-
-				PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-					, myEntity.GetType(), aShootNote.myEnitityVelocity, aShootNote.myEnititySteering));
-				myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
+				CU::Vector4<float> pos = orientation.GetPos();
+				orientation = rotation * orientation;
+				orientation.SetPos(pos);
 			}
+
+			PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
+				, myEntity.GetType(), aShootNote.myEnitityVelocity, aShootNote.myEnititySteering));
+			myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 		}
 	}
 	else
 	{
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), 200.f, 5.f));
 		myHasEMP = false;
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), myEMPRadius, myEMPDuration));
+		myEMPRadius = 0.f;
+		myEMPDuration = 0.f;
 	}
 }
 
@@ -99,6 +99,8 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	}
 	else if (aNote.myType == ePowerUpType::EMP)
 	{
+		myEMPRadius = aNote.myRadius;
+		myEMPDuration = aNote.myDuration;
 		myHasEMP = true;
 	}
 }
@@ -153,5 +155,5 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 	}
 
 	myWeapons[aWeaponID].myID = aWeaponID;
-	myCurrentWeaponID = myWeapons[aWeaponID].myID;
+	myCurrentWeaponID = aWeaponID;
 }

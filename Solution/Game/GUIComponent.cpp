@@ -2,6 +2,7 @@
 #include <Camera.h>
 #include "Constants.h"
 #include "ConversationMessage.h"
+#include "Entity.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
 #include "MissionNote.h"
@@ -66,6 +67,7 @@ GUIComponent::~GUIComponent()
 void GUIComponent::Init(float aMaxDistanceToEnemies)
 {
 	myMaxDistanceToEnemies = aMaxDistanceToEnemies;
+	myEnemiesTarget = &GetEntity();
 }
 
 void GUIComponent::Update(float aDeltaTime)
@@ -160,6 +162,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	mySteeringTarget->Render(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
 	myCrosshair->Render(halfWidth, -(halfHeight));
+
 
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);
