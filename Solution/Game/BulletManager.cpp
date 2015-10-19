@@ -84,8 +84,18 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 	std::string projectileLoaderType;
 	XMLReader rootDocument;
 	rootDocument.OpenDocument(aProjectilePath);
-	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("Projectile");
-	rootDocument.ForceReadAttribute(rootElement, "type", projectileLoaderType);
+	tinyxml2::XMLElement* projectileElement;
+	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
+	if (rootElement == nullptr) 
+	{
+		projectileElement = rootDocument.FindFirstChild("Projectile");
+	}
+	else
+	{
+		projectileElement = rootDocument.FindFirstChild(rootElement, "Projectile");
+	}
+	
+	rootDocument.ForceReadAttribute(projectileElement, "type", projectileLoaderType);
 	rootDocument.CloseDocument();
 
 	BulletData* bulletData = new BulletData;
