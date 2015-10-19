@@ -18,9 +18,9 @@ namespace Prism
 		myLiveParticles = 0;
 
 
-		int particleSize = myEmitterData.myEmissionLifeTime / myEmitterData.myEmissionRate;
+		int particleCount = static_cast<int>(myEmitterData.myEmissionLifeTime / myEmitterData.myEmissionRate) + 1;
 
-		myParticles.Init(particleSize);
+		myParticles.Init(particleCount);
 		myEmissionTime = myEmitterData.myEmissionRate;
 
 		for (int i = 0; i < myParticles.GetCapacity(); ++i)
