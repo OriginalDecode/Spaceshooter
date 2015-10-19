@@ -1070,58 +1070,59 @@ CU::Matrix44<float> CreateMatrix(FbxAMatrix& aOriention)
 
 float GetAnimationTime(FbxNode* aNode, FbxAnimLayer* aCurrentAnimLayer)
 {
+	aCurrentAnimLayer;
 	FbxTimeSpan span;
 	aNode->GetAnimationInterval(span);
 	return float(span.GetStop().GetSecondDouble());
-	double time = 0.0f;
-	FbxAnimCurve* translationX = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* translationY = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* translationZ = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-	if (translationX && translationX->KeyGetCount() > 0)
-	{
-		time = max(time, translationX->KeyGet(translationX->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	if (translationY && translationY->KeyGetCount() > 0)
-	{
-		time = max(time, translationY->KeyGet(translationY->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	if (translationZ && translationZ->KeyGetCount() > 0)
-	{
-		time = max(time, translationZ->KeyGet(translationZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
+	//double time = 0.0f;
+	//FbxAnimCurve* translationX = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* translationY = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* translationZ = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (translationX && translationX->KeyGetCount() > 0)
+	//{
+	//	time = max(time, translationX->KeyGet(translationX->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (translationY && translationY->KeyGetCount() > 0)
+	//{
+	//	time = max(time, translationY->KeyGet(translationY->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (translationZ && translationZ->KeyGetCount() > 0)
+	//{
+	//	time = max(time, translationZ->KeyGet(translationZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
 
-	FbxAnimCurve* rotationX = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* rotationY = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* rotationZ = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-	if (rotationX && rotationX->KeyGetCount() > 0)
-	{
-		time = max(time, rotationX->KeyGet(rotationX->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	if (rotationY && rotationY->KeyGetCount() > 0)
-	{
-		time = max(time, rotationY->KeyGet(rotationY->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	if (rotationZ && rotationZ->KeyGetCount() > 0)
-	{
-		time = max(time, rotationZ->KeyGet(rotationZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
+	//FbxAnimCurve* rotationX = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* rotationY = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* rotationZ = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (rotationX && rotationX->KeyGetCount() > 0)
+	//{
+	//	time = max(time, rotationX->KeyGet(rotationX->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (rotationY && rotationY->KeyGetCount() > 0)
+	//{
+	//	time = max(time, rotationY->KeyGet(rotationY->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (rotationZ && rotationZ->KeyGetCount() > 0)
+	//{
+	//	time = max(time, rotationZ->KeyGet(rotationZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
 
-	FbxAnimCurve* scaleX = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* scaleY = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* scaleZ = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
-	if (scaleX && scaleX->KeyGetCount() > 0)
-	{
-		time = max(time, scaleX->KeyGet(scaleX->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	if (scaleY && scaleY->KeyGetCount() > 0)
-	{
-		time = max(time, scaleY->KeyGet(scaleY->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	if (scaleZ && scaleZ->KeyGetCount() > 0)
-	{
-		time = max(time, scaleZ->KeyGet(scaleZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
-	}
-	return (float)time;
+	//FbxAnimCurve* scaleX = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* scaleY = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* scaleZ = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (scaleX && scaleX->KeyGetCount() > 0)
+	//{
+	//	time = max(time, scaleX->KeyGet(scaleX->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (scaleY && scaleY->KeyGetCount() > 0)
+	//{
+	//	time = max(time, scaleY->KeyGet(scaleY->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (scaleZ && scaleZ->KeyGetCount() > 0)
+	//{
+	//	time = max(time, scaleZ->KeyGet(scaleZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//return (float)time;
 }
 
 CU::Matrix44<float> GetAnimationMatrix(FbxNode* aNode, FbxAnimLayer* aCurrentAnimLayer, float aTime, CU::Matrix44<float>& offsetMatrix)
