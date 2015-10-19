@@ -160,6 +160,9 @@
     <ClCompile Include="DefendMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="DefendMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -356,6 +359,9 @@
     </ClInclude>
     <ClInclude Include="DefendMission.h">
       <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="DefendMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

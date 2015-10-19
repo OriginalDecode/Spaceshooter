@@ -7,6 +7,7 @@
 #include <Vector.h>
 #include <Matrix44.h>
 #include <Matrix33.h>
+#include "../LodStructs.h"
 
 #define FBXLoaderArray CU::GrowingArray
 
@@ -156,6 +157,9 @@ public:
 		myCamera = nullptr;
 	}
 
+	Prism::LodGroup* CreateLodGroup(){ myLodGroup = new Prism::LodGroup(); return myLodGroup; }
+
+	Prism::LodGroup* myLodGroup;
 	ModelData* myData;
 	LoaderLight* myLight;
 	LoaderCamera* myCamera;

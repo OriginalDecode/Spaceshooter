@@ -221,6 +221,9 @@
     <ClInclude Include="EmitterInstance.h">
       <Filter>Rendering\Particle</Filter>
     </ClInclude>
+    <ClInclude Include="LodStructs.h">
+      <Filter>FBX</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
