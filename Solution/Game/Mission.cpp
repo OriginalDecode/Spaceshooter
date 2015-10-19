@@ -8,8 +8,9 @@
 Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
 	, myStartEventNames(4)
+	, myEndEventNames(4)
 {
-	MissionEventReader::ReadEventNames(aReader, aElement, myStartEventNames);
+	MissionEventReader::ReadEventNames(aReader, aElement, myStartEventNames, myEndEventNames);
 }
 
 
@@ -36,7 +37,10 @@ void Mission::End()
 
 void Mission::EventsEnd()
 {
-
+	for (int i = 0; i < myEndEventNames.Size(); ++i)
+	{
+		PostMaster::GetInstance()->SendMessage(StartEventMessage(myEndEventNames[i]));
+	}
 }
 
 int Mission::GetIndex() const
