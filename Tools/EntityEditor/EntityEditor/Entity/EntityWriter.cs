@@ -20,9 +20,7 @@ namespace EntityEditor.Entity
             myEntityData = aEntityData;
             myEntityList = aEntityList;
 
-            int lastSlash = myFilePath.LastIndexOf("\\");
-            string entityListPath = myFilePath.Substring(0, lastSlash);
-            entityListPath += "\\EntityList.xml";
+            string entityListPath = "Data/Script/LI_list_entity.xml";
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;

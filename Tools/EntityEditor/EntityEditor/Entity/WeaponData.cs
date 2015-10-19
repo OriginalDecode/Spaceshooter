@@ -13,6 +13,8 @@ namespace EntityEditor.Entity
         public string myEntityType;
         public int myMaxAmount;
         public float mySpeed;
+
+        public string myFilePath;
     }
 
     public struct BulletListXml
@@ -25,8 +27,11 @@ namespace EntityEditor.Entity
         public float myCooldown;
         public Vector3<float> myPosition;
         public int mySpread;
+        public int myNumberOfBulletsPerShot;
         public string myBulletType;
         public string myType;
+
+        public string myFilePath;
     }
 
     public struct WeaponListXml
