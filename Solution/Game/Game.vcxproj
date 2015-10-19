@@ -129,6 +129,7 @@
     <ClInclude Include="ConversationAction.h" />
     <ClInclude Include="ConversationManager.h" />
     <ClInclude Include="ConversationMessage.h" />
+    <ClInclude Include="DefendMission.h" />
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueueEmptyMessage.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="ConversationAction.cpp" />
     <ClCompile Include="ConversationManager.cpp" />
     <ClCompile Include="ConversationMessage.cpp" />
+    <ClCompile Include="DefendMission.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Event.cpp" />
