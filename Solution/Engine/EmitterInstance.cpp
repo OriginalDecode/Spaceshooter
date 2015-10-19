@@ -2,6 +2,7 @@
 #include "Camera.h"
 #include <d3dx11effect.h>
 #include "EmitterInstance.h"
+#include <MathHelper.h>
 #include "VertexBufferWrapper.h"
 namespace Prism
 {
@@ -11,13 +12,25 @@ namespace Prism
 		myVertexWrapper = nullptr;
 	}
 
-	void EmitterInstance::Initiate(EmitterData& someData)
+	void EmitterInstance::Initiate(EmitterData someData)
 	{
-		myData = someData;
-		myParticles.Init(myData.myMaxSize);
-		EmittParticle();
+		myEmitterData = someData;
+		myLiveParticles = 0;
 
-		myEmissionTime = myData.myEmissionRate;
+
+		int particleSize = myEmitterData.myEmissionLifeTime / myEmitterData.myEmissionRate;
+
+		myParticles.Init(particleSize);
+		myEmissionTime = myEmitterData.myEmissionRate;
+
+		for (int i = 0; i < myParticles.GetCapacity(); ++i)
+		{
+			ParticleInstance tempParticle;
+			myParticles.Add(tempParticle);
+		}
+
+		myOrientation.SetPos(CU::Vector3f(0.0f, 0.0f, 5.0f));
+
 		CreateVertexBuffer();
 	}
 
@@ -25,25 +38,29 @@ namespace Prism
 	{
 		UpdateVertexBuffer();
 
-		myData.myEffect->SetWorldMatrix(myOrientation);
-		myData.myEffect->SetViewMatrix(aCamera->GetOrientation());
-		myData.myEffect->SetProjectionMatrix(aCamera->GetProjection());
+		myEmitterData.myEffect->SetTexture(
+			Engine::GetInstance()->GetTextureContainer()->GetTexture(myEmitterData.myTextureName.c_str()));
 
-		Engine::GetInstance()->GetContex()->IASetInputLayout(myData.myInputLayout);
+		
+		myEmitterData.myEffect->SetWorldMatrix(myOrientation);
+		myEmitterData.myEffect->SetViewMatrix(CU::InverseSimple(aCamera->GetOrientation()));
+		myEmitterData.myEffect->SetProjectionMatrix(aCamera->GetProjection());
+
+		Engine::GetInstance()->GetContex()->IASetInputLayout(myEmitterData.myInputLayout);
 		Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 		Engine::GetInstance()->GetContex()->IASetVertexBuffers(
-			  myVertexWrapper->myStartSlot
+			myVertexWrapper->myStartSlot
 			, myVertexWrapper->myNumberOfBuffers
 			, &myVertexWrapper->myVertexBuffer
 			, &myVertexWrapper->myStride
 			, &myVertexWrapper->myByteOffset);
 
 		D3DX11_TECHNIQUE_DESC techDesc;
-		myData.myEffect->GetTechnique()->GetDesc(&techDesc);
+		myEmitterData.myEffect->GetTechnique()->GetDesc(&techDesc);
 
 		for (UINT i = 0; i < techDesc.Passes; ++i)
 		{
-			myData.myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, Engine::GetInstance()->GetContex());
+			myEmitterData.myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, Engine::GetInstance()->GetContex());
 			Engine::GetInstance()->GetContex()->Draw(myParticles.Size(), 0);
 		}
 	}
@@ -71,20 +88,22 @@ namespace Prism
 		vertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		vertexBufferDesc.MiscFlags = 0;
 		vertexBufferDesc.StructureByteStride = 0;
-		
+
 		if (myVertexWrapper->myVertexBuffer != nullptr)
 		{
 			myVertexWrapper->myVertexBuffer->Release();
 		}
 
-		
+		vertexBufferDesc.ByteWidth = sizeof(ParticleInstance) * myEmitterData.myMaxParticleAmount;
+
 		D3D11_SUBRESOURCE_DATA vertexData;
 		ZeroMemory(&vertexData, sizeof(vertexData));
-		
+
 		vertexData.pSysMem = reinterpret_cast<char*>(&myParticles[0]);
 
-		hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData, &myVertexWrapper->myVertexBuffer);
-		DL_ASSERT_EXP(FAILED(hr), "[EmitterInstance](CreateVertexBuffer) : Failed to create VertexBuffer");
+		hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexData
+			, &myVertexWrapper->myVertexBuffer);
+		DL_ASSERT_EXP(hr == S_OK, "[EmitterInstance](CreateVertexBuffer) : Failed to create VertexBuffer");
 
 	}
 
@@ -99,8 +118,8 @@ namespace Prism
 
 			if (mappedResource.pData != nullptr)
 			{
-				ParticleData *data = reinterpret_cast<ParticleData*>(mappedResource.pData);
-				memcpy(data, &myParticles[0], sizeof(ParticleData)* myParticles.GetCapacity());
+				ParticleInstance *data = reinterpret_cast<ParticleInstance*>(mappedResource.pData);
+				memcpy(data, &myParticles[0], sizeof(ParticleInstance)* myParticles.GetCapacity());
 			}
 
 			Engine::GetInstance()->GetContex()->Unmap(myVertexWrapper->myVertexBuffer, 0);
@@ -111,22 +130,74 @@ namespace Prism
 	void EmitterInstance::UpdateEmitter(float aDeltaTime)
 	{
 		myEmissionTime -= aDeltaTime;
+
+		UpdateParticle(aDeltaTime);
+
 		if (myEmissionTime <= 0)
 		{
 			EmittParticle();
-			myEmissionTime = myData.myEmissionRate;
+			myEmissionTime = myEmitterData.myEmissionRate;
 		}
-		UpdateParticle(aDeltaTime);
+
+
 	}
-	
+
 	void EmitterInstance::UpdateParticle(float aDeltaTime)
 	{
-		aDeltaTime;
+		if (myLiveParticles == myParticles.Size() - 1)
+		{
+			myLiveParticles = 0;
+		}
+
+		for (int i = 0; i < myParticles.Size(); ++i)
+		{
+			myParticles[i].myAlpha += aDeltaTime * myEmitterData.myData.myAlphaDelta;
+			myParticles[i].mySize += aDeltaTime * myEmitterData.myData.mySizeDelta;
+
+			myParticles[i].myLifeTime -= aDeltaTime;
+			
+			myParticles[i].myPosition = myParticles[i].myPosition - myParticles[i].myVelocity * aDeltaTime;
+
+			if (myParticles[i].myLifeTime <= 0.0f)
+			{
+				myParticles[i].myIsAlive = false;
+				continue;
+			}
+
+			if (myParticles[i].myAlpha <= 0.0f)
+			{
+				myParticles[i].myIsAlive = false;
+				continue;
+			}
+		}
 	}
 
 	void EmitterInstance::EmittParticle()
 	{
+		
 
+			myParticles[myLiveParticles].myIsAlive = true;
+			myParticles[myLiveParticles].myPosition = myOrientation.GetPos();
+			myParticles[myLiveParticles].myLifeTime = myEmitterData.myEmissionLifeTime;
+
+			myParticles[myLiveParticles].mySize = CU::Math::RandomRange(myEmitterData.myData.myMinStartSize
+				, myEmitterData.myData.myMaxStartSize);
+
+		//	myParticles[myLiveParticles].mySize = 100;
+
+
+			myParticles[myLiveParticles].myVelocity.x = CU::Math::RandomRange(myEmitterData.myData.myMinVelocity.x,
+				myEmitterData.myData.myMaxVelocity.x);
+
+			myParticles[myLiveParticles].myVelocity.y = CU::Math::RandomRange(myEmitterData.myData.myMinVelocity.y,
+				myEmitterData.myData.myMaxVelocity.y);
+
+			myParticles[myLiveParticles].myVelocity.z = CU::Math::RandomRange(myEmitterData.myData.myMinVelocity.z,
+				myEmitterData.myData.myMaxVelocity.z);
+
+			myParticles[myLiveParticles].myAlpha = 1;
+			myLiveParticles += 1;
+
+		
 	}
-
 }
