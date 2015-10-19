@@ -515,16 +515,28 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
 				myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
 
 
-		D3DX11_TECHNIQUE_DESC techDesc;
-		myEffect->GetTechnique()->GetDesc(&techDesc);
+		
 
 		for (int s = 0; s < mySurfaces.Size(); ++s)
 		{
 			mySurfaces[s]->Activate();
 
+			ID3DX11EffectTechnique* tech;
+			D3DX11_TECHNIQUE_DESC techDesc;
+
+			if(mySurfaces[s]->GetEmissive() == true)
+			{
+				tech = myEffect->GetEffect()->GetTechniqueByName("Render_Emissive");
+			}
+			else
+			{
+				tech = myEffect->GetTechnique();
+			}
+			
+			tech->GetDesc(&techDesc);
 			for (UINT i = 0; i < techDesc.Passes; ++i)
 			{
-				myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, 
+				tech->GetPassByIndex(i)->Apply(0,
 						Engine::GetInstance()->GetContex());
 				Engine::GetInstance()->GetContex()->DrawIndexed(mySurfaces[s]->GetIndexCount(),
 						mySurfaces[s]->GetVertexStart(), 0);

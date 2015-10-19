@@ -92,14 +92,17 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 	int currentIndex = 0;
 	while (myMissions.Size() != myMissionsNotOrder.Size())
 	{
+		int prevIndex = currentIndex;
 		for (int i = 0; i < myMissionsNotOrder.Size(); ++i)
 		{
 			if (myMissionsNotOrder[i]->GetIndex() == currentIndex)
 			{
 				++currentIndex;
 				myMissions.Add(myMissionsNotOrder[i]);
+				break;
 			}
 		}
+		DL_ASSERT_EXP(prevIndex == currentIndex - 1, "Mission index " + std::to_string(currentIndex) + " not found.");
 	}
 
 	reader.CloseDocument();
@@ -113,8 +116,8 @@ MissionManager::~MissionManager()
 
 void MissionManager::Init()
 {
-	myMissions[myCurrentMission]->Start();
 	myMissions[myCurrentMission]->EventsStart();
+	myMissions[myCurrentMission]->Start();
 	myAllowedToStartNextMission = false;
 	myEndEventsActive = false;
 }
@@ -143,6 +146,8 @@ void MissionManager::Update(float aDeltaTime)
 		{
 			myMissions[myCurrentMission]->EventsStart();
 			myMissions[myCurrentMission]->Start();
+			myAllowedToStartNextMission = false;
+			myEndEventsActive = false;
 		}
 	}
 }

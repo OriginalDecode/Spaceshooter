@@ -126,11 +126,11 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 		auto& currentTexture = someData->myTextures[i];
 			
 		std::string resourceName;
-		if (currentTexture.myType == DIFFUSE)
+		if (currentTexture.myType == ALBEDO)
 		{
 			resourceName = "AlbedoTexture";
 		}
-		if (currentTexture.myType == NORMALMAP)
+		if (currentTexture.myType == NORMAL)
 		{
 			resourceName = "NormalTexture";
 			useSRGB = false;
@@ -139,14 +139,19 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 		{
 			resourceName = "RoughnessTexture";
 		}
-		if (currentTexture.myType == SUBSTANCE)
+		if (currentTexture.myType == METALNESS)
 		{
 			resourceName = "MetalnessTexture";
 		}
-		if (currentTexture.myType == AO)
+		if (currentTexture.myType == AMBIENT)
 		{
 			resourceName = "AOTexture";
 		}
+		if (currentTexture.myType == FBXTextureType::EMISSIVE)
+		{
+			resourceName = "EmissiveTexture";
+		}
+
 		surface.SetTexture(resourceName, currentTexture.myFileName, useSRGB);
 	}
 	outData->mySurfaces.Add(new Surface(surface));

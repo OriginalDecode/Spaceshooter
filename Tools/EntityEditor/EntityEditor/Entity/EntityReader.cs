@@ -53,35 +53,6 @@ namespace EntityEditor
             return myEntityData;
         }
 
-        public void LoadEntityList(string aFilePath, Form aParent)
-        {
-            if (aFilePath == "") return;
-            myFilePath = aFilePath;
-            string entityListPath = "Data/Script/LI_list_entity.xml";
-
-            if (myEntityList.myPaths == null)
-            {
-                myEntityList.myPaths = new List<string>();
-            }
-
-            //if (Directory.Exists(entityListPath) == true)
-            //{
-            using (XmlReader reader = XmlReader.Create(entityListPath))
-            {
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        ReadEntityListFile(reader);
-                    }
-                }
-            }
-            EntityEditorForm entityForm = (EntityEditorForm)aParent;
-            entityForm.SetEntityList(myEntityList);
-            //}
-
-        }
-
         private void ReadEntityListFile(XmlReader aReader)
         {
             if (aReader.Name == "path")

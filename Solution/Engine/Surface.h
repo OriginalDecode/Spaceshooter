@@ -34,6 +34,9 @@ namespace Prism{
 		void Activate();
 		void ReloadSurface();
 
+		bool GetEmissive() const;
+		void SetEmissive();
+
 	private:
 		CU::GrowingArray<Texture*> myTextures;
 		CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderViews;
@@ -47,6 +50,7 @@ namespace Prism{
 		int myIndexStart;
 
 		Effect* myEffect;
+		bool myEmissive;
 	};
 }
 
@@ -98,4 +102,9 @@ inline void Prism::Surface::SetEffect(Effect* aEffect)
 inline void Prism::Surface::SetPrimitiveTopology(const D3D11_PRIMITIVE_TOPOLOGY aTopology)
 {
 	myPrimitiveTopologyType = aTopology;
+}
+
+inline bool Prism::Surface::GetEmissive() const
+{
+	return myEmissive;
 }
