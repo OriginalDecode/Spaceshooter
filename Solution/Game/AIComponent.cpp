@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "AIComponent.h"
 #include "Constants.h"
+#include "DefendMessage.h"
 #include <Engine.h>
 #include "Entity.h"
 #include <MathHelper.h>
 #include "PhysicsComponent.h"
+#include "PostMaster.h"
 #include <sstream>
 #include <Vector.h>
 
@@ -12,8 +14,16 @@ AIComponent::AIComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
 	, myPhysicsComponent(nullptr)
 	, myAvoidanceDistance(300.f)
+	, myPrevEntityToFollow(nullptr)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 }
+
+AIComponent::~AIComponent()
+{
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+}
+
 void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
 	, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
 	, eAITargetPositionMode aTargetPositionMode)
@@ -82,6 +92,19 @@ void AIComponent::Update(float aDeltaTime)
 void AIComponent::SetEntityToFollow(Entity* aEntity)
 {
 	myEntityToFollow = aEntity;
+}
+
+void AIComponent::ReceiveMessage(const DefendMessage& aMessage)
+{
+	if (aMessage.myType == DefendMessage::eType::ENTITY)
+	{
+		myPrevEntityToFollow = myEntityToFollow;
+		myEntityToFollow = aMessage.myEntity;
+	}
+	else if (aMessage.myType == DefendMessage::eType::COMPLETE)
+	{
+		myEntityToFollow = myPrevEntityToFollow;
+	}
 }
 
 void AIComponent::FollowEntity(float aDeltaTime)

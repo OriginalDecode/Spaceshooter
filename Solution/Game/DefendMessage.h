@@ -1,8 +1,24 @@
 #pragma once
-class DefendMessage
+
+#include "Message.h"
+#include <string>
+
+class Entity;
+
+class DefendMessage : public Message
 {
 public:
-	DefendMessage();
-	~DefendMessage();
+	enum class eType
+	{
+		NAME,
+		ENTITY,
+		COMPLETE,
+	};
+
+	DefendMessage(eType aType, const std::string& aDefendName = "", Entity* aEntity = nullptr);
+
+	const eType myType;
+	const std::string myDefendName;
+	Entity* myEntity;
 };
 

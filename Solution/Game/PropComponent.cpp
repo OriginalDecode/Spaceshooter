@@ -1,19 +1,28 @@
 #include "stdafx.h"
 #include "CollisionNote.h"
+#include "DefendMessage.h"
 #include "Entity.h"
 #include "HealthComponent.h"
 #include "PropComponent.h"
 #include "ShieldComponent.h"
 #include "PhysicsComponent.h"
+#include "PostMaster.h"
 
 PropComponent::PropComponent(Entity& aEntity)
 	: Component(aEntity)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 }
 
 
 PropComponent::~PropComponent()
 {
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+}
+
+void PropComponent::Init(const std::string& aDefendName)
+{
+	myDefendName = aDefendName;
 }
 
 void PropComponent::ReceiveNote(const CollisionNote& aNote)
@@ -35,4 +44,12 @@ void PropComponent::ReceiveNote(const CollisionNote& aNote)
 	}
 	// should also bounce of prop
 	//aNote.myEntity.GetComponent<PhysicsComponent>()->BounceOff(1);
+}
+
+void PropComponent::ReceiveMessage(const DefendMessage& aMessage)
+{
+	if (aMessage.myType == DefendMessage::eType::NAME && aMessage.myDefendName == myDefendName)
+	{
+		PostMaster::GetInstance()->SendMessage<DefendMessage>(DefendMessage(DefendMessage::eType::ENTITY, myDefendName, &GetEntity()));
+	}
 }
