@@ -10,6 +10,11 @@ namespace CSharpUtilities.Components
 {
     public class Vector3Component : BaseComponent
     {
+        private Label myLabel = new Label();
+
+        private NumericTextComponent myXText;
+        private NumericTextComponent myYText;
+        private NumericTextComponent myZText;
 
         public Vector3Component(Point aLocation, Size aSize, string aText)
             : base(aLocation, aSize, aText)
@@ -19,63 +24,77 @@ namespace CSharpUtilities.Components
 
         protected override void InitializeComponents(string aText)
         {
-            throw new NotImplementedException();
+            myLabel.Text = aText;
+            myLabel.Location = new Point(myLocation.X, myLocation.Y);
+            myLabel.Size = new Size(50, mySize.Height);
+
+            myXText = new NumericTextComponent(new Point(myLocation.X + 50, myLocation.Y), new Size(90, mySize.Height), "X");
+            myYText = new NumericTextComponent(new Point(myLocation.X + 110, myLocation.Y), new Size(90, mySize.Height), "Y");
+            myZText = new NumericTextComponent(new Point(myLocation.X + 170, myLocation.Y), new Size(90, mySize.Height), "Z");
+
         }
 
         public override void BindToPanel(Panel aPanel)
         {
-            throw new NotImplementedException();
+            aPanel.Controls.Add(myLabel);
+
+            myXText.BindToPanel(aPanel);
+            myYText.BindToPanel(aPanel);
+            myZText.BindToPanel(aPanel);
+
         }
 
         public override void Show()
         {
-            throw new NotImplementedException();
+            myLabel.Show();
+            myXText.Show();
+            myYText.Show();
+            myZText.Show();
         }
 
         public override void Hide()
         {
-            throw new NotImplementedException();
+            myLabel.Hide();
+            myXText.Hide();
+            myYText.Hide();
+            myZText.Hide();
         }
 
         public float GetX()
         {
-            throw new NotImplementedException();
-            return 0;
+            return float.Parse(myXText.GetTextBox().Text);
         }
 
         public TextBox GetXTextBox()
         {
-            throw new NotImplementedException();
-            return new TextBox();
+            return myXText.GetTextBox();
         }
 
         public float GetY()
         {
-            throw new NotImplementedException();
-            return 0;
+            return float.Parse(myYText.GetTextBox().Text);
         }
 
         public TextBox GetYTextBox()
         {
-            throw new NotImplementedException();
-            return new TextBox();
+            return myYText.GetTextBox();
         }
 
         public float GetZ()
         {
-            throw new NotImplementedException();
-            return 0;
+            return float.Parse(myZText.GetTextBox().Text);
         }
 
         public TextBox GetZTextBox()
         {
-            throw new NotImplementedException();
-            return new TextBox();
+            return myZText.GetTextBox();
         }
 
         public void SetPosition(string aX, string aY, string aZ)
         {
-            throw new NotImplementedException();
+            myXText.GetTextBox().Text = aX;
+            myYText.GetTextBox().Text = aY;
+            myZText.GetTextBox().Text = aZ;
         }
     }
 }
