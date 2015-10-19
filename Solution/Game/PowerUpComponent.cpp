@@ -34,10 +34,11 @@ void PowerUpComponent::Init(ePowerUpType someType, float someDuration, int someS
 	myFireRateMultiplier = someFireRateMultiplier;
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, float someDuration)
+void PowerUpComponent::Init(ePowerUpType someType, float someDuration, float someRadius)
 {
 	myType = someType;
 	myDuration = someDuration;
+	myRadius = someRadius;
 }
 
 void PowerUpComponent::Init(ePowerUpType someType, std::string aUpgradeName, int anUpgradeID)
@@ -52,6 +53,11 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 	if (myType == ePowerUpType::WEAPON_UPGRADE)
 	{
 		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName, myUpgradeID));
+	}
+	else if (myType == ePowerUpType::EMP)
+	{
+		PowerUpNote note(myType, myDuration, myRadius);
+		aNote.myEntity.SendNote(note);
 	}
 	else
 	{

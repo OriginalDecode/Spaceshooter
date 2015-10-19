@@ -31,7 +31,11 @@ void Subscriber::ReceiveMessage(const SpawnEnemyMessage&)
 {
 }
 
-void Subscriber::ReceiveMessage(const StartEventMessage&)
+void Subscriber::ReceiveMessage(const EnqueueEventMessage&)
+{
+}
+
+void Subscriber::ReceiveMessage(const EventQueueEmptyMessage&)
 {
 }
 
@@ -40,5 +44,9 @@ void Subscriber::ReceiveMessage(const EnemyKilledMessage&)
 }
 
 void Subscriber::ReceiveMessage(const PowerUpMessage&)
+{
+}
+
+void Subscriber::ReceiveMessage(const DefendMessage&)
 {
 }

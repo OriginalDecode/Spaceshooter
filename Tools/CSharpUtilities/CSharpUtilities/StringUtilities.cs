@@ -61,5 +61,17 @@ namespace CSharpUtilities
 
             return convertedPath;
         }
+
+        public static string ConvertPathToDataFolderPath(string aPath)
+        {
+            int dataTagIndex = aPath.IndexOf("Data");
+            if (dataTagIndex <= 0) return "Data/";
+            string convertedPath = aPath;
+            convertedPath = aPath.Substring(0, dataTagIndex);
+            convertedPath = convertedPath.Replace("\\", "/");
+            convertedPath += "Data/";
+
+            return convertedPath;
+        }
     }
 }

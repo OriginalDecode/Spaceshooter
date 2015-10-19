@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
+using CSharpUtilities;
 
 namespace EntityEditor.Entity
 {
@@ -20,9 +21,7 @@ namespace EntityEditor.Entity
             myEntityData = aEntityData;
             myEntityList = aEntityList;
 
-            int lastSlash = myFilePath.LastIndexOf("\\");
-            string entityListPath = myFilePath.Substring(0, lastSlash);
-            entityListPath += "\\EntityList.xml";
+            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;

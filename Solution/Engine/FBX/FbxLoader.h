@@ -2,20 +2,23 @@
 
 #include <fbxsdk.h>
 #include <vector>
+#include <string>
 #include <GrowingArray.h>
+#include <Vector.h>
 #include <Matrix44.h>
+#include <Matrix33.h>
+#include "../LodStructs.h"
 
 #define FBXLoaderArray CU::GrowingArray
 
-#pragma warning(disable : 4099)
-
 enum FBXTextureType
 {
-	DIFFUSE,
-	NORMALMAP,
+	ALBEDO,
+	NORMAL,
 	ROUGHNESS,
-	SUBSTANCE,
-	AO,
+	METALNESS,
+	AMBIENT,
+	EMISSIVE,
 	NR_OF_TEXTURETYPES,
 };
 
@@ -28,7 +31,7 @@ struct TextureInfo
 struct KeyFrame
 {
 	float myTime;
-	CU::Matrix44f myMatrix;
+	CU::Matrix44<float> myMatrix;
 };
 
 struct Bone 
@@ -36,8 +39,8 @@ struct Bone
 	std::string myName;
 	float myAnimationTime;
 	int myId;
-	CU::Matrix44f myBaseOrientation;
-	CU::Matrix44f myBindMatrix;
+	CU::Matrix44<float> myBaseOrientation;
+	CU::Matrix44<float> myBindMatrix;
 	std::vector<KeyFrame> myFrames;
 	std::vector<int> myChilds;
 };
@@ -46,7 +49,7 @@ struct AnimationData
 {
 	std::string myName;
 
-	CU::Matrix44f myBindMatrix;
+	CU::Matrix44<float> myBindMatrix;
 	int myRootBone;
 	std::vector<Bone> myBones;
 };
@@ -126,18 +129,18 @@ enum ELightType
 	EPointLight,
 };
 
-struct FBXLight
+struct LoaderLight
 {
 	ELightType myType;
-	CU::Vector3f myColor;
-	CU::Vector3f myDirection;
-	CU::Matrix44f myOrientation;
+	CU::Vector3<float> myColor;
+	CU::Vector3<float> myDirection;
+	CU::Matrix44<float> myOrientation;
 	float myIntensity;
 	float myInnerAngle;
 	float myOuterAngle;
 };
 
-struct Camera
+struct LoaderCamera
 {
 	float myFov;
 };
@@ -152,17 +155,21 @@ public:
 		myTextureData = nullptr;
 		myLight = nullptr;
 		myCamera = nullptr;
+		myLodGroup = nullptr;
 	}
 
+	Prism::LodGroup* CreateLodGroup(){ myLodGroup = new Prism::LodGroup(); return myLodGroup; }
+
+	Prism::LodGroup* myLodGroup;
 	ModelData* myData;
-	FBXLight* myLight;
-	Camera* myCamera;
+	LoaderLight* myLight;
+	LoaderCamera* myCamera;
 	AnimationData* myAnimation;
 	TextureData* myTextureData;
 	AnimationCurves* myAnimationCurves;
 	FBXLoaderArray<	KeyFrame > myAnimatedOrientation;
-	CU::Matrix44f myOrientation;
-	CU::Matrix44f myRotationPivot;
+	CU::Matrix44<float> myOrientation;
+	CU::Matrix44<float> myRotationPivot;
 	FBXLoaderArray<FbxModelData*> myChilds;
 };
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace EntityEditor.ComponentEditors
+namespace EntityEditor.Panels
 {
     abstract public class BasePanel : Panel
     {

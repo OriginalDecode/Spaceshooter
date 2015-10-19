@@ -4,6 +4,6 @@
 
 ConversationMessage::ConversationMessage(const std::string& aText)
 	: myText(aText)
-	, Message(eMessageType::CONVERSATION_MESSAGE)
+	, Message(eMessageType::CONVERSATION)
 {
 }

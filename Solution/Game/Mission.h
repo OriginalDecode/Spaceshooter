@@ -20,7 +20,7 @@ public:
 	virtual void Start();
 	void EventsStart();
 	virtual void End();
-	void EventsEnd();
+	bool EventsEnd();
 
 	virtual int GetIndex() const;
 	virtual void SetIndex(int aIndex);
@@ -28,7 +28,6 @@ public:
 protected:
 	int myIndex;
 	CU::GrowingArray<std::string> myStartEventNames;
-	//CU::GrowingArray<Event*> myEventsEnd;
-
+	CU::GrowingArray<std::string> myEndEventNames;
 };
 

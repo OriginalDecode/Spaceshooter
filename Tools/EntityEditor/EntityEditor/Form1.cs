@@ -19,19 +19,16 @@ namespace EntityEditor
         private Entity.EntityWriter myEntityWriter = new Entity.EntityWriter();
         private Entity.EntityListXML myEntityList;
 
-        private RenameEntity myRenameEntityForm = null;
-
         private string myCurrentEntityFolderPath = Properties.Settings.Default.DefaultEntityFolderPath;
         private string myCurrentEntityFilePath = Properties.Settings.Default.DefaultEntityFileName;
+        private string myDataFolderPath = "";
 
-        private AddComponentForm myAddComponentForm = null;
-
-        private ComponentEditors.AIComponent myAIComponentSettingsForm = null;
-        private ComponentEditors.ShootingComponent myShootingComponentSettingsForm = null;
-        private ComponentEditors.CollisionComponent myCollisionComponentSettingsForm = null;
-
-        private ComponentEditors.GraphicsComponentPanel myGraphicsComponentPanel = null;
-        private ComponentEditors.ShootingComponentPanel myShootingComponentPanel = null;
+        private Panels.AddComponentPanel myAddComponentPanel = null;
+        private Panels.AIComponentPanel myAIComponentPanel = null;
+        private Panels.CollisionComponentPanel myCollisionComponentPanel = null;
+        private Panels.GraphicsComponentPanel myGraphicsComponentPanel = null;
+        private Panels.ShootingComponentPanel myShootingComponentPanel = null;
+        private Panels.RenamePanel myRenameEntityPanel = null;
 
         public EntityEditorForm()
         {
@@ -39,6 +36,8 @@ namespace EntityEditor
 
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             DL_Debug.GetInstance.Init("EntityEditorLog");
+
+            myDataFolderPath = StringUtilities.ConvertPathToDataFolderPath(myCurrentEntityFolderPath);
 
             if (myCurrentEntityFolderPath == "")
             {
@@ -50,17 +49,21 @@ namespace EntityEditor
             Point panelLocation = new Point(10, 10);
             Size panelSize = new Size(500, 800);
 
-            myGraphicsComponentPanel = new ComponentEditors.GraphicsComponentPanel(panelLocation, panelSize, this);
-            myShootingComponentPanel = new ComponentEditors.ShootingComponentPanel(panelLocation, panelSize, this);
+            myAddComponentPanel = new Panels.AddComponentPanel(panelLocation, panelSize, this);
+            myAIComponentPanel = new Panels.AIComponentPanel(panelLocation, panelSize, this);
+            myCollisionComponentPanel = new Panels.CollisionComponentPanel(panelLocation, panelSize, this);
+            myGraphicsComponentPanel = new Panels.GraphicsComponentPanel(panelLocation, panelSize, this);
+            myShootingComponentPanel = new Panels.ShootingComponentPanel(panelLocation, panelSize, this);
+            myRenameEntityPanel = new Panels.RenamePanel(panelLocation, panelSize, this);
 
+            PropertyPanel.Controls.Add(myAddComponentPanel);
+            PropertyPanel.Controls.Add(myAIComponentPanel);
+            PropertyPanel.Controls.Add(myCollisionComponentPanel);
             PropertyPanel.Controls.Add(myGraphicsComponentPanel);
             PropertyPanel.Controls.Add(myShootingComponentPanel);
+            PropertyPanel.Controls.Add(myRenameEntityPanel);
 
-            myGraphicsComponentPanel.Hide();
-            myGraphicsComponentPanel.Load(myCurrentEntity.myGraphicsComponent);
-
-            myShootingComponentPanel.Show();
-            myShootingComponentPanel.Load(myCurrentEntity.myShootingComponent);
+            HidePanels();
         }
 
         public void DisplayEntityData()
@@ -150,9 +153,10 @@ namespace EntityEditor
 
         private void OpenRenameEntityWindow()
         {
-            myRenameEntityForm = new RenameEntity(this);
-            myRenameEntityForm.Activate();
-            myRenameEntityForm.Visible = true;
+            HidePanels();
+
+            myRenameEntityPanel.Show();
+            myRenameEntityPanel.Load(myCurrentEntity.myName);
         }
 
         private void RemoveSelectedComponent(string aComponentName)
@@ -172,6 +176,7 @@ namespace EntityEditor
             if (aComponentName.StartsWith("Shooting") == true)
             {
                 myCurrentEntity.myShootingComponent.myIsActive = false;
+                myCurrentEntity.myShootingComponent.myWeaponType = "";
                 return;
             }
             if (aComponentName.StartsWith("Collision") == true)
@@ -183,85 +188,44 @@ namespace EntityEditor
             }
         }
 
-        private void HideComponents()
+        private void HidePanels()
         {
+            myAddComponentPanel.Hide();
+            myAIComponentPanel.Hide();
+            myCollisionComponentPanel.Hide();
             myGraphicsComponentPanel.Hide();
+            myShootingComponentPanel.Hide();
+            myRenameEntityPanel.Hide();
         }
 
         private void EditSelectedComponent(string aComponentName)
         {
-            HideComponents();
+            HidePanels();
             if (aComponentName.StartsWith("Graphics") == true)
             {
-                //myGraphicsComponentSettingsForm = new ComponentEditors.GraphicsComponent(this, myCurrentEntity.myGraphicsComponent);
-                //myGraphicsComponentSettingsForm.Visible = true;
-                //myGraphicsComponentSettingsForm.Activate();
                 myGraphicsComponentPanel.Show();
                 myGraphicsComponentPanel.Load(myCurrentEntity.myGraphicsComponent);
                 return;
             }
             if (aComponentName.StartsWith("AI") == true)
             {
-                myAIComponentSettingsForm = new ComponentEditors.AIComponent(this, myCurrentEntity.myAIComponent);
-                myAIComponentSettingsForm.Visible = true;
-                myAIComponentSettingsForm.Activate();
+                myAIComponentPanel.Show();
+                myAIComponentPanel.Load(myCurrentEntity.myAIComponent);
                 return;
             }
             if (aComponentName.StartsWith("Shooting") == true)
             {
-                myShootingComponentSettingsForm = new ComponentEditors.ShootingComponent(this, myCurrentEntity.myShootingComponent);
-                myShootingComponentSettingsForm.Visible = true;
-                myShootingComponentSettingsForm.Activate();
+                myShootingComponentPanel.Show();
+                myShootingComponentPanel.Load(myCurrentEntity.myShootingComponent);
                 return;
             }
             if (aComponentName.StartsWith("Collision") == true)
             {
-                myCollisionComponentSettingsForm = new ComponentEditors.CollisionComponent(this, myCurrentEntity.myCollisionComponent);
-                myCollisionComponentSettingsForm.Visible = true;
-                myCollisionComponentSettingsForm.Activate();
+                myCollisionComponentPanel.Show();
+                myCollisionComponentPanel.Load(myCurrentEntity.myCollisionComponent);
                 return;
             }
         }
-        //----- Edit Entity Buttons Section Start -----
-        private void EntityContentList_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            int index = this.EntityContentList.IndexFromPoint(e.Location);
-            if (CheckIfItemStartsWith("Name: ", index))
-            {
-                OpenRenameEntityWindow();
-            }
-            if (CheckIfItemEndsWith("Component", index))
-            {
-                EditSelectedComponent((string)EntityContentList.Items[index]);
-            }
-        }
-        private void renameEntityToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            OpenRenameEntityWindow();
-        }
-
-        private void editComponentToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string selectedName = (string)EntityContentList.SelectedItem;
-            if (selectedName != null && selectedName.EndsWith("Component"))
-            {
-                EditSelectedComponent(selectedName);
-            }
-        }
-
-        private void Btn_Edit_Click(object sender, EventArgs e)
-        {
-            string selectedName = (string)EntityContentList.SelectedItem;
-            if (selectedName != null && selectedName.StartsWith("Name: "))
-            {
-                OpenRenameEntityWindow();
-            }
-            if (selectedName != null && selectedName.EndsWith("Component"))
-            {
-                EditSelectedComponent(selectedName);
-            }
-        }
-        //----- Edit Entity Buttons Section Ends -----
 
         //----- Open Entity Buttons Section Start -----
         private void openEntityToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -279,6 +243,8 @@ namespace EntityEditor
 
                 myCurrentEntityFilePath = openEntityFile.FileName;
                 myCurrentEntityFolderPath = myCurrentEntityFilePath.Replace(openEntityFile.SafeFileName, "");
+                myDataFolderPath = StringUtilities.ConvertPathToDataFolderPath(myCurrentEntityFolderPath);
+                myShootingComponentPanel.ReloadXML(myDataFolderPath);
                 Properties.Settings.Default.DefaultEntityFolderPath = myCurrentEntityFolderPath;
                 Properties.Settings.Default.DefaultEntityFileName = myCurrentEntityFilePath;
                 Properties.Settings.Default.Save();
@@ -298,27 +264,13 @@ namespace EntityEditor
         //----- Add Component Button Start -----
         private void addComponentToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            myAddComponentForm = new AddComponentForm(this, myCurrentEntity);
-        }
-
-        private void Btn_Add_Click(object sender, EventArgs e)
-        {
-            myAddComponentForm = new AddComponentForm(this, myCurrentEntity);
+            myAddComponentPanel.Show();
+            myAddComponentPanel.Load(myCurrentEntity);
         }
 
         //----- Add Component Button Ends -----
 
         //----- Remove Component Button Start -----
-        private void Btn_Remove_Click(object sender, EventArgs e)
-        {
-            string selectedName = (string)EntityContentList.SelectedItem;
-            if (selectedName != null && selectedName.EndsWith("Component"))
-            {
-                RemoveSelectedComponent(selectedName);
-                DisplayEntityData();
-            }
-        }
-
         private void removeComponentToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string selectedName = (string)EntityContentList.SelectedItem;
@@ -332,22 +284,9 @@ namespace EntityEditor
 
         private void newEntityToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (myCurrentEntityFolderPath != "")
-            {
-                saveEntityFile.InitialDirectory = myCurrentEntityFolderPath;
-            }
-            saveEntityFile.AddExtension = true;
-            saveEntityFile.DefaultExt = ".xml";
-            saveEntityFile.Filter = "XML file (*.xml)|*.xml";
-            saveEntityFile.ShowDialog();
-
-            myCurrentEntityFilePath = saveEntityFile.FileName;
-            Properties.Settings.Default.DefaultEntityFileName = myCurrentEntityFilePath;
-            Properties.Settings.Default.Save();
-
+            SetEntityName("");
             OpenRenameEntityWindow();
-
-            myEntityReader.LoadEntityList(myCurrentEntityFilePath, this);
+            myShootingComponentPanel.ReloadXML(myDataFolderPath);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)

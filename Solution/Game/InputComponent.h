@@ -49,6 +49,7 @@ private:
 	float myMaxBoostValue;
 	float myCurrentBoostCooldown;
 	float myMaxBoostCooldown;
+	float myWeaponRotationModifier;
 
 	bool myCameraIsLocked;
 	bool myBoost;

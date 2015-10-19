@@ -6,6 +6,9 @@ class EnemyKilledMessage : public Message
 {
 public:
 	EnemyKilledMessage();
-	
 };
 
+inline EnemyKilledMessage::EnemyKilledMessage()
+	: Message(eMessageType::ENEMY_KILLED)
+{
+}

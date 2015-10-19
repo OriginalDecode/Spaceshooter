@@ -18,8 +18,10 @@ public:
 	bool Update();
 
 private:
+	void operator=(Conversation&) = delete;
 	struct Sentence
 	{
+		void operator=(Sentence&) = delete;
 		Sentence(const std::string& aText) : myText(aText){}
 		const std::string myText;
 	};
@@ -27,7 +29,7 @@ private:
 	void SetCurrentSentence();
 
 	CU::GrowingArray<Sentence*> mySentences;
-
+	const std::string myName;
 	int myCurrentSentence;
 	float myTimeLeft;
 	float myShowTime;

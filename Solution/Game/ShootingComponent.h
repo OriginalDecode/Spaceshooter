@@ -47,6 +47,8 @@ private:
 
 	bool myHasWeapon;
 	bool myHasEMP;
+	float myEMPRadius;
+	float myEMPDuration;
 };
 
 inline eComponentType ShootingComponent::GetType()
@@ -66,6 +68,8 @@ inline void ShootingComponent::SetCurrentWeaponID(int anID)
 
 inline void ShootingComponent::ActivateEMP()
 {
+	myEMPRadius = 1000.f;
+	myEMPDuration = 5.f;
 	myHasEMP = true;
 }
 

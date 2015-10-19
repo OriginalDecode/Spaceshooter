@@ -31,6 +31,7 @@ public:
 	void ReceiveNote(const GUINote& aNote) override;
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
+	void ReceiveMessage(const DefendMessage& aMessage) override;
 	
 private:
 	Prism::Model2D* myReticle;
@@ -55,6 +56,8 @@ private:
 	bool myWaypointActive;
 
 	std::string myConversation;
+
+	Entity* myEnemiesTarget;
 };
 
 inline eComponentType GUIComponent::GetType()

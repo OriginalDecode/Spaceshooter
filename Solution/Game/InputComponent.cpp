@@ -32,6 +32,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
+	myWeaponRotationModifier = 0.f;
 	myCurrentBoostCooldown = 0.f;
 	myCurrentBoostValue = 0.f;
 	myMaxBoostCooldown = 0.f;
@@ -62,18 +63,9 @@ void InputComponent::Update(float aDeltaTime)
 		{
 			myEntity.SendNote(InputNote(2));
 		}
-		if (myInputWrapper->KeyIsPressed(DIK_4))
-		{
-			myEntity.SendNote(InputNote(3));
-		}
-		if (myInputWrapper->KeyIsPressed(DIK_5))
-		{
-			myEntity.SendNote(InputNote(4));
-		}
-		
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
-			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), mySteering);
+			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), mySteering * mySteeringModifier * myWeaponRotationModifier);
 			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
 		}
 
@@ -131,6 +123,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "deacceleration", myBoostDeacceleration);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "maxBoost", myMaxBoostValue);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("boost"), "cooldown", myMaxBoostCooldown);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("weaponRotation"), "modifier", myWeaponRotationModifier);
 	reader.CloseDocument();
 }
 

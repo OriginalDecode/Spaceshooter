@@ -3,13 +3,14 @@
 #include "Event.h"
 #include "MissionEventReader.h"
 #include "PostMaster.h"
-#include "StartEventMessage.h"
+#include "EnqueueEventMessage.h"
 
 Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
 	, myStartEventNames(4)
+	, myEndEventNames(4)
 {
-	MissionEventReader::ReadEventNames(aReader, aElement, myStartEventNames);
+	MissionEventReader::ReadEventNames(aReader, aElement, myStartEventNames, myEndEventNames);
 }
 
 
@@ -25,7 +26,7 @@ void Mission::EventsStart()
 {
 	for (int i = 0; i < myStartEventNames.Size(); ++i)
 	{
-		PostMaster::GetInstance()->SendMessage(StartEventMessage(myStartEventNames[i]));
+		PostMaster::GetInstance()->SendMessage(EnqueueEventMessage(myStartEventNames[i]));
 	}
 }
 
@@ -34,9 +35,14 @@ void Mission::End()
 
 }
 
-void Mission::EventsEnd()
+bool Mission::EventsEnd()
 {
+	for (int i = 0; i < myEndEventNames.Size(); ++i)
+	{
+		PostMaster::GetInstance()->SendMessage(EnqueueEventMessage(myEndEventNames[i]));
+	}
 
+	return myEndEventNames.Size() == 0;
 }
 
 int Mission::GetIndex() const

@@ -7,6 +7,7 @@
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "ConversationManager.h"
+#include "DefendMessage.h"
 #include "DirectionalLight.h"
 #include "EffectContainer.h"
 #include <Engine.h>
@@ -52,9 +53,11 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	, myMissionManager(nullptr)
 	, myEventManager(nullptr)
 	, myConversationManager(nullptr)
+	, myEntityToDefend(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	myScene = new Prism::Scene();
 	myWeaponFactory = new WeaponFactory();
 	myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
@@ -145,6 +148,7 @@ Level::~Level()
 
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	delete myCamera;
 	myEntities.DeleteAll();
 
@@ -177,7 +181,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 {
 	myCollisionManager->CleanUp();
 
-	if (myPlayer->GetAlive() == false)
+	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
 	{
 		return true;
 	}
@@ -330,6 +334,10 @@ void Level::ReadXML(const std::string& aFile)
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
+		
+		std::string defendName;
+		reader.ReadAttribute(entityElement, "defendName", defendName);
+
 
 		tinyxml2::XMLElement* propElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> propPosition;
@@ -348,7 +356,7 @@ void Level::ReadXML(const std::string& aFile)
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(propRotation.y) * newEntity->myOrientation;
 		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
 
-		newEntity->AddComponent<PropComponent>();
+		newEntity->AddComponent<PropComponent>()->Init(defendName);
 
 		int health = 30;
 		newEntity->AddComponent<HealthComponent>()->Init(health);
@@ -393,7 +401,7 @@ void Level::ReadXML(const std::string& aFile)
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}
-		else if (powerType == "weaponUpgrade")
+		else if (powerType == "weaponupgrade")
 		{
 			newEntity->SetPowerUp(ePowerUpType::WEAPON_UPGRADE);
 		}
@@ -465,6 +473,19 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
 	}
 }
+
+void Level::ReceiveMessage(const DefendMessage& aMessage)
+{
+	if (aMessage.myType == DefendMessage::eType::ENTITY)
+	{
+		myEntityToDefend = aMessage.myEntity;
+	}
+	else if (aMessage.myType == DefendMessage::eType::COMPLETE)
+	{
+		myEntityToDefend = nullptr;
+	}
+}
+
 
 void Level::LoadPlayer()
 {
@@ -551,14 +572,6 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_T))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
-	}
-	if (myInputWrapper->KeyDown(DIK_L))
-	{
-		myPlayer->GetComponent<InputComponent>()->DisableMovement(2.f);
-	}
-	if (myInputWrapper->KeyDown(DIK_K))
-	{
-		myCollisionManager->DisableEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 100.f, 10.f);
 	}
 	if (myInputWrapper->KeyDown(DIK_J))
 	{

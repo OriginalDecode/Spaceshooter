@@ -1,19 +1,19 @@
 #include "../stdafx.h"
-#include "FBXLoader.h"
 
+
+
+#include "FbxLoader.h"
 #include <Vector4.h>
 #include <Matrix44.h>
 #include <DL_Assert.h>
 #include <CommonHelper.h>
 #pragma warning(disable : 4239 4244)
 
-#define PI 3.14159265359f
-
 
 FBXLoader::FBXLoader()
 {
 	myFbxManager = FbxManager::Create();
-		
+
 	// Create the IO settings object.
 	FbxIOSettings *ios = FbxIOSettings::Create(myFbxManager, IOSROOT);
 	myFbxManager->SetIOSettings(ios);
@@ -28,15 +28,15 @@ FBXLoader::~FBXLoader()
 FbxScene* FBXLoader::LoadScene(const char* aFile)
 {
 	// Create an importer using the SDK manager.
-	FbxImporter* lImporter = FbxImporter::Create(myFbxManager,"");
+	FbxImporter* lImporter = FbxImporter::Create(myFbxManager, "");
 
 	// Use the first argument as the filename for the importer.
-	if(!lImporter->Initialize(aFile, -1, myFbxManager->GetIOSettings())) 
-	{ 
-		printf("Call to FbxImporter::Initialize() failed.\n"); 
-		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString()); 
+	if (!lImporter->Initialize(aFile, -1, myFbxManager->GetIOSettings()))
+	{
+		printf("Call to FbxImporter::Initialize() failed.\n");
+		printf("Error returned: %s\n\n", lImporter->GetStatus().GetErrorString());
 		std::string errorMessage = "Could not find fbx file: " + std::string(aFile);
-		FBX_LOG(errorMessage.c_str());
+		DL_PRINT(errorMessage.c_str());
 		MessageBoxA(nullptr, errorMessage.c_str(), "ERROR", 0);
 		//DL_ASSERT("Fbx file not found. Check the debug logger!");
 	}
@@ -77,8 +77,8 @@ FbxAMatrix GetGeometry(FbxNode* pNode)
 FbxAMatrix GetRotaionPivot(FbxNode* pNode)
 {
 	const FbxVector4 lT = pNode->GetRotationPivot(FbxNode::eSourcePivot);// (FbxNode::eSourcePivot);
-	const FbxVector4 lR(0,0,0,1);
-	const FbxVector4 lS(1,1,1,1);
+	const FbxVector4 lR(0, 0, 0, 1);
+	const FbxVector4 lS(1, 1, 1, 1);
 
 	return FbxAMatrix(lT, lR, lS);
 }
@@ -203,12 +203,12 @@ FbxAMatrix GetGlobalPosition(FbxNode* pNode, const FbxTime& pTime, FbxPose* pPos
 
 
 //Compute the transform matrix that the cluster will transform the vertex.
-void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition, 
-								FbxMesh* pMesh,
-								FbxCluster* pCluster, 
-								FbxAMatrix& pVertexTransformMatrix,
-								FbxTime pTime, 
-								FbxPose* pPose)
+void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,
+	FbxMesh* pMesh,
+	FbxCluster* pCluster,
+	FbxAMatrix& pVertexTransformMatrix,
+	FbxTime pTime,
+	FbxPose* pPose)
 {
 	pPose;
 	pTime;
@@ -227,7 +227,7 @@ void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,
 
 	FbxAMatrix lClusterRelativeInitPosition;
 	FbxAMatrix lClusterRelativeCurrentPositionInverse;
-	
+
 	if (lClusterMode == FbxCluster::eAdditive && pCluster->GetAssociateModel())
 	{
 		pCluster->GetTransformAssociateModelMatrix(lAssociateGlobalInitPosition);
@@ -279,20 +279,19 @@ void ComputeClusterDeformation(FbxAMatrix& pGlobalPosition,
 
 
 // Deform the vertex array in classic linear way.
-void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition, 
-								FbxMesh* pMesh,  
-								FbxVector4* someWeights,
-								FbxVectorTemplate4<int>* someBones,
-								AnimationData* aAnimation)
+void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
+	FbxMesh* pMesh,
+	FbxVector4* someWeights,
+	FbxVectorTemplate4<int>* someBones,
+	AnimationData* aAnimation)
 {
 	aAnimation;
 	pGlobalPosition;
 	// All the links must have the same link mode.
 	FbxCluster::ELinkMode lClusterMode = ((FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin))->GetCluster(0)->GetLinkMode();
 	lClusterMode;
-
 	int lVertexCount = pMesh->GetControlPointsCount();
-	for(int i = 0;i < lVertexCount;++i)
+	for (int i = 0; i < lVertexCount; ++i)
 	{
 		someBones[i][0] = -1;
 		someBones[i][1] = -1;
@@ -308,12 +307,12 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 	// For all skins and all clusters, accumulate their deformation and weight
 	// on each vertices and store them in lClusterDeformation and lClusterWeight.
 	int lSkinCount = pMesh->GetDeformerCount(FbxDeformer::eSkin);
-	for ( int lSkinIndex=0; lSkinIndex<lSkinCount; ++lSkinIndex)
+	for (int lSkinIndex = 0; lSkinIndex < lSkinCount; ++lSkinIndex)
 	{
 		FbxSkin * lSkinDeformer = (FbxSkin *)pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
-		
+
 		int lClusterCount = lSkinDeformer->GetClusterCount();
-		for ( int lClusterIndex=0; lClusterIndex<lClusterCount; ++lClusterIndex)
+		for (int lClusterIndex = 0; lClusterIndex < lClusterCount; ++lClusterIndex)
 		{
 			FbxCluster* lCluster = lSkinDeformer->GetCluster(lClusterIndex);
 			if (!lCluster->GetLink())
@@ -325,10 +324,10 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 			FbxAMatrix lVertexTransformMatrix;
 
 			int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
-			for (int k = 0; k < lVertexIndexCount; ++k) 
-			{            
+			for (int k = 0; k < lVertexIndexCount; ++k)
+			{
 				int lIndex = lCluster->GetControlPointIndices()[k];
-					
+
 				// Sometimes, the mesh can have less points than at the time of the skinning
 				// because a smooth operator was active when skinning but has been deactivated during export.
 				if (lIndex >= lVertexCount)
@@ -342,9 +341,9 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 				}
 
 				bool foundSpot = false;
-				for(int spot = 0;spot < 4;++spot)
+				for (int spot = 0; spot < 4; ++spot)
 				{
-					if(someBones[lIndex][spot] == -1)
+					if (someBones[lIndex][spot] == -1)
 					{
 						someBones[lIndex][spot] = boneId;
 						someWeights[lIndex][spot] = lWeight;
@@ -354,15 +353,15 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 				}
 
 				/*if (lClusterMode == FbxCluster::eAdditive)
-				{    
+				{
 
-					// Set the link to 1.0 just to know this vertex is influenced by a link.
-					lClusterWeight[lIndex] = 1.0;
+				// Set the link to 1.0 just to know this vertex is influenced by a link.
+				lClusterWeight[lIndex] = 1.0;
 				}
 				else // lLinkMode == FbxCluster::eNormalize || lLinkMode == FbxCluster::eTotalOne
 				{
-					// Add to the sum of weights to either normalize or complete the vertex.
-					lClusterWeight[lIndex] += lWeight;
+				// Add to the sum of weights to either normalize or complete the vertex.
+				lClusterWeight[lIndex] += lWeight;
 				}*/
 			}//For each vertex			
 		}//lClusterCount
@@ -370,48 +369,48 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 
 	/*for(int i = 0;i < lVertexCount;++i)
 	{
-		if(someBones[i][0] == -1)
-		{
-			someBones[i][0] = 0;
-		}
-		if(someBones[i][1] == -1)
-		{
-			someBones[i][1] = 0;
-		}
-		if(someBones[i][2] == -1)
-		{
-			someBones[i][2] = 0;
-		}
-		if(someBones[i][3] == -1)
-		{
-			someBones[i][3] = 0;
-		}
+	if(someBones[i][0] == -1)
+	{
+	someBones[i][0] = 0;
+	}
+	if(someBones[i][1] == -1)
+	{
+	someBones[i][1] = 0;
+	}
+	if(someBones[i][2] == -1)
+	{
+	someBones[i][2] = 0;
+	}
+	if(someBones[i][3] == -1)
+	{
+	someBones[i][3] = 0;
+	}
 
 	}*/
 
 	//Actually deform each vertices here by information stored in lClusterDeformation and lClusterWeight
-	/*for (int i = 0; i < lVertexCount; i++) 
+	/*for (int i = 0; i < lVertexCount; i++)
 	{
-		FbxVector4 lSrcVertex = pVertexArray[i];
-		FbxVector4& lDstVertex = pVertexArray[i];
-		double lWeight = lClusterWeight[i];
+	FbxVector4 lSrcVertex = pVertexArray[i];
+	FbxVector4& lDstVertex = pVertexArray[i];
+	double lWeight = lClusterWeight[i];
 
-		// Deform the vertex if there was at least a link with an influence on the vertex,
-		if (lWeight != 0.0) 
-		{
-			lDstVertex = lClusterDeformation[i].MultT(lSrcVertex);
-			if (lClusterMode == FbxCluster::eNormalize)
-			{
-				// In the normalized link mode, a vertex is always totally influenced by the links. 
-				lDstVertex /= lWeight;
-			}
-			else if (lClusterMode == FbxCluster::eTotalOne)
-			{
-				// In the total 1 link mode, a vertex can be partially influenced by the links. 
-				lSrcVertex *= (1.0 - lWeight);
-				lDstVertex += lSrcVertex;
-			}
-		} 
+	// Deform the vertex if there was at least a link with an influence on the vertex,
+	if (lWeight != 0.0)
+	{
+	lDstVertex = lClusterDeformation[i].MultT(lSrcVertex);
+	if (lClusterMode == FbxCluster::eNormalize)
+	{
+	// In the normalized link mode, a vertex is always totally influenced by the links.
+	lDstVertex /= lWeight;
+	}
+	else if (lClusterMode == FbxCluster::eTotalOne)
+	{
+	// In the total 1 link mode, a vertex can be partially influenced by the links.
+	lSrcVertex *= (1.0 - lWeight);
+	lDstVertex += lSrcVertex;
+	}
+	}
 	}
 
 	delete [] lClusterDeformation;
@@ -419,7 +418,7 @@ void ComputeLinearDeformation(FbxAMatrix& pGlobalPosition,
 }
 
 
-bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
+bool FillData(ModelData* someData, FbxNode* aNode, AnimationData* aAnimation)
 {
 	FbxMesh* mesh = aNode->GetMesh();
 	if (mesh == nullptr || !aNode)
@@ -446,32 +445,32 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 					lMaterialIndex;
 					/*if (someData->mSubMeshes[lMaterialIndex] == NULL)
 					{
-						someData->mSubMeshes[lMaterialIndex] = new ModelData::SubMesh;
+					someData->mSubMeshes[lMaterialIndex] = new ModelData::SubMesh;
 					}
 					someData->mSubMeshes[lMaterialIndex]->TriangleCount += 1;*/
 				}
 
 				// Make sure we have no "holes" (NULL) in the mSubMeshes table. This can happen
 				// if, in the loop above, we resized the mSubMeshes by more than one slot.
-					
+
 				/*for (int i = 0; i < someData->mSubMeshes.Count(); i++)
 				{
-					if (someData->mSubMeshes[i] == NULL)
-						someData->mSubMeshes[i] = new ModelData::SubMesh;
+				if (someData->mSubMeshes[i] == NULL)
+				someData->mSubMeshes[i] = new ModelData::SubMesh;
 				}*/
 
 				// Record the offset (how many vertex)
 				const int lMaterialCount = someData->mSubMeshes.Size();
 				lMaterialCount;
 				int lOffset = 0;
+				lOffset;
 				/*for (int lIndex = 0; lIndex < lMaterialCount; ++lIndex)
 				{
-					someData->mSubMeshes[lIndex]->IndexOffset = lOffset;
-					lOffset += someData->mSubMeshes[lIndex]->TriangleCount * 3;
-					// This will be used as counter in the following procedures, reset to zero
-					someData->mSubMeshes[lIndex]->TriangleCount = 0;
+				someData->mSubMeshes[lIndex]->IndexOffset = lOffset;
+				lOffset += someData->mSubMeshes[lIndex]->TriangleCount * 3;
+				// This will be used as counter in the following procedures, reset to zero
+				someData->mSubMeshes[lIndex]->TriangleCount = 0;
 				}*/
-				DL_ASSERT_EXP(lOffset == lPolygonCount * 3, "Failed something in FBX loader.");
 				FBX_ASSERT(lOffset == lPolygonCount * 3);
 			}
 		}
@@ -485,11 +484,10 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 			someData->mSubMeshes.Init(1);
 		}
 		someData->mSubMeshes.RemoveAll();
-		someData->mSubMeshes.AddEmptyObject();
-		someData->mSubMeshes[0] = new ModelData::SubMesh();
+		someData->mSubMeshes.Add(new ModelData::SubMesh());
 	}
 
-		
+
 
 	bool hasNormalMap = false;
 
@@ -499,53 +497,61 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		FbxSurfaceMaterial * lMaterial = aNode->GetMaterial(lMaterialIndex);
 		if (lMaterial && !lMaterial->GetUserDataPtr())
 		{
-			TextureInfo diffuseInfo;
-			GetMaterialProperty(lMaterial,FbxSurfaceMaterial::sDiffuse,FbxSurfaceMaterial::sDiffuseFactor,diffuseInfo.myFileName);
-			diffuseInfo.myType = DIFFUSE;
-			if(diffuseInfo.myFileName.empty() == false)
+			TextureInfo albedoInfo;
+			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sDiffuse, nullptr, albedoInfo.myFileName);
+			albedoInfo.myType = FBXTextureType::ALBEDO;
+			if (albedoInfo.myFileName.empty() == false)
 			{
-				someData->myTextures.push_back(diffuseInfo);
+				someData->myTextures.push_back(albedoInfo);
 			}
 
 			TextureInfo normalInfo;
-			GetMaterialProperty(lMaterial,FbxSurfaceMaterial::sNormalMap,FbxSurfaceMaterial::sBumpFactor,normalInfo.myFileName);
-			hasNormalMap = normalInfo.myFileName.empty() == false;
-			normalInfo.myType = NORMALMAP;
-			if(normalInfo.myFileName.empty() == false)
+			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sNormalMap, nullptr, normalInfo.myFileName);
+			hasNormalMap = false;
+			normalInfo.myType = FBXTextureType::NORMAL;
+			if (normalInfo.myFileName.empty() == false)
 			{
 				someData->myTextures.push_back(normalInfo);
 				hasNormalMap = true;
 			}
 
 			TextureInfo roughnessInfo;
-			GetMaterialProperty(lMaterial,FbxSurfaceMaterial::sSpecular,FbxSurfaceMaterial::sSpecularFactor,roughnessInfo.myFileName);
-			roughnessInfo.myType = ROUGHNESS;
-			if(roughnessInfo.myFileName.empty() == false)
+			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sSpecular, nullptr, roughnessInfo.myFileName);
+			roughnessInfo.myType = FBXTextureType::ROUGHNESS;
+			if (roughnessInfo.myFileName.empty() == false)
 			{
 				someData->myTextures.push_back(roughnessInfo);
 			}
 
-			TextureInfo substanceInfo;
-			GetMaterialProperty(lMaterial,FbxSurfaceMaterial::sReflection,FbxSurfaceMaterial::sReflectionFactor,substanceInfo.myFileName);
-			substanceInfo.myType = SUBSTANCE;
-			if(substanceInfo.myFileName.empty() == false)
+			TextureInfo metalnessInfo;
+			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sReflection, nullptr, metalnessInfo.myFileName);
+			metalnessInfo.myType = FBXTextureType::METALNESS;
+			if (metalnessInfo.myFileName.empty() == false)
 			{
-				someData->myTextures.push_back(substanceInfo);
+				someData->myTextures.push_back(metalnessInfo);
 			}
 
 			TextureInfo ambientInfo;
-			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sAmbient, FbxSurfaceMaterial::sAmbientFactor, ambientInfo.myFileName);
-			ambientInfo.myType = AO;
+			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sAmbient, nullptr, ambientInfo.myFileName);
+			ambientInfo.myType = FBXTextureType::AMBIENT;
 			if (ambientInfo.myFileName.empty() == false)
 			{
 				someData->myTextures.push_back(ambientInfo);
+			}
+
+			TextureInfo emissiveInfo;
+			GetMaterialProperty(lMaterial, FbxSurfaceMaterial::sEmissive, nullptr, emissiveInfo.myFileName);
+			emissiveInfo.myType = FBXTextureType::EMISSIVE;
+			if (emissiveInfo.myFileName.empty() == false)
+			{
+				someData->myTextures.push_back(emissiveInfo);
 			}
 		}
 	}
 
 	// Congregate all the data of a mesh to be cached in VBOs.
 	// If normal or UV is by polygon vertex, record all vertex attributes by polygon vertex.'
-		
+
 	someData->mHasNormal = mesh->GetElementNormalCount() > 0;
 	someData->mHasUV = mesh->GetElementUVCount() > 0;
 	someData->myHasBiNormal = mesh->GetElementBinormalCount() > 0;
@@ -553,13 +559,13 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 	FbxSkin * lSkinDeformer = (FbxSkin *)mesh->GetDeformer(0, FbxDeformer::eSkin);
 	someData->myHasSkinweights = lSkinDeformer != nullptr;
 
-	if(hasNormalMap && someData->myHasBiNormal == false)
+	if (hasNormalMap && someData->myHasBiNormal == false)
 	{
 		mesh->GenerateTangentsDataForAllUVSets();
 		someData->myHasBiNormal = mesh->GetElementBinormalCount() > 0;
 	}
 	someData->myHasTangents = mesh->GetElementTangentCount() > 0;
-		
+
 	FbxGeometryElement::EMappingMode lNormalMappingMode = FbxGeometryElement::eNone;
 	FbxGeometryElement::EMappingMode lUVMappingMode = FbxGeometryElement::eNone;
 	if (someData->mHasNormal)
@@ -609,7 +615,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		ModelData::Layout newLayout;
 		newLayout.myType = ModelData::VERTEX_NORMAL;
 		newLayout.mySize = NORMAL_STRIDE;
-		newLayout.myOffset = stride*4;
+		newLayout.myOffset = stride * 4;
 		someData->myLayout.Add(newLayout);
 
 		stride += NORMAL_STRIDE;
@@ -625,7 +631,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		ModelData::Layout newLayout;
 		newLayout.myType = ModelData::VERTEX_UV;
 		newLayout.mySize = UV_STRIDE;
-		newLayout.myOffset = stride*4;
+		newLayout.myOffset = stride * 4;
 		someData->myLayout.Add(newLayout);
 
 		stride += UV_STRIDE;
@@ -639,7 +645,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		ModelData::Layout newLayout;
 		newLayout.myType = ModelData::VERTEX_BINORMAL;
 		newLayout.mySize = BINORMAL_STRIDE;
-		newLayout.myOffset = stride*4;
+		newLayout.myOffset = stride * 4;
 		someData->myLayout.Add(newLayout);
 
 		stride += BINORMAL_STRIDE;
@@ -652,7 +658,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		ModelData::Layout newLayout;
 		newLayout.myType = ModelData::VERTEX_TANGENT;
 		newLayout.mySize = TANGENT_STRIDE;
-		newLayout.myOffset = stride*4;
+		newLayout.myOffset = stride * 4;
 		someData->myLayout.Add(newLayout);
 
 		stride += TANGENT_STRIDE;
@@ -665,7 +671,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		ModelData::Layout newLayout;
 		newLayout.myType = ModelData::VERTEX_SKINWEIGHTS;
 		newLayout.mySize = SKINWEIGHT_STRIDE;
-		newLayout.myOffset = stride*4;
+		newLayout.myOffset = stride * 4;
 		someData->myLayout.Add(newLayout);
 
 		stride += SKINWEIGHT_STRIDE;
@@ -673,7 +679,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 
 		newLayout.myType = ModelData::VERTEX_BONEID;
 		newLayout.mySize = BONEID_STRIDE;
-		newLayout.myOffset = stride*4;
+		newLayout.myOffset = stride * 4;
 		someData->myLayout.Add(newLayout);
 
 		stride += BONEID_STRIDE;
@@ -686,12 +692,12 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 	FbxAMatrix globalPos;
 	FbxVector4* weights = nullptr;
 	FbxVectorTemplate4<int>* bones = nullptr;
-	FbxTime time = static_cast<FbxTime>(0.0f);
-	if(someData->myHasSkinweights)
+	FbxTime time = static_cast<FbxLongLong>(0.0f);
+	if (someData->myHasSkinweights)
 	{
 		weights = new FbxVector4[mesh->GetControlPointsCount()];
 		bones = new FbxVectorTemplate4<int>[mesh->GetControlPointsCount()];
-		ComputeLinearDeformation(globalPos,mesh,weights,bones,aAnimation);
+		ComputeLinearDeformation(globalPos, mesh, weights, bones, aAnimation);
 	}
 
 	const FbxGeometryElementBinormal * lBiNormalElement = NULL;
@@ -732,14 +738,17 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 			int addedSize = VERTEX_STRIDE;
 			// Save the vertex position.
 			lCurrentVertex = lControlPoints[lIndex];
-				
-			CU::Vector4f position(static_cast<float>(lCurrentVertex[0]),
-					static_cast<float>(lCurrentVertex[1]),
-					static_cast<float>(lCurrentVertex[2]),
-					1);
 
-			CU::Matrix44f fixMatrix;
-			fixMatrix = CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1,0,0));
+			
+			CU::Vector4<float> position(static_cast<float>(lCurrentVertex[0]),
+				static_cast<float>(lCurrentVertex[1]),
+				static_cast<float>(lCurrentVertex[2]),
+				1);
+
+			
+			
+			CU::Matrix44<float> fixMatrix;
+			fixMatrix = CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
 			position = position*fixMatrix;
 
 			lVertices[currentIndex] = position.x;
@@ -758,8 +767,8 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 				}
 				lCurrentNormal = lNormalElement->GetDirectArray().GetAt(lNormalIndex);
 
-				CU::Vector3f normal( static_cast<float>(lCurrentNormal[0]), static_cast<float>(lCurrentNormal[1]), static_cast<float>(lCurrentNormal[2]));
-				normal = normal*CU::Matrix33<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
+				CU::Vector3<float> normal(static_cast<float>(lCurrentNormal[0]), static_cast<float>(lCurrentNormal[1]), static_cast<float>(lCurrentNormal[2]));
+				normal = normal*CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
 
 				lVertices[currentIndex + addedSize] = normal.x;
 				lVertices[currentIndex + addedSize + 1] = normal.y;
@@ -783,68 +792,66 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 			}
 
 			if (someData->myHasBiNormal)
+			{
+				int lBinormIndexIndex = lIndex;
+				if (lBiNormalElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
 				{
-					int lBinormIndexIndex = lIndex;
-					if (lBiNormalElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-					{
-						lBinormIndexIndex = lBiNormalElement->GetIndexArray().GetAt(lIndex);
-					}
-
-					lCurrentBiNormal = lBiNormalElement->GetDirectArray().GetAt(lBinormIndexIndex);
-					//mesh->GetElementBinormal(lPolygonIndex, lVerticeIndex, lCurrentNormal);
-					//lCurrentNormal = lCurrentNormal
-					CU::Vector3f normal( static_cast<float>(lCurrentBiNormal[0]), static_cast<float>(lCurrentBiNormal[1]), static_cast<float>(lCurrentBiNormal[2]));
-					normal = normal*CU::Matrix33<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
-					if (CU::Length(normal) != 0.f)
-						CU::Normalize(normal);
-					lVertices[currentIndex + addedSize] = normal.x;
-					lVertices[currentIndex + addedSize + 1] = normal.y;
-					lVertices[currentIndex + addedSize + 2] = normal.z;
-					lVertices[currentIndex + addedSize + 3] = 0;
-					addedSize += BINORMAL_STRIDE;
+					lBinormIndexIndex = lBiNormalElement->GetIndexArray().GetAt(lIndex);
 				}
 
-				if (someData->myHasTangents)
+				lCurrentBiNormal = lBiNormalElement->GetDirectArray().GetAt(lBinormIndexIndex);
+				//mesh->GetElementBinormal(lPolygonIndex, lVerticeIndex, lCurrentNormal);
+				//lCurrentNormal = lCurrentNormal
+				CU::Vector3<float> normal(static_cast<float>(lCurrentBiNormal[0]), static_cast<float>(lCurrentBiNormal[1]), static_cast<float>(lCurrentBiNormal[2]));
+				normal = normal*CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
+				CU::Normalize(normal);
+				lVertices[currentIndex + addedSize] = normal.x;
+				lVertices[currentIndex + addedSize + 1] = normal.y;
+				lVertices[currentIndex + addedSize + 2] = normal.z;
+				lVertices[currentIndex + addedSize + 3] = 0;
+				addedSize += BINORMAL_STRIDE;
+			}
+
+			if (someData->myHasTangents)
+			{
+				int lBinormIndexIndex = lIndex;
+				if (lTangentElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
 				{
-					int lBinormIndexIndex = lIndex;
-					if (lTangentElement->GetReferenceMode() == FbxLayerElement::eIndexToDirect)
-					{
-						lBinormIndexIndex = lTangentElement->GetIndexArray().GetAt(lIndex);
-					}
-
-					lCurrentTangent = lTangentElement->GetDirectArray().GetAt(lBinormIndexIndex);
-
-					//lCurrentNormal = lCurrentNormal
-					CU::Vector3f normal( static_cast<float>(lCurrentTangent[0]), static_cast<float>(lCurrentTangent[1]), static_cast<float>(lCurrentTangent[2]));
-					normal = normal*CU::Matrix33<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
-					if (CU::Length(normal) != 0.f)
-						CU::Normalize(normal);
-					lVertices[currentIndex + addedSize] = normal.x;
-					lVertices[currentIndex + addedSize + 1] = normal.y;
-					lVertices[currentIndex + addedSize + 2] = normal.z;
-					lVertices[currentIndex + addedSize + 3] = 0;
-					addedSize += TANGENT_STRIDE;
+					lBinormIndexIndex = lTangentElement->GetIndexArray().GetAt(lIndex);
 				}
 
-				if(someData->myHasSkinweights)
-				{
-					FbxVector4 currentWeights = weights[lIndex];
-					//currentWeights.Normalize();
+				lCurrentTangent = lTangentElement->GetDirectArray().GetAt(lBinormIndexIndex);
 
-					lVertices[currentIndex + addedSize] = static_cast<float>(currentWeights[0]);
-					lVertices[currentIndex + addedSize + 1] = static_cast<float>(currentWeights[1]);
-					lVertices[currentIndex + addedSize + 2] = static_cast<float>(currentWeights[2]);
-					lVertices[currentIndex + addedSize + 3] = static_cast<float>(currentWeights[3]);
-					addedSize += SKINWEIGHT_STRIDE;
+				//lCurrentNormal = lCurrentNormal
+				CU::Vector3<float> normal(static_cast<float>(lCurrentTangent[0]), static_cast<float>(lCurrentTangent[1]), static_cast<float>(lCurrentTangent[2]));
+				normal = normal*CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
+				CU::Normalize(normal);
+				lVertices[currentIndex + addedSize] = normal.x;
+				lVertices[currentIndex + addedSize + 1] = normal.y;
+				lVertices[currentIndex + addedSize + 2] = normal.z;
+				lVertices[currentIndex + addedSize + 3] = 0;
+				addedSize += TANGENT_STRIDE;
+			}
 
-					FbxVectorTemplate4<int> currentBones = bones[lIndex];
+			if (someData->myHasSkinweights)
+			{
+				FbxVector4 currentWeights = weights[lIndex];
+				//currentWeights.Normalize();
 
-					lVertices[currentIndex + addedSize] = static_cast<float>(currentBones[0]);
-					lVertices[currentIndex + addedSize + 1] = static_cast<float>(currentBones[1]);
-					lVertices[currentIndex + addedSize + 2] = static_cast<float>(currentBones[2]);
-					lVertices[currentIndex + addedSize + 3] = static_cast<float>(currentBones[3]);
-					addedSize += BONEID_STRIDE;
-				}
+				lVertices[currentIndex + addedSize] = currentWeights[0];
+				lVertices[currentIndex + addedSize + 1] = currentWeights[1];
+				lVertices[currentIndex + addedSize + 2] = currentWeights[2];
+				lVertices[currentIndex + addedSize + 3] = currentWeights[3];
+				addedSize += SKINWEIGHT_STRIDE;
+
+				FbxVectorTemplate4<int> currentBones = bones[lIndex];
+
+				lVertices[currentIndex + addedSize] = currentBones[0];
+				lVertices[currentIndex + addedSize + 1] = currentBones[1];
+				lVertices[currentIndex + addedSize + 2] = currentBones[2];
+				lVertices[currentIndex + addedSize + 3] = currentBones[3];
+				addedSize += BONEID_STRIDE;
+			}
 		}
 
 	}
@@ -862,11 +869,11 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 		// Where should I save the vertex attribute index, according to the material
 		const int lIndexOffset = someData->mSubMeshes[lMaterialIndex]->IndexOffset +
 			someData->mSubMeshes[lMaterialIndex]->TriangleCount * 3;
-		for (int lVerticeIndex = TRIANGLE_VERTEX_COUNT-1; lVerticeIndex > -1; --lVerticeIndex)
+		for (int lVerticeIndex = TRIANGLE_VERTEX_COUNT - 1; lVerticeIndex > -1; --lVerticeIndex)
 		{
 			const int lControlPointIndex = mesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
-				
-			int vertexIndex = lIndexOffset + (TRIANGLE_VERTEX_COUNT-1) - lVerticeIndex;
+
+			int vertexIndex = lIndexOffset + (TRIANGLE_VERTEX_COUNT - 1) - lVerticeIndex;
 			if (someData->mAllByControlPoint)
 			{
 				lIndices[vertexIndex] = static_cast<unsigned int>(lControlPointIndex);
@@ -880,14 +887,13 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 				int addedSize = VERTEX_STRIDE;
 				int currentIndex = lVertexCount * stride;
 
-				CU::Vector4f position(static_cast<float>(lCurrentVertex[0]),
+				CU::Vector4<float> position(static_cast<float>(lCurrentVertex[0]),
 					static_cast<float>(lCurrentVertex[1]),
 					static_cast<float>(lCurrentVertex[2]),
 					1);
 
-				//fixMatrix
-				CU::Matrix44f fixMatrix;
-				fixMatrix = CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
+				CU::Matrix44<float> fixMatrix;
+				fixMatrix = CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
 				position = position*fixMatrix;
 
 				lVertices[currentIndex] = position.x;
@@ -898,11 +904,9 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 				if (someData->mHasNormal)
 				{
 					mesh->GetPolygonVertexNormal(lPolygonIndex, lVerticeIndex, lCurrentNormal);
-					CU::Vector3f normal( static_cast<float>(lCurrentNormal[0]), static_cast<float>(lCurrentNormal[1]), static_cast<float>(lCurrentNormal[2]));
-					normal = normal*CU::Matrix33<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
-					if (CU::Length(normal) != 0.f)
-						CU::Normalize(normal);
-
+					CU::Vector3<float> normal(static_cast<float>(lCurrentNormal[0]), static_cast<float>(lCurrentNormal[1]), static_cast<float>(lCurrentNormal[2]));
+					normal = normal*CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
+					CU::Normalize(normal);
 					lVertices[currentIndex + addedSize] = normal.x;
 					lVertices[currentIndex + addedSize + 1] = normal.y;
 					lVertices[currentIndex + addedSize + 2] = normal.z;
@@ -918,7 +922,7 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 					lVertices[currentIndex + addedSize + 1] = static_cast<float>(lCurrentUV[1])*-1.0f;
 					addedSize += UV_STRIDE;
 				}
-					
+
 				if (someData->myHasBiNormal)
 				{
 					int lBinormIndexIndex = lVerticeIndex;
@@ -929,10 +933,9 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 
 					lCurrentBiNormal = lBiNormalElement->GetDirectArray().GetAt(lBinormIndexIndex);
 
-					CU::Vector3f normal( static_cast<float>(lCurrentBiNormal[0]), static_cast<float>(lCurrentBiNormal[1]), static_cast<float>(lCurrentBiNormal[2]));
-					normal = normal*CU::Matrix33<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
-					if (CU::Length(normal) != 0.f)
-						CU::Normalize(normal);
+					CU::Vector3<float> normal(static_cast<float>(lCurrentBiNormal[0]), static_cast<float>(lCurrentBiNormal[1]), static_cast<float>(lCurrentBiNormal[2]));
+					normal = normal*CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
+					CU::Normalize(normal);
 					lVertices[currentIndex + addedSize] = normal.x;
 					lVertices[currentIndex + addedSize + 1] = normal.y;
 					lVertices[currentIndex + addedSize + 2] = normal.z;
@@ -952,10 +955,9 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 
 					mesh->GetPolygonVertexNormal(lPolygonIndex, lVerticeIndex, lCurrentNormal);
 
-					CU::Vector3f normal( static_cast<float>(lCurrentTangent[0]), static_cast<float>(lCurrentTangent[1]), static_cast<float>(lCurrentTangent[2]));
-					normal = normal*CU::Matrix33<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
-					if (CU::Length(normal) != 0.f)
-						CU::Normalize(normal);
+					CU::Vector3<float> normal(static_cast<float>(lCurrentBiNormal[0]), static_cast<float>(lCurrentBiNormal[1]), static_cast<float>(lCurrentBiNormal[2]));
+					normal = normal*CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
+					CU::Normalize(normal);
 					lVertices[currentIndex + addedSize] = normal.x;
 					lVertices[currentIndex + addedSize + 1] = normal.y;
 					lVertices[currentIndex + addedSize + 2] = normal.z;
@@ -963,26 +965,26 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 					addedSize += TANGENT_STRIDE;
 				}
 
-				if(someData->myHasSkinweights)
+				if (someData->myHasSkinweights)
 				{
 					FbxVector4 currentWeights = weights[lControlPointIndex];
 					FbxVectorTemplate4<int> currentBones = bones[lControlPointIndex];
-					for(int l = 0;l < 4;++l)
+					for (int l = 0; l < 4; ++l)
 					{
-						if(currentBones[l] == -1)
+						if (currentBones[l] == -1)
 						{
 							currentWeights[l] = 0.0f;
 						}
 					}
 					currentWeights.Normalize();
 
-					lVertices[currentIndex + addedSize] = static_cast<float>(currentWeights[0]);
-					lVertices[currentIndex + addedSize + 1] = static_cast<float>(currentWeights[1]);
-					lVertices[currentIndex + addedSize + 2] = static_cast<float>(currentWeights[2]);
-					lVertices[currentIndex + addedSize + 3] = static_cast<float>(currentWeights[3]);
+					lVertices[currentIndex + addedSize] = currentWeights[0];
+					lVertices[currentIndex + addedSize + 1] = currentWeights[1];
+					lVertices[currentIndex + addedSize + 2] = currentWeights[2];
+					lVertices[currentIndex + addedSize + 3] = currentWeights[3];
 					addedSize += SKINWEIGHT_STRIDE;
 
-						
+
 
 					lVertices[currentIndex + addedSize] = *(float*)&currentBones[0];
 					lVertices[currentIndex + addedSize + 1] = *(float*)&currentBones[1];
@@ -1002,16 +1004,16 @@ bool FillData(ModelData* someData,FbxNode* aNode, AnimationData* aAnimation)
 	someData->myVertexBuffer = lVertices;
 	someData->myIndicies = lIndices;
 
-	if(weights)
+	if (weights)
 	{
-		delete [] weights;
-		delete [] bones;
+		delete[] weights;
+		delete[] bones;
 	}
 
 	return true;
 }
 
-FbxAMatrix GetGlobalPosition(FbxNode* pNode , FbxPose* pPose, FbxAMatrix* pParentGlobalPosition)
+FbxAMatrix GetGlobalPosition(FbxNode* pNode, FbxPose* pPose, FbxAMatrix* pParentGlobalPosition)
 {
 	FbxAMatrix lGlobalPosition;
 	bool        lPositionFound = false;
@@ -1043,7 +1045,7 @@ FbxAMatrix GetGlobalPosition(FbxNode* pNode , FbxPose* pPose, FbxAMatrix* pParen
 				{
 					if (pNode->GetParent())
 					{
-						lParentGlobalPosition = GetGlobalPosition(pNode->GetParent(), pPose,nullptr);
+						lParentGlobalPosition = GetGlobalPosition(pNode->GetParent(), pPose, nullptr);
 					}
 				}
 
@@ -1056,12 +1058,12 @@ FbxAMatrix GetGlobalPosition(FbxNode* pNode , FbxPose* pPose, FbxAMatrix* pParen
 	return lGlobalPosition;
 }
 
-CU::Matrix44f CreateMatrix(FbxAMatrix& aOriention)
+CU::Matrix44<float> CreateMatrix(FbxAMatrix& aOriention)
 {
 	CU::Matrix44f returnMatrix;
-	for(int y = 0;y < 4;++y)
+	for (int y = 0; y < 4; ++y)
 	{
-		for(int x = 0;x < 4;++x)
+		for (int x = 0; x < 4; ++x)
 		{
 			returnMatrix.myMatrix[y * 4 + x] = (float)aOriention.Get(x, y);
 		}
@@ -1069,182 +1071,178 @@ CU::Matrix44f CreateMatrix(FbxAMatrix& aOriention)
 	return returnMatrix;
 }
 
-float GetAnimationTime(FbxNode* aNode,FbxAnimLayer* aCurrentAnimLayer)
+float GetAnimationTime(FbxNode* aNode, FbxAnimLayer* aCurrentAnimLayer)
 {
 	aCurrentAnimLayer;
-	aNode;
 	FbxTimeSpan span;
 	aNode->GetAnimationInterval(span);
 	return float(span.GetStop().GetSecondDouble());
-	/*
-	double time = 0.0f;
-	FbxAnimCurve* translationX = aNode->LclTranslation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* translationY = aNode->LclTranslation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* translationZ = aNode->LclTranslation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Z);
-	if(translationX && translationX->KeyGetCount() > 0)
-	{
-		time = max(time,translationX->KeyGet(translationX->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	if(translationY && translationY->KeyGetCount() > 0)
-	{
-		time = max(time,translationY->KeyGet(translationY->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	if(translationZ && translationZ->KeyGetCount() > 0)
-	{
-		time = max(time,translationZ->KeyGet(translationZ->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
+	//double time = 0.0f;
+	//FbxAnimCurve* translationX = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* translationY = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* translationZ = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (translationX && translationX->KeyGetCount() > 0)
+	//{
+	//	time = max(time, translationX->KeyGet(translationX->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (translationY && translationY->KeyGetCount() > 0)
+	//{
+	//	time = max(time, translationY->KeyGet(translationY->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (translationZ && translationZ->KeyGetCount() > 0)
+	//{
+	//	time = max(time, translationZ->KeyGet(translationZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
 
-	FbxAnimCurve* rotationX = aNode->LclRotation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* rotationY = aNode->LclRotation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* rotationZ = aNode->LclRotation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Z);
-	if(rotationX && rotationX->KeyGetCount() > 0)
-	{
-		time = max(time,rotationX->KeyGet(rotationX->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	if(rotationY && rotationY->KeyGetCount() > 0)
-	{
-		time = max(time,rotationY->KeyGet(rotationY->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	if(rotationZ && rotationZ->KeyGetCount() > 0)
-	{
-		time = max(time,rotationZ->KeyGet(rotationZ->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
+	//FbxAnimCurve* rotationX = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* rotationY = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* rotationZ = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (rotationX && rotationX->KeyGetCount() > 0)
+	//{
+	//	time = max(time, rotationX->KeyGet(rotationX->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (rotationY && rotationY->KeyGetCount() > 0)
+	//{
+	//	time = max(time, rotationY->KeyGet(rotationY->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (rotationZ && rotationZ->KeyGetCount() > 0)
+	//{
+	//	time = max(time, rotationZ->KeyGet(rotationZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
 
-	FbxAnimCurve* scaleX = aNode->LclScaling.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* scaleY = aNode->LclScaling.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* scaleZ = aNode->LclScaling.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Z);
-	if(scaleX && scaleX->KeyGetCount() > 0)
-	{
-		time = max(time,scaleX->KeyGet(scaleX->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	if(scaleY && scaleY->KeyGetCount() > 0)
-	{
-		time = max(time,scaleY->KeyGet(scaleY->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	if(scaleZ && scaleZ->KeyGetCount() > 0)
-	{
-		time = max(time,scaleZ->KeyGet(scaleZ->KeyGetCount()-1).GetTime().GetSecondDouble());
-	}
-	return (float)time;
-	*/
+	//FbxAnimCurve* scaleX = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* scaleY = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* scaleZ = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (scaleX && scaleX->KeyGetCount() > 0)
+	//{
+	//	time = max(time, scaleX->KeyGet(scaleX->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (scaleY && scaleY->KeyGetCount() > 0)
+	//{
+	//	time = max(time, scaleY->KeyGet(scaleY->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//if (scaleZ && scaleZ->KeyGetCount() > 0)
+	//{
+	//	time = max(time, scaleZ->KeyGet(scaleZ->KeyGetCount() - 1).GetTime().GetSecondDouble());
+	//}
+	//return (float)time;
 }
 
-CU::Matrix44f GetAnimationMatrix(FbxNode* aNode,FbxAnimLayer* aCurrentAnimLayer, float aTime, CU::Matrix44f& offsetMatrix)
+CU::Matrix44<float> GetAnimationMatrix(FbxNode* aNode, FbxAnimLayer* aCurrentAnimLayer, float aTime, CU::Matrix44<float>& offsetMatrix)
 {
 	aTime;
 	aCurrentAnimLayer;
 	aNode;
-	CU::Matrix44f returnMatrix = offsetMatrix;
+
+	CU::Matrix44<float> returnMatrix = offsetMatrix;
 	return returnMatrix;
-	/*
-	CU::Vector3f startTranslation = offsetMatrix.GetPos();
-	FbxTime time;
-	time.SetSecondDouble(aTime);
-	CU::Vector3f translation(0,0,0);
-
-	FbxAnimCurve* translationX = aNode->LclTranslation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* translationY = aNode->LclTranslation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* translationZ = aNode->LclTranslation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Z);
-	if(translationX)
-	{
-		translation.x = translationX->Evaluate(time);
-	}
-	else
-	{
-		translation.x = startTranslation.x;
-	}
-	if(translationY)
-	{
-		translation.y = translationY->Evaluate(time);
-	}
-	else
-	{
-		translation.y = startTranslation.y;
-	}
-	if(translationZ)
-	{
-		translation.z = translationZ->Evaluate(time);
-	}
-	else
-	{
-		translation.z = startTranslation.z;
-	}
-
-		
-
-	FbxVector4 rotation(0,0,0,0);
-	FbxAnimCurve* rotationX = aNode->LclRotation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* rotationY = aNode->LclRotation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* rotationZ = aNode->LclRotation.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Z);
-	if(rotationX)
-	{
-		rotation[0] = -rotationX->Evaluate(time)*(PI/180.0f);
-	}
-	if(rotationY)
-	{
-		rotation[1] = rotationY->Evaluate(time)*(PI/180.0f);
-	}
-	if(rotationZ)
-	{
-		rotation[2] = -rotationZ->Evaluate(time)*(PI/180.0f);
-	}
-	CU::Matrix44f rotationMatrix;
-	returnMatrix.SetPos(translation);
-
-	CU::Matrix44f fixMatrix;
-	fixMatrix.myMatrix[0] = -1;
-
-	returnMatrix = fixMatrix * returnMatrix * fixMatrix;
-	returnMatrix *= CU::Matrix44<float>::CreateRotateAroundZ(rotation[2]);
-	returnMatrix *= CU::Matrix44<float>::CreateRotateAroundY(rotation[1]);
-	returnMatrix *= CU::Matrix44<float>::CreateRotateAroundX(rotation[0]);
-
-	FbxVector4 scale(1,1,1,1);
-	FbxAnimCurve* scaleX = aNode->LclScaling.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_X);
-	FbxAnimCurve* scaleY = aNode->LclScaling.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Y);
-	FbxAnimCurve* scaleZ = aNode->LclScaling.GetCurve(aCurrentAnimLayer,FBXSDK_CURVENODE_COMPONENT_Z);
-	if(scaleX)
-	{
-		scale[0] = scaleX->Evaluate(time);
-	}
-	if(scaleY)
-	{
-		scale[1] = scaleY->Evaluate(time);
-	}
-	if(scaleZ)
-	{
-		scale[2] = scaleZ->Evaluate(time);
-	}
-
-	FbxAMatrix currentMatrix;
-	//currentMatrix.SetTRS(translation,rotationMatrix,scale);
-
-		
-	return returnMatrix;
-	*/
+	//CU::Vector3<float> startTranslation = offsetMatrix.Get();
+	//FbxTime time;
+	//time.SetSecondDouble(aTime);
+	//CU::Vector3<float> translation(0, 0, 0);
+	//
+	//FbxAnimCurve* translationX = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* translationY = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* translationZ = aNode->LclTranslation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (translationX)
+	//{
+	//	translation.x = translationX->Evaluate(time);
+	//}
+	//else
+	//{
+	//	translation.x = startTranslation.x;
+	//}
+	//if (translationY)
+	//{
+	//	translation.y = translationY->Evaluate(time);
+	//}
+	//else
+	//{
+	//	translation.y = startTranslation.y;
+	//}
+	//if (translationZ)
+	//{
+	//	translation.z = translationZ->Evaluate(time);
+	//}
+	//else
+	//{
+	//	translation.z = startTranslation.z;
+	//}
+	//
+	//
+	//
+	//FbxVector4 rotation(0, 0, 0, 0);
+	//FbxAnimCurve* rotationX = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* rotationY = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* rotationZ = aNode->LclRotation.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (rotationX)
+	//{
+	//	rotation[0] = -rotationX->Evaluate(time)*(PI / 180.0f);
+	//}
+	//if (rotationY)
+	//{
+	//	rotation[1] = rotationY->Evaluate(time)*(PI / 180.0f);
+	//}
+	//if (rotationZ)
+	//{
+	//	rotation[2] = -rotationZ->Evaluate(time)*(PI / 180.0f);
+	//}
+	//CU::Matrix44<float> rotationMatrix;
+	//returnMatrix.SetPosition(translation);
+	//
+	//CU::Matrix44<float> fixMatrix;
+	//fixMatrix.myMatrix[0] = -1;
+	//
+	//returnMatrix = fixMatrix * returnMatrix * fixMatrix;
+	//returnMatrix *= CU::Matrix44<float>::CreateRotateAroundZ(rotation[2]);
+	//returnMatrix *= CU::Matrix44<float>::CreateRotateAroundY(rotation[1]);
+	//returnMatrix *= CU::Matrix44<float>::CreateRotateAroundX(rotation[0]);
+	//
+	//FbxVector4 scale(1, 1, 1, 1);
+	//FbxAnimCurve* scaleX = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_X);
+	//FbxAnimCurve* scaleY = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Y);
+	//FbxAnimCurve* scaleZ = aNode->LclScaling.GetCurve(aCurrentAnimLayer, FBXSDK_CURVENODE_COMPONENT_Z);
+	//if (scaleX)
+	//{
+	//	scale[0] = scaleX->Evaluate(time);
+	//}
+	//if (scaleY)
+	//{
+	//	scale[1] = scaleY->Evaluate(time);
+	//}
+	//if (scaleZ)
+	//{
+	//	scale[2] = scaleZ->Evaluate(time);
+	//}
+	//
+	//FbxAMatrix currentMatrix;
+	////currentMatrix.SetTRS(translation,rotationMatrix,scale);
+	//
+	//
+	//return returnMatrix;
 }
 
-void LoadAnimation(AnimationData& aAnimation,FbxNode* aNode,FbxAMatrix& aParentOrientation, FbxPose* aPose, FbxAnimLayer* aCurrentAnimLayer, int parentBone)
+void LoadAnimation(AnimationData& aAnimation, FbxNode* aNode, FbxAMatrix& aParentOrientation, FbxPose* aPose, FbxAnimLayer* aCurrentAnimLayer, int parentBone)
 {
-	FbxAMatrix lGlobalPosition = GetGlobalPosition(aNode, static_cast<FbxTime>(0.0f), aPose, &aParentOrientation);
+	FbxAMatrix lGlobalPosition = GetGlobalPosition(aNode, 0.0f, aPose, &aParentOrientation);
 	FbxNodeAttribute* lNodeAttribute = aNode->GetNodeAttribute();
 	int boneId = -1;
 	if (lNodeAttribute)
 	{
-		if(lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
+		if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
 		{
 			Bone newBone;
-			newBone.myAnimationTime = GetAnimationTime(aNode,aCurrentAnimLayer);
-			float oneFrameTime = 1.0f/24.0f;
-				
-			CU::Matrix44f fixMatrix;
+			newBone.myAnimationTime = GetAnimationTime(aNode, aCurrentAnimLayer);
+			float oneFrameTime = 1.0f / 24.0f;
+
+			CU::Matrix44<float> fixMatrix;
 			fixMatrix.myMatrix[0] = -1;
 			FbxAMatrix lLocalTransform = aNode->EvaluateLocalTransform();
 			newBone.myBaseOrientation = fixMatrix * CreateMatrix(lLocalTransform) * fixMatrix;
 
 			char buffer[32];
-			_itoa_s<32>(parentBone,buffer,10);
-			newBone.myName = aNode->GetName();	
+			_itoa_s<32>(parentBone, buffer, 10);
+			newBone.myName = aNode->GetName();
 			newBone.myName += buffer;
 
 			int lNodeIndex = aPose->Find(aNode);
@@ -1254,14 +1252,14 @@ void LoadAnimation(AnimationData& aAnimation,FbxNode* aNode,FbxAMatrix& aParentO
 			memcpy((double*)bindMatrix, (double*)bindPoseMatrix, sizeof(bindMatrix.mData));
 
 			FbxAMatrix localPosOffset;
-				
+
 			memcpy((double*)localPosOffset, (double*)bindPoseMatrix, sizeof(localPosOffset.mData));
-			localPosOffset =  localPosOffset * aParentOrientation.Inverse();
+			localPosOffset = localPosOffset * aParentOrientation.Inverse();
 
 			newBone.myBindMatrix = fixMatrix * CreateMatrix(lGlobalPosition.Inverse()) * fixMatrix;
 
-			CU::Matrix44f localStartOffset = CreateMatrix(bindMatrix.Inverse());
-			for(float currentFrameTime = 0.0f;currentFrameTime < newBone.myAnimationTime;currentFrameTime+= oneFrameTime)
+			CU::Matrix44<float> localStartOffset = CreateMatrix(bindMatrix.Inverse());
+			for (float currentFrameTime = 0.0f; currentFrameTime < newBone.myAnimationTime; currentFrameTime += oneFrameTime)
 			{
 				KeyFrame keyFrame;
 				keyFrame.myTime = currentFrameTime;
@@ -1274,7 +1272,7 @@ void LoadAnimation(AnimationData& aAnimation,FbxNode* aNode,FbxAMatrix& aParentO
 			FbxAMatrix animationMatrix;
 
 			FbxSkeleton* sekeleton = aNode->GetSkeleton();
-			if(sekeleton->IsSkeletonRoot())
+			if (sekeleton->IsSkeletonRoot())
 			{
 				aAnimation.myBindMatrix = CU::Matrix44<float>();
 				aAnimation.myRootBone = aAnimation.myBones.size();
@@ -1282,7 +1280,7 @@ void LoadAnimation(AnimationData& aAnimation,FbxNode* aNode,FbxAMatrix& aParentO
 			boneId = aAnimation.myBones.size();
 			aNode->SetUserDataPtr((void*)boneId);
 
-			if(parentBone != -1)
+			if (parentBone != -1)
 			{
 				aAnimation.myBones[parentBone].myChilds.push_back(boneId);
 			}
@@ -1294,23 +1292,66 @@ void LoadAnimation(AnimationData& aAnimation,FbxNode* aNode,FbxAMatrix& aParentO
 	const int lChildCount = aNode->GetChildCount();
 	for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex)
 	{
-		LoadAnimation( aAnimation, aNode->GetChild(lChildIndex), lGlobalPosition , aPose, aCurrentAnimLayer, boneId);
+		LoadAnimation(aAnimation, aNode->GetChild(lChildIndex), lGlobalPosition, aPose, aCurrentAnimLayer, boneId);
 	}
 }
 
-void LoadNodeRecursive(FbxModelData* aModel,AnimationData& aAnimation,FbxNode* aNode,FbxAMatrix& aParentOrientation, FbxPose* aPose, FbxAnimLayer* aCurrentAnimLayer, int parentBone)
+void SetLodGroup(FbxModelData* aModel, FbxNode* aNode)
+{
+	// Create a lod group for this model
+	Prism::LodGroup* group = aModel->CreateLodGroup();
+	FbxLODGroup *lLodGroupAttr = (FbxLODGroup*)aNode->GetNodeAttribute();
+	double minDistance = 0; // Minumum distance the lod group will be rendered at
+	double maxDistance = 1000; // Maximum distance the lod group will be rendered at
+	if (lLodGroupAttr->MinMaxDistance.Get())
+	{
+		// If the value is set from Maya, read it
+		minDistance = lLodGroupAttr->MinDistance.Get();
+		maxDistance = lLodGroupAttr->MaxDistance.Get();
+	}
+
+	// Display levels
+	int displayLevels = lLodGroupAttr->GetNumDisplayLevels();
+	for (int i = 0; i < displayLevels; i++)
+	{
+		Prism::Lod* lod = group->CreateLod();
+		FbxLODGroup::EDisplayLevel lLevel;
+		if (lLodGroupAttr->GetDisplayLevel(i, lLevel))
+		{
+			lod->myLevel = i;
+			lod->myUseLod = lLevel == FbxLODGroup::eUseLOD;
+		}
+
+	}
+
+	// Add the levels and the values for them
+	group->myThreshHolds.Add(minDistance);
+	for (int i = 0; i < lLodGroupAttr->GetNumThresholds(); i++)
+	{
+		FbxDistance lThreshVal;
+		if (lLodGroupAttr->GetThreshold(i, lThreshVal))
+		{
+			double threasHoldValue = lThreshVal.value();
+			group->myThreshHolds.Add(threasHoldValue);
+		}
+	}
+	group->myThreshHolds.Add(maxDistance);
+
+}
+
+void LoadNodeRecursive(FbxModelData* aModel, AnimationData& aAnimation, FbxNode* aNode, FbxAMatrix& aParentOrientation, FbxPose* aPose, FbxAnimLayer* aCurrentAnimLayer, int parentBone)
 {
 	parentBone;
-	FbxAMatrix lGlobalPosition = GetGlobalPosition(aNode, static_cast<FbxTime>(0.0f), aPose, &aParentOrientation);
+
+	FbxAMatrix lGlobalPosition = GetGlobalPosition(aNode, 0.0f, aPose, &aParentOrientation);
 	FbxNodeAttribute* lNodeAttribute = aNode->GetNodeAttribute();
-		
+
 	if (lNodeAttribute && lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eSkeleton)
 	{
 		return;
 	}
 
-	CU::Matrix44f fixMatrix;
-	fixMatrix = CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3f(1, 0, 0));
+	CU::Matrix44<float> fixMatrix = CU::Matrix44<float>::CreateReflectionMatrixAboutAxis(CU::Vector3<float>(1, 0, 0));
 
 	FbxAMatrix lGeometryOffset = GetGeometry(aNode);
 	FbxAMatrix lGlobalOffPosition = lGlobalPosition * lGeometryOffset;
@@ -1325,23 +1366,23 @@ void LoadNodeRecursive(FbxModelData* aModel,AnimationData& aAnimation,FbxNode* a
 	if (lNodeAttribute)
 	{
 
-		if(lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
+		if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eMesh)
 		{
 			aModel->myData = new ModelData();
 			aModel->myData->myLayout.Init(8);
-				
+
 			// Geometry offset.
 			// it is not inherited by the children.
 			FillData(aModel->myData, aNode, &aAnimation);
 		}
 		else if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eLight)
 		{
-			FBXLight* newLight = new FBXLight();
+			LoaderLight* newLight = new LoaderLight();
 			FbxLight* light = aNode->GetLight();
-				
-			newLight->myIntensity = static_cast<float>(light->Intensity);
+
+			newLight->myIntensity = light->Intensity;
 			auto color = light->Color.Get();
-			newLight->myColor = CU::Vector3<float>(static_cast<float>(color.mData[0]), static_cast<float>(color.mData[1]), static_cast<float>(color.mData[2]));
+			newLight->myColor = { float(color.mData[0]), float(color.mData[1]), float(color.mData[2]) };
 
 			auto type = light->LightType.Get();
 			if (type == FbxLight::eDirectional)
@@ -1354,20 +1395,24 @@ void LoadNodeRecursive(FbxModelData* aModel,AnimationData& aAnimation,FbxNode* a
 			}
 			else if (type == FbxLight::eSpot)
 			{
-				newLight->myInnerAngle = static_cast<float>(light->InnerAngle);
-				newLight->myOuterAngle = static_cast<float>(light->OuterAngle);
+				newLight->myInnerAngle = light->InnerAngle;
+				newLight->myOuterAngle = light->OuterAngle;
 			}
-				
+
 			aModel->myLight = newLight;
 		}
 		else if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eCamera)
 		{
-			aModel->myCamera = new Camera();
+			aModel->myCamera = new LoaderCamera();
 			auto orgCamera = aNode->GetCamera();
-			aModel->myCamera->myFov = static_cast<float>(orgCamera->FieldOfViewY);
+			aModel->myCamera->myFov = orgCamera->FieldOfViewY;
+		}
+		else if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eLODGroup)
+		{
+			SetLodGroup(aModel, aNode);
 		}
 		FbxTimeSpan animationInterval;
-			
+
 		if (aNode->GetAnimationInterval(animationInterval))
 		{
 			aModel->myAnimationCurves = new AnimationCurves();
@@ -1397,7 +1442,7 @@ void LoadNodeRecursive(FbxModelData* aModel,AnimationData& aAnimation,FbxNode* a
 
 				KeyFrame animationFrame;
 				animationFrame.myTime = currentTime;
-					
+
 				animationFrame.myMatrix = fixMatrix * CreateMatrix(aNode->EvaluateLocalTransform(time)) * fixMatrix;
 				aModel->myAnimatedOrientation.Add(animationFrame);
 			}
@@ -1405,31 +1450,31 @@ void LoadNodeRecursive(FbxModelData* aModel,AnimationData& aAnimation,FbxNode* a
 	}
 
 	const int lChildCount = aNode->GetChildCount();
-	if(lChildCount > 0)
+	if (lChildCount > 0)
 	{
 		aModel->myChilds.Init(lChildCount);
 		for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex)
 		{
 			aModel->myChilds.Add(new FbxModelData());
-			
-			LoadNodeRecursive(aModel->myChilds.GetLast(), aAnimation, aNode->GetChild(lChildIndex), lGlobalPosition , aPose, aCurrentAnimLayer, boneId);
+
+			LoadNodeRecursive(aModel->myChilds.GetLast(), aAnimation, aNode->GetChild(lChildIndex), lGlobalPosition, aPose, aCurrentAnimLayer, boneId);
 		}
 	}
 }
 
-FbxModelData* FBXLoader::loadModel( const char* aFile )
+FbxModelData* FBXLoader::loadModel(const char* aFile)
 {
-	FBX_LOG("FBXLoader Creating ModelData...");
+	DL_PRINT("FBXLoader Creating ModelData...");
 	myLoadingModel = new FbxModelData;
-	FBX_LOG("Success!");
-	FBX_LOG("FBXLoader Creating TextureData...");
+	DL_PRINT("Success!");
+	DL_PRINT("FBXLoader Creating TextureData...");
 	myLoadingModel->myTextureData = new TextureData();
-	FBX_LOG("Success!");
-	FBX_LOG("FBXLoader Loading Scene...");
+	DL_PRINT("Success!");
+	DL_PRINT("FBXLoader Loading Scene...");
 	auto scene = LoadScene(aFile);
-	FBX_LOG("Successfully loaded scene!");
+	DL_PRINT("Successfully loaded scene!");
 
-	FBX_LOG("FBXLoader Loading Textures...");
+	DL_PRINT("FBXLoader Loading Textures...");
 	//TextureData
 	const int lTextureCount = scene->GetTextureCount();
 	for (int lTextureIndex = 0; lTextureIndex < lTextureCount; ++lTextureIndex)
@@ -1439,31 +1484,23 @@ FbxModelData* FBXLoader::loadModel( const char* aFile )
 		if (lFileTexture && !lFileTexture->GetUserDataPtr())
 		{
 			const FbxString lFileName = lFileTexture->GetFileName();
-			
+
 			unsigned int lTextureObject = 0;
 			lTextureObject;
 			bool lStatus = false;
 			lStatus;
-			
-			const FbxString lAbsFbxFileName = FbxPathUtils::Resolve(aFile);
-			const FbxString lAbsFolderName = FbxPathUtils::GetFolderName(lAbsFbxFileName);
-			const FbxString lTextureFileName = lAbsFolderName + "\\" + lFileTexture->GetRelativeFileName();// FbxPathUtils::GetFileName(lFileName);
-				
+
 			std::string str = lFileTexture->GetFileName();
 			str = CU::GetSubString(str, "Data/", true, 1);
-			//const FbxString lResolvedFileName = CU::GetSubString( str, "Data\\",true);// lFileTexture->GetRelativeFileName();;// FbxPathUtils::Bind(lAbsFolderName, lTextureFileName);
 
-			const FbxString lResolvedFileName = lAbsFolderName + "\\" + FbxPathUtils::GetFileName(lFileName);// lFileTexture->GetRelativeFileName();;// FbxPathUtils::Bind(lAbsFolderName, lTextureFileName);
 			TextureInfo info;
-			info.myFileName = lResolvedFileName;
-			//info.myFileName += "\\";
 			info.myFileName = str;
 			myLoadingModel->myTextureData->myTextures.push_back(info);
 			lFileTexture->SetFileName(str.c_str());
 		}
 	}
-	FBX_LOG("Success!");
-	FBX_LOG("FBXLoader Loading Animations...");
+	DL_PRINT("Success!");
+	DL_PRINT("FBXLoader Loading Animations...");
 
 	FbxArray<FbxString*> animationNames;
 	FbxArray<FbxPose*> poses;
@@ -1471,7 +1508,7 @@ FbxModelData* FBXLoader::loadModel( const char* aFile )
 	scene->FillPoseArray(poses);
 	FbxAnimStack * lCurrentAnimationStack = nullptr;
 	FbxAnimLayer* lCurrentAnimLayer = nullptr;
-	if(animationNames.GetCount() > 0)
+	if (animationNames.GetCount() > 0)
 	{
 		lCurrentAnimationStack = scene->FindMember<FbxAnimStack>(animationNames[0]->Buffer());
 		if (lCurrentAnimationStack != NULL)
@@ -1482,14 +1519,14 @@ FbxModelData* FBXLoader::loadModel( const char* aFile )
 	//lCurrentAnimLayer->IsR
 	myLoadingModel->myAnimation = new AnimationData();
 	FbxPose* pose = nullptr;
-	if(poses.GetCount() > 0)
+	if (poses.GetCount() > 0)
 	{
 		pose = poses[0];
 	}
 
-	LoadAnimation(*myLoadingModel->myAnimation,scene->GetRootNode(),FbxAMatrix(),pose, lCurrentAnimLayer,-1);
+	LoadAnimation(*myLoadingModel->myAnimation, scene->GetRootNode(), FbxAMatrix(), pose, lCurrentAnimLayer, -1);
 	LoadNodeRecursive(myLoadingModel, *myLoadingModel->myAnimation, scene->GetRootNode(), FbxAMatrix(), pose, lCurrentAnimLayer, -1);
-	FBX_LOG("Success!");
-		
+	DL_PRINT("Success!");
+
 	return myLoadingModel;
 }

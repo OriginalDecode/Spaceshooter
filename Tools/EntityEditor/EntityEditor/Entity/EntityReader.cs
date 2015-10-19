@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using System.Windows.Forms;
+using CSharpUtilities;
 
 namespace EntityEditor
 {
@@ -19,9 +20,7 @@ namespace EntityEditor
         {
             if (aFilePath == "") return myEntityData;
             myFilePath = aFilePath;
-            int lastSlash = myFilePath.LastIndexOf("\\");
-            string entityListPath = myFilePath.Substring(0, lastSlash);
-            entityListPath += "\\EntityList.xml";
+            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
 
             if (myEntityList.myPaths == null)
             {
@@ -53,37 +52,6 @@ namespace EntityEditor
             entityForm.SetEntityList(myEntityList);
 
             return myEntityData;
-        }
-
-        public void LoadEntityList(string aFilePath, Form aParent)
-        {
-            if (aFilePath == "") return;
-            myFilePath = aFilePath;
-            int lastSlash = myFilePath.LastIndexOf("\\");
-            string entityListPath = myFilePath.Substring(0, lastSlash);
-            entityListPath += "\\EntityList.xml";
-
-            if (myEntityList.myPaths == null)
-            {
-                myEntityList.myPaths = new List<string>();
-            }
-
-            //if (Directory.Exists(entityListPath) == true)
-            //{
-            using (XmlReader reader = XmlReader.Create(entityListPath))
-            {
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        ReadEntityListFile(reader);
-                    }
-                }
-            }
-            EntityEditorForm entityForm = (EntityEditorForm)aParent;
-            entityForm.SetEntityList(myEntityList);
-            //}
-
         }
 
         private void ReadEntityListFile(XmlReader aReader)
@@ -137,7 +105,8 @@ namespace EntityEditor
             else if (aReader.Name == "CollisionSphere")
             {
                 aReader.MoveToAttribute("radius");
-                myEntityData.myCollisionComponent.myRadius = float.Parse(aReader.Value);
+                string formatedValue = aReader.Value.Replace("f", "0");
+                myEntityData.myCollisionComponent.myRadius = float.Parse(formatedValue);
                 myEntityData.myCollisionComponent.myHasSphere = true;
             }
         }

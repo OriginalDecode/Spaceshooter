@@ -12,6 +12,7 @@ Prism::Surface::Surface()
 	myShaderViews.Init(2);
 	myFilePaths.Init(2);
 	myShaderResourceNames.Init(2);
+	myEmissive = false;
 }
 
 bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
@@ -27,6 +28,11 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::str
 		//DL_MESSAGE_BOX(errorMsg.c_str(), "Surface Error", MB_ICONWARNING);
 		RESOURCE_LOG(errorMsg.c_str());
 		return false;
+	}
+
+	if (aResourceName == "EmissiveTexture")
+	{
+		myEmissive = true;
 	}
 
 	myTextures.Add(tex);
@@ -67,6 +73,11 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aText
 		//DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
 		RESOURCE_LOG("Failed to get ShaderResource");
 		return false;
+	}
+
+	if (aResourceName == "EmissiveTexture")
+	{
+		myEmissive = true;
 	}
 
 	myTextures.Add(aTexture);

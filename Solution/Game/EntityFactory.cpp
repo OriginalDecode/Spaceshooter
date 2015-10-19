@@ -72,11 +72,19 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	entityDocument.OpenDocument(aEntityPath);
 
 	EntityData newEntity(*myDummyScene);
-
-	tinyxml2::XMLElement* rootElement = entityDocument.FindFirstChild("Entity");
+	tinyxml2::XMLElement* entityElement;
+	tinyxml2::XMLElement* rootElement = entityDocument.FindFirstChild("root");
+	if (rootElement == nullptr)
+	{
+		entityElement = entityDocument.FindFirstChild("Entity");
+	}
+	else 
+	{
+		entityElement = entityDocument.FindFirstChild(rootElement, "Entity");
+	}
 
 	std::string entityName = "";
-	entityDocument.ForceReadAttribute(rootElement, "name", entityName);
+	entityDocument.ForceReadAttribute(entityElement, "name", entityName);
 
 	if (myEntities.find(entityName) != myEntities.end())
 	{
@@ -85,7 +93,7 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	}
 	newEntity.myEntity->SetName(entityName);
 	ENTITY_LOG("Load entity %s starting", entityName.c_str());
-	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(rootElement); e != nullptr;
+	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(entityElement); e != nullptr;
 		e = entityDocument.FindNextElement(e))
 	{
 		std::string childName = e->Name();
@@ -361,6 +369,8 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myFireRateMultiplier = 1;
 	aEntityToAddTo.myIsEMP = false;
+	aEntityToAddTo.myEMPDuration = 0.f;
+	aEntityToAddTo.myEMPRadius = 0.f;
 	aEntityToAddTo.myUpgradeName = "";
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 
@@ -394,6 +404,12 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			aDocument.ForceReadAttribute(e, "entityName", aEntityToAddTo.myUpgradeName);
 			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Emp").c_str()) == 0)
+		{
+			aEntityToAddTo.myIsEMP = true;
+			aDocument.ForceReadAttribute(e, "time", aEntityToAddTo.myEMPDuration);
+			aDocument.ForceReadAttribute(e, "radius", aEntityToAddTo.myEMPRadius);
 		}
 	}
 }
@@ -488,10 +504,15 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		{
 			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myUpgradeName, it->second.myUpgradeID);
 		}
+		else if (it->second.myIsEMP == true)
+		{
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myEMPDuration
+				, it->second.myEMPRadius);
+		}
 		else
 		{
-		aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
-			, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
+				, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
 		}
 	}
 

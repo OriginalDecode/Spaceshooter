@@ -115,9 +115,6 @@
     <ClCompile Include="SpawnEnemyMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="StartEventMessage.cpp">
-      <Filter>PostMaster\Messages</Filter>
-    </ClCompile>
     <ClCompile Include="SurvivalMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
@@ -134,9 +131,6 @@
       <Filter>Mission</Filter>
     </ClCompile>
     <ClCompile Include="PowerUpMessage.cpp">
-      <Filter>PostMaster\Messages</Filter>
-    </ClCompile>
-    <ClCompile Include="EnemyKilledMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
     <ClCompile Include="Action.cpp">
@@ -159,6 +153,15 @@
     </ClCompile>
     <ClCompile Include="ConversationManager.cpp">
       <Filter>Conversation</Filter>
+    </ClCompile>
+    <ClCompile Include="EnqueueEventMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="DefendMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
+    <ClCompile Include="DefendMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -306,9 +309,6 @@
     <ClInclude Include="SpawnEnemyMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="StartEventMessage.h">
-      <Filter>PostMaster\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="SurvivalMission.h">
       <Filter>Mission</Filter>
     </ClInclude>
@@ -350,6 +350,18 @@
     </ClInclude>
     <ClInclude Include="ConversationManager.h">
       <Filter>Conversation</Filter>
+    </ClInclude>
+    <ClInclude Include="EnqueueEventMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="EventQueueEmptyMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="DefendMission.h">
+      <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="DefendMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

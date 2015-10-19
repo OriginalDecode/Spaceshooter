@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CommonHelper.h"
+#include "DefendMission.h"
 #include <DL_Assert.h>
 #include "Entity.h"
 #include "KillAllAbortMission.h"
@@ -9,6 +10,7 @@
 #include "KillXEnemiesMission.h"
 #include "Level.h"
 #include "MissionManager.h"
+#include "PostMaster.h"
 #include <sstream>
 #include "SurvivalMission.h"
 #include "SurvivalAbortMission.h"
@@ -22,7 +24,10 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 	, myMissions(16)
 	, myCurrentMission(0) 
 	, myMissionsNotOrder(16)
+	, myAllowedToStartNextMission(true)
+	, myEndEventsActive(false)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::EVENT_QUEUE_EMPTY, this);
 	XMLReader reader;
 	reader.OpenDocument(aFileToReadFrom);
 
@@ -78,9 +83,15 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			survivalAbort->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(survivalAbort);
 		}
+		else if (type == "defend")
+		{
+			DefendMission* mission = new DefendMission(reader, element);
+			mission->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(mission);
+		}
 		else
 		{
-			std::string error = "Missiontype not recognized." + type;
+			std::string error = "Missiontype not recognized: " + type;
 			DL_ASSERT(error.c_str());
 		}
 	}
@@ -88,14 +99,17 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 	int currentIndex = 0;
 	while (myMissions.Size() != myMissionsNotOrder.Size())
 	{
+		int prevIndex = currentIndex;
 		for (int i = 0; i < myMissionsNotOrder.Size(); ++i)
 		{
 			if (myMissionsNotOrder[i]->GetIndex() == currentIndex)
 			{
 				++currentIndex;
 				myMissions.Add(myMissionsNotOrder[i]);
+				break;
 			}
 		}
+		DL_ASSERT_EXP(prevIndex == currentIndex - 1, "Mission index " + std::to_string(currentIndex) + " not found.");
 	}
 
 	reader.CloseDocument();
@@ -103,13 +117,16 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 
 MissionManager::~MissionManager()
 {
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::EVENT_QUEUE_EMPTY, this);
 	myMissions.DeleteAll();
 }
 
 void MissionManager::Init()
 {
-	myMissions[myCurrentMission]->Start();
 	myMissions[myCurrentMission]->EventsStart();
+	myMissions[myCurrentMission]->Start();
+	myAllowedToStartNextMission = false;
+	myEndEventsActive = false;
 }
 
 void MissionManager::Update(float aDeltaTime)
@@ -118,9 +135,14 @@ void MissionManager::Update(float aDeltaTime)
 	std::stringstream ss;
 	ss << myCurrentMission;
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
-	if (myMissions[myCurrentMission]->Update(aDeltaTime) == true)
+	if (myEndEventsActive == false && myMissions[myCurrentMission]->Update(aDeltaTime) == true)
 	{
-		myMissions[myCurrentMission]->EventsEnd();
+		myAllowedToStartNextMission = myMissions[myCurrentMission]->EventsEnd();
+		myEndEventsActive = true;
+	}
+
+	if (myEndEventsActive == true && myAllowedToStartNextMission == true)
+	{
 		myMissions[myCurrentMission]->End();
 		++myCurrentMission;
 		if (myCurrentMission == myMissions.Size())
@@ -131,6 +153,13 @@ void MissionManager::Update(float aDeltaTime)
 		{
 			myMissions[myCurrentMission]->EventsStart();
 			myMissions[myCurrentMission]->Start();
+			myAllowedToStartNextMission = false;
+			myEndEventsActive = false;
 		}
 	}
+}
+
+void MissionManager::ReceiveMessage(const EventQueueEmptyMessage&)
+{
+	myAllowedToStartNextMission = true;
 }
