@@ -361,6 +361,8 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myFireRateMultiplier = 1;
 	aEntityToAddTo.myIsEMP = false;
+	aEntityToAddTo.myEMPDuration = 0.f;
+	aEntityToAddTo.myEMPRadius = 0.f;
 	aEntityToAddTo.myUpgradeName = "";
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 
@@ -394,6 +396,12 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			aDocument.ForceReadAttribute(e, "entityName", aEntityToAddTo.myUpgradeName);
 			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Emp").c_str()) == 0)
+		{
+			aEntityToAddTo.myIsEMP = true;
+			aDocument.ForceReadAttribute(e, "time", aEntityToAddTo.myEMPDuration);
+			aDocument.ForceReadAttribute(e, "radius", aEntityToAddTo.myEMPRadius);
 		}
 	}
 }
@@ -488,10 +496,15 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		{
 			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myUpgradeName, it->second.myUpgradeID);
 		}
+		else if (it->second.myIsEMP == true)
+		{
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myEMPDuration
+				, it->second.myEMPRadius);
+		}
 		else
 		{
-		aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
-			, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
+				, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
 		}
 	}
 

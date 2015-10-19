@@ -393,7 +393,7 @@ void Level::ReadXML(const std::string& aFile)
 		{
 			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
 		}
-		else if (powerType == "weaponUpgrade")
+		else if (powerType == "weaponupgrade")
 		{
 			newEntity->SetPowerUp(ePowerUpType::WEAPON_UPGRADE);
 		}
@@ -551,14 +551,6 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_T))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
-	}
-	if (myInputWrapper->KeyDown(DIK_L))
-	{
-		myPlayer->GetComponent<InputComponent>()->DisableMovement(2.f);
-	}
-	if (myInputWrapper->KeyDown(DIK_K))
-	{
-		myCollisionManager->DisableEnemiesWithinSphere(myPlayer->myOrientation.GetPos(), 100.f, 10.f);
 	}
 	if (myInputWrapper->KeyDown(DIK_J))
 	{
