@@ -73,14 +73,22 @@ void WeaponFactory::LoadProjectile(const std::string& aProjectileFilePath)
 {
 	XMLReader projectileDocument;
 	projectileDocument.OpenDocument(aProjectileFilePath);
-
-	tinyxml2::XMLElement* rootElement = projectileDocument.FindFirstChild("Projectile");
-
+	tinyxml2::XMLElement* projectileElement;
+	tinyxml2::XMLElement* rootElement = projectileDocument.FindFirstChild("root");
+	if (rootElement == nullptr)
+	{
+		projectileElement = projectileDocument.FindFirstChild("Projectile");
+	} 
+	else
+	{
+		projectileElement = projectileDocument.FindFirstChild(rootElement, "Projectile");
+	}
+	
 	ProjectileDataType projectileType;
 
-	projectileDocument.ForceReadAttribute(rootElement, "type", projectileType.myType);
+	projectileDocument.ForceReadAttribute(projectileElement, "type", projectileType.myType);
 
-	for (tinyxml2::XMLElement* e = projectileDocument.FindFirstChild(rootElement); e != nullptr;
+	for (tinyxml2::XMLElement* e = projectileDocument.FindFirstChild(projectileElement); e != nullptr;
 		e = projectileDocument.FindNextElement(e))
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Entity").c_str()) == 0)
@@ -106,15 +114,23 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 {
 	XMLReader weaponDocument;
 	weaponDocument.OpenDocument(aWeaponFilePath);
-
-	tinyxml2::XMLElement* rootElement = weaponDocument.FindFirstChild("Weapon");
+	tinyxml2::XMLElement* weaponElement;
+	tinyxml2::XMLElement* rootElement = weaponDocument.FindFirstChild("root");
+	if (rootElement == nullptr)
+	{
+		weaponElement = weaponDocument.FindFirstChild("Weapon");
+	}
+	else
+	{
+		weaponElement = weaponDocument.FindFirstChild(rootElement, "Weapon");
+	}
 
 	WeaponDataType weaponDataType;
 	weaponDataType.myBulletsPerShot = 1;
 
-	weaponDocument.ForceReadAttribute(rootElement, "name", weaponDataType.myType);
+	weaponDocument.ForceReadAttribute(weaponElement, "name", weaponDataType.myType);
 
-	for (tinyxml2::XMLElement* e = weaponDocument.FindFirstChild(rootElement); e != nullptr;
+	for (tinyxml2::XMLElement* e = weaponDocument.FindFirstChild(weaponElement); e != nullptr;
 		e = weaponDocument.FindNextElement(e))
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("cooldown").c_str()) == 0)

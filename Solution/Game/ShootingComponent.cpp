@@ -69,8 +69,16 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				orientation.SetPos(pos);
 			}
 
+			CU::Matrix44<float> rotation;
+			rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
+			rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
+
+			CU::Vector4<float> pos = orientation.GetPos();
+			orientation = rotation * orientation;
+			orientation.SetPos(pos);
+
 			PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-				, myEntity.GetType(), aShootNote.myEnitityVelocity, aShootNote.myEnititySteering));
+				, myEntity.GetType(), aShootNote.myEnitityVelocity));
 			myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 		}
 	}

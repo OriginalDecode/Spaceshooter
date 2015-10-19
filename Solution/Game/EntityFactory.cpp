@@ -72,11 +72,19 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	entityDocument.OpenDocument(aEntityPath);
 
 	EntityData newEntity(*myDummyScene);
-
-	tinyxml2::XMLElement* rootElement = entityDocument.FindFirstChild("Entity");
+	tinyxml2::XMLElement* entityElement;
+	tinyxml2::XMLElement* rootElement = entityDocument.FindFirstChild("root");
+	if (rootElement == nullptr)
+	{
+		entityElement = entityDocument.FindFirstChild("Entity");
+	}
+	else 
+	{
+		entityElement = entityDocument.FindFirstChild(rootElement, "Entity");
+	}
 
 	std::string entityName = "";
-	entityDocument.ForceReadAttribute(rootElement, "name", entityName);
+	entityDocument.ForceReadAttribute(entityElement, "name", entityName);
 
 	if (myEntities.find(entityName) != myEntities.end())
 	{
@@ -85,7 +93,7 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 	}
 	newEntity.myEntity->SetName(entityName);
 	ENTITY_LOG("Load entity %s starting", entityName.c_str());
-	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(rootElement); e != nullptr;
+	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(entityElement); e != nullptr;
 		e = entityDocument.FindNextElement(e))
 	{
 		std::string childName = e->Name();
