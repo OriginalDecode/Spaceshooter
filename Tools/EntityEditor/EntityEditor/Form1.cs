@@ -21,6 +21,7 @@ namespace EntityEditor
 
         private string myCurrentEntityFolderPath = Properties.Settings.Default.DefaultEntityFolderPath;
         private string myCurrentEntityFilePath = Properties.Settings.Default.DefaultEntityFileName;
+        private string myDataFolderPath = "";
 
         private Panels.AddComponentPanel myAddComponentPanel = null;
         private Panels.AIComponentPanel myAIComponentPanel = null;
@@ -35,6 +36,8 @@ namespace EntityEditor
 
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             DL_Debug.GetInstance.Init("EntityEditorLog");
+
+            myDataFolderPath = StringUtilities.ConvertPathToDataFolderPath(myCurrentEntityFolderPath);
 
             if (myCurrentEntityFolderPath == "")
             {
@@ -240,6 +243,8 @@ namespace EntityEditor
 
                 myCurrentEntityFilePath = openEntityFile.FileName;
                 myCurrentEntityFolderPath = myCurrentEntityFilePath.Replace(openEntityFile.SafeFileName, "");
+                myDataFolderPath = StringUtilities.ConvertPathToDataFolderPath(myCurrentEntityFolderPath);
+                myShootingComponentPanel.ReloadXML(myDataFolderPath);
                 Properties.Settings.Default.DefaultEntityFolderPath = myCurrentEntityFolderPath;
                 Properties.Settings.Default.DefaultEntityFileName = myCurrentEntityFilePath;
                 Properties.Settings.Default.Save();
@@ -281,6 +286,7 @@ namespace EntityEditor
         {
             SetEntityName("");
             OpenRenameEntityWindow();
+            myShootingComponentPanel.ReloadXML(myDataFolderPath);
         }
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)

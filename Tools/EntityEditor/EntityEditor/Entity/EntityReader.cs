@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using System.Windows.Forms;
+using CSharpUtilities;
 
 namespace EntityEditor
 {
@@ -19,7 +20,7 @@ namespace EntityEditor
         {
             if (aFilePath == "") return myEntityData;
             myFilePath = aFilePath;
-            string entityListPath = "Data/Script/LI_list_entity.xml";
+            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
 
             if (myEntityList.myPaths == null)
             {
