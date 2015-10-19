@@ -155,6 +155,7 @@ public:
 		myTextureData = nullptr;
 		myLight = nullptr;
 		myCamera = nullptr;
+		myLodGroup = nullptr;
 	}
 
 	Prism::LodGroup* CreateLodGroup(){ myLodGroup = new Prism::LodGroup(); return myLodGroup; }
