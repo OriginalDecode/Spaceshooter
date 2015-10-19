@@ -10,6 +10,7 @@ enum class eMessageType
 	POWER_UP,
 	CONVERSATION,
 	EVENT_QUEUE_EMPTY,
+	DEFEND,
 };
 
 enum class eBulletType
