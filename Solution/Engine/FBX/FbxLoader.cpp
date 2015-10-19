@@ -1,5 +1,7 @@
 #include "../stdafx.h"
 
+
+
 #include "FbxLoader.h"
 #include <Vector4.h>
 #include <Matrix44.h>
@@ -1293,6 +1295,50 @@ void LoadAnimation(AnimationData& aAnimation, FbxNode* aNode, FbxAMatrix& aParen
 	}
 }
 
+void SetLodGroup(FbxModelData* aModel, FbxNode* aNode)
+{
+	// Create a lod group for this model
+	Prism::LodGroup* group = aModel->CreateLodGroup();
+	FbxLODGroup *lLodGroupAttr = (FbxLODGroup*)aNode->GetNodeAttribute();
+	double minDistance = 0; // Minumum distance the lod group will be rendered at
+	double maxDistance = 1000; // Maximum distance the lod group will be rendered at
+	if (lLodGroupAttr->MinMaxDistance.Get())
+	{
+		// If the value is set from Maya, read it
+		minDistance = lLodGroupAttr->MinDistance.Get();
+		maxDistance = lLodGroupAttr->MaxDistance.Get();
+	}
+
+	// Display levels
+	int displayLevels = lLodGroupAttr->GetNumDisplayLevels();
+	for (int i = 0; i < displayLevels; i++)
+	{
+		Prism::Lod* lod = group->CreateLod();
+		FbxLODGroup::EDisplayLevel lLevel;
+		if (lLodGroupAttr->GetDisplayLevel(i, lLevel))
+		{
+			lod->myLevel = i;
+			lod->myUseLod = lLevel == FbxLODGroup::eUseLOD;
+		}
+
+	}
+
+	// Add the levels and the values for them
+	group->myThreshHolds.Add(minDistance);
+	int threasHolds = lLodGroupAttr->GetNumThresholds();
+	for (int i = 0; i < lLodGroupAttr->GetNumThresholds(); i++)
+	{
+		FbxDistance lThreshVal;
+		if (lLodGroupAttr->GetThreshold(i, lThreshVal))
+		{
+			double threasHoldValue = lThreshVal.value();
+			group->myThreshHolds.Add(threasHoldValue);
+		}
+	}
+	group->myThreshHolds.Add(maxDistance);
+
+}
+
 void LoadNodeRecursive(FbxModelData* aModel, AnimationData& aAnimation, FbxNode* aNode, FbxAMatrix& aParentOrientation, FbxPose* aPose, FbxAnimLayer* aCurrentAnimLayer, int parentBone)
 {
 	parentBone;
@@ -1360,6 +1406,10 @@ void LoadNodeRecursive(FbxModelData* aModel, AnimationData& aAnimation, FbxNode*
 			aModel->myCamera = new LoaderCamera();
 			auto orgCamera = aNode->GetCamera();
 			aModel->myCamera->myFov = orgCamera->FieldOfViewY;
+		}
+		else if (lNodeAttribute->GetAttributeType() == FbxNodeAttribute::eLODGroup)
+		{
+			SetLodGroup(aModel, aNode);
 		}
 		FbxTimeSpan animationInterval;
 

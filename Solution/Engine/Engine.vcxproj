@@ -222,6 +222,7 @@
     <ClInclude Include="Instance.h" />
     <ClInclude Include="DirectionalLight.h" />
     <ClInclude Include="LightStructs.h" />
+    <ClInclude Include="LodStructs.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Model2D.h" />
     <ClInclude Include="ModelLoader.h" />
