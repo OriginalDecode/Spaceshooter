@@ -689,7 +689,7 @@ bool FillData(ModelData* someData, FbxNode* aNode, AnimationData* aAnimation)
 	FbxAMatrix globalPos;
 	FbxVector4* weights = nullptr;
 	FbxVectorTemplate4<int>* bones = nullptr;
-	FbxTime time = static_cast<fbxsdk::FbxLongLong>(0.0f);
+	FbxTime time = static_cast<FbxLongLong>(0.0f);
 	if (someData->myHasSkinweights)
 	{
 		weights = new FbxVector4[mesh->GetControlPointsCount()];
