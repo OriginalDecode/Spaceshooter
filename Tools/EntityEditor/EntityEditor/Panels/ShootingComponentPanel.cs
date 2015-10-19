@@ -193,6 +193,8 @@ namespace EntityEditor.Panels
 
         private eSaveShootingState mySaveState;
 
+        private string myDataFolder = "Data/";
+
         public ShootingComponentPanel(Point aLocation, Size aSize, Form aParent)
             : base(aLocation, aSize, aParent)
         {
@@ -227,8 +229,8 @@ namespace EntityEditor.Panels
 
         protected override void IntitalizeControls()
         {
-            myWeaponReader.LoadWeapons("Data/Script/LI_list_weapon.xml");
-            myWeaponReader.LoadBullets("Data/Script/LI_list_projectile.xml");
+            myWeaponReader.LoadWeapons(myDataFolder + "Script/LI_list_weapon.xml");
+            myWeaponReader.LoadBullets(myDataFolder + "Script/LI_list_projectile.xml");
 
             myWeaponTypes = new DropDownComponent(new Point(Location.X, Location.Y + 10), new Size(Size.Width, 10), "Weapon");
             myWeaponTypes.GetDropDown().SelectedIndexChanged += new EventHandler(WeaponDropDown_SelectIndex_Changed);
@@ -268,10 +270,16 @@ namespace EntityEditor.Panels
             this.Controls.Add(mySaveButton);
         }
 
+        public void ReloadXML(string aDataPath)
+        {
+            myDataFolder = aDataPath;
+            ReloadWeaponXML();
+        }
+
         private void ReloadWeaponXML()
         {
-            myWeaponReader.LoadWeapons("Data/Script/LI_list_weapon.xml");
-            myWeaponReader.LoadBullets("Data/Script/LI_list_projectile.xml");
+            myWeaponReader.LoadWeapons(myDataFolder + "Script/LI_list_weapon.xml");
+            myWeaponReader.LoadBullets(myDataFolder + "Script/LI_list_projectile.xml");
 
             myLoadedWeapons = myWeaponReader.GetWeaponData();
             myWeaponTypes.GetDropDown().Items.Clear();
