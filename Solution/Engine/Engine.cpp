@@ -46,6 +46,12 @@ namespace Prism
 		delete myFontContainer;
 		delete myDebugDataDisplay;
 		delete myFileWatcher;
+
+		Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
+		while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
+		{
+			//wait for ModelLoader to exit its loading-loop
+		}
 		delete myModelLoader;
 	}
 

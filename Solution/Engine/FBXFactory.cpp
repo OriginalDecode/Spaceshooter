@@ -155,18 +155,19 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 		surface.SetTexture(resourceName, currentTexture.myFileName, useSRGB);
 	}
 	outData->mySurfaces.Add(new Surface(surface));
+	
 }
 
 Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect* aEffect)
 {
 	Model* tempModel = new Model();
 	tempModel->SetEffect(aEffect);
+	tempModel->SetLodGroup(someModelData->myLodGroup);
 		
 	if (someModelData->myData)
 	{
 		FillData(someModelData->myData, tempModel, aEffect);
 		tempModel->myOrientation = someModelData->myOrientation;
-
 	}
 	for (int i = 0; i < someModelData->myChilds.Size(); ++i)
 	{

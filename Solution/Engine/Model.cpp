@@ -21,11 +21,14 @@ Prism::Model::Model()
 	myVertexFormat.Init(2);
 	myIsNULLObject = true;
 	myInited = false;
+	myIsLodGroup = false;
+	myLodGroup = nullptr;
 
 	myVertexBuffer = nullptr;
 	myIndexBuffer = nullptr;
 	myVertexBaseData = nullptr;
 	myIndexBaseData = nullptr;
+	myParent = nullptr;
 }
 
 Prism::Model::~Model()
@@ -83,6 +86,7 @@ void Prism::Model::Init()
 
 		delete[] vertexDesc;
 
+		myVertexCount = myVertexBaseData->myNumberOfVertices;
 		if (InitVertexBuffer() == false)
 		{
 			DL_ASSERT("Model::Init() failed to InitVertexBuffer()");
@@ -472,8 +476,18 @@ void Prism::Model::InitLightCube(const float aWidth, const float aHeight, const 
 
 void Prism::Model::AddChild(Model* aChild)
 {
+	aChild->myParent = this;
 	myChilds.Add(aChild);
 	myChildTransforms.Add(aChild->myOrientation);
+}
+
+void Prism::Model::SetLodGroup(LodGroup* aLodGroup)
+{
+	myLodGroup = aLodGroup;
+	if (myLodGroup != nullptr)
+	{
+		myIsLodGroup = true;
+	}
 }
 
 Prism::Effect* Prism::Model::GetEffect()
@@ -492,61 +506,88 @@ void Prism::Model::SetEffect(Effect* aEffect)
 	}
 }
 
-void Prism::Model::Render(const CU::Matrix44<float>& aOrientation)
+void Prism::Model::Render(const CU::Matrix44<float>& aOrientation, const CU::Vector3<float>& aCameraPosition)
 {
-	if (myIsNULLObject == false)
+	if (myIsLodGroup == true)
 	{
-		TIME_FUNCTION;
+		float lengthBetweenCameraAndModel = CU::Length(aCameraPosition - aOrientation.GetPos());
+		int level = 0;
 
-		float blendFactor[4];
-		blendFactor[0] = 0.f;
-		blendFactor[1] = 0.f;
-		blendFactor[2] = 0.f;
-		blendFactor[3] = 0.f;
+		Model* toRender = nullptr;
+		for (int i = myChilds.Size() - 1; i >= 0; i--)
+		{
+			LodGroup* group = myLodGroup;
+			double threashold = group->myThreshHolds[i];
+			if (threashold <= lengthBetweenCameraAndModel)
+			{
+				toRender = myChilds[i];
+				level = i;
+				break;
+			}
+		}
 
-		myEffect->SetBlendState(NULL, blendFactor);
-		myEffect->SetWorldMatrix(aOrientation);
+		if (toRender)
+		{
+			toRender->Render(aOrientation, aCameraPosition);
+		}
+	}
+	else
+	{
+		if (myIsNULLObject == false)
+		{
+			TIME_FUNCTION;
 
-		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-		Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot, 
-				myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer, 
+			float blendFactor[4];
+			blendFactor[0] = 0.f;
+			blendFactor[1] = 0.f;
+			blendFactor[2] = 0.f;
+			blendFactor[3] = 0.f;
+
+			myEffect->SetBlendState(NULL, blendFactor);
+			myEffect->SetWorldMatrix(aOrientation);
+
+
+			Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
+			Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot,
+				myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer,
 				&myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
-		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer, 
+			Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer,
 				myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
 
 
-		
 
-		for (int s = 0; s < mySurfaces.Size(); ++s)
-		{
-			mySurfaces[s]->Activate();
 
-			ID3DX11EffectTechnique* tech;
-			D3DX11_TECHNIQUE_DESC techDesc;
+			for (int s = 0; s < mySurfaces.Size(); ++s)
+			{
+				mySurfaces[s]->Activate();
 
-			if(mySurfaces[s]->GetEmissive() == true)
-			{
-				tech = myEffect->GetEffect()->GetTechniqueByName("Render_Emissive");
-			}
-			else
-			{
-				tech = myEffect->GetTechnique();
-			}
-			
-			tech->GetDesc(&techDesc);
-			for (UINT i = 0; i < techDesc.Passes; ++i)
-			{
-				tech->GetPassByIndex(i)->Apply(0,
+				ID3DX11EffectTechnique* tech;
+				D3DX11_TECHNIQUE_DESC techDesc;
+
+				if (mySurfaces[s]->GetEmissive() == true)
+				{
+					tech = myEffect->GetEffect()->GetTechniqueByName("Render_Emissive");
+				}
+				else
+				{
+					tech = myEffect->GetTechnique();
+				}
+
+				tech->GetDesc(&techDesc);
+				for (UINT i = 0; i < techDesc.Passes; ++i)
+				{
+					tech->GetPassByIndex(i)->Apply(0,
 						Engine::GetInstance()->GetContex());
-				Engine::GetInstance()->GetContex()->DrawIndexed(mySurfaces[s]->GetIndexCount(),
+					Engine::GetInstance()->GetContex()->DrawIndexed(mySurfaces[s]->GetIndexCount(),
 						mySurfaces[s]->GetVertexStart(), 0);
+				}
 			}
 		}
-	}
 
-	for (int i = 0; i < myChilds.Size(); ++i)
-	{
-		myChilds[i]->Render(myChildTransforms[i] * aOrientation);
+		for (int i = 0; i < myChilds.Size(); ++i)
+		{
+			myChilds[i]->Render(myChildTransforms[i] * aOrientation, aCameraPosition);
+		}
 	}
 }
 

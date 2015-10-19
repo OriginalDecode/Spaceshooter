@@ -463,6 +463,7 @@ bool FillData(ModelData* someData, FbxNode* aNode, AnimationData* aAnimation)
 				const int lMaterialCount = someData->mSubMeshes.Size();
 				lMaterialCount;
 				int lOffset = 0;
+				lOffset;
 				/*for (int lIndex = 0; lIndex < lMaterialCount; ++lIndex)
 				{
 				someData->mSubMeshes[lIndex]->IndexOffset = lOffset;
@@ -1325,7 +1326,6 @@ void SetLodGroup(FbxModelData* aModel, FbxNode* aNode)
 
 	// Add the levels and the values for them
 	group->myThreshHolds.Add(minDistance);
-	int threasHolds = lLodGroupAttr->GetNumThresholds();
 	for (int i = 0; i < lLodGroupAttr->GetNumThresholds(); i++)
 	{
 		FbxDistance lThreshVal;
