@@ -20,7 +20,7 @@ public:
 	virtual void Start();
 	void EventsStart();
 	virtual void End();
-	void EventsEnd();
+	bool EventsEnd();
 
 	virtual int GetIndex() const;
 	virtual void SetIndex(int aIndex);

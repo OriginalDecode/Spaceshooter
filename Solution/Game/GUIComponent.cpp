@@ -28,7 +28,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 {
-	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION_MESSAGE, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
@@ -43,7 +43,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 GUIComponent::~GUIComponent()
 {
-	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION_MESSAGE, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;

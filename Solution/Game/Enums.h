@@ -8,7 +8,8 @@ enum class eMessageType
 	START_EVENT,
 	ENEMY_KILLED,
 	POWER_UP,
-	CONVERSATION_MESSAGE
+	CONVERSATION,
+	EVENT_QUEUE_EMPTY,
 };
 
 enum class eBulletType
