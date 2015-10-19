@@ -2,13 +2,15 @@
 
 #include "ControllerComponent.h"
 #include "Enums.h"
+#include "Subscriber.h"
 
 class PhysicsComponent;
 
-class AIComponent : public ControllerComponent
+class AIComponent : public ControllerComponent, public Subscriber
 {
 public:
 	AIComponent(Entity& aEntity);
+	~AIComponent();
 
 	void Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
 		, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
@@ -16,6 +18,8 @@ public:
 	void Update(float aDeltaTime) override;
 
 	void SetEntityToFollow(Entity* aEntity);
+
+	void ReceiveMessage(const DefendMessage& aMessage) override;
 
 	const std::string& GetTargetName() const;
 
@@ -31,6 +35,7 @@ private:
 
 	float myTimeToNextDecision;
 	Entity* myEntityToFollow;
+	Entity* myPrevEntityToFollow;
 	CU::Vector3<float> myVelocity;
 	CU::Vector3<float> myFollowingOffset;
 	CU::Vector3<float> myToTarget;

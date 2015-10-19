@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CommonHelper.h"
+#include "DefendMission.h"
 #include <DL_Assert.h>
 #include "Entity.h"
 #include "KillAllAbortMission.h"
@@ -84,9 +85,9 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		else if (type == "defend")
 		{
-			//DefendMission* mission = new DefendMission(reader, element);
-			//mission->SetIndex(missionIndex);
-			//myMissionsNotOrder.Add(mission);
+			DefendMission* mission = new DefendMission(reader, element);
+			mission->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(mission);
 		}
 		else
 		{
