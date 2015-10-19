@@ -157,6 +157,9 @@
     <ClCompile Include="EnqueueEventMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="DefendMission.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -350,6 +353,9 @@
     </ClInclude>
     <ClInclude Include="EventQueueEmptyMessage.h">
       <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="DefendMission.h">
+      <Filter>Mission</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

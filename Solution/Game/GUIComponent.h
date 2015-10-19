@@ -55,6 +55,8 @@ private:
 	bool myWaypointActive;
 
 	std::string myConversation;
+
+	Entity* myEnemiesTarget;
 };
 
 inline eComponentType GUIComponent::GetType()

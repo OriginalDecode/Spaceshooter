@@ -82,9 +82,15 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 			survivalAbort->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(survivalAbort);
 		}
+		else if (type == "defend")
+		{
+			//DefendMission* mission = new DefendMission(reader, element);
+			//mission->SetIndex(missionIndex);
+			//myMissionsNotOrder.Add(mission);
+		}
 		else
 		{
-			std::string error = "Missiontype not recognized." + type;
+			std::string error = "Missiontype not recognized: " + type;
 			DL_ASSERT(error.c_str());
 		}
 	}
