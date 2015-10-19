@@ -2,10 +2,10 @@
 
 #include "Message.h"
 
-class StartEventMessage : public Message
+class EnqueueEventMessage : public Message
 {
 public:
-	StartEventMessage(const std::string& aName);
+	EnqueueEventMessage(const std::string& aName);
 
 	const std::string& GetName() const;
 

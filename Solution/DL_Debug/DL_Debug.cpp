@@ -144,6 +144,11 @@ void DL_Debug::Debug::AssertMessage(bool aAssertExpression, const char *aFileNam
 	}
 }
 
+void DL_Debug::Debug::AssertMessage(bool aAssertExpression, const char *aFileName, int aLine, const char *aFunctionName, const std::string& aString)
+{
+	AssertMessage(aAssertExpression, aFileName, aLine, aFunctionName, aString.c_str());
+}
+
 void DL_Debug::Debug::AssertMessage(const char *aFileName, int aLine, const char *aFunctionName, const std::string& aString)
 {
 	std::stringstream ss;

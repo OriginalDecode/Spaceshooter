@@ -8,6 +8,7 @@
 Conversation::Conversation(const std::string& aName, XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: mySentences(16)
 	, myShowTime(3)
+	, myName(aName)
 {
 	for (tinyxml2::XMLElement* element = aReader.ForceFindFirstChild(aElement, "sentence");
 		element != nullptr; element = aReader.FindNextElement(element, "sentence"))

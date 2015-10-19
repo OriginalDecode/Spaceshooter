@@ -8,13 +8,12 @@ using System.Drawing;
 
 namespace CSharpUtilities.Components
 {
-    public class DropDownEditComponent : BaseComponent
+    public class DropDownComponent : BaseComponent
     {
         private Label myLabel = new Label();
         private ComboBox myDropDown = new ComboBox();
-        private Button myButton = new Button();
 
-        public DropDownEditComponent(Point aLocation, Size aSize, string aText) : base(aLocation,aSize,aText)
+        public DropDownComponent(Point aLocation, Size aSize, string aText) : base(aLocation,aSize,aText)
         {
 
         }
@@ -27,31 +26,39 @@ namespace CSharpUtilities.Components
 
             myDropDown.Location = new Point(myLocation.X + 50, myLocation.Y);
             myDropDown.Size = new Size(100, mySize.Height);
-
-            myButton.Text = "Edit";
-            myButton.Location = new Point(myLocation.X + 200, myLocation.Y);
-            myButton.Size = new Size(50, mySize.Height + 10);
         }
 
         public override void Show()
         {
             myLabel.Show();
             myDropDown.Show();
-            myButton.Show();
         }
 
         public override void Hide()
         {
             myLabel.Hide();
             myDropDown.Hide();
-            myButton.Hide();
         }
 
         public override void BindToPanel(Panel aPanel)
         {
             aPanel.Controls.Add(myLabel);
             aPanel.Controls.Add(myDropDown);
-            aPanel.Controls.Add(myButton);
+        }
+
+        public void AddItem(object aItem)
+        {
+            myDropDown.Items.Add(aItem);
+        }
+
+        public void RemoveItem(object aItem)
+        {
+            myDropDown.Items.Remove(aItem);
+        }
+
+        public ComboBox GetDropDown()
+        {
+            return myDropDown;
         }
     }
 }

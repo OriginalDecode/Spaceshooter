@@ -8,7 +8,7 @@ using System.Drawing;
 using CSharpUtilities;
 using CSharpUtilities.Components;
 
-namespace EntityEditor.ComponentEditors
+namespace EntityEditor.Panels
 {
     public class GCP_ModelPanel
     {
@@ -21,8 +21,8 @@ namespace EntityEditor.ComponentEditors
         {
             myLocation = aLocation;
 
-            myModelPathComponent = new PathBrowseComponent(new Point(myLocation.X + 10, myLocation.Y + 10), new Size(300, 10), "Model");
-            myEffectPathComponent = new PathBrowseComponent(new Point(myLocation.X + 10, myLocation.Y + 30), new Size(300, 10), "Effect");
+            myModelPathComponent = new PathBrowseComponent(new Point(myLocation.X, myLocation.Y + 10), new Size(300, 10), "Model");
+            myEffectPathComponent = new PathBrowseComponent(new Point(myLocation.X, myLocation.Y + 35), new Size(300, 10), "Effect");
         }
 
         public void Show()
@@ -59,9 +59,7 @@ namespace EntityEditor.ComponentEditors
 
         public GraphicsComponentPanel(Point aLocation, Size aSize, Form aParent) : base(aLocation, aSize, aParent)
         {
-            this.BackColor = SystemColors.ControlLight;
-
-            LoadSettings();
+            
         }
 
         public void Load(Entity.GraphicsComponentData aGraphicsComponentData)
@@ -74,7 +72,7 @@ namespace EntityEditor.ComponentEditors
         {
             myPropertyTitle.Text += "Graphcis Component";;
 
-            myModelPanel = new GCP_ModelPanel(new Point(this.Location.X, this.Location.Y + 30));
+            myModelPanel = new GCP_ModelPanel(new Point(this.Location.X, this.Location.Y));
 
             myModelPanel.BindToPanel(this);
 

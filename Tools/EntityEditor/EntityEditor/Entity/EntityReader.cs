@@ -19,9 +19,7 @@ namespace EntityEditor
         {
             if (aFilePath == "") return myEntityData;
             myFilePath = aFilePath;
-            int lastSlash = myFilePath.LastIndexOf("\\");
-            string entityListPath = myFilePath.Substring(0, lastSlash);
-            entityListPath += "\\EntityList.xml";
+            string entityListPath = "Data/Script/LI_list_entity.xml";
 
             if (myEntityList.myPaths == null)
             {
@@ -59,9 +57,7 @@ namespace EntityEditor
         {
             if (aFilePath == "") return;
             myFilePath = aFilePath;
-            int lastSlash = myFilePath.LastIndexOf("\\");
-            string entityListPath = myFilePath.Substring(0, lastSlash);
-            entityListPath += "\\EntityList.xml";
+            string entityListPath = "Data/Script/LI_list_entity.xml";
 
             if (myEntityList.myPaths == null)
             {
@@ -137,7 +133,8 @@ namespace EntityEditor
             else if (aReader.Name == "CollisionSphere")
             {
                 aReader.MoveToAttribute("radius");
-                myEntityData.myCollisionComponent.myRadius = float.Parse(aReader.Value);
+                string formatedValue = aReader.Value.Replace("f", "0");
+                myEntityData.myCollisionComponent.myRadius = float.Parse(formatedValue);
                 myEntityData.myCollisionComponent.myHasSphere = true;
             }
         }

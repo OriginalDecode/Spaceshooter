@@ -3,13 +3,14 @@
 #include "ConversationAction.h"
 #include "Event.h"
 #include "EventManager.h"
+#include "EventQueueEmptyMessage.h"
 #include "PostMaster.h"
 #include "SpawnEnemy.h"
-#include "StartEventMessage.h"
+#include "EnqueueEventMessage.h"
 #include <XMLReader.h>
 
 EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aConversationManager)
-	: myActiveEvents(16)
+	: myEventQueue(16)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::START_EVENT, this);
 	XMLReader reader;
@@ -52,7 +53,7 @@ EventManager::~EventManager()
 	}
 }
 
-void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
+void EventManager::ReceiveMessage(const EnqueueEventMessage& aMessage)
 {
 	std::string eventName = CU::ToLower(aMessage.GetName());
 	std::unordered_map<std::string, Event*>::const_iterator it = myEvents.find(eventName);
@@ -63,23 +64,27 @@ void EventManager::ReceiveMessage(const StartEventMessage& aMessage)
 	}
 	else
 	{
-		myActiveEvents.Add(myEvents[eventName]);
-		if (myActiveEvents.Size() == 1)
+		myEventQueue.Add(myEvents[eventName]);
+		if (myEventQueue.Size() == 1)
 		{
-			myActiveEvents.GetLast()->Start();
+			myEventQueue.GetLast()->Start();
 		}
 	}
 }
 
 void EventManager::Update()
 {
-	if (myActiveEvents.Size() > 0 && myActiveEvents[0]->Update() == true)
+	if (myEventQueue.Size() > 0 && myEventQueue[0]->Update() == true)
 	{
-		myActiveEvents.RemoveNonCyclicAtIndex(0);
+		myEventQueue.RemoveNonCyclicAtIndex(0);
 		
-		if (myActiveEvents.Size() > 0)
+		if (myEventQueue.Size() > 0)
 		{
-			myActiveEvents[0]->Start();
+			myEventQueue[0]->Start();
+		}
+		else
+		{
+			PostMaster::GetInstance()->SendMessage<EventQueueEmptyMessage>(EventQueueEmptyMessage());
 		}
 	}
 }

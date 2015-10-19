@@ -12,11 +12,11 @@ public:
 	EventManager(const std::string& aXmlPath, ConversationManager& aConversationManager);
 	~EventManager();
 
-	void ReceiveMessage(const StartEventMessage& aMessage) override;
+	void ReceiveMessage(const EnqueueEventMessage& aMessage) override;
 	
 	void Update();
 private:
 	std::unordered_map<std::string, Event*> myEvents;
-	CU::GrowingArray<Event*> myActiveEvents;
+	CU::GrowingArray<Event*> myEventQueue;
 };
 

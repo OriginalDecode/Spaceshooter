@@ -30,6 +30,8 @@ namespace EntityEditor.Entity
                 myWeaponPaths.myPaths = new List<string>();
             }
 
+            myWeaponData.Clear();
+
             using (XmlReader reader = XmlReader.Create(aWeaponListPath))
             {
                 while(reader.Read())
@@ -52,6 +54,11 @@ namespace EntityEditor.Entity
                             ReadWeaponData(reader);
                         }
                     }
+                    if(myNewWeaponData.myNumberOfBulletsPerShot == 0)
+                    {
+                        myNewWeaponData.myNumberOfBulletsPerShot = 1;
+                    }
+                    myNewWeaponData.myFilePath = myWeaponPaths.myPaths[i];
                     myWeaponData.Add(myNewWeaponData);
                 }
             }
@@ -86,6 +93,11 @@ namespace EntityEditor.Entity
                 aReader.MoveToAttribute("value");
                 myNewWeaponData.mySpread = int.Parse(aReader.Value);
             }
+            else if (aReader.Name == "bulletsPerShot")
+            {
+                aReader.MoveToAttribute("value");
+                myNewWeaponData.myNumberOfBulletsPerShot = int.Parse(aReader.Value);
+            }
             else if (aReader.Name == "position")
             {
                 aReader.MoveToAttribute("x");
@@ -109,6 +121,11 @@ namespace EntityEditor.Entity
             return myWeaponData;
         }
 
+        public WeaponListXml GetWeaponListXml()
+        {
+            return myWeaponPaths;
+        }
+
         public void LoadBullets(string aBulletListPath)
         {
             if (aBulletListPath == "") return;
@@ -117,6 +134,8 @@ namespace EntityEditor.Entity
             {
                 myBulletPaths.myPaths = new List<string>();
             }
+
+            myBulletData.Clear();
 
             using (XmlReader reader = XmlReader.Create(aBulletListPath))
             {
@@ -140,6 +159,7 @@ namespace EntityEditor.Entity
                             ReadBulletData(reader);
                         }
                     }
+                    myNewBulletData.myFilePath = myBulletPaths.myPaths[i];
                     myBulletData.Add(myNewBulletData);
                 }
             }
@@ -167,7 +187,7 @@ namespace EntityEditor.Entity
             else if (aReader.Name == "Entity")
             {
                 aReader.MoveToAttribute("type");
-                myNewBulletData.myType = aReader.Value;
+                myNewBulletData.myEntityType = aReader.Value;
             }
             else if (aReader.Name == "maxAmount")
             {
@@ -177,13 +197,20 @@ namespace EntityEditor.Entity
             else if (aReader.Name == "speed")
             {
                 aReader.MoveToAttribute("value");
-                myNewBulletData.mySpeed = float.Parse(aReader.Value);
+                string formatedValue = aReader.Value.Replace("f", "0");
+                float floatValue = float.Parse(formatedValue, System.Globalization.CultureInfo.InvariantCulture);
+                myNewBulletData.mySpeed = floatValue;
             }
         }
 
         public List<BulletData> GetBulletData()
         {
             return myBulletData;
+        }
+
+        public BulletListXml GetBulletListXml()
+        {
+            return myBulletPaths;
         }
     }
 }
