@@ -16,6 +16,8 @@ public:
 	void ReceiveNote(const CollisionNote& aNote) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 
+	const std::string& GetDefendName() const;
+
 	static eComponentType GetType();
 private:
 	std::string myDefendName;
@@ -26,3 +28,7 @@ inline eComponentType PropComponent::GetType()
 	return eComponentType::PROP;
 }
 
+inline const std::string& PropComponent::GetDefendName() const
+{
+	return myDefendName;
+}

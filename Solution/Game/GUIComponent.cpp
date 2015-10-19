@@ -2,12 +2,15 @@
 #include <Camera.h>
 #include "Constants.h"
 #include "ConversationMessage.h"
+#include "DefendMessage.h"
 #include "Entity.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
+#include "HealthComponent.h"
 #include "MissionNote.h"
 #include <Model2D.h>
 #include "PostMaster.h"
+#include "PropComponent.h"
 #include <sstream>
 
 #define CIRCLERADIUS 400.f
@@ -28,8 +31,10 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpMarker(new Prism::Model2D)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
+	, myEnemiesTarget(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
@@ -45,6 +50,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 GUIComponent::~GUIComponent()
 {
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -164,6 +170,14 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myCrosshair->Render(halfWidth, -(halfHeight));
 
 
+	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
+	{
+		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget " 
+			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": " 
+			+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
+			, { halfWidth, -halfHeight });
+	}
+
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);
 
@@ -225,4 +239,16 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
 {
 	myConversation = aMessage.myText;
+}
+
+void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
+{
+	if (aMessage.myType == DefendMessage::eType::ENTITY)
+	{
+		myEnemiesTarget = aMessage.myEntity;
+	}
+	else if (aMessage.myType == DefendMessage::eType::COMPLETE)
+	{
+		myEnemiesTarget = nullptr;
+	}
 }
