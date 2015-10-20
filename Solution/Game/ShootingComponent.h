@@ -5,14 +5,15 @@
 struct WeaponData
 {
 	eBulletType myBulletType;
+	int myBulletsPerShot;
+	int myMultiplier;
 	int mySpread;
 	int myID;
-	int myBulletsPerShot;
 	float myCoolDownTime;
 	float myCurrentTime;
+	bool myIsHoming;
 	CU::Vector3<float> myPosition;
 	std::string myType;
-	int myMultiplier;
 };
 
 class Entity;

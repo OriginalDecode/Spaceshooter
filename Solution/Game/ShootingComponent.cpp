@@ -78,7 +78,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 			orientation.SetPos(pos);
 
 			PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-				, myEntity.GetType(), aShootNote.myEnitityVelocity));
+				, myEntity.GetType(), aShootNote.myEnitityVelocity, myWeapons[myCurrentWeaponID].myIsHoming));
 			myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 		}
 	}
@@ -124,6 +124,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	newWeapon.mySpread = aWeapon.mySpread;
 	newWeapon.myType = aWeapon.myType;
 	newWeapon.myMultiplier = 1;
+	newWeapon.myIsHoming = false;
 
 	newWeapon.myBulletType = ConvertToBulletEnum(aWeapon.myBulletType);
 

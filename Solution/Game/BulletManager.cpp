@@ -57,7 +57,7 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetEntityVelocity());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetIsHoming());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -174,6 +174,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		}
 	}
 
+	if (bullet->GetComponent<AIComponent>() != nullptr)
+	{
+		bullet->RemoveComponent<AIComponent>();
+	}
+
 	bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
 		(anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
@@ -184,7 +189,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation.GetPos(), 2000.f);
 		if (enemy != nullptr)
 		{
-			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 100.f, 
+			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 10.f, 
 				eAITargetPositionMode::KAMIKAZE);
 			bullet->GetComponent<AIComponent>()->SetEntityToFollow(enemy);
 		}
@@ -222,10 +227,10 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (playerBulletComp->GetActive() == false)
 			{
-				//if (playerBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
-				//{
-				//	playerBulletComp->GetEntity().r
-				//}
+				if (playerBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				{
+					playerBulletComp->GetEntity().RemoveComponent<AIComponent>();
+				}
 				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
 			}
@@ -238,6 +243,10 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (enemyBulletComp->GetActive() == false)
 			{
+				if (enemyBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				{
+					enemyBulletComp->GetEntity().RemoveComponent<AIComponent>();
+				}
 				myCollisionManager.Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::ENEMY_BULLET);
 			}
