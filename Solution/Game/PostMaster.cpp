@@ -5,20 +5,24 @@
 PostMaster* PostMaster::myInstance = nullptr;
 PostMaster::PostMaster()
 {
+	for (int i = 0; i < static_cast<int>(eMessageType::COUNT); ++i)
+	{
+		mySubscribers[i].Init(2);
+	}
 }
 
 
 PostMaster::~PostMaster()
 {
-	for (auto it = mySubscribers.begin(); it != mySubscribers.end(); ++it)
+	for (int i = 0; i < static_cast<int>(eMessageType::COUNT); ++i)
 	{
-		if (it->second.Size() > 0)
+		if (mySubscribers[i].Size() > 0)
 		{
 			DL_ASSERT("Subscriber not unsubscribed at Postmaster-Destroy.");
 		}
-	}
 
-	mySubscribers.clear();
+		mySubscribers[i].RemoveAll();
+	}
 }
 
 PostMaster* PostMaster::GetInstance()
@@ -45,14 +49,13 @@ void PostMaster::Destroy()
 
 void PostMaster::Subscribe(const eMessageType aMessageType, Subscriber* aSubscriber, ePriorityLayer aPriority, bool aLetThrough)
 {
-	auto it = mySubscribers.find(aMessageType);
+	CU::GrowingArray<SubscriberInfo>& subscribers
+		= mySubscribers[static_cast<int>(aMessageType)];
+
 #ifdef _DEBUG
-	if (it != mySubscribers.end())
+	for (int i = 0; i < subscribers.Size(); ++i)
 	{
-		for (unsigned int i = 0; i < it->second.Size(); ++i)
-		{
-			DL_ASSERT_EXP(it->second[i].mySubscriber != aSubscriber, "Tried to add the same subscriber to the same message twice.");
-		}
+		DL_ASSERT_EXP(subscribers[i].mySubscriber != aSubscriber, "Tried to add the same subscriber to the same message twice.");
 	}
 #endif
 
@@ -61,61 +64,53 @@ void PostMaster::Subscribe(const eMessageType aMessageType, Subscriber* aSubscri
 	newSubscriber.myPriority = aPriority;
 	newSubscriber.myLetThrough = aLetThrough;
 
-	if (it == mySubscribers.end())
-	{
-		mySubscribers[aMessageType].Init(4);
-	}
-
 	if (aPriority == ePriorityLayer::NO_PRIO)
 	{
-		mySubscribers[aMessageType].Add(newSubscriber);
+		mySubscribers[static_cast<int>(aMessageType)].Add(newSubscriber);
 	}
 	else
 	{
-		mySubscribers[aMessageType].Add(newSubscriber);
-		SortSubscribers(mySubscribers[aMessageType]);
+		mySubscribers[static_cast<int>(aMessageType)].Add(newSubscriber);
+		SortSubscribers(mySubscribers[static_cast<int>(aMessageType)]);
 	}
 }
 
 void PostMaster::UnSubscribe(const eMessageType aMessageType, Subscriber* aSubscriber)
 {
-	auto it = mySubscribers.find(aMessageType);
+	CU::GrowingArray<SubscriberInfo>& subscribers
+		= mySubscribers[static_cast<int>(aMessageType)];
 
-	if (it != mySubscribers.end())
+	for (int i = 0; i < subscribers.Size(); ++i)
 	{
-		for (unsigned int i = 0; i < unsigned int(mySubscribers[aMessageType].Size()); ++i)
+		if (subscribers[i].mySubscriber == aSubscriber)
 		{
-			if (mySubscribers[aMessageType][i].mySubscriber == aSubscriber)
-			{
-				mySubscribers[aMessageType].RemoveCyclicAtIndex(i);
-				break;
-			}
+			subscribers.RemoveCyclicAtIndex(i);
+			break;
 		}
-
-		SortSubscribers(mySubscribers[aMessageType]);
 	}
+
+	SortSubscribers(subscribers);
 }
 
 void PostMaster::UnSubscribe(Subscriber* aSubscriber)
 {
-	auto it = mySubscribers.begin();
-
-	for (; it != mySubscribers.end(); ++it)
+	for (int i = 0; i < static_cast<int>(eMessageType::COUNT); ++i)
 	{
-		for (int i = it->second.Size() - 1; i >= 0; --i)
+		CU::GrowingArray<SubscriberInfo, int>& subscribers
+			= mySubscribers[i];
+
+		for (int j = 0; j < subscribers.Size(); ++j)
 		{
-			if (it->second[i].mySubscriber == aSubscriber)
+			if (subscribers[j].mySubscriber == aSubscriber)
 			{
-				it->second.RemoveCyclicAtIndex(i);
+				subscribers.RemoveCyclicAtIndex(j);
 				break;
 			}
 		}
-
-		SortSubscribers(it->second);
 	}
 }
 
-void PostMaster::SortSubscribers(CU::GrowingArray<SubscriberInfo, unsigned int> &aBuffer)
+void PostMaster::SortSubscribers(CU::GrowingArray<SubscriberInfo> &aBuffer)
 {
 	int max = 0;
 	if (aBuffer.Size() < 3)
@@ -127,7 +122,7 @@ void PostMaster::SortSubscribers(CU::GrowingArray<SubscriberInfo, unsigned int> 
 		return;
 	}
 
-	for (unsigned int i = 0; i < aBuffer.Size(); ++i)
+	for (int i = 0; i < aBuffer.Size(); ++i)
 	{
 		if (aBuffer[max].myPriority < aBuffer[i].myPriority)
 			max = i;
@@ -137,7 +132,7 @@ void PostMaster::SortSubscribers(CU::GrowingArray<SubscriberInfo, unsigned int> 
 	QuickSort(aBuffer, 0, aBuffer.Size() - 2);
 }
 
-void PostMaster::QuickSort(CU::GrowingArray<SubscriberInfo, unsigned int> &aBuffer, const int aStart, const int aEnd)
+void PostMaster::QuickSort(CU::GrowingArray<SubscriberInfo> &aBuffer, const int aStart, const int aEnd)
 {
 	int lower = aStart + 1;
 	int upper = aEnd;
