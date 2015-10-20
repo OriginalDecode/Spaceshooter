@@ -85,7 +85,13 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		else if (type == "defend")
 		{
-			DefendMission* mission = new DefendMission(reader, element);
+			DefendMission* mission = new DefendMission(reader, element, false);
+			mission->SetIndex(missionIndex);
+			myMissionsNotOrder.Add(mission);
+		}
+		else if (type == "defendabort")
+		{
+			DefendMission* mission = new DefendMission(reader, element, true);
 			mission->SetIndex(missionIndex);
 			myMissionsNotOrder.Add(mission);
 		}
