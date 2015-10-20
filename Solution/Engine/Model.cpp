@@ -561,7 +561,7 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation, const CU::Vec
 			{
 				mySurfaces[s]->Activate();
 
-				ID3DX11EffectTechnique* tech;
+				ID3DX11EffectTechnique* tech = nullptr;
 				D3DX11_TECHNIQUE_DESC techDesc;
 
 				if (mySurfaces[s]->GetEmissive() == true)
@@ -573,6 +573,8 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation, const CU::Vec
 					tech = myEffect->GetTechnique();
 				}
 
+				DL_ASSERT_EXP(tech != nullptr, "Technique is nullptr");
+				DL_ASSERT_EXP(tech->IsValid(), "Technique is not valid");
 				tech->GetDesc(&techDesc);
 				for (UINT i = 0; i < techDesc.Passes; ++i)
 				{
