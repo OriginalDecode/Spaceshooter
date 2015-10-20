@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include <AudioInterface.h>
+
 #include "Constants.h"
 #include <DebugMenu.h>
 #include <DebugDataDisplay.h>
@@ -66,7 +66,6 @@ void InputComponent::Update(float aDeltaTime)
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
 			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), mySteering * mySteeringModifier * myWeaponRotationModifier);
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
 		}
 
 		if (myInputWrapper->KeyIsPressed(DIK_LSHIFT) || myInputWrapper->KeyIsPressed(DIK_RSHIFT))
