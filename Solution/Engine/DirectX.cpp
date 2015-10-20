@@ -210,7 +210,7 @@ bool Prism::DirectX::D3DSwapChainSetup()
 		return false;
 	}
 
-#ifndef RELEASE_BUILD
+#ifdef _DEBUG
 	myDebugInterface = nullptr;
 	result = myDevice->QueryInterface(__uuidof(ID3D11Debug), (void**)&myDebugInterface);
 	if (FAILED(result))
