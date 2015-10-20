@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AIComponent.h"
+#include <AudioInterface.h>
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -183,7 +184,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation.GetPos(), 2000.f);
 		if (enemy != nullptr)
 		{
-			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity), 
+			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 100.f, 
 				eAITargetPositionMode::KAMIKAZE);
 			bullet->GetComponent<AIComponent>()->SetEntityToFollow(enemy);
 		}
@@ -221,9 +222,12 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (playerBulletComp->GetActive() == false)
 			{
+				//if (playerBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				//{
+				//	playerBulletComp->GetEntity().r
+				//}
 				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
-				// remove AI if it exists
 			}
 		}
 
