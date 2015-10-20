@@ -88,7 +88,8 @@ void Prism::EffectContainer::VerifyShader(const std::string& aFilePath)
 		|| aFilePath == "Data/Resource/Shader/S_effect_sprite.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_graph.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_debug.fx"
-		|| aFilePath == "Data/Resource/Shader/S_effect_skybox.fx",
+		|| aFilePath == "Data/Resource/Shader/S_effect_skybox.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_basic.fx",
 		CU::Concatenate("Found invalid Shader: %s", aFilePath.c_str()));
 }
 
