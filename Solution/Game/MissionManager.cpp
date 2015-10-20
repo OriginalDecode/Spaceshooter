@@ -1,20 +1,13 @@
 #include "stdafx.h"
 
 #include "CommonHelper.h"
-#include "DefendMission.h"
 #include <DL_Assert.h>
 #include "Entity.h"
-#include "KillAllAbortMission.h"
-#include "KillAllMission.h"
-#include "KillXEnemiesAbortMission.h"
-#include "KillXEnemiesMission.h"
 #include "Level.h"
+#include "MissionContainer.h"
 #include "MissionManager.h"
 #include "PostMaster.h"
 #include <sstream>
-#include "SurvivalMission.h"
-#include "SurvivalAbortMission.h"
-#include "WaypointMission.h"
 #include "XMLReader.h"
 
 
@@ -33,74 +26,17 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 
 	tinyxml2::XMLElement* element = reader.ForceFindFirstChild("root");
 
-	for (element = reader.ForceFindFirstChild(element, "mission"); element != nullptr;
-		element = reader.FindNextElement(element, "mission"))
+	for (element = reader.ForceFindFirstChild(element, "missionContainer"); element != nullptr;
+		element = reader.FindNextElement(element, "missionContainer"))
 	{
-		std::string type;
-		reader.ForceReadAttribute(element, "type", type);
-		type = CU::ToLower(type);
 		int missionIndex = -1;
 		reader.ForceReadAttribute(element, "index", missionIndex);
-		if (type == "waypoint")
-		{
-			WaypointMission* waypoint = new WaypointMission(myLevel, myPlayer, reader, element);
-			waypoint->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(waypoint);
-		}
-		else if (type == "killx")
-		{
-			KillXEnemiesMission* mission = new KillXEnemiesMission(myLevel, reader, element);
-			mission->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(mission);
-		}
-		else if (type == "killxabort")
-		{
-			KillXEnemiesAbortMission* mission = new KillXEnemiesAbortMission(myLevel, reader, element);
-			mission->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(mission);
-		}
-		else if (type == "killall")
-		{
-			KillAllMission* killAll = new KillAllMission(myLevel, reader, element);
-			killAll->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(killAll);
-		}
-		else if (type == "killallabort")
-		{
-			KillAllAbortMission* killAllAbort = new KillAllAbortMission(myLevel, reader, element);
-			killAllAbort->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(killAllAbort);
-		}
-		else if (type == "survival")
-		{
-			SurvivalMission* survival = new SurvivalMission(reader, element);
-			survival->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(survival);
-		}
-		else if (type == "survivalabort")
-		{
-			SurvivalAbortMission* survivalAbort = new SurvivalAbortMission(reader, element);
-			survivalAbort->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(survivalAbort);
-		}
-		else if (type == "defend")
-		{
-			DefendMission* mission = new DefendMission(reader, element, false);
-			mission->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(mission);
-		}
-		else if (type == "defendabort")
-		{
-			DefendMission* mission = new DefendMission(reader, element, true);
-			mission->SetIndex(missionIndex);
-			myMissionsNotOrder.Add(mission);
-		}
-		else
-		{
-			std::string error = "Missiontype not recognized: " + type;
-			DL_ASSERT(error.c_str());
-		}
+
+		MissionContainer* mission = new MissionContainer(myLevel, myPlayer, reader, element);
+		mission->SetIndex(missionIndex);
+		myMissionsNotOrder.Add(mission);
 	}
+	reader.CloseDocument();
 
 	int currentIndex = 0;
 	while (myMissions.Size() != myMissionsNotOrder.Size())
@@ -117,8 +53,6 @@ MissionManager::MissionManager(Level& aLevel, Entity& aPlayer, const std::string
 		}
 		DL_ASSERT_EXP(prevIndex == currentIndex - 1, "Mission index " + std::to_string(currentIndex) + " not found.");
 	}
-
-	reader.CloseDocument();
 }
 
 MissionManager::~MissionManager()
@@ -143,7 +77,7 @@ void MissionManager::Update(float aDeltaTime)
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
 	if (myEndEventsActive == false && myMissions[myCurrentMission]->Update(aDeltaTime) == true)
 	{
-		myAllowedToStartNextMission = myMissions[myCurrentMission]->EventsEnd();
+		myAllowedToStartNextMission = !myMissions[myCurrentMission]->EventsEnd();
 		myEndEventsActive = true;
 	}
 

@@ -12,7 +12,6 @@ namespace CommonUtilities
 class InGameState;
 class MenuState;
 class BulletManager;
-class LevelFactory;
 
 class Game : public Subscriber
 {
@@ -36,7 +35,6 @@ private:
 	CU::InputWrapper* myInputWrapper;
 
 	StateStack myStateStack;
-	LevelFactory* myLevelFactory;
 
 	MenuState* myCurrentMenu;
 	InGameState* myGame;

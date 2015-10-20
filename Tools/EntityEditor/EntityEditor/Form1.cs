@@ -27,6 +27,7 @@ namespace EntityEditor
         private Panels.AIComponentPanel myAIComponentPanel = null;
         private Panels.CollisionComponentPanel myCollisionComponentPanel = null;
         private Panels.GraphicsComponentPanel myGraphicsComponentPanel = null;
+        private Panels.HealthComponentPanel myHealthComponentPanel = null;
         private Panels.ShootingComponentPanel myShootingComponentPanel = null;
         private Panels.RenamePanel myRenameEntityPanel = null;
 
@@ -55,6 +56,7 @@ namespace EntityEditor
             myAIComponentPanel = new Panels.AIComponentPanel(panelLocation, panelSize, this);
             myCollisionComponentPanel = new Panels.CollisionComponentPanel(panelLocation, panelSize, this);
             myGraphicsComponentPanel = new Panels.GraphicsComponentPanel(panelLocation, panelSize, this);
+            myHealthComponentPanel = new Panels.HealthComponentPanel(panelLocation, panelSize, this);
             myShootingComponentPanel = new Panels.ShootingComponentPanel(panelLocation, panelSize, this);
             myRenameEntityPanel = new Panels.RenamePanel(panelLocation, panelSize, this);
 
@@ -62,6 +64,7 @@ namespace EntityEditor
             PropertyPanel.Controls.Add(myAIComponentPanel);
             PropertyPanel.Controls.Add(myCollisionComponentPanel);
             PropertyPanel.Controls.Add(myGraphicsComponentPanel);
+            PropertyPanel.Controls.Add(myHealthComponentPanel);
             PropertyPanel.Controls.Add(myShootingComponentPanel);
             PropertyPanel.Controls.Add(myRenameEntityPanel);
 
@@ -74,14 +77,6 @@ namespace EntityEditor
 
             EntityContentList.Items.Add("Name: " + myCurrentEntity.myName);
             EntityContentList.Items.Add("Components:");
-            if (myCurrentEntity.myGraphicsComponent.myIsActive)
-            {
-                EntityContentList.Items.Add("GraphicsComponent");
-            }
-            if (myCurrentEntity.myShootingComponent.myIsActive)
-            {
-                EntityContentList.Items.Add("ShootingComponent");
-            }
             if (myCurrentEntity.myAIComponent.myIsActive)
             {
                 EntityContentList.Items.Add("AIComponent");
@@ -89,6 +84,18 @@ namespace EntityEditor
             if (myCurrentEntity.myCollisionComponent.myIsActive)
             {
                 EntityContentList.Items.Add("CollisionComponent");
+            }
+            if (myCurrentEntity.myHealthComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("HealthComponent");
+            }
+            if (myCurrentEntity.myGraphicsComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("GraphicsComponent");
+            }
+            if (myCurrentEntity.myShootingComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("ShootingComponent");
             }
         }
 
@@ -124,6 +131,10 @@ namespace EntityEditor
         public void SetCollisionComponent(Entity.CollisionComponentData aCollisionComponent)
         {
             myCurrentEntity.myCollisionComponent = aCollisionComponent;
+        }
+        public void SetHealthComponent(Entity.HealthComponentData aHealthComponent)
+        {
+            myCurrentEntity.myHealthComponent = aHealthComponent;
         }
         //Set Components To EntityData End
 
@@ -188,6 +199,12 @@ namespace EntityEditor
                 myCurrentEntity.myCollisionComponent.myRadius = 0;
                 return;
             }
+            if (aComponentName.StartsWith("Health") == true)
+            {
+                myCurrentEntity.myHealthComponent.myIsActive = false;
+                myCurrentEntity.myHealthComponent.myHealth = 0;
+                return;
+            }
         }
 
         private void HidePanels()
@@ -196,6 +213,7 @@ namespace EntityEditor
             myAIComponentPanel.Hide();
             myCollisionComponentPanel.Hide();
             myGraphicsComponentPanel.Hide();
+            myHealthComponentPanel.Hide();
             myShootingComponentPanel.Hide();
             myRenameEntityPanel.Hide();
         }
@@ -225,6 +243,12 @@ namespace EntityEditor
             {
                 myCollisionComponentPanel.Show();
                 myCollisionComponentPanel.Load(myCurrentEntity.myCollisionComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("Health") == true)
+            {
+                myHealthComponentPanel.Show();
+                myHealthComponentPanel.Load(myCurrentEntity.myHealthComponent);
                 return;
             }
         }

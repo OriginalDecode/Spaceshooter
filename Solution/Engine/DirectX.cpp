@@ -82,8 +82,10 @@ void Prism::DirectX::CleanD3D()
 	myContext->Release();
 	myContext = nullptr;
 
+#ifdef _DEBUG
 	myDebugInterface->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
 	myDebugInterface->Release();
+#endif
 }
 
 void Prism::DirectX::EnableZBuffer()
@@ -210,7 +212,7 @@ bool Prism::DirectX::D3DSwapChainSetup()
 		return false;
 	}
 
-#ifndef RELEASE_BUILD
+#ifdef _DEBUG
 	myDebugInterface = nullptr;
 	result = myDevice->QueryInterface(__uuidof(ID3D11Debug), (void**)&myDebugInterface);
 	if (FAILED(result))

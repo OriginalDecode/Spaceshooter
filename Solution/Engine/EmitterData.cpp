@@ -63,19 +63,8 @@ namespace Prism
 		read.ReadAttribute(element, "z", myEmissionVelocityDelta.z);
 
 
-		element = read.ForceFindFirstChild(emitter, "ParticleStartColor");
-		read.ReadAttribute(element, "r", myStartColor.x);
-		read.ReadAttribute(element, "g", myStartColor.y);
-		read.ReadAttribute(element, "b", myStartColor.z);
-
-		element = read.ForceFindFirstChild(emitter, "ParticleEndColor");
-		read.ReadAttribute(element, "r", myEndColor.x);
-		read.ReadAttribute(element, "g", myEndColor.y);
-		read.ReadAttribute(element, "b", myEndColor.z);
-
-
 		element = read.ForceFindFirstChild(emitter, "ParticleLifeTime");
-		read.ReadAttribute(element, "value", myParticlesLifeTime);
+		read.ReadAttribute(element, "value", myEmissionLifeTime);
 
 		element = read.ForceFindFirstChild(emitter, "EmissionRate");
 		read.ReadAttribute(element, "value", myEmissionRate);
@@ -90,27 +79,25 @@ namespace Prism
 		element = read.ForceFindFirstChild(emitter, "ParticleMinScale");
 		read.ReadAttribute(element, "value", myMinScale);
 
+		element = read.ForceFindFirstChild(emitter, "ParticleAmount");
+		read.ReadAttribute(element, "value", myMaxParticleAmount);
 
-		/*element = read.ForceFindFirstChild(emitter, "ParticleAlphaDelta");
+
+		element = read.ForceFindFirstChild(emitter, "ParticleAlphaDelta");
 		read.ReadAttribute(element, "value", myData.myAlphaDelta);
 		element = read.ForceFindFirstChild(emitter, "ParticleSizeDelta");
 		read.ReadAttribute(element, "value", myData.mySizeDelta);
 
 		element = read.ForceFindFirstChild(emitter, "ParticleAlphaStart");
-		read.ReadAttribute(element, "value", myData.myStartAlpha);*/
+		read.ReadAttribute(element, "value", myData.myStartAlpha);
 
 		read.CloseDocument();
 
-		myData.myStartColor = myStartColor;
-		myData.myEndColor = myEndColor;
-
 		myData.myMaxStartSize = myMaxScale;
-		myData.myMinStartSize = myMinScale;
-		
 		myData.myMaxVelocity = myMaxVelocity;
 		myData.myMinVelocity = myMinVelocity;
-
-		myData.myLifeTime = myParticlesLifeTime;
+		myData.myLifeTime = myEmissionLifeTime;
+		myData.myMinStartSize = myMinScale;
 
 		myTexture = Engine::GetInstance()->GetTextureContainer()->GetTexture(myTextureName.c_str());
 		myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect(myEffectName.c_str());
@@ -120,28 +107,31 @@ namespace Prism
 
 	void EmitterData::CreateInputLayout()
 	{
-		HRESULT hr;
+		HRESULT hr = S_OK;
 
 		D3DX11_PASS_DESC passDesc;
-		hr = myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-		DL_ASSERT_EXP(!FAILED(hr), "[EmitterData](CreateInputLayout) : Failed to get Pass Description!");
+		myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
+
+		DL_ASSERT_EXP(hr == S_OK, "[EmitterData](CreateInputLayout) : Failed to get pass description!");
 
 		const D3D11_INPUT_ELEMENT_DESC VertexParticleLayout[] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "VELOCITY", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "ALPHA", 0, DXGI_FORMAT_R32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "SIZE", 0, DXGI_FORMAT_R32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			{ "TIME", 0, DXGI_FORMAT_R32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "RESERVED", 0, DXGI_FORMAT_R32_FLOAT, 0, 36, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
-		UINT size = ARRAYSIZE(VertexParticleLayout);
+		UINT arrSize = ARRAYSIZE(VertexParticleLayout);
 
 		hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(VertexParticleLayout
-			, size
+			, arrSize
 			, passDesc.pIAInputSignature
 			, passDesc.IAInputSignatureSize
 			, &myInputLayout);
-		DL_ASSERT_EXP(!FAILED(hr), "[EmitterData](CreateInputLayout) : Failed to Create InputLayout!");
+
+		DL_ASSERT_EXP(hr == S_OK, "[EmitterData](CreateInputLayout) : Failed to Create InputLayout!");
 	}
 }

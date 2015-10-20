@@ -1,13 +1,10 @@
 #pragma once
-#include "..\CommonUtilities\Vector.h"
+
 struct ParticleData
 {
 
 	CU::Vector3f myMaxVelocity;
 	CU::Vector3f myMinVelocity;
-
-	CU::Vector3f myStartColor;
-	CU::Vector3f myEndColor;
 
 	float myLifeTime;
 	
@@ -21,27 +18,21 @@ struct ParticleData
 
 };
 
-struct GraphicalParticle
+struct ParticleInstance
 {
-	GraphicalParticle()
-		: myAlpha(0.0f)
-		, mySize(0.0f)
-		, myLifeTime(10.0f)
+	ParticleInstance()
 	{
+		myAlpha = 1.0f;
+		mySize = 1.0f;
+		myLifeTime = 10.0f;
+		myIsAlive = false;
 	}
+	CU::Vector3f	myPosition;
+	CU::Vector3f	myVelocity;
 
-	CU::Vector3f myPosition;
-	CU::Vector3f myColor;
-	float myAlpha;
-	float mySize;
-	float myLifeTime;
-};
+	float			myAlpha;
+	float			mySize;
+	float			myLifeTime;
+	bool			myIsAlive;
 
-struct LogicalParticle
-{
-	LogicalParticle()
-		: myVelocity(CU::Vector3f(0, 0, 0))
-	{
-	}
-	CU::Vector3f myVelocity;
 };

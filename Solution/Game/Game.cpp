@@ -33,7 +33,6 @@ Game::Game()
 Game::~Game()
 {
 	delete myInputWrapper;
-	delete myLevelFactory;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
 
 	Prism::Audio::AudioInterface::Destroy();
@@ -58,13 +57,11 @@ bool Game::Init(HWND& aHwnd)
 	myInputWrapper->Init(aHwnd, GetModuleHandle(NULL)
 		, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper, myCanWinGame);
-
 	if (startInMenu == false)
 	{
 		myGame = new InGameState(myInputWrapper, myShowMessages);
-		myGame->SetLevel(myLevelFactory->LoadLevel(1));
 		myStateStack.PushMainGameState(myGame);
+		myGame->SetLevel(1);
 	}
 	else
 	{
@@ -155,34 +152,13 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	{
 	case eGameState::LOAD_GAME:
 		myGame = new InGameState(myInputWrapper, myShowMessages);
-		myGame->SetLevel(myLevelFactory->LoadLevel(aMessage.GetID()));
 		myStateStack.PushMainGameState(myGame);
+		myGame->SetLevel(aMessage.GetID());
 		break;
-
-	case eGameState::RELOAD_LEVEL:
-		myGame->SetLevel(myLevelFactory->ReloadLevel());
-		break;
-
 	case eGameState::LOAD_MENU:
 		myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);
 		myStateStack.PushMainGameState(myCurrentMenu);
 		break;
-
-	case eGameState::COMPLETE_LEVEL:
-		if (myLevelFactory->IsLastLevel() == false)
-		{
-			myGame->CompleteLevel();
-		}
-		else
-		{
-			myGame->CompleteGame();
-		}
-		break;
-
-	case eGameState::LOAD_NEXT_LEVEL:
-		myGame->SetLevel(myLevelFactory->LoadNextLevel());
-		break;
-
 	case eGameState::MOUSE_LOCK:
 		myLockMouse = aMessage.GetMouseLocked();
 		break;

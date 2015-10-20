@@ -23,16 +23,17 @@ namespace CSharpUtilities.Components
 
         protected override void InitializeComponents(string aText)
         {
-            int textLength = aText.Length;
-            if (textLength > 6) textLength = 6;
+            int textSize = aText.Length * 10;
+            if (textSize > 60) textSize = 60;
+            int sizePerObject = mySize.Width - textSize;
 
             myLabel.Text = aText;
             myLabel.Location = new Point(myLocation.X, myLocation.Y);
-            myLabel.Size = new Size(textLength * 10, mySize.Height);
+            myLabel.Size = new Size(textSize, mySize.Height);
 
 
-            myTextBox.Location = new Point(myLocation.X + textLength * 10 + 10, myLocation.Y - 3);
-            myTextBox.Size = new Size(mySize.Width - 50, mySize.Height);
+            myTextBox.Location = new Point(myLocation.X + textSize, myLocation.Y - 3);
+            myTextBox.Size = new Size(sizePerObject, mySize.Height);
             myTextBox.KeyPress += new KeyPressEventHandler(TextBox_KeyPress);
         }
 
@@ -52,6 +53,11 @@ namespace CSharpUtilities.Components
         {
             myLabel.Show();
             myTextBox.Show();
+        }
+
+        public void AddTextChangeEvent(EventHandler aEvent)
+        {
+            myTextBox.TextChanged += new EventHandler(aEvent);
         }
 
         public TextBox GetTextBox()

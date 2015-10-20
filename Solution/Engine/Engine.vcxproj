@@ -180,6 +180,7 @@
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelProxy.cpp" />
     <ClCompile Include="Octree.cpp" />
+    <ClCompile Include="ParticleData.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SpotLight.cpp" />

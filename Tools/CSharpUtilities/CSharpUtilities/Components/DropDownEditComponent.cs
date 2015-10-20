@@ -40,6 +40,11 @@ namespace CSharpUtilities.Components
             myDropDown.Hide();
         }
 
+        public void AddSelectedIndexChangeEvent(EventHandler aEvent)
+        {
+            myDropDown.SelectedIndexChanged += new EventHandler(aEvent);
+        }
+
         public override void BindToPanel(Panel aPanel)
         {
             aPanel.Controls.Add(myLabel);
