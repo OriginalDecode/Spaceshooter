@@ -199,6 +199,12 @@ namespace EntityEditor
                 myCurrentEntity.myCollisionComponent.myRadius = 0;
                 return;
             }
+            if (aComponentName.StartsWith("Health") == true)
+            {
+                myCurrentEntity.myHealthComponent.myIsActive = false;
+                myCurrentEntity.myHealthComponent.myHealth = 0;
+                return;
+            }
         }
 
         private void HidePanels()
