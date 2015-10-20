@@ -16,8 +16,11 @@ namespace EntityEditor
         private Entity.EntityData myEntityData = new Entity.EntityData();
         private Entity.EntityListXML myEntityList = new Entity.EntityListXML();
 
+        private XMLWrapperRead myXMLWrapper = new XMLWrapperRead();
+
         public Entity.EntityData LoadFile(String aFilePath, Form aParent)
         {
+            myEntityData = new Entity.EntityData();
             if (aFilePath == "") return myEntityData;
             myFilePath = aFilePath;
             string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
@@ -26,26 +29,25 @@ namespace EntityEditor
             {
                 myEntityList.myPaths = new List<string>();
             }
-
-            using (XmlReader reader = XmlReader.Create(myFilePath))
+            XmlDocument entityDoc = myXMLWrapper.Open(myFilePath);
+            XmlNode rootElement = myXMLWrapper.FindFirstElement();
+            XmlNode entityElement;
+            entityElement = myXMLWrapper.FindFirstChildElement(rootElement);
+            if (rootElement.Name != "root")
             {
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        ReadElement(reader);
-                    }
-                }
+                entityElement = rootElement;
             }
-            using (XmlReader reader = XmlReader.Create(entityListPath))
+            myXMLWrapper.ReadAttribute(entityElement, "name", ref myEntityData.myName);
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(entityElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
             {
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        ReadEntityListFile(reader);
-                    }
-                }
+                ReadElement(e);
+            }
+
+            XmlDocument entityListDoc = myXMLWrapper.Open(entityListPath);
+            rootElement = myXMLWrapper.FindFirstElement();
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(rootElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                ReadEntityListFile(e);
             }
 
             EntityEditorForm entityForm = (EntityEditorForm)aParent;
@@ -54,61 +56,113 @@ namespace EntityEditor
             return myEntityData;
         }
 
-        private void ReadEntityListFile(XmlReader aReader)
+        private void ReadEntityListFile(XmlNode aNode)
         {
-            if (aReader.Name == "path")
+            if (aNode.Name == "path")
             {
-                aReader.MoveToAttribute("src");
-                if (myEntityList.myPaths.Contains(aReader.Value) == false)
+                string path = "";
+                myXMLWrapper.ReadAttribute(aNode, "src", ref path);
+
+                if (myEntityList.myPaths.Contains(path) == false)
                 {
-                    myEntityList.myPaths.Add(aReader.Value);
+                    myEntityList.myPaths.Add(path);
                 }
             }
         }
 
-        private void ReadElement(XmlReader aReader)
+        private void ReadElement(XmlNode aNode)
         {
-            if (aReader.Name == "Entity")
-            {
-                aReader.MoveToAttribute("name");
-                myEntityData.myName = aReader.Value;
-            }
-            else if (aReader.Name == "GraphicsComponent")
+            if (aNode.Name == "GraphicsComponent")
             {
                 myEntityData.myGraphicsComponent.myIsActive = true;
+                ReadGraphicsComponent(aNode);
             }
-            else if (aReader.Name == "Model")
-            {
-                aReader.MoveToAttribute("modelFile");
-                myEntityData.myGraphicsComponent.myModelPath = aReader.Value;
-
-                aReader.MoveToAttribute("effectFile");
-                myEntityData.myGraphicsComponent.myEffectPath = aReader.Value;
-            }
-            else if (aReader.Name == "AIComponent")
+            else if (aNode.Name == "AIComponent")
             {
                 myEntityData.myAIComponent.myIsActive = true;
+                ReadAIComponent(aNode);
             }
-            else if (aReader.Name == "ShootingComponent")
+            else if (aNode.Name == "ShootingComponent")
             {
                 myEntityData.myShootingComponent.myIsActive = true;
+                ReadShootingComponent(aNode);
             }
-            else if (aReader.Name == "Weapon")
-            {
-                aReader.MoveToAttribute("type");
-                myEntityData.myShootingComponent.myWeaponType = aReader.Value;
-            }
-            else if (aReader.Name == "CollisionComponent")
+            else if (aNode.Name == "CollisionComponent")
             {
                 myEntityData.myCollisionComponent.myIsActive = true;
-            }
-            else if (aReader.Name == "CollisionSphere")
-            {
-                aReader.MoveToAttribute("radius");
-                string formatedValue = aReader.Value.Replace("f", "0");
-                myEntityData.myCollisionComponent.myRadius = float.Parse(formatedValue);
-                myEntityData.myCollisionComponent.myHasSphere = true;
+                ReadCollisionComponent(aNode);
             }
         }
+
+        private void ReadGraphicsComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Model")
+                {
+                    myXMLWrapper.ReadAttribute(e, "modelFile", ref myEntityData.myGraphicsComponent.myModelPath);
+                    myXMLWrapper.ReadAttribute(e, "effectFile", ref myEntityData.myGraphicsComponent.myEffectPath);
+                }
+            }
+        }
+
+        private void ReadAIComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Speed")
+                {
+                    myXMLWrapper.ReadAttribute(e, "min", ref myEntityData.myAIComponent.mySpeed.myX);
+                    myXMLWrapper.ReadAttribute(e, "max", ref myEntityData.myAIComponent.mySpeed.myY);
+                }
+                else if (e.Name == "TimeToNextDecision")
+                {
+                    myXMLWrapper.ReadAttribute(e, "min", ref myEntityData.myAIComponent.myTimeToNextDecision.myX);
+                    myXMLWrapper.ReadAttribute(e, "max", ref myEntityData.myAIComponent.myTimeToNextDecision.myY);
+                }
+                else if (e.Name == "FollowEntity")
+                {
+                    myXMLWrapper.ReadAttribute(e, "targetName", ref myEntityData.myAIComponent.myEntityToFollow);
+                }
+                else if (e.Name == "AIMode")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myAIComponent.myAIMode);
+                }
+                else if (e.Name == "AvoidanceDistance")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myAIComponent.myAvoidanceDistance);
+                }
+                else if (e.Name == "AvoidanceOffset")
+                {
+                    myXMLWrapper.ReadAttribute(e, "x", ref myEntityData.myAIComponent.myAvoidanceOffset.myX);
+                    myXMLWrapper.ReadAttribute(e, "y", ref myEntityData.myAIComponent.myAvoidanceOffset.myY);
+                    myXMLWrapper.ReadAttribute(e, "z", ref myEntityData.myAIComponent.myAvoidanceOffset.myZ);
+                }
+            }
+        }
+
+        private void ReadShootingComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Weapon")
+                {
+                    myXMLWrapper.ReadAttribute(e, "type", ref myEntityData.myShootingComponent.myWeaponType);
+                }
+            }
+        }
+
+        private void ReadCollisionComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "CollisionSphere")
+                {
+                    myEntityData.myCollisionComponent.myHasSphere = true;
+                    myXMLWrapper.ReadAttribute(e, "radius", ref myEntityData.myCollisionComponent.myRadius);
+                }
+            }
+        }
+
     }
 }

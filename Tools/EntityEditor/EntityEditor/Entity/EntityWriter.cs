@@ -120,7 +120,28 @@ namespace EntityEditor.Entity
         private void WriteAIComponent(XmlWriter aWriter)
         {
             aWriter.WriteStartElement("AIComponent");
-
+            aWriter.WriteStartElement("Speed");
+            aWriter.WriteAttributeString("min", myEntityData.myAIComponent.mySpeed.myX.ToString());
+            aWriter.WriteAttributeString("max", myEntityData.myAIComponent.mySpeed.myY.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("TimeToNextDecision");
+            aWriter.WriteAttributeString("min", myEntityData.myAIComponent.myTimeToNextDecision.myX.ToString());
+            aWriter.WriteAttributeString("max", myEntityData.myAIComponent.myTimeToNextDecision.myY.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("FollowEntity");
+            aWriter.WriteAttributeString("targetName", myEntityData.myAIComponent.myEntityToFollow);
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("AIMode");
+            aWriter.WriteAttributeString("value", myEntityData.myAIComponent.myAIMode.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("AvoidanceDistance");
+            aWriter.WriteAttributeString("value", myEntityData.myAIComponent.myAvoidanceDistance.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("AvoidanceOffset");
+            aWriter.WriteAttributeString("x", myEntityData.myAIComponent.myAvoidanceOffset.myX.ToString());
+            aWriter.WriteAttributeString("y", myEntityData.myAIComponent.myAvoidanceOffset.myY.ToString());
+            aWriter.WriteAttributeString("z", myEntityData.myAIComponent.myAvoidanceOffset.myZ.ToString());
+            aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
 

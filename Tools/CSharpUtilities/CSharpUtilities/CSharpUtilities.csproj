@@ -55,18 +55,21 @@
   <ItemGroup>
     <Compile Include="Components\BaseComponent.cs" />
     <Compile Include="Components\DropDownEditComponent.cs" />
+    <Compile Include="Components\MinMaxComponent.cs" />
     <Compile Include="Components\NumericTextComponent.cs" />
     <Compile Include="Components\Vector3Component.cs" />
     <Compile Include="DL_Debug.cs" />
     <Compile Include="Components\PathBrowseComponent.cs" />
     <Compile Include="StringUtilities.cs" />
     <Compile Include="Vector.cs" />
+    <Compile Include="XMLWrapperRead.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
