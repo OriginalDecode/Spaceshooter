@@ -166,6 +166,9 @@
     <ClCompile Include="WaitAction.cpp">
       <Filter>Event\Action</Filter>
     </ClCompile>
+    <ClCompile Include="MissionContainer.cpp">
+      <Filter>Mission</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -368,6 +371,9 @@
     </ClInclude>
     <ClInclude Include="WaitAction.h">
       <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionContainer.h">
+      <Filter>Mission</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
