@@ -59,6 +59,9 @@
     <Compile Include="Panels\GraphicsComponentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Panels\HealthComponentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Panels\RenamePanel.cs">
       <SubType>Component</SubType>
     </Compile>

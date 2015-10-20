@@ -92,6 +92,22 @@ namespace EntityEditor
                 myEntityData.myCollisionComponent.myIsActive = true;
                 ReadCollisionComponent(aNode);
             }
+            else if (aNode.Name == "HealthComponent")
+            {
+                myEntityData.myHealthComponent.myIsActive = true;
+                ReadHealthComponent(aNode);
+            }
+        }
+
+        private void ReadHealthComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Health")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myHealthComponent.myHealth);
+                }
+            }
         }
 
         private void ReadGraphicsComponent(XmlNode aNode)

@@ -100,6 +100,10 @@ namespace EntityEditor.Entity
             {
                 WriteCollisionComponent(aWriter);
             }
+            if (myEntityData.myHealthComponent.myIsActive == true)
+            {
+                WriteHealthComponent(aWriter);
+            }
 
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
@@ -164,6 +168,20 @@ namespace EntityEditor.Entity
             {
                 aWriter.WriteStartElement("CollisionSphere");
                 aWriter.WriteAttributeString("radius", myEntityData.myCollisionComponent.myRadius.ToString());
+                aWriter.WriteEndElement();
+            }
+
+            aWriter.WriteEndElement();
+        }
+
+        private void WriteHealthComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("HealthComponent");
+
+            if (myEntityData.myCollisionComponent.myHasSphere == true)
+            {
+                aWriter.WriteStartElement("Health");
+                aWriter.WriteAttributeString("value", myEntityData.myHealthComponent.myHealth.ToString());
                 aWriter.WriteEndElement();
             }
 
