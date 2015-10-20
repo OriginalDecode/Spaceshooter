@@ -5,7 +5,7 @@
 #include "EventManager.h"
 #include "EventQueueEmptyMessage.h"
 #include "PostMaster.h"
-#include "SpawnEnemy.h"
+#include "SpawnEnemyAction.h"
 #include "EnqueueEventMessage.h"
 #include <XMLReader.h>
 
@@ -30,7 +30,7 @@ EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aCo
 			element = reader.FindNextElement(element, "spawnEnemy"))
 		{
 			// move to spawnEnemy-class, then read pos, rot, scale.
-			actions.Add(new SpawnEnemy(reader, element));
+			actions.Add(new SpawnEnemyAction(reader, element));
 
 		}
 		tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "conversation");

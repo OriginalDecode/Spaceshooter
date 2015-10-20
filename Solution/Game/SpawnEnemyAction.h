@@ -8,11 +8,11 @@ namespace tinyxml2
 class SpawnEnemyMessage;
 class XMLReader;
 
-class SpawnEnemy : public Action
+class SpawnEnemyAction : public Action
 {
 public:
-	SpawnEnemy(XMLReader& aReader, tinyxml2::XMLElement* aElement);
-	~SpawnEnemy();
+	SpawnEnemyAction(XMLReader& aReader, tinyxml2::XMLElement* aElement);
+	~SpawnEnemyAction();
 
 	void OnEnter() override;
 	bool OnExit() override;
