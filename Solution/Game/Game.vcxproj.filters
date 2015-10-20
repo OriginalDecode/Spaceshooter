@@ -133,9 +133,6 @@
     <ClCompile Include="PowerUpMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
-    <ClCompile Include="Action.cpp">
-      <Filter>Event\Action</Filter>
-    </ClCompile>
     <ClCompile Include="MissionEventReader.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
