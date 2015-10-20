@@ -52,6 +52,6 @@ void HealthComponent::ReceiveNote(const PowerUpNote& aNote)
 {
 	if (aNote.myType == ePowerUpType::HEALTHKIT)
 	{
-		AddHealth(aNote.myValue);
+		AddHealth(static_cast<int>(aNote.myValue));
 	}
 }
