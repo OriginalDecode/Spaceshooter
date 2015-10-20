@@ -121,10 +121,10 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	newWeapon.myCoolDownTime = aWeapon.myCoolDownTime;
 	newWeapon.myCurrentTime = aWeapon.myCoolDownTime;
 	newWeapon.myPosition = aWeapon.myPosition;
+	newWeapon.myIsHoming = aWeapon.myIsHoming;
 	newWeapon.mySpread = aWeapon.mySpread;
 	newWeapon.myType = aWeapon.myType;
 	newWeapon.myMultiplier = 1;
-	newWeapon.myIsHoming = false;
 
 	newWeapon.myBulletType = ConvertToBulletEnum(aWeapon.myBulletType);
 
@@ -152,6 +152,7 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 	myWeapons[aWeaponID].myCoolDownTime = aWeapon.myCoolDownTime;
 	myWeapons[aWeaponID].myCurrentTime = aWeapon.myCoolDownTime;
 	myWeapons[aWeaponID].myPosition = aWeapon.myPosition;
+	myWeapons[aWeaponID].myIsHoming = aWeapon.myIsHoming;
 	myWeapons[aWeaponID].mySpread = aWeapon.mySpread;
 	myWeapons[aWeaponID].myType = aWeapon.myType;
 	myWeapons[aWeaponID].myMultiplier = 1;
