@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
+using CSharpUtilities;
 
 namespace EntityEditor.Entity
 {
@@ -19,17 +20,19 @@ namespace EntityEditor.Entity
 
         public void SaveWeaponFile(String aFilePath, Entity.WeaponData aWeaponData, Entity.WeaponListXml aWeaponList)
         {
-            myFilePath = aFilePath;
+            myFilePath = aWeaponData.myFilePath;
             myWeaponData = aWeaponData;
             myWeaponListXml = aWeaponList;
 
-            string weaponListPath = "Data/Script/LI_list_weapon.xml";
+            string dataFolder = StringUtilities.ConvertPathToDataFolderPath(aFilePath);
+            dataFolder = dataFolder.Replace("Data/", "");
+            string weaponListPath = dataFolder + "Data/Script/LI_list_weapon.xml";
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
             settings.Indent = true;
 
-            using (XmlWriter writer = XmlWriter.Create(myFilePath, settings))
+            using (XmlWriter writer = XmlWriter.Create(dataFolder + myFilePath, settings))
             {
                 WriteWeaponFile(writer);
             }
@@ -108,7 +111,9 @@ namespace EntityEditor.Entity
             myBulletData = aBulletData;
             myBulletListXml = aBulletList;
 
-            string projectileListPath = "Data/Script/LI_list_projectile.xml";
+            string dataFolder = StringUtilities.ConvertPathToDataFolderPath(aFilePath);
+            dataFolder = dataFolder.Replace("Data/", "");
+            string projectileListPath = dataFolder + "Data/Script/LI_list_projectile.xml";
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;

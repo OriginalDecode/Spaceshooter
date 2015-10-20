@@ -80,6 +80,7 @@ namespace EntityEditor.Entity
 
         private void WriteFile(XmlWriter aWriter)
         {
+            aWriter.WriteStartElement("root");
             aWriter.WriteStartElement("Entity");
             aWriter.WriteAttributeString("name", myEntityData.myName);
 
@@ -100,6 +101,7 @@ namespace EntityEditor.Entity
                 WriteCollisionComponent(aWriter);
             }
 
+            aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
 using System.Windows.Forms;
+using CSharpUtilities;
 
 namespace EntityEditor.Entity
 {
@@ -31,6 +32,7 @@ namespace EntityEditor.Entity
             }
 
             myWeaponData.Clear();
+            myWeaponPaths.myPaths.Clear();
 
             using (XmlReader reader = XmlReader.Create(aWeaponListPath))
             {
@@ -45,7 +47,9 @@ namespace EntityEditor.Entity
 
             for(int i = 0; i < myWeaponPaths.myPaths.Count; ++i)
             {
-                using(XmlReader reader = XmlReader.Create(myWeaponPaths.myPaths[i]))
+                string dataPath = StringUtilities.ConvertPathToDataFolderPath(aWeaponListPath);
+                dataPath = dataPath.Replace("Data/", "");
+                using(XmlReader reader = XmlReader.Create(dataPath + myWeaponPaths.myPaths[i]))
                 {
                     while(reader.Read())
                     {
@@ -136,6 +140,7 @@ namespace EntityEditor.Entity
             }
 
             myBulletData.Clear();
+            myBulletPaths.myPaths.Clear();
 
             using (XmlReader reader = XmlReader.Create(aBulletListPath))
             {
@@ -150,7 +155,9 @@ namespace EntityEditor.Entity
 
             for (int i = 0; i < myBulletPaths.myPaths.Count; ++i)
             {
-                using (XmlReader reader = XmlReader.Create(myBulletPaths.myPaths[i]))
+                string dataPath = StringUtilities.ConvertPathToDataFolderPath(aBulletListPath);
+                dataPath = dataPath.Replace("Data/", "");
+                using (XmlReader reader = XmlReader.Create(dataPath + myBulletPaths.myPaths[i]))
                 {
                     while (reader.Read())
                     {

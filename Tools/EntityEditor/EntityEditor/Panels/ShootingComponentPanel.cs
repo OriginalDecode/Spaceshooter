@@ -221,16 +221,10 @@ namespace EntityEditor.Panels
             }
         }
 
-        public void SaveWeaponAndBullet()
-        {
-            myWeaponWriter.SaveWeaponFile(myWeaponData.myFilePath, myWeaponData, myWeaponReader.GetWeaponListXml());
-            myWeaponWriter.SaveBulletFile(myBulletData.myFilePath, myBulletData, myWeaponReader.GetBulletListXml());
-        }
-
         protected override void IntitalizeControls()
         {
-            myWeaponReader.LoadWeapons(myDataFolder + "Script/LI_list_weapon.xml");
-            myWeaponReader.LoadBullets(myDataFolder + "Script/LI_list_projectile.xml");
+            myWeaponReader.LoadWeapons("Data/Script/LI_list_weapon.xml");
+            myWeaponReader.LoadBullets("Data/Script/LI_list_projectile.xml");
 
             myWeaponTypes = new DropDownComponent(new Point(Location.X, Location.Y + 10), new Size(Size.Width, 10), "Weapon");
             myWeaponTypes.GetDropDown().SelectedIndexChanged += new EventHandler(WeaponDropDown_SelectIndex_Changed);
@@ -391,8 +385,9 @@ namespace EntityEditor.Panels
         {
             mySaveState = eSaveShootingState.BOTH;
             SaveSettings();
-            myWeaponWriter.SaveBulletFile(myBulletData.myFilePath, myBulletData, myWeaponReader.GetBulletListXml());
-            myWeaponWriter.SaveWeaponFile(myWeaponData.myFilePath, myWeaponData, myWeaponReader.GetWeaponListXml());
+            string pathToData = myDataFolder.Replace("Data/", "");
+            myWeaponWriter.SaveBulletFile(pathToData + myBulletData.myFilePath, myBulletData, myWeaponReader.GetBulletListXml());
+            myWeaponWriter.SaveWeaponFile(pathToData + myWeaponData.myFilePath, myWeaponData, myWeaponReader.GetWeaponListXml());
 
             ReloadWeaponXML();
             LoadSettings();
