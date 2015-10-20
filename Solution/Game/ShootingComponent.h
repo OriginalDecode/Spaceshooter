@@ -47,9 +47,10 @@ private:
 	int myCurrentWeaponID;
 
 	bool myHasWeapon;
-	bool myHasEMP;
-	float myEMPRadius;
-	float myEMPDuration;
+	ePowerUpType myPowerUpType;
+
+	float myPowerUpRadius;
+	float myPowerUpDuration;
 };
 
 inline eComponentType ShootingComponent::GetType()
@@ -69,9 +70,8 @@ inline void ShootingComponent::SetCurrentWeaponID(int anID)
 
 inline void ShootingComponent::ActivateEMP()
 {
-	myEMPRadius = 1000.f;
-	myEMPDuration = 5.f;
-	myHasEMP = true;
+	myPowerUpRadius = 1000.f;
+	myPowerUpDuration = 5.f;
 }
 
 inline eBulletType ConvertToBulletEnum(const std::string& aString)
