@@ -37,6 +37,10 @@ DefendMission::DefendMission(XMLReader& aReader, tinyxml2::XMLElement* aElement,
 
 DefendMission::~DefendMission()
 {
+	if (PostMaster::GetInstance()->IsSubscribed(eMessageType::DEFEND, this) == true)
+	{
+		PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	}
 }
 
 void DefendMission::Start()
