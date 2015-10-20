@@ -53,6 +53,9 @@ namespace Prism
 			//wait for ModelLoader to exit its loading-loop
 		}
 		delete myModelLoader;
+
+		delete myDirectX;
+		myDirectX = nullptr;
 	}
 
 	bool Engine::Create(HWND& aHwnd, WNDPROC aWndProc, SetupInfo& aSetupInfo)
@@ -72,14 +75,6 @@ namespace Prism
 	Engine* Engine::GetInstance()
 	{
 		return myInstance;
-	}
-
-	void Engine::Shutdown()
-	{
-		
-		myDirectX->CleanD3D();
-		delete myDirectX;
-		myDirectX = nullptr;
 	}
 
 	void Engine::ShutdownThreadedLoading()

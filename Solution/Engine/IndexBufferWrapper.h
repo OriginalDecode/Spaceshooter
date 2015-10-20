@@ -5,6 +5,15 @@ namespace Prism
 {
 	struct IndexBufferWrapper
 	{
+		IndexBufferWrapper(){ myIndexBuffer = nullptr; }
+		~IndexBufferWrapper()
+		{ 
+			if (myIndexBuffer != nullptr)
+			{
+				myIndexBuffer->Release(); 
+				myIndexBuffer = nullptr;
+			}
+		}
 		unsigned int myByteOffset;
 		ID3D11Buffer* myIndexBuffer;
 		DXGI_FORMAT myIndexBufferFormat;

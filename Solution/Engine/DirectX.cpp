@@ -13,10 +13,7 @@ Prism::DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
 
 Prism::DirectX::~DirectX()
 {
-	if (myDepthBuffer != nullptr)
-	{
-		myDepthBuffer->Release();
-	}
+	CleanD3D();
 }
 
 void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned int aFlags)
@@ -62,8 +59,31 @@ void Prism::DirectX::CleanD3D()
 	myDevice->Release();
 	myDevice = nullptr;
 
+	myDepthBuffer->Release();
+	myDepthBuffer = nullptr;
+
+	myDepthBufferView->Release();
+	myDepthBufferView = nullptr;
+
+	myEnabledDepthStencilState->Release();
+	myEnabledDepthStencilState = nullptr;
+
+	myDisabledDepthStencilState->Release();
+	myDisabledDepthStencilState = nullptr;
+
+	mySolidRasterizer->Release();
+	mySolidRasterizer = nullptr;
+
+	myWireframeRasterizer->Release();
+	myWireframeRasterizer = nullptr;
+
+	myContext->ClearState();
+	myContext->Flush();
 	myContext->Release();
 	myContext = nullptr;
+
+	myDebugInterface->ReportLiveDeviceObjects(D3D11_RLDO_DETAIL);
+	myDebugInterface->Release();
 }
 
 void Prism::DirectX::EnableZBuffer()
@@ -189,6 +209,27 @@ bool Prism::DirectX::D3DSwapChainSetup()
 	{
 		return false;
 	}
+
+#ifndef RELEASE_BUILD
+	myDebugInterface = nullptr;
+	result = myDevice->QueryInterface(__uuidof(ID3D11Debug), (void**)&myDebugInterface);
+	if (FAILED(result))
+	{
+		DL_ASSERT("[DirectX]: Failed to Query DebugInterface");
+		return false;
+	}
+
+	myInfoQueue = nullptr;
+	if (FAILED(myDebugInterface->QueryInterface(__uuidof(ID3D11InfoQueue), (void**)&myInfoQueue)))
+	{
+		DL_ASSERT("[DirectX]: Failed to Query InfoQueue");
+		return false;
+	}
+
+	myInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+	myInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+	myInfoQueue->Release();
+#endif
 
 	return TRUE;
 }

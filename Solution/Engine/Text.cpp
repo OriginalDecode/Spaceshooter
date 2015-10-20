@@ -29,22 +29,22 @@ Prism::Text::Text()
 
 Prism::Text::~Text()
 {
-	if (myVertexBuffer->myVertexBuffer != nullptr)
-	{
-		myVertexBuffer->myVertexBuffer->Release();
-	}
 	delete myVertexBuffer;
-
-	if (myIndexBuffer->myIndexBuffer != nullptr)
-	{
-		myIndexBuffer->myIndexBuffer->Release();
-	}
 	delete myIndexBuffer;
 
 	delete myVertexBufferDesc;
 	delete myIndexBufferDesc;
 	delete myInitData;
 	delete mySurface;
+
+	myVertexLayout->Release();
+	myVertexLayout = nullptr;
+
+	if (myBlendState != nullptr)
+	{
+		myBlendState->Release();
+		myBlendState = nullptr;
+	}
 }
 
 void Prism::Text::Init(Font* aFont)

@@ -112,7 +112,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	delete globalGame;
 	globalGame = nullptr;
 
-	Prism::Engine::GetInstance()->Shutdown();
 	Prism::Engine::Destroy();
 	return 0;
 }
