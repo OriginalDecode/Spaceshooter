@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSharpUtilities;
 
 namespace EntityEditor.Entity
 {
@@ -14,7 +15,7 @@ namespace EntityEditor.Entity
         public CollisionComponentData myCollisionComponent;
         public GraphicsComponentData myGraphicsComponent;
         public ShootingComponentData myShootingComponent;
-        
+        public HealthComponentData myHealthComponent;
     }
 
     public struct EntityListXML
@@ -33,6 +34,13 @@ namespace EntityEditor.Entity
     public struct AIComponentData
     {
         public bool myIsActive;
+
+        public Vector2<float> mySpeed;
+        public Vector2<float> myTimeToNextDecision;
+        public Vector3<float> myAvoidanceOffset;
+        public float myAvoidanceDistance;
+        public int myAIMode;
+        public string myEntityToFollow;
     }
 
     public struct ShootingComponentData
@@ -40,6 +48,13 @@ namespace EntityEditor.Entity
         public bool myIsActive;
 
         public string myWeaponType;
+    }
+
+    public struct HealthComponentData
+    {
+        public bool myIsActive;
+
+        public int myHealth;
     }
 
     public struct CollisionComponentData
