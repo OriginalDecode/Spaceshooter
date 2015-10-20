@@ -364,52 +364,26 @@ void EntityFactory::LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& 
 void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent)
 {
 	aEntityToAddTo.myDuration = 0.f;
-	aEntityToAddTo.myShieldStrength = 0;
-	aEntityToAddTo.myHealthToRecover = 0;
-	aEntityToAddTo.myUpgradeID = -1;
-	aEntityToAddTo.myFireRateMultiplier = 1;
-	aEntityToAddTo.myIsEMP = false;
-	aEntityToAddTo.myEMPDuration = 0.f;
-	aEntityToAddTo.myEMPRadius = 0.f;
+	aEntityToAddTo.myPowerUpValue = 0.f;
 	aEntityToAddTo.myUpgradeName = "";
+	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
-
+	
 	for (tinyxml2::XMLElement* e = aPowerUpComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
-		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Duration").c_str()) == 0)
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Power").c_str()) == 0)
 		{
-			float duration = 0;
-			aDocument.ForceReadAttribute(e, "value", duration);
-			aEntityToAddTo.myDuration = duration;
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ShieldStrength").c_str()) == 0)
-		{
-			int shield = 0;
-			aDocument.ForceReadAttribute(e, "value", shield);
-			aEntityToAddTo.myShieldStrength = shield;
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthToRecover").c_str()) == 0)
-		{
-			int health = 0;
-			aDocument.ForceReadAttribute(e, "value", health);
-			aEntityToAddTo.myHealthToRecover = health;
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("FireRateMultiplier").c_str()) == 0)
-		{
-			int firerate = 0;
-			aDocument.ForceReadAttribute(e, "value", firerate);
-			aEntityToAddTo.myFireRateMultiplier = firerate;
+			std::string name;
+			aDocument.ForceReadAttribute(e, "type", name);
+			aDocument.ForceReadAttribute(e, "value", aEntityToAddTo.myPowerUpValue);
+			aDocument.ForceReadAttribute(e, "time", aEntityToAddTo.myDuration);
+			aEntityToAddTo.myPowerUpType = ConvertToPowerUpType(name);
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("WeaponUpgrade").c_str()) == 0)
 		{
 			aDocument.ForceReadAttribute(e, "entityName", aEntityToAddTo.myUpgradeName);
 			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
-		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Emp").c_str()) == 0)
-		{
-			aEntityToAddTo.myIsEMP = true;
-			aDocument.ForceReadAttribute(e, "time", aEntityToAddTo.myEMPDuration);
-			aDocument.ForceReadAttribute(e, "radius", aEntityToAddTo.myEMPRadius);
+			aEntityToAddTo.myPowerUpType = ePowerUpType::WEAPON_UPGRADE;
 		}
 	}
 }
@@ -500,19 +474,13 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	{
 		aTargetEntity->AddComponent<PowerUpComponent>();
 		
-		if (it->second.myUpgradeName != "")
+		if (it->second.myPowerUpType == ePowerUpType::WEAPON_UPGRADE)
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myUpgradeName, it->second.myUpgradeID);
-		}
-		else if (it->second.myIsEMP == true)
-		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myEMPDuration
-				, it->second.myEMPRadius);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myUpgradeName, it->second.myUpgradeID);
 		}
 		else
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(aTargetEntity->GetPowerUpType(), it->second.myDuration
-				, it->second.myShieldStrength, it->second.myHealthToRecover, it->second.myFireRateMultiplier);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpValue, it->second.myDuration);
 		}
 	}
 
@@ -522,4 +490,38 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 void EntityFactory::ReloadEntity(const std::string&)
 {
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
+}
+
+ePowerUpType EntityFactory::ConvertToPowerUpType(std::string aName)
+{
+	std::string name = CU::ToLower(aName);
+	if (name == "healthkit")
+	{
+		return ePowerUpType::HEALTHKIT;
+	}
+	else if (name == "shield")
+	{
+		return ePowerUpType::SHIELDBOOST;
+	}
+	else if (name == "firerate")
+	{
+		return ePowerUpType::FIRERATEBOOST;
+	}
+	else if (name == "weaponupgrade")
+	{
+		return ePowerUpType::WEAPON_UPGRADE;
+	}
+	else if (name == "emp")
+	{
+		return ePowerUpType::EMP;
+	}
+	else if (name == "homing")
+	{
+		return ePowerUpType::HOMING;
+	}
+	
+	std::string errorMessage = "[EntityFactory] There is no powerup named " + aName;
+	DL_ASSERT(errorMessage.c_str());
+	
+	return ePowerUpType::NO_POWERUP;
 }

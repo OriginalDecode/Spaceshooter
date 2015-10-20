@@ -47,7 +47,8 @@ enum class ePowerUpType
 	SHIELDBOOST,
 	HEALTHKIT,
 	WEAPON_UPGRADE,
-	EMP
+	EMP,
+	HOMING
 };
 
 enum class eMissionType

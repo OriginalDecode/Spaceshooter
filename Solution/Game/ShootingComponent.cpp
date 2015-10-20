@@ -102,12 +102,12 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	{
 		for (int i = 0; i < myWeapons.Size(); ++i)
 		{
-			myWeapons[i].myMultiplier = aNote.myFireRateMultiplier;
+			myWeapons[i].myMultiplier = aNote.myValue;
 		}
 	}
 	else if (aNote.myType == ePowerUpType::EMP)
 	{
-		myEMPRadius = aNote.myRadius;
+		myEMPRadius = aNote.myValue;
 		myEMPDuration = aNote.myDuration;
 		myHasEMP = true;
 	}

@@ -376,50 +376,20 @@ void Level::ReadXML(const std::string& aFile)
 	{
 		Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene, Prism::eOctreeType::STATIC);
 
-		tinyxml2::XMLElement* triggerElement = reader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> triggerPosition;
-		reader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
-		reader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
-		reader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
-		newEntity->myOrientation.SetPos(triggerPosition*10.f);
+		tinyxml2::XMLElement* powerUpElement = reader.ForceFindFirstChild(entityElement, "position");
+		CU::Vector3<float> powerUpPosition;
+		reader.ForceReadAttribute(powerUpElement, "X", powerUpPosition.x);
+		reader.ForceReadAttribute(powerUpElement, "Y", powerUpPosition.y);
+		reader.ForceReadAttribute(powerUpElement, "Z", powerUpPosition.z);
+		newEntity->myOrientation.SetPos(powerUpPosition*10.f);
 
-
-		triggerElement = reader.ForceFindFirstChild(entityElement, "type");
+		powerUpElement = reader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
-		reader.ForceReadAttribute(triggerElement, "powerup", powerUp);
-		std::string powerType = CU::GetSubString(CU::ToLower(powerUp).c_str(), '_', false);
-
-		if (powerType == "healthkit")
-		{
-			newEntity->SetPowerUp(ePowerUpType::HEALTHKIT);
-		}
-		else if (powerType == "shield")
-		{
-			newEntity->SetPowerUp(ePowerUpType::SHIELDBOOST);
-		}
-		else if (powerType == "firerate")
-		{
-			newEntity->SetPowerUp(ePowerUpType::FIRERATEBOOST);
-		}
-		else if (powerType == "weaponupgrade")
-		{
-			newEntity->SetPowerUp(ePowerUpType::WEAPON_UPGRADE);
-		}
-		else if (powerType == "emp")
-		{
-			newEntity->SetPowerUp(ePowerUpType::EMP);
-		}
-		else
-		{
-			std::string errorMessage = "[Level] There is no powerup named " + powerType;
-			DL_ASSERT(errorMessage.c_str());
-		}
+		reader.ForceReadAttribute(powerUpElement, "powerup", powerUp);
 
 		myEntityFactory->CopyEntity(newEntity, powerUp);
 		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myPlayer);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
-
-		//newEntity->AddComponent<PowerUpComponent>()->Init(newEntity->GetPowerUpType());
 
 		myEntities.Add(newEntity);
 	}

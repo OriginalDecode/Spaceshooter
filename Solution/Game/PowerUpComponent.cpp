@@ -17,28 +17,16 @@ PowerUpComponent::PowerUpComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myPlayer(nullptr)
 	, myDuration(0)
-	, myShieldStrength(0)
-	, myHealthRecover(0)
-	, myFireRateMultiplier(0)
+	, myValue(0)
 	, myUpgradeName("")
 {
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, float someDuration, int someShieldStrength
-	, int someHealthRecover, int someFireRateMultiplier)
+void PowerUpComponent::Init(ePowerUpType someType, float someValue, float someDuration)
 {
 	myType = someType;
+	myValue = someValue;
 	myDuration = someDuration;
-	myShieldStrength = someShieldStrength;
-	myHealthRecover = someHealthRecover;
-	myFireRateMultiplier = someFireRateMultiplier;
-}
-
-void PowerUpComponent::Init(ePowerUpType someType, float someDuration, float someRadius)
-{
-	myType = someType;
-	myDuration = someDuration;
-	myRadius = someRadius;
 }
 
 void PowerUpComponent::Init(ePowerUpType someType, std::string aUpgradeName, int anUpgradeID)
@@ -54,14 +42,9 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 	{
 		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName, myUpgradeID));
 	}
-	else if (myType == ePowerUpType::EMP)
-	{
-		PowerUpNote note(myType, myDuration, myRadius);
-		aNote.myEntity.SendNote(note);
-	}
 	else
 	{
-		PowerUpNote note(myType, myDuration, myShieldStrength, myHealthRecover, myFireRateMultiplier);
+		PowerUpNote note(myType, myValue, myDuration);
 		aNote.myEntity.SendNote(note);
 	}
 

@@ -54,14 +54,8 @@ struct EntityData
 	int myLife;
 	int myDamage;
 
-	bool myIsEMP;
-
-	float myEMPRadius;
+	float myPowerUpValue;
 	float myDuration;
-	float myEMPDuration;
-	int myShieldStrength;
-	int myHealthToRecover; 
-	int myFireRateMultiplier;
 	ePowerUpType myPowerUpType;
 	std::string myUpgradeName;
 	int myUpgradeID;
@@ -91,6 +85,8 @@ private:
 	void LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement);
 	void LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement);
 	void LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent);
+
+	ePowerUpType ConvertToPowerUpType(std::string aName);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 
