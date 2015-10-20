@@ -18,9 +18,8 @@ void ConversationAction::OnEnter()
 }
 
 
-bool ConversationAction::OnExit()
+void ConversationAction::OnExit()
 {
-	return true;
 }
 
 bool ConversationAction::Update()

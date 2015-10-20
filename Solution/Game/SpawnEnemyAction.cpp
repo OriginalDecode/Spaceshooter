@@ -48,9 +48,8 @@ void SpawnEnemyAction::OnEnter()
 }
 
 
-bool SpawnEnemyAction::OnExit()
+void SpawnEnemyAction::OnExit()
 {
-	return true;
 }
 
 bool SpawnEnemyAction::Update()

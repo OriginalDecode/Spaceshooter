@@ -6,6 +6,7 @@ Event::Event(const std::string& aName, const CU::GrowingArray<Action*>& someActi
 	: myName(aName)
 	, myActions(someActions)
 {
+	DL_ASSERT_EXP(myActions.Size() > 0, "Can't create event with zero actions.");
 }
 
 Event::~Event()
@@ -15,21 +16,15 @@ Event::~Event()
 
 void Event::Start()
 {
-	for (int i = 0; i < myActions.Size(); ++i)
-	{
-		myActions[i]->OnEnter();
-	}
+	myIndex = 0;
+	myActions[myIndex]->OnEnter();
 }
 
 bool Event::Update()
 {
 	if (myActions[myIndex]->Update() == true)
 	{
-		if (myActions[myIndex]->OnExit() == false)
-		{
-			myIndex = 0;
-			return true;
-		}
+		myActions[myIndex]->OnExit();
 
 		++myIndex;
 

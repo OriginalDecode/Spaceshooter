@@ -15,7 +15,7 @@ public:
 	~SpawnEnemyAction();
 
 	void OnEnter() override;
-	bool OnExit() override;
+	void OnExit() override;
 	bool Update() override;
 
 private:

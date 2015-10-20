@@ -21,10 +21,9 @@ void WaitAction::OnEnter()
 }
 
 
-bool WaitAction::OnExit()
+void WaitAction::OnExit()
 {
 	myTime = 0.f;
-	return true;
 }
 
 bool WaitAction::Update()
