@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <VectorOnStack.h>
 #include <Vector.h>
+#include <StaticArray.h>
 
 #undef SendMessage
 
@@ -42,22 +43,21 @@ private:
 	~PostMaster();
 	static PostMaster* myInstance;
 	
-	void SortSubscribers(CU::GrowingArray<SubscriberInfo, unsigned int>& aSubscribers);
-	void QuickSort(CU::GrowingArray<SubscriberInfo, unsigned int>& aBuffer, const int aStart, const int aEnd);
+	void SortSubscribers(CU::GrowingArray<SubscriberInfo>& aSubscribers);
+	void QuickSort(CU::GrowingArray<SubscriberInfo>& aBuffer, const int aStart, const int aEnd);
 
-	std::unordered_map<eMessageType, CU::GrowingArray<SubscriberInfo, unsigned int>> mySubscribers;
+	CU::StaticArray<CU::GrowingArray<SubscriberInfo>, static_cast<int>(eMessageType::COUNT)> mySubscribers;
 };
 
 template<typename Message>
 void PostMaster::SendMessage(const Message& aMessage)
 {
-	auto it = mySubscribers.find(aMessage.GetMessageType());
+	CU::GrowingArray<SubscriberInfo>& subscribers
+		= mySubscribers[static_cast<int>(aMessage.GetMessageType())];
 
-	if (it != mySubscribers.end())
+	if (subscribers.Size() > 0)
 	{
-		CU::GrowingArray<SubscriberInfo, unsigned int>& subscribers = it->second;
-
-		for (unsigned int i = 0; i < subscribers.Size(); ++i)
+		for (int i = 0; i < subscribers.Size(); ++i)
 		{
 			subscribers[i].mySubscriber->ReceiveMessage(aMessage);
 

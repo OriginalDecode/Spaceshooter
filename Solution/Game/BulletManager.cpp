@@ -1,4 +1,6 @@
 #include "stdafx.h"
+
+#include <AudioInterface.h>
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -55,6 +57,11 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
 		, aMessage.GetEntityType(), aMessage.GetEntityVelocity());
+
+	if (aMessage.GetEntityType() == eEntityType::PLAYER)
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
+	}
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
