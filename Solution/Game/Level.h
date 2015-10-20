@@ -12,6 +12,7 @@ namespace Prism
 	class SpotLight;
 	class Text;
 	class Instance;
+	class EmitterInstance;
 };
 
 namespace CommonUtilities
@@ -78,6 +79,8 @@ private:
 	CU::Matrix44<float> mySkySphereOrientation;
 	Prism::Scene* myScene;
 	Prism::Camera* myCamera;
+	Prism::EmitterInstance* myEmitter;
+	
 	CU::Matrix44<float> myWorldMatrix;
 
 	CU::GrowingArray<Entity*> myEntities;

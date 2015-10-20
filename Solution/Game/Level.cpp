@@ -14,6 +14,9 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include <EmitterInstance.h>
+#include <EmitterData.h>
+
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -85,7 +88,11 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	WATCH_FILE(aFileName, Level::ReadXML);
 
 	ReadXML(aFileName);
-
+	Prism::EmitterData data;
+	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
+	myEmitter = new Prism::EmitterInstance();
+	myEmitter->Initiate(data);
+	myEmitter->SetPosition(CU::Vector3f(25, 0, 0));
 	//Entity* cube = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::DYNAMIC, "this is a cube");
 	//cube->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Primitive/cube.fbx"
 	//	, "Data/Resource/Shader/S_effect_no_texture.fx");
@@ -180,7 +187,7 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 bool Level::LogicUpdate(float aDeltaTime)
 {
 	myCollisionManager->CleanUp();
-
+	myEmitter->Update(aDeltaTime);
 	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
 	{
 		return true;
@@ -229,6 +236,8 @@ void Level::Render()
 	{
 		myScene->Render(myBulletManager->GetInstances());
 	}
+
+	myEmitter->Render(myCamera);
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
