@@ -158,6 +158,10 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 			return false;
 		}
 
+	}
+
+	if (compiledShader != nullptr)
+	{
 		compiledShader->Release();
 	}
 	

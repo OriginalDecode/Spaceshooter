@@ -24,6 +24,7 @@ bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 		texture2D->GetDesc(texture2DDEsc);
 		UINT width = texture2DDEsc->Width;
 		UINT height = texture2DDEsc->Height;
+		texture2D->Release();
 		delete texture2DDEsc;
 
 		std::string errorMessage = "Texturesize not power of 2: [" + aFilePath + "].";

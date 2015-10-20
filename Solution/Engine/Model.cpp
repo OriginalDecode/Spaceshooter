@@ -35,22 +35,18 @@ Prism::Model::~Model()
 {
 	myChilds.DeleteAll();
 
-	if (myVertexBuffer != nullptr && myVertexBuffer->myVertexBuffer != nullptr)
-	{
-		myVertexBuffer->myVertexBuffer->Release();
-	}
 	delete myVertexBuffer;
-
-	if (myIndexBuffer != nullptr && myIndexBuffer->myIndexBuffer != nullptr)
-	{
-		myIndexBuffer->myIndexBuffer->Release();
-	}
 	delete myIndexBuffer;
 
 	delete myVertexBaseData;
 	delete myIndexBaseData;
 	mySurfaces.DeleteAll();
-	
+
+	if (myVertexLayout != nullptr)
+	{
+		myVertexLayout->Release();
+		myVertexLayout = nullptr;
+	}
 }
 
 void Prism::Model::Init()

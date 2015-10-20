@@ -30,6 +30,8 @@ namespace Prism
 
 	ModelLoader::~ModelLoader()
 	{
+		delete myModelFactory;
+		myModelFactory = nullptr;
 		myNonFXBModels.DeleteAll();
 	}
 
@@ -48,6 +50,14 @@ namespace Prism
 				myCanAddToLoadArray = true;
 				myIsLoading = false;
 				std::this_thread::yield();
+				continue;
+			}
+
+			if (myIsRunning == false || myClearLoadJobs == true)
+			{
+				myIsLoading = false;
+				myClearLoadJobs = false;
+				myCanAddToLoadArray = true;
 				continue;
 			}
 
