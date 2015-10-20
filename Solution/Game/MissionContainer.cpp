@@ -18,12 +18,15 @@ MissionContainer::MissionContainer(Level& aLevel, Entity& aPlayer, XMLReader& aR
 	: Mission(aReader, aElement)
 	, myRequiredMissions(8)
 	, myOptionalMissions(8)
-	, myActiveMissions(16)
+	, myRequiredActiveMissions(8)
+	, myOptionalActiveMissions(8)
 	, myEndingMissions(8)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::EVENT_QUEUE_EMPTY, this);
 
-	CU::GrowingArray<Mission*> unorderedMissions(8);
+	CU::GrowingArray<Mission*> unorderedRequiredMissions(8);
+	CU::GrowingArray<Mission*> unorderedOptionalMissions(8);
+
 	for (tinyxml2::XMLElement* element = aReader.ForceFindFirstChild(aElement, "mission"); element != nullptr;
 		element = aReader.FindNextElement(element, "mission"))
 	{
@@ -32,82 +35,75 @@ MissionContainer::MissionContainer(Level& aLevel, Entity& aPlayer, XMLReader& aR
 		type = CU::ToLower(type);
 		int missionIndex = -1;
 		aReader.ForceReadAttribute(element, "index", missionIndex);
+		bool required;
+		aReader.ForceReadAttribute(element, "required", required);
+
+		Mission* mission = nullptr;
 		if (type == "waypoint")
 		{
-			WaypointMission* waypoint = new WaypointMission(aLevel, aPlayer, aReader, element);
-			waypoint->SetIndex(missionIndex);
-			unorderedMissions.Add(waypoint);
+			mission = new WaypointMission(aLevel, aPlayer, aReader, element);
 		}
 		else if (type == "killx")
 		{
-			KillXEnemiesMission* mission = new KillXEnemiesMission(aLevel, aReader, element);
-			mission->SetIndex(missionIndex);
-			unorderedMissions.Add(mission);
+			mission = new KillXEnemiesMission(aLevel, aReader, element);
 		}
 		else if (type == "killxabort")
 		{
-			KillXEnemiesAbortMission* mission = new KillXEnemiesAbortMission(aLevel, aReader, element);
-			mission->SetIndex(missionIndex);
-			unorderedMissions.Add(mission);
+			mission = new KillXEnemiesAbortMission(aLevel, aReader, element);
 		}
 		else if (type == "killall")
 		{
-			KillAllMission* killAll = new KillAllMission(aLevel, aReader, element);
-			killAll->SetIndex(missionIndex);
-			unorderedMissions.Add(killAll);
+			mission = new KillAllMission(aLevel, aReader, element);
 		}
 		else if (type == "killallabort")
 		{
-			KillAllAbortMission* killAllAbort = new KillAllAbortMission(aLevel, aReader, element);
-			killAllAbort->SetIndex(missionIndex);
-			unorderedMissions.Add(killAllAbort);
+			mission = new KillAllAbortMission(aLevel, aReader, element);
 		}
 		else if (type == "survival")
 		{
-			SurvivalMission* survival = new SurvivalMission(aReader, element);
-			survival->SetIndex(missionIndex);
-			unorderedMissions.Add(survival);
+			mission = new SurvivalMission(aReader, element);
 		}
 		else if (type == "survivalabort")
 		{
-			SurvivalAbortMission* survivalAbort = new SurvivalAbortMission(aReader, element);
-			survivalAbort->SetIndex(missionIndex);
-			unorderedMissions.Add(survivalAbort);
+			mission = new SurvivalAbortMission(aReader, element);
 		}
 		else if (type == "defend")
 		{
-			DefendMission* mission = new DefendMission(aReader, element, false);
-			mission->SetIndex(missionIndex);
-			unorderedMissions.Add(mission);
+			mission = new DefendMission(aReader, element, false);
 		}
 		else if (type == "defendabort")
 		{
-			DefendMission* mission = new DefendMission(aReader, element, true);
-			mission->SetIndex(missionIndex);
-			unorderedMissions.Add(mission);
+			mission = new DefendMission(aReader, element, true);
+		}
+
+		DL_ASSERT_EXP(mission != nullptr, "Missiontype not recognized: " + type);
+
+		mission->SetIndex(missionIndex);
+
+		if (required == true)
+		{
+			unorderedRequiredMissions.Add(mission);
 		}
 		else
 		{
-			std::string error = "Missiontype not recognized: " + type;
-			DL_ASSERT(error.c_str());
+			unorderedOptionalMissions.Add(mission);
 		}
 	}
 
-	int currentIndex = 0;
-	while (myRequiredMissions.Size() != unorderedMissions.Size())
+	DL_ASSERT_EXP(unorderedRequiredMissions.Size() > 0, "Need a required mission in missioncontainer");
+
+	SortCopy(myRequiredMissions, unorderedRequiredMissions);
+	SortCopy(myOptionalMissions, unorderedOptionalMissions);
+	
+
+	for (int i = 0; i < myRequiredMissions.Size(); ++i)
 	{
-		int prevIndex = currentIndex;
-		for (int i = 0; i < unorderedMissions.Size(); ++i)
-		{
-			if (unorderedMissions[i]->GetIndex() == currentIndex)
-			{
-				++currentIndex;
-				myRequiredMissions.Add(unorderedMissions[i]);
-				myActiveMissions.Add(unorderedMissions[i]);
-				break;
-			}
-		}
-		DL_ASSERT_EXP(prevIndex == currentIndex - 1, "Mission index " + std::to_string(currentIndex) + " not found.");
+		myRequiredActiveMissions.Add(myRequiredMissions[i]);
+	}
+
+	for (int i = 0; i < myOptionalMissions.Size(); ++i)
+	{
+		myOptionalActiveMissions.Add(myOptionalMissions[i]);
 	}
 }
 
@@ -120,32 +116,44 @@ MissionContainer::~MissionContainer()
 
 bool MissionContainer::Update(float aDeltaTime)
 {
-	for (int i = myActiveMissions.Size() - 1; i >= 0; --i)
+	Update(aDeltaTime, myRequiredActiveMissions);
+	Update(aDeltaTime, myOptionalActiveMissions);
+
+	return myRequiredActiveMissions.Size() <= 0 && myEndingMissions.Size() <= 0;
+}
+
+void MissionContainer::Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions)
+{
+	for (int i = someMissions.Size() - 1; i >= 0; --i)
 	{
-		if (myActiveMissions[i]->Update(aDeltaTime) == true)
+		if (someMissions[i]->Update(aDeltaTime) == true)
 		{
-			if (myActiveMissions[i]->EventsEnd() == true)
+			if (someMissions[i]->EventsEnd() == true)
 			{
-				myEndingMissions.Add(myActiveMissions[i]);
+				myEndingMissions.Add(someMissions[i]);
 			}
 			else
 			{
-				myActiveMissions[i]->End();
+				someMissions[i]->End();
 			}
 
-			myActiveMissions.RemoveCyclicAtIndex(i);
+			someMissions.RemoveCyclicAtIndex(i);
 		}
 	}
-
-	return myActiveMissions.Size() <= 0 && myEndingMissions.Size() <= 0;
 }
 
 void MissionContainer::Start()
 {
-	for (int i = 0; i < myActiveMissions.Size(); ++i)
+	for (int i = 0; i < myRequiredActiveMissions.Size(); ++i)
 	{
-		myActiveMissions[i]->EventsStart();
-		myActiveMissions[i]->Start();
+		myRequiredActiveMissions[i]->EventsStart();
+		myRequiredActiveMissions[i]->Start();
+	}
+
+	for (int i = 0; i < myOptionalActiveMissions.Size(); ++i)
+	{
+		myOptionalActiveMissions[i]->EventsStart();
+		myOptionalActiveMissions[i]->Start();
 	}
 }
 
@@ -162,4 +170,23 @@ void MissionContainer::ReceiveMessage(const EventQueueEmptyMessage&)
 	}
 
 	myEndingMissions.RemoveAll();
+}
+
+void MissionContainer::SortCopy(CU::GrowingArray<Mission*>& someOut, const CU::GrowingArray<Mission*>& someIn) const
+{
+	int currentIndex = 0;
+	while (someOut.Size() != someIn.Size())
+	{
+		int prevIndex = currentIndex;
+		for (int i = 0; i < someIn.Size(); ++i)
+		{
+			if (someIn[i]->GetIndex() == currentIndex)
+			{
+				++currentIndex;
+				someOut.Add(someIn[i]);
+				break;
+			}
+		}
+		DL_ASSERT_EXP(prevIndex == currentIndex - 1, "Mission index " + std::to_string(currentIndex) + " not found.");
+	}
 }
