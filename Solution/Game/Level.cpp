@@ -491,7 +491,7 @@ void Level::LoadPlayer()
 {
 	Entity* player = new Entity(eEntityType::PLAYER, *myScene, Prism::eOctreeType::DYNAMIC);
 	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
-		, "Data/Resource/Shader/S_effect_no_texture.fx");
+		, "Data/Resource/Shader/S_effect_pbl.fx");
 	player->AddComponent<InputComponent>()->Init(*myInputWrapper);
 	player->AddComponent<ShootingComponent>();
 	player->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactory->GetWeapon("machineGun1"));
