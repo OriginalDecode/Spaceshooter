@@ -15,6 +15,9 @@ public:
 	void Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
 		, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
 		, eAITargetPositionMode aTargetPositionMode);
+
+	void Init(float aSpeed, eAITargetPositionMode aTargetPositionMode);
+
 	void Update(float aDeltaTime) override;
 
 	void SetEntityToFollow(Entity* aEntity);

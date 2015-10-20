@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "AIComponent.h"
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -6,6 +7,7 @@
 #include "CollisionManager.h"
 #include <Engine.h>
 #include <EngineEnums.h>
+#include "Enums.h"
 #include "Entity.h"
 #include "EntityFactory.h"
 #include <FileWatcher.h>
@@ -145,7 +147,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
-	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity)
+	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, bool aIsHoming)
 {
 	Entity* bullet = nullptr;
 	if (aEntityType == eEntityType::PLAYER)
@@ -175,6 +177,17 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		(anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
+
+	if (aIsHoming == true)
+	{
+		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation.GetPos(), 2000.f);
+		if (enemy != nullptr)
+		{
+			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity), 
+				eAITargetPositionMode::KAMIKAZE);
+			bullet->GetComponent<AIComponent>()->SetEntityToFollow(enemy);
+		}
+	}
 
 	if (aEntityType == eEntityType::PLAYER)
 	{
@@ -210,6 +223,7 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 			{
 				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
+				// remove AI if it exists
 			}
 		}
 

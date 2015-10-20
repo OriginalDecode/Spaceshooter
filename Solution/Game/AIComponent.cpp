@@ -21,7 +21,10 @@ AIComponent::AIComponent(Entity& aEntity)
 
 AIComponent::~AIComponent()
 {
-	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
+	{
+		PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	}
 }
 
 void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
@@ -45,6 +48,20 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
 
+void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
+{
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	myTargetPositionMode = aTargetPositionMode;
+	myMovementSpeed = aSpeed;
+	myVelocity = myEntity.myOrientation.GetForward() * myMovementSpeed;
+	myEntityToFollow = nullptr;
+	myTimeToNextDecision = 0.f;
+	myAvoidanceDistance = 0.f;
+	myFollowingOffset = 0.f;
+	myCanMove = true;
+	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
+}
+
 void AIComponent::Update(float aDeltaTime)
 {
 	DL_ASSERT_EXP(myEntityToFollow != nullptr, "AI needs an entity to follow.");
@@ -63,13 +80,16 @@ void AIComponent::Update(float aDeltaTime)
 		myTimeToNextDecision -= aDeltaTime;
 		FollowEntity(aDeltaTime);
 
-		CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-
-		CU::Normalize(toTarget);
-		if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
+		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
 		{
-			myTimeToNextDecision = myTimeBetweenDecisions;
-			Shoot(myPhysicsComponent->GetVelocity());
+			CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+
+			CU::Normalize(toTarget);
+			if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
+			{
+				myTimeToNextDecision = myTimeBetweenDecisions;
+				Shoot(myPhysicsComponent->GetVelocity());
+			}
 		}
 	}
 	else
@@ -185,5 +205,9 @@ void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 				myIsEscaping = false;
 			}
 		}
+	}
+	else if (aMode == eAITargetPositionMode::KAMIKAZE)
+	{
+		myToTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 	}
 }
