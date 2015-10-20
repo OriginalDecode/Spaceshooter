@@ -25,6 +25,9 @@ public:
 	T* AddComponent();
 
 	template <typename T>
+	void RemoveComponent();
+
+	template <typename T>
 	T* GetComponent();
 
 	template <typename T>
@@ -88,6 +91,21 @@ T* Entity::AddComponent()
 	myComponents[index] = component;
 
 	return component;
+}
+
+template <typename T>
+void Entity::RemoveComponent()
+{
+	DL_ASSERT_EXP(T::GetType() != eComponentType::NOT_USED, "Tried to add invalid component.");
+
+	int index = static_cast<int>(T::GetType());
+	if (myComponents[index] == nullptr)
+	{
+		DL_ASSERT("Tried to remove a component from a entity that wasnt added.");
+	}
+
+	delete myComponents[index];
+	myComponents[index] = nullptr;
 }
 
 template <typename T>
