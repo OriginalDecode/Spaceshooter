@@ -387,7 +387,7 @@ void Level::ReadXML(const std::string& aFile)
 		std::string powerUp;
 		reader.ForceReadAttribute(powerUpElement, "powerup", powerUp);
 
-		myEntityFactory->CopyEntity(newEntity, powerUp);
+		myEntityFactory->CopyEntity(newEntity, "homing");
 		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myPlayer);
 		myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 
