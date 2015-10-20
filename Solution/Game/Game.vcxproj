@@ -134,6 +134,7 @@
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueueEmptyMessage.h" />
+    <ClInclude Include="MissionContainer.h" />
     <ClInclude Include="MissionEventReader.h" />
     <ClInclude Include="EventManager.h" />
     <ClInclude Include="GUINote.h" />
@@ -175,7 +176,7 @@
     <ClInclude Include="ShieldComponent.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
-    <ClInclude Include="SpawnEnemy.h" />
+    <ClInclude Include="SpawnEnemyAction.h" />
     <ClInclude Include="SpawnEnemyMessage.h" />
     <ClInclude Include="EnqueueEventMessage.h" />
     <ClInclude Include="StateEnums.h" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Subscriber.h" />
     <ClInclude Include="SurvivalAbortMission.h" />
     <ClInclude Include="SurvivalMission.h" />
+    <ClInclude Include="WaitAction.h" />
     <ClInclude Include="WaypointComponent.h" />
     <ClInclude Include="WaypointMission.h" />
     <ClInclude Include="WeaponFactory.h" />
@@ -209,6 +211,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="MissionContainer.cpp" />
     <ClCompile Include="MissionEventReader.cpp" />
     <ClCompile Include="EventManager.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -236,7 +239,7 @@
     <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
-    <ClCompile Include="SpawnEnemy.cpp" />
+    <ClCompile Include="SpawnEnemyAction.cpp" />
     <ClCompile Include="SpawnEnemyMessage.cpp" />
     <ClCompile Include="EnqueueEventMessage.cpp" />
     <ClCompile Include="StateStack.cpp" />
@@ -249,6 +252,7 @@
     <ClCompile Include="Subscriber.cpp" />
     <ClCompile Include="SurvivalAbortMission.cpp" />
     <ClCompile Include="SurvivalMission.cpp" />
+    <ClCompile Include="WaitAction.cpp" />
     <ClCompile Include="WaypointComponent.cpp" />
     <ClCompile Include="WaypointMission.cpp" />
     <ClCompile Include="WeaponFactory.cpp" />

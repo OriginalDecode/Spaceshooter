@@ -136,9 +136,6 @@
     <ClCompile Include="Action.cpp">
       <Filter>Event\Action</Filter>
     </ClCompile>
-    <ClCompile Include="SpawnEnemy.cpp">
-      <Filter>Event\Action</Filter>
-    </ClCompile>
     <ClCompile Include="MissionEventReader.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
@@ -162,6 +159,15 @@
     </ClCompile>
     <ClCompile Include="DefendMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="SpawnEnemyAction.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="WaitAction.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
+    <ClCompile Include="MissionContainer.cpp">
+      <Filter>Mission</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -333,9 +339,6 @@
     <ClInclude Include="Action.h">
       <Filter>Event\Action</Filter>
     </ClInclude>
-    <ClInclude Include="SpawnEnemy.h">
-      <Filter>Event\Action</Filter>
-    </ClInclude>
     <ClInclude Include="MissionEventReader.h">
       <Filter>Mission</Filter>
     </ClInclude>
@@ -362,6 +365,15 @@
     </ClInclude>
     <ClInclude Include="DefendMessage.h">
       <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnEnemyAction.h">
+      <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="WaitAction.h">
+      <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="MissionContainer.h">
+      <Filter>Mission</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -110,6 +110,22 @@ void PostMaster::UnSubscribe(Subscriber* aSubscriber)
 	}
 }
 
+bool PostMaster::IsSubscribed(const eMessageType aMessageType, Subscriber* aSubscriber)
+{
+	CU::GrowingArray<SubscriberInfo>& subscribers
+		= mySubscribers[static_cast<int>(aMessageType)];
+
+	for (int i = 0; i < subscribers.Size(); ++i)
+	{
+		if (subscribers[i].mySubscriber == aSubscriber)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void PostMaster::SortSubscribers(CU::GrowingArray<SubscriberInfo> &aBuffer)
 {
 	int max = 0;

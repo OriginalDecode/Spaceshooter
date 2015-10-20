@@ -337,7 +337,7 @@ void Level::ReadXML(const std::string& aFile)
 		
 		std::string defendName;
 		reader.ReadAttribute(entityElement, "defendName", defendName);
-
+		defendName = CU::ToLower(defendName);
 
 		tinyxml2::XMLElement* propElement = reader.ForceFindFirstChild(entityElement, "position");
 		CU::Vector3<float> propPosition;

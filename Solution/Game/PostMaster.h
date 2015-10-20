@@ -34,6 +34,7 @@ public:
 	void Subscribe(const eMessageType aMessageType, Subscriber* aSubscriber, ePriorityLayer aPriority = ePriorityLayer::NO_PRIO, bool aLetThrough = true);
 	void UnSubscribe(const eMessageType aMessageType, Subscriber* aSubscriber);
 	void UnSubscribe(Subscriber* aSubscriber);
+	bool IsSubscribed(const eMessageType aMessageType, Subscriber* aSubscriber);
 
 	template<typename Message>
 	void SendMessage(const Message& aMessage);

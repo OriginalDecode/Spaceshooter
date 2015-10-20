@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #include "PostMaster.h"
-#include "SpawnEnemy.h"
+#include "SpawnEnemyAction.h"
 #include "SpawnEnemyMessage.h"
 #include <XMLReader.h>
 
 
-SpawnEnemy::SpawnEnemy(XMLReader& aReader, tinyxml2::XMLElement* aElement)
+SpawnEnemyAction::SpawnEnemyAction(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 {
 	std::string type;
 	aReader.ForceReadAttribute(aElement, "type", type);
@@ -37,23 +37,23 @@ SpawnEnemy::SpawnEnemy(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	myMessage = new SpawnEnemyMessage(type, position, rotation, scale);
 }
 
-SpawnEnemy::~SpawnEnemy()
+SpawnEnemyAction::~SpawnEnemyAction()
 {
 	delete myMessage;
 }
 
-void SpawnEnemy::OnEnter()
+void SpawnEnemyAction::OnEnter()
 {
 	PostMaster::GetInstance()->SendMessage(*myMessage);
 }
 
 
-bool SpawnEnemy::OnExit()
+bool SpawnEnemyAction::OnExit()
 {
 	return true;
 }
 
-bool SpawnEnemy::Update()
+bool SpawnEnemyAction::Update()
 {
 	return true;
 }

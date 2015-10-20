@@ -11,18 +11,24 @@
 PropComponent::PropComponent(Entity& aEntity)
 	: Component(aEntity)
 {
-	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 }
 
 
 PropComponent::~PropComponent()
 {
-	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	if (myDefendName != "")
+	{
+		PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	}
 }
 
 void PropComponent::Init(const std::string& aDefendName)
 {
 	myDefendName = aDefendName;
+	if (myDefendName != "")
+	{
+		PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+	}
 }
 
 void PropComponent::ReceiveNote(const CollisionNote& aNote)
