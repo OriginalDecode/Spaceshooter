@@ -78,7 +78,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 			orientation.SetPos(pos);
 
 			PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType, orientation
-				, myEntity.GetType(), aShootNote.myEnitityVelocity));
+				, myEntity.GetType(), aShootNote.myEnitityVelocity, myWeapons[myCurrentWeaponID].myIsHoming));
 			myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 		}
 	}
@@ -102,12 +102,12 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	{
 		for (int i = 0; i < myWeapons.Size(); ++i)
 		{
-			myWeapons[i].myMultiplier = aNote.myFireRateMultiplier;
+			myWeapons[i].myMultiplier = aNote.myValue;
 		}
 	}
 	else if (aNote.myType == ePowerUpType::EMP)
 	{
-		myEMPRadius = aNote.myRadius;
+		myEMPRadius = aNote.myValue;
 		myEMPDuration = aNote.myDuration;
 		myHasEMP = true;
 	}
@@ -121,6 +121,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	newWeapon.myCoolDownTime = aWeapon.myCoolDownTime;
 	newWeapon.myCurrentTime = aWeapon.myCoolDownTime;
 	newWeapon.myPosition = aWeapon.myPosition;
+	newWeapon.myIsHoming = aWeapon.myIsHoming;
 	newWeapon.mySpread = aWeapon.mySpread;
 	newWeapon.myType = aWeapon.myType;
 	newWeapon.myMultiplier = 1;
@@ -151,6 +152,7 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 	myWeapons[aWeaponID].myCoolDownTime = aWeapon.myCoolDownTime;
 	myWeapons[aWeaponID].myCurrentTime = aWeapon.myCoolDownTime;
 	myWeapons[aWeaponID].myPosition = aWeapon.myPosition;
+	myWeapons[aWeaponID].myIsHoming = aWeapon.myIsHoming;
 	myWeapons[aWeaponID].mySpread = aWeapon.mySpread;
 	myWeapons[aWeaponID].myType = aWeapon.myType;
 	myWeapons[aWeaponID].myMultiplier = 1;

@@ -127,6 +127,7 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 
 	WeaponDataType weaponDataType;
 	weaponDataType.myBulletsPerShot = 1;
+	weaponDataType.myIsHoming = false;
 
 	weaponDocument.ForceReadAttribute(weaponElement, "name", weaponDataType.myType);
 
@@ -154,6 +155,10 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("bullet").c_str()) == 0)
 		{
 			weaponDocument.ForceReadAttribute(e, "type", weaponDataType.myBulletType);
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("homing").c_str()) == 0)
+		{
+			weaponDocument.ForceReadAttribute(e, "bool", weaponDataType.myIsHoming);
 		}
 	}
 

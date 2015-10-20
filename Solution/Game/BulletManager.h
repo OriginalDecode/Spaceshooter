@@ -58,10 +58,12 @@ public:
 private:
 	void operator=(BulletManager&) = delete;
 
-	void LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, const std::string& aProjectilePath);
+	void LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
+		const std::string& aProjectilePath);
 
-	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, 
-		eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity);
+	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, 
+		const CU::Vector3<float>& aEnitityVelocity, bool aIsHoming);
+	
 	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
 
 	void DeleteWeaponData(BulletData* aWeaponData);

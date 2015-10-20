@@ -47,7 +47,8 @@ enum class ePowerUpType
 	SHIELDBOOST,
 	HEALTHKIT,
 	WEAPON_UPGRADE,
-	EMP
+	EMP,
+	HOMING
 };
 
 enum class eMissionType
@@ -95,4 +96,5 @@ enum class eAITargetPositionMode
 	NOT_USED,
 	KEEP_DISTANCE,
 	ESCAPE_THEN_RETURN,
+	KAMIKAZE
 };

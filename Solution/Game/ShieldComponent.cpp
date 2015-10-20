@@ -28,7 +28,7 @@ void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 	if (aNote.myType == ePowerUpType::SHIELDBOOST)
 	{
 		myShieldOvercharged = true;
-		myShieldStrength = aNote.myShieldStrength;
+		myShieldStrength = aNote.myValue;
 	}
 }
 
