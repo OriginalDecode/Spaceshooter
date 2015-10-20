@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <CommonHelper.h>
 #include <d3dx11effect.h>
 #include "Engine.h"
 #include "Effect.h"
@@ -33,6 +34,8 @@ Prism::Effect* Prism::EffectContainer::GetEffect(const std::string& aFilePath)
 
 void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 {
+	VerifyShader(aFilePath);
+
 	Effect* newEffect = new Effect();
 	
 	if (newEffect->Init(aFilePath) == false)
@@ -76,6 +79,17 @@ void Prism::EffectContainer::ReloadEffect(const std::string& aFilePath)
 	{
 		shaderVar->SetResource(tex->GetShaderView());
 	}
+}
+
+void Prism::EffectContainer::VerifyShader(const std::string& aFilePath)
+{
+	DL_ASSERT_EXP(aFilePath == "Data/Resource/Shader/S_effect_pbl.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_font.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_sprite.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_graph.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_debug.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_skybox.fx",
+		CU::Concatenate("Found invalid Shader: %s", aFilePath.c_str()));
 }
 
 void Prism::EffectContainer::Update(const float aDeltaTime)

@@ -20,7 +20,7 @@ namespace Prism
 	{
 	public:
 		~EmitterInstance();
-		void Initiate(EmitterData& someData);
+		void Initiate(EmitterData someData);
 		void Render(Camera* aCamera);
 		void Update(float aDeltaTime);
 
@@ -37,10 +37,11 @@ namespace Prism
 		CU::GrowingArray<ParticleInstance> myParticles;
 		CU::Matrix44f myOrientation;
 
-		EmitterData myData;
+		EmitterData myEmitterData;
 		VertexBufferWrapper *myVertexWrapper;
 
 		float myEmissionTime;
+		int myLiveParticles;
 
 	};
 }

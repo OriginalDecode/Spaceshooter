@@ -22,6 +22,7 @@ namespace CommonUtilities
 class BulletManager;
 class CollisionManager;
 class ConversationManager;
+class DefendMessage;
 class Entity;
 class EntityFactory;
 class EventManager;
@@ -62,6 +63,7 @@ public:
 
 	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
+	void ReceiveMessage(const DefendMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 
@@ -86,6 +88,7 @@ private:
 	CU::GrowingArray<Prism::SpotLight*> mySpotLights;
 
 	Entity* myPlayer;
+	Entity* myEntityToDefend;
 
 	CU::InputWrapper* myInputWrapper;
 

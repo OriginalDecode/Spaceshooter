@@ -5,6 +5,7 @@
 #include <GrowingArray.h>
 #include <Matrix.h>
 #include "Vertices.h"
+#include "LodStructs.h"
 
 
 namespace Prism
@@ -34,11 +35,12 @@ namespace Prism
 				, CU::Vector4f aColour = { 1.f, 1.f, 1.f, 1.f });
 
 		void AddChild(Model* aChild);
+		void SetLodGroup(LodGroup* aLodGroup);
 
 		Effect* GetEffect();
 		void SetEffect(Effect* aEffect);
 
-		void Render(const CU::Matrix44<float>& aOrientation);
+		void Render(const CU::Matrix44<float>& aOrientation, const CU::Vector3<float>& aCameraPosition);
 
 		void OnEffectLoad() override;
 
@@ -56,6 +58,8 @@ namespace Prism
 		CU::GrowingArray<D3D11_INPUT_ELEMENT_DESC*> myVertexFormat;
 		bool myIsNULLObject;
 		bool myInited;
+		bool myIsLodGroup;
+		LodGroup* myLodGroup;
 
 		VertexIndexWrapper* myIndexBaseData;
 		IndexBufferWrapper* myIndexBuffer;
@@ -64,9 +68,11 @@ namespace Prism
 
 		CU::GrowingArray<Surface*> mySurfaces;
 		CU::GrowingArray<Model*> myChilds;
+		Model* myParent;
 		CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 		CU::Matrix44f myOrientation;
 
 		std::string myFilePath;
+		int myVertexCount;
 	};
 }

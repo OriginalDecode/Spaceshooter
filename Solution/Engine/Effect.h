@@ -13,10 +13,12 @@ struct ID3DX11EffectMatrixVariable;
 struct ID3DX11EffectVariable;
 struct ID3DX11EffectScalarVariable;
 struct ID3DX11EffectVectorVariable;
+struct ID3DX11EffectShaderResourceVariable;
 
 namespace Prism
 {
 	class EffectListener;
+	class Texture;
 
 	class Effect
 	{
@@ -33,6 +35,7 @@ namespace Prism
 		void SetViewMatrix(const CU::Matrix44<float>& aViewMatrix);
 		void SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix);
 		void SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask = 0xFFFFFFFF);
+		void SetTexture(Texture* aTexture);
 
 		void UpdateDirectionalLights(
 			const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData);
@@ -61,6 +64,8 @@ namespace Prism
 		ID3DX11EffectVariable* myPointLightVariable;
 		ID3DX11EffectVariable* mySpotLightVariable;
 
+		ID3DX11EffectShaderResourceVariable	*myTexture;
+		
 		std::string myFileName;
 
 		CU::GrowingArray<EffectListener*> myEffectListeners;

@@ -29,7 +29,7 @@ CollisionManager::CollisionManager()
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
 	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP;
-	myEnemyBulletFilter = eEntityType::PLAYER;
+	myEnemyBulletFilter = eEntityType::PLAYER | eEntityType::PROP;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
 	myPropFilter = eEntityType::PLAYER;

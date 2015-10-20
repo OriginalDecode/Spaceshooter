@@ -31,6 +31,7 @@ public:
 	void ReceiveNote(const GUINote& aNote) override;
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
+	void ReceiveMessage(const DefendMessage& aMessage) override;
 	
 private:
 	Prism::Model2D* myReticle;

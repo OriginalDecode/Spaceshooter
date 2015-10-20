@@ -1,6 +1,8 @@
 #include "stdafx.h"
+#include "DefendMessage.h"
 #include "DefendMission.h"
 #include "Engine.h"
+#include "Entity.h"
 #include "Level.h"
 #include "PostMaster.h"
 #include <sstream>
@@ -11,15 +13,20 @@ DefendMission::DefendMission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: Mission(aReader, aElement)
 {
 	tinyxml2::XMLElement* element = aReader.ForceFindFirstChild(aElement, "defend");
-	aReader.ForceReadAttribute(element, "name", myNameToDefend);
+	aReader.ForceReadAttribute(element, "defendName", myNameToDefend);
 
 	element = aReader.ForceFindFirstChild(aElement, "seconds");
 	aReader.ForceReadAttribute(element, "value", myTotalTime);
+
+}
+
+DefendMission::~DefendMission()
+{
 }
 
 void DefendMission::Start()
 {
-	//PostMaster::GetInstance()->SendMessage<DefendMessage>(eMessageType::DEFEND);
+	PostMaster::GetInstance()->SendMessage<DefendMessage>(DefendMessage(DefendMessage::eType::NAME, myNameToDefend));
 	myTime = myTotalTime;
 }
 

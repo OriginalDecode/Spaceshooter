@@ -67,6 +67,11 @@ void Prism::Effect::SetBlendState(ID3D11BlendState* aBlendState, float aBlendFac
 	Engine::GetInstance()->GetContex()->OMSetBlendState(aBlendState, aBlendFactor, aSampleMask);
 }
 
+void Prism::Effect::SetTexture(Texture* aTexture)
+{
+	myTexture->SetResource(aTexture->GetShaderView());
+}
+
 void Prism::Effect::UpdateDirectionalLights(
 	const CU::StaticArray<Prism::DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
@@ -216,5 +221,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		mySpotLightVariable = nullptr;
 	}
 
+	myTexture = myEffect->GetVariableByName("DiffuseTexture")->AsShaderResource();
+	if (myTexture->IsValid() == false)
+	{
+		myTexture = nullptr;
+	}
+
 	return true;
 }
+

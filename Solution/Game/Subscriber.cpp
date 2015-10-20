@@ -46,3 +46,7 @@ void Subscriber::ReceiveMessage(const EnemyKilledMessage&)
 void Subscriber::ReceiveMessage(const PowerUpMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const DefendMessage&)
+{
+}

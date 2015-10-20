@@ -3,6 +3,7 @@
 class Message;
 class BulletMessage;
 class ConversationMessage;
+class DefendMessage;
 class GameStateMessage;
 class SpawnEnemyMessage;
 class EnqueueEventMessage;
@@ -25,6 +26,7 @@ public:
 	virtual void ReceiveMessage(const SpawnEnemyMessage& aMessage);
 	virtual void ReceiveMessage(const EnqueueEventMessage& aMessage);
 	virtual void ReceiveMessage(const EventQueueEmptyMessage& aMessage);
+	virtual void ReceiveMessage(const DefendMessage& aMessage);
 
 };
 

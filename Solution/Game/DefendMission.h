@@ -12,6 +12,7 @@ class DefendMission : public Mission
 {
 public:
 	DefendMission(XMLReader& aReader, tinyxml2::XMLElement* aElement);
+	~DefendMission();
 	
 	void Start() override;
 	bool Update(float aDeltaTime) override;
