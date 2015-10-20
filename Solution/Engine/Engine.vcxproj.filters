@@ -87,6 +87,9 @@
       <Filter>Octree</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="ParticleData.cpp">
+      <Filter>Rendering\Particle</Filter>
+    </ClCompile>
     <ClCompile Include="EmitterData.cpp">
       <Filter>Rendering\Particle</Filter>
     </ClCompile>
