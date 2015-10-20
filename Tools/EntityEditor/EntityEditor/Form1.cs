@@ -34,6 +34,8 @@ namespace EntityEditor
         {
             InitializeComponent();
 
+            this.Text = "Entity Editor v.1.0";
+
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             DL_Debug.GetInstance.Init("EntityEditorLog");
 
