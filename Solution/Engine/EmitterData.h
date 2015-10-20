@@ -46,10 +46,11 @@ namespace Prism
 		float myEmissionLifeTime;
 		float myEmissionRate;
 		float myEmissionRateDelta;
+
 		float myMinScale;
 		float myMaxScale;
 
-		int	myMaxSize;
+		int	myMaxParticleAmount;
 
 	};
 }

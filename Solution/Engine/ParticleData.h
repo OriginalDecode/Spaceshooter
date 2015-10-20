@@ -20,12 +20,19 @@ struct ParticleData
 
 struct ParticleInstance
 {
+	ParticleInstance()
+	{
+		myAlpha = 1.0f;
+		mySize = 1.0f;
+		myLifeTime = 10.0f;
+		myIsAlive = false;
+	}
+	CU::Vector3f	myPosition;
+	CU::Vector3f	myVelocity;
 
-	CU::Vector3f myPosition;
-	CU::Vector3f myVelocity;
-
-	float myAlpha;
-	float mySize;
-	float myLifeTime;
+	float			myAlpha;
+	float			mySize;
+	float			myLifeTime;
+	bool			myIsAlive;
 
 };
