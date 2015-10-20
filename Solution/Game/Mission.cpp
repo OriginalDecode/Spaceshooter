@@ -42,7 +42,7 @@ bool Mission::EventsEnd()
 		PostMaster::GetInstance()->SendMessage(EnqueueEventMessage(myEndEventNames[i]));
 	}
 
-	return myEndEventNames.Size() == 0;
+	return myEndEventNames.Size() > 0;
 }
 
 int Mission::GetIndex() const
