@@ -37,8 +37,11 @@ namespace tinyxml2
 
 class Level : public Subscriber
 {
+	friend class LevelFactory;
+
 public:
 	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper);
+	Level(CU::InputWrapper* aInputWrapper);
 	~Level();
 
 	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);
@@ -47,12 +50,6 @@ public:
 	void Render();
 
 	void OnResize(int aWidth, int aHeigth);
-
-	void SetShowLightCube(bool aBool);
-	bool GetShowLightCube() const;
-
-	void SetRenderStuff(bool aBool);
-	bool GetRenderStuff() const;
 
 	void RemoveEntity(Entity* aEntity);
 
@@ -102,31 +99,8 @@ private:
 	MissionManager* myMissionManager;
 	EventManager* myEventManager;
 
-	bool myRenderStuff;
-	bool myShowPointLightCube;
 	bool myComplete;
 };
-
-
-inline void Level::SetShowLightCube(bool aBool)
-{
-	myShowPointLightCube = aBool;
-}
-
-inline bool Level::GetShowLightCube() const
-{
-	return myShowPointLightCube;
-}
-
-inline void Level::SetRenderStuff(bool aBool)
-{
-	myRenderStuff = aBool;
-}
-
-inline bool Level::GetRenderStuff() const
-{
-	return myRenderStuff;
-}
 
 inline void Level::RemoveEntity(Entity* aEntity)
 {

@@ -65,7 +65,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	myEntityFactory = new EntityFactory(myWeaponFactory);
 	myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml");
 	myInputWrapper = aInputWrapper;
-	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
@@ -136,9 +135,29 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	}
 
 	myMissionManager->Init();
-	myRenderStuff = true;
 }
 
+Level::Level(CU::InputWrapper* aInputWrapper)
+	: myEntities(16)
+	, myDirectionalLights(4)
+	, myPointLights(4)
+	, mySpotLights(4)
+	, myComplete(false)
+	, mySkySphere(nullptr)
+	, myEntityFactory(nullptr)
+	, myWeaponFactory(nullptr)
+	, myBulletManager(nullptr)
+	, myCollisionManager(nullptr)
+	, myMissionManager(nullptr)
+	, myEventManager(nullptr)
+	, myConversationManager(nullptr)
+	, myEntityToDefend(nullptr)
+{
+	myInputWrapper = aInputWrapper;
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+}
 
 Level::~Level()
 {
@@ -224,11 +243,8 @@ void Level::Render()
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	mySkySphere->Render(*myCamera);
 	Prism::Engine::GetInstance()->EnableZBuffer();
-
-	if (myRenderStuff)
-	{
-		myScene->Render(myBulletManager->GetInstances());
-	}
+	
+	myScene->Render(myBulletManager->GetInstances());
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 

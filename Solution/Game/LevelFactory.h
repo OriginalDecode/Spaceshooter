@@ -10,19 +10,18 @@ class Level;
 class LevelFactory
 {
 public:
-	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, const bool& aCanWinGame = true);
+	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper);
 	~LevelFactory();
 
 	Level* LoadLevel(const int& anID);
-	Level* ReloadLevel();
+	Level* LoadCurrentLevel();
 	Level* LoadNextLevel();
-	void DeleteOldLevel();
+
+	void ReadXML(const std::string& aFilePath);
 
 	bool IsLastLevel() const;
 
-	// for filewatcher:
 	void LoadLevelListFromXML(const std::string& aXMLPath); 
-	void LoadLevelFromXML(const std::string& aXMLPath);
 private:
 
 	CU::InputWrapper* myInputWrapper;
@@ -32,6 +31,5 @@ private:
 	std::unordered_map<int, std::string> myLevelPaths;
 
 	int myCurrentID;
-	bool myCanWinGame;
 };
 
