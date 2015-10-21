@@ -14,6 +14,8 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include <EmitterData.h>
+#include <EmitterInstance.h>
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -65,7 +67,6 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	myEntityFactory = new EntityFactory(myWeaponFactory);
 	myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml");
 	myInputWrapper = aInputWrapper;
-	myShowPointLightCube = false;
 
 	myCollisionManager = new CollisionManager();
 	myBulletManager = new BulletManager(*myCollisionManager, *myScene);
@@ -79,12 +80,18 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	dirLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
 	dirLight->SetDir({ 0.f, 0.5f, -1.f });
 	myDirectionalLights.Add(dirLight);
-	
+
 	LoadPlayer();
 
 	WATCH_FILE(aFileName, Level::ReadXML);
 
 	ReadXML(aFileName);
+	Prism::EmitterData data;
+	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
+
+	myEmitter = new Prism::EmitterInstance();
+	myEmitter->Initiate(data);
+	myEmitter->SetPosition({ 5, 5, 5 });
 
 	//Entity* cube = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::DYNAMIC, "this is a cube");
 	//cube->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Primitive/cube.fbx"
@@ -107,7 +114,7 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 		}
 	}
 
-	
+
 	myScene->SetCamera(myCamera);
 
 	for (int i = 0; i < myDirectionalLights.Size(); ++i)
@@ -136,15 +143,36 @@ Level::Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper)
 	}
 
 	myMissionManager->Init();
-	myRenderStuff = true;
 }
 
+Level::Level(CU::InputWrapper* aInputWrapper)
+	: myEntities(16)
+	, myDirectionalLights(4)
+	, myPointLights(4)
+	, mySpotLights(4)
+	, myComplete(false)
+	, mySkySphere(nullptr)
+	, myEntityFactory(nullptr)
+	, myWeaponFactory(nullptr)
+	, myBulletManager(nullptr)
+	, myCollisionManager(nullptr)
+	, myMissionManager(nullptr)
+	, myEventManager(nullptr)
+	, myConversationManager(nullptr)
+	, myEntityToDefend(nullptr)
+{
+	myInputWrapper = aInputWrapper;
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+}
 
 Level::~Level()
 {
 	Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
 	while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
-	{ }
+	{
+	}
 
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
@@ -160,7 +188,7 @@ Level::~Level()
 	delete myMissionManager;
 	delete myEventManager;
 	delete myConversationManager;
-
+	delete myEmitter;
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
@@ -179,6 +207,7 @@ void Level::SetSkySphere(const std::string& aModelFilePath, const std::string& a
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
+	myEmitter->Update(aDeltaTime);
 	myCollisionManager->CleanUp();
 
 	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
@@ -198,7 +227,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 		/*if (myEntities[i]->GetType() == eEntityType::POWERUP)
 		{
-			myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
+		myPlayer->SendNote<WaypointNote>(WaypointNote(myEntities[i]->myOrientation.GetPos()));
 		}*/
 
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
@@ -224,11 +253,10 @@ void Level::Render()
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	mySkySphere->Render(*myCamera);
 	Prism::Engine::GetInstance()->EnableZBuffer();
+	
+	myScene->Render(myBulletManager->GetInstances());
 
-	if (myRenderStuff)
-	{
-		myScene->Render(myBulletManager->GetInstances());
-	}
+	myEmitter->Render(myCamera);
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
@@ -296,7 +324,7 @@ void Level::ReadXML(const std::string& aFile)
 
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);
-	
+
 	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap(cubeMap);
 
 	SetSkySphere(skySphere, "Data/Resource/Shader/S_effect_skybox.fx");
@@ -334,7 +362,7 @@ void Level::ReadXML(const std::string& aFile)
 		std::string propType;
 		reader.ForceReadAttribute(entityElement, "propType", propType);
 		myEntityFactory->CopyEntity(newEntity, propType);
-		
+
 		std::string defendName;
 		reader.ReadAttribute(entityElement, "defendName", defendName);
 		defendName = CU::ToLower(defendName);
@@ -487,7 +515,7 @@ void Level::LoadPlayer()
 	player->AddComponent<GUIComponent>()->SetCamera(myCamera);
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
-	
+
 	reader.CloseDocument();
 
 	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
