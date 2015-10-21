@@ -312,15 +312,12 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 
 void LevelFactory::LoadPlayer()
 {
+
 	Entity* player = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
 	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
 		, "Data/Resource/Shader/S_effect_pbl.fx");
 	player->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	player->AddComponent<ShootingComponent>();
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("machineGun1"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("shotgun1"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("rocket1"));
-	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();
 	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
@@ -343,8 +340,24 @@ void LevelFactory::LoadPlayer()
 
 	reader.CloseDocument();
 
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml"; // lite fulhax
+	reader.OpenDocument(settingsPath);
+
+	std::string firstWeapon;
+	std::string secondWeapon;
+	std::string thirdWeapon;
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
+
+	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
+	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
+	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+
 	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 	myCurrentLevel->myPlayer = player;
+	reader.CloseDocument();
 }
 
 void LevelFactory::AddToScene()
