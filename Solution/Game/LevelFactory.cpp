@@ -137,11 +137,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
 
-	Prism::DirectionalLight* dirLight = new Prism::DirectionalLight();
-	dirLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
-	dirLight->SetDir({ 0.f, 0.5f, -1.f });
-	myDirectionalLights.Add(dirLight);
-
 	LoadPlayer();
 
 	Sleep(10);
