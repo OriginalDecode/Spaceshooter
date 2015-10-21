@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -46,7 +47,7 @@ namespace EntityEditor.Panels
 
         protected override void SaveSettings()
         {
-            myPhysicsComponent.myWeight = float.Parse(myWeight.GetTextBox().Text);
+            myPhysicsComponent.myWeight = StringUtilities.ToFloat(myWeight.GetTextBox().Text);
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetPhysicsComponent(myPhysicsComponent);

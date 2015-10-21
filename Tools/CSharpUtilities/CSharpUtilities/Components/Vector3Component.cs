@@ -72,7 +72,7 @@ namespace CSharpUtilities.Components
         public float GetX()
         {
             float value = 0;
-            if (myXText.GetTextBox().Text != "") value = float.Parse(myXText.GetTextBox().Text);
+            if (myXText.GetTextBox().Text != "") value = StringUtilities.ToFloat(myXText.GetTextBox().Text);
             return value;
         }
 
@@ -84,7 +84,7 @@ namespace CSharpUtilities.Components
         public float GetY()
         {
             float value = 0;
-            if (myYText.GetTextBox().Text != "") value = float.Parse(myYText.GetTextBox().Text);
+            if (myYText.GetTextBox().Text != "") value = StringUtilities.ToFloat(myYText.GetTextBox().Text);
             return value;
         }
 
@@ -96,7 +96,7 @@ namespace CSharpUtilities.Components
         public float GetZ()
         {
             float value = 0;
-            if (myZText.GetTextBox().Text != "") value = float.Parse(myZText.GetTextBox().Text);
+            if (myZText.GetTextBox().Text != "") value = StringUtilities.ToFloat(myZText.GetTextBox().Text);
             return value;
         }
 
