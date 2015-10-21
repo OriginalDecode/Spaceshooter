@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "DefendMission.h"
+#include "Enums.h"
 #include "KillAllAbortMission.h"
 #include "KillAllMission.h"
 #include "KillXEnemiesAbortMission.h"
@@ -114,19 +115,19 @@ MissionContainer::~MissionContainer()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::EVENT_QUEUE_EMPTY, this);
 }
 
-bool MissionContainer::Update(float aDeltaTime, int)
+bool MissionContainer::Update(float aDeltaTime, int, eMissionCategory)
 {
-	Update(aDeltaTime, myRequiredActiveMissions, 0);
-	Update(aDeltaTime, myOptionalActiveMissions, myRequiredActiveMissions.Size());
+	Update(aDeltaTime, myRequiredActiveMissions, 0, eMissionCategory::REQUIRED);
+	Update(aDeltaTime, myOptionalActiveMissions, myRequiredActiveMissions.Size(), eMissionCategory::NOT_REQUIRED);
 
 	return myRequiredActiveMissions.Size() <= 0 && myEndingMissions.Size() <= 0;
 }
 
-void MissionContainer::Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions, int aOffset)
+void MissionContainer::Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions, int aOffset, eMissionCategory aCategory)
 {
 	for (int i = someMissions.Size() - 1; i >= 0; --i)
 	{
-		if (someMissions[i]->Update(aDeltaTime, i + aOffset) == true)
+		if (someMissions[i]->Update(aDeltaTime, i + aOffset, aCategory) == true)
 		{
 			if (someMissions[i]->EventsEnd() == true)
 			{

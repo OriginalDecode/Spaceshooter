@@ -16,7 +16,7 @@ public:
 	~DefendMission();
 	
 	void Start() override;
-	bool Update(float aDeltaTime, int aMissionIndex) override;
+	bool Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory) override;
 
 	void End() override;
 

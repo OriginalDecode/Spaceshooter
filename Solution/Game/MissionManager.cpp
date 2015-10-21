@@ -75,7 +75,7 @@ void MissionManager::Update(float aDeltaTime)
 	std::stringstream ss;
 	ss << myCurrentMission;
 	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
-	if (myEndEventsActive == false && myMissions[myCurrentMission]->Update(aDeltaTime, -1) == true)
+	if (myEndEventsActive == false && myMissions[myCurrentMission]->Update(aDeltaTime, -1, eMissionCategory::DUMMY) == true)
 	{
 		myAllowedToStartNextMission = !myMissions[myCurrentMission]->EventsEnd();
 		myEndEventsActive = true;

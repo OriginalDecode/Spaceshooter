@@ -11,11 +11,16 @@ SurvivalMission::SurvivalMission(XMLReader& aReader, tinyxml2::XMLElement* aElem
 	aReader.ForceReadAttribute(element, "value", mySurvivalTime);
 }
 
-bool SurvivalMission::Update(float aDeltaTime, int aMissionIndex)
+bool SurvivalMission::Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory)
 {
 	std::stringstream ss;
 	ss.precision(2);
 	ss << "Current mission: Survive for: " << myTime << " seconds";
+
+	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
+	{
+		ss << " (Optional)";
+	}
 
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);

@@ -13,11 +13,16 @@ SurvivalAbortMission::SurvivalAbortMission(XMLReader& aReader, tinyxml2::XMLElem
 	aReader.ForceReadAttribute(element, "value", myRealTimeStart);
 }
 
-bool SurvivalAbortMission::Update(float aDeltaTime, int aMissionIndex)
+bool SurvivalAbortMission::Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory)
 {
 	std::stringstream ss;
 	ss.precision(2);
 	ss << "Current mission: Survive for: " << myVisualTime << " seconds (abort)";
+
+	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
+	{
+		ss << " (Optional)";
+	}
 
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);

@@ -16,7 +16,7 @@ public:
 	KillXEnemiesMission(Level& aLevel, XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	~KillXEnemiesMission();
 
-	bool Update(float aDeltaTime, int aMissionIndex) override;
+	bool Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory) override;
 	void Start() override;
 	void End() override;
 

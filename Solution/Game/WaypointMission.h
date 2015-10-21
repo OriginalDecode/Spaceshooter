@@ -15,7 +15,7 @@ public:
 	WaypointMission(Level& aLevel, Entity& aPlayer, XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	~WaypointMission();
 
-	bool Update(float aDeltaTime, int aMissionIndex) override;
+	bool Update(float aDeltaTime, int aMissionIndex, eMissionCategory aCategory) override;
 	void Start() override;
 	void End() override;
 

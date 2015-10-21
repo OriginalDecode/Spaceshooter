@@ -58,6 +58,13 @@ enum class eMissionType
 	KILL_ALL,
 };
 
+enum class eMissionCategory
+{
+	REQUIRED,
+	NOT_REQUIRED,
+	DUMMY
+};
+
 enum class eMissionEvent
 {
 	START,
