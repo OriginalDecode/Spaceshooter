@@ -58,6 +58,12 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
 		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetIsHoming());
+
+
+	if (aMessage.GetEntityType() == eEntityType::PLAYER)
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
+	}
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
