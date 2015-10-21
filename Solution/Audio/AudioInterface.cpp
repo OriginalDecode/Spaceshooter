@@ -96,5 +96,22 @@ namespace Prism
 				return myWwiseManager->RegisterObject(anObjectID);
 			}
 		}
+
+		void AudioInterface::UnRegisterObject(int aObjectID)
+		{
+			if (myWwiseManager)
+			{
+				return myWwiseManager->UnRegister(aObjectID);
+			}
+		}
+
+		int AudioInterface::GetUniqueID()
+		{
+			if (myWwiseManager)
+			{
+				return myWwiseManager->RegisterAndGetID();
+			}
+			return -1;
+		}
 	}
 }
