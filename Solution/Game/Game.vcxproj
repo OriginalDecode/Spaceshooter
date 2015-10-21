@@ -134,6 +134,7 @@
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueueEmptyMessage.h" />
+    <ClInclude Include="HealthNote.h" />
     <ClInclude Include="MissionContainer.h" />
     <ClInclude Include="MissionEventReader.h" />
     <ClInclude Include="EventManager.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="PowerUpComponent.h" />
     <ClInclude Include="PropComponent.h" />
     <ClInclude Include="ShieldComponent.h" />
+    <ClInclude Include="ShieldNote.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
     <ClInclude Include="SpawnEnemyAction.h" />

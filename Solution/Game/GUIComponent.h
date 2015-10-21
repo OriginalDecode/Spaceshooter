@@ -29,10 +29,15 @@ public:
 	static eComponentType GetType();
 	void ReceiveNote(const MissionNote& aNote) override;
 	void ReceiveNote(const GUINote& aNote) override;
+	void ReceiveNote(const HealthNote& aNote) override;
+
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	
+
+	void ReadXML();
+
 private:
 	Prism::Model2D* myReticle;
 	Prism::Model2D* myModel2DToRender;
@@ -44,6 +49,9 @@ private:
 	Prism::Model2D* myDefendArrow;
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
+
+	CU::GrowingArray<Prism::Model2D*> myHealthBar;
+
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
 
