@@ -97,6 +97,22 @@ namespace EntityEditor
                 myEntityData.myHealthComponent.myIsActive = true;
                 ReadHealthComponent(aNode);
             }
+            else if (aNode.Name == "PhysicsComponent")
+            {
+                myEntityData.myPhysicsComponent.myIsActive = true;
+                ReadPhysicsComponent(aNode);
+            }
+        }
+
+        private void ReadPhysicsComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Weight")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myHealthComponent.myHealth);
+                }
+            }
         }
 
         private void ReadHealthComponent(XmlNode aNode)

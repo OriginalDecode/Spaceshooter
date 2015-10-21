@@ -104,7 +104,20 @@ namespace EntityEditor.Entity
             {
                 WriteHealthComponent(aWriter);
             }
+            if (myEntityData.myPhysicsComponent.myIsActive == true)
+            {
+                WritePhysicsComponent(aWriter);
+            }
 
+            aWriter.WriteEndElement();
+            aWriter.WriteEndElement();
+        }
+
+        private void WritePhysicsComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("PhysicsComponent");
+            aWriter.WriteStartElement("Weight");
+            aWriter.WriteAttributeString("value", myEntityData.myPhysicsComponent.myWeight.ToString());
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }

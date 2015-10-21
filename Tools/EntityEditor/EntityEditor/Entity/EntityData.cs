@@ -16,6 +16,7 @@ namespace EntityEditor.Entity
         public GraphicsComponentData myGraphicsComponent;
         public ShootingComponentData myShootingComponent;
         public HealthComponentData myHealthComponent;
+        public PhysicsComponentData myPhysicsComponent;
     }
 
     public struct EntityListXML
@@ -55,6 +56,13 @@ namespace EntityEditor.Entity
         public bool myIsActive;
 
         public int myHealth;
+    }
+
+    public struct PhysicsComponentData
+    {
+        public bool myIsActive;
+
+        public float myWeight;
     }
 
     public struct CollisionComponentData
