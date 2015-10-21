@@ -10,5 +10,14 @@ public:
 
 private:
 	
+	
 
 };
+
+inline ResizeMessage::ResizeMessage()
+	: Message(eMessageType::RESIZE)
+{
+
+
+
+}

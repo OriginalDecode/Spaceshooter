@@ -239,7 +239,6 @@
     <ClCompile Include="PowerUpComponent.cpp" />
     <ClCompile Include="PowerUpMessage.cpp" />
     <ClCompile Include="PropComponent.cpp" />
-    <ClCompile Include="ResizeMessage.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="SpawnEnemyAction.cpp" />

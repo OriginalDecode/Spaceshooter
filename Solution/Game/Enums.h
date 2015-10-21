@@ -11,6 +11,7 @@ enum class eMessageType
 	CONVERSATION,
 	EVENT_QUEUE_EMPTY,
 	DEFEND,
+	RESIZE,
 	COUNT,
 };
 
