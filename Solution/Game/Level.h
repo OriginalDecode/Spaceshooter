@@ -41,11 +41,8 @@ class Level : public Subscriber
 	friend class LevelFactory;
 
 public:
-	Level(const std::string& aFileName, CU::InputWrapper* aInputWrapper);
 	Level(CU::InputWrapper* aInputWrapper);
 	~Level();
-
-	void SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName);
 
 	bool LogicUpdate(float aDeltaTime);
 	void Render();
@@ -69,7 +66,6 @@ private:
 	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
 	Entity* GetEntityWithName(const std::string& aName);
-	void LoadPlayer();
 	void UpdateDebug();
 
 	Prism::Instance* mySkySphere;
@@ -81,10 +77,6 @@ private:
 
 	CU::GrowingArray<Entity*> myEntities;
 	CU::GrowingArray<Entity*> myDeadEntities;
-
-	CU::GrowingArray<Prism::DirectionalLight*> myDirectionalLights;
-	CU::GrowingArray<Prism::PointLight*> myPointLights;
-	CU::GrowingArray<Prism::SpotLight*> mySpotLights;
 
 	Entity* myPlayer;
 	Entity* myEntityToDefend;
