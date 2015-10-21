@@ -74,6 +74,8 @@ void ShieldComponent::Update(float aDelta)
 					return;
 				}
 				myShieldStrength += 1;
+				myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
+
 			}
 		}
 	}

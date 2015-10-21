@@ -283,6 +283,18 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 	}
 }
 
+void GUIComponent::ReceiveNote(const HealthNote& aNote)
+{
+	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) *
+		20 + 0.5f)));
+}
+
+void GUIComponent::ReceiveNote(const ShieldNote& aNote)
+{
+	myShieldBarCount = static_cast<int>(((aNote.myShieldStrength / static_cast<float>(aNote.myMaxShieldStrength) *
+		20 + 0.5f)));
+}
+
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
 {
 	myConversation = aMessage.myText;
@@ -300,18 +312,10 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 	}
 }
 
-void GUIComponent::ReceiveNote(const HealthNote& aNote)
+void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
-	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) *
-		20 + 0.5f)));
-}
 
-void GUIComponent::ReceiveNote(const ShieldNote& aNote)
-{
-	myShieldBarCount = static_cast<int>(((aNote.myShieldStrength / static_cast<float>(aNote.myMaxShieldStrength) *
-		20 + 0.5f)));
 }
-
 void GUIComponent::ReadXML()
 {
 	XMLReader reader;
