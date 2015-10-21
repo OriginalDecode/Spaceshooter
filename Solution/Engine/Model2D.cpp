@@ -76,6 +76,42 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
+void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize
+			, const char* anEffectFilePath)
+{
+	myTextureSize = aTextureSize;
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect(anEffectFilePath);
+
+	if (myEffect == nullptr)
+	{
+		DL_MESSAGE_BOX("Failed to GetEffect", "Model2D::Init", MB_ICONWARNING);
+	}
+
+	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	D3DX11_PASS_DESC passDesc;
+	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
+	if (FAILED(hr) != S_OK)
+	{
+		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Model2D::Init", MB_ICONWARNING);
+	}
+
+	myVertices.Init(6);
+	myVerticeIndices.Init(6);
+
+	InitVertexBuffer();
+	InitIndexBuffer();
+	InitSurface(aFileName);
+	InitBlendState();
+
+	ZeroMemory(myInitData, sizeof(myInitData));
+}
+
 void Prism::Model2D::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
@@ -144,7 +180,7 @@ void Prism::Model2D::InitBlendState()
 
 void Prism::Model2D::Render(const float aDrawX, const float aDrawY)
 {
-	if (aDrawX != myLastDrawX && aDrawY != myLastDrawY)
+	if (aDrawX != myLastDrawX || aDrawY != myLastDrawY)
 	{
 		Update(aDrawX, aDrawY);
 	}

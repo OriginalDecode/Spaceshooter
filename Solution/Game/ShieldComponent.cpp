@@ -1,8 +1,10 @@
 #include "stdafx.h"
 
+#include "Entity.h"
 #include "Enums.h"
 #include "PowerUpNote.h"
 #include "ShieldComponent.h"
+#include "ShieldNote.h"
 
 
 ShieldComponent::ShieldComponent(Entity& aEntity)
@@ -19,7 +21,8 @@ void ShieldComponent::Init()
 	myCooldown = 0.f;
 
 	myOvercharge = 0;
-	myShieldStrength = 100;
+	myMaxShieldStrength = 100;
+	myShieldStrength = myMaxShieldStrength;
 
 }
 
@@ -43,6 +46,8 @@ void ShieldComponent::DamageShield(int someDamage)
 	{
 		myShieldStrength -= someDamage;
 	}
+
+	myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
 }
 
 void ShieldComponent::Update(float aDelta)
@@ -55,17 +60,17 @@ void ShieldComponent::Update(float aDelta)
 			myShieldStrength = 0;
 		}
 
-		if (myShieldStrength < 100)
+		if (myShieldStrength < myMaxShieldStrength)
 		{
 			COMPONENT_LOG("Recharging shield strenght!");
 			myCooldown += aDelta;
 
 			if (myCooldown >= myReachargeTime)
 			{
-				if (myShieldStrength >= 100)
+				if (myShieldStrength >= myMaxShieldStrength)
 				{
 					COMPONENT_LOG("Shield Strength reached 100. During recharge time.");
-					myShieldStrength = 100;
+					myShieldStrength = myMaxShieldStrength;
 					return;
 				}
 				myShieldStrength += 1;
@@ -77,7 +82,7 @@ void ShieldComponent::Update(float aDelta)
 	{
 		COMPONENT_LOG("Shield is overcharged.");
 		POWERUP_LOG("Shield is overcharged.");
-		if (myShieldStrength <= 100)
+		if (myShieldStrength <= myMaxShieldStrength)
 		{
 			COMPONENT_LOG("Shield is 100 or lower, shield is no longer overcharged!");
 			myShieldOvercharged = false;

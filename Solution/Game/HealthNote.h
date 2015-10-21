@@ -2,10 +2,10 @@
 
 struct HealthNote
 {
-	HealthNote(float someHealth, float someMaxHealth);
+	HealthNote(int someHealth, int someMaxHealth);
 
-	float myHealth;
-	float myMaxHeatlh;
+	int myHealth;
+	int myMaxHealth;
 
 
 private:
@@ -13,10 +13,8 @@ private:
 	void operator=(HealthNote&) = delete;
 };
 
-inline HealthNote::HealthNote(float someHealth, float someMaxHealth)
+inline HealthNote::HealthNote(int someHealth, int someMaxHealth)
 	: myHealth(someHealth)
-	, myMaxHeatlh(someMaxHealth)
+	, myMaxHealth(someMaxHealth)
 {
 }
-
-

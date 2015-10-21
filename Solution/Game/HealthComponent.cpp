@@ -45,8 +45,10 @@ void HealthComponent::RemoveHealth(int aHealthToRemove)
 		else
 		{
 			myCurrentHealth -= aHealthToRemove;
-			myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
 		}
+		
+		myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
+
 	}
 }
 
