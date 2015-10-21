@@ -166,6 +166,9 @@
     <ClCompile Include="MissionContainer.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="ResizeMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />

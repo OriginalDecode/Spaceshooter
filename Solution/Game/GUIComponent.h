@@ -35,6 +35,7 @@ public:
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
+	void ReceiveMessage(const ResizeMessage& aMessage) override;
 
 	void ReadXML();
 

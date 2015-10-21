@@ -10,6 +10,7 @@ class EnqueueEventMessage;
 class EventQueueEmptyMessage;
 class EnemyKilledMessage;
 class PowerUpMessage;
+class ResizeMessage;
 
 class Subscriber
 {
@@ -27,6 +28,6 @@ public:
 	virtual void ReceiveMessage(const EnqueueEventMessage& aMessage);
 	virtual void ReceiveMessage(const EventQueueEmptyMessage& aMessage);
 	virtual void ReceiveMessage(const DefendMessage& aMessage);
-
+	virtual void ReceiveMessage(const ResizeMessage& aMessage);
 };
 
