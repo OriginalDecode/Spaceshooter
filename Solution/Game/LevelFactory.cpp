@@ -198,6 +198,31 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myMissionManager->Init();
 }
 
+void LevelFactory::ReadLevelSettings()
+{
+	if (myCurrentID >= 10)
+	{
+		DL_ASSERT("[LevelFactory] Can't handle level ID with two digits.");
+	}
+	XMLReader reader;
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml"; // lite fulhax
+	reader.OpenDocument(settingsPath);
+
+	std::string firstWeapon;
+	std::string secondWeapon;
+	std::string thirdWeapon;
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
+
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+
+	reader.CloseDocument();
+}
+
 void LevelFactory::LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
 {
 	LoadDirectionalLights(aReader, aLevelElement);
@@ -337,27 +362,12 @@ void LevelFactory::LoadPlayer()
 	player->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
-
-	reader.CloseDocument();
-
-	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml"; // lite fulhax
-	reader.OpenDocument(settingsPath);
-
-	std::string firstWeapon;
-	std::string secondWeapon;
-	std::string thirdWeapon;
-	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
-	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
-	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
-
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
-	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
-
 	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
-	myCurrentLevel->myPlayer = player;
+
 	reader.CloseDocument();
+	myCurrentLevel->myPlayer = player;
+	ReadLevelSettings();
+	
 }
 
 void LevelFactory::AddToScene()
