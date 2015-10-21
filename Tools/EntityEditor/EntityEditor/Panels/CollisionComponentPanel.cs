@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -29,21 +30,23 @@ namespace EntityEditor.Panels
             mySphereCollisionActive.Location = new Point(Location.X - 58, Location.Y + 10);
             mySphereCollisionActive.Size = new Size(150, 20);
 
-            mySphereCollisionActive.CheckStateChanged += new EventHandler(this.SphereActivateChanged);
+            mySphereCollisionActive.CheckStateChanged += new EventHandler(this.PanelDataChanged);
 
             this.Controls.Add(mySphereCollisionActive);
             mySphereCollisionActive.Show();
 
             mySphereRadius = new NumericTextComponent(new Point(Location.X, Location.Y + 40), new Size(245, 13), "Sphere Radius");
-            mySphereRadius.GetTextBox().TextChanged += new EventHandler(this.SphereRadius_TextChange);
+            mySphereRadius.AddTextChangeEvent(this.PanelDataChanged);
             mySphereRadius.BindToPanel(this);
             mySphereRadius.Show();
         }
 
         public void Load(Entity.CollisionComponentData aCollisionComponent)
         {
+            myHasLoadedComponent = false;
             myCollisionComponent = aCollisionComponent;
             LoadSettings();
+            myHasLoadedComponent = true;
         }
 
         protected override void LoadSettings()
@@ -69,7 +72,7 @@ namespace EntityEditor.Panels
                 myCollisionComponent.myHasSphere = true;
                 if (mySphereRadius.GetTextBox().Text != "")
                 {
-                    myCollisionComponent.myRadius = float.Parse(mySphereRadius.GetTextBox().Text);
+                    myCollisionComponent.myRadius = StringUtilities.ToFloat(mySphereRadius.GetTextBox().Text);
                 }
             }
             else
@@ -79,18 +82,6 @@ namespace EntityEditor.Panels
             }
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetCollisionComponent(myCollisionComponent);
-        }
-
-        private void SphereActivateChanged(object sender, EventArgs e)
-        {
-            SaveSettings();
-            LoadSettings();
-        }
-
-        private void SphereRadius_TextChange(object sender, EventArgs e)
-        {
-            SaveSettings();
-            LoadSettings();
         }
     }
 }

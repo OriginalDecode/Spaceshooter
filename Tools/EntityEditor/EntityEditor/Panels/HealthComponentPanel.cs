@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -44,7 +45,7 @@ namespace EntityEditor.Panels
 
         protected override void SaveSettings()
         {
-            myHealthComponent.myHealth = int.Parse(myHealth.GetTextBox().Text);
+            myHealthComponent.myHealth = StringUtilities.ToInt(myHealth.GetTextBox().Text);
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetHealthComponent(myHealthComponent);

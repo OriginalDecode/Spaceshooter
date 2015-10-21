@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -124,7 +125,8 @@ namespace EntityEditor.Panels
             myAIComponent.myAIMode = myAIMode.GetDropDown().SelectedIndex + 1;
 
             float avoidanceDistance = 0;
-            if (myAvoidanceDistance.GetTextBox().Text != "") avoidanceDistance = float.Parse(myAvoidanceDistance.GetTextBox().Text);
+            if (myAvoidanceDistance.GetTextBox().Text != "") 
+                avoidanceDistance = StringUtilities.ToFloat(myAvoidanceDistance.GetTextBox().Text);
             myAIComponent.myAvoidanceDistance = avoidanceDistance;
             myAIComponent.myAvoidanceOffset.myX = myAvoidanceOffset.GetX();
             myAIComponent.myAvoidanceOffset.myY = myAvoidanceOffset.GetY();

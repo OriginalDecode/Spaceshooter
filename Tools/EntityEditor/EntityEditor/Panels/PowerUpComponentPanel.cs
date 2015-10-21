@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -88,11 +89,11 @@ namespace EntityEditor.Panels
         {
             myPowerUpComponent.myType = (string)myType.GetDropDown().SelectedItem;
 
-            myPowerUpComponent.myValue = float.Parse(myValue.GetTextBox().Text);
-            myPowerUpComponent.myTime = float.Parse(myTime.GetTextBox().Text);
+            myPowerUpComponent.myValue = StringUtilities.ToFloat(myValue.GetTextBox().Text);
+            myPowerUpComponent.myTime = StringUtilities.ToFloat(myTime.GetTextBox().Text);
 
             myPowerUpComponent.myUpgradedWeapon = myWeaponUpgrade.GetTextBox().Text;
-            myPowerUpComponent.myWeaponID = int.Parse(myWeaponID.GetTextBox().Text);
+            myPowerUpComponent.myWeaponID = StringUtilities.ToInt(myWeaponID.GetTextBox().Text);
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetPowerUpComponent(myPowerUpComponent);

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -52,8 +53,8 @@ namespace EntityEditor.Panels
 
         protected override void SaveSettings()
         {
-            myBulletComponent.myLifeTime = float.Parse(myLifeTime.GetTextBox().Text);
-            myBulletComponent.myDamage = float.Parse(myDamage.GetTextBox().Text);
+            myBulletComponent.myLifeTime = StringUtilities.ToFloat(myLifeTime.GetTextBox().Text);
+            myBulletComponent.myDamage = StringUtilities.ToFloat(myDamage.GetTextBox().Text);
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetBulletComponent(myBulletComponent);

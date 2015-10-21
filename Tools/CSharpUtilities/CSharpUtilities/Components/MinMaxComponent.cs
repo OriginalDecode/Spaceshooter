@@ -68,7 +68,7 @@ namespace CSharpUtilities.Components
         public float GetMinValue()
         {
             float value = 0;
-            if(myMinValue.GetTextBox().Text != "") value = float.Parse(myMinValue.GetTextBox().Text);
+            if (myMinValue.GetTextBox().Text != "") value = StringUtilities.ToFloat(myMinValue.GetTextBox().Text);
             return value;
         }
 
@@ -80,7 +80,7 @@ namespace CSharpUtilities.Components
         public float GetMaxValue()
         {
             float value = 0;
-            if (myMaxValue.GetTextBox().Text != "") value = float.Parse(myMaxValue.GetTextBox().Text);
+            if (myMaxValue.GetTextBox().Text != "") value = StringUtilities.ToFloat(myMaxValue.GetTextBox().Text);
             return value;
         }
     }
