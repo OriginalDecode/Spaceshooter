@@ -12,10 +12,13 @@ namespace EntityEditor.Entity
         public string myName;
 
         public AIComponentData myAIComponent;
+        public BulletComponentData myBulletComponent;
         public CollisionComponentData myCollisionComponent;
         public GraphicsComponentData myGraphicsComponent;
         public ShootingComponentData myShootingComponent;
         public HealthComponentData myHealthComponent;
+        public PhysicsComponentData myPhysicsComponent;
+        public PowerUpComponentData myPowerUpComponent;
     }
 
     public struct EntityListXML
@@ -55,6 +58,33 @@ namespace EntityEditor.Entity
         public bool myIsActive;
 
         public int myHealth;
+    }
+
+    public struct PhysicsComponentData
+    {
+        public bool myIsActive;
+
+        public float myWeight;
+    }
+
+    public struct PowerUpComponentData
+    {
+        public bool myIsActive;
+
+        public string myType;
+        public float myValue;
+        public float myTime;
+
+        public string myUpgradedWeapon;
+        public int myWeaponID;
+    }
+
+    public struct BulletComponentData
+    {
+        public bool myIsActive;
+
+        public float myLifeTime;
+        public float myDamage;
     }
 
     public struct CollisionComponentData

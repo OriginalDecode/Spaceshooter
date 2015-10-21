@@ -25,10 +25,13 @@ namespace EntityEditor
 
         private Panels.AddComponentPanel myAddComponentPanel = null;
         private Panels.AIComponentPanel myAIComponentPanel = null;
+        private Panels.BulletComponentPanel myBulletComponentPanel = null;
         private Panels.CollisionComponentPanel myCollisionComponentPanel = null;
         private Panels.GraphicsComponentPanel myGraphicsComponentPanel = null;
         private Panels.HealthComponentPanel myHealthComponentPanel = null;
         private Panels.ShootingComponentPanel myShootingComponentPanel = null;
+        private Panels.PhysicsComponentPanel myPhysicsComponentPanel = null;
+        private Panels.PowerUpComponentPanel myPowerUpComponentPanel = null;
         private Panels.RenamePanel myRenameEntityPanel = null;
 
         public EntityEditorForm()
@@ -54,18 +57,24 @@ namespace EntityEditor
 
             myAddComponentPanel = new Panels.AddComponentPanel(panelLocation, panelSize, this);
             myAIComponentPanel = new Panels.AIComponentPanel(panelLocation, panelSize, this);
+            myBulletComponentPanel = new Panels.BulletComponentPanel(panelLocation, panelSize, this);
             myCollisionComponentPanel = new Panels.CollisionComponentPanel(panelLocation, panelSize, this);
             myGraphicsComponentPanel = new Panels.GraphicsComponentPanel(panelLocation, panelSize, this);
             myHealthComponentPanel = new Panels.HealthComponentPanel(panelLocation, panelSize, this);
             myShootingComponentPanel = new Panels.ShootingComponentPanel(panelLocation, panelSize, this);
+            myPhysicsComponentPanel = new Panels.PhysicsComponentPanel(panelLocation, panelSize, this);
+            myPowerUpComponentPanel = new Panels.PowerUpComponentPanel(panelLocation, panelSize, this);
             myRenameEntityPanel = new Panels.RenamePanel(panelLocation, panelSize, this);
 
             PropertyPanel.Controls.Add(myAddComponentPanel);
             PropertyPanel.Controls.Add(myAIComponentPanel);
+            PropertyPanel.Controls.Add(myBulletComponentPanel);
             PropertyPanel.Controls.Add(myCollisionComponentPanel);
             PropertyPanel.Controls.Add(myGraphicsComponentPanel);
             PropertyPanel.Controls.Add(myHealthComponentPanel);
             PropertyPanel.Controls.Add(myShootingComponentPanel);
+            PropertyPanel.Controls.Add(myPhysicsComponentPanel);
+            PropertyPanel.Controls.Add(myPowerUpComponentPanel);
             PropertyPanel.Controls.Add(myRenameEntityPanel);
 
             HidePanels();
@@ -96,6 +105,18 @@ namespace EntityEditor
             if (myCurrentEntity.myShootingComponent.myIsActive)
             {
                 EntityContentList.Items.Add("ShootingComponent");
+            }
+            if (myCurrentEntity.myPhysicsComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("PhysicsComponent");
+            }
+            if (myCurrentEntity.myBulletComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("BulletComponent");
+            }
+            if (myCurrentEntity.myPowerUpComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("PowerUpComponent");
             }
         }
 
@@ -135,6 +156,18 @@ namespace EntityEditor
         public void SetHealthComponent(Entity.HealthComponentData aHealthComponent)
         {
             myCurrentEntity.myHealthComponent = aHealthComponent;
+        }
+        public void SetPhysicsComponent(Entity.PhysicsComponentData aPhysicsComponent)
+        {
+            myCurrentEntity.myPhysicsComponent = aPhysicsComponent;
+        }
+        public void SetBulletComponent(Entity.BulletComponentData aBulletComponent)
+        {
+            myCurrentEntity.myBulletComponent = aBulletComponent;
+        }
+        public void SetPowerUpComponent(Entity.PowerUpComponentData aPowerUpComponent)
+        {
+            myCurrentEntity.myPowerUpComponent = aPowerUpComponent;
         }
         //Set Components To EntityData End
 
@@ -205,16 +238,43 @@ namespace EntityEditor
                 myCurrentEntity.myHealthComponent.myHealth = 0;
                 return;
             }
+            if (aComponentName.StartsWith("Physics") == true)
+            {
+                myCurrentEntity.myPhysicsComponent.myIsActive = false;
+                myCurrentEntity.myPhysicsComponent.myWeight = 0;
+                return;
+            }
+            if (aComponentName.StartsWith("Bullet") == true)
+            {
+                myCurrentEntity.myBulletComponent.myIsActive = false;
+                myCurrentEntity.myBulletComponent.myLifeTime = 0;
+                myCurrentEntity.myBulletComponent.myDamage = 0;
+                return;
+            }
+            if (aComponentName.StartsWith("PowerUp") == true)
+            {
+                myCurrentEntity.myPowerUpComponent.myIsActive = false;
+                myCurrentEntity.myPowerUpComponent.myType = "";
+                myCurrentEntity.myPowerUpComponent.myValue = 0;
+                myCurrentEntity.myPowerUpComponent.myTime = 0;
+
+                myCurrentEntity.myPowerUpComponent.myUpgradedWeapon = "";
+                myCurrentEntity.myPowerUpComponent.myWeaponID = 0;
+                return;
+            }
         }
 
         private void HidePanels()
         {
             myAddComponentPanel.Hide();
             myAIComponentPanel.Hide();
+            myBulletComponentPanel.Hide();
             myCollisionComponentPanel.Hide();
             myGraphicsComponentPanel.Hide();
             myHealthComponentPanel.Hide();
             myShootingComponentPanel.Hide();
+            myPhysicsComponentPanel.Hide();
+            myPowerUpComponentPanel.Hide();
             myRenameEntityPanel.Hide();
         }
 
@@ -249,6 +309,24 @@ namespace EntityEditor
             {
                 myHealthComponentPanel.Show();
                 myHealthComponentPanel.Load(myCurrentEntity.myHealthComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("Physics") == true)
+            {
+                myPhysicsComponentPanel.Show();
+                myPhysicsComponentPanel.Load(myCurrentEntity.myPhysicsComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("Bullet") == true)
+            {
+                myBulletComponentPanel.Show();
+                myBulletComponentPanel.Load(myCurrentEntity.myBulletComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("PowerUp") == true)
+            {
+                myPowerUpComponentPanel.Show();
+                myPowerUpComponentPanel.Load(myCurrentEntity.myPowerUpComponent);
                 return;
             }
         }
