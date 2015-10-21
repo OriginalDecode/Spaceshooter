@@ -45,3 +45,7 @@ void Component::ReceiveNote(const GUINote&)
 void Component::ReceiveNote(const HealthNote&)
 {
 }
+
+void Component::ReceiveNote(const ShieldNote&)
+{
+}

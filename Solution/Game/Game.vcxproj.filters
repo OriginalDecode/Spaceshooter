@@ -378,6 +378,9 @@
     <ClInclude Include="ShieldNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
+    <ClInclude Include="ResizeMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

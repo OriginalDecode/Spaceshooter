@@ -26,6 +26,7 @@ private:
 
 
 	int myShieldStrength;
+	int myMaxShieldStrength;
 	int myOvercharge;
 
 };

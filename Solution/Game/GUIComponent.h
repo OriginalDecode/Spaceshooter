@@ -30,11 +30,12 @@ public:
 	void ReceiveNote(const MissionNote& aNote) override;
 	void ReceiveNote(const GUINote& aNote) override;
 	void ReceiveNote(const HealthNote& aNote) override;
+	void ReceiveNote(const ShieldNote& aNote) override;
 
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
-	
+	void ReceiveMessage(const ResizeMessage& aMessage) override;
 
 	void ReadXML();
 
@@ -50,7 +51,11 @@ private:
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
 
-	CU::GrowingArray<Prism::Model2D*> myHealthBar;
+	//CU::GrowingArray<Prism::Model2D*> myHealthBar;
+	//CU::GrowingArray<Prism::Model2D*> myShieldBar;
+
+	Prism::Model2D* myHealthBar;
+	Prism::Model2D* myShieldBar;
 
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
@@ -64,6 +69,13 @@ private:
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
+
+	int myHealthBarCount;
+	int myShieldBarCount;
+
+	CU::Vector2<float> myHealthBarRenderPosition;
+	CU::Vector2<float> myShieldBarRenderPosition;
+
 
 	std::string myConversation;
 

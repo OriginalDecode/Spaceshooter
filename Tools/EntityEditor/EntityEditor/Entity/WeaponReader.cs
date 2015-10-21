@@ -20,6 +20,8 @@ namespace EntityEditor.Entity
         private WeaponData myNewWeaponData;
         private BulletData myNewBulletData;
 
+        private XMLWrapperRead myXMLWrapper = new XMLWrapperRead();
+
         public void LoadWeapons(string aWeaponListPath)
         {
             if (aWeaponListPath == "") return;
@@ -33,90 +35,75 @@ namespace EntityEditor.Entity
 
             myWeaponData.Clear();
             myWeaponPaths.myPaths.Clear();
-
-            using (XmlReader reader = XmlReader.Create(aWeaponListPath))
+            XmlDocument weaponListDoc = myXMLWrapper.Open(aWeaponListPath);
+            XmlNode rootElement = myXMLWrapper.FindFirstElement();
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(rootElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
             {
-                while(reader.Read())
-                {
-                    if(reader.NodeType == XmlNodeType.Element)
-                    {
-                        ReadWeaponList(reader);
-                    }
-                }
+                ReadWeaponList(e);
             }
+
 
             for(int i = 0; i < myWeaponPaths.myPaths.Count; ++i)
             {
                 string dataPath = StringUtilities.ConvertPathToDataFolderPath(aWeaponListPath);
                 dataPath = dataPath.Replace("Data/", "");
-                using(XmlReader reader = XmlReader.Create(dataPath + myWeaponPaths.myPaths[i]))
+                XmlDocument weaponDoc = myXMLWrapper.Open(dataPath + myWeaponPaths.myPaths[i]);
+                rootElement = myXMLWrapper.FindFirstElement();
+                XmlNode weaponElement = myXMLWrapper.FindFirstChildElement(rootElement);
+                if(rootElement.Name != "root") 
                 {
-                    while(reader.Read())
-                    {
-                        if(reader.NodeType == XmlNodeType.Element)
-                        {
-                            ReadWeaponData(reader);
-                        }
-                    }
-                    if(myNewWeaponData.myNumberOfBulletsPerShot == 0)
-                    {
-                        myNewWeaponData.myNumberOfBulletsPerShot = 1;
-                    }
-                    myNewWeaponData.myFilePath = myWeaponPaths.myPaths[i];
-                    myWeaponData.Add(myNewWeaponData);
+                    weaponElement = rootElement;
                 }
+                myXMLWrapper.ReadAttribute(weaponElement, "name", ref myNewWeaponData.myType);
+                for (XmlNode e = myXMLWrapper.FindFirstChildElement(weaponElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+                {
+                    ReadWeaponData(e);
+                }
+                if(myNewWeaponData.myNumberOfBulletsPerShot == 0)
+                {
+                    myNewWeaponData.myNumberOfBulletsPerShot = 1;
+                }
+                myNewWeaponData.myFilePath = myWeaponPaths.myPaths[i];
+                myWeaponData.Add(myNewWeaponData);
             }
         }
 
-        private void ReadWeaponList(XmlReader aReader)
+        private void ReadWeaponData(XmlNode aNode)
         {
-            if(aReader.Name == "path")
+            if (aNode.Name == "cooldown")
             {
-                aReader.MoveToAttribute("src");
-                if(myWeaponPaths.myPaths.Contains(aReader.Value) == false)
-                {
-                    myWeaponPaths.myPaths.Add(aReader.Value);
-                }
+                myXMLWrapper.ReadAttribute(aNode, "value", ref myNewWeaponData.myCooldown);
+            }
+            else if (aNode.Name == "spread")
+            {
+                myXMLWrapper.ReadAttribute(aNode, "value", ref myNewWeaponData.mySpread);
+            }
+            else if (aNode.Name == "bulletsPerShot")
+            {
+                myXMLWrapper.ReadAttribute(aNode, "value", ref myNewWeaponData.myNumberOfBulletsPerShot);
+            }
+            else if (aNode.Name == "position")
+            {
+                myXMLWrapper.ReadAttribute(aNode, "x", ref myNewWeaponData.myPosition.myX);
+                myXMLWrapper.ReadAttribute(aNode, "y", ref myNewWeaponData.myPosition.myY);
+                myXMLWrapper.ReadAttribute(aNode, "z", ref myNewWeaponData.myPosition.myZ);
+            }
+            else if (aNode.Name == "bullet")
+            {
+                myXMLWrapper.ReadAttribute(aNode, "type", ref myNewWeaponData.myBulletType);
             }
         }
 
-        private void ReadWeaponData(XmlReader aReader)
+        private void ReadWeaponList(XmlNode aNode)
         {
-            if(aReader.Name == "Weapon")
+            if (aNode.Name == "path")
             {
-                aReader.MoveToAttribute("name");
-                myNewWeaponData.myType = aReader.Value;
-            }
-            else if(aReader.Name == "cooldown")
-            {
-                aReader.MoveToAttribute("value");
-                myNewWeaponData.myCooldown = float.Parse(aReader.Value);
-            }
-            else if (aReader.Name == "spread")
-            {
-                aReader.MoveToAttribute("value");
-                myNewWeaponData.mySpread = int.Parse(aReader.Value);
-            }
-            else if (aReader.Name == "bulletsPerShot")
-            {
-                aReader.MoveToAttribute("value");
-                myNewWeaponData.myNumberOfBulletsPerShot = int.Parse(aReader.Value);
-            }
-            else if (aReader.Name == "position")
-            {
-                aReader.MoveToAttribute("x");
-                myNewWeaponData.myPosition.myX = float.Parse(aReader.Value);
-
-                aReader.MoveToAttribute("y");
-                myNewWeaponData.myPosition.myY = float.Parse(aReader.Value);
-
-                aReader.MoveToAttribute("z");
-                myNewWeaponData.myPosition.myZ = float.Parse(aReader.Value);
-            }
-            else if (aReader.Name == "bullet")
-            {
-                aReader.MoveToAttribute("type");
-                myNewWeaponData.myBulletType = aReader.Value;
+                string path = "";
+                myXMLWrapper.ReadAttribute(aNode, "src", ref path);
+                if (myWeaponPaths.myPaths.Contains(path) == false)
+                {
+                    myWeaponPaths.myPaths.Add(path);
+                }
             }
         }
 
@@ -141,72 +128,60 @@ namespace EntityEditor.Entity
 
             myBulletData.Clear();
             myBulletPaths.myPaths.Clear();
-
-            using (XmlReader reader = XmlReader.Create(aBulletListPath))
+            XmlDocument bulletListDoc = myXMLWrapper.Open(aBulletListPath);
+            XmlNode rootElement = myXMLWrapper.FindFirstElement();
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(rootElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
             {
-                while (reader.Read())
-                {
-                    if (reader.NodeType == XmlNodeType.Element)
-                    {
-                        ReadBulletList(reader);
-                    }
-                }
+                ReadBulletList(e);
             }
 
             for (int i = 0; i < myBulletPaths.myPaths.Count; ++i)
             {
                 string dataPath = StringUtilities.ConvertPathToDataFolderPath(aBulletListPath);
                 dataPath = dataPath.Replace("Data/", "");
-                using (XmlReader reader = XmlReader.Create(dataPath + myBulletPaths.myPaths[i]))
+                XmlDocument bulletDoc = myXMLWrapper.Open(dataPath + myBulletPaths.myPaths[i]);
+                rootElement = myXMLWrapper.FindFirstElement();
+                XmlNode bulletElement = myXMLWrapper.FindFirstChildElement(rootElement);
+                if (rootElement.Name != "root")
                 {
-                    while (reader.Read())
-                    {
-                        if (reader.NodeType == XmlNodeType.Element)
-                        {
-                            ReadBulletData(reader);
-                        }
-                    }
-                    myNewBulletData.myFilePath = myBulletPaths.myPaths[i];
-                    myBulletData.Add(myNewBulletData);
+                    bulletElement = rootElement;
                 }
+                myXMLWrapper.ReadAttribute(bulletElement, "type", ref myNewBulletData.myType);
+                for (XmlNode e = myXMLWrapper.FindFirstChildElement(bulletElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+                {
+                    ReadBulletData(e);
+                }
+                myNewBulletData.myFilePath = myBulletPaths.myPaths[i];
+                myBulletData.Add(myNewBulletData);
             }
         }
 
-        private void ReadBulletList(XmlReader aReader)
+        private void ReadBulletData(XmlNode aNode)
         {
-            if (aReader.Name == "path")
+            if (aNode.Name == "Entity")
             {
-                aReader.MoveToAttribute("src");
-                if (myBulletPaths.myPaths.Contains(aReader.Value) == false)
-                {
-                    myBulletPaths.myPaths.Add(aReader.Value);
-                }
+                myXMLWrapper.ReadAttribute(aNode, "type", ref myNewBulletData.myEntityType);
+            }
+            else if (aNode.Name == "maxAmount")
+            {
+                myXMLWrapper.ReadAttribute(aNode, "value", ref myNewBulletData.myMaxAmount);
+            }
+            else if (aNode.Name == "speed")
+            {
+                myXMLWrapper.ReadAttribute(aNode, "value", ref myNewBulletData.mySpeed);
             }
         }
 
-        private void ReadBulletData(XmlReader aReader)
+        private void ReadBulletList(XmlNode aNode)
         {
-            if (aReader.Name == "Projectile")
+            if (aNode.Name == "path")
             {
-                aReader.MoveToAttribute("type");
-                myNewBulletData.myType = aReader.Value;
-            }
-            else if (aReader.Name == "Entity")
-            {
-                aReader.MoveToAttribute("type");
-                myNewBulletData.myEntityType = aReader.Value;
-            }
-            else if (aReader.Name == "maxAmount")
-            {
-                aReader.MoveToAttribute("value");
-                myNewBulletData.myMaxAmount = int.Parse(aReader.Value);
-            }
-            else if (aReader.Name == "speed")
-            {
-                aReader.MoveToAttribute("value");
-                string formatedValue = aReader.Value.Replace("f", "0");
-                float floatValue = float.Parse(formatedValue, System.Globalization.CultureInfo.InvariantCulture);
-                myNewBulletData.mySpeed = floatValue;
+                string path = "";
+                myXMLWrapper.ReadAttribute(aNode, "src", ref path);
+                if (myBulletPaths.myPaths.Contains(path) == false)
+                {
+                    myBulletPaths.myPaths.Add(path);
+                }
             }
         }
 

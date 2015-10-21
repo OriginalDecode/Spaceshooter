@@ -31,6 +31,8 @@ void HealthComponent::AddHealth(int aHealthToAdd)
 			myCurrentHealth = myMaxHealth;
 		}
 	}
+
+	myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
 }
 
 void HealthComponent::RemoveHealth(int aHealthToRemove)
@@ -45,8 +47,10 @@ void HealthComponent::RemoveHealth(int aHealthToRemove)
 		else
 		{
 			myCurrentHealth -= aHealthToRemove;
-			myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
 		}
+		
+		myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
+
 	}
 }
 
