@@ -27,8 +27,6 @@ namespace EntityEditor.Panels
         private DropDownComponent myAIMode;
         private Label myAvoidanceLabel = new Label();
 
-        private bool myHasLoadedComponent = false;
-
         public AIComponentPanel(Point aLocation, Size aSize, Form aParent)
             : base(aLocation, aSize, aParent)
         {
@@ -134,15 +132,6 @@ namespace EntityEditor.Panels
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetAIComponent(myAIComponent);
-        }
-
-        private void PanelDataChanged(object sender, EventArgs e)
-        {
-            if (myHasLoadedComponent == true)
-            {
-                SaveSettings();
-                LoadSettings();
-            }
         }
     }
 }

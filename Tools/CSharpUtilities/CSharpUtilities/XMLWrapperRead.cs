@@ -11,7 +11,6 @@ namespace CSharpUtilities
     public class XMLWrapperRead
     {
         private XmlDocument myDocument = new XmlDocument();
-        private XmlReader myReader;
         public XMLWrapperRead()
         {
 
@@ -72,7 +71,15 @@ namespace CSharpUtilities
                 {
                     string formatedValue = att.Value;
                     formatedValue = formatedValue.Replace("f", "");
-                    aValue = float.Parse(formatedValue);
+                    try
+                    {
+                        aValue = float.Parse(formatedValue);
+                    }
+                    catch (FormatException)
+                    {
+                        formatedValue = formatedValue.Replace(".", ",");
+                        aValue = float.Parse(formatedValue);
+                    }
                 }
             }
         }
@@ -105,7 +112,16 @@ namespace CSharpUtilities
             {
                 if (att.Name == aAttribute)
                 {
-                    aValue = double.Parse(att.Value);
+                    string formatedValue = att.Value;
+                    try
+                    {
+                        aValue = double.Parse(formatedValue);
+                    }
+                    catch (FormatException)
+                    {
+                        formatedValue = formatedValue.Replace(".", ",");
+                        aValue = double.Parse(formatedValue);
+                    }
                 }
             }
         }
