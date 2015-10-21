@@ -58,6 +58,8 @@ public:
 	ePowerUpType GetPowerUpType() const;
 	Prism::eOctreeType GetOctreeType() const;
 
+	int GetAudioSFXID();
+
 private:
 	void operator=(Entity&) = delete;
 	CU::StaticArray<Component*, static_cast<int>(eComponentType::_COUNT)> myComponents;
@@ -73,6 +75,8 @@ private:
 	bool myRotateX;
 	bool myRotateY;
 	bool myRotateZ;
+
+	int myAudioSFXID;
 
 };
 
@@ -204,4 +208,9 @@ inline void Entity::SetShouldRotateZ(bool aShouldRotate)
 inline bool Entity::GetShouldRotateZ()
 {
 	return myRotateZ;
+}
+
+inline int Entity::GetAudioSFXID()
+{
+	return myAudioSFXID;
 }

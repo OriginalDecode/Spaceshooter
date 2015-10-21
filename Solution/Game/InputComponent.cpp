@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-
+#include <AudioInterface.h>
 #include "Constants.h"
 #include <DebugMenu.h>
 #include <DebugDataDisplay.h>
@@ -184,6 +184,11 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	{
 		myMovementSpeed -= myAcceleration * aDelta;
 	}
+
+	int soundSpeed = (myMovementSpeed / myMaxMovementSpeed) * 100;
+	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetAudioSFXID());
+	int boostSpeed = (myCurrentBoostValue / myMaxBoostValue) * 100;
+	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetAudioSFXID());
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 	myMovementSpeed += myCurrentBoostValue;

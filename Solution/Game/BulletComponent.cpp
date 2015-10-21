@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <AudioInterface.h>
 #include "BulletComponent.h"
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
@@ -38,6 +39,7 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 {
 	if (aNote.myEntity.GetAlive() == true)
 	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Rocket", myEntity.GetAudioSFXID());
 		if (aNote.myEntity.GetComponent<ShieldComponent>() != nullptr)
 		{
 			COMPONENT_LOG("Shield component found on entity. (BulletComponent)");
@@ -59,4 +61,5 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 			aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), myDamageRadius, myDamage);
 		}
 	}
+
 }
