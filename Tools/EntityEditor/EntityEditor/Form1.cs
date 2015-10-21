@@ -29,6 +29,7 @@ namespace EntityEditor
         private Panels.GraphicsComponentPanel myGraphicsComponentPanel = null;
         private Panels.HealthComponentPanel myHealthComponentPanel = null;
         private Panels.ShootingComponentPanel myShootingComponentPanel = null;
+        private Panels.PhysicsComponentPanel myPhysicsComponentPanel = null;
         private Panels.RenamePanel myRenameEntityPanel = null;
 
         public EntityEditorForm()
@@ -58,6 +59,7 @@ namespace EntityEditor
             myGraphicsComponentPanel = new Panels.GraphicsComponentPanel(panelLocation, panelSize, this);
             myHealthComponentPanel = new Panels.HealthComponentPanel(panelLocation, panelSize, this);
             myShootingComponentPanel = new Panels.ShootingComponentPanel(panelLocation, panelSize, this);
+            myPhysicsComponentPanel = new Panels.PhysicsComponentPanel(panelLocation, panelSize, this);
             myRenameEntityPanel = new Panels.RenamePanel(panelLocation, panelSize, this);
 
             PropertyPanel.Controls.Add(myAddComponentPanel);
@@ -66,6 +68,7 @@ namespace EntityEditor
             PropertyPanel.Controls.Add(myGraphicsComponentPanel);
             PropertyPanel.Controls.Add(myHealthComponentPanel);
             PropertyPanel.Controls.Add(myShootingComponentPanel);
+            PropertyPanel.Controls.Add(myPhysicsComponentPanel);
             PropertyPanel.Controls.Add(myRenameEntityPanel);
 
             HidePanels();
@@ -96,6 +99,10 @@ namespace EntityEditor
             if (myCurrentEntity.myShootingComponent.myIsActive)
             {
                 EntityContentList.Items.Add("ShootingComponent");
+            }
+            if (myCurrentEntity.myPhysicsComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("PhysicsComponent");
             }
         }
 
@@ -135,6 +142,10 @@ namespace EntityEditor
         public void SetHealthComponent(Entity.HealthComponentData aHealthComponent)
         {
             myCurrentEntity.myHealthComponent = aHealthComponent;
+        }
+        public void SetPhysicsComponent(Entity.PhysicsComponentData aPhysicsComponent)
+        {
+            myCurrentEntity.myPhysicsComponent = aPhysicsComponent;
         }
         //Set Components To EntityData End
 
@@ -205,6 +216,12 @@ namespace EntityEditor
                 myCurrentEntity.myHealthComponent.myHealth = 0;
                 return;
             }
+            if (aComponentName.StartsWith("Physics") == true)
+            {
+                myCurrentEntity.myPhysicsComponent.myIsActive = false;
+                myCurrentEntity.myPhysicsComponent.myWeight = 0;
+                return;
+            }
         }
 
         private void HidePanels()
@@ -215,6 +232,7 @@ namespace EntityEditor
             myGraphicsComponentPanel.Hide();
             myHealthComponentPanel.Hide();
             myShootingComponentPanel.Hide();
+            myPhysicsComponentPanel.Hide();
             myRenameEntityPanel.Hide();
         }
 
@@ -249,6 +267,12 @@ namespace EntityEditor
             {
                 myHealthComponentPanel.Show();
                 myHealthComponentPanel.Load(myCurrentEntity.myHealthComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("Physics") == true)
+            {
+                myPhysicsComponentPanel.Show();
+                myPhysicsComponentPanel.Load(myCurrentEntity.myPhysicsComponent);
                 return;
             }
         }

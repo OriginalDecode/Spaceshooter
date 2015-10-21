@@ -12,7 +12,7 @@ namespace EntityEditor.Panels
     {
         protected Label myPropertyTitle = new Label();
         protected Form myOwnerForm;
-
+        protected bool myHasLoadedComponent = false;
         public BasePanel(Point aLocation, Size aSize, Form aParent)
         {
             myOwnerForm = aParent;
@@ -34,5 +34,13 @@ namespace EntityEditor.Panels
         abstract protected void IntitalizeControls();
         abstract protected void LoadSettings();
         abstract protected void SaveSettings();
+        protected void PanelDataChanged(object sender, EventArgs e)
+        {
+            if (myHasLoadedComponent == true)
+            {
+                SaveSettings();
+                LoadSettings();
+            }
+        }
     }
 }

@@ -372,6 +372,12 @@
     <ClInclude Include="MissionContainer.h">
       <Filter>Mission</Filter>
     </ClInclude>
+    <ClInclude Include="HealthNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="ShieldNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
