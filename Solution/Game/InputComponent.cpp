@@ -185,9 +185,9 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		myMovementSpeed -= myAcceleration * aDelta;
 	}
 
-	int soundSpeed = (myMovementSpeed / myMaxMovementSpeed) * 100;
+	int soundSpeed = static_cast<int>((myMovementSpeed / myMaxMovementSpeed) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetAudioSFXID());
-	int boostSpeed = (myCurrentBoostValue / myMaxBoostValue) * 100;
+	int boostSpeed = static_cast<int>((myCurrentBoostValue / myMaxBoostValue) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetAudioSFXID());
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);

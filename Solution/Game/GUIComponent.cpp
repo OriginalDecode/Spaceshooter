@@ -312,7 +312,7 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 	}
 }
 
-void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
+void GUIComponent::ReceiveMessage(const ResizeMessage&)
 {
 
 }
