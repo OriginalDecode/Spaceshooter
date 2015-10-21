@@ -62,7 +62,24 @@ void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 
 	if (aMessage.GetEntityType() == eEntityType::PLAYER)
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
+		if (aMessage.GetBulletType() == eBulletType::MACHINGUN_BULLET_LEVEL_1
+			|| aMessage.GetBulletType() == eBulletType::MACHINGUN_BULLET_LEVEL_2
+			|| aMessage.GetBulletType() == eBulletType::MACHINGUN_BULLET_LEVEL_3)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", 0);
+		}
+		if (aMessage.GetBulletType() == eBulletType::SHOTGUN_BULLET_LEVEL_1
+			|| aMessage.GetBulletType() == eBulletType::SHOTGUN_BULLET_LEVEL_2
+			|| aMessage.GetBulletType() == eBulletType::SHOTGUN_BULLET_LEVEL_3)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", 0);
+		}
+		if (aMessage.GetBulletType() == eBulletType::ROCKET_MISSILE_LEVEL_1
+			|| aMessage.GetBulletType() == eBulletType::ROCKET_MISSILE_LEVEL_2
+			|| aMessage.GetBulletType() == eBulletType::ROCKET_MISSILE_LEVEL_3)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", 0);
+		}
 	}
 }
 
