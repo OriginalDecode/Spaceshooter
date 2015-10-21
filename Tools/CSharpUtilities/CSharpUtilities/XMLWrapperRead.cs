@@ -5,11 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Globalization;
 
 namespace CSharpUtilities
 {
     public class XMLWrapperRead
     {
+        private NumberFormatInfo myNumberFormat = new CultureInfo("en-US", false).NumberFormat;
         private XmlDocument myDocument = new XmlDocument();
         public XMLWrapperRead()
         {
@@ -73,12 +75,12 @@ namespace CSharpUtilities
                     formatedValue = formatedValue.Replace("f", "");
                     try
                     {
-                        aValue = float.Parse(formatedValue);
+                        aValue = float.Parse(formatedValue, myNumberFormat);
                     }
                     catch (FormatException)
                     {
                         formatedValue = formatedValue.Replace(".", ",");
-                        aValue = float.Parse(formatedValue);
+                        aValue = float.Parse(formatedValue, myNumberFormat);
                     }
                 }
             }
@@ -90,7 +92,7 @@ namespace CSharpUtilities
             {
                 if (att.Name == aAttribute)
                 {
-                    aValue = int.Parse(att.Value);
+                    aValue = int.Parse(att.Value, myNumberFormat);
                 }
             }
         }
@@ -115,12 +117,12 @@ namespace CSharpUtilities
                     string formatedValue = att.Value;
                     try
                     {
-                        aValue = double.Parse(formatedValue);
+                        aValue = double.Parse(formatedValue, myNumberFormat);
                     }
                     catch (FormatException)
                     {
                         formatedValue = formatedValue.Replace(".", ",");
-                        aValue = double.Parse(formatedValue);
+                        aValue = double.Parse(formatedValue, myNumberFormat);
                     }
                 }
             }
