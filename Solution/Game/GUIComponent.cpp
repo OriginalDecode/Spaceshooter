@@ -7,6 +7,7 @@
 #include "GUIComponent.h"
 #include "GUINote.h"
 #include "HealthComponent.h"
+#include "HealthNote.h"
 #include "MissionNote.h"
 #include <Model2D.h>
 #include "PostMaster.h"
@@ -29,6 +30,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCamera(nullptr)
 	, myPowerUpArrow(new Prism::Model2D)
 	, myPowerUpMarker(new Prism::Model2D)
+	, myDefendMarker(new Prism::Model2D)
+	, myDefendArrow(new Prism::Model2D)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
@@ -45,7 +48,18 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myWaypointMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds", arrowAndMarkerSize);
 	myPowerUpArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_powerup.dds", arrowAndMarkerSize);
 	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
-}	 
+	myDefendMarker->Init("Data/Resource/Texture/UI/T_defend_marker.dds", arrowAndMarkerSize);
+	myDefendArrow->Init("Data/Resource/Texture/UI/T_defend_arrow.dds", arrowAndMarkerSize);
+
+	myHealthBar.Init(20);
+	for (int i = 0; i < myHealthBar.GetCapacity(); ++i)
+	{
+		Prism::Model2D *bar;
+		bar = new Prism::Model2D;
+		bar->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { 32.f, 32.f });
+		myHealthBar.Add(bar);
+	}
+}
 
 GUIComponent::~GUIComponent()
 {
@@ -61,6 +75,11 @@ GUIComponent::~GUIComponent()
 	delete myPowerUpArrow;
 	delete myPowerUpMarker;
 	delete myModel2DToRender;
+	delete myDefendMarker;
+	delete myDefendArrow;
+	myReticle = nullptr;
+	myPowerUpArrow = nullptr;
+	myPowerUpMarker = nullptr;
 	myWaypointMarker = nullptr;
 	myWaypointArrow = nullptr;
 	mySteeringTarget = nullptr;
@@ -68,6 +87,12 @@ GUIComponent::~GUIComponent()
 	myEnemyMarker = nullptr;
 	myEnemyArrow = nullptr;
 	myModel2DToRender = nullptr;
+	myDefendArrow = nullptr;
+	myDefendMarker = nullptr;
+
+	myHealthBar.DeleteAll();
+
+
 }
 
 void GUIComponent::Init(float aMaxDistanceToEnemies)
@@ -79,7 +104,7 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 void GUIComponent::Update(float aDeltaTime)
 {
 	aDeltaTime;
-	
+
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
@@ -172,8 +197,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
-		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget " 
-			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": " 
+		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget "
+			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": "
 			+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
 			, { halfWidth, -halfHeight });
 	}
@@ -195,8 +220,18 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CalculateAndRender(myPowerUpPositions[i], myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, true);
 	}
 
+	if (myEnemiesTarget != nullptr)
+	{
+		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
+	}
+
 	myEnemiesPosition.RemoveAll();
 	myPowerUpPositions.RemoveAll();
+
+	for (int i = 0; i < 0; ++i)
+	{
+		myHealthBar[i]->Render(32.f + (i*13.f) , -32.f);
+	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 	//Prism::Engine::GetInstance()->DisableAlpaBlending();
@@ -235,7 +270,6 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 	}
 }
 
-
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
 {
 	myConversation = aMessage.myText;
@@ -251,4 +285,9 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 	{
 		myEnemiesTarget = nullptr;
 	}
+}
+
+void GUIComponent::ReceiveNote(const HealthNote& aNote)
+{
+
 }

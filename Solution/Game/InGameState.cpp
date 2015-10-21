@@ -38,7 +38,7 @@ InGameState::~InGameState()
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
-	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper, true);
+	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper);
 	myIsLetThrough = false;
 	myIsComplete = false;
 	myStateStack = aStateStackProxy;
@@ -65,10 +65,6 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 		}
 
 		return eStateStatus::ePopMainState;
-	}
-	else if (myInputWrapper->KeyDown(DIK_R))
-	{
-		myLevel->SetRenderStuff(!myLevel->GetRenderStuff());
 	}
 
 	if (myLevel->LogicUpdate(aDeltaTime) == true)
@@ -114,7 +110,7 @@ void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::RELOAD_LEVEL:
-		myLevel = myLevelFactory->ReloadLevel();
+		myLevel = myLevelFactory->LoadCurrentLevel();
 		break;
 
 	case eGameState::COMPLETE_LEVEL:

@@ -23,6 +23,7 @@ namespace Prism
 		void Initiate(EmitterData someData);
 		void Render(Camera* aCamera);
 		void Update(float aDeltaTime);
+		void SetPosition(const CU::Vector3f& aPosition);
 
 	private:
 
@@ -34,14 +35,18 @@ namespace Prism
 
 		void EmittParticle();
 
-		CU::GrowingArray<ParticleInstance> myParticles;
+		CU::GrowingArray<LogicalParticle> myLogicalParticles;
+		CU::GrowingArray<GraphicalParticle> myGraphicalParticles;
+
+		CU::Vector3f myDiffColor;
+
 		CU::Matrix44f myOrientation;
 
 		EmitterData myEmitterData;
 		VertexBufferWrapper *myVertexWrapper;
 
 		float myEmissionTime;
-		int myLiveParticles;
+		int myParticleIndex;
 
 	};
 }

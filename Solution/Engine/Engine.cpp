@@ -52,6 +52,8 @@ namespace Prism
 		{
 			//wait for ModelLoader to exit its loading-loop
 		}
+		myModelLoader->Shutdown();
+		myModelLoaderThread->join();
 		delete myModelLoader;
 
 		delete myDirectX;
@@ -75,13 +77,6 @@ namespace Prism
 	Engine* Engine::GetInstance()
 	{
 		return myInstance;
-	}
-
-	void Engine::ShutdownThreadedLoading()
-	{
-		myModelLoader->Shutdown();
-		myModelLoaderThread->join();
-
 	}
 
 	void Engine::Render()

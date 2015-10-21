@@ -23,9 +23,14 @@ public:
 
 	void ReceiveMessage(const EventQueueEmptyMessage&) override;
 private:
+
+	void SortCopy(CU::GrowingArray<Mission*>& someOut, const CU::GrowingArray<Mission*>& someIn) const;
+	void Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions);
+
 	CU::GrowingArray<Mission*> myRequiredMissions;
 	CU::GrowingArray<Mission*> myOptionalMissions;
-	CU::GrowingArray<Mission*> myActiveMissions;
+	CU::GrowingArray<Mission*> myRequiredActiveMissions;
+	CU::GrowingArray<Mission*> myOptionalActiveMissions;
 	CU::GrowingArray<Mission*> myEndingMissions;
 };
 
