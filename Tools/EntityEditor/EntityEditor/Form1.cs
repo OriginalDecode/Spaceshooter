@@ -25,6 +25,7 @@ namespace EntityEditor
 
         private Panels.AddComponentPanel myAddComponentPanel = null;
         private Panels.AIComponentPanel myAIComponentPanel = null;
+        private Panels.BulletComponentPanel myBulletComponentPanel = null;
         private Panels.CollisionComponentPanel myCollisionComponentPanel = null;
         private Panels.GraphicsComponentPanel myGraphicsComponentPanel = null;
         private Panels.HealthComponentPanel myHealthComponentPanel = null;
@@ -55,6 +56,7 @@ namespace EntityEditor
 
             myAddComponentPanel = new Panels.AddComponentPanel(panelLocation, panelSize, this);
             myAIComponentPanel = new Panels.AIComponentPanel(panelLocation, panelSize, this);
+            myBulletComponentPanel = new Panels.BulletComponentPanel(panelLocation, panelSize, this);
             myCollisionComponentPanel = new Panels.CollisionComponentPanel(panelLocation, panelSize, this);
             myGraphicsComponentPanel = new Panels.GraphicsComponentPanel(panelLocation, panelSize, this);
             myHealthComponentPanel = new Panels.HealthComponentPanel(panelLocation, panelSize, this);
@@ -64,6 +66,7 @@ namespace EntityEditor
 
             PropertyPanel.Controls.Add(myAddComponentPanel);
             PropertyPanel.Controls.Add(myAIComponentPanel);
+            PropertyPanel.Controls.Add(myBulletComponentPanel);
             PropertyPanel.Controls.Add(myCollisionComponentPanel);
             PropertyPanel.Controls.Add(myGraphicsComponentPanel);
             PropertyPanel.Controls.Add(myHealthComponentPanel);
@@ -103,6 +106,10 @@ namespace EntityEditor
             if (myCurrentEntity.myPhysicsComponent.myIsActive)
             {
                 EntityContentList.Items.Add("PhysicsComponent");
+            }
+            if (myCurrentEntity.myBulletComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("BulletComponent");
             }
         }
 
@@ -146,6 +153,10 @@ namespace EntityEditor
         public void SetPhysicsComponent(Entity.PhysicsComponentData aPhysicsComponent)
         {
             myCurrentEntity.myPhysicsComponent = aPhysicsComponent;
+        }
+        public void SetBulletComponent(Entity.BulletComponentData aBulletComponent)
+        {
+            myCurrentEntity.myBulletComponent = aBulletComponent;
         }
         //Set Components To EntityData End
 
@@ -222,12 +233,20 @@ namespace EntityEditor
                 myCurrentEntity.myPhysicsComponent.myWeight = 0;
                 return;
             }
+            if (aComponentName.StartsWith("Bullet") == true)
+            {
+                myCurrentEntity.myBulletComponent.myIsActive = false;
+                myCurrentEntity.myBulletComponent.myLifeTime = 0;
+                myCurrentEntity.myBulletComponent.myDamage = 0;
+                return;
+            }
         }
 
         private void HidePanels()
         {
             myAddComponentPanel.Hide();
             myAIComponentPanel.Hide();
+            myBulletComponentPanel.Hide();
             myCollisionComponentPanel.Hide();
             myGraphicsComponentPanel.Hide();
             myHealthComponentPanel.Hide();
@@ -273,6 +292,12 @@ namespace EntityEditor
             {
                 myPhysicsComponentPanel.Show();
                 myPhysicsComponentPanel.Load(myCurrentEntity.myPhysicsComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("Bullet") == true)
+            {
+                myBulletComponentPanel.Show();
+                myBulletComponentPanel.Load(myCurrentEntity.myBulletComponent);
                 return;
             }
         }

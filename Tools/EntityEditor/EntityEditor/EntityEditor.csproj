@@ -53,6 +53,9 @@
     <Compile Include="Panels\BasePanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Panels\BulletComponentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Panels\CollisionComponentPanel.cs">
       <SubType>Component</SubType>
     </Compile>

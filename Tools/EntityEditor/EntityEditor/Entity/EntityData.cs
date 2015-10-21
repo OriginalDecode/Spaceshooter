@@ -12,6 +12,7 @@ namespace EntityEditor.Entity
         public string myName;
 
         public AIComponentData myAIComponent;
+        public BulletComponentData myBulletComponent;
         public CollisionComponentData myCollisionComponent;
         public GraphicsComponentData myGraphicsComponent;
         public ShootingComponentData myShootingComponent;
@@ -63,6 +64,14 @@ namespace EntityEditor.Entity
         public bool myIsActive;
 
         public float myWeight;
+    }
+
+    public struct BulletComponentData
+    {
+        public bool myIsActive;
+
+        public float myLifeTime;
+        public float myDamage;
     }
 
     public struct CollisionComponentData
