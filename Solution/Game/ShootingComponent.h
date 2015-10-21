@@ -49,8 +49,9 @@ private:
 	bool myHasWeapon;
 	ePowerUpType myPowerUpType;
 
-	float myPowerUpRadius;
+	float myPowerUpValue;
 	float myPowerUpDuration;
+	float myPowerUpCoolDownReducer;
 };
 
 inline eComponentType ShootingComponent::GetType()
@@ -70,7 +71,7 @@ inline void ShootingComponent::SetCurrentWeaponID(int anID)
 
 inline void ShootingComponent::ActivateEMP()
 {
-	myPowerUpRadius = 1000.f;
+	myPowerUpValue = 1000.f;
 	myPowerUpDuration = 5.f;
 }
 

@@ -22,8 +22,9 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, Component(aEntity)
 	, myHasWeapon(false)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
-	, myPowerUpRadius(0.f)
+	, myPowerUpValue(0.f)
 	, myPowerUpDuration(0.f)
+	, myPowerUpCoolDownReducer(1.f)
 {
 }
 
@@ -31,13 +32,13 @@ void ShootingComponent::Update(float aDeltaTime)
 {
 	if (myHasWeapon == true)
 	{
-		if (myWeapons[myCurrentWeaponID].myCurrentTime >= myWeapons[myCurrentWeaponID].myCoolDownTime)
+		if (myWeapons[myCurrentWeaponID].myCurrentTime >= (myWeapons[myCurrentWeaponID].myCoolDownTime))
 		{
 			myWeapons[myCurrentWeaponID].myCurrentTime = myWeapons[myCurrentWeaponID].myCoolDownTime;
 		}
 		else
 		{
-			myWeapons[myCurrentWeaponID].myCurrentTime += myWeapons[myCurrentWeaponID].myMultiplier * aDeltaTime;
+			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime * myPowerUpCoolDownReducer;
 		}
 	}
 
@@ -47,8 +48,9 @@ void ShootingComponent::Update(float aDeltaTime)
 		if (myPowerUpDuration <= 0.f)
 		{
 			myPowerUpType = ePowerUpType::NO_POWERUP;
+			myPowerUpCoolDownReducer = 1.f;
 			myPowerUpDuration = 0.f;
-			myPowerUpRadius = 0.f;
+			myPowerUpValue = 0.f;
 		}
 	}
 }
@@ -106,8 +108,8 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 	else
 	{
 		myPowerUpType = ePowerUpType::NO_POWERUP;
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), myPowerUpRadius, myPowerUpDuration));
-		myPowerUpRadius = 0.f;
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), myPowerUpValue, myPowerUpDuration));
+		myPowerUpValue = 0.f;
 		myPowerUpDuration = 0.f;
 	}
 }
@@ -119,11 +121,16 @@ void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 
 void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	if (aNote.myType == ePowerUpType::FIRERATEBOOST 
-		|| aNote.myType == ePowerUpType::EMP 
+	if (aNote.myType == ePowerUpType::EMP 
 		|| aNote.myType == ePowerUpType::HOMING)
 	{
-		myPowerUpRadius = aNote.myValue;
+		myPowerUpValue = aNote.myValue;
+		myPowerUpDuration = aNote.myDuration;
+		myPowerUpType = aNote.myType;
+	}
+	else if (aNote.myType == ePowerUpType::FIRERATEBOOST)
+	{
+		myPowerUpCoolDownReducer = aNote.myValue;
 		myPowerUpDuration = aNote.myDuration;
 		myPowerUpType = aNote.myType;
 	}
