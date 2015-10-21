@@ -26,14 +26,14 @@ KillXEnemiesAbortMission::~KillXEnemiesAbortMission()
 	}
 }
 
-bool KillXEnemiesAbortMission::Update(float aDeltaTime)
+bool KillXEnemiesAbortMission::Update(float aDeltaTime, int aMissionIndex)
 {
 	aDeltaTime;
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
 	std::stringstream ss;
 	ss << "Current mission: Kill " << myEnemiesToKillVisual << " enemies (abort).";
-	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
+	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
 
 
 	return myEnemiesToKillReal <= 0;

@@ -114,19 +114,19 @@ MissionContainer::~MissionContainer()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::EVENT_QUEUE_EMPTY, this);
 }
 
-bool MissionContainer::Update(float aDeltaTime)
+bool MissionContainer::Update(float aDeltaTime, int)
 {
-	Update(aDeltaTime, myRequiredActiveMissions);
-	Update(aDeltaTime, myOptionalActiveMissions);
+	Update(aDeltaTime, myRequiredActiveMissions, 0);
+	Update(aDeltaTime, myOptionalActiveMissions, myRequiredActiveMissions.Size());
 
 	return myRequiredActiveMissions.Size() <= 0 && myEndingMissions.Size() <= 0;
 }
 
-void MissionContainer::Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions)
+void MissionContainer::Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions, int aOffset)
 {
 	for (int i = someMissions.Size() - 1; i >= 0; --i)
 	{
-		if (someMissions[i]->Update(aDeltaTime) == true)
+		if (someMissions[i]->Update(aDeltaTime, i + aOffset) == true)
 		{
 			if (someMissions[i]->EventsEnd() == true)
 			{

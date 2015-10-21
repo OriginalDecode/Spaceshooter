@@ -17,7 +17,7 @@ public:
 	MissionContainer(Level& aLevel, Entity& aPlayer, XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	~MissionContainer();
 
-	bool Update(float aDeltaTime) override;
+	bool Update(float aDeltaTime, int aMissionIndex) override;
 	void Start() override;
 	void End() override;
 
@@ -25,7 +25,7 @@ public:
 private:
 
 	void SortCopy(CU::GrowingArray<Mission*>& someOut, const CU::GrowingArray<Mission*>& someIn) const;
-	void Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions);
+	void Update(float aDeltaTime, CU::GrowingArray<Mission*>& someMissions, int aOffset);
 
 	CU::GrowingArray<Mission*> myRequiredMissions;
 	CU::GrowingArray<Mission*> myOptionalMissions;

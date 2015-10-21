@@ -14,7 +14,7 @@ class KillAllAbortMission : public Mission
 public:
 	KillAllAbortMission(Level& aLevel, XMLReader& aReader, tinyxml2::XMLElement* aElement);
 
-	bool Update(float aDeltaTime) override;
+	bool Update(float aDeltaTime, int aMissionIndex) override;
 
 private:
 	bool operator=(KillAllAbortMission&) = delete;

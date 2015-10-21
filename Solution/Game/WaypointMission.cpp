@@ -25,12 +25,12 @@ WaypointMission::~WaypointMission()
 {
 }
 
-bool WaypointMission::Update(float)
+bool WaypointMission::Update(float, int aMissionIndex)
 {
 
 	Prism::Engine* engine = Prism::Engine::GetInstance();
-	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
-	engine->PrintDebugText("Current mission: GO TO WAYPOINT!", { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
+	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y  * 0.5f);
+	engine->PrintDebugText("Current mission: GO TO WAYPOINT!", { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
 
 	myPlayer.SendNote<GUINote>(GUINote(myTrigger->myOrientation.GetPos(), eGUINoteType::WAYPOINT));
 
