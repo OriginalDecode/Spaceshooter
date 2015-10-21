@@ -29,6 +29,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCamera(nullptr)
 	, myPowerUpArrow(new Prism::Model2D)
 	, myPowerUpMarker(new Prism::Model2D)
+	, myDefendMarker(new Prism::Model2D)
+	, myDefendArrow(new Prism::Model2D)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
@@ -45,7 +47,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myWaypointMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds", arrowAndMarkerSize);
 	myPowerUpArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_powerup.dds", arrowAndMarkerSize);
 	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
-}	 
+	myDefendMarker->Init("Data/Resource/Texture/UI/T_defend_marker.dds", arrowAndMarkerSize);
+	myDefendArrow->Init("Data/Resource/Texture/UI/T_defend_arrow.dds", arrowAndMarkerSize);
+}
 
 GUIComponent::~GUIComponent()
 {
@@ -61,6 +65,11 @@ GUIComponent::~GUIComponent()
 	delete myPowerUpArrow;
 	delete myPowerUpMarker;
 	delete myModel2DToRender;
+	delete myDefendMarker;
+	delete myDefendArrow;
+	myReticle = nullptr;
+	myPowerUpArrow = nullptr;
+	myPowerUpMarker = nullptr;
 	myWaypointMarker = nullptr;
 	myWaypointArrow = nullptr;
 	mySteeringTarget = nullptr;
@@ -68,6 +77,8 @@ GUIComponent::~GUIComponent()
 	myEnemyMarker = nullptr;
 	myEnemyArrow = nullptr;
 	myModel2DToRender = nullptr;
+	myDefendArrow = nullptr;
+	myDefendMarker = nullptr;
 }
 
 void GUIComponent::Init(float aMaxDistanceToEnemies)
@@ -79,7 +90,7 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 void GUIComponent::Update(float aDeltaTime)
 {
 	aDeltaTime;
-	
+
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
@@ -172,8 +183,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
-		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget " 
-			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": " 
+		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget "
+			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": "
 			+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
 			, { halfWidth, -halfHeight });
 	}
@@ -193,6 +204,11 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	for (int i = 0; i < myPowerUpPositions.Size(); ++i)
 	{
 		CalculateAndRender(myPowerUpPositions[i], myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, true);
+	}
+
+	if (myEnemiesTarget != nullptr)
+	{
+		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
 	}
 
 	myEnemiesPosition.RemoveAll();

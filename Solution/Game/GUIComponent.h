@@ -40,6 +40,8 @@ private:
 	Prism::Model2D* myEnemyMarker;
 	Prism::Model2D* myWaypointMarker;
 	Prism::Model2D* myWaypointArrow;
+	Prism::Model2D* myDefendMarker;
+	Prism::Model2D* myDefendArrow;
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
 	CU::Vector2<float> mySteeringTargetPosition;
