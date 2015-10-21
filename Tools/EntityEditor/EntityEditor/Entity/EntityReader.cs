@@ -102,6 +102,26 @@ namespace EntityEditor
                 myEntityData.myPhysicsComponent.myIsActive = true;
                 ReadPhysicsComponent(aNode);
             }
+            else if (aNode.Name == "BulletComponent")
+            {
+                myEntityData.myBulletComponent.myIsActive = true;
+                ReadBulletComponent(aNode);
+            }
+        }
+
+        private void ReadBulletComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "lifeTime")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myBulletComponent.myLifeTime);
+                }
+                if (e.Name == "damage")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myBulletComponent.myDamage);
+                }
+            }
         }
 
         private void ReadPhysicsComponent(XmlNode aNode)

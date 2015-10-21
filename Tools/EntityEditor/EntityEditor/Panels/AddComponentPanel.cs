@@ -17,7 +17,8 @@ namespace EntityEditor.Panels
         GraphicsComponent,
         ShootingComponent,
         HealthComponent,
-        PhysicsComponent
+        PhysicsComponent,
+        BulletComponent
     };
 
     public class AddComponentPanel : BasePanel
@@ -80,6 +81,10 @@ namespace EntityEditor.Panels
             {
                 myComponents.AddItem(eComponentType.PhysicsComponent);
             }
+            if (myEntity.myBulletComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.BulletComponent);
+            }
         }
 
         protected override void SaveSettings()
@@ -109,6 +114,10 @@ namespace EntityEditor.Panels
             {
                 eForm.SetPhysicsComponent(myEntity.myPhysicsComponent);
             }
+            if (myEntity.myBulletComponent.myIsActive == true)
+            {
+                eForm.SetBulletComponent(myEntity.myBulletComponent);
+            }
             eForm.DisplayEntityData();
         }
 
@@ -135,6 +144,9 @@ namespace EntityEditor.Panels
                     break;
                 case eComponentType.PhysicsComponent:
                     myEntity.myPhysicsComponent.myIsActive = true;
+                    break;
+                case eComponentType.BulletComponent:
+                    myEntity.myBulletComponent.myIsActive = true;
                     break;
                 default:
                     DL_Debug.GetInstance.DL_ErrorMessage("The component " 

@@ -108,7 +108,23 @@ namespace EntityEditor.Entity
             {
                 WritePhysicsComponent(aWriter);
             }
+            if (myEntityData.myBulletComponent.myIsActive == true)
+            {
+                WriteBulletComponent(aWriter);
+            }
 
+            aWriter.WriteEndElement();
+            aWriter.WriteEndElement();
+        }
+
+        private void WriteBulletComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("BulletComponent");
+            aWriter.WriteStartElement("lifeTime");
+            aWriter.WriteAttributeString("value", myEntityData.myBulletComponent.myLifeTime.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("damage");
+            aWriter.WriteAttributeString("value", myEntityData.myBulletComponent.myDamage.ToString());
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
