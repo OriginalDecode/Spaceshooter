@@ -324,8 +324,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 
 void GUIComponent::ReceiveNote(const HealthNote& aNote)
 {
-	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) *
-		20 + 0.5f)));
+	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) * 20 + 0.5f)));
 }
 
 void GUIComponent::ReceiveNote(const ShieldNote& aNote)
@@ -402,4 +401,10 @@ void GUIComponent::ReadXML()
 
 	myBarSize = (myOriginalBarSize * offset);
 
+}
+
+void GUIComponent::Reset()
+{
+	myHealthBarCount = 20;
+	myShieldBarCount = 20;
 }

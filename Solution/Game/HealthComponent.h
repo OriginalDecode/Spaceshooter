@@ -10,6 +10,8 @@ public:
 	void AddHealth(int aHealthToAdd);
 	void RemoveHealth(int aHealthToRemove);
 
+	void Update(float aDeltaTime) override;
+
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	bool IsAlive() const;
@@ -26,7 +28,10 @@ private:
 
 	int myMaxHealth;
 	int myCurrentHealth;
+
 	bool myIsInvulnerable;
+	float myInvulnerablityTimeMax;
+	float myInvulnerablityTimeCurrent;
 };
 
 inline bool HealthComponent::IsAlive() const
