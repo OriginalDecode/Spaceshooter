@@ -40,7 +40,6 @@ private:
 	InGameState* myGame;
 
 	bool myLockMouse;
-	bool myCanWinGame;
 	bool myShowMessages;
 
 	CU::Vector2<int> myWindowSize;

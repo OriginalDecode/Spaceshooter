@@ -27,6 +27,7 @@ public:
 	bool IsLastLevel() const;
 	void LoadLevelListFromXML(const std::string& aXMLPath); 
 	void ReadXML(const std::string& aFilePath);
+	void ReadLevelSettings();
 
 private:
 

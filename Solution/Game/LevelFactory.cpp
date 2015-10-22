@@ -117,6 +117,10 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 		{
 			DL_ASSERT("[LevelFactory] Wrong ID-number in levelList.xml! The numbers should be counting up, in order.");
 		}
+		if (myCurrentID >= 10)
+		{
+			DL_ASSERT("[LevelFactory] Can't handle level ID with two digits.");
+		}
 	}
 	reader.CloseDocument();
 }
@@ -136,11 +140,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
-
-	Prism::DirectionalLight* dirLight = new Prism::DirectionalLight();
-	dirLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
-	dirLight->SetDir({ 0.f, 0.5f, -1.f });
-	myDirectionalLights.Add(dirLight);
 
 	LoadPlayer();
 
@@ -201,6 +200,27 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	AddToScene();
 
 	myCurrentLevel->myMissionManager->Init();
+}
+
+void LevelFactory::ReadLevelSettings()
+{
+	XMLReader reader;
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml";
+	reader.OpenDocument(settingsPath);
+
+	std::string firstWeapon;
+	std::string secondWeapon;
+	std::string thirdWeapon;
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
+
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon)); // replace these with UpgradeWeapon later
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+
+	reader.CloseDocument();
 }
 
 void LevelFactory::LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
@@ -317,15 +337,12 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 
 void LevelFactory::LoadPlayer()
 {
+
 	Entity* player = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
 	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
 		, "Data/Resource/Shader/S_effect_pbl.fx");
 	player->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	player->AddComponent<ShootingComponent>();
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("machineGun1"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("shotgun1"));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("rocket1"));
-	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	player->AddComponent<ShieldComponent>()->Init();
 	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
@@ -345,11 +362,12 @@ void LevelFactory::LoadPlayer()
 	player->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
+	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 
 	reader.CloseDocument();
-
-	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 	myCurrentLevel->myPlayer = player;
+	ReadLevelSettings();
+	
 }
 
 void LevelFactory::AddToScene()

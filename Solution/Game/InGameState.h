@@ -37,6 +37,7 @@ public:
 
 	void CompleteLevel();
 	void CompleteGame();
+	void LoadLevelSettings();
 
 private:
 	void ShowMessage(const std::string& aBackgroundPath, const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage = nullptr);

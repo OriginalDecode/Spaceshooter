@@ -24,12 +24,16 @@ namespace Prism
 			void SetListenerPosition(float aX, float aY, float aZ);
 
 			void RegisterObject(int anObjectID);
+			void UnRegisterObject(int aObjectID);
 			typedef void(*callback_function)(const char*);
 			void SetErrorCallBack(callback_function aErrorCallback);
+
+			int GetUniqueID();
 		private:
 			static AudioInterface* myInstance;
 			AudioInterface();
 			~AudioInterface();
+
 
 			WwiseManager* myWwiseManager;
 		};

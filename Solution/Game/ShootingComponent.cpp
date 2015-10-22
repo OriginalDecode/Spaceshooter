@@ -124,15 +124,17 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	if (aNote.myType == ePowerUpType::EMP 
 		|| aNote.myType == ePowerUpType::HOMING)
 	{
-		myPowerUpValue = aNote.myValue;
+		myPowerUpCoolDownReducer = 1.f;
 		myPowerUpDuration = aNote.myDuration;
 		myPowerUpType = aNote.myType;
+		myPowerUpValue = aNote.myValue;
 	}
 	else if (aNote.myType == ePowerUpType::FIRERATEBOOST)
 	{
 		myPowerUpCoolDownReducer = aNote.myValue;
 		myPowerUpDuration = aNote.myDuration;
 		myPowerUpType = aNote.myType;
+		myPowerUpValue = 0.f;
 	}
 }
 

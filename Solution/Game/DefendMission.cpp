@@ -51,7 +51,7 @@ void DefendMission::Start()
 	myVisualTime = myVisualTimeStart;
 }
 
-bool DefendMission::Update(float aDeltaTime)
+bool DefendMission::Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory)
 {
 	DL_ASSERT_EXP(myEntityToDefend != nullptr, "Could not find entity to defend: " + myNameToDefend);
 
@@ -66,10 +66,15 @@ bool DefendMission::Update(float aDeltaTime)
 		ss << "Current mission: DEFEND (abort) for: (visual) " << myVisualTime << " (real) " << myRealTime << " seconds";
 	}
 
+	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
+	{
+		ss << " (Optional)";
+	}
+
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
 
-	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, -(screenCenter.y) + screenCenter.y * 0.5f });
+	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
 	myRealTime -= aDeltaTime;
 	myVisualTime -= aDeltaTime;
 	return myRealTime <= 0.f;

@@ -51,6 +51,7 @@ namespace Prism
 
 		WwiseManager::WwiseManager()
 			:myErrorCallbck(nullptr)
+			, myCurrentID(0)
 		{
 		}
 
@@ -313,5 +314,18 @@ namespace Prism
 				myErrorCallbck(aError);
 			}
 		}
+
+		int WwiseManager::RegisterAndGetID()
+		{
+			myCurrentID++;
+			RegisterObject(myCurrentID);
+			return myCurrentID;
+		}
+
+		void WwiseManager::UnRegister(int aObjectID)
+		{
+			AK::SoundEngine::UnregisterGameObj(aObjectID);
+		}
+
 	}
 }

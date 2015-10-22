@@ -326,7 +326,7 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 	}
 }
 
-void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
+void GUIComponent::ReceiveMessage(const ResizeMessage&)
 {
 	float offset = aMessage.GetResolution().y / static_cast<float>(aMessage.GetResolution().x);
 	
