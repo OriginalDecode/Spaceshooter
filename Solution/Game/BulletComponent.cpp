@@ -1,11 +1,13 @@
 #include "stdafx.h"
 #include <AudioInterface.h>
+#include "BulletCollisionToGUIMessage.h"
 #include "BulletComponent.h"
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "CollisionNote.h"
 #include "Entity.h"
 #include "HealthComponent.h"
+#include "PostMaster.h"
 #include "ShieldComponent.h"
 
 BulletComponent::BulletComponent(Entity& aEntity)
@@ -60,6 +62,8 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 		{
 			aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), myDamageRadius, myDamage);
 		}
+
+		PostMaster::GetInstance()->SendMessage<BulletCollisionToGUIMessage>(BulletCollisionToGUIMessage(this->GetEntity(), aNote.myEntity));
 	}
 
 }
