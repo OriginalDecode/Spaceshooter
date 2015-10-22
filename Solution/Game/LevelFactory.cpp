@@ -117,6 +117,10 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 		{
 			DL_ASSERT("[LevelFactory] Wrong ID-number in levelList.xml! The numbers should be counting up, in order.");
 		}
+		if (myCurrentID >= 10)
+		{
+			DL_ASSERT("[LevelFactory] Can't handle level ID with two digits.");
+		}
 	}
 	reader.CloseDocument();
 }
@@ -200,12 +204,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 void LevelFactory::ReadLevelSettings()
 {
-	if (myCurrentID >= 10)
-	{
-		DL_ASSERT("[LevelFactory] Can't handle level ID with two digits.");
-	}
 	XMLReader reader;
-	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml"; // lite fulhax
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml";
 	reader.OpenDocument(settingsPath);
 
 	std::string firstWeapon;
@@ -215,7 +215,7 @@ void LevelFactory::ReadLevelSettings()
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
 
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon)); // replace these with UpgradeWeapon later
 	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
 	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
 	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
