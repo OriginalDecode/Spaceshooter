@@ -7,5 +7,6 @@
   <ItemGroup>
     <ClInclude Include="dirent.h" />
     <ClInclude Include="Reader.h" />
+    <ClInclude Include="stdafx.h" />
   </ItemGroup>
 </Project>

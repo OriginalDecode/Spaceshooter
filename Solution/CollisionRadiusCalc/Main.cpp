@@ -31,16 +31,22 @@
 #include <string.h>
 #include "dirent.h"
 #include "Reader.h"
+#include <TimerManager.h>
+#include <DL_Debug.h>
 
 static int find_directory(const char *dirname, Reader& aReader);
 
 
 int main()
 {
+	DL_Debug::Debug::Create();
+	CU::TimerManager::Create();
+	
 	Reader reader;
 	find_directory("Data", reader);
-	//reader.Print();
-	system("PAUSE");
+
+	CU::TimerManager::Destroy();
+	DL_Debug::Debug::Destroy();
 	return EXIT_SUCCESS;
 }
 
