@@ -19,6 +19,7 @@ CollisionManager::CollisionManager()
 	, myTriggers(16)
 	, myProps(16)
 	, myPowerUps(16)
+	, myDefendables(16)
 	, myPlayerFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
@@ -26,13 +27,15 @@ CollisionManager::CollisionManager()
 	, myTriggerFilter(0)
 	, myPropFilter(0)
 	, myPowerUpFilter(0)
+	, myDefendableFilter(0)
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
-	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP;
-	myEnemyBulletFilter = eEntityType::PLAYER;// | eEntityType::PROP;
+	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP | eEntityType::DEFENDABLE;
+	myEnemyBulletFilter = eEntityType::PLAYER | eEntityType::DEFENDABLE;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
 	myPropFilter = eEntityType::PLAYER;
+	myDefendableFilter = eEntityType::PLAYER;
 	//myEnemyFilter = eEntityType::PLAYER;
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 }
@@ -67,6 +70,9 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 	case eEntityType::PROP:
 		myProps.Add(aComponent);
 		break;
+	case eEntityType::DEFENDABLE:
+		myDefendables.Add(aComponent);
+		break;
 	default:
 		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
 		break;
@@ -98,6 +104,9 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::PROP:
 		myProps.RemoveCyclic(aComponent);
+		break;
+	case eEntityType::DEFENDABLE:
+		myDefendables.RemoveCyclic(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
@@ -135,6 +144,10 @@ void CollisionManager::Update()
 	{
 		CheckAllCollisions(myProps[i], myPropFilter);
 	}
+	for (int i = myDefendables.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myDefendables[i], myDefendableFilter);
+	}
 }
 
 void CollisionManager::CleanUp()
@@ -167,6 +180,14 @@ void CollisionManager::CleanUp()
 		if (myPowerUps[i]->GetEntity().GetAlive() == false)
 		{
 			myPowerUps.RemoveCyclicAtIndex(i);
+		}
+	}
+
+	for (int i = myDefendables.Size() - 1; i >= 0; --i)
+	{
+		if (myDefendables[i]->GetEntity().GetAlive() == false)
+		{
+			myDefendables.RemoveCyclicAtIndex(i);
 		}
 	}
 }
@@ -205,6 +226,10 @@ void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aF
 	if (aFilter & eEntityType::POWERUP)
 	{
 		CheckCollision(aComponent, myPowerUps);
+	}
+	if (aFilter & eEntityType::DEFENDABLE)
+	{
+		CheckCollision(aComponent, myDefendables);
 	}
 }
 

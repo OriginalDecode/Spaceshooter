@@ -39,6 +39,7 @@ enum eEntityType //Collision manager needs this as ints!
 	TRIGGER = 16,
 	PROP = 32,
 	POWERUP = 64,
+	DEFENDABLE = 128
 };
 
 enum class ePowerUpType
