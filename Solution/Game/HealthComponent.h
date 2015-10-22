@@ -18,7 +18,7 @@ public:
 
 	int GetHealth() const;
 	
-	void SetInvulnerability(bool anIsInvulnerable);
+	void SetInvulnerability();
 	bool GetInvulnerability() const;
 
 	static eComponentType GetType();
@@ -44,9 +44,10 @@ inline int HealthComponent::GetHealth() const
 	return myCurrentHealth;
 }
 
-inline void HealthComponent::SetInvulnerability(bool anIsInvulnerable)
+inline void HealthComponent::SetInvulnerability()
 {
-	myIsInvulnerable = anIsInvulnerable;
+	myIsInvulnerable = true;
+	myInvulnerablityTimeMax = 1000000000000.f; // räcker det med nollor LINUS
 }
 
 inline bool HealthComponent::GetInvulnerability() const

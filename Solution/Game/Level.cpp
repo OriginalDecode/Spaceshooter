@@ -263,12 +263,11 @@ void Level::UpdateDebug()
 	}
 	if (myInputWrapper->KeyDown(DIK_M) == true)
 	{
-		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(false);
 		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(myPlayer->GetComponent<HealthComponent>()->GetHealth());
 	}
 	if (myInputWrapper->KeyDown(DIK_V) == true)
 	{
-		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
+		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability();
 	}
 	if (myInputWrapper->KeyDown(DIK_B) == true)
 	{
