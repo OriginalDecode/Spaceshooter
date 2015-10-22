@@ -99,6 +99,7 @@ enum class eComponentType
 	SHEILD,
 	SHOOTING,
 	WAY_POINT,
+	EMITTER,
 	_COUNT,
 };
 

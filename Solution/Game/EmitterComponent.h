@@ -1,8 +1,25 @@
 #pragma once
-class EmitterComponent
+#include "Component.h"
+
+namespace Prism
+{
+	class EmitterInstance;
+	class Camera;
+}
+
+class EmitterComponent : public Component
 {
 public:
-	EmitterComponent();
+	EmitterComponent(Entity& aEntity);
 	~EmitterComponent();
+	void Init(std::string aPath);
+	void Update(float aDeltaTime) override;
+	void Render();
+	static eComponentType GetType();
+private:
+
+
+	Prism::EmitterInstance* myEmitter;
+	std::string myXMLPath;
 };
 

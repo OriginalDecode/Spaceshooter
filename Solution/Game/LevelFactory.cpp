@@ -8,8 +8,6 @@
 #include "DefendMessage.h"
 #include "DirectionalLight.h"
 #include "HealthComponent.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
 #include "EffectContainer.h"
 #include <Engine.h>
 #include <EngineEnums.h>
@@ -193,12 +191,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	
 	reader.CloseDocument();
 
-	Prism::EmitterData data;
-	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
-
-	myCurrentLevel->myEmitter = new Prism::EmitterInstance();
-	myCurrentLevel->myEmitter->Initiate(data);
-	myCurrentLevel->myEmitter->SetPosition({ 5, 5, 5 });
+	
 
 	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
 	{

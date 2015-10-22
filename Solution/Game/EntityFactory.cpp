@@ -6,6 +6,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include "EmitterComponent.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
 #include "GraphicsComponent.h"
@@ -135,6 +136,11 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PowerUpComponent").c_str()) == 0)
 		{
 			LoadPowerUpComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("EmitterComponent").c_str()) == 0)
+		{
+			LoadEmitterComponent(newEntity, entityDocument, e);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("rotate").c_str()) == 0)
@@ -388,7 +394,16 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	}
 }
 
-
+void EntityFactory::LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aEmitterComponent)
+{
+	for (tinyxml2::XMLElement* e = aEmitterComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Path").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "src", aEntityToAddTo.myEmitterXMLPath);
+		}
+	}
+}
 
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
 {
@@ -487,6 +502,11 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		{
 			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpValue, it->second.myDuration);
 		}
+	}
+
+	if (it->second.myEmitterXMLPath != "")
+	{ 
+		aTargetEntity->AddComponent<EmitterComponent>()->Init(it->second.myEmitterXMLPath);
 	}
 
 	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());

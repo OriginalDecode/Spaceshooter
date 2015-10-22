@@ -13,8 +13,6 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -88,16 +86,15 @@ Level::~Level()
 	delete myMissionManager;
 	delete myEventManager;
 	delete myConversationManager;
-	delete myEmitter;
 	delete myScene;
 	mySkySphere = nullptr;
 	myScene = nullptr;
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
+
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime);
 	myCollisionManager->CleanUp();
 
 	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
@@ -140,8 +137,6 @@ void Level::Render()
 	Prism::Engine::GetInstance()->EnableZBuffer();
 	
 	myScene->Render(myBulletManager->GetInstances());
-
-	myEmitter->Render(myCamera);
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
