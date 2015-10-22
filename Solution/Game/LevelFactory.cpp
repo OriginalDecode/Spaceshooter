@@ -232,9 +232,9 @@ void LevelFactory::ReadLevelSettings()
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
 
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon)); // replace these with UpgradeWeapon later
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon), 0); // replace these with UpgradeWeapon later
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon), 1);
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon), 2);
 	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
 
 	reader.CloseDocument();
@@ -357,6 +357,10 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
 	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
+
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_machine_level_1")); // replace these with UpgradeWeapon later
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_rocket_launcher_level_1"));
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_player.xml");

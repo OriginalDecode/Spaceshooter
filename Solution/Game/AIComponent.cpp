@@ -81,7 +81,7 @@ void AIComponent::Update(float aDeltaTime)
 		FollowEntity(aDeltaTime);
 
 		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE 
-			|| myTargetPositionMode != eAITargetPositionMode::MINE)
+			&& myTargetPositionMode != eAITargetPositionMode::MINE)
 		{
 			CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 
