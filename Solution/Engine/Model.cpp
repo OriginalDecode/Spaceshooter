@@ -513,8 +513,9 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation, const CU::Vec
 		for (int i = myChilds.Size() - 1; i >= 0; i--)
 		{
 			LodGroup* group = myLodGroup;
-			double threashold = group->myThreshHolds[i];
-			if (threashold <= lengthBetweenCameraAndModel)
+			double threshold = group->myThreshHolds[i];
+			threshold /= 100;
+			if (threshold <= lengthBetweenCameraAndModel)
 			{
 				toRender = myChilds[i];
 				level = i;
@@ -570,7 +571,7 @@ void Prism::Model::Render(const CU::Matrix44<float>& aOrientation, const CU::Vec
 				}
 
 				DL_ASSERT_EXP(tech != nullptr, "Technique is nullptr");
-				DL_ASSERT_EXP(tech->IsValid(), "Technique is not valid");
+				DL_ASSERT_EXP(tech->IsValid() != false, "Technique is not valid");
 				tech->GetDesc(&techDesc);
 				for (UINT i = 0; i < techDesc.Passes; ++i)
 				{
