@@ -291,8 +291,6 @@ void InputComponent::Reset()
 {
 	myRollSpeed = 0.f;
 	myMovementSpeed = 0.f;
-	myMaxSteeringSpeed = 0.f;
-	myMaxRollSpeed = 0.f;
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
