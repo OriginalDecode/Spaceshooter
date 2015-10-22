@@ -46,8 +46,17 @@ inline int HealthComponent::GetHealth() const
 
 inline void HealthComponent::SetInvulnerability()
 {
-	myIsInvulnerable = true;
-	myInvulnerablityTimeMax = 1000000000000.f; // räcker det med nollor LINUS
+	if (myIsInvulnerable == true)
+	{
+		myInvulnerablityTimeMax = 0.f;
+		myIsInvulnerable = false;
+	}
+	else
+	{
+		myInvulnerablityTimeMax = 1000000000000.f; // räcker det med nollor LINUS
+		myInvulnerablityTimeCurrent = 0.f;
+		myIsInvulnerable = true;
+	}
 }
 
 inline bool HealthComponent::GetInvulnerability() const
