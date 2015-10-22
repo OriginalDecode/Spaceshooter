@@ -157,6 +157,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
+
 	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);
