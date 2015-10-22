@@ -63,8 +63,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myOriginalBarSize = 32.f;
 	myBarSize = myOriginalBarSize;
 
-	ReadXML();
-
 	myHealthBarGlow->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { myBarSize, myBarSize });
 	myHealthBar->Init("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", { myBarSize, myBarSize });
 
@@ -350,36 +348,4 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 	myShieldBar->SetSize({ myBarSize, myBarSize });
 	myShieldBarGlow->SetSize({ myBarSize, myBarSize });
-}
-
-void GUIComponent::ReadXML()
-{
-	XMLReader reader;
-	reader.OpenDocument("Data/Resource/GUI/GUI_bar_health.xml");
-	tinyxml2::XMLElement* root = reader.FindFirstChild("root");
-	tinyxml2::XMLElement* position = reader.FindFirstChild(root, "Position");
-	reader.ForceReadAttribute(position, "X", myOriginalHealthBarRenderPosition.x);
-	reader.ForceReadAttribute(position, "Y", myOriginalHealthBarRenderPosition.y);
-
-	reader.CloseDocument();
-
-	reader.OpenDocument("Data/Resource/GUI/GUI_bar_shield.xml");
-	root = reader.FindFirstChild("root");
-	position = reader.FindFirstChild(root, "Position");
-	reader.ForceReadAttribute(position, "X", myOriginalShieldBarRenderPosition.x);
-	reader.ForceReadAttribute(position, "Y", myOriginalShieldBarRenderPosition.y);
-
-	reader.CloseDocument();
-
-
-
-	//myHealthBarRenderPosition = myOriginalHealthBarRenderPosition;
-	//myShieldBarRenderPosition = myOriginalShieldBarRenderPosition;
-
-	float offset = Prism::Engine::GetInstance()->GetWindowSize().y /
-		static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
-
-
-	myBarSize = (myOriginalBarSize * offset);
-
 }
