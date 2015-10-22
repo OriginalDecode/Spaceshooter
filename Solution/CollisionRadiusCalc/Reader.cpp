@@ -46,7 +46,7 @@ void Reader::WriteXml(const std::string& aFbxPath, float aRadius) const
 	xmlPath += ".xml";
 	file.open(xmlPath);
 
-	file << "<root>\n\t<radius value=\"" << aRadius << "\"\\>\n</root>";
+	file << "<root>\n\t<radius value=\"" << aRadius << "\"/>\n</root>";
 
 	file.close();
 	std::cout << " radius: " << aRadius << std::endl;
