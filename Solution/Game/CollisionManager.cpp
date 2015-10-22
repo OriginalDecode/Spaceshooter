@@ -302,7 +302,7 @@ Entity* CollisionManager::GetClosestEnemyWithinSphere(const CU::Matrix44<float> 
 		{
 			Entity* enemy = &myEnemies[i]->GetEntity();
 			
-			float dotValue = CU::Dot(enemy->myOrientation.GetPos(), anOrientation.GetPos());
+			float dotValue = CU::Dot(enemy->myOrientation.GetPos(), anOrientation.GetForward());
 			if (dotValue > 0.7)
 			{
 				if (closestEnemy == nullptr)
