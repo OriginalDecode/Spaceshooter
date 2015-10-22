@@ -421,4 +421,5 @@ void GUIComponent::Reset()
 {
 	myHealthBarCount = 20;
 	myShieldBarCount = 20;
+	myEnemiesTarget = nullptr;
 }

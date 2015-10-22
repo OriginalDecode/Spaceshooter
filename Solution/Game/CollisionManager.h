@@ -26,7 +26,7 @@ public:
 
 	void DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aTime);
 	void DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage);
-	Entity* GetClosestEnemyWithinSphere(CU::Vector3<float> aCenter, float aRadius);
+	Entity* GetClosestEnemyWithinSphere(const CU::Matrix44<float> &anOrientation, float aRadius);
 
 private:
 	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);

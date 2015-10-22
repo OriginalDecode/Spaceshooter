@@ -209,7 +209,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 	if (aIsHoming == true)
 	{
-		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation.GetPos(), 2000.f); // replace this target lock
+		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation, 2000.f); // replace this target lock
 		if (enemy != nullptr)
 		{
 			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity), 
