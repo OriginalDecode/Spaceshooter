@@ -134,6 +134,7 @@
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueueEmptyMessage.h" />
+    <ClInclude Include="GUIMessage.h" />
     <ClInclude Include="HealthNote.h" />
     <ClInclude Include="MissionContainer.h" />
     <ClInclude Include="MissionEventReader.h" />

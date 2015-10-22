@@ -381,6 +381,9 @@
     <ClInclude Include="ResizeMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="GUIMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
