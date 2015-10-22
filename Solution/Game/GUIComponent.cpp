@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <Camera.h>
+#include "BulletCollisionToGUIMessage.h"
 #include "Constants.h"
 #include "ConversationMessage.h"
 #include "DefendMessage.h"
@@ -42,11 +43,13 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShieldBar(new Prism::Model2D)
 	, myHealthBarGlow(new Prism::Model2D)
 	, myShieldBarGlow(new Prism::Model2D)
+	, myHitMarker(new Prism::Model2D)
 
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
@@ -74,7 +77,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myHealthBarCount = 20;
 	myShieldBarCount = 20;
 
-
+	myHitMarker->Init("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds", { 256, 256 });
 }
 
 GUIComponent::~GUIComponent()
@@ -82,6 +85,7 @@ GUIComponent::~GUIComponent()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -94,6 +98,7 @@ GUIComponent::~GUIComponent()
 	delete myModel2DToRender;
 	delete myDefendMarker;
 	delete myDefendArrow;
+	delete myHitMarker;
 	myReticle = nullptr;
 	myPowerUpArrow = nullptr;
 	myPowerUpMarker = nullptr;
@@ -106,6 +111,7 @@ GUIComponent::~GUIComponent()
 	myModel2DToRender = nullptr;
 	myDefendArrow = nullptr;
 	myDefendMarker = nullptr;
+	myHitMarker = nullptr;
 
 	delete myHealthBar;
 	myHealthBar = nullptr;
@@ -120,7 +126,7 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 
 void GUIComponent::Update(float aDeltaTime)
 {
-	aDeltaTime;
+	myHitMarkerTimer -= aDeltaTime;
 
 }
 
@@ -202,15 +208,16 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
 	//Prism::Engine::GetInstance()->EnableAlphaBlending();
+
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
+	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
+		, -halfHeight - mySteeringTargetPosition.y);
 	Prism::Engine::GetInstance()->PrintDebugText(myConversation, { halfWidth, -halfHeight - 200.f });
 	myReticle->Render(halfWidth, -halfHeight);
-	mySteeringTarget->Render(halfWidth + mySteeringTargetPosition.x
-		, -halfHeight - mySteeringTargetPosition.y);
+	mySteeringTarget->Render(steeringPos.x, steeringPos.y);
 	myCrosshair->Render(halfWidth, -(halfHeight));
-
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
@@ -271,6 +278,11 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 		myShieldBarGlow->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
 		myShieldBar->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
+	}
+
+	if (myHitMarkerTimer >= 0.f)
+	{
+		myHitMarker->Render(steeringPos.x, steeringPos.y);
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
@@ -349,6 +361,14 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 	myShieldBar->SetSize({ myBarSize, myBarSize });
 	myShieldBarGlow->SetSize({ myBarSize, myBarSize });
+}
+
+void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
+{
+	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
+	{
+		myHitMarkerTimer = 0.1f;
+	}
 }
 
 void GUIComponent::ReadXML()
