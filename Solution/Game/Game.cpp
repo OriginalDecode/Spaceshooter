@@ -10,16 +10,17 @@
 #include <FileWatcher.h>
 #include <Font.h>
 #include "Game.h"
+#include "GameStateMessage.h"
 #include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
 #include "LevelFactory.h"
+#include "MenuState.h"
+#include "PostMaster.h"
+#include "ResizeMessage.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
-#include "PostMaster.h"
 #include <Vector.h>
-#include "GameStateMessage.h"
-#include "MenuState.h"
 #include <XMLReader.h>
 
 Game::Game()
@@ -144,6 +145,7 @@ void Game::OnResize(int aWidth, int aHeight)
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);
+	PostMaster::GetInstance()->SendMessage(ResizeMessage());
 }
 
 void Game::ReceiveMessage(const GameStateMessage& aMessage)

@@ -51,11 +51,6 @@ private:
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
 
-	//CU::GrowingArray<Prism::Model2D*> myHealthBar;
-	//CU::GrowingArray<Prism::Model2D*> myShieldBar;
-
-	Prism::Model2D* myHealthBar;
-	Prism::Model2D* myShieldBar;
 
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
@@ -70,11 +65,25 @@ private:
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 
+
 	int myHealthBarCount;
 	int myShieldBarCount;
 
+	Prism::Model2D* myHealthBar;
+	Prism::Model2D* myShieldBar;
+
+	Prism::Model2D* myHealthBarGlow;
+	Prism::Model2D* myShieldBarGlow;
+
+
 	CU::Vector2<float> myHealthBarRenderPosition;
+	CU::Vector2<float> myOriginalHealthBarRenderPosition;
+
 	CU::Vector2<float> myShieldBarRenderPosition;
+	CU::Vector2<float> myOriginalShieldBarRenderPosition;
+
+	float myBarSize;
+	float myOriginalBarSize;
 
 
 	std::string myConversation;
