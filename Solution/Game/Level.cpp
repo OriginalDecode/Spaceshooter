@@ -70,7 +70,15 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	delete myCamera;
-	myEntities.DeleteAll();
+
+	for (int i = 0; i < myEntities.Size(); i++)
+	{
+		if (myEntities[i] != myPlayer)
+		{
+			delete myEntities[i];
+			myEntities[i] = nullptr;
+		}
+	}
 
 	delete mySkySphere;
 	delete myEntityFactory;
@@ -82,6 +90,8 @@ Level::~Level()
 	delete myConversationManager;
 	delete myEmitter;
 	delete myScene;
+	mySkySphere = nullptr;
+	myScene = nullptr;
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
 }
 
@@ -190,6 +200,11 @@ Entity* Level::GetEntityWithName(const std::string& aName)
 int Level::GetEnemiesAlive() const
 {
 	return myCollisionManager->GetEnemiesAlive();
+}
+
+Entity* Level::GetPlayer()
+{
+	return myPlayer;
 }
 
 void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)

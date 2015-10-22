@@ -93,3 +93,10 @@ void ShieldComponent::Update(float aDelta)
 
 }
 
+void ShieldComponent::Reset()
+{
+	myShieldStrength = myMaxShieldStrength;
+	myShieldOvercharged = false;
+	myCooldown = 0.f;
+	myOvercharge = 0;
+}

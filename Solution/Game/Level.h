@@ -56,6 +56,8 @@ public:
 
 	int GetEnemiesAlive() const;
 
+	Entity* GetPlayer();
+
 	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;

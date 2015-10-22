@@ -268,3 +268,19 @@ void InputComponent::UpdateSteering(const float& aDelta)
 		}
 	}
 }
+
+void InputComponent::Reset()
+{
+	myRollSpeed = 0.f;
+	myMovementSpeed = 0.f;
+	myMaxSteeringSpeed = 0.f;
+	myMaxRollSpeed = 0.f;
+	myCameraIsLocked = false;
+	myBoost = false;
+	myCanMove = true;
+	myWeaponRotationModifier = 0.f;
+	myCurrentBoostCooldown = 0.f;
+	myCurrentBoostValue = 0.f;
+	myMaxBoostCooldown = 0.f;
+	myMaxBoostValue = 0.f;
+}

@@ -16,6 +16,7 @@ public:
 
 	static eComponentType GetType();
 
+	void Reset() override;
 
 private:
 

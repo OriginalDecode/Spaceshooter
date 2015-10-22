@@ -38,8 +38,9 @@
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
-LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper)
+LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, Entity& aPlayer)
 	: myInputWrapper(anInputWrapper)
+	, myPlayer(&aPlayer)
 	, myCurrentLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
@@ -141,7 +142,19 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
 
-	LoadPlayer();
+	if (myPlayer == nullptr)
+	{
+		LoadPlayer();
+	}
+	else
+	{
+		myCurrentLevel->myPlayer = myPlayer;
+		myCurrentLevel->myPlayer->Reset();
+	}
+
+	ReadLevelSettings();
+	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
+	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 
 	Sleep(10);
 	XMLReader reader;
@@ -338,14 +351,14 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 void LevelFactory::LoadPlayer()
 {
 
-	Entity* player = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
-	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
+	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myPlayer->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
 		, "Data/Resource/Shader/S_effect_pbl.fx");
-	player->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
-	player->AddComponent<ShootingComponent>();
-	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
-	player->AddComponent<ShieldComponent>()->Init();
-	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
+	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
+	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
+	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Initiate(7.5f);
+	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
+	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_player.xml");
@@ -354,20 +367,17 @@ void LevelFactory::LoadPlayer()
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
 
-	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
-	myCurrentLevel->myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
+	myCurrentLevel->myPlayer->AddComponent<HealthComponent>()->Init(health, invulnerable);
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
-	myCurrentLevel->myEntities.Add(player);
-	myCurrentLevel->myCamera = new Prism::Camera(player->myOrientation);
-	player->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
+	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
+	myCurrentLevel->myPlayer->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
-	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
+	myPlayer = myCurrentLevel->myPlayer;
 
-	reader.CloseDocument();
-	myCurrentLevel->myPlayer = player;
-	ReadLevelSettings();
-	
+	reader.CloseDocument();	
 }
 
 void LevelFactory::AddToScene()

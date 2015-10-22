@@ -61,3 +61,9 @@ void HealthComponent::ReceiveNote(const PowerUpNote& aNote)
 		AddHealth(static_cast<int>(aNote.myValue));
 	}
 }
+
+void HealthComponent::Reset()
+{
+	myIsInvulnerable = false;
+	myCurrentHealth = myMaxHealth;
+}

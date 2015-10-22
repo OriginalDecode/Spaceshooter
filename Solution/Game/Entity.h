@@ -40,6 +40,7 @@ public:
 	void Kill();
 	const std::string& GetName() const;
 	void SetName(const std::string& aName);
+	void Reset();
 
 	Prism::Scene& GetScene();
 

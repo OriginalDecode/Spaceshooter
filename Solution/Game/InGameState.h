@@ -13,6 +13,7 @@ class BulletManager;
 class CollisionManager;
 class LevelFactory;
 class Level;
+class Entity;
 class MessageState;
 
 class InGameState : public GameState, public Subscriber
@@ -37,13 +38,15 @@ public:
 
 	void CompleteLevel();
 	void CompleteGame();
-	void LoadLevelSettings();
+	void LoadLevelSettings(); 
+	void LoadPlayerSettings();
 
 private:
 	void ShowMessage(const std::string& aBackgroundPath, const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage = nullptr);
 	
 	LevelFactory* myLevelFactory;
 	Level* myLevel;
+	Entity* myPlayer;
 
 	MessageState* myMessageScreen;
 

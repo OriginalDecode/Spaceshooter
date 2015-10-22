@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include <DebugDataDisplay.h>
 #include <Engine.h>
+#include "Entity.h"
 #include <FileWatcher.h>
 #include <Font.h>
 #include "GameStateMessage.h"
@@ -24,6 +25,7 @@
 
 InGameState::InGameState(CU::InputWrapper* anInputWrapper, const bool& aShowMessages)
 	: myShowMessages(aShowMessages)
+	, myPlayer(nullptr)
 {
 	myInputWrapper = anInputWrapper;
 }
@@ -32,13 +34,16 @@ InGameState::~InGameState()
 {
 	delete myLevelFactory;
 	delete myLevel;
+	delete myPlayer;
+	myLevelFactory = nullptr;
 	myLevel = nullptr;
+	myPlayer = nullptr;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
-	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper);
+	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper, *myPlayer);
 	myIsLetThrough = false;
 	myIsComplete = false;
 	myStateStack = aStateStackProxy;
@@ -55,6 +60,8 @@ void InGameState::EndState()
 const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
 	BEGIN_TIME_BLOCK("InGameState::Update");
+
+	myPlayer = myLevel->GetPlayer();
 
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
 	{
@@ -150,6 +157,11 @@ void InGameState::CompleteGame()
 void InGameState::LoadLevelSettings()
 {
 	myLevelFactory->ReadLevelSettings();
+}
+
+void InGameState::LoadPlayerSettings()
+{
+	myLevelFactory->LoadPlayer();
 }
 
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 

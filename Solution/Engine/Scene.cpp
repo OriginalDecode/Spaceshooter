@@ -33,6 +33,7 @@ Prism::Scene::~Scene()
 
 #ifdef SCENE_USE_OCTREE
 	delete myOctree;
+	myOctree = nullptr;
 #else
 	myInstances.DeleteAll();
 #endif

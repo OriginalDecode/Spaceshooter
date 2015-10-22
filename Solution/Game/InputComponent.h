@@ -16,6 +16,8 @@ public:
 
 	static eComponentType GetType();
 
+	void Reset() override;
+
 private:
 	void operator=(const InputComponent&) = delete;
 	void ReadXML(const std::string& aFile);

@@ -20,7 +20,7 @@ GraphicsComponent::GraphicsComponent(Entity& aEntity)
 
 GraphicsComponent::~GraphicsComponent()
 {
-	if (myEntity.GetOctreeType() != Prism::eOctreeType::NOT_IN_OCTREE)
+	if (myEntity.GetOctreeType() != Prism::eOctreeType::NOT_IN_OCTREE && myEntity.GetType() != eEntityType::PLAYER)
 	{
 		myEntity.GetScene().RemoveInstance(myInstance);
 	}

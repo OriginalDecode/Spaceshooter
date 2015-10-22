@@ -38,6 +38,13 @@ void PhysicsComponent::MoveForward(float aDistance)
 	myVelocity = (myEntity.myOrientation.GetForward() * (aDistance));
 }
 
+void PhysicsComponent::Reset()
+{
+	myVelocity.x = 0.f;
+	myVelocity.y = 0.f;
+	myVelocity.z = 0.f;
+}
+
 //void PhysicsComponent::BounceOff(float anEntityWeight)
 //{
 //	//myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() - myVelocity * 2.f);

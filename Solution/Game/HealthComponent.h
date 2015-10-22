@@ -20,6 +20,8 @@ public:
 	bool GetInvulnerability() const;
 
 	static eComponentType GetType();
+
+	void Reset() override;
 private:
 
 	int myMaxHealth;
