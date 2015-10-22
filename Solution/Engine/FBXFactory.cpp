@@ -223,3 +223,44 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 	return returnModel;
 }
 
+void Prism::FBXFactory::LoadModelForRadiusCalc(const char* aFilePath
+	, CU::GrowingArray<CU::Vector3<float>>& someVerticesOut)
+{
+	FbxModelData* fbxModelData = myLoader->loadModel(aFilePath);
+
+	CreateModelForRadiusCalc(fbxModelData, someVerticesOut);
+	delete fbxModelData;
+}
+
+void Prism::FBXFactory::CreateModelForRadiusCalc(FbxModelData* someModelData, CU::GrowingArray<CU::Vector3<float>>& someVerticesOut
+	, const CU::Matrix44<float>& aParentOrientation)
+{
+	CU::Matrix44<float> orientation = someModelData->myOrientation * aParentOrientation;
+	orientation.NormalizeRotationVectors();
+	if (someModelData->myData)
+	{
+		FillDataForRadiusCalc(someModelData->myData, someVerticesOut, orientation);
+	}
+	for (int i = 0; i < someModelData->myChilds.Size(); ++i)
+	{
+		auto currentChild = someModelData->myChilds[i];
+		CreateModelForRadiusCalc(currentChild, someVerticesOut, orientation);
+	}
+}
+
+void Prism::FBXFactory::FillDataForRadiusCalc(ModelData* aModelData, CU::GrowingArray<CU::Vector3<float>>& someVerticesOut
+	, const CU::Matrix44<float>& aOrientation)
+{
+	int sizeOfBuffer = aModelData->myVertexCount*aModelData->myVertexStride*sizeof(float);
+	char* vertexRawData = new char[sizeOfBuffer];
+	memcpy(vertexRawData, aModelData->myVertexBuffer, sizeOfBuffer);
+
+	for (int i = 0; i < sizeOfBuffer - 3 * 4; i += aModelData->myVertexStride*sizeof(float))
+	{
+		CU::Vector3<float> position;
+		memcpy(&position, vertexRawData + i, 3 * 4);
+		position = position * aOrientation;
+		someVerticesOut.Add(position);
+	}
+	delete vertexRawData;
+}
