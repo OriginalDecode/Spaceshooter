@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Defines.h"
 #include "EngineEnums.h"
 #include "Frustum.h"
 #include "Instance.h"
@@ -16,11 +17,11 @@ std::stringstream ss5;
 int totalTreeNodes = 0;
 int maxNumOfDynamic = 0;
 int maxDynamicDepth = 0;
-int maxDynamicHalfWidth = 0;
+float maxDynamicHalfWidth = 0;
 int totalDynamicObjects = 0;
 int maxNumOfStatic = 0;
 int maxStaticDepth = 0;
-int maxStaticHalfWidth = 0;
+float maxStaticHalfWidth = 0;
 int totalStaticObjects = 0;
 #endif
 
@@ -101,10 +102,6 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 #ifdef SHOW_OCTREE_DEBUG
 	if (myDepth == 0)
 	{
-		if (totalDynamicObjects < 7)
-		{
-			int apa = 5;
-		}
 		ss << "Total: " << totalTreeNodes;
 		ss2 << "Max Dynamic: " << maxNumOfDynamic << " depth: " << maxDynamicDepth << " halfWidth: " << maxDynamicHalfWidth;
 		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth << " halfWidth: " << maxStaticHalfWidth;
@@ -148,14 +145,14 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 #endif
 	for (int i = 0; i < myObjectsDynamic.Size(); ++i)
 	{
-		if (aFrustum.Inside(myObjectsDynamic[i]->GetPosition(), myObjectsDynamic[i]->GetRadius()) == true)
+		if (aFrustum.Inside(myObjectsDynamic[i]->GetPosition(), myObjectsDynamic[i]->GetObjectCullingRadius()) == true)
 		{
 			aOutArray.Add(myObjectsDynamic[i]);
 		}
 	}
 	for (int i = 0; i < myObjectsStatic.Size(); ++i)
 	{
-		if (aFrustum.Inside(myObjectsStatic[i]->GetPosition(), myObjectsStatic[i]->GetRadius()) == true)
+		if (aFrustum.Inside(myObjectsStatic[i]->GetPosition(), myObjectsStatic[i]->GetObjectCullingRadius()) == true)
 		{
 			aOutArray.Add(myObjectsStatic[i]);
 		}
@@ -199,7 +196,7 @@ void Prism::TreeNode::Modify(Instance* anObject, eModifyType aModifyType)
 			delta = anObject->GetPosition().z - myPosition.z;
 		}
 
-		if (abs(delta) + myHalfWidth * (myLooseness - 1.f) <= anObject->GetRadius())
+		if (abs(delta) + myHalfWidth * (myLooseness - 1.f) <= anObject->GetObjectCullingRadius())
 		{
 			straddle = true;
 			break;
@@ -328,12 +325,12 @@ bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAAB
 
 bool Prism::TreeNode::CheckEnclosed(Instance* anObject) const
 {
-	return myPosition.x - myHalfWidth < anObject->GetPosition().x - anObject->GetRadius()
-		&& myPosition.y - myHalfWidth < anObject->GetPosition().y - anObject->GetRadius()
-		&& myPosition.z - myHalfWidth < anObject->GetPosition().z - anObject->GetRadius()
-		&& myPosition.x + myHalfWidth > anObject->GetPosition().x + anObject->GetRadius()
-		&& myPosition.y + myHalfWidth > anObject->GetPosition().y + anObject->GetRadius()
-		&& myPosition.z + myHalfWidth > anObject->GetPosition().z + anObject->GetRadius();
+	return myPosition.x - myHalfWidth < anObject->GetPosition().x - anObject->GetObjectCullingRadius()
+		&& myPosition.y - myHalfWidth < anObject->GetPosition().y - anObject->GetObjectCullingRadius()
+		&& myPosition.z - myHalfWidth < anObject->GetPosition().z - anObject->GetObjectCullingRadius()
+		&& myPosition.x + myHalfWidth > anObject->GetPosition().x + anObject->GetObjectCullingRadius()
+		&& myPosition.y + myHalfWidth > anObject->GetPosition().y + anObject->GetObjectCullingRadius()
+		&& myPosition.z + myHalfWidth > anObject->GetPosition().z + anObject->GetObjectCullingRadius();
 }
 
 void Prism::TreeNode::InsertObjectUp(Instance* anObject)

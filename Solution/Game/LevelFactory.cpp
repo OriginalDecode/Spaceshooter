@@ -425,6 +425,8 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
 	delete myCurrentLevel->mySkySphere;
-	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere, 
-		myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
+	myCurrentLevel->mySkySphereCullingRadius = 10.f;
+	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
+		, myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE
+		, myCurrentLevel->mySkySphereCullingRadius);
 }

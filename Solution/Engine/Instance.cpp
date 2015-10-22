@@ -8,12 +8,13 @@
 #include "ModelProxy.h"
 
 
-Prism::Instance::Instance(ModelProxy& aModel, const CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType)
+Prism::Instance::Instance(ModelProxy& aModel, const CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType
+		, const float& aObjectCullingRadius)
 	: myProxy(aModel)
 	, myOctreeType(anOctreeType)
 	, myOrientation(anOrientation)
 	, myScale({1,1,1})
-	, myRadius(5.f)
+	, myObjectCullingRadius(aObjectCullingRadius)
 {
 }
 
