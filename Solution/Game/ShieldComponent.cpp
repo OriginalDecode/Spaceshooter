@@ -2,6 +2,7 @@
 
 #include "Entity.h"
 #include "Enums.h"
+#include "HealthComponent.h"
 #include "PowerUpNote.h"
 #include "ShieldComponent.h"
 #include "ShieldNote.h"
@@ -37,17 +38,20 @@ void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 
 void ShieldComponent::DamageShield(int someDamage)
 {
-	myCooldown = 0;
-	if (someDamage >= myShieldStrength)
+	if (myEntity.GetComponent<HealthComponent>()->GetInvulnerability() == false)
 	{
-		myShieldStrength = 0;
-	}
-	else
-	{
-		myShieldStrength -= someDamage;
-	}
+		myCooldown = 0;
+		if (someDamage >= myShieldStrength)
+		{
+			myShieldStrength = 0;
+		}
+		else
+		{
+			myShieldStrength -= someDamage;
+		}
 
-	myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
+		myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
+	}
 }
 
 void ShieldComponent::Update(float aDelta)
