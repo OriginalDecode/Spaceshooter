@@ -50,7 +50,8 @@ enum class ePowerUpType
 	HEALTHKIT,
 	WEAPON_UPGRADE,
 	EMP,
-	HOMING
+	HOMING,
+	INVULNERABLITY
 };
 
 enum class eMissionType

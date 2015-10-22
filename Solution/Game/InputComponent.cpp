@@ -294,9 +294,7 @@ void InputComponent::Reset()
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
-	myWeaponRotationModifier = 0.f;
 	myCurrentBoostCooldown = 0.f;
 	myCurrentBoostValue = 0.f;
 	myMaxBoostCooldown = 0.f;
-	myMaxBoostValue = 0.f;
 }
