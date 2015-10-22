@@ -7,11 +7,14 @@
 #include "GUIComponent.h"
 #include "GUINote.h"
 #include "HealthComponent.h"
+#include "HealthNote.h"
 #include "MissionNote.h"
 #include <Model2D.h>
 #include "PostMaster.h"
 #include "PropComponent.h"
+#include "ShieldNote.h"
 #include <sstream>
+#include <XMLReader.h>
 
 #define CIRCLERADIUS 400.f
 
@@ -34,6 +37,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
+	, myHealthBar(new Prism::Model2D)
+	, myShieldBar(new Prism::Model2D)
+
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
@@ -49,6 +55,14 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
 	myDefendMarker->Init("Data/Resource/Texture/UI/T_defend_marker.dds", arrowAndMarkerSize);
 	myDefendArrow->Init("Data/Resource/Texture/UI/T_defend_arrow.dds", arrowAndMarkerSize);
+
+	myHealthBar->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { 32.f, 32.f });
+	myShieldBar->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { 32.f, 32.f });
+
+	myHealthBarCount = 20;
+	myShieldBarCount = 20;
+
+	ReadXML();
 }
 
 GUIComponent::~GUIComponent()
@@ -79,6 +93,14 @@ GUIComponent::~GUIComponent()
 	myModel2DToRender = nullptr;
 	myDefendArrow = nullptr;
 	myDefendMarker = nullptr;
+
+	delete myHealthBar;
+	myHealthBar = nullptr;
+
+	//myHealthBar.DeleteAll();
+	//myShieldBar.DeleteAll();
+
+
 }
 
 void GUIComponent::Init(float aMaxDistanceToEnemies)
@@ -214,6 +236,16 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemiesPosition.RemoveAll();
 	myPowerUpPositions.RemoveAll();
 
+	for (int i = 0; i < myHealthBarCount; ++i)
+	{
+		myHealthBar->Render(myHealthBarRenderPosition.x + ((i * 16.f) + 2.f), myHealthBarRenderPosition.y);
+	}
+
+	for (int i = 0; i < myShieldBarCount; ++i)
+	{
+		myShieldBar->Render(myShieldBarRenderPosition.x + ((i*16.f) + 2.f), myShieldBarRenderPosition.y);
+	}
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 	//Prism::Engine::GetInstance()->DisableAlpaBlending();
 }
@@ -251,6 +283,17 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 	}
 }
 
+void GUIComponent::ReceiveNote(const HealthNote& aNote)
+{
+	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) *
+		20 + 0.5f)));
+}
+
+void GUIComponent::ReceiveNote(const ShieldNote& aNote)
+{
+	myShieldBarCount = static_cast<int>(((aNote.myShieldStrength / static_cast<float>(aNote.myMaxShieldStrength) *
+		20 + 0.5f)));
+}
 
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
 {
@@ -267,4 +310,30 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 	{
 		myEnemiesTarget = nullptr;
 	}
+}
+
+void GUIComponent::ReceiveMessage(const ResizeMessage&)
+{
+
+}
+void GUIComponent::ReadXML()
+{
+	XMLReader reader;
+	reader.OpenDocument("Data/Resource/GUI/GUI_bar_health.xml");
+	tinyxml2::XMLElement* root = reader.FindFirstChild("root");
+	tinyxml2::XMLElement* position = reader.FindFirstChild(root, "Position");
+	reader.ForceReadAttribute(position, "X", myHealthBarRenderPosition.x);
+	reader.ForceReadAttribute(position, "Y", myHealthBarRenderPosition.y);
+
+	reader.CloseDocument();
+
+	reader.OpenDocument("Data/Resource/GUI/GUI_bar_shield.xml");
+	root = reader.FindFirstChild("root");
+	position = reader.FindFirstChild(root, "Position");
+	reader.ForceReadAttribute(position, "X", myShieldBarRenderPosition.x);
+	reader.ForceReadAttribute(position, "Y", myShieldBarRenderPosition.y);
+
+	reader.CloseDocument();
+
+
 }

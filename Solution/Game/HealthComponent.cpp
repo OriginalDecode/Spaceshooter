@@ -3,6 +3,7 @@
 #include "HealthComponent.h"
 #include "Entity.h"
 #include "Enums.h"
+#include "HealthNote.h"
 #include "PowerUpNote.h"
 #include "ShieldComponent.h"
 
@@ -30,6 +31,8 @@ void HealthComponent::AddHealth(int aHealthToAdd)
 			myCurrentHealth = myMaxHealth;
 		}
 	}
+
+	myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
 }
 
 void HealthComponent::RemoveHealth(int aHealthToRemove)
@@ -45,6 +48,9 @@ void HealthComponent::RemoveHealth(int aHealthToRemove)
 		{
 			myCurrentHealth -= aHealthToRemove;
 		}
+		
+		myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
+
 	}
 }
 

@@ -16,7 +16,10 @@ namespace EntityEditor.Panels
         CollisionComponent,
         GraphicsComponent,
         ShootingComponent,
-        HealthComponent
+        HealthComponent,
+        PhysicsComponent,
+        BulletComponent,
+        PowerUpComponent
     };
 
     public class AddComponentPanel : BasePanel
@@ -75,6 +78,18 @@ namespace EntityEditor.Panels
             {
                 myComponents.AddItem(eComponentType.HealthComponent);
             }
+            if (myEntity.myPhysicsComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.PhysicsComponent);
+            }
+            if (myEntity.myBulletComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.BulletComponent);
+            }
+            if (myEntity.myPowerUpComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.PowerUpComponent);
+            }
         }
 
         protected override void SaveSettings()
@@ -100,6 +115,18 @@ namespace EntityEditor.Panels
             {
                 eForm.SetHealthComponent(myEntity.myHealthComponent);
             }
+            if (myEntity.myPhysicsComponent.myIsActive == true)
+            {
+                eForm.SetPhysicsComponent(myEntity.myPhysicsComponent);
+            }
+            if (myEntity.myBulletComponent.myIsActive == true)
+            {
+                eForm.SetBulletComponent(myEntity.myBulletComponent);
+            }
+            if (myEntity.myPowerUpComponent.myIsActive == true)
+            {
+                eForm.SetPowerUpComponent(myEntity.myPowerUpComponent);
+            }
             eForm.DisplayEntityData();
         }
 
@@ -123,6 +150,15 @@ namespace EntityEditor.Panels
                     break;
                 case eComponentType.HealthComponent:
                     myEntity.myHealthComponent.myIsActive = true;
+                    break;
+                case eComponentType.PhysicsComponent:
+                    myEntity.myPhysicsComponent.myIsActive = true;
+                    break;
+                case eComponentType.BulletComponent:
+                    myEntity.myBulletComponent.myIsActive = true;
+                    break;
+                case eComponentType.PowerUpComponent:
+                    myEntity.myPowerUpComponent.myIsActive = true;
                     break;
                 default:
                     DL_Debug.GetInstance.DL_ErrorMessage("The component " 

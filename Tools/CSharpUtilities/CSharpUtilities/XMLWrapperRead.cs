@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Xml;
+using System.Globalization;
 
 namespace CSharpUtilities
 {
     public class XMLWrapperRead
     {
+        private NumberFormatInfo myNumberFormat = new CultureInfo("en-US", false).NumberFormat;
         private XmlDocument myDocument = new XmlDocument();
-        private XmlReader myReader;
         public XMLWrapperRead()
         {
 
@@ -72,7 +73,15 @@ namespace CSharpUtilities
                 {
                     string formatedValue = att.Value;
                     formatedValue = formatedValue.Replace("f", "");
-                    aValue = float.Parse(formatedValue);
+                    try
+                    {
+                        aValue = float.Parse(formatedValue, myNumberFormat);
+                    }
+                    catch (FormatException)
+                    {
+                        formatedValue = formatedValue.Replace(".", ",");
+                        aValue = float.Parse(formatedValue, myNumberFormat);
+                    }
                 }
             }
         }
@@ -83,7 +92,7 @@ namespace CSharpUtilities
             {
                 if (att.Name == aAttribute)
                 {
-                    aValue = int.Parse(att.Value);
+                    aValue = int.Parse(att.Value, myNumberFormat);
                 }
             }
         }
@@ -105,7 +114,16 @@ namespace CSharpUtilities
             {
                 if (att.Name == aAttribute)
                 {
-                    aValue = double.Parse(att.Value);
+                    string formatedValue = att.Value;
+                    try
+                    {
+                        aValue = double.Parse(formatedValue, myNumberFormat);
+                    }
+                    catch (FormatException)
+                    {
+                        formatedValue = formatedValue.Replace(".", ",");
+                        aValue = double.Parse(formatedValue, myNumberFormat);
+                    }
                 }
             }
         }

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AIComponent.h"
 #include "BulletManager.h"
+#include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "ConversationManager.h"
@@ -18,13 +19,22 @@
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
 #include "GraphicsComponent.h"
+#include "GUIComponent.h"
+#include "InputComponent.h"
+#include "Instance.h"
 #include "LevelFactory.h"
 #include "Level.h"
+#include "ModelLoader.h"
 #include "MissionManager.h"
+#include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include "PropComponent.h"
+#include "PhysicsComponent.h"
 #include <Scene.h>
+#include "ShieldComponent.h"
+#include "ShootingComponent.h"
+#include <SpotLight.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -33,6 +43,9 @@ LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* 
 	, myCurrentLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
+	, myDirectionalLights(4)
+	, myPointLights(4)
+	, mySpotLights(4)
 {
 	LoadLevelListFromXML(aLevelListPath);
 }
@@ -73,197 +86,6 @@ Level* LevelFactory::LoadNextLevel()
 	return LoadLevel(myCurrentID + 1);
 }
 
-void LevelFactory::ReadXML(const std::string& aFilePath)
-{
-	myCurrentLevel->myScene = new Prism::Scene();
-	myCurrentLevel->myWeaponFactory = new WeaponFactory();
-	myCurrentLevel->myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
-	myCurrentLevel->myWeaponFactory->LoadProjectiles("Data/Script/LI_list_projectile.xml");
-	myCurrentLevel->myEntityFactory = new EntityFactory(myCurrentLevel->myWeaponFactory);
-	myCurrentLevel->myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml");
-	myCurrentLevel->myCollisionManager = new CollisionManager();
-	myCurrentLevel->myBulletManager = new BulletManager(*myCurrentLevel->myCollisionManager, *myCurrentLevel->myScene);
-	myCurrentLevel->myBulletManager->LoadFromFactory(myCurrentLevel->myWeaponFactory, myCurrentLevel->myEntityFactory, "Data/Script/LI_list_projectile.xml");
-
-	Prism::DirectionalLight* dirLight = new Prism::DirectionalLight();
-	dirLight->SetColor({ 0.5f, 0.5f, 0.5f, 1.f });
-	dirLight->SetDir({ 0.f, 0.5f, -1.f });
-	myCurrentLevel->myDirectionalLights.Add(dirLight);
-
-	myCurrentLevel->LoadPlayer();
-
-	Sleep(10);
-	XMLReader reader;
-	reader.OpenDocument(aFilePath);
-	tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("root");
-	levelElement = reader.ForceFindFirstChild(levelElement, "scene");
-	std::string skySphere;
-	std::string cubeMap;
-	std::string missionXML;
-	std::string eventXML;
-	std::string conversationXML;
-
-	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "missionxml"), "source", missionXML);
-	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "eventxml"), "source", eventXML);
-	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "conversationxml"), "source", conversationXML);
-
-	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);
-	myCurrentLevel->myMissionManager = new MissionManager(*myCurrentLevel, *myCurrentLevel->myPlayer, missionXML);
-	myCurrentLevel->myEventManager = new EventManager(eventXML, *myCurrentLevel->myConversationManager);
-
-	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
-	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);
-
-	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap(cubeMap);
-
-	myCurrentLevel->SetSkySphere(skySphere, "Data/Resource/Shader/S_effect_skybox.fx");
-
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "directionallight"); entityElement != nullptr;
-		entityElement = reader.FindNextElement(entityElement, "directionallight"))
-	{
-		tinyxml2::XMLElement* directionalElement = reader.ForceFindFirstChild(entityElement, "rotation");
-
-		Prism::DirectionalLight* newDirLight = new Prism::DirectionalLight();
-
-		CU::Vector3<float> lightDirection;
-		reader.ForceReadAttribute(directionalElement, "X", lightDirection.x);
-		reader.ForceReadAttribute(directionalElement, "Y", lightDirection.y);
-		reader.ForceReadAttribute(directionalElement, "Z", lightDirection.z);
-		newDirLight->SetDir(lightDirection);
-
-		directionalElement = reader.ForceFindFirstChild(entityElement, "color");
-
-		CU::Vector4<float> lightColor;
-		reader.ForceReadAttribute(directionalElement, "R", lightColor.myR);
-		reader.ForceReadAttribute(directionalElement, "G", lightColor.myG);
-		reader.ForceReadAttribute(directionalElement, "B", lightColor.myB);
-		reader.ForceReadAttribute(directionalElement, "A", lightColor.myA);
-		newDirLight->SetColor(lightColor);
-
-		//myScene->AddLight(newDirLight);
-		myCurrentLevel->myDirectionalLights.Add(newDirLight);
-	}
-
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "prop"); entityElement != nullptr;
-		entityElement = reader.FindNextElement(entityElement, "prop"))
-	{
-		Entity* newEntity = new Entity(eEntityType::PROP, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
-		std::string propType;
-		reader.ForceReadAttribute(entityElement, "propType", propType);
-		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
-
-		std::string defendName;
-		reader.ReadAttribute(entityElement, "defendName", defendName);
-		defendName = CU::ToLower(defendName);
-
-		tinyxml2::XMLElement* propElement = reader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> propPosition;
-		reader.ForceReadAttribute(propElement, "X", propPosition.x);
-		reader.ForceReadAttribute(propElement, "Y", propPosition.y);
-		reader.ForceReadAttribute(propElement, "Z", propPosition.z);
-		newEntity->myOrientation.SetPos(propPosition*10.f);
-
-		propElement = reader.ForceFindFirstChild(entityElement, "rotation");
-		CU::Vector3<float> propRotation;
-		reader.ForceReadAttribute(propElement, "X", propRotation.x);
-		reader.ForceReadAttribute(propElement, "Y", propRotation.y);
-		reader.ForceReadAttribute(propElement, "Z", propRotation.z);
-
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(propRotation.x) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(propRotation.y) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
-
-		newEntity->AddComponent<PropComponent>()->Init(defendName);
-
-		int health = 30;
-		newEntity->AddComponent<HealthComponent>()->Init(health);
-
-		myCurrentLevel->myEntities.Add(newEntity);
-		myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);
-	}
-
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "trigger"); entityElement != nullptr;
-		entityElement = reader.FindNextElement(entityElement, "trigger"))
-	{
-		myCurrentLevel->AddTrigger(reader, entityElement);
-	}
-
-	for (tinyxml2::XMLElement* entityElement = reader.FindFirstChild(levelElement, "powerup"); entityElement != nullptr;
-		entityElement = reader.FindNextElement(entityElement, "powerup"))
-	{
-		Entity* newEntity = new Entity(eEntityType::POWERUP, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
-
-		tinyxml2::XMLElement* powerUpElement = reader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> powerUpPosition;
-		reader.ForceReadAttribute(powerUpElement, "X", powerUpPosition.x);
-		reader.ForceReadAttribute(powerUpElement, "Y", powerUpPosition.y);
-		reader.ForceReadAttribute(powerUpElement, "Z", powerUpPosition.z);
-		newEntity->myOrientation.SetPos(powerUpPosition*10.f);
-
-		powerUpElement = reader.ForceFindFirstChild(entityElement, "type");
-		std::string powerUp;
-		reader.ForceReadAttribute(powerUpElement, "powerup", powerUp);
-
-		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, powerUp);
-		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myCurrentLevel->myPlayer);
-		myCurrentLevel->myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
-
-		myCurrentLevel->myEntities.Add(newEntity);
-	}
-	reader.CloseDocument();
-
-	Prism::EmitterData data;
-	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
-
-	myCurrentLevel->myEmitter = new Prism::EmitterInstance();
-	myCurrentLevel->myEmitter->Initiate(data);
-	myCurrentLevel->myEmitter->SetPosition({ 5, 5, 5 });
-
-	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
-	{
-		if (myCurrentLevel->myEntities[i]->GetComponent<AIComponent>() != nullptr)
-		{
-			std::string targetName = myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->GetTargetName();
-			Entity* target = myCurrentLevel->GetEntityWithName(targetName);
-			myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myCurrentLevel->myPlayer);
-			if (target != nullptr)
-			{
-				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target);
-			}
-		}
-	}
-
-
-	myCurrentLevel->myScene->SetCamera(myCurrentLevel->myCamera);
-
-	for (int i = 0; i < myCurrentLevel->myDirectionalLights.Size(); ++i)
-	{
-		myCurrentLevel->myScene->AddLight(myCurrentLevel->myDirectionalLights[i]);
-	}
-
-	for (int i = 0; i < myCurrentLevel->myPointLights.Size(); ++i)
-	{
-		myCurrentLevel->myScene->AddLight(myCurrentLevel->myPointLights[i]);
-	}
-
-	for (int i = 0; i < myCurrentLevel->mySpotLights.Size(); ++i)
-	{
-		myCurrentLevel->myScene->AddLight(myCurrentLevel->mySpotLights[i]);
-	}
-
-	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
-	{
-		GraphicsComponent* gfxComp = myCurrentLevel->myEntities[i]->GetComponent<GraphicsComponent>();
-
-		if (gfxComp != nullptr)
-		{
-			myCurrentLevel->myScene->AddInstance(gfxComp->GetInstance());
-		}
-	}
-
-	myCurrentLevel->myMissionManager->Init();
-}
-
 bool LevelFactory::IsLastLevel() const
 {
 	if (myLevelPaths.find(myCurrentID + 1) == myLevelPaths.end())
@@ -295,6 +117,314 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 		{
 			DL_ASSERT("[LevelFactory] Wrong ID-number in levelList.xml! The numbers should be counting up, in order.");
 		}
+		if (myCurrentID >= 10)
+		{
+			DL_ASSERT("[LevelFactory] Can't handle level ID with two digits.");
+		}
 	}
 	reader.CloseDocument();
+}
+
+void LevelFactory::ReadXML(const std::string& aFilePath)
+{
+	myCurrentLevel->myScene = new Prism::Scene();
+	myCurrentLevel->myWeaponFactory = new WeaponFactory();
+	myCurrentLevel->myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
+	myCurrentLevel->myWeaponFactory->LoadProjectiles("Data/Script/LI_list_projectile.xml");
+	myCurrentLevel->myEntityFactory = new EntityFactory(myCurrentLevel->myWeaponFactory);
+	myCurrentLevel->myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml");
+	myCurrentLevel->myCollisionManager = new CollisionManager();
+	myCurrentLevel->myBulletManager = new BulletManager(*myCurrentLevel->myCollisionManager, *myCurrentLevel->myScene);
+	myCurrentLevel->myBulletManager->LoadFromFactory(myCurrentLevel->myWeaponFactory, myCurrentLevel->myEntityFactory, "Data/Script/LI_list_projectile.xml");
+
+	myDirectionalLights.DeleteAll();
+	myPointLights.DeleteAll();
+	mySpotLights.DeleteAll();
+
+	LoadPlayer();
+
+	Sleep(10);
+	XMLReader reader;
+	reader.OpenDocument(aFilePath);
+	tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("root");
+	levelElement = reader.ForceFindFirstChild(levelElement, "scene");
+	std::string skySphere;
+	std::string cubeMap;
+	std::string missionXML;
+	std::string eventXML;
+	std::string conversationXML;
+
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "missionxml"), "source", missionXML);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "eventxml"), "source", eventXML);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "conversationxml"), "source", conversationXML);
+
+	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);
+	myCurrentLevel->myMissionManager = new MissionManager(*myCurrentLevel, *myCurrentLevel->myPlayer, missionXML);
+	myCurrentLevel->myEventManager = new EventManager(eventXML, *myCurrentLevel->myConversationManager);
+
+	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
+	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);
+
+	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap(cubeMap);
+
+	SetSkySphere(skySphere, "Data/Resource/Shader/S_effect_skybox.fx");
+
+	LoadLights(reader, levelElement);
+	LoadProps(reader, levelElement);
+	LoadDefendables(reader, levelElement);
+	LoadTriggers(reader, levelElement);
+	LoadPowerups(reader, levelElement);
+	
+	reader.CloseDocument();
+
+	Prism::EmitterData data;
+	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
+
+	myCurrentLevel->myEmitter = new Prism::EmitterInstance();
+	myCurrentLevel->myEmitter->Initiate(data);
+	myCurrentLevel->myEmitter->SetPosition({ 5, 5, 5 });
+
+	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
+	{
+		if (myCurrentLevel->myEntities[i]->GetComponent<AIComponent>() != nullptr)
+		{
+			std::string targetName = myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->GetTargetName();
+			Entity* target = myCurrentLevel->GetEntityWithName(targetName);
+			myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myCurrentLevel->myPlayer);
+			if (target != nullptr)
+			{
+				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target);
+			}
+		}
+	}
+
+	AddToScene();
+
+	myCurrentLevel->myMissionManager->Init();
+}
+
+void LevelFactory::ReadLevelSettings()
+{
+	XMLReader reader;
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml";
+	reader.OpenDocument(settingsPath);
+
+	std::string firstWeapon;
+	std::string secondWeapon;
+	std::string thirdWeapon;
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
+
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon)); // replace these with UpgradeWeapon later
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+
+	reader.CloseDocument();
+}
+
+void LevelFactory::LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	LoadDirectionalLights(aReader, aLevelElement);
+
+
+
+}
+
+void LevelFactory::LoadDirectionalLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "directionallight"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "directionallight"))
+	{
+		tinyxml2::XMLElement* directionalElement = aReader.ForceFindFirstChild(entityElement, "rotation");
+
+		Prism::DirectionalLight* newDirLight = new Prism::DirectionalLight();
+
+		CU::Vector3<float> lightDirection;
+		aReader.ForceReadAttribute(directionalElement, "X", lightDirection.x);
+		aReader.ForceReadAttribute(directionalElement, "Y", lightDirection.y);
+		aReader.ForceReadAttribute(directionalElement, "Z", lightDirection.z);
+		newDirLight->SetDir(lightDirection);
+
+		directionalElement = aReader.ForceFindFirstChild(entityElement, "color");
+
+		CU::Vector4<float> lightColor;
+		aReader.ForceReadAttribute(directionalElement, "R", lightColor.myR);
+		aReader.ForceReadAttribute(directionalElement, "G", lightColor.myG);
+		aReader.ForceReadAttribute(directionalElement, "B", lightColor.myB);
+		aReader.ForceReadAttribute(directionalElement, "A", lightColor.myA);
+		newDirLight->SetColor(lightColor);
+
+		myDirectionalLights.Add(newDirLight);
+	}
+}
+
+void LevelFactory::LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "prop"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "prop"))
+	{
+		Entity* newEntity = new Entity(eEntityType::PROP, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
+		std::string propType;
+		aReader.ForceReadAttribute(entityElement, "propType", propType);
+		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
+
+		newEntity->AddComponent<PropComponent>()->Init("");
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
+	}
+}
+
+void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "defendable"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "defendable"))
+	{
+		Entity* newEntity = new Entity(eEntityType::DEFENDABLE, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
+		std::string propType;
+		aReader.ForceReadAttribute(entityElement, "propType", propType);
+		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
+
+		std::string defendName;
+		aReader.ForceReadAttribute(entityElement, "defendName", defendName);
+		defendName = CU::ToLower(defendName);
+
+		newEntity->AddComponent<PropComponent>()->Init(defendName);
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
+	}
+}
+
+void LevelFactory::LoadTriggers(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "trigger"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "trigger"))
+	{
+		myCurrentLevel->AddTrigger(aReader, entityElement);
+	}
+}
+
+void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "powerup"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "powerup"))
+	{
+		Entity* newEntity = new Entity(eEntityType::POWERUP, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
+
+		tinyxml2::XMLElement* powerUpElement = aReader.ForceFindFirstChild(entityElement, "position");
+		CU::Vector3<float> powerUpPosition;
+		aReader.ForceReadAttribute(powerUpElement, "X", powerUpPosition.x);
+		aReader.ForceReadAttribute(powerUpElement, "Y", powerUpPosition.y);
+		aReader.ForceReadAttribute(powerUpElement, "Z", powerUpPosition.z);
+		newEntity->myOrientation.SetPos(powerUpPosition*10.f);
+
+		powerUpElement = aReader.ForceFindFirstChild(entityElement, "type");
+		std::string powerUp;
+		aReader.ForceReadAttribute(powerUpElement, "powerup", powerUp);
+
+		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, powerUp);
+		newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myCurrentLevel->myPlayer);
+		myCurrentLevel->myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
+
+		myCurrentLevel->myEntities.Add(newEntity);
+	}
+}
+
+void LevelFactory::LoadPlayer()
+{
+
+	Entity* player = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
+		, "Data/Resource/Shader/S_effect_pbl.fx");
+	player->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
+	player->AddComponent<ShootingComponent>();
+	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
+	player->AddComponent<ShieldComponent>()->Init();
+	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
+
+	XMLReader reader;
+	reader.OpenDocument("Data/Setting/SET_player.xml");
+	int health = 0;
+	bool invulnerable = false;
+	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
+	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
+
+	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
+	myCurrentLevel->myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
+
+	myCurrentLevel->myEntities.Add(player);
+	myCurrentLevel->myCamera = new Prism::Camera(player->myOrientation);
+	player->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
+	float maxMetersToEnemies = 0;
+	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
+	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
+
+	reader.CloseDocument();
+	myCurrentLevel->myPlayer = player;
+	ReadLevelSettings();
+	
+}
+
+void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate)
+{
+	tinyxml2::XMLElement* propElement = aReader.ForceFindFirstChild(aLevelElement, "position");
+	CU::Vector3<float> propPosition;
+	aReader.ForceReadAttribute(propElement, "X", propPosition.x);
+	aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
+	aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
+	aEntityToCreate->myOrientation.SetPos(propPosition*10.f);
+
+	propElement = aReader.ForceFindFirstChild(aLevelElement, "rotation");
+	CU::Vector3<float> propRotation;
+	aReader.ForceReadAttribute(propElement, "X", propRotation.x);
+	aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
+	aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
+
+	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundX(propRotation.x) * aEntityToCreate->myOrientation;
+	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOrientation;
+	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOrientation;
+
+	int health = 30;
+	aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
+
+	myCurrentLevel->myEntities.Add(aEntityToCreate);
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), aEntityToCreate->GetType());
+}
+
+void LevelFactory::AddToScene()
+{
+	myCurrentLevel->myScene->SetCamera(myCurrentLevel->myCamera);
+
+	for (int i = 0; i < myDirectionalLights.Size(); ++i)
+	{
+		myCurrentLevel->myScene->AddLight(myDirectionalLights[i]);
+	}
+
+	for (int i = 0; i < myPointLights.Size(); ++i)
+	{
+		myCurrentLevel->myScene->AddLight(myPointLights[i]);
+	}
+
+	for (int i = 0; i < mySpotLights.Size(); ++i)
+	{
+		myCurrentLevel->myScene->AddLight(mySpotLights[i]);
+	}
+
+	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
+	{
+		GraphicsComponent* gfxComp = myCurrentLevel->myEntities[i]->GetComponent<GraphicsComponent>();
+
+		if (gfxComp != nullptr)
+		{
+			myCurrentLevel->myScene->AddInstance(gfxComp->GetInstance());
+		}
+	}
+}
+
+void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::string& aEffectFileName)
+{
+	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		aModelFilePath, aEffectFileName);
+	delete myCurrentLevel->mySkySphere;
+	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere, 
+		myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
 }

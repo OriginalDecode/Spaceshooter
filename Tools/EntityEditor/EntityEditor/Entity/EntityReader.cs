@@ -97,6 +97,66 @@ namespace EntityEditor
                 myEntityData.myHealthComponent.myIsActive = true;
                 ReadHealthComponent(aNode);
             }
+            else if (aNode.Name == "PhysicsComponent")
+            {
+                myEntityData.myPhysicsComponent.myIsActive = true;
+                ReadPhysicsComponent(aNode);
+            }
+            else if (aNode.Name == "BulletComponent")
+            {
+                myEntityData.myBulletComponent.myIsActive = true;
+                ReadBulletComponent(aNode);
+            }
+            else if (aNode.Name == "PowerUpComponent")
+            {
+                myEntityData.myPowerUpComponent.myIsActive = true;
+                ReadPowerUpComponent(aNode);
+            }
+        }
+
+        private void ReadPowerUpComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Power")
+                {
+                    myXMLWrapper.ReadAttribute(e, "type", ref myEntityData.myPowerUpComponent.myType);
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myPowerUpComponent.myValue);
+                    myXMLWrapper.ReadAttribute(e, "time", ref myEntityData.myPowerUpComponent.myTime);
+                }
+                if (e.Name == "WeaponUpgrade")
+                {
+                    myEntityData.myPowerUpComponent.myType = "WeaponUpgrade";
+                    myXMLWrapper.ReadAttribute(e, "entityName", ref myEntityData.myPowerUpComponent.myUpgradedWeapon);
+                    myXMLWrapper.ReadAttribute(e, "weaponID", ref myEntityData.myPowerUpComponent.myWeaponID);
+                }
+            }
+        }
+
+        private void ReadBulletComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "lifeTime")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myBulletComponent.myLifeTime);
+                }
+                if (e.Name == "damage")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myBulletComponent.myDamage);
+                }
+            }
+        }
+
+        private void ReadPhysicsComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "Weight")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myHealthComponent.myHealth);
+                }
+            }
         }
 
         private void ReadHealthComponent(XmlNode aNode)

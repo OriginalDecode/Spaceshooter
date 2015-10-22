@@ -12,7 +12,7 @@ class SurvivalMission : public Mission
 public:
 	SurvivalMission(XMLReader& aReader, tinyxml2::XMLElement* aElement);
 
-	bool Update(float aDeltaTime) override;
+	bool Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory) override;
 	void Start() override;
 	void End() override;
 

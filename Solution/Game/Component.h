@@ -9,6 +9,8 @@ struct InputNote;
 struct MissionNote;
 struct PowerUpNote;
 struct ShootNote;
+struct HealthNote;
+struct ShieldNote;
 
 
 class Component
@@ -26,6 +28,8 @@ public:
 	virtual void ReceiveNote(const PowerUpNote& aNote);
 	virtual void ReceiveNote(const ShootNote& aMessage);
 	virtual void ReceiveNote(const GUINote& aNote);
+	virtual void ReceiveNote(const HealthNote& aNote);
+	virtual void ReceiveNote(const ShieldNote& aNote);
 
 	Entity& GetEntity();
 

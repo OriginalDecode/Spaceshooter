@@ -16,7 +16,7 @@ public:
 	Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement);
 	virtual ~Mission();
 
-	virtual bool Update(float aDeltaTime) = 0;
+	virtual bool Update(float aDeltaTime, int aMissionIndex, eMissionCategory aCategory) = 0;
 	virtual void Start();
 	void EventsStart();
 	virtual void End();

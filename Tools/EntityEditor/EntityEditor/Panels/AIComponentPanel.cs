@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -26,8 +27,6 @@ namespace EntityEditor.Panels
         private Vector3Component myAvoidanceOffset;
         private DropDownComponent myAIMode;
         private Label myAvoidanceLabel = new Label();
-
-        private bool myHasLoadedComponent = false;
 
         public AIComponentPanel(Point aLocation, Size aSize, Form aParent)
             : base(aLocation, aSize, aParent)
@@ -126,7 +125,8 @@ namespace EntityEditor.Panels
             myAIComponent.myAIMode = myAIMode.GetDropDown().SelectedIndex + 1;
 
             float avoidanceDistance = 0;
-            if (myAvoidanceDistance.GetTextBox().Text != "") avoidanceDistance = float.Parse(myAvoidanceDistance.GetTextBox().Text);
+            if (myAvoidanceDistance.GetTextBox().Text != "") 
+                avoidanceDistance = StringUtilities.ToFloat(myAvoidanceDistance.GetTextBox().Text);
             myAIComponent.myAvoidanceDistance = avoidanceDistance;
             myAIComponent.myAvoidanceOffset.myX = myAvoidanceOffset.GetX();
             myAIComponent.myAvoidanceOffset.myY = myAvoidanceOffset.GetY();
@@ -134,15 +134,6 @@ namespace EntityEditor.Panels
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetAIComponent(myAIComponent);
-        }
-
-        private void PanelDataChanged(object sender, EventArgs e)
-        {
-            if (myHasLoadedComponent == true)
-            {
-                SaveSettings();
-                LoadSettings();
-            }
         }
     }
 }

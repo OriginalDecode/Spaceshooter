@@ -104,7 +104,61 @@ namespace EntityEditor.Entity
             {
                 WriteHealthComponent(aWriter);
             }
+            if (myEntityData.myPhysicsComponent.myIsActive == true)
+            {
+                WritePhysicsComponent(aWriter);
+            }
+            if (myEntityData.myBulletComponent.myIsActive == true)
+            {
+                WriteBulletComponent(aWriter);
+            }
+            if (myEntityData.myPowerUpComponent.myIsActive == true)
+            {
+                WritePowerUpComponent(aWriter);
+            }
 
+            aWriter.WriteEndElement();
+            aWriter.WriteEndElement();
+        }
+
+        private void WritePowerUpComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("PowerUpComponent");
+            if (myEntityData.myPowerUpComponent.myType == "WeaponUpgrade")
+            {
+                aWriter.WriteStartElement("WeaponUpgrade");
+                aWriter.WriteAttributeString("entityName", myEntityData.myPowerUpComponent.myUpgradedWeapon);
+                aWriter.WriteAttributeString("weaponID", myEntityData.myPowerUpComponent.myWeaponID.ToString());
+                aWriter.WriteEndElement();
+            }
+            else
+            {
+                aWriter.WriteStartElement("Power");
+                aWriter.WriteAttributeString("type", myEntityData.myPowerUpComponent.myType);
+                aWriter.WriteAttributeString("value", myEntityData.myPowerUpComponent.myValue.ToString());
+                aWriter.WriteAttributeString("time", myEntityData.myPowerUpComponent.myTime.ToString());
+                aWriter.WriteEndElement();
+            }
+            aWriter.WriteEndElement();
+        }
+
+        private void WriteBulletComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("BulletComponent");
+            aWriter.WriteStartElement("lifeTime");
+            aWriter.WriteAttributeString("value", myEntityData.myBulletComponent.myLifeTime.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("damage");
+            aWriter.WriteAttributeString("value", myEntityData.myBulletComponent.myDamage.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteEndElement();
+        }
+
+        private void WritePhysicsComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("PhysicsComponent");
+            aWriter.WriteStartElement("Weight");
+            aWriter.WriteAttributeString("value", myEntityData.myPhysicsComponent.myWeight.ToString());
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }

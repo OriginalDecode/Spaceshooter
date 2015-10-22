@@ -147,6 +147,11 @@ void InGameState::CompleteGame()
 	myIsComplete = true;
 }
 
+void InGameState::LoadLevelSettings()
+{
+	myLevelFactory->ReadLevelSettings();
+}
+
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 
 	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
 {

@@ -50,3 +50,7 @@ void Subscriber::ReceiveMessage(const PowerUpMessage&)
 void Subscriber::ReceiveMessage(const DefendMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const ResizeMessage&)
+{
+}

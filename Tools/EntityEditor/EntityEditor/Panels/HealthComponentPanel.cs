@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
+using CSharpUtilities;
 using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
@@ -14,8 +15,6 @@ namespace EntityEditor.Panels
         private Entity.HealthComponentData myHealthComponent;
 
         private NumericTextComponent myHealth;
-
-        private bool myHasLoadedComponenet = false;
 
         public HealthComponentPanel(Point aLocation, Size aSize, Form aParent)
             : base(aLocation, aSize, aParent)
@@ -33,10 +32,10 @@ namespace EntityEditor.Panels
 
         public void Load(Entity.HealthComponentData aHealthComponent)
         {
-            myHasLoadedComponenet = false;
+            myHasLoadedComponent = false;
             myHealthComponent = aHealthComponent;
             LoadSettings();
-            myHasLoadedComponenet = true;
+            myHasLoadedComponent = true;
         }
 
         protected override void LoadSettings()
@@ -46,19 +45,10 @@ namespace EntityEditor.Panels
 
         protected override void SaveSettings()
         {
-            myHealthComponent.myHealth = int.Parse(myHealth.GetTextBox().Text);
+            myHealthComponent.myHealth = StringUtilities.ToInt(myHealth.GetTextBox().Text);
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetHealthComponent(myHealthComponent);
-        }
-
-        private void PanelDataChanged(object sender, EventArgs e)
-        {
-            if (myHasLoadedComponenet == true)
-            {
-                SaveSettings();
-                LoadSettings();
-            }
         }
     }
 }

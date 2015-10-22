@@ -150,6 +150,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
 	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, bool aIsHoming)
 {
+
 	Entity* bullet = nullptr;
 	if (aEntityType == eEntityType::PLAYER)
 	{
@@ -158,6 +159,28 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	else if (aEntityType == eEntityType::ENEMY)
 	{
 		bullet = aWeaponData->myEnemyBullets[aWeaponData->myEnemyBulletCounter];
+	}
+
+	if (aEntityType == eEntityType::PLAYER)
+	{
+		if (aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
+			|| aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_2
+			|| aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", bullet->GetAudioSFXID());
+		}
+		if (aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_1
+			|| aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_2
+			|| aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", bullet->GetAudioSFXID());
+		}
+		if (aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_1
+			|| aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_2
+			|| aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", bullet->GetAudioSFXID());
+		}
 	}
 
 	DL_ASSERT_EXP(bullet != nullptr, "Non Player/Enemy cant activate bullets!");

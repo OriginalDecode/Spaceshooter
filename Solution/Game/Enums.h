@@ -11,6 +11,7 @@ enum class eMessageType
 	CONVERSATION,
 	EVENT_QUEUE_EMPTY,
 	DEFEND,
+	RESIZE,
 	COUNT,
 };
 
@@ -38,6 +39,7 @@ enum eEntityType //Collision manager needs this as ints!
 	TRIGGER = 16,
 	PROP = 32,
 	POWERUP = 64,
+	DEFENDABLE = 128
 };
 
 enum class ePowerUpType
@@ -55,6 +57,13 @@ enum class eMissionType
 {
 	WAYPOINT,
 	KILL_ALL,
+};
+
+enum class eMissionCategory
+{
+	REQUIRED,
+	NOT_REQUIRED,
+	DUMMY
 };
 
 enum class eMissionEvent

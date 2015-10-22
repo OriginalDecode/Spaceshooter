@@ -23,7 +23,10 @@ namespace Prism
 		Model2D();
 		~Model2D();
 
+
 		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
+		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize, const char* anEffectFilePath);
+
 		void Render(const float aDrawX, const float aDrawY);
 		void Rotate(float aRadian);
 

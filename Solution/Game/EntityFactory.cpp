@@ -392,6 +392,11 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
 {
+	if (myEntities.find(aEntityTag) == myEntities.end())
+	{
+		std::string error = "[EntityFactory] No entity with name " + aEntityTag;
+		DL_ASSERT(error);
+	}
 	auto it = myEntities.find(aEntityTag);
 	Entity* sourceEntity = it->second.myEntity;
 

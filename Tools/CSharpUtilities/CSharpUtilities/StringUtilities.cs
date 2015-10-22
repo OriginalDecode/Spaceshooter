@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace CSharpUtilities
 {
    public class StringUtilities
     {
-
+       static private NumberFormatInfo myNumberFormat = new CultureInfo("en-US", false).NumberFormat;
         public static void PrintString(string aString)
         {
             MessageBox.Show(aString, "Test");
@@ -72,6 +73,33 @@ namespace CSharpUtilities
             convertedPath += "Data/";
 
             return convertedPath;
+        }
+
+        public static float ToFloat(string aText)
+        {
+            float value = 0;
+            if(aText != "")
+                value = float.Parse(aText, myNumberFormat);
+
+            return value;
+        }
+
+        public static int ToInt(string aText)
+        {
+            int value = 0;
+            if(aText != "") 
+                value = int.Parse(aText, myNumberFormat);
+
+            return value;
+        }
+
+        public static double ToDouble(string aText)
+        {
+            double value = 0;
+            if(aText != "")
+                value = double.Parse(aText, myNumberFormat);
+
+            return value;
         }
     }
 }

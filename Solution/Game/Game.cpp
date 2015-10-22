@@ -46,7 +46,6 @@ bool Game::Init(HWND& aHwnd)
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
-	reader.ReadAttribute(reader.FindFirstChild("canWinGame"), "bool", myCanWinGame);
 	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
@@ -59,9 +58,7 @@ bool Game::Init(HWND& aHwnd)
 
 	if (startInMenu == false)
 	{
-		myGame = new InGameState(myInputWrapper, myShowMessages);
-		myStateStack.PushMainGameState(myGame);
-		myGame->SetLevel(1);
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::LOAD_GAME, 1));
 	}
 	else
 	{
