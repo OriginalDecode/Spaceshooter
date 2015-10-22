@@ -114,10 +114,6 @@ void InputComponent::Update(float aDeltaTime)
 		yRotation = -myMaxSteeringSpeed;
 	}
 
-	std::string tempX = std::to_string(xRotation);
-	tempX += ", " + std::to_string(yRotation);
-	SetWindowTextA(GetActiveWindow(), tempX.c_str());
-
 	RotateX(yRotation);
 	RotateY(xRotation);
 
