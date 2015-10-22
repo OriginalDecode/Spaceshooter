@@ -287,29 +287,35 @@ void CollisionManager::DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, flo
 	}
 }
 
-Entity* CollisionManager::GetClosestEnemyWithinSphere(CU::Vector3<float> aCenter, float aRadius)
+Entity* CollisionManager::GetClosestEnemyWithinSphere(const CU::Matrix44<float> &anOrientation, float aRadius)
 {
 	Sphere sphere;
-	sphere.myCenterPosition = aCenter;
+	sphere.myCenterPosition = anOrientation.GetPos();
 	sphere.myRadius = aRadius;
 	sphere.myRadiusSquared = aRadius * aRadius;
 	Entity* closestEnemy = nullptr;
+	float bestDot = 0.f;
 
 	for (int i = myEnemies.Size() - 1; i >= 0; --i)
 	{
 		if (CU::Intersection::SphereVsSphere(sphere, myEnemies[i]->GetSphere()) == true && myEnemies[i]->GetEntity().GetComponent<HealthComponent>()->IsAlive() == true)
 		{
 			Entity* enemy = &myEnemies[i]->GetEntity();
-
-			if (closestEnemy == nullptr)
-			{
-				closestEnemy = enemy;
-				continue;
-			}
 			
-			if (CU::Length(enemy->myOrientation.GetPos()) > CU::Length(closestEnemy->myOrientation.GetPos()))
+			float dotValue = CU::Dot(enemy->myOrientation.GetPos(), anOrientation.GetPos());
+			if (dotValue > 0.7)
 			{
-				closestEnemy = enemy;
+				if (closestEnemy == nullptr)
+				{
+					closestEnemy = enemy;
+					bestDot = dotValue;
+					continue;
+				}
+				if (dotValue > bestDot)
+				{
+					closestEnemy = enemy;
+					bestDot = dotValue;
+				}
 			}
 		}
 	}
