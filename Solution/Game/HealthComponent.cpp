@@ -17,6 +17,8 @@ void HealthComponent::Init(int aMaxHealth, bool anIsInvulnerable)
 	myMaxHealth = aMaxHealth;
 	myCurrentHealth = myMaxHealth;
 	myIsInvulnerable = anIsInvulnerable;
+	myInvulnerablityTimeCurrent = 0.f;
+	myInvulnerablityTimeMax = 0.f;
 	DL_ASSERT_EXP(myMaxHealth > 0, "Health component inited to 0 hp.");
 }
 
@@ -24,14 +26,11 @@ void HealthComponent::AddHealth(int aHealthToAdd)
 {
 	myCurrentHealth += aHealthToAdd;
 
-	if (myIsInvulnerable == false) // testing
+	if (myCurrentHealth > myMaxHealth)
 	{
-		if (myCurrentHealth > myMaxHealth)
-		{
-			myCurrentHealth = myMaxHealth;
-		}
+		myCurrentHealth = myMaxHealth;
 	}
-
+	
 	myEntity.SendNote(HealthNote(myCurrentHealth, myMaxHealth));
 }
 
@@ -54,11 +53,30 @@ void HealthComponent::RemoveHealth(int aHealthToRemove)
 	}
 }
 
+void HealthComponent::Update(float aDeltaTime)
+{
+	if (myIsInvulnerable == true)
+	{
+		myInvulnerablityTimeCurrent += aDeltaTime;
+		if (myInvulnerablityTimeCurrent >= myInvulnerablityTimeMax)
+		{
+			myInvulnerablityTimeCurrent = 0.f;
+			myInvulnerablityTimeMax = 0.f;
+			myIsInvulnerable = false;
+		}
+	}
+}
+
 void HealthComponent::ReceiveNote(const PowerUpNote& aNote)
 {
 	if (aNote.myType == ePowerUpType::HEALTHKIT)
 	{
 		AddHealth(static_cast<int>(aNote.myValue));
+	}
+	else if (aNote.myType == ePowerUpType::INVULNERABLITY)
+	{
+		myInvulnerablityTimeCurrent = 0.f;
+		myInvulnerablityTimeMax = aNote.myValue;
 	}
 }
 

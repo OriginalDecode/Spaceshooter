@@ -166,9 +166,6 @@
     <ClCompile Include="MissionContainer.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
-    <ClCompile Include="EmitterComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -384,8 +381,8 @@
     <ClInclude Include="ResizeMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
-    <ClInclude Include="EmitterComponent.h">
-      <Filter>Components</Filter>
+    <ClInclude Include="BulletCollisionToGUIMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

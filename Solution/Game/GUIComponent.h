@@ -37,8 +37,11 @@ public:
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	void ReceiveMessage(const ResizeMessage& aMessage) override;
+	void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage) override;
 
 	void ReadXML();
+
+	void Reset() override;
 
 private:
 	Prism::Model2D* myReticle;
@@ -51,6 +54,8 @@ private:
 	Prism::Model2D* myDefendArrow;
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
+	Prism::Model2D* myHitMarker;
+	float myHitMarkerTimer;
 
 
 	CU::Vector2<float> mySteeringTargetPosition;

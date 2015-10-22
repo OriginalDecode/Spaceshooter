@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include <Camera.h>
+#include "BulletCollisionToGUIMessage.h"
 #include "Constants.h"
 #include "ConversationMessage.h"
 #include "DefendMessage.h"
@@ -42,11 +43,13 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShieldBar(new Prism::Model2D)
 	, myHealthBarGlow(new Prism::Model2D)
 	, myShieldBarGlow(new Prism::Model2D)
+	, myHitMarker(new Prism::Model2D)
 
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
@@ -63,6 +66,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myOriginalBarSize = 32.f;
 	myBarSize = myOriginalBarSize;
 
+	ReadXML();
+
 	myHealthBarGlow->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { myBarSize, myBarSize });
 	myHealthBar->Init("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", { myBarSize, myBarSize });
 
@@ -72,7 +77,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myHealthBarCount = 20;
 	myShieldBarCount = 20;
 
-
+	myHitMarker->Init("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds", { 256, 256 });
 }
 
 GUIComponent::~GUIComponent()
@@ -80,6 +85,7 @@ GUIComponent::~GUIComponent()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -92,6 +98,7 @@ GUIComponent::~GUIComponent()
 	delete myModel2DToRender;
 	delete myDefendMarker;
 	delete myDefendArrow;
+	delete myHitMarker;
 	myReticle = nullptr;
 	myPowerUpArrow = nullptr;
 	myPowerUpMarker = nullptr;
@@ -104,6 +111,7 @@ GUIComponent::~GUIComponent()
 	myModel2DToRender = nullptr;
 	myDefendArrow = nullptr;
 	myDefendMarker = nullptr;
+	myHitMarker = nullptr;
 
 	delete myHealthBar;
 	myHealthBar = nullptr;
@@ -118,7 +126,7 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 
 void GUIComponent::Update(float aDeltaTime)
 {
-	aDeltaTime;
+	myHitMarkerTimer -= aDeltaTime;
 
 }
 
@@ -200,15 +208,16 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
 	//Prism::Engine::GetInstance()->EnableAlphaBlending();
+
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
+	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
+		, -halfHeight - mySteeringTargetPosition.y);
 	Prism::Engine::GetInstance()->PrintDebugText(myConversation, { halfWidth, -halfHeight - 200.f });
 	myReticle->Render(halfWidth, -halfHeight);
-	mySteeringTarget->Render(halfWidth + mySteeringTargetPosition.x
-		, -halfHeight - mySteeringTargetPosition.y);
+	mySteeringTarget->Render(steeringPos.x, steeringPos.y);
 	myCrosshair->Render(halfWidth, -(halfHeight));
-
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
@@ -271,6 +280,11 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		myShieldBar->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
 	}
 
+	if (myHitMarkerTimer >= 0.f)
+	{
+		myHitMarker->Render(steeringPos.x, steeringPos.y);
+	}
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 	//Prism::Engine::GetInstance()->DisableAlpaBlending();
 }
@@ -310,8 +324,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 
 void GUIComponent::ReceiveNote(const HealthNote& aNote)
 {
-	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) *
-		20 + 0.5f)));
+	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) * 20 + 0.5f)));
 }
 
 void GUIComponent::ReceiveNote(const ShieldNote& aNote)
@@ -348,4 +361,50 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 	myShieldBar->SetSize({ myBarSize, myBarSize });
 	myShieldBarGlow->SetSize({ myBarSize, myBarSize });
+}
+
+void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
+{
+	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
+	{
+		myHitMarkerTimer = 0.1f;
+	}
+}
+
+void GUIComponent::ReadXML()
+{
+	XMLReader reader;
+	reader.OpenDocument("Data/Resource/GUI/GUI_bar_health.xml");
+	tinyxml2::XMLElement* root = reader.FindFirstChild("root");
+	tinyxml2::XMLElement* position = reader.FindFirstChild(root, "Position");
+	reader.ForceReadAttribute(position, "X", myOriginalHealthBarRenderPosition.x);
+	reader.ForceReadAttribute(position, "Y", myOriginalHealthBarRenderPosition.y);
+
+	reader.CloseDocument();
+
+	reader.OpenDocument("Data/Resource/GUI/GUI_bar_shield.xml");
+	root = reader.FindFirstChild("root");
+	position = reader.FindFirstChild(root, "Position");
+	reader.ForceReadAttribute(position, "X", myOriginalShieldBarRenderPosition.x);
+	reader.ForceReadAttribute(position, "Y", myOriginalShieldBarRenderPosition.y);
+
+	reader.CloseDocument();
+
+
+
+	//myHealthBarRenderPosition = myOriginalHealthBarRenderPosition;
+	//myShieldBarRenderPosition = myOriginalShieldBarRenderPosition;
+
+	float offset = Prism::Engine::GetInstance()->GetWindowSize().y /
+		static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
+
+
+	myBarSize = (myOriginalBarSize * offset);
+
+}
+
+void GUIComponent::Reset()
+{
+	myHealthBarCount = 20;
+	myShieldBarCount = 20;
 }

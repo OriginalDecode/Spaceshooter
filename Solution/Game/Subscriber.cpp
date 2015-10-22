@@ -54,3 +54,7 @@ void Subscriber::ReceiveMessage(const DefendMessage&)
 void Subscriber::ReceiveMessage(const ResizeMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const BulletCollisionToGUIMessage&)
+{
+}

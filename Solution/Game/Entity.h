@@ -34,6 +34,7 @@ public:
 	void SendNote(const T& aNote);
 
 	CU::Matrix44<float> myOrientation;
+	CU::Matrix44<float> myOriginalOrientation;
 
 	eEntityType GetType() const;
 	bool GetAlive() const;

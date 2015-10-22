@@ -12,6 +12,7 @@ enum class eMessageType
 	EVENT_QUEUE_EMPTY,
 	DEFEND,
 	RESIZE,
+	BULLET_COLLISION_TO_GUI,
 	COUNT,
 };
 
@@ -50,7 +51,8 @@ enum class ePowerUpType
 	HEALTHKIT,
 	WEAPON_UPGRADE,
 	EMP,
-	HOMING
+	HOMING,
+	INVULNERABLITY
 };
 
 enum class eMissionType
