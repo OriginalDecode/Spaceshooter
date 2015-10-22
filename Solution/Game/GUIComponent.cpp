@@ -44,7 +44,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myHealthBarGlow(new Prism::Model2D)
 	, myShieldBarGlow(new Prism::Model2D)
 	, myHitMarker(new Prism::Model2D)
-
+	, myDamageIndicator(new Prism::Model2D)
+	, myHitMarkerTimer(-1.f)
+	, myDamageIndicatorTimer(-1.f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -78,6 +80,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myShieldBarCount = 20;
 
 	myHitMarker->Init("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds", { 256, 256 });
+	myDamageIndicator->Init("Data/Resource/Texture/UI/T_damage_indicator.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x)
+		, float(Prism::Engine::GetInstance()->GetWindowSize().y) });
 }
 
 GUIComponent::~GUIComponent()
@@ -99,6 +103,7 @@ GUIComponent::~GUIComponent()
 	delete myDefendMarker;
 	delete myDefendArrow;
 	delete myHitMarker;
+	delete myDamageIndicator;
 	myReticle = nullptr;
 	myPowerUpArrow = nullptr;
 	myPowerUpMarker = nullptr;
@@ -112,7 +117,7 @@ GUIComponent::~GUIComponent()
 	myDefendArrow = nullptr;
 	myDefendMarker = nullptr;
 	myHitMarker = nullptr;
-
+	myDamageIndicator = nullptr;
 	delete myHealthBar;
 	myHealthBar = nullptr;
 
@@ -127,7 +132,7 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 void GUIComponent::Update(float aDeltaTime)
 {
 	myHitMarkerTimer -= aDeltaTime;
-
+	myDamageIndicatorTimer -= aDeltaTime;
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
@@ -285,6 +290,11 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		myHitMarker->Render(steeringPos.x, steeringPos.y);
 	}
 
+	if (myDamageIndicatorTimer >= 0.f)
+	{
+		myDamageIndicator->Render(halfWidth, -halfHeight);
+	}
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 	//Prism::Engine::GetInstance()->DisableAlpaBlending();
 }
@@ -368,6 +378,10 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
+	}
+	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
+	{
+		myDamageIndicatorTimer = 0.1f;
 	}
 }
 
