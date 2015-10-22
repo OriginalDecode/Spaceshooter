@@ -212,7 +212,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation.GetPos(), 2000.f); // replace this target lock
 		if (enemy != nullptr)
 		{
-			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f, 
+			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity), 
 				eAITargetPositionMode::KAMIKAZE);
 			bullet->GetComponent<AIComponent>()->SetEntityToFollow(enemy);
 		}
