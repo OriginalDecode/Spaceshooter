@@ -96,6 +96,28 @@ void InputComponent::Update(float aDeltaTime)
 	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
 	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
 
+	if (xRotation > myMaxSteeringSpeed)
+	{
+		xRotation = myMaxSteeringSpeed;
+	}
+	if (xRotation < -myMaxSteeringSpeed)
+	{
+		xRotation = -myMaxSteeringSpeed;
+	}
+
+	if (yRotation > myMaxSteeringSpeed)
+	{
+		yRotation = myMaxSteeringSpeed;
+	}
+	if (yRotation < -myMaxSteeringSpeed)
+	{
+		yRotation = -myMaxSteeringSpeed;
+	}
+
+	std::string tempX = std::to_string(xRotation);
+	tempX += ", " + std::to_string(yRotation);
+	SetWindowTextA(GetActiveWindow(), tempX.c_str());
+
 	RotateX(yRotation);
 	RotateY(xRotation);
 
