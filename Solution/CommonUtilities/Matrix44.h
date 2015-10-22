@@ -500,6 +500,14 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
+	void Matrix44<T>::NormalizeRotationVectors()
+	{
+		NormalizeVector(&myMatrix[0]);
+		NormalizeVector(&myMatrix[4]);
+		NormalizeVector(&myMatrix[8]);
+	}
+
+	template <typename T>
 	CommonUtilities::Vector3<T> Matrix44<T>::GetPos() const
 	{
 		return CommonUtilities::Vector3<T>(myMatrix[12], myMatrix[13], myMatrix[14]);
@@ -568,5 +576,15 @@ namespace CommonUtilities
 		temp.myMatrix[15] = 1.f;
 
 		return temp;
+	}
+
+	template <typename T>
+	void Matrix44<T>::NormalizeVector(T* aMatrixEntry)
+	{
+		Vector3<T> vector(aMatrixEntry[0], aMatrixEntry[1], aMatrixEntry[2]);
+		Normalize(vector);
+		aMatrixEntry[0] = vector.x;
+		aMatrixEntry[1] = vector.y;
+		aMatrixEntry[2] = vector.z;
 	}
 }
