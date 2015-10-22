@@ -40,6 +40,8 @@ public:
 
 	void ReadXML();
 
+	void Reset() override;
+
 private:
 	Prism::Model2D* myReticle;
 	Prism::Model2D* myModel2DToRender;
