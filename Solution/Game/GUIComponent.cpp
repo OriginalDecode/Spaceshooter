@@ -199,6 +199,28 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	}
 }
 
+void GUIComponent::CalculateAndRender(const CU::Vector2<float>& aPosition
+	, Prism::Model2D* aCurrentModel, const CU::Vector2<int> aWindowSize)
+{
+	CU::Matrix44<float> renderPos;
+
+	renderPos.SetPos(aPosition);
+	renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
+	renderPos = renderPos * myCamera->GetProjection();
+
+	CU::Vector3<float> newRenderPos = renderPos.GetPos();
+	newRenderPos /= renderPos.GetPos4().w;
+
+	newRenderPos += 1.f;
+	newRenderPos *= 0.5f;
+	newRenderPos.x *= aWindowSize.x;
+	newRenderPos.y *= aWindowSize.y;
+	newRenderPos.y -= aWindowSize.y;
+	
+	aCurrentModel->Render(newRenderPos.x, newRenderPos.y);
+}
+
+
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
 	//Prism::Engine::GetInstance()->EnableAlphaBlending();
@@ -247,17 +269,21 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	for (int i = 0; i < myHealthBarCount; ++i)
 	{
-		myHealthBarGlow->Render((myHealthBarRenderPosition.x + ((i * 16.f) + 1.f)) / aWindowSize.x
-			, myHealthBarRenderPosition.y / aWindowSize.y);
+		CalculateAndRender({ myCamera->GetOrientation().GetPos().x + -0.699f
+			, myCamera->GetOrientation().GetPos().y + -0.367f }
+		, myHealthBarGlow
+		, aWindowSize);
 
-		myHealthBar->Render((myHealthBarRenderPosition.x + ((i * 16.f) + 1.f)) / aWindowSize.x
-			, myHealthBarRenderPosition.y / aWindowSize.y);
+		//myHealthBarGlow->Render();
+
+		//myHealthBar->Render((myHealthBarRenderPosition.x + ((i * 16.f) + 1.f)) / aWindowSize.x
+		//	, myHealthBarRenderPosition.y / aWindowSize.y);
 	}
 
 	for (int i = 0; i < myShieldBarCount; ++i)
 	{
-		myShieldBarGlow->Render(myShieldBarRenderPosition.x + ((i*16.f) + 1.f), myShieldBarRenderPosition.y);
-		myShieldBar->Render(myShieldBarRenderPosition.x + ((i*16.f) + 1.f), myShieldBarRenderPosition.y);
+	//	myShieldBarGlow->Render(myShieldBarRenderPosition.x + ((i*16.f) + 1.f), myShieldBarRenderPosition.y);
+	//	myShieldBar->Render(myShieldBarRenderPosition.x + ((i*16.f) + 1.f), myShieldBarRenderPosition.y);
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
@@ -326,15 +352,15 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 	}
 }
 
-void GUIComponent::ReceiveMessage(const ResizeMessage&)
+void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
 	float offset = aMessage.GetResolution().y / static_cast<float>(aMessage.GetResolution().x);
-	
+
 	myBarSize = (myOriginalBarSize * offset) * 2;
-	
+
 	myHealthBar->SetSize({ myBarSize, myBarSize });
 	myHealthBarGlow->SetSize({ myBarSize, myBarSize });
-	
+
 	myShieldBar->SetSize({ myBarSize, myBarSize });
 	myShieldBarGlow->SetSize({ myBarSize, myBarSize });
 }

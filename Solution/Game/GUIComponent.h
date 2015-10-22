@@ -22,6 +22,9 @@ public:
 	void Update(float aDeltaTime) override;
 	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
 		, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
+	void CalculateAndRender(const CU::Vector2<float>& aPosition
+		, Prism::Model2D* aCurrentModel, const CU::Vector2<int> aWindowSize);
+
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 
 	void SetCamera(Prism::Camera* aCamera);
