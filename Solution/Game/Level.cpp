@@ -177,7 +177,8 @@ Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	aReader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
 	aReader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
 	aReader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
-	newEntity->myOrientation.SetPos(triggerPosition*10.f);
+	newEntity->myOriginalOrientation.SetPos(triggerPosition*10.f);
+	newEntity->myOrientation = newEntity->myOriginalOrientation;
 
 	myEntities.Add(newEntity);
 	myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::TRIGGER);
