@@ -170,7 +170,7 @@ Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	aReader.ForceReadAttribute(aElement, "radius", entityRadius);
 	myEntityFactory->CopyEntity(newEntity, "trigger");
 
-	newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+	newEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(entityRadius);
 
 	tinyxml2::XMLElement* triggerElement = aReader.ForceFindFirstChild(aElement, "position");
 	CU::Vector3<float> triggerPosition;

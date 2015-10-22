@@ -2,7 +2,9 @@
 
 #include <Camera.h>
 #include "CollisionComponent.h"
+#include "Constants.h"
 #include "Entity.h"
+#include "GraphicsComponent.h"
 
 CollisionComponent::CollisionComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -15,10 +17,17 @@ CollisionComponent::~CollisionComponent()
 }
 
 void CollisionComponent::Initiate(float someRadius)
+
 {
-	SetRadius(someRadius);
-
-
+	if (myEntity.GetComponent<GraphicsComponent>() != nullptr)
+	{
+		SetCollisionRadius(myEntity.GetComponent<GraphicsComponent>()->GetCullingRadius() 
+			* globalCollisionRadiusMultiplier);
+	}
+	else
+	{
+		SetCollisionRadius(someRadius);
+	}
 }
 
 void CollisionComponent::Update(float)

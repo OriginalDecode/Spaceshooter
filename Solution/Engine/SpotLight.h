@@ -44,6 +44,7 @@ namespace Prism
 		float myCone;
 
 		Instance* myInstance;
+		float myObjectCullingRadius;
 	};
 
 	inline void SpotLight::Update()

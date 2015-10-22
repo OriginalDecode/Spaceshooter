@@ -11,7 +11,7 @@ namespace CommonUtilities
 	}
 }
 
-//#define SHOW_OCTREE_DEBUG
+
 
 namespace Prism
 {

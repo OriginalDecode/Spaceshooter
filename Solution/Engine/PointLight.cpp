@@ -12,8 +12,9 @@ namespace Prism
 
 	void PointLight::Initiate()
 	{
+		myObjectCullingRadius = 10.f;
 		ModelProxy* model = Engine::GetInstance()->GetModelLoader()->LoadLightCube(1, 1, 1);
-		myInstance = new Instance(*model, myOrientation, eOctreeType::NOT_IN_OCTREE);
+		myInstance = new Instance(*model, myOrientation, eOctreeType::NOT_IN_OCTREE, myObjectCullingRadius);
 	}
 
 	void PointLight::Render(Camera* aCamera)

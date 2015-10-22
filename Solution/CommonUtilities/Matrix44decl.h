@@ -29,6 +29,9 @@ namespace CommonUtilities
 
 		void SetPos(const CommonUtilities::Vector3<T>& aPos);
 		void SetPos(const CommonUtilities::Vector4<T>& aPos);
+		
+		void NormalizeRotationVectors();
+
 		CommonUtilities::Vector3<T> GetPos() const;
 		CommonUtilities::Vector4<T> GetPos4() const;
 		CommonUtilities::Vector3<T> GetForward() const;
@@ -43,5 +46,8 @@ namespace CommonUtilities
 			}
 			return *this;
 		}
+
+	private:
+		void NormalizeVector(T* aMatrixEntry);
 	};
 }

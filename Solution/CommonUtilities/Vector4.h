@@ -46,6 +46,11 @@ namespace CommonUtilities
 	template <typename T>
 	void Normalize(Vector4<T>& aVector)
 	{
+		if (aVector.x == 0 && aVector.y == 0 && aVector.z == 0 && aVector.w == 0)
+		{
+			//DL_DEBUG("Warning: Normalize zero vector.");
+			return;
+		}
 		aVector = GetNormalized(aVector);
 	}
 
@@ -53,7 +58,11 @@ namespace CommonUtilities
 	Vector4<T> GetNormalized(const Vector4<T>& aVector)
 	{
 		T length = Length(aVector);
-		assert(length != 0 && "Division by zero.");
+		if (length == 0)
+		{
+			return aVector;
+		}
+		//assert(length != 0 && "Division by zero.");
 		return Vector4<T>(aVector / length);
 	}
 

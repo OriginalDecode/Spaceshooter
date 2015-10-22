@@ -184,6 +184,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	LoadLights(reader, levelElement);
 	LoadProps(reader, levelElement);
+	LoadDefendables(reader, levelElement);
 	LoadTriggers(reader, levelElement);
 	LoadPowerups(reader, levelElement);
 	
@@ -282,34 +283,27 @@ void LevelFactory::LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelEle
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
 
+		newEntity->AddComponent<PropComponent>()->Init("");
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
+	}
+}
+
+void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "defendable"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "defendable"))
+	{
+		Entity* newEntity = new Entity(eEntityType::DEFENDABLE, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
+		std::string propType;
+		aReader.ForceReadAttribute(entityElement, "propType", propType);
+		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
+
 		std::string defendName;
-		aReader.ReadAttribute(entityElement, "defendName", defendName);
+		aReader.ForceReadAttribute(entityElement, "defendName", defendName);
 		defendName = CU::ToLower(defendName);
 
-		tinyxml2::XMLElement* propElement = aReader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> propPosition;
-		aReader.ForceReadAttribute(propElement, "X", propPosition.x);
-		aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
-		aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
-		newEntity->myOrientation.SetPos(propPosition*10.f);
-
-		propElement = aReader.ForceFindFirstChild(entityElement, "rotation");
-		CU::Vector3<float> propRotation;
-		aReader.ForceReadAttribute(propElement, "X", propRotation.x);
-		aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
-		aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
-
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(propRotation.x) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(propRotation.y) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
-
 		newEntity->AddComponent<PropComponent>()->Init(defendName);
-
-		int health = 30;
-		newEntity->AddComponent<HealthComponent>()->Init(health);
-
-		myCurrentLevel->myEntities.Add(newEntity);
-		myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
 	}
 }
 
@@ -380,6 +374,32 @@ void LevelFactory::LoadPlayer()
 	reader.CloseDocument();	
 }
 
+void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate)
+{
+	tinyxml2::XMLElement* propElement = aReader.ForceFindFirstChild(aLevelElement, "position");
+	CU::Vector3<float> propPosition;
+	aReader.ForceReadAttribute(propElement, "X", propPosition.x);
+	aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
+	aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
+	aEntityToCreate->myOrientation.SetPos(propPosition*10.f);
+
+	propElement = aReader.ForceFindFirstChild(aLevelElement, "rotation");
+	CU::Vector3<float> propRotation;
+	aReader.ForceReadAttribute(propElement, "X", propRotation.x);
+	aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
+	aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
+
+	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundX(propRotation.x) * aEntityToCreate->myOrientation;
+	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOrientation;
+	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOrientation;
+
+	int health = 30;
+	aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
+
+	myCurrentLevel->myEntities.Add(aEntityToCreate);
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), aEntityToCreate->GetType());
+}
+
 void LevelFactory::AddToScene()
 {
 	myCurrentLevel->myScene->SetCamera(myCurrentLevel->myCamera);
@@ -415,6 +435,8 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
 	delete myCurrentLevel->mySkySphere;
-	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere, 
-		myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
+	myCurrentLevel->mySkySphereCullingRadius = 10.f;
+	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
+		, myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE
+		, myCurrentLevel->mySkySphereCullingRadius);
 }

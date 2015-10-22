@@ -96,6 +96,24 @@ void InputComponent::Update(float aDeltaTime)
 	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
 	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
 
+	if (xRotation > myMaxSteeringSpeed)
+	{
+		xRotation = myMaxSteeringSpeed;
+	}
+	if (xRotation < -myMaxSteeringSpeed)
+	{
+		xRotation = -myMaxSteeringSpeed;
+	}
+
+	if (yRotation > myMaxSteeringSpeed)
+	{
+		yRotation = myMaxSteeringSpeed;
+	}
+	if (yRotation < -myMaxSteeringSpeed)
+	{
+		yRotation = -myMaxSteeringSpeed;
+	}
+
 	RotateX(yRotation);
 	RotateY(xRotation);
 
