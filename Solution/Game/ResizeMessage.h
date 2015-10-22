@@ -8,7 +8,7 @@ class ResizeMessage : public Message
 {
 public:
 
-	ResizeMessage();
+	ResizeMessage(int aWidth, int aHeight);
 
 	const CU::Vector2<int>& GetResolution() const;
 
@@ -18,10 +18,10 @@ private:
 
 };
 
-inline ResizeMessage::ResizeMessage()
+inline ResizeMessage::ResizeMessage(int aWidth, int aHeight)
 	: Message(eMessageType::RESIZE)
 {
-	myResolution = Prism::Engine::GetInstance()->GetWindowSize();
+	myResolution = { aWidth, aHeight };
 }
 
 inline const CU::Vector2<int>& ResizeMessage::GetResolution() const

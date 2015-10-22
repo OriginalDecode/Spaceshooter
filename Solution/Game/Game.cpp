@@ -119,8 +119,8 @@ bool Game::Update()
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
-	
-	
+
+
 	myStateStack.RenderCurrentState();
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
@@ -142,7 +142,7 @@ void Game::OnResize(int aWidth, int aHeight)
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);
-	PostMaster::GetInstance()->SendMessage(ResizeMessage());
+	PostMaster::GetInstance()->SendMessage(ResizeMessage(aWidth, aHeight));
 }
 
 void Game::ReceiveMessage(const GameStateMessage& aMessage)
