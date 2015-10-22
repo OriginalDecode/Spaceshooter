@@ -401,9 +401,6 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOriginalOrientation;
 	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOriginalOrientation;
 
-	int health = 30;
-	aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
-
 	aEntityToCreate->myOrientation = aEntityToCreate->myOriginalOrientation;
 	myCurrentLevel->myEntities.Add(aEntityToCreate);
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), aEntityToCreate->GetType());
