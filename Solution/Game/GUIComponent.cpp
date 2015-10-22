@@ -226,10 +226,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
-		//Prism::Engine::GetInstance()->PrintDebugText("DefendTarget "
-		//	+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": "
-		//	+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
-		//	, { halfWidth, -halfHeight });
+		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget "
+			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": "
+			+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
+			, { halfWidth, -halfHeight });
 	}
 
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
@@ -421,4 +421,5 @@ void GUIComponent::Reset()
 {
 	myHealthBarCount = 20;
 	myShieldBarCount = 20;
+	myEnemiesTarget = nullptr;
 }
