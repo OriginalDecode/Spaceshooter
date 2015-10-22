@@ -55,7 +55,9 @@ private:
 	Prism::Model2D* myCrosshair;
 	Prism::Model2D* mySteeringTarget;
 	Prism::Model2D* myHitMarker;
+	Prism::Model2D* myDamageIndicator;
 	float myHitMarkerTimer;
+	float myDamageIndicatorTimer;
 
 
 	CU::Vector2<float> mySteeringTargetPosition;
