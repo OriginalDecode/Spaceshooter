@@ -153,6 +153,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	}
 
 	ReadLevelSettings();
+	myCurrentLevel->myPlayer->myOriginalOrientation = myCurrentLevel->myPlayer->myOrientation;
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 
@@ -328,7 +329,8 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 		aReader.ForceReadAttribute(powerUpElement, "X", powerUpPosition.x);
 		aReader.ForceReadAttribute(powerUpElement, "Y", powerUpPosition.y);
 		aReader.ForceReadAttribute(powerUpElement, "Z", powerUpPosition.z);
-		newEntity->myOrientation.SetPos(powerUpPosition*10.f);
+		newEntity->myOriginalOrientation.SetPos(powerUpPosition*10.f);
+		newEntity->myOrientation = newEntity->myOriginalOrientation;
 
 		powerUpElement = aReader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
@@ -381,7 +383,7 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aReader.ForceReadAttribute(propElement, "X", propPosition.x);
 	aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
 	aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
-	aEntityToCreate->myOrientation.SetPos(propPosition*10.f);
+	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*10.f);
 
 	propElement = aReader.ForceFindFirstChild(aLevelElement, "rotation");
 	CU::Vector3<float> propRotation;
@@ -389,13 +391,14 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
 	aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
 
-	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundX(propRotation.x) * aEntityToCreate->myOrientation;
-	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOrientation;
-	aEntityToCreate->myOrientation = aEntityToCreate->myOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOrientation;
+	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundX(propRotation.x) * aEntityToCreate->myOriginalOrientation;
+	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOriginalOrientation;
+	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOriginalOrientation;
 
 	int health = 30;
 	aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
 
+	aEntityToCreate->myOrientation = aEntityToCreate->myOriginalOrientation;
 	myCurrentLevel->myEntities.Add(aEntityToCreate);
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), aEntityToCreate->GetType());
 }
