@@ -524,6 +524,10 @@ ePowerUpType EntityFactory::ConvertToPowerUpType(std::string aName)
 	{
 		return ePowerUpType::HOMING;
 	}
+	else if (name == "invulnerability")
+	{
+		return ePowerUpType::INVULNERABLITY;
+	}
 	
 	std::string errorMessage = "[EntityFactory] There is no powerup named " + aName;
 	DL_ASSERT(errorMessage.c_str());
