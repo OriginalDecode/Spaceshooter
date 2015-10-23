@@ -2,7 +2,8 @@
 #include "SoundComponent.h"
 
 
-SoundComponent::SoundComponent()
+SoundComponent::SoundComponent(Entity& aEntity)
+	:Component(aEntity)
 {
 }
 

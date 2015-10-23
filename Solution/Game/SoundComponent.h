@@ -1,8 +1,13 @@
 #pragma once
-class SoundComponent
+
+#include "Component.h"
+
+class SoundComponent : public Component
 {
 public:
-	SoundComponent();
+	SoundComponent(Entity& aEntity);
 	~SoundComponent();
+
+
 };
 
