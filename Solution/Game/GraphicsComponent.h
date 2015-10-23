@@ -15,6 +15,7 @@ public:
 	~GraphicsComponent();
 
 	void Init(const char* aModelPath, const char* aEffectPath);
+	void InitDLL(const char* aModelPath, const char* aEffectPath);
 	void InitGeometry(const Prism::MeshData& aMeshData);
 	void InitCube(float aWidth, float aHeight, float aDepth);
 	void Update(float aDeltaTime);

@@ -94,7 +94,9 @@ namespace Prism
 		myDirectX->Present(0, 0);
 
 #ifdef RELEASE_BUILD
+#ifndef DLL_EXPORT
 		myClearColor = { 0.f, 0.f, 0.f, 1.f };
+#endif
 #endif
 
 		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, myClearColor.myA };

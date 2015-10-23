@@ -499,6 +499,12 @@ void Prism::Model::SetEffect(Effect* aEffect)
 	for (int i = 0; i < mySurfaces.Size(); ++i)
 	{
 		mySurfaces[i]->SetEffect(myEffect);
+		mySurfaces[i]->ReloadSurface();
+	}
+
+	for (int i = 0; i < myChilds.Size(); ++i) 
+	{
+		myChilds[i]->SetEffect(aEffect);
 	}
 }
 
