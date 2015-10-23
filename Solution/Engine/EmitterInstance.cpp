@@ -182,7 +182,9 @@ namespace Prism
 
 		myGraphicalParticles[myParticleIndex].myColor = myEmitterData.myStartColor;
 
-		myGraphicalParticles[myParticleIndex].myPosition = aWorldMatrix.GetPos();
+		myGraphicalParticles[myParticleIndex].myPosition = 
+			CU::Math::RandomRange(aWorldMatrix.GetPos() + myEmitterData.myEmitterSize
+			, aWorldMatrix.GetPos() - myEmitterData.myEmitterSize);
 
 		myGraphicalParticles[myParticleIndex].myLifeTime = myEmitterData.myParticlesLifeTime;
 

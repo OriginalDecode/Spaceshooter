@@ -4,7 +4,6 @@
 namespace Prism
 {
 	class EmitterInstance;
-	class Camera;
 }
 
 class EmitterComponent : public Component
@@ -16,10 +15,14 @@ public:
 	void Update(float aDeltaTime) override;
 	void Render();
 	static eComponentType GetType();
+	int GetEmitterCount();
 private:
+
+	CU::Matrix44f myOrientation;
 
 	CU::Vector3f myPosition;
 	Prism::EmitterInstance* myEmitter;
 	std::string myXMLPath;
+	static int myEmitterCount; //Emitter count duh.
 };
 

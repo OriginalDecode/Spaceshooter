@@ -6,6 +6,7 @@
 #include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include "Constants.h"
 #include "ConversationManager.h"
 #include "DefendMessage.h"
 #include "EffectContainer.h"
@@ -148,6 +149,10 @@ void Level::Render()
 		else
 		{
 			myEntities[i]->GetComponent<EmitterComponent>()->Render();
+
+			Prism::Engine::GetInstance()->PrintDebugText(myEntities[i]->GetComponent<EmitterComponent>()->GetEmitterCount()
+				, { 1600, 0 });
+
 		}
 
 	}
@@ -165,6 +170,7 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f });
 	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f });
 	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f });
+
 }
 
 void Level::OnResize(int aWidth, int aHeight)

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "Camera.h"
+#include "Constants.h"
 
 #include "EmitterComponent.h"
 
@@ -10,15 +11,13 @@
 #include "Entity.h"
 #include "Scene.h"
 
+int EmitterComponent::myEmitterCount = 0;
+
 EmitterComponent::EmitterComponent(Entity& aEntity)
 	: Component(aEntity)
+	, myEmitter(nullptr)
 {
-	//Prism::EmitterData data;
-	//data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
-
-	//myEmitter = new Prism::EmitterInstance();
-	//myEmitter->Initiate(data);
-	//myEmitter->SetPosition({ 5, 5, 5 });
+	myEmitterCount++;
 }
 
 EmitterComponent::~EmitterComponent()
@@ -31,19 +30,16 @@ void EmitterComponent::Init(std::string aPath)
 {
 	myXMLPath = aPath;
 
+	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
 	myEmitter = new Prism::EmitterInstance();
-
 	Prism::EmitterData data;
 	data.LoadDataFile(myXMLPath.c_str());
 	myEmitter->Initiate(data);
-	//myEmitter->SetPosition(myEntity.myOrientation.GetPos());}
 }
 
 void EmitterComponent::Update(float aDeltaTime)
 {
-	//myEmitter->SetParent(myEntity.myOrientation);
-
-	myEmitter->Update(aDeltaTime, myEntity.myOrientation);
+	myEmitter->Update(aDeltaTime, myEntity.myOrientation );
 }
 
 void EmitterComponent::Render()
@@ -56,3 +52,7 @@ eComponentType EmitterComponent::GetType()
 	return eComponentType::EMITTER;
 }
 
+int EmitterComponent::GetEmitterCount()
+{
+	return myEmitterCount;
+}
