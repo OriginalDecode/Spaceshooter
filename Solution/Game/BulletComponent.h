@@ -37,11 +37,6 @@ inline void BulletComponent::SetMaxLifeTime(float aMaxTime)
 	myMaxLifeTime = aMaxTime;
 }
 
-inline void BulletComponent::SetActive(bool aActive)
-{
-	myActive = aActive;
-}
-
 inline bool BulletComponent::GetActive() const
 {
 	return myActive;

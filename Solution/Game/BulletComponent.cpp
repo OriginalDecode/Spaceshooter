@@ -15,14 +15,14 @@ BulletComponent::BulletComponent(Entity& aEntity)
 {
 	myCurrentLifeTime = 0.f;
 	myDamageRadius = 0.f;
-	myActive = false;
+	SetActive(false);
 }
 
 void BulletComponent::Update(float aDeltaTime)
 {
 	if (myCurrentLifeTime >= myMaxLifeTime)
 	{
-		myActive = false;
+		SetActive(false);
 		myCurrentLifeTime = 0.f;
 	}
 	myCurrentLifeTime += aDeltaTime;
@@ -31,7 +31,7 @@ void BulletComponent::Update(float aDeltaTime)
 void BulletComponent::Init(float aMaxTime, int aDamage, float aDamageRadius, eBulletType aType)
 {
 	myType = aType;
-	myActive = false;
+	SetActive(false);
 	myMaxLifeTime = aMaxTime;
 	myDamage = aDamage;
 	myDamageRadius = aDamageRadius;
@@ -56,7 +56,7 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 			aNote.myEntity.GetComponent<HealthComponent>()->RemoveHealth(myDamage);
 		}
 
-		myActive = false;
+		SetActive(false);
 		aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 		
 		if (myDamageRadius > 0.f)
@@ -67,4 +67,40 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 		PostMaster::GetInstance()->SendMessage<BulletCollisionToGUIMessage>(BulletCollisionToGUIMessage(this->GetEntity(), aNote.myEntity));
 	}
 
+}
+
+void BulletComponent::SetActive(bool aActive)
+{
+	myActive = aActive;
+	if (myActive == true)
+	{
+		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)
+		{
+			if (myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
+				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_2
+				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", myEntity.GetAudioSFXID());
+				//bullet->SendNote<SoundNote>(SoundNote(eSoundEvent::PLAY, )
+
+			}
+			if (myType == eBulletType::SHOTGUN_BULLET_LEVEL_1
+				|| myType == eBulletType::SHOTGUN_BULLET_LEVEL_2
+				|| myType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", myEntity.GetAudioSFXID());
+			}
+			if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
+				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
+				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", myEntity.GetAudioSFXID());
+			}
+		}
+
+	}
+	else
+	{
+		//SEND STOPNOTE SOUND
+	}
 }
