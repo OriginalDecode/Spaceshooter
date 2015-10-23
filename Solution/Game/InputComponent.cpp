@@ -12,6 +12,7 @@
 #include "InputNote.h"
 #include <InputWrapper.h>
 #include "PhysicsComponent.h"
+#include "SoundComponent.h"
 #include <sstream>
 #include <XMLReader.h>
 
@@ -204,9 +205,9 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	}
 
 	int soundSpeed = static_cast<int>((myMovementSpeed / myMaxMovementSpeed) * 100);
-	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetAudioSFXID());
+	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 	int boostSpeed = static_cast<int>((myCurrentBoostValue / myMaxBoostValue) * 100);
-	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetAudioSFXID());
+	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 
 	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
 	myMovementSpeed += myCurrentBoostValue;

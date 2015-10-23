@@ -87,6 +87,12 @@ enum class eGUINoteType
 	STEERING_TARGET,
 };
 
+enum class eSoundNoteType
+{
+	PLAY,
+	STOP
+};
+
 enum class eComponentType
 {
 	NOT_USED,
@@ -105,6 +111,7 @@ enum class eComponentType
 	SHOOTING,
 	WAY_POINT,
 	EMITTER,
+	SOUND,
 	_COUNT,
 };
 

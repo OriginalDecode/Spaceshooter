@@ -18,6 +18,7 @@
 #include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
+#include "SoundComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -234,6 +235,7 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 {
 	aEntityToAddTo.myDamageRadius = 0.f;
 	aEntityToAddTo.myEntity->AddComponent<BulletComponent>();
+	aEntityToAddTo.myEntity->AddComponent<SoundComponent>();
 	for (tinyxml2::XMLElement* e = aBulletComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("lifeTime").c_str()) == 0)
@@ -489,6 +491,10 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			eBulletType bulletType = ConvertToBulletType(sourceEntity->GetName());
 			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage, it->second.myDamageRadius, bulletType);
 		}
+	}
+	if (sourceEntity->GetComponent<SoundComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<SoundComponent>();
 	}
 
 	if (sourceEntity->GetComponent<PowerUpComponent>() != nullptr)
