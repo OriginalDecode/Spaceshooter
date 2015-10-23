@@ -201,6 +201,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseModel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugDataDisplay.cpp" />
     <ClCompile Include="DebugMenu.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseModel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugDataDisplay.h" />
     <ClInclude Include="DebugMenu.h" />
