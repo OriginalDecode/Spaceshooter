@@ -218,6 +218,7 @@
     <ClInclude Include="ShieldNote.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
+    <ClInclude Include="SoundComponent.h" />
     <ClInclude Include="SpawnEnemyAction.h" />
     <ClInclude Include="SpawnEnemyMessage.h" />
     <ClInclude Include="EnqueueEventMessage.h" />
@@ -281,6 +282,7 @@
     <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
     <ClCompile Include="SpawnEnemyAction.cpp" />
     <ClCompile Include="SpawnEnemyMessage.cpp" />
     <ClCompile Include="EnqueueEventMessage.cpp" />

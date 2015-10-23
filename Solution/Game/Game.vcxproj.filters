@@ -169,6 +169,9 @@
     <ClCompile Include="EmitterComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="SoundComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -388,6 +391,9 @@
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
     <ClInclude Include="EmitterComponent.h">
+      <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SoundComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
