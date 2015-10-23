@@ -12,44 +12,15 @@
 #include "Surface.h"
 #include "TextureContainer.h"
 
-Prism::Sprite::Sprite()
+Prism::Sprite::Sprite(const std::string& aFileName, const CU::Vector2<float>& aSpriteSize
+		, const CU::Vector2<float>& aHotSpot)
+	: mySize(aSpriteSize)
+	, myHotspot(aHotSpot)
 {
-	myLastDrawX = -999.f;
-	myLastDrawY = -999.f;
-	myVertexBufferDesc = new D3D11_BUFFER_DESC();
-	myIndexBufferDesc = new D3D11_BUFFER_DESC();
-	myInitData = new D3D11_SUBRESOURCE_DATA();
-}
+	myFileName = aFileName;
 
-Prism::Sprite::~Sprite()
-{
-	delete myVertexBuffer;
-	delete myIndexBuffer;
-
-	delete myVertexBufferDesc;
-	delete myIndexBufferDesc;
-	delete myInitData;
-	delete mySurface;
-
-	myVertexLayout->Release();
-	myVertexLayout = nullptr;
-
-	if (myBlendState != nullptr)
-	{
-		myBlendState->Release();
-		myBlendState = nullptr;
-	}
-}
-
-void Prism::Sprite::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
-{
-	myTextureSize = aTextureSize;
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_sprite.fx");
-
-	if (myEffect == nullptr)
-	{
-		DL_MESSAGE_BOX("Failed to GetEffect", "Sprite::Init", MB_ICONWARNING);
-	}
+	myEffect->AddListener(this);
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
@@ -57,135 +28,24 @@ void Prism::Sprite::Init(const std::string& aFileName, const CU::Vector2<float> 
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	D3DX11_PASS_DESC passDesc;
-	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Sprite::Init", MB_ICONWARNING);
-	}
-
-	myVertices.Init(6);
-	myVerticeIndices.Init(6);
-
-	InitVertexBuffer();
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_IMMUTABLE, 0);
 	InitIndexBuffer();
-	InitSurface(aFileName);
+	InitSurface("DiffuseTexture", myFileName);
 	InitBlendState();
 
 	ZeroMemory(myInitData, sizeof(myInitData));
+
+	CreateVertices();
 }
 
-void Prism::Sprite::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize
-			, const char* anEffectFilePath)
+void Prism::Sprite::Render(const CU::Vector2<float>& aPosition, const CU::Vector2<float>& aScale
+	, const CU::Vector4<float>& aColor)
 {
-	myTextureSize = aTextureSize;
-	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect(anEffectFilePath);
-
-	if (myEffect == nullptr)
-	{
-		DL_MESSAGE_BOX("Failed to GetEffect", "Sprite::Init", MB_ICONWARNING);
-	}
-
-	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
-	{
-		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-
-	D3DX11_PASS_DESC passDesc;
-	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Sprite::Init", MB_ICONWARNING);
-	}
-
-	myVertices.Init(6);
-	myVerticeIndices.Init(6);
-
-	InitVertexBuffer();
-	InitIndexBuffer();
-	InitSurface(aFileName);
-	InitBlendState();
-
-	ZeroMemory(myInitData, sizeof(myInitData));
-}
-
-void Prism::Sprite::InitVertexBuffer()
-{
-	myVertexBuffer = new VertexBufferWrapper();
-	myVertexBuffer->myStride = sizeof(VertexPosUV);
-	myVertexBuffer->myByteOffset = 0;
-	myVertexBuffer->myStartSlot = 0;
-	myVertexBuffer->myNumberOfBuffers = 1;
-
-
-	ZeroMemory(myVertexBufferDesc, sizeof(myVertexBufferDesc));
-	myVertexBufferDesc->Usage = D3D11_USAGE_DYNAMIC;
-	myVertexBufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	myVertexBufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	myVertexBufferDesc->MiscFlags = 0;
-	myVertexBufferDesc->StructureByteStride = 0;
-}
-
-void Prism::Sprite::InitIndexBuffer()
-{
-	myIndexBuffer = new IndexBufferWrapper();
-	myIndexBuffer->myIndexBufferFormat = DXGI_FORMAT_R32_UINT;
-	myIndexBuffer->myByteOffset = 0;
-
-
-	ZeroMemory(myIndexBufferDesc, sizeof(myIndexBufferDesc));
-	myIndexBufferDesc->Usage = D3D11_USAGE_IMMUTABLE;
-	myIndexBufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER;
-	myIndexBufferDesc->CPUAccessFlags = 0;
-	myIndexBufferDesc->MiscFlags = 0;
-	myIndexBufferDesc->StructureByteStride = 0;
-}
-
-void Prism::Sprite::InitSurface(const std::string& aFileName)
-{
-	mySurface = new Surface();
-
-	mySurface->SetEffect(myEffect);
-	mySurface->SetIndexCount(0);
-	mySurface->SetIndexStart(0);
-	mySurface->SetVertexCount(0);
-	mySurface->SetVertexStart(0);
-	mySurface->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	mySurface->SetTexture("DiffuseTexture", aFileName, true);
-}
-
-void Prism::Sprite::InitBlendState()
-{
-	D3D11_BLEND_DESC blendDesc;
-	blendDesc.AlphaToCoverageEnable = true;
-	blendDesc.IndependentBlendEnable = false;
-	blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
-
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBlendState(&blendDesc, &myBlendState);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateBlendState", "Text::InitBlendState", MB_ICONWARNING);
-	}
-}
-
-void Prism::Sprite::Render(const float aDrawX, const float aDrawY)
-{
-	if (aDrawX != myLastDrawX || aDrawY != myLastDrawY)
-	{
-		Update(aDrawX, aDrawY);
-	}
-
 	Engine::GetInstance()->DisableZBuffer();
+
+	myPosition = aPosition;
+	myScale = aScale;
 
 	float blendFactor[4];
 	blendFactor[0] = 0.f;
@@ -193,128 +53,58 @@ void Prism::Sprite::Render(const float aDrawX, const float aDrawY)
 	blendFactor[2] = 0.f;
 	blendFactor[3] = 0.f;
 
-	myEffect->SetBlendState(myBlendState, blendFactor);
-	myEffect->SetViewMatrix(myIdentityMatrix);
+	//myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
-	myEffect->SetWorldMatrix(myIdentityMatrix);
+	myEffect->SetPosAndScale(aPosition, aScale);
+	//myEffect->SetColor(aColor);
 
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
-		, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer
-		, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
-	Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
-		, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
-
-
-	D3DX11_TECHNIQUE_DESC techDesc;
-	myEffect->GetTechnique()->GetDesc(&techDesc);
-
-	mySurface->Activate();
-
-	for (UINT i = 0; i < techDesc.Passes; ++i)
-	{
-		myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, Engine::GetInstance()->GetContex());
-		Engine::GetInstance()->GetContex()->DrawIndexed(mySurface->GetIndexCount(), mySurface->GetVertexStart(), 0);
-	}
+	BaseModel::Render();
 
 	Engine::GetInstance()->EnableZBuffer();
 }
 
-void Prism::Sprite::SetupVertexBuffer()
+void Prism::Sprite::CreateVertices()
 {
-	TIME_FUNCTION
+	TIME_FUNCTION;
 
 
-		if (myVertexBuffer->myVertexBuffer != nullptr)
-			myVertexBuffer->myVertexBuffer->Release();
+	CU::GrowingArray<VertexPosUV> vertices(4);
+	CU::GrowingArray<int> indices(6);
 
-	myVertexBufferDesc->ByteWidth = sizeof(VertexPosUV) * myVertices.Size();
-	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
-
-
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Sprite::SetupVertexBuffer", MB_ICONWARNING);
-	}
-}
-
-void Prism::Sprite::SetupIndexBuffer()
-{
-	TIME_FUNCTION
-
-		if (myIndexBuffer->myIndexBuffer != nullptr)
-			myIndexBuffer->myIndexBuffer->Release();
-
-	myIndexBufferDesc->ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
-	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
-
-
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData,
-		&myIndexBuffer->myIndexBuffer);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Sprite::SetupIndexBuffer", MB_ICONWARNING);
-	}
-}
-
-void Prism::Sprite::OnEffectLoad()
-{
-	mySurface->ReloadSurface();
-}
-
-void Prism::Sprite::Update(const float aDrawX, const float aDrawY)
-{
-	TIME_FUNCTION
-
-	myLastDrawX = aDrawX;
-	myLastDrawY = aDrawY;
-
-	myVertices.RemoveAll();
-	myVerticeIndices.RemoveAll();
-	
-	float left, right, top, bottom;
-	left = aDrawX - (myTextureSize.x / 2.f);
-	right = aDrawX + myTextureSize.x - (myTextureSize.x / 2.f);
-	top = aDrawY + (myTextureSize.y / 2.f);
-	bottom = aDrawY - myTextureSize.y + (myTextureSize.y / 2.f);
+	float left = 0 - myHotspot.x;
+	float right = left + mySize.x;
+	float top = 0 + myHotspot.y;
+	float bottom = top - mySize.y;
 
 	VertexPosUV vert;
 	vert.myPos = { left, top, 0.0f };
 	vert.myUV = { 0.0f, 0.0f };
-	myVertices.Add(vert);
+	vertices.Add(vert);
 
 	vert.myPos = { right, bottom, 0.0f };
 	vert.myUV = { 1.0f, 1.0f };
-	myVertices.Add(vert);
+	vertices.Add(vert);
 
 	vert.myPos = { left, bottom, 0.0f };
 	vert.myUV = { 0.0f, 1.0f };
-	myVertices.Add(vert);
-
-	vert.myPos = { left, top, 0.0f };
-	vert.myUV = { 0.0f, 0.0f };
-	myVertices.Add(vert);
+	vertices.Add(vert);
 
 	vert.myPos = { right, top, 0.0f };
 	vert.myUV = { 1.0f, 0.0f };
-	myVertices.Add(vert);
+	vertices.Add(vert);
 
-	vert.myPos = { right, bottom, 0.0f };
-	vert.myUV = { 1.0f, 1.0f };
-	myVertices.Add(vert);
 
-	myVerticeIndices.Add(0);
-	myVerticeIndices.Add(1);
-	myVerticeIndices.Add(2);
+	indices.Add(0);
+	indices.Add(1);
+	indices.Add(2);
 
-	myVerticeIndices.Add(0);
-	myVerticeIndices.Add(4);
-	myVerticeIndices.Add(1);
+	indices.Add(0);
+	indices.Add(3);
+	indices.Add(1);
 
-	SetupVertexBuffer();
-	SetupIndexBuffer();
+	SetupVertexBuffer(vertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&vertices[0]));
+	SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]));
 
-	mySurface->SetIndexCount(myVerticeIndices.Size());
-	mySurface->SetVertexCount(myVertices.Size());
+	mySurfaces[0]->SetVertexCount(vertices.Size());
+	mySurfaces[0]->SetIndexCount(indices.Size());
 }

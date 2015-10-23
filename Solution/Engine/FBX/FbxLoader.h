@@ -170,7 +170,7 @@ public:
 	FBXLoaderArray<	KeyFrame > myAnimatedOrientation;
 	CU::Matrix44<float> myOrientation;
 	CU::Matrix44<float> myRotationPivot;
-	FBXLoaderArray<FbxModelData*> myChilds;
+	FBXLoaderArray<FbxModelData*> myChildren;
 };
 
 class FBXLoader

@@ -14,139 +14,34 @@
 #include "IndexBufferWrapper.h"
 #include "Surface.h"
 
-Prism::Text::Text()
-	: myHasText(false)
-	, myLastDrawX(-999.f)
-	, myLastDrawY(-999.f)
-	, myLastScale(-999.f)
-	, myCharSpacing(17.f)
-{
-	myVertexBufferDesc = new D3D11_BUFFER_DESC();
-	myIndexBufferDesc = new D3D11_BUFFER_DESC();
-	myInitData = new D3D11_SUBRESOURCE_DATA();
-}
-
-
-Prism::Text::~Text()
-{
-	delete myVertexBuffer;
-	delete myIndexBuffer;
-
-	delete myVertexBufferDesc;
-	delete myIndexBufferDesc;
-	delete myInitData;
-	delete mySurface;
-
-	myVertexLayout->Release();
-	myVertexLayout = nullptr;
-
-	if (myBlendState != nullptr)
-	{
-		myBlendState->Release();
-		myBlendState = nullptr;
-	}
-}
-
 void Prism::Text::Init(Font* aFont)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_font.fx");
 	myFont = aFont;
 	myCharSize = myFont->GetCharSize();
+	myCharSpacing = 17.f;
+	myScale = { 1.f, 1.f };
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
 	{
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	D3DX11_PASS_DESC passDesc;
-	myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
-	if (FAILED(hr) != S_OK)
-	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Text::Init", MB_ICONWARNING);
-	}
-
-	myVertices.Init(6);
-	myVerticeIndices.Init(6);
-
-	InitVertexBuffer();
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	InitIndexBuffer();
-	InitSurface();
+	InitSurface("DiffuseTexture", myFont->GetTexture()->GetFileName());
 	InitBlendState();
 
 	ZeroMemory(myInitData, sizeof(myInitData));
+
+	myVertices.Init(16);
+	myIndices.Init(16);
 }
 
-void Prism::Text::InitVertexBuffer()
-{
-	myVertexBuffer = new VertexBufferWrapper();
-	myVertexBuffer->myStride = sizeof(VertexPosColorUV);
-	myVertexBuffer->myByteOffset = 0;
-	myVertexBuffer->myStartSlot = 0;
-	myVertexBuffer->myNumberOfBuffers = 1;
-
-
-	ZeroMemory(myVertexBufferDesc, sizeof(myVertexBufferDesc));
-	myVertexBufferDesc->Usage = D3D11_USAGE_DYNAMIC;
-	myVertexBufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	myVertexBufferDesc->CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	myVertexBufferDesc->MiscFlags = 0;
-	myVertexBufferDesc->StructureByteStride = 0;
-}
-
-void Prism::Text::InitIndexBuffer()
-{
-	myIndexBuffer = new IndexBufferWrapper();
-	myIndexBuffer->myIndexBufferFormat = DXGI_FORMAT_R32_UINT;
-	myIndexBuffer->myByteOffset = 0;
-
-
-	ZeroMemory(myIndexBufferDesc, sizeof(myIndexBufferDesc));
-	myIndexBufferDesc->Usage = D3D11_USAGE_IMMUTABLE;
-	myIndexBufferDesc->BindFlags = D3D11_BIND_INDEX_BUFFER;
-	myIndexBufferDesc->CPUAccessFlags = 0;
-	myIndexBufferDesc->MiscFlags = 0;
-	myIndexBufferDesc->StructureByteStride = 0;
-}
-
-void Prism::Text::InitSurface()
-{
-	mySurface = new Surface();
-
-	mySurface->SetEffect(myEffect);
-	mySurface->SetIndexCount(0);
-	mySurface->SetIndexStart(0);
-	mySurface->SetVertexCount(0);
-	mySurface->SetVertexStart(0);
-	mySurface->SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	mySurface->SetTexture("DiffuseTexture", myFont->GetTexture());
-}
-
-void Prism::Text::InitBlendState()
-{
-	//D3D11_BLEND_DESC blendDesc;
-	//blendDesc.AlphaToCoverageEnable = false;
-	//blendDesc.IndependentBlendEnable = false;
-	//blendDesc.RenderTarget[0].BlendEnable = TRUE;
-	//blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-	//blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	//blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	//blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-	//blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
-	//blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	//blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
-	//
-	//HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBlendState(&blendDesc, &myBlendState);
-	//if (FAILED(hr) != S_OK)
-	//{
-	//	DL_MESSAGE_BOX("Failed to CreateBlendState", "Text::InitBlendState", MB_ICONWARNING);
-	//}
-}
-
-void Prism::Text::Render(const char* aString
-	, const float aDrawX, const float aDrawY, const CU::Vector4<float>& aColor, const float aScale)
+void Prism::Text::Render(const std::string& aString, const CU::Vector2<float>& aPosition
+	, const CU::Vector2<float>& aScale, const CU::Vector4<float>& aColor)
 {
 
 	if (Engine::GetInstance()->myWireframeShouldShow == true)
@@ -154,44 +49,28 @@ void Prism::Text::Render(const char* aString
 		Engine::GetInstance()->DisableWireframe();
 	}
 
-	UpdateSentence(aString, aDrawX, aDrawY, aColor, aScale);
-
-	if (myHasText == false)
-		return;
-
-
+	if (myLastText != aString)
+	{
+		ConstructBuffers(aString);
+	}
 
 	Engine::GetInstance()->DisableZBuffer();
 
-	//float blendFactor[4];
-	//blendFactor[0] = 0.f;
-	//blendFactor[1] = 0.f;
-	//blendFactor[2] = 0.f;
-	//blendFactor[3] = 0.f;
-	//
-	//myEffect->SetBlendState(myBlendState, blendFactor);
-	myEffect->SetViewMatrix(myIdentityMatrix);
+	myPosition = aPosition;
+	myScale = aScale;
+
+	float blendFactor[4];
+	blendFactor[0] = 0.f;
+	blendFactor[1] = 0.f;
+	blendFactor[2] = 0.f;
+	blendFactor[3] = 0.f;
+
+	myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
-	myEffect->SetWorldMatrix(myIdentityMatrix);
+	myEffect->SetPosAndScale(aPosition, aScale);
+	//myEffect->SetColor(aColor);
 
-	Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
-	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
-		, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer
-		, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
-	Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
-		, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
-
-
-	D3DX11_TECHNIQUE_DESC techDesc;
-	myEffect->GetTechnique()->GetDesc(&techDesc);
-
-	mySurface->Activate();
-
-	for (UINT i = 0; i < techDesc.Passes; ++i)
-	{
-		myEffect->GetTechnique()->GetPassByIndex(i)->Apply(0, Engine::GetInstance()->GetContex());
-		Engine::GetInstance()->GetContex()->DrawIndexed(mySurface->GetIndexCount(), mySurface->GetVertexStart(), 0);
-	}
+	BaseModel::Render();
 
 	Engine::GetInstance()->EnableZBuffer();
 
@@ -202,9 +81,9 @@ void Prism::Text::Render(const char* aString
 }
 
 
-CU::Vector2<float> Prism::Text::GetTextSize(const char* aString) const
+CU::Vector2<float> Prism::Text::GetTextSize(const std::string& aString) const
 {
-	int numOfLetters = static_cast<int>(strlen(aString));
+	int numOfLetters = aString.length();
 	CU::Vector2<float> size;
 
 
@@ -214,171 +93,77 @@ CU::Vector2<float> Prism::Text::GetTextSize(const char* aString) const
 	return size;
 }
 
-float Prism::Text::GetTextWidth() const
+const CU::Vector2<float>& Prism::Text::GetCharSize() const
 {
-	return myTextWidth;
+	return myCharSize;
 }
 
-void Prism::Text::SetupVertexBuffer()
+void Prism::Text::ConstructBuffers(const std::string& aString)
 {
-	TIME_FUNCTION
-
-
-		if (myVertexBuffer->myVertexBuffer != nullptr)
-			myVertexBuffer->myVertexBuffer->Release();
-
-	myVertexBufferDesc->ByteWidth = sizeof(VertexPosColorUV) * myVertices.Size();
-	myInitData->pSysMem = reinterpret_cast<char*>(&myVertices[0]);
-
-
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
-	if (FAILED(hr) != S_OK)
-	{
-		//HRESULT deviceRemovedReason = Engine::GetInstance()->GetDevice()->GetDeviceRemovedReason();
-		DL_ASSERT("Failed to SetupVertexBuffer");
-	}
-}
-
-void Prism::Text::SetupIndexBuffer()
-{
-	TIME_FUNCTION
-
-		if (myIndexBuffer->myIndexBuffer != nullptr)
-			myIndexBuffer->myIndexBuffer->Release();
-
-	myIndexBufferDesc->ByteWidth = sizeof(UINT) * myVerticeIndices.Size();
-	myInitData->pSysMem = reinterpret_cast<char*>(&myVerticeIndices[0]);
-
-
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myIndexBufferDesc, myInitData,
-		&myIndexBuffer->myIndexBuffer);
-	if (FAILED(hr) != S_OK)
-	{
-		//HRESULT deviceRemovedReason = Engine::GetInstance()->GetDevice()->GetDeviceRemovedReason();
-		DL_ASSERT("Failed to SetupIndexBuffer");
-	}
-}
-
-
-void Prism::Text::CreateFirstTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex,
-	const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, const CU::Vector4<float>& aColor)
-{
-	int index = aIndex;
-
-	VertexPosColorUV vert;
-	vert.myCol = aColor;
-	vert.myPos.z = aDrawPos.z;
-
-	//TopLeft
-	vert.myPos.x = aDrawPos.x * aScale;
-	vert.myPos.y = aDrawPos.y * aScale;
-	vert.myUV = aTopLeftUV;
-	myVertices.Add(vert);
-	myVerticeIndices.Add(index);
-	++index;
-
-	//BottomRight
-	vert.myPos.x = (aDrawPos.x + myCharSize.x) * aScale;
-	vert.myPos.y = (aDrawPos.y - myCharSize.y) * aScale;
-	vert.myUV = aBotRightUV;
-	myVertices.Add(vert);
-	myVerticeIndices.Add(index);
-	++index;
-
-
-	//BottomLeft
-	vert.myPos.x = aDrawPos.x * aScale;
-	vert.myPos.y = (aDrawPos.y - myCharSize.y) * aScale;
-	vert.myUV.x = aTopLeftUV.x;
-	vert.myUV.y = aBotRightUV.y;
-
-	myVertices.Add(vert);
-	myVerticeIndices.Add(index);
-	++index;
-}
-
-void Prism::Text::CreateSecondTri(const CU::Vector3<float>& aDrawPos, const float aScale, const int aIndex,
-	const CU::Vector2<float>& aTopLeftUV, const CU::Vector2<float>& aBotRightUV, const CU::Vector4<float>& aColor)
-{
-	int index = aIndex;
-
-	VertexPosColorUV vert;
-	vert.myCol = aColor;
-	vert.myPos.z = aDrawPos.z;
-
-	//TopLeft
-	vert.myPos.x = aDrawPos.x * aScale;
-	vert.myPos.y = aDrawPos.y * aScale;
-	vert.myUV = aTopLeftUV;
-	myVertices.Add(vert);
-	myVerticeIndices.Add(index);
-	++index;
-
-	//TopRight
-	vert.myPos.x = (aDrawPos.x + myCharSize.x) * aScale;
-	vert.myPos.y = aDrawPos.y * aScale;
-	vert.myUV.x = aBotRightUV.x;
-	vert.myUV.y = aTopLeftUV.y;
-	myVertices.Add(vert);
-	myVerticeIndices.Add(index);
-	++index;
-
-	//BottomRight
-	vert.myPos.x = (aDrawPos.x + myCharSize.x) * aScale;
-	vert.myPos.y = (aDrawPos.y - myCharSize.y) * aScale;
-	vert.myUV = aBotRightUV;
-	myVertices.Add(vert);
-	myVerticeIndices.Add(index);
-	++index;
-}
-
-
-void Prism::Text::UpdateSentence(const char* aString, const float aDrawX, const float aDrawY,
-	const CU::Vector4<float>& aColor, const float aScale)
-{
-	TIME_FUNCTION
-
-		if (/*myLastText != nullptr && */strcmp(aString, myLastText.c_str()) == 0 && aDrawX == myLastDrawX
-			&& aDrawY == myLastDrawY && aScale == myLastScale)
-		{
-		return;
-		}
+	TIME_FUNCTION;
 
 	myLastText = aString;
-	myLastDrawX = aDrawX;
-	myLastDrawY = aDrawY;
-	myLastScale = aScale;
-	myTextWidth = aDrawX;
+	myTextWidth = 0;
 
-	myHasText = true;
-	int numOfLetters = static_cast<int>(strlen(aString));
-	int index = 0;
-	float drawX = aDrawX;
-	float drawY = aDrawY;
+	int numOfLetters = aString.length();
+	float drawX = 0;
+	float drawY = 0;
 	float z = 1.f;
 
 	myVertices.RemoveAll();
-	myVerticeIndices.RemoveAll();
+	myIndices.RemoveAll();
+	VertexPosUV vert;
 	for (int i = 0; i < numOfLetters; ++i)
 	{
 		Font::CharacterData charData = myFont->GetCharData(aString[i]);
 
-		CreateFirstTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV, aColor);
-		index += 3;
+		float left = drawX;
+		float right = left + myCharSize.x;
+		float top = drawY;
+		float bottom = top - myCharSize.y;
 
-		CreateSecondTri({ drawX, drawY, z }, aScale, index, charData.myTopLeftUV, charData.myBottomRightUV, aColor);
-		index += 3;
+
+		vert.myPos = CU::Vector3<float>(left, top, z);
+		vert.myUV = charData.myTopLeftUV;
+		myVertices.Add(vert);
+
+		vert.myPos = CU::Vector3<float>(right, bottom, z);
+		vert.myUV = charData.myBottomRightUV;
+		myVertices.Add(vert);
+
+		vert.myPos = CU::Vector3<float>(left, bottom, z);
+		vert.myUV = { charData.myTopLeftUV.x, charData.myBottomRightUV.y };
+		myVertices.Add(vert);
+
+		vert.myPos = CU::Vector3<float>(right, top, z);
+		vert.myUV = { charData.myBottomRightUV.x, charData.myTopLeftUV.y };
+		myVertices.Add(vert);
+
+
+		int startIndex = i * 4;
+		myIndices.Add(startIndex + 0);
+		myIndices.Add(startIndex + 1);
+		myIndices.Add(startIndex + 2);
+
+		myIndices.Add(startIndex + 0);
+		myIndices.Add(startIndex + 3);
+		myIndices.Add(startIndex + 1);
 
 
 		drawX += myCharSize.x - myCharSpacing;
 		z -= 0.001f;
 	}
 
-	SetupVertexBuffer();
-	SetupIndexBuffer();
+	SetupVertexBuffer(myVertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&myVertices[0]));
+	SetupIndexBuffer(myIndices.Size(), reinterpret_cast<char*>(&myIndices[0]));
 
-	mySurface->SetIndexCount(myVerticeIndices.Size());
-	mySurface->SetVertexCount(myVertices.Size());
+	mySurfaces[0]->SetVertexCount(myVertices.Size());
+	mySurfaces[0]->SetIndexCount(myIndices.Size());
 
 	myTextWidth = drawX - myTextWidth;
+}
+
+float Prism::Text::GetTextWidth() const
+{
+	return myTextWidth;
 }

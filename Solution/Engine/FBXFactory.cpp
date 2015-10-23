@@ -48,6 +48,7 @@ void Prism::FBXFactory::FillData(ModelData* someData, Model* outData, Effect* aE
 	memcpy(indexData, someData->myIndicies, someData->myIndexCount*sizeof(unsigned int));
 	indexWrapper->myIndexData = (char*)indexData;
 	indexWrapper->mySize = someData->myIndexCount*sizeof(unsigned int);
+	indexWrapper->myNumberOfIndices = someData->myIndexCount;
 	outData->myIndexBaseData = indexWrapper;
 
 	VertexDataWrapper* vertexData = new VertexDataWrapper();
@@ -169,9 +170,9 @@ Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect
 		FillData(someModelData->myData, tempModel, aEffect);
 		tempModel->myOrientation = someModelData->myOrientation;
 	}
-	for (int i = 0; i < someModelData->myChilds.Size(); ++i)
+	for (int i = 0; i < someModelData->myChildren.Size(); ++i)
 	{
-		auto currentChild = someModelData->myChilds[i];
+		auto currentChild = someModelData->myChildren[i];
 		tempModel->AddChild(CreateModel(currentChild, aEffect));
 	}
 	return tempModel;
@@ -241,9 +242,9 @@ void Prism::FBXFactory::CreateModelForRadiusCalc(FbxModelData* someModelData, CU
 	{
 		FillDataForRadiusCalc(someModelData->myData, someVerticesOut, orientation);
 	}
-	for (int i = 0; i < someModelData->myChilds.Size(); ++i)
+	for (int i = 0; i < someModelData->myChildren.Size(); ++i)
 	{
-		auto currentChild = someModelData->myChilds[i];
+		auto currentChild = someModelData->myChildren[i];
 		CreateModelForRadiusCalc(currentChild, someVerticesOut, orientation);
 	}
 }

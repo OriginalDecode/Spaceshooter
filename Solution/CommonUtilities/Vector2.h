@@ -6,9 +6,15 @@
 
 namespace CommonUtilities
 {
+	template <typename T>
+	Vector2<T>::Vector2()
+	{
+		x = 0;
+		y = 0;
+	}
 
 	template <typename T>
-	Vector2<T>::Vector2(T aX = 0, T aY = 0)
+	Vector2<T>::Vector2(T aX, T aY)
 	{
 		x = aX;
 		y = aY;

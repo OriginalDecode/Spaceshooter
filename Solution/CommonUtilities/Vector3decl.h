@@ -8,7 +8,8 @@ namespace CommonUtilities
 	class Vector3
 	{
 	public:
-		Vector3(T aX = 0, T aY = 0, T aZ = 0);
+		Vector3();
+		Vector3(T aX, T aY, T aZ);
 		~Vector3();
 
 

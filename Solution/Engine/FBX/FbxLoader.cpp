@@ -1452,12 +1452,12 @@ void LoadNodeRecursive(FbxModelData* aModel, AnimationData& aAnimation, FbxNode*
 	const int lChildCount = aNode->GetChildCount();
 	if (lChildCount > 0)
 	{
-		aModel->myChilds.Init(lChildCount);
+		aModel->myChildren.Init(lChildCount);
 		for (int lChildIndex = 0; lChildIndex < lChildCount; ++lChildIndex)
 		{
-			aModel->myChilds.Add(new FbxModelData());
+			aModel->myChildren.Add(new FbxModelData());
 
-			LoadNodeRecursive(aModel->myChilds.GetLast(), aAnimation, aNode->GetChild(lChildIndex), lGlobalPosition, aPose, aCurrentAnimLayer, boneId);
+			LoadNodeRecursive(aModel->myChildren.GetLast(), aAnimation, aNode->GetChild(lChildIndex), lGlobalPosition, aPose, aCurrentAnimLayer, boneId);
 		}
 	}
 }

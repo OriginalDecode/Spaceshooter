@@ -24,11 +24,10 @@ Menu::Menu(const std::string& aXMLPath)
 	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "sizeX", crosshairSize.x);
 	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "sizeY", crosshairSize.y);
 
-	myCrosshair = new Prism::Sprite;
-	myCrosshair->Init(crosshair, crosshairSize);
-	myBackground = new Prism::Sprite;
-	myBackground->Init(background, { float(Prism::Engine::GetInstance()->GetWindowSize().x),
-		float(Prism::Engine::GetInstance()->GetWindowSize().y) });
+	myCrosshair = new Prism::Sprite(crosshair, crosshairSize, crosshairSize/2.f);
+	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
+	myBackground = new Prism::Sprite(background, screenSize, screenSize / 2.f);
 
 	tinyxml2::XMLElement* buttonElement = reader.FindFirstChild(menuElement, "button");
 	for (; buttonElement != nullptr; buttonElement = reader.FindNextElement(buttonElement))
@@ -50,14 +49,14 @@ Menu::~Menu()
 
 void Menu::Render(CU::InputWrapper* anInputWrapper)
 {
-	myBackground->Render((myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2));
+	myBackground->Render({ (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2) });
 
 	for (int i = 0; i < myButtons.Size(); i++)
 	{
 		myButtons[i]->Render();
 	}
 
-	myCrosshair->Render(anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y);
+	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
 
 void Menu::Update(CU::InputWrapper* anInputWrapper)

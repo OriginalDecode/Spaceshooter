@@ -9,7 +9,16 @@ namespace CommonUtilities
 	typedef Vector4<float> Vector4f;
 
 	template <typename T>
-	Vector4<T>::Vector4(T aX = 0, T aY = 0, T aZ = 0, T aW = 0)
+	Vector4<T>::Vector4()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+		w = 0;
+	}
+
+	template <typename T>
+	Vector4<T>::Vector4(T aX, T aY, T aZ, T aW)
 	{
 		x = aX;
 		y = aY;

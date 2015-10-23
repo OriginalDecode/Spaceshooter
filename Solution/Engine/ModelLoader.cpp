@@ -92,26 +92,10 @@ namespace Prism
 					
 					break;
 				}
-				case Prism::ModelLoader::eLoadType::POLYGON:
-				{
-					model = new Prism::Model();
-					model->InitPolygon();
-
-					myNonFXBModels.Add(model);
-					break;
-				}
 				case Prism::ModelLoader::eLoadType::CUBE:
 				{
 					model = new Prism::Model();
-					model->InitCube(loadArray[i].mySize.x, loadArray[i].mySize.y, loadArray[i].mySize.z);
-
-					myNonFXBModels.Add(model);
-					break;
-				}
-				case Prism::ModelLoader::eLoadType::LIGHT_CUBE:
-				{
-					model = new Prism::Model();
-					model->InitLightCube(loadArray[i].mySize.x, loadArray[i].mySize.y,
+					model->InitCube(loadArray[i].mySize.x, loadArray[i].mySize.y,
 						loadArray[i].mySize.z, loadArray[i].myColor);
 
 					myNonFXBModels.Add(model);
@@ -189,69 +173,7 @@ namespace Prism
 		
 	}
 
-	ModelProxy* ModelLoader::LoadPolygon()
-	{
-
-#ifdef THREADED_LOADING
-		WaitUntilAddIsAllowed();
-
-		myCanCopyArray = false;
-		ModelProxy* proxy = new ModelProxy();
-		proxy->SetModel(nullptr);
-
-		LoadData newData;
-		newData.myProxy = proxy;
-		newData.myLoadType = eLoadType::POLYGON;
-
-
-		myBuffers[myInactiveBuffer].Add(newData);
-
-		myCanCopyArray = true;
-
-		return proxy;
-#else
-		ModelProxy* proxy = new ModelProxy();
-		Model* model = new Prism::Model();
-		model->InitPolygon();
-
-		proxy->SetModel(model);
-
-		return proxy;
-#endif
-		
-	}
-
-	ModelProxy* ModelLoader::LoadCube(float aWidth, float aHeight, float aDepth)
-	{
-#ifdef THREADED_LOADING
-		WaitUntilAddIsAllowed();
-
-		myCanCopyArray = false;
-		ModelProxy* proxy = new ModelProxy();
-		proxy->SetModel(nullptr);
-
-		LoadData newData;
-		newData.myProxy = proxy;
-		newData.myLoadType = eLoadType::CUBE;
-		newData.mySize = { aWidth, aHeight, aDepth };
-
-		myBuffers[myInactiveBuffer].Add(newData);
-
-		myCanCopyArray = true;
-
-		return proxy;
-#else
-		ModelProxy* proxy = new ModelProxy();
-		Model* model = new Prism::Model();
-		model->InitCube(aWidth, aHeight, aDepth);
-
-		proxy->SetModel(model);
-
-		return proxy;
-#endif
-	}
-
-	ModelProxy* ModelLoader::LoadLightCube(float aWidth, float aHeight, float aDepth
+	ModelProxy* ModelLoader::LoadCube(float aWidth, float aHeight, float aDepth
 		, CU::Vector4f aColour)
 	{
 #ifdef THREADED_LOADING
@@ -263,7 +185,7 @@ namespace Prism
 
 		LoadData newData;
 		newData.myProxy = proxy;
-		newData.myLoadType = eLoadType::LIGHT_CUBE;
+		newData.myLoadType = eLoadType::CUBE;
 		newData.mySize = { aWidth, aHeight, aDepth };
 		newData.myColor = aColour;
 

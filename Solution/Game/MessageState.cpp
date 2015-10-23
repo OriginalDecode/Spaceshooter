@@ -10,8 +10,7 @@
 MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper)
 	: myEvent(nullptr)
 {
-	myBackground = new Prism::Sprite;
-	myBackground->Init(aTexturePath, aSize);
+	myBackground = new Prism::Sprite(aTexturePath, aSize, aSize/2.f);
 	myInputWrapper = anInputWrapper;
 	myTextMessage = "";
 }
@@ -55,7 +54,7 @@ const eStateStatus MessageState::Update(const float&)
 
 void MessageState::Render()
 {
-	myBackground->Render(Prism::Engine::GetInstance()->GetWindowSize().x / 2.f, -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f);
+	myBackground->Render({ Prism::Engine::GetInstance()->GetWindowSize().x / 2.f, -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f });
 
 	if (myTextMessage != "")
 	{

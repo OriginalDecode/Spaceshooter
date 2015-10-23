@@ -107,7 +107,7 @@ namespace Prism
 					color = { 0.f, 0.f, 1.f, 1.f };
 				}
 
-				myText->Render(myMenuElements[i].myName.c_str(), textPosition.x, textPosition.y, color);
+				myText->Render(myMenuElements[i].myName, textPosition, { 1.f, 1.f }, color);
 			}
 		}
 	}

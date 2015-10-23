@@ -9,7 +9,8 @@ namespace CommonUtilities
 	class Vector4
 	{
 	public:
-		Vector4(T aX = 0, T aY = 0, T aZ = 0, T aW = 0);
+		Vector4();
+		Vector4(T aX, T aY, T aZ, T aW);
 		Vector4(Vector3<T> aVector);
 		~Vector4();
 

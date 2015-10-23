@@ -1,80 +1,36 @@
 #pragma once
-#include <GrowingArray.h>
-#include <Matrix.h>
-#include "Vertices.h"
-#include "EffectListener.h"
 
-struct ID3D11BlendState;
-struct ID3D11InputLayout;
-struct D3D11_BUFFER_DESC;
-struct D3D11_SUBRESOURCE_DATA;
+#include "BaseModel.h"
 
 namespace Prism
 {
-	class Effect;
-	class Surface;
-	class Camera;
-	struct IndexBufferWrapper;
-	struct VertexBufferWrapper;
-
-	class Sprite : public EffectListener
+	class Sprite : public BaseModel
 	{
 	public:
-		Sprite();
-		~Sprite();
+		Sprite(const std::string& aFileName, const CU::Vector2<float>& aSpriteSize
+			, const CU::Vector2<float>& aHotSpot);
 
-
-		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
-		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize, const char* anEffectFilePath);
-
-		void Render(const float aDrawX, const float aDrawY);
-		void Rotate(float aRadian);
+		void Render(const CU::Vector2<float>& aPosition, const CU::Vector2<float>& aScale = { 1.f, 1.f }
+			, const CU::Vector4<float>& aColor = { 1.f, 1.f, 1.f, 1.f });
 
 		void SetSize(const CU::Vector2<float> aTextureSize);
-
 		const CU::Vector2<float>& GetSize() const;
 
 	private:
 
-		void Update(const float aDrawX, const float aDrawY);
-		void InitVertexBuffer();
-		void InitIndexBuffer();
-		void InitSurface(const std::string& aFileName);
-		void InitBlendState();
+		void CreateVertices();
 
-		void SetupVertexBuffer();
-		void SetupIndexBuffer();
-
-		void OnEffectLoad();
-
-		Effect* myEffect;
-		ID3D11InputLayout* myVertexLayout;
-		CU::GrowingArray<VertexPosUV> myVertices;
-		CU::GrowingArray<int> myVerticeIndices;
-
-		VertexBufferWrapper* myVertexBuffer;
-		D3D11_BUFFER_DESC* myVertexBufferDesc;
-		IndexBufferWrapper* myIndexBuffer;
-		D3D11_BUFFER_DESC* myIndexBufferDesc;
-		D3D11_SUBRESOURCE_DATA* myInitData;
-
-		Surface* mySurface;
-
-		CU::Matrix44<float> myIdentityMatrix;
-		CU::Vector2<float> myTextureSize;
-		ID3D11BlendState* myBlendState;
-
-		float myLastDrawX;
-		float myLastDrawY;
+		CU::Vector2<float> mySize;
+		CU::Vector2<float> myHotspot;
 	};
 }
 
 inline void Prism::Sprite::SetSize(const CU::Vector2<float> aTextureSize)
 {
-	myTextureSize = aTextureSize;
+	//myTextureSize = aTextureSize;
 }
 
 inline const CU::Vector2<float>& Prism::Sprite::GetSize() const
 {
-	return myTextureSize;
+	return mySize;
 }

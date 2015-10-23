@@ -126,7 +126,8 @@ void Prism::DebugDataDisplay::RenderMemoryUsage()
 	myStringStream.str(std::string());
 	myStringStream << "Memory: " << Prism::SystemMonitor::GetMemoryUsageMB() << "mb" << std::endl;
 
-	myText->Render(myStringStream.str().c_str(), myMemUsageStartPos.x, myMemUsageStartPos.y, myTextScale);
+	myText->Render(myStringStream.str(), myMemUsageStartPos, { myTextScale, myTextScale }
+		, { 1.f, 1.f, 1.f, 1.f });
 }
 
 void Prism::DebugDataDisplay::RenderCPUUsage()
@@ -138,7 +139,8 @@ void Prism::DebugDataDisplay::RenderCPUUsage()
 	myStringStream << "CPU: "
 		<< Prism::SystemMonitor::GetCPUUsage() << "%" << std::endl;;
 
-	myText->Render(myStringStream.str().c_str(), myCPUUSageStartPos.x, myCPUUSageStartPos.y, myTextScale);
+	myText->Render(myStringStream.str(), myCPUUSageStartPos, { myTextScale, myTextScale }
+		, { 1.f, 1.f, 1.f, 1.f });
 }
 
 void Prism::DebugDataDisplay::RenderFrameTime()
@@ -150,7 +152,8 @@ void Prism::DebugDataDisplay::RenderFrameTime()
 	myStringStream.str(std::string());
 	myStringStream << "FPS: " << FPS << std::endl;
 
-	myText->Render(myStringStream.str().c_str(), myFrameTimeStartPos.x, myFrameTimeStartPos.y, myTextScale);
+	myText->Render(myStringStream.str(), myFrameTimeStartPos, { myTextScale, myTextScale }
+		, { 1.f, 1.f, 1.f, 1.f });
 
 
 	float frameTimeMS = myLastDeltaTime * 1000.f;
@@ -158,6 +161,7 @@ void Prism::DebugDataDisplay::RenderFrameTime()
 	myStringStream.str(std::string());
 	myStringStream << "FrameTime: " << frameTimeMS << "ms" << std::endl;
 
-	myText->Render(myStringStream.str().c_str()
-		, myFrameTimeStartPos.x, myFrameTimeStartPos.y - 30.f, myTextScale);
+	myText->Render(myStringStream.str()
+		, { myFrameTimeStartPos.x, myFrameTimeStartPos.y - 30.f }, { myTextScale, myTextScale }
+		, { 1.f, 1.f, 1.f, 1.f });
 }
