@@ -38,6 +38,7 @@ public:
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	void ReceiveMessage(const ResizeMessage& aMessage) override;
 	void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage) override;
+	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 
 	void ReadXML();
 
@@ -103,6 +104,10 @@ private:
 	std::string myConversation;
 
 	Entity* myEnemiesTarget;
+
+	bool myShowMessage;
+	std::string myMessage; 
+	float myMessageTime;
 };
 
 inline eComponentType GUIComponent::GetType()

@@ -12,6 +12,7 @@
 #include "MissionNote.h"
 #include <Sprite.h>
 #include "PostMaster.h"
+#include "PowerUpMessage.h"
 #include "PropComponent.h"
 #include "ResizeMessage.h"
 #include "ShieldNote.h"
@@ -51,11 +52,15 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myHitMarkerTimer(-1.f)
 	, myDamageIndicatorTimer(-1.f)
 	, myClosestEnemy(nullptr)
+	, myShowMessage(false)
+	, myMessage("")
+	, myMessageTime(0.f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
 	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
@@ -95,6 +100,7 @@ GUIComponent::~GUIComponent()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -139,6 +145,17 @@ void GUIComponent::Update(float aDeltaTime)
 {
 	myHitMarkerTimer -= aDeltaTime;
 	myDamageIndicatorTimer -= aDeltaTime;
+
+	if (myShowMessage == true)
+	{
+		myMessageTime -= aDeltaTime;
+		if (myMessageTime <= 0.f)
+		{
+			myShowMessage = false;
+			myMessageTime = 0.f;
+			myMessage = "";
+		}
+	}
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
@@ -323,6 +340,12 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		myDamageIndicator->Render(halfWidth, -halfHeight);
 	}
 
+	if (myShowMessage == true)
+	{
+		Prism::Engine::GetInstance()->PrintDebugText(myMessage, { 100.f, -100.f });
+
+	}
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
 
@@ -413,6 +436,13 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	{
 		myDamageIndicatorTimer = 0.1f;
 	}
+}
+
+void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
+{
+	myMessage = "Weapon upgrade received: " + aMessage.GetUprgade();
+	myMessageTime = 5.f;
+	myShowMessage = true;
 }
 
 void GUIComponent::ReadXML()
