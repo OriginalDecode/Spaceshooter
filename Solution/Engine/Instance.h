@@ -15,7 +15,8 @@ namespace Prism
 	class Instance
 	{
 	public:
-		Instance(ModelProxy& aModel, const CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType);
+		Instance(ModelProxy& aModel, const CU::Matrix44<float>& anOrientation, eOctreeType anOctreeType
+			, const float& aObjectCullingRadius);
 		~Instance();
 
 		void Render(Camera& aCamera);
@@ -32,7 +33,7 @@ namespace Prism
 		void UpdatePointLights(const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData);
 		void UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData);
 		
-		float GetRadius() const;
+		float GetObjectCullingRadius() const;
 		eOctreeType GetOctreeType() const;
 
 	private:
@@ -43,12 +44,12 @@ namespace Prism
 		const CU::Matrix44<float>& myOrientation;
 		CU::Vector3<float> myScale;
 
-		float myRadius;
+		const float& myObjectCullingRadius;
 	};
 
-	inline float Instance::GetRadius() const
+	inline float Instance::GetObjectCullingRadius() const
 	{
-		return myRadius;
+		return myObjectCullingRadius;
 	}
 
 	inline eOctreeType Instance::GetOctreeType() const

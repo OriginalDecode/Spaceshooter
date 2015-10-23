@@ -37,7 +37,7 @@ namespace CommonUtilities
 	{
 		if (aVector.x == 0 && aVector.y == 0 && aVector.z == 0)
 		{
-			DL_DEBUG("Warning: Normalize zero vector.");
+			//DL_DEBUG("Warning: Normalize zero vector.");
 			return;
 		}
 		aVector = GetNormalized(aVector);
@@ -47,6 +47,10 @@ namespace CommonUtilities
 	Vector3<T> GetNormalized(const Vector3<T>& aVector)
 	{
 		T length = Length(aVector);
+		if (length == 0)
+		{
+			return aVector;
+		}
 		//assert(length != 0 && "Division by zero.");
 		return Vector3<T>(aVector / length);
 	}

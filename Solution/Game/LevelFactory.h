@@ -13,11 +13,12 @@ namespace Prism
 };
 
 class Level;
+class Entity;
 
 class LevelFactory
 {
 public:
-	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper);
+	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, Entity& aPlayer);
 	~LevelFactory();
 
 	Level* LoadLevel(const int& anID);
@@ -27,15 +28,18 @@ public:
 	bool IsLastLevel() const;
 	void LoadLevelListFromXML(const std::string& aXMLPath); 
 	void ReadXML(const std::string& aFilePath);
+	void ReadLevelSettings();
+	void LoadPlayer();
 
 private:
-
 	void LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadDirectionalLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
+	void LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadTriggers(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
-	void LoadPlayer();
+
+	void FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate);
 
 	void AddToScene();
 
@@ -50,6 +54,8 @@ private:
 	CU::GrowingArray<Prism::SpotLight*> mySpotLights;
 
 	std::unordered_map<int, std::string> myLevelPaths;
+
+	Entity* myPlayer;
 
 	int myCurrentID;
 };

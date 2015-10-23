@@ -74,3 +74,16 @@ void Entity::Kill()
 
 	myAlive = false;
 }
+
+void Entity::Reset()
+{
+	myOrientation = myOriginalOrientation;
+	myAlive = true;
+	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
+	{
+		if (myComponents[i] != nullptr)
+		{
+			myComponents[i]->Reset();
+		}
+	}
+}

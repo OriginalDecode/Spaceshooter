@@ -80,7 +80,8 @@ void AIComponent::Update(float aDeltaTime)
 		myTimeToNextDecision -= aDeltaTime;
 		FollowEntity(aDeltaTime);
 
-		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
+		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE 
+			&& myTargetPositionMode != eAITargetPositionMode::MINE)
 		{
 			CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 
@@ -129,41 +130,48 @@ void AIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void AIComponent::FollowEntity(float aDeltaTime)
 {
-	CalculateToTarget(myTargetPositionMode);
-	myVelocity += myToTarget * aDeltaTime;
+	if (myTargetPositionMode != eAITargetPositionMode::MINE)
+	{
+		CalculateToTarget(myTargetPositionMode);
+		myVelocity += myToTarget * aDeltaTime;
 
-	CU::Normalize(myVelocity);
+		CU::Normalize(myVelocity);
 
-	CU::Vector3<float> up(0, 1.f, 0);
-	up = up * myEntity.myOrientation;
+		CU::Vector3<float> up(0, 1.f, 0);
+		up = up * myEntity.myOrientation;
 
-	CU::Normalize(myToTarget);
+		CU::Normalize(myToTarget);
 
-	up = up + myToTarget * aDeltaTime;
+		up = up + myToTarget * aDeltaTime;
 
-	CU::Normalize(up);
+		CU::Normalize(up);
 
-	CU::Vector3<float> right = CU::Cross(up, myVelocity);
-	up = CU::Cross(myVelocity, right);
+		CU::Vector3<float> right = CU::Cross(up, myVelocity);
+		up = CU::Cross(myVelocity, right);
 
-	right = CU::Cross(up, myVelocity);
+		right = CU::Cross(up, myVelocity);
 
-	myEntity.myOrientation.myMatrix[0] = right.x;
-	myEntity.myOrientation.myMatrix[1] = right.y;
-	myEntity.myOrientation.myMatrix[2] = right.z;
-	myEntity.myOrientation.myMatrix[3] = 0;
+		myEntity.myOrientation.myMatrix[0] = right.x;
+		myEntity.myOrientation.myMatrix[1] = right.y;
+		myEntity.myOrientation.myMatrix[2] = right.z;
+		myEntity.myOrientation.myMatrix[3] = 0;
 
-	myEntity.myOrientation.myMatrix[4] = up.x;
-	myEntity.myOrientation.myMatrix[5] = up.y;
-	myEntity.myOrientation.myMatrix[6] = up.z;
-	myEntity.myOrientation.myMatrix[7] = 0;
+		myEntity.myOrientation.myMatrix[4] = up.x;
+		myEntity.myOrientation.myMatrix[5] = up.y;
+		myEntity.myOrientation.myMatrix[6] = up.z;
+		myEntity.myOrientation.myMatrix[7] = 0;
 
-	myEntity.myOrientation.myMatrix[8] = myVelocity.x;
-	myEntity.myOrientation.myMatrix[9] = myVelocity.y;
-	myEntity.myOrientation.myMatrix[10] = myVelocity.z;
-	myEntity.myOrientation.myMatrix[11] = 0;
+		myEntity.myOrientation.myMatrix[8] = myVelocity.x;
+		myEntity.myOrientation.myMatrix[9] = myVelocity.y;
+		myEntity.myOrientation.myMatrix[10] = myVelocity.z;
+		myEntity.myOrientation.myMatrix[11] = 0;
 
-	myVelocity *= myMovementSpeed;
+		myVelocity *= myMovementSpeed;
+	}
+	else
+	{
+
+	}
 }
 
 void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)

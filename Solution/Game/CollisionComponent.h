@@ -13,7 +13,7 @@ public:
 	void Initiate(float someRadius);
 	void Update(float aDeltaTime) override;
 
-	void SetRadius(float someRadius = 0);
+	void SetCollisionRadius(float someRadius = 0);
 	Sphere GetSphere();
 
 
@@ -30,7 +30,7 @@ inline eComponentType CollisionComponent::GetType()
 	return eComponentType::COLLISION;
 }
 
-inline void CollisionComponent::SetRadius(float someRadius)
+inline void CollisionComponent::SetCollisionRadius(float someRadius)
 {
 	mySphere.myRadius = someRadius;
 	mySphere.myRadiusSquared = mySphere.myRadius * mySphere.myRadius;

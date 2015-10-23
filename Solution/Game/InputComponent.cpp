@@ -96,6 +96,24 @@ void InputComponent::Update(float aDeltaTime)
 	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
 	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
 
+	if (xRotation > myMaxSteeringSpeed)
+	{
+		xRotation = myMaxSteeringSpeed;
+	}
+	if (xRotation < -myMaxSteeringSpeed)
+	{
+		xRotation = -myMaxSteeringSpeed;
+	}
+
+	if (yRotation > myMaxSteeringSpeed)
+	{
+		yRotation = myMaxSteeringSpeed;
+	}
+	if (yRotation < -myMaxSteeringSpeed)
+	{
+		yRotation = -myMaxSteeringSpeed;
+	}
+
 	RotateX(yRotation);
 	RotateY(xRotation);
 
@@ -267,4 +285,16 @@ void InputComponent::UpdateSteering(const float& aDelta)
 			mySteering.y = 0.f;
 		}
 	}
+}
+
+void InputComponent::Reset()
+{
+	myRollSpeed = 0.f;
+	myMovementSpeed = 0.f;
+	myCameraIsLocked = false;
+	myBoost = false;
+	myCanMove = true;
+	myCurrentBoostCooldown = 0.f;
+	myCurrentBoostValue = 0.f;
+	myMaxBoostCooldown = 0.f;
 }

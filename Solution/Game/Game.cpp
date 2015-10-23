@@ -10,16 +10,17 @@
 #include <FileWatcher.h>
 #include <Font.h>
 #include "Game.h"
+#include "GameStateMessage.h"
 #include "InGameState.h"
 #include <InputWrapper.h>
 #include "Level.h"
 #include "LevelFactory.h"
+#include "MenuState.h"
+#include "PostMaster.h"
+#include "ResizeMessage.h"
 #include <TimerManager.h>
 #include <VTuneApi.h>
-#include "PostMaster.h"
 #include <Vector.h>
-#include "GameStateMessage.h"
-#include "MenuState.h"
 #include <XMLReader.h>
 
 Game::Game()
@@ -46,7 +47,6 @@ bool Game::Init(HWND& aHwnd)
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
-	reader.ReadAttribute(reader.FindFirstChild("canWinGame"), "bool", myCanWinGame);
 	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
@@ -59,9 +59,7 @@ bool Game::Init(HWND& aHwnd)
 
 	if (startInMenu == false)
 	{
-		myGame = new InGameState(myInputWrapper, myShowMessages);
-		myStateStack.PushMainGameState(myGame);
-		myGame->SetLevel(1);
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::LOAD_GAME, 1));
 	}
 	else
 	{
@@ -121,8 +119,8 @@ bool Game::Update()
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
 	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
-	
-	
+
+
 	myStateStack.RenderCurrentState();
 	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
@@ -144,6 +142,7 @@ void Game::OnResize(int aWidth, int aHeight)
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);
+	PostMaster::GetInstance()->SendMessage(ResizeMessage(aWidth, aHeight));
 }
 
 void Game::ReceiveMessage(const GameStateMessage& aMessage)

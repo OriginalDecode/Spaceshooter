@@ -12,6 +12,7 @@ enum class eMessageType
 	EVENT_QUEUE_EMPTY,
 	DEFEND,
 	RESIZE,
+	BULLET_COLLISION_TO_GUI,
 	COUNT,
 };
 
@@ -39,6 +40,7 @@ enum eEntityType //Collision manager needs this as ints!
 	TRIGGER = 16,
 	PROP = 32,
 	POWERUP = 64,
+	DEFENDABLE = 128
 };
 
 enum class ePowerUpType
@@ -49,7 +51,8 @@ enum class ePowerUpType
 	HEALTHKIT,
 	WEAPON_UPGRADE,
 	EMP,
-	HOMING
+	HOMING,
+	INVULNERABLITY
 };
 
 enum class eMissionType
@@ -96,6 +99,7 @@ enum class eComponentType
 	SHEILD,
 	SHOOTING,
 	WAY_POINT,
+	EMITTER,
 	_COUNT,
 };
 
@@ -104,5 +108,6 @@ enum class eAITargetPositionMode
 	NOT_USED,
 	KEEP_DISTANCE,
 	ESCAPE_THEN_RETURN,
-	KAMIKAZE
+	KAMIKAZE,
+	MINE
 };

@@ -35,6 +35,8 @@ public:
 
 	static eComponentType GetType();
 
+	virtual void Reset();
+
 protected:
 	void operator=(Component&) = delete;
 

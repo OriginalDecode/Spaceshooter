@@ -8,8 +8,6 @@
 #include "DefendMessage.h"
 #include "DirectionalLight.h"
 #include "HealthComponent.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
 #include "EffectContainer.h"
 #include <Engine.h>
 #include <EngineEnums.h>
@@ -38,8 +36,9 @@
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
-LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper)
+LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, Entity& aPlayer)
 	: myInputWrapper(anInputWrapper)
+	, myPlayer(&aPlayer)
 	, myCurrentLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
@@ -117,6 +116,10 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 		{
 			DL_ASSERT("[LevelFactory] Wrong ID-number in levelList.xml! The numbers should be counting up, in order.");
 		}
+		if (myCurrentID >= 10)
+		{
+			DL_ASSERT("[LevelFactory] Can't handle level ID with two digits.");
+		}
 	}
 	reader.CloseDocument();
 }
@@ -137,7 +140,22 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
 
-	LoadPlayer();
+	if (myPlayer == nullptr)
+	{
+		LoadPlayer();
+	}
+	else
+	{
+		myCurrentLevel->myPlayer = myPlayer;
+		myCurrentLevel->myPlayer->Reset();
+	}
+
+	ReadLevelSettings();
+	myCurrentLevel->myPlayer->myOriginalOrientation = myCurrentLevel->myPlayer->myOrientation;
+	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
+	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
+
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	Sleep(10);
 	XMLReader reader;
@@ -167,17 +185,13 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	LoadLights(reader, levelElement);
 	LoadProps(reader, levelElement);
+	LoadDefendables(reader, levelElement);
 	LoadTriggers(reader, levelElement);
 	LoadPowerups(reader, levelElement);
 	
 	reader.CloseDocument();
 
-	Prism::EmitterData data;
-	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
-
-	myCurrentLevel->myEmitter = new Prism::EmitterInstance();
-	myCurrentLevel->myEmitter->Initiate(data);
-	myCurrentLevel->myEmitter->SetPosition({ 5, 5, 5 });
+	
 
 	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
 	{
@@ -196,6 +210,27 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	AddToScene();
 
 	myCurrentLevel->myMissionManager->Init();
+}
+
+void LevelFactory::ReadLevelSettings()
+{
+	XMLReader reader;
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml";
+	reader.OpenDocument(settingsPath);
+
+	std::string firstWeapon;
+	std::string secondWeapon;
+	std::string thirdWeapon;
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
+	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
+
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon), 0); // replace these with UpgradeWeapon later
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon), 1);
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon), 2);
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+
+	reader.CloseDocument();
 }
 
 void LevelFactory::LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
@@ -244,34 +279,27 @@ void LevelFactory::LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelEle
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
 
+		newEntity->AddComponent<PropComponent>()->Init("");
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
+	}
+}
+
+void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "defendable"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "defendable"))
+	{
+		Entity* newEntity = new Entity(eEntityType::DEFENDABLE, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
+		std::string propType;
+		aReader.ForceReadAttribute(entityElement, "propType", propType);
+		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
+
 		std::string defendName;
-		aReader.ReadAttribute(entityElement, "defendName", defendName);
+		aReader.ForceReadAttribute(entityElement, "defendName", defendName);
 		defendName = CU::ToLower(defendName);
 
-		tinyxml2::XMLElement* propElement = aReader.ForceFindFirstChild(entityElement, "position");
-		CU::Vector3<float> propPosition;
-		aReader.ForceReadAttribute(propElement, "X", propPosition.x);
-		aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
-		aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
-		newEntity->myOrientation.SetPos(propPosition*10.f);
-
-		propElement = aReader.ForceFindFirstChild(entityElement, "rotation");
-		CU::Vector3<float> propRotation;
-		aReader.ForceReadAttribute(propElement, "X", propRotation.x);
-		aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
-		aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
-
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(propRotation.x) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(propRotation.y) * newEntity->myOrientation;
-		newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(propRotation.z) * newEntity->myOrientation;
-
 		newEntity->AddComponent<PropComponent>()->Init(defendName);
-
-		int health = 30;
-		newEntity->AddComponent<HealthComponent>()->Init(health);
-
-		myCurrentLevel->myEntities.Add(newEntity);
-		myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::PROP);
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
 	}
 }
 
@@ -296,7 +324,8 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 		aReader.ForceReadAttribute(powerUpElement, "X", powerUpPosition.x);
 		aReader.ForceReadAttribute(powerUpElement, "Y", powerUpPosition.y);
 		aReader.ForceReadAttribute(powerUpElement, "Z", powerUpPosition.z);
-		newEntity->myOrientation.SetPos(powerUpPosition*10.f);
+		newEntity->myOriginalOrientation.SetPos(powerUpPosition*10.f);
+		newEntity->myOrientation = newEntity->myOriginalOrientation;
 
 		powerUpElement = aReader.ForceFindFirstChild(entityElement, "type");
 		std::string powerUp;
@@ -313,14 +342,18 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 void LevelFactory::LoadPlayer()
 {
 
-	Entity* player = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
-	player->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
+	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myPlayer->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
 		, "Data/Resource/Shader/S_effect_pbl.fx");
-	player->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
-	player->AddComponent<ShootingComponent>();
-	player->AddComponent<CollisionComponent>()->Initiate(7.5f);
-	player->AddComponent<ShieldComponent>()->Init();
-	player->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
+	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
+	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
+	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Initiate(7.5f);
+	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
+	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
+
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_machine_level_1")); // replace these with UpgradeWeapon later
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"));
+	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_rocket_launcher_level_1"));
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_player.xml");
@@ -329,35 +362,47 @@ void LevelFactory::LoadPlayer()
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
 
-	player->AddComponent<HealthComponent>()->Init(health, invulnerable);
-	myCurrentLevel->myCollisionManager->Add(player->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
+	myCurrentLevel->myPlayer->AddComponent<HealthComponent>()->Init(health, invulnerable);
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
-	myCurrentLevel->myEntities.Add(player);
-	myCurrentLevel->myCamera = new Prism::Camera(player->myOrientation);
-	player->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
+	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
+	myCurrentLevel->myPlayer->AddComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
+	myPlayer = myCurrentLevel->myPlayer;
 
-	reader.CloseDocument();
+	reader.CloseDocument();	
+}
 
-	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml"; // lite fulhax
-	reader.OpenDocument(settingsPath);
+void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate)
+{
+	tinyxml2::XMLElement* propElement = aReader.ForceFindFirstChild(aLevelElement, "position");
+	CU::Vector3<float> propPosition;
+	aReader.ForceReadAttribute(propElement, "X", propPosition.x);
+	aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
+	aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
+	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*10.f);
 
-	std::string firstWeapon;
-	std::string secondWeapon;
-	std::string thirdWeapon;
-	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
-	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
-	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
+	propElement = aReader.ForceFindFirstChild(aLevelElement, "rotation");
+	CU::Vector3<float> propRotation;
+	aReader.ForceReadAttribute(propElement, "X", propRotation.x);
+	aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
+	aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
 
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon));
-	player->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon));
-	player->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundX(propRotation.x) * aEntityToCreate->myOriginalOrientation;
+	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOriginalOrientation;
+	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOriginalOrientation;
 
-	player->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
-	myCurrentLevel->myPlayer = player;
-	reader.CloseDocument();
+	if (aEntityToCreate->GetType() == eEntityType::PROP)
+	{
+		int health = 30;
+		aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
+	}
+
+	aEntityToCreate->myOrientation = aEntityToCreate->myOriginalOrientation;
+	myCurrentLevel->myEntities.Add(aEntityToCreate);
+	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myEntities.GetLast()->GetComponent<CollisionComponent>(), aEntityToCreate->GetType());
 }
 
 void LevelFactory::AddToScene()
@@ -395,6 +440,8 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	Prism::ModelProxy* skySphere = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		aModelFilePath, aEffectFileName);
 	delete myCurrentLevel->mySkySphere;
-	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere, 
-		myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE);
+	myCurrentLevel->mySkySphereCullingRadius = 10.f;
+	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
+		, myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE
+		, myCurrentLevel->mySkySphereCullingRadius);
 }

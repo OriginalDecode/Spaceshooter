@@ -19,6 +19,7 @@ CollisionManager::CollisionManager()
 	, myTriggers(16)
 	, myProps(16)
 	, myPowerUps(16)
+	, myDefendables(16)
 	, myPlayerFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
@@ -26,13 +27,15 @@ CollisionManager::CollisionManager()
 	, myTriggerFilter(0)
 	, myPropFilter(0)
 	, myPowerUpFilter(0)
+	, myDefendableFilter(0)
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
-	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP;
-	myEnemyBulletFilter = eEntityType::PLAYER;// | eEntityType::PROP;
+	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP | eEntityType::DEFENDABLE;
+	myEnemyBulletFilter = eEntityType::PLAYER | eEntityType::DEFENDABLE;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
 	myPropFilter = eEntityType::PLAYER;
+	myDefendableFilter = eEntityType::PLAYER;
 	//myEnemyFilter = eEntityType::PLAYER;
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 }
@@ -67,6 +70,9 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 	case eEntityType::PROP:
 		myProps.Add(aComponent);
 		break;
+	case eEntityType::DEFENDABLE:
+		myDefendables.Add(aComponent);
+		break;
 	default:
 		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
 		break;
@@ -98,6 +104,9 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::PROP:
 		myProps.RemoveCyclic(aComponent);
+		break;
+	case eEntityType::DEFENDABLE:
+		myDefendables.RemoveCyclic(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
@@ -135,6 +144,10 @@ void CollisionManager::Update()
 	{
 		CheckAllCollisions(myProps[i], myPropFilter);
 	}
+	for (int i = myDefendables.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myDefendables[i], myDefendableFilter);
+	}
 }
 
 void CollisionManager::CleanUp()
@@ -167,6 +180,14 @@ void CollisionManager::CleanUp()
 		if (myPowerUps[i]->GetEntity().GetAlive() == false)
 		{
 			myPowerUps.RemoveCyclicAtIndex(i);
+		}
+	}
+
+	for (int i = myDefendables.Size() - 1; i >= 0; --i)
+	{
+		if (myDefendables[i]->GetEntity().GetAlive() == false)
+		{
+			myDefendables.RemoveCyclicAtIndex(i);
 		}
 	}
 }
@@ -205,6 +226,10 @@ void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aF
 	if (aFilter & eEntityType::POWERUP)
 	{
 		CheckCollision(aComponent, myPowerUps);
+	}
+	if (aFilter & eEntityType::DEFENDABLE)
+	{
+		CheckCollision(aComponent, myDefendables);
 	}
 }
 
@@ -262,29 +287,35 @@ void CollisionManager::DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, flo
 	}
 }
 
-Entity* CollisionManager::GetClosestEnemyWithinSphere(CU::Vector3<float> aCenter, float aRadius)
+Entity* CollisionManager::GetClosestEnemyWithinSphere(const CU::Matrix44<float> &anOrientation, float aRadius)
 {
 	Sphere sphere;
-	sphere.myCenterPosition = aCenter;
+	sphere.myCenterPosition = anOrientation.GetPos();
 	sphere.myRadius = aRadius;
 	sphere.myRadiusSquared = aRadius * aRadius;
 	Entity* closestEnemy = nullptr;
+	float bestDot = 0.f;
 
 	for (int i = myEnemies.Size() - 1; i >= 0; --i)
 	{
 		if (CU::Intersection::SphereVsSphere(sphere, myEnemies[i]->GetSphere()) == true && myEnemies[i]->GetEntity().GetComponent<HealthComponent>()->IsAlive() == true)
 		{
 			Entity* enemy = &myEnemies[i]->GetEntity();
-
-			if (closestEnemy == nullptr)
-			{
-				closestEnemy = enemy;
-				continue;
-			}
 			
-			if (CU::Length(enemy->myOrientation.GetPos()) > CU::Length(closestEnemy->myOrientation.GetPos()))
+			float dotValue = CU::Dot(enemy->myOrientation.GetPos(), anOrientation.GetForward());
+			if (dotValue > 0.7)
 			{
-				closestEnemy = enemy;
+				if (closestEnemy == nullptr)
+				{
+					closestEnemy = enemy;
+					bestDot = dotValue;
+					continue;
+				}
+				if (dotValue > bestDot)
+				{
+					closestEnemy = enemy;
+					bestDot = dotValue;
+				}
 			}
 		}
 	}

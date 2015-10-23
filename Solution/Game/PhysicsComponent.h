@@ -20,6 +20,7 @@ public:
 
 	void MoveForward(float aDistance);
 
+	void Reset() override;
 	//void BounceOff(float anEntityWeight);
 
 private:

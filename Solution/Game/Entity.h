@@ -34,12 +34,14 @@ public:
 	void SendNote(const T& aNote);
 
 	CU::Matrix44<float> myOrientation;
+	CU::Matrix44<float> myOriginalOrientation;
 
 	eEntityType GetType() const;
 	bool GetAlive() const;
 	void Kill();
 	const std::string& GetName() const;
 	void SetName(const std::string& aName);
+	void Reset();
 
 	Prism::Scene& GetScene();
 

@@ -49,3 +49,7 @@ void Component::ReceiveNote(const HealthNote&)
 void Component::ReceiveNote(const ShieldNote&)
 {
 }
+
+void Component::Reset()
+{
+}

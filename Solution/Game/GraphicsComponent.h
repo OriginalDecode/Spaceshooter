@@ -25,8 +25,11 @@ public:
 	void SetPosition(const CU::Vector3<float>& aPosition);
 	void SetScale(const CU::Vector3<float>& aScale);
 
+	float GetCullingRadius() const;
+
 private:
 	Prism::Instance* myInstance;
+	float myCullingRadius;
 };
 
 inline Prism::Instance* GraphicsComponent::GetInstance()
@@ -39,3 +42,7 @@ inline eComponentType GraphicsComponent::GetType()
 	return eComponentType::GRAPHICS;
 }
 
+inline float GraphicsComponent::GetCullingRadius() const
+{
+	return myCullingRadius;
+}

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 
+#include "CollisionComponent.h"
+#include "Constants.h"
 #include "GraphicsComponent.h"
 #include "Entity.h"
 #include <Engine.h>
@@ -10,17 +12,19 @@
 #include "ModelLoader.h"
 #include <ModelProxy.h>
 #include <Scene.h>
+#include <XMLReader.h>
 
 
 GraphicsComponent::GraphicsComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myInstance(nullptr)
+	, myCullingRadius(10.f)
 {
 }
 
 GraphicsComponent::~GraphicsComponent()
 {
-	if (myEntity.GetOctreeType() != Prism::eOctreeType::NOT_IN_OCTREE)
+	if (myEntity.GetOctreeType() != Prism::eOctreeType::NOT_IN_OCTREE && myEntity.GetType() != eEntityType::PLAYER)
 	{
 		myEntity.GetScene().RemoveInstance(myInstance);
 	}
@@ -33,7 +37,22 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(aModelPath
 		, aEffectPath);
 
-	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
+	std::string xmlPath(aModelPath, strlen(aModelPath) - 4);
+	xmlPath += ".xml";
+
+	XMLReader reader;
+	reader.OpenDocument(xmlPath);
+
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius"), "value", myCullingRadius);
+	reader.CloseDocument();
+
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType(), myCullingRadius);
+
+	if (myEntity.GetComponent<CollisionComponent>() != nullptr)
+	{
+		myEntity.GetComponent<CollisionComponent>()->SetCollisionRadius(myCullingRadius 
+			* globalCollisionRadiusMultiplier);
+	}
 }
 
 void GraphicsComponent::InitDLL(const char* aModelPath, const char* aEffectPath)
@@ -44,14 +63,20 @@ void GraphicsComponent::InitDLL(const char* aModelPath, const char* aEffectPath)
 	Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath);
 	model->SetEffect(Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
 
-	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType(), myCullingRadius);
 }
 
 void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 {
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadCube(aWidth, aHeight, aDepth);
 
-	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType());
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType(), myCullingRadius);
+
+	if (myEntity.GetComponent<CollisionComponent>() != nullptr)
+	{
+		myEntity.GetComponent<CollisionComponent>()->SetCollisionRadius(myCullingRadius 
+			* globalCollisionRadiusMultiplier);
+	}
 }
 
 void GraphicsComponent::Update(float aDeltaTime)

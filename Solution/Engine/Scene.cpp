@@ -3,6 +3,7 @@
 #include <AABB.h>
 #include "Camera.h"
 #include "DebugDataDisplay.h"
+#include "Defines.h"
 #include "DirectionalLight.h"
 #include "Instance.h"
 #include "PointLight.h"
@@ -33,6 +34,7 @@ Prism::Scene::~Scene()
 
 #ifdef SCENE_USE_OCTREE
 	delete myOctree;
+	myOctree = nullptr;
 #else
 	myInstances.DeleteAll();
 #endif

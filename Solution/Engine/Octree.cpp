@@ -16,6 +16,7 @@ Prism::Octree::Octree(int aMaxDepth)
 Prism::Octree::~Octree()
 {
 	delete myRoot;
+	myRoot = nullptr;
 }
 
 void Prism::Octree::Add(Instance* aInstance)

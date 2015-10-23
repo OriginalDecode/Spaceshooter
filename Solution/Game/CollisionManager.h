@@ -26,7 +26,7 @@ public:
 
 	void DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aTime);
 	void DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage);
-	Entity* GetClosestEnemyWithinSphere(CU::Vector3<float> aCenter, float aRadius);
+	Entity* GetClosestEnemyWithinSphere(const CU::Matrix44<float> &anOrientation, float aRadius);
 
 private:
 	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);
@@ -39,6 +39,7 @@ private:
 	int myTriggerFilter;
 	int myPropFilter;
 	int myPowerUpFilter;
+	int myDefendableFilter;
 
 	CU::GrowingArray<CollisionComponent*> myPlayers;
 	CU::GrowingArray<CollisionComponent*> myEnemies;
@@ -47,6 +48,7 @@ private:
 	CU::GrowingArray<CollisionComponent*> myTriggers;
 	CU::GrowingArray<CollisionComponent*> myPowerUps;
 	CU::GrowingArray<CollisionComponent*> myProps;
+	CU::GrowingArray<CollisionComponent*> myDefendables;
 };
 
 inline int CollisionManager::GetEnemiesAlive() const

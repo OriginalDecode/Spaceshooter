@@ -1,6 +1,7 @@
 #pragma once
 
 class Message;
+class BulletCollisionToGUIMessage;
 class BulletMessage;
 class ConversationMessage;
 class DefendMessage;
@@ -29,5 +30,6 @@ public:
 	virtual void ReceiveMessage(const EventQueueEmptyMessage& aMessage);
 	virtual void ReceiveMessage(const DefendMessage& aMessage);
 	virtual void ReceiveMessage(const ResizeMessage& aMessage);
+	virtual void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage);
 };
 

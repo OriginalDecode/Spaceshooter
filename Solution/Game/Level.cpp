@@ -13,8 +13,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
+#include "EmitterComponent.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -70,7 +69,15 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	delete myCamera;
-	myEntities.DeleteAll();
+
+	for (int i = 0; i < myEntities.Size(); i++)
+	{
+		if (myEntities[i] != myPlayer)
+		{
+			delete myEntities[i];
+			myEntities[i] = nullptr;
+		}
+	}
 
 	delete mySkySphere;
 	delete myEntityFactory;
@@ -80,14 +87,15 @@ Level::~Level()
 	delete myMissionManager;
 	delete myEventManager;
 	delete myConversationManager;
-	delete myEmitter;
 	delete myScene;
+	mySkySphere = nullptr;
+	myScene = nullptr;
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
+
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime);
 	myCollisionManager->CleanUp();
 
 	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
@@ -131,7 +139,18 @@ void Level::Render()
 	
 	myScene->Render(myBulletManager->GetInstances());
 
-	myEmitter->Render(myCamera);
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
+		{
+			continue;
+		}
+		else
+		{
+			myEntities[i]->GetComponent<EmitterComponent>()->Render();
+		}
+
+	}
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
@@ -160,14 +179,15 @@ Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	aReader.ForceReadAttribute(aElement, "radius", entityRadius);
 	myEntityFactory->CopyEntity(newEntity, "trigger");
 
-	newEntity->GetComponent<CollisionComponent>()->SetRadius(entityRadius);
+	newEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(entityRadius);
 
 	tinyxml2::XMLElement* triggerElement = aReader.ForceFindFirstChild(aElement, "position");
 	CU::Vector3<float> triggerPosition;
 	aReader.ForceReadAttribute(triggerElement, "X", triggerPosition.x);
 	aReader.ForceReadAttribute(triggerElement, "Y", triggerPosition.y);
 	aReader.ForceReadAttribute(triggerElement, "Z", triggerPosition.z);
-	newEntity->myOrientation.SetPos(triggerPosition*10.f);
+	newEntity->myOriginalOrientation.SetPos(triggerPosition*10.f);
+	newEntity->myOrientation = newEntity->myOriginalOrientation;
 
 	myEntities.Add(newEntity);
 	myCollisionManager->Add(myEntities.GetLast()->GetComponent<CollisionComponent>(), eEntityType::TRIGGER);
@@ -190,6 +210,11 @@ Entity* Level::GetEntityWithName(const std::string& aName)
 int Level::GetEnemiesAlive() const
 {
 	return myCollisionManager->GetEnemiesAlive();
+}
+
+Entity* Level::GetPlayer()
+{
+	return myPlayer;
 }
 
 void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
@@ -247,12 +272,11 @@ void Level::UpdateDebug()
 	}
 	if (myInputWrapper->KeyDown(DIK_M) == true)
 	{
-		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(false);
 		myPlayer->GetComponent<HealthComponent>()->RemoveHealth(myPlayer->GetComponent<HealthComponent>()->GetHealth());
 	}
 	if (myInputWrapper->KeyDown(DIK_V) == true)
 	{
-		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability(!myPlayer->GetComponent<HealthComponent>()->GetInvulnerability());
+		myPlayer->GetComponent<HealthComponent>()->SetInvulnerability();
 	}
 	if (myInputWrapper->KeyDown(DIK_B) == true)
 	{

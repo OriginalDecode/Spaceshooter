@@ -12,7 +12,6 @@ namespace Prism
 	class SpotLight;
 	class Text;
 	class Instance;
-	class EmitterInstance;
 };
 
 namespace CommonUtilities
@@ -56,6 +55,8 @@ public:
 
 	int GetEnemiesAlive() const;
 
+	Entity* GetPlayer();
+
 	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
@@ -70,9 +71,9 @@ private:
 
 	Prism::Instance* mySkySphere;
 	CU::Matrix44<float> mySkySphereOrientation;
+	float mySkySphereCullingRadius;
 	Prism::Scene* myScene;
 	Prism::Camera* myCamera;
-	Prism::EmitterInstance* myEmitter;
 	CU::Matrix44<float> myWorldMatrix;
 
 	CU::GrowingArray<Entity*> myEntities;
