@@ -601,6 +601,26 @@ eBulletType EntityFactory::ConvertToBulletType(std::string aName)
 	{
 		return eBulletType::SHOTGUN_BULLET_LEVEL_3;
 	}
+	else if (type == "e_projectile_enemy_default")
+	{
+		return eBulletType::ENEMY_BULLET_DEFAULT;
+	}
+	else if (type == "e_projectile_enemy_fast")
+	{
+		return eBulletType::ENEMY_BULLET_FAST;
+	}
+	else if (type == "e_projectile_enemy_slow")
+	{
+		return eBulletType::ENEMY_BULLET_SLOW;
+	}
+	else if (type == "e_projectile_enemy_turret")
+	{
+		return eBulletType::ENEMY_BULLET_TURRET;
+	}
+	else if (type == "e_projectile_enemy_homing")
+	{
+		return eBulletType::ENEMY_BULLET_HOMING;
+	}
 	std::string errorText = "The bullet " + aName + " is not a supported bullet. Please contact a programmer to fix this!";
 	DL_ASSERT(errorText.c_str());
 	return eBulletType::COUNT;
