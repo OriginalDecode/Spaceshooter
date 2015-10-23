@@ -84,6 +84,7 @@ void DefendMission::End()
 {
 	myRealTime = 0.f;
 	myVisualTime = 0.f;
+	PostMaster::GetInstance()->SendMessage<DefendMessage>(DefendMessage(DefendMessage::eType::COMPLETE, myNameToDefend));
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 }
 

@@ -37,7 +37,7 @@ bool WaypointMission::Update(float, int aMissionIndex, eMissionCategory aCategor
 	}
 	engine->PrintDebugText(message, { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
 
-	myPlayer.SendNote<GUINote>(GUINote(myTrigger->myOrientation.GetPos(), eGUINoteType::WAYPOINT));
+
 
 	return !myTrigger->GetAlive();
 }
@@ -45,6 +45,7 @@ bool WaypointMission::Update(float, int aMissionIndex, eMissionCategory aCategor
 void WaypointMission::Start()
 {
 	myPlayer.SendNote(MissionNote(eMissionType::WAYPOINT, eMissionEvent::START));
+	myPlayer.SendNote<GUINote>(GUINote(myTrigger->myOrientation.GetPos(), eGUINoteType::WAYPOINT));
 }
 
 void WaypointMission::End()
