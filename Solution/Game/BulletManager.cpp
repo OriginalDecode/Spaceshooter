@@ -159,7 +159,6 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	{
 		bullet = aWeaponData->myEnemyBullets[aWeaponData->myEnemyBulletCounter];
 	}
-	//bullet->GetComponent<BulletComponent>()->SetType(aWeaponData->myType);
 	DL_ASSERT_EXP(bullet != nullptr, "Non Player/Enemy cant activate bullets!");
 
 	if (bullet->GetComponent<BulletComponent>()->GetActive() == false)
