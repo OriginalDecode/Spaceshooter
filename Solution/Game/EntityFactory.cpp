@@ -486,7 +486,8 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		aTargetEntity->AddComponent<BulletComponent>();
 		if (it->second.myMaxTime > 0 && it->second.myDamage > 0)
 		{
-			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage, it->second.myDamageRadius);
+			eBulletType bulletType = ConvertToBulletType(sourceEntity->GetName());
+			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage, it->second.myDamageRadius, bulletType);
 		}
 	}
 
@@ -553,4 +554,48 @@ ePowerUpType EntityFactory::ConvertToPowerUpType(std::string aName)
 	DL_ASSERT(errorMessage.c_str());
 	
 	return ePowerUpType::NO_POWERUP;
+}
+
+eBulletType EntityFactory::ConvertToBulletType(std::string aName) 
+{
+	std::string type = CU::ToLower(aName);
+	if (type == "machinegunbullet1") 
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_1;
+	}
+	else if (type == "machinegunbullet2")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_2;
+	}
+	else if (type == "machinegunbullet3")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_3;
+	}
+	else if (type == "rocketmissile1")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_1;
+	}
+	else if (type == "rocketmissile2")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_2;
+	}
+	else if (type == "rocketmissile3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (type == "shotgunbullet1")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_1;
+	}
+	else if (type == "shotgunbullet2")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_2;
+	}
+	else if (type == "shotgunbullet3")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_3;
+	}
+	std::string errorText = "The bullet " + aName + " is not a supported bullet. Please contact a programmer to fix this!";
+	DL_ASSERT(errorText.c_str());
+	return eBulletType::COUNT;
 }

@@ -28,8 +28,9 @@ void BulletComponent::Update(float aDeltaTime)
 	myCurrentLifeTime += aDeltaTime;
 }
 
-void BulletComponent::Init(float aMaxTime, int aDamage, float aDamageRadius)
+void BulletComponent::Init(float aMaxTime, int aDamage, float aDamageRadius, eBulletType aType)
 {
+	myType = aType;
 	myActive = false;
 	myMaxLifeTime = aMaxTime;
 	myDamage = aDamage;
