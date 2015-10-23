@@ -44,22 +44,22 @@ bool Prism::Effect::Init(const std::string& aEffectFile)
 
 void Prism::Effect::SetScaleVector(const CU::Vector3<float>& aScaleVector)
 {
-	myScaleVectorVariable->SetFloatVector(&aScaleVector.x);
+	myScaleVector->SetFloatVector(&aScaleVector.x);
 }
 
 void Prism::Effect::SetWorldMatrix(const CU::Matrix44<float>& aWorldMatrix)
 {
-	myWorldMatrixVariable->SetMatrix(&aWorldMatrix.myMatrix[0]);
+	myWorldMatrix->SetMatrix(&aWorldMatrix.myMatrix[0]);
 }
 
 void Prism::Effect::SetViewMatrix(const CU::Matrix44<float>& aViewMatrix)
 {
-	myViewMatrixVariable->SetMatrix(&aViewMatrix.myMatrix[0]);
+	myViewMatrix->SetMatrix(&aViewMatrix.myMatrix[0]);
 }
 
 void Prism::Effect::SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix)
 {
-	myProjectionMatrixVariable->SetMatrix(&aProjectionMatrix.myMatrix[0]);
+	myProjectionMatrix->SetMatrix(&aProjectionMatrix.myMatrix[0]);
 }
 
 void Prism::Effect::SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask)
@@ -72,40 +72,55 @@ void Prism::Effect::SetTexture(Texture* aTexture)
 	myTexture->SetResource(aTexture->GetShaderView());
 }
 
+void Prism::Effect::SetPosAndScale(const CU::Vector2<float>& aPos
+	, const CU::Vector2<float>& aScale)
+{
+	DL_ASSERT_EXP(mySpritePosAndScale != nullptr
+		, "Effect2D: Tried to SetPosAndScale but mySpritePosAndScale is nullptr");
+
+	mySpritePosAndScaleVector.x = aPos.x;
+	mySpritePosAndScaleVector.y = aPos.y;
+
+	mySpritePosAndScaleVector.z = aScale.x;
+	mySpritePosAndScaleVector.w = aScale.y;
+
+	mySpritePosAndScale->SetFloatVector(&mySpritePosAndScaleVector.x);
+}
+
 void Prism::Effect::UpdateDirectionalLights(
 	const CU::StaticArray<Prism::DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
-	if (myDirectionalLightVariable != nullptr)
+	if (myDirectionalLight != nullptr)
 	{
-		myDirectionalLightVariable->SetRawValue(&someDirectionalLightData[0], 0, 
+		myDirectionalLight->SetRawValue(&someDirectionalLightData[0], 0, 
 			sizeof(DirectionalLightData) * NUMBER_OF_DIRECTIONAL_LIGHTS);
 	}
 }
 
 void Prism::Effect::UpdatePointLights(const CU::StaticArray<PointLightData, NUMBER_OF_POINT_LIGHTS>& somePointLightData)
 {
-	if (myPointLightVariable != nullptr)
+	if (myPointLight != nullptr)
 	{
-		myPointLightVariable->SetRawValue(&somePointLightData[0], 0, sizeof(PointLightData) * NUMBER_OF_POINT_LIGHTS);
+		myPointLight->SetRawValue(&somePointLightData[0], 0, sizeof(PointLightData) * NUMBER_OF_POINT_LIGHTS);
 	}
 }
 
 void Prism::Effect::UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData)
 {
-	if (mySpotLightVariable != nullptr)
+	if (mySpotLight != nullptr)
 	{
-		mySpotLightVariable->SetRawValue(&someSpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
+		mySpotLight->SetRawValue(&someSpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
 	}
 }
 
 void Prism::Effect::UpdateTime(const float aDeltaTime)
 {
-	if (myTotalTimeVariable != nullptr)
+	if (myTotalTime != nullptr)
 	{
 		float newTime = 0.f;
-		myTotalTimeVariable->GetFloat(&newTime);
+		myTotalTime->GetFloat(&newTime);
 		newTime += aDeltaTime;
-		myTotalTimeVariable->SetFloat(newTime);
+		myTotalTime->SetFloat(newTime);
 	}
 }
 
@@ -173,62 +188,68 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		return false;
 	}
 
-	myScaleVectorVariable = myEffect->GetVariableByName("Scale")->AsVector();
-	if (myScaleVectorVariable->IsValid() == false)
+	myScaleVector = myEffect->GetVariableByName("Scale")->AsVector();
+	if (myScaleVector->IsValid() == false)
 	{
-		myScaleVectorVariable = nullptr;
+		myScaleVector = nullptr;
 	}
 
-	myWorldMatrixVariable = myEffect->GetVariableByName("World")->AsMatrix();
-	if (myWorldMatrixVariable->IsValid() == false)
+	myWorldMatrix = myEffect->GetVariableByName("World")->AsMatrix();
+	if (myWorldMatrix->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get WorldMatrix", "Effect Error", MB_ICONWARNING);
 		return false;
 	}
 
-	myViewMatrixVariable = myEffect->GetVariableByName("View")->AsMatrix();
-	if (myViewMatrixVariable->IsValid() == false)
+	myViewMatrix = myEffect->GetVariableByName("View")->AsMatrix();
+	if (myViewMatrix->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get ViewMatrix", "Effect Error", MB_ICONWARNING);
 		return false;
 	}
 
-	myProjectionMatrixVariable = myEffect->GetVariableByName("Projection")->AsMatrix();
-	if (myProjectionMatrixVariable->IsValid() == false)
+	myProjectionMatrix = myEffect->GetVariableByName("Projection")->AsMatrix();
+	if (myProjectionMatrix->IsValid() == false)
 	{
 		DL_MESSAGE_BOX("Failed to get ProjectionMatrix", "Effect Error", MB_ICONWARNING);
 		return false;
 	}
 
-	myTotalTimeVariable = nullptr;
-	myTotalTimeVariable = myEffect->GetVariableByName("Time")->AsScalar();
-	if (myTotalTimeVariable->IsValid() == false)
+	myTotalTime = nullptr;
+	myTotalTime = myEffect->GetVariableByName("Time")->AsScalar();
+	if (myTotalTime->IsValid() == false)
 	{
-		myTotalTimeVariable = nullptr;
+		myTotalTime = nullptr;
 	}
 
-	myDirectionalLightVariable = myEffect->GetVariableByName("DirectionalLights");
-	if (myDirectionalLightVariable->IsValid() == false)
+	myDirectionalLight = myEffect->GetVariableByName("DirectionalLights");
+	if (myDirectionalLight->IsValid() == false)
 	{
-		myDirectionalLightVariable = nullptr;
+		myDirectionalLight = nullptr;
 	}
 
-	myPointLightVariable = myEffect->GetVariableByName("PointLights");
-	if (myPointLightVariable->IsValid() == false)
+	myPointLight = myEffect->GetVariableByName("PointLights");
+	if (myPointLight->IsValid() == false)
 	{
-		myPointLightVariable = nullptr;
+		myPointLight = nullptr;
 	}
 
-	mySpotLightVariable = myEffect->GetVariableByName("SpotLights");
-	if (mySpotLightVariable->IsValid() == false)
+	mySpotLight = myEffect->GetVariableByName("SpotLights");
+	if (mySpotLight->IsValid() == false)
 	{
-		mySpotLightVariable = nullptr;
+		mySpotLight = nullptr;
 	}
 
 	myTexture = myEffect->GetVariableByName("DiffuseTexture")->AsShaderResource();
 	if (myTexture->IsValid() == false)
 	{
 		myTexture = nullptr;
+	}
+
+	mySpritePosAndScale = myEffect->GetVariableByName("SpritePositionAndScale")->AsVector();
+	if (mySpritePosAndScale->IsValid() == false)
+	{
+		mySpritePosAndScale = nullptr;
 	}
 
 	return true;

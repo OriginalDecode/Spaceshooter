@@ -87,8 +87,8 @@ namespace Prism
 
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
-			myDebugText->Render(myDebugTexts[i].myText.c_str(), myDebugTexts[i].myPosition.x, myDebugTexts[i].myPosition.y
-				, myDebugTexts[i].myScale);
+			myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
+				, { myDebugTexts[i].myScale, myDebugTexts[i].myScale }, { 1.f, 1.f, 1.f, 1.f });
 		}
 		myDebugTexts.RemoveAll();
 		myDirectX->Present(0, 0);

@@ -39,11 +39,9 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
 	}
 	
-	myBackground = new Prism::Sprite;
-	myBackground->Init(picPath, mySize);
+	myBackground = new Prism::Sprite(picPath, mySize, mySize / 2.f);
 
-	myHoverBackground = new Prism::Sprite;
-	myHoverBackground->Init(picHoveredPath, mySize);
+	myHoverBackground = new Prism::Sprite(picHoveredPath, mySize, mySize / 2.f);
 
 	myIsHovered = false;
 
@@ -62,11 +60,11 @@ void Button::Render()
 {
 	if (myIsHovered == false)
 	{
-		myBackground->Render(myPosition.x, myPosition.y);
+		myBackground->Render({ myPosition.x, myPosition.y });
 	}
 	else
 	{
-		myHoverBackground->Render(myPosition.x, myPosition.y);
+		myHoverBackground->Render({ myPosition.x, myPosition.y });
 	}
 }
 

@@ -22,18 +22,14 @@ namespace Prism
 		volatile bool IsLoading() const;
 
 		ModelProxy* LoadModel(const std::string& aModelPath, const std::string& aEffectPath);
-		ModelProxy* LoadPolygon();
-		ModelProxy* LoadCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
-		ModelProxy* LoadLightCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
+		ModelProxy* LoadCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
 			, CU::Vector4f aColour = { 1.f, 1.f, 1.f, 1.f });
 
 	private:
 		enum class eLoadType
 		{
 			MODEL,
-			POLYGON,
 			CUBE,
-			LIGHT_CUBE,
 			GEOMETRY,
 		};
 		struct LoadData

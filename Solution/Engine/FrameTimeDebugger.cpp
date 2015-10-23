@@ -250,10 +250,10 @@ namespace Prism
 		
 				myStringStream << std::endl;
 		
-				it->second.myNameText->Render(it->second.myNameString.c_str(), drawPos.x, drawPos.y, { 1.f, 1.f, 1.f, 1.f }, 0.75f);
+				it->second.myNameText->Render(it->second.myNameString, drawPos, { 0.75f, 0.75f }, { 1.f, 1.f, 1.f, 1.f });
 		
-				it->second.myTimeText->Render(myStringStream.str().c_str()
-					, drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y, timeColor, 0.75f);
+				it->second.myTimeText->Render(myStringStream.str()
+					, { drawPos.x + it->second.myNameText->GetTextWidth() + 10.f, drawPos.y }, { 0.75f, 0.75f }, timeColor);
 				drawPos.y -= 30.f;
 			}
 		}

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "BaseModel.h"
 #include <D3DX11.h>
 #include "EffectListener.h"
 #include <GrowingArray.h>
@@ -20,8 +21,7 @@ namespace Prism
 	struct VertexIndexWrapper;
 
 	
-
-	class Model : public EffectListener
+	class Model : public BaseModel
 	{
 		friend class FBXFactory;
 	public:
@@ -29,10 +29,8 @@ namespace Prism
 		~Model();
 
 		void Init();
-		void InitPolygon();
-		void InitCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f);
-		void InitLightCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
-				, CU::Vector4f aColour = { 1.f, 1.f, 1.f, 1.f });
+		void InitCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
+				, CU::Vector4f aColour = { 0.7f, 0.7f, 0.7f, 1.f });
 
 		void AddChild(Model* aChild);
 		void SetLodGroup(LodGroup* aLodGroup);
@@ -42,37 +40,22 @@ namespace Prism
 
 		void Render(const CU::Matrix44<float>& aOrientation, const CU::Vector3<float>& aCameraPosition);
 
-		void OnEffectLoad() override;
-
 	private:
-		void InitVertexBaseData(int aNumberOfVertices, VertexType aVertexType, int aVertexSize, char* aVertexData);
-		void InitIndexBaseData(DXGI_FORMAT aFormat, int aNumberOfIndices, char* aIndexData);
-
-		bool InitVertexBuffer();
-		bool InitIndexBuffer();
-
-		Effect* myEffect;
-		ID3D11InputLayout* myVertexLayout;
-		CU::GrowingArray<VertexPosNormUV> myVertices;
-		CU::GrowingArray<int> myVerticeIndices;
-		CU::GrowingArray<D3D11_INPUT_ELEMENT_DESC*> myVertexFormat;
 		bool myIsNULLObject;
-		bool myInited;
-		bool myIsLodGroup;
-		LodGroup* myLodGroup;
 
+		CU::GrowingArray<D3D11_INPUT_ELEMENT_DESC*> myVertexFormat;
 		VertexIndexWrapper* myIndexBaseData;
-		IndexBufferWrapper* myIndexBuffer;
 		VertexDataWrapper* myVertexBaseData;
-		VertexBufferWrapper* myVertexBuffer;
 
-		CU::GrowingArray<Surface*> mySurfaces;
-		CU::GrowingArray<Model*> myChilds;
-		Model* myParent;
+		CU::GrowingArray<Model*> myChildren;
 		CU::GrowingArray<CU::Matrix44f> myChildTransforms;
 		CU::Matrix44f myOrientation;
 
-		std::string myFilePath;
 		int myVertexCount;
+		Model* myParent;
+		bool myInited;
+		bool myIsLodGroup;
+		LodGroup* myLodGroup;
+		std::string myFilePath;
 	};
 }

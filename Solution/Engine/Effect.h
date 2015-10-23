@@ -36,6 +36,8 @@ namespace Prism
 		void SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix);
 		void SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask = 0xFFFFFFFF);
 		void SetTexture(Texture* aTexture);
+		void SetPosAndScale(const CU::Vector2<float>& aPos
+			, const CU::Vector2<float>& aScale = { 1.f, 1.f });
 
 		void UpdateDirectionalLights(
 			const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData);
@@ -51,20 +53,23 @@ namespace Prism
 		ID3DX11Effect* myEffect;
 		ID3DX11EffectTechnique* myTechnique;
 
-		ID3DX11EffectMatrixVariable* myProjectionMatrixVariable;
-		ID3DX11EffectMatrixVariable* myViewMatrixVariable;
-		ID3DX11EffectMatrixVariable* myWorldMatrixVariable;
+		ID3DX11EffectMatrixVariable* myProjectionMatrix;
+		ID3DX11EffectMatrixVariable* myViewMatrix;
+		ID3DX11EffectMatrixVariable* myWorldMatrix;
 
-		ID3DX11EffectScalarVariable* myEyePositionVariable;
-		ID3DX11EffectScalarVariable* myTotalTimeVariable;
+		ID3DX11EffectScalarVariable* myEyePosition;
+		ID3DX11EffectScalarVariable* myTotalTime;
 
-		ID3DX11EffectVectorVariable* myScaleVectorVariable;
+		ID3DX11EffectVectorVariable* myScaleVector;
 
-		ID3DX11EffectVariable* myDirectionalLightVariable;
-		ID3DX11EffectVariable* myPointLightVariable;
-		ID3DX11EffectVariable* mySpotLightVariable;
+		ID3DX11EffectVariable* myDirectionalLight;
+		ID3DX11EffectVariable* myPointLight;
+		ID3DX11EffectVariable* mySpotLight;
 
 		ID3DX11EffectShaderResourceVariable	*myTexture;
+
+		ID3DX11EffectVectorVariable* mySpritePosAndScale;
+		CU::Vector4<float> mySpritePosAndScaleVector;
 		
 		std::string myFileName;
 

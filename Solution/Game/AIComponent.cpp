@@ -57,7 +57,7 @@ void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
 	myEntityToFollow = nullptr;
 	myTimeToNextDecision = 0.f;
 	myAvoidanceDistance = 0.f;
-	myFollowingOffset = 0.f;
+	myFollowingOffset = CU::Vector3<float>();
 	myCanMove = true;
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }

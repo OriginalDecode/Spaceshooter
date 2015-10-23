@@ -24,27 +24,10 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
 	, myEnemiesPosition(16)
-	, myReticle(new Prism::Sprite)
-	, mySteeringTarget(new Prism::Sprite)
-	, myCrosshair(new Prism::Sprite)
-	, myEnemyMarker(new Prism::Sprite)
-	, myEnemyArrow(new Prism::Sprite)
-	, myWaypointArrow(new Prism::Sprite)
-	, myWaypointMarker(new Prism::Sprite)
 	, myCamera(nullptr)
-	, myPowerUpArrow(new Prism::Sprite)
-	, myPowerUpMarker(new Prism::Sprite)
-	, myDefendMarker(new Prism::Sprite)
-	, myDefendArrow(new Prism::Sprite)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
-	, myHealthBar(new Prism::Sprite)
-	, myShieldBar(new Prism::Sprite)
-	, myHealthBarGlow(new Prism::Sprite)
-	, myShieldBarGlow(new Prism::Sprite)
-	, myHitMarker(new Prism::Sprite)
-	, myDamageIndicator(new Prism::Sprite)
 	, myHitMarkerTimer(-1.f)
 	, myDamageIndicatorTimer(-1.f)
 {
@@ -52,36 +35,51 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
+	myReticle = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_circle.dds"
+		, { 1024.f, 1024.f }, { 512.f, 512.f });
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
-	myReticle->Init("Data/Resource/Texture/UI/T_navigation_circle.dds", { 1024.f, 1024.f });
-	mySteeringTarget->Init("Data/Resource/Texture/UI/T_crosshair_stearing.dds", arrowAndMarkerSize);
-	myCrosshair->Init("Data/Resource/Texture/UI/T_crosshair_shooting.dds", { 256.f, 256.f }); // the size scales the pic
-	myEnemyMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_enemy.dds", arrowAndMarkerSize);
-	myEnemyArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", arrowAndMarkerSize);
-	myWaypointArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_waypoint.dds", arrowAndMarkerSize);
-	myWaypointMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds", arrowAndMarkerSize);
-	myPowerUpArrow->Init("Data/Resource/Texture/UI/T_navigation_arrow_powerup.dds", arrowAndMarkerSize);
-	myPowerUpMarker->Init("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds", arrowAndMarkerSize);
-	myDefendMarker->Init("Data/Resource/Texture/UI/T_defend_marker.dds", arrowAndMarkerSize);
-	myDefendArrow->Init("Data/Resource/Texture/UI/T_defend_arrow.dds", arrowAndMarkerSize);
+	mySteeringTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_stearing.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
+	myCrosshair = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting.dds"
+		, { 256.f, 256.f }, { 128.f, 128.f }); // the size scales the pic
+	myEnemyMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_enemy.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myEnemyArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myWaypointArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_waypoint.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myWaypointMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_waypoint.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myPowerUpArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_powerup.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myPowerUpMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_powerup.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myDefendMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_defend_marker.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
+	myDefendArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_defend_arrow.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize/2.f);
 
 	myOriginalBarSize = 32.f;
 	myBarSize = myOriginalBarSize;
 
 	ReadXML();
 
-	myHealthBarGlow->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { myBarSize, myBarSize });
-	myHealthBar->Init("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", { myBarSize, myBarSize });
+	CU::Vector2<float> barSize(myBarSize, myBarSize);
+	myHealthBarGlow = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", barSize, barSize/2.f);
+	myHealthBar = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", barSize, barSize / 2.f);
 
-	myShieldBarGlow->Init("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", { myBarSize, myBarSize });
-	myShieldBar->Init("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", { myBarSize, myBarSize });
+	myShieldBarGlow = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", barSize, barSize / 2.f);
+	myShieldBar = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", barSize, barSize / 2.f);
 
 	myHealthBarCount = 20;
 	myShieldBarCount = 20;
 
-	myHitMarker->Init("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds", { 256, 256 });
-	myDamageIndicator->Init("Data/Resource/Texture/UI/T_damage_indicator.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x)
-		, float(Prism::Engine::GetInstance()->GetWindowSize().y) });
+	myHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds"
+		, { 256, 256 }, { 128.f, 128.f });
+
+	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
+	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize/2.f);
 }
 
 GUIComponent::~GUIComponent()
@@ -206,7 +204,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		{
 			Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
 		}
-		aCurrentModel->Render(newRenderPos.x, newRenderPos.y);
+		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
 	}
 }
 
@@ -220,9 +218,9 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
 	Prism::Engine::GetInstance()->PrintDebugText(myConversation, { halfWidth, -halfHeight - 200.f });
-	myReticle->Render(halfWidth, -halfHeight);
-	mySteeringTarget->Render(steeringPos.x, steeringPos.y);
-	myCrosshair->Render(halfWidth, -(halfHeight));
+	myReticle->Render({ halfWidth, -halfHeight });
+	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
+	myCrosshair->Render({halfWidth, -(halfHeight)});
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
@@ -267,8 +265,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		newRenderPos.y *= aWindowSize.y;
 		newRenderPos.y -= aWindowSize.y;
 
-		myHealthBarGlow->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
-		myHealthBar->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
+		myHealthBarGlow->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
+		myHealthBar->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
 	}
 
 	for (int i = 0; i < myShieldBarCount; ++i)
@@ -281,18 +279,18 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		newRenderPos.y *= aWindowSize.y;
 		newRenderPos.y -= aWindowSize.y;
 
-		myShieldBarGlow->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
-		myShieldBar->Render(newRenderPos.x + (i * 11.f), newRenderPos.y);
+		myShieldBarGlow->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
+		myShieldBar->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
 	}
 
 	if (myHitMarkerTimer >= 0.f)
 	{
-		myHitMarker->Render(steeringPos.x, steeringPos.y);
+		myHitMarker->Render({ steeringPos.x, steeringPos.y });
 	}
 
 	if (myDamageIndicatorTimer >= 0.f)
 	{
-		myDamageIndicator->Render(halfWidth, -halfHeight);
+		myDamageIndicator->Render({ halfWidth, -halfHeight });
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
