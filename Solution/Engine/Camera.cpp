@@ -30,6 +30,8 @@ namespace Prism
 		reader.OpenDocument(aFileName);
 		tinyxml2::XMLElement* levelElement = reader.ForceFindFirstChild("camera");
 		reader.ForceReadAttribute(levelElement, "fov", myFOV);
+		reader.ForceReadAttribute(levelElement, "nearplane", myNear);
+		reader.ForceReadAttribute(levelElement, "farplane", myFar);
 		myFOV *= 3.14159f / 180.f;
 		OnResize(Engine::GetInstance()->GetWindowSize().x, Engine::GetInstance()->GetWindowSize().y);
 		reader.CloseDocument();
