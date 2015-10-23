@@ -8,9 +8,6 @@
 #include "FBXFactory.h"
 #include <TimerManager.h>
 
-
-#define THREADED_LOADING
-
 namespace Prism
 {
 	ModelLoader::ModelLoader()

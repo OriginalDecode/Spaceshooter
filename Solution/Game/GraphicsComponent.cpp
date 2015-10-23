@@ -55,6 +55,17 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	}
 }
 
+void GraphicsComponent::InitDLL(const char* aModelPath, const char* aEffectPath)
+{
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(aModelPath
+		, aEffectPath);
+
+	Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath);
+	model->SetEffect(Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
+
+	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType(), myCullingRadius);
+}
+
 void GraphicsComponent::InitCube(float aWidth, float aHeight, float aDepth)
 {
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadCube(aWidth, aHeight, aDepth);
