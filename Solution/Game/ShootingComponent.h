@@ -38,11 +38,15 @@ public:
 
 	void SetCurrentWeaponID(int anID);
 
+	void SetHomingTarget(Entity* aTarget);
+
 	void ActivateEMP(); // test function
 
 private:
 
 	CU::GrowingArray<WeaponData, int> myWeapons;
+
+	Entity* myHomingTarget;
 
 	int myCurrentWeaponID;
 
@@ -59,20 +63,15 @@ inline eComponentType ShootingComponent::GetType()
 	return eComponentType::SHOOTING;
 }
 
-inline void ShootingComponent::SetCurrentWeaponID(int anID)
-{
-	myCurrentWeaponID = anID;
-	
-	if (anID >= myWeapons.Size())
-	{
-		myCurrentWeaponID = myWeapons.Size() - 1;
-	}
-}
-
 inline void ShootingComponent::ActivateEMP()
 {
 	myPowerUpValue = 1000.f;
 	myPowerUpDuration = 5.f;
+}
+
+inline void ShootingComponent::SetHomingTarget(Entity* aTarget)
+{
+	myHomingTarget = aTarget;
 }
 
 inline eBulletType ConvertToBulletEnum(const std::string& aString)
@@ -112,6 +111,34 @@ inline eBulletType ConvertToBulletEnum(const std::string& aString)
 	else if (aString == "rocket3")
 	{
 		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (aString == "rocket3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (aString == "rocket3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (aString == "B_enemy_default")
+	{
+		return eBulletType::ENEMY_BULLET_DEFAULT;
+	}
+	else if (aString == "B_enemy_fast")
+	{
+		return eBulletType::ENEMY_BULLET_FAST;
+	}
+	else if (aString == "B_enemy_slow")
+	{
+		return eBulletType::ENEMY_BULLET_SLOW;
+	}
+	else if (aString == "B_enemy_turret")
+	{
+		return eBulletType::ENEMY_BULLET_TURRET;
+	}
+	else if (aString == "B_enemy_homing")
+	{
+		return eBulletType::ENEMY_BULLET_HOMING;
 	}
 	return eBulletType::COUNT;
 }

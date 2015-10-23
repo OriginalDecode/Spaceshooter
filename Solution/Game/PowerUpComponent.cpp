@@ -54,7 +54,7 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 
 void PowerUpComponent::Update(float aDeltaTime)
 {
-	myPlayer->SendNote<GUINote>(GUINote(myEntity.myOrientation.GetPos(), eGUINoteType::POWERUP));
+	myPlayer->SendNote<GUINote>(GUINote(&myEntity, eGUINoteType::POWERUP));
 
 	CU::Vector3f pos = myEntity.myOrientation.GetPos();
 	myEntity.myOrientation *= CU::Matrix44f::CreateRotateAroundZ(1.f* aDeltaTime);
