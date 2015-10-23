@@ -159,7 +159,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 		DL_ASSERT(errorMessage.c_str());
 	}
 
-	newWeapon.myID = static_cast<int>(newWeapon.myBulletType);
+	newWeapon.myID = myWeapons.Size();
 	myCurrentWeaponID = newWeapon.myID;
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;

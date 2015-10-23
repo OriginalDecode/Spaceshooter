@@ -113,5 +113,33 @@ inline eBulletType ConvertToBulletEnum(const std::string& aString)
 	{
 		return eBulletType::ROCKET_MISSILE_LEVEL_3;
 	}
+	else if (aString == "rocket3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (aString == "rocket3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (aString == "B_enemy_default")
+	{
+		return eBulletType::ENEMY_BULLET_DEFAULT;
+	}
+	else if (aString == "B_enemy_fast")
+	{
+		return eBulletType::ENEMY_BULLET_FAST;
+	}
+	else if (aString == "B_enemy_slow")
+	{
+		return eBulletType::ENEMY_BULLET_SLOW;
+	}
+	else if (aString == "B_enemy_turret")
+	{
+		return eBulletType::ENEMY_BULLET_TURRET;
+	}
+	else if (aString == "B_enemy_homing")
+	{
+		return eBulletType::ENEMY_BULLET_HOMING;
+	}
 	return eBulletType::COUNT;
 }
