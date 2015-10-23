@@ -10,6 +10,11 @@
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
     <LocalDebuggerCommandArguments>-useEngineLog -useResourceLog -useDirectXLog</LocalDebuggerCommandArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)..\Workbed\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments>-useEngineLog -useResourceLog -useDirectXLog</LocalDebuggerCommandArguments>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)..\Workbed\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

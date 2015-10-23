@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="DLL_Release|Win32">
+      <Configuration>DLL_Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Internal|Win32">
       <Configuration>Internal</Configuration>
       <Platform>Win32</Platform>
@@ -32,6 +36,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -48,6 +59,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -60,6 +74,13 @@
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(SolutionDir)\Engine;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\DL_Debug;$(SolutionDir)..\DirectX\include\;$(SolutionDir)\InputWrapper;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
+    <OutDir>$(SolutionDir)..\Libs\</OutDir>
+    <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
     <IncludePath>$(SolutionDir)\Engine;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\DL_Debug;$(SolutionDir)..\DirectX\include\;$(SolutionDir)\InputWrapper;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)..\Libs\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
@@ -100,6 +121,22 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PreprocessorDefinitions>RELEASE_BUILD;DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -132,6 +169,7 @@
     <ClInclude Include="DefendMessage.h" />
     <ClInclude Include="DefendMission.h" />
     <ClInclude Include="EmitterComponent.h" />
+    <ClInclude Include="EmitterManager.h" />
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueueEmptyMessage.h" />
@@ -181,6 +219,8 @@
     <ClInclude Include="ShieldNote.h" />
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
+    <ClInclude Include="SoundComponent.h" />
+    <ClInclude Include="SoundNote.h" />
     <ClInclude Include="SpawnEnemyAction.h" />
     <ClInclude Include="SpawnEnemyMessage.h" />
     <ClInclude Include="EnqueueEventMessage.h" />
@@ -213,6 +253,7 @@
     <ClCompile Include="DefendMessage.cpp" />
     <ClCompile Include="DefendMission.cpp" />
     <ClCompile Include="EmitterComponent.cpp" />
+    <ClCompile Include="EmitterManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="EntityFactory.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -244,6 +285,7 @@
     <ClCompile Include="PropComponent.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
+    <ClCompile Include="SoundComponent.cpp" />
     <ClCompile Include="SpawnEnemyAction.cpp" />
     <ClCompile Include="SpawnEnemyMessage.cpp" />
     <ClCompile Include="EnqueueEventMessage.cpp" />
@@ -252,6 +294,7 @@
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Subscriber.cpp" />

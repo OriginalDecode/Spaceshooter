@@ -2,7 +2,7 @@
 
 namespace Prism
 {
-	class Model2D;
+	class Sprite;
 }
 
 namespace CommonUtilities
@@ -28,7 +28,7 @@ public:
 private:
 
 	CU::GrowingArray<Button*> myButtons;
-	Prism::Model2D* myBackground;
-	Prism::Model2D* myCrosshair;
+	Prism::Sprite* myBackground;
+	Prism::Sprite* myCrosshair;
 };
 

@@ -3,14 +3,14 @@
 #include <Engine.h>
 #include "GameStateMessage.h"
 #include "MessageState.h"
-#include <Model2D.h>
+#include <Sprite.h>
 #include <InputWrapper.h>
 #include "PostMaster.h"
 
 MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper)
 	: myEvent(nullptr)
 {
-	myBackground = new Prism::Model2D;
+	myBackground = new Prism::Sprite;
 	myBackground->Init(aTexturePath, aSize);
 	myInputWrapper = anInputWrapper;
 	myTextMessage = "";

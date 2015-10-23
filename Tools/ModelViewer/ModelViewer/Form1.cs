@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using System.Windows.Markup;
+
 
 namespace ModelViewer
 {
@@ -25,10 +25,12 @@ namespace ModelViewer
 
         private Point myPreviousMousePosition;
 
+        private CSharpUtilities.Components.DropDownComponent myModelList;
+        private CSharpUtilities.Components.DropDownComponent myShaderList;
+
         public ModelViewerWindow()
         {
             InitializeComponent();
-
             if (myModelFolderPath == "")
             {
                 Properties.Settings.Default.DefaultModelFolderDirectory = Directory.GetCurrentDirectory();
@@ -46,6 +48,8 @@ namespace ModelViewer
             effectFolderBrowser.SelectedPath = myEffectFolderPath;
 
             myPreviousMousePosition = MousePosition;
+
+            //myModelList = new CSharpUtilities.Components.DropDownComponent(new Point())
 
             LoadEngine();
             FillEffectList();
@@ -84,6 +88,10 @@ namespace ModelViewer
 
         private void Btn_OpenEffectFolder_Click(object sender, EventArgs e)
         {
+            if (Directory.Exists(myEffectFolderPath) == false)
+            {
+                myEffectFolderPath = Directory.GetCurrentDirectory();
+            }
             effectFolderBrowser.SelectedPath = myEffectFolderPath;
             effectFolderBrowser.ShowDialog();
 
@@ -101,6 +109,11 @@ namespace ModelViewer
 
         private void FillEffectList()
         {
+            if (Directory.Exists(myEffectFolderPath) == false)
+            {
+                myEffectFolderPath = Directory.GetCurrentDirectory();
+            }
+
             DirectoryInfo currentDirectory = new DirectoryInfo(myEffectFolderPath);
 
             FileInfo[] filesInDirectory = currentDirectory.GetFiles();

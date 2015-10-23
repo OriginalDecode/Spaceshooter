@@ -38,10 +38,15 @@ namespace Prism
 		CreateVertexBuffer();
 	}
 
-	void EmitterInstance::SetPosition(const CU::Vector3f& aPosition)
-	{
-		myOrientation.SetPos(aPosition);
-	}
+//void EmitterInstance::SetParent(const CU::Matrix44f& aParent)
+//{
+//	myOrientation *= aParent;
+//}
+//
+//void EmitterInstance::SetPosition(const CU::Vector3f& aPosition)
+//{
+//	myOrientation.SetPos(aPosition);
+//}
 
 	void EmitterInstance::Render(Camera* aCamera)
 	{
@@ -74,9 +79,10 @@ namespace Prism
 		}
 	}
 
-	void EmitterInstance::Update(float aDeltaTime)
+	void EmitterInstance::Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix)
 	{
-		UpdateEmitter(aDeltaTime);
+		//myOrientation *= aWorldMatrix;
+		UpdateEmitter(aDeltaTime,aWorldMatrix);
 	}
 
 	void EmitterInstance::CreateVertexBuffer()
@@ -126,7 +132,7 @@ namespace Prism
 		Engine::GetInstance()->GetContex()->Unmap(myVertexWrapper->myVertexBuffer, 0);
 	}
 
-	void EmitterInstance::UpdateEmitter(float aDeltaTime)
+	void EmitterInstance::UpdateEmitter(float aDeltaTime, const CU::Matrix44f& aWorldMatrix)
 	{
 		myEmissionTime -= aDeltaTime;
 
@@ -134,7 +140,7 @@ namespace Prism
 
 		if (myEmissionTime <= 0)
 		{
-			EmittParticle();
+			EmittParticle(aWorldMatrix);
 			myEmissionTime = myEmitterData.myEmissionRate;
 		}
 
@@ -166,7 +172,7 @@ namespace Prism
 		}
 	}
 
-	void EmitterInstance::EmittParticle()
+	void EmitterInstance::EmittParticle( const CU::Matrix44f& aWorldMatrix)
 	{
 
 		if (myParticleIndex == myLogicalParticles.Size() - 1)
@@ -176,7 +182,9 @@ namespace Prism
 
 		myGraphicalParticles[myParticleIndex].myColor = myEmitterData.myStartColor;
 
-		myGraphicalParticles[myParticleIndex].myPosition = myOrientation.GetPos();
+		myGraphicalParticles[myParticleIndex].myPosition = 
+			CU::Math::RandomRange(aWorldMatrix.GetPos() + myEmitterData.myEmitterSize
+			, aWorldMatrix.GetPos() - myEmitterData.myEmitterSize);
 
 		myGraphicalParticles[myParticleIndex].myLifeTime = myEmitterData.myParticlesLifeTime;
 

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "AIComponent.h"
-#include <AudioInterface.h>
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -160,29 +159,6 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	{
 		bullet = aWeaponData->myEnemyBullets[aWeaponData->myEnemyBulletCounter];
 	}
-
-	if (aEntityType == eEntityType::PLAYER)
-	{
-		if (aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
-			|| aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_2
-			|| aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", bullet->GetAudioSFXID());
-		}
-		if (aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_1
-			|| aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_2
-			|| aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", bullet->GetAudioSFXID());
-		}
-		if (aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_1
-			|| aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_2
-			|| aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", bullet->GetAudioSFXID());
-		}
-	}
-
 	DL_ASSERT_EXP(bullet != nullptr, "Non Player/Enemy cant activate bullets!");
 
 	if (bullet->GetComponent<BulletComponent>()->GetActive() == false)

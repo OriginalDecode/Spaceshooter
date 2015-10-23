@@ -13,19 +13,13 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	, myOctreeType(anOctreeType)
 	, myName(aName)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
-	, myAudioSFXID(-1)
+
 {
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
 		myComponents[i] = nullptr;
 	}
-	myAudioSFXID = Prism::Audio::AudioInterface::GetInstance()->GetUniqueID();
 
-	if (myType == eEntityType::PLAYER)
-	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Thrusters", myAudioSFXID);
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ThrusterBoost", myAudioSFXID);
-	}
 }
 
 Entity::~Entity()
@@ -38,27 +32,11 @@ Entity::~Entity()
 	{
 		delete myComponents[i];
 	}
-	if (myType == eEntityType::PLAYER)
-	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Thrusters", myAudioSFXID);
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_ThrusterBoost", myAudioSFXID);
-	}
 
-	Prism::Audio::AudioInterface::GetInstance()->UnRegisterObject(myAudioSFXID);
 }
 
 void Entity::Update(float aDeltaTime)
 {
-	if (myType == eEntityType::PLAYER)
-	{
-		Prism::Audio::AudioInterface::GetInstance()->SetListenerPosition(myOrientation.GetPos().x
-			, myOrientation.GetPos().y, myOrientation.GetPos().z);
-	}
-	else
-	{
-		Prism::Audio::AudioInterface::GetInstance()->SetPosition(myOrientation.GetPos().x
-			, myOrientation.GetPos().y, myOrientation.GetPos().z, myAudioSFXID);
-	}
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
 		if (myComponents[i] != nullptr)

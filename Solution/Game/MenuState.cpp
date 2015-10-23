@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MenuState.h"
-#include <Model2D.h>
+#include <Sprite.h>
 #include <Camera.h>
 #include <InputWrapper.h>
 #include "StateStackProxy.h"

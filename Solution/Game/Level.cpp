@@ -6,6 +6,7 @@
 #include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include "Constants.h"
 #include "ConversationManager.h"
 #include "DefendMessage.h"
 #include "EffectContainer.h"
@@ -13,8 +14,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
+#include "EmitterComponent.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -88,16 +88,15 @@ Level::~Level()
 	delete myMissionManager;
 	delete myEventManager;
 	delete myConversationManager;
-	delete myEmitter;
 	delete myScene;
 	mySkySphere = nullptr;
 	myScene = nullptr;
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
+
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime);
 	myCollisionManager->CleanUp();
 
 	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
@@ -141,7 +140,22 @@ void Level::Render()
 	
 	myScene->Render(myBulletManager->GetInstances());
 
-	myEmitter->Render(myCamera);
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
+		{
+			continue;
+		}
+		else
+		{
+			myEntities[i]->GetComponent<EmitterComponent>()->Render();
+
+			Prism::Engine::GetInstance()->PrintDebugText(myEntities[i]->GetComponent<EmitterComponent>()->GetEmitterCount()
+				, { 1600, 0 });
+
+		}
+
+	}
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
@@ -156,6 +170,7 @@ void Level::Render()
 	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f });
 	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f });
 	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f });
+
 }
 
 void Level::OnResize(int aWidth, int aHeight)

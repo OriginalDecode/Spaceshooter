@@ -10,7 +10,7 @@
 #include <Matrix.h>
 #include <Matrix44.h>
 #include "Model.h"
-#include "Model2D.h"
+#include "Sprite.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include "Texture.h"

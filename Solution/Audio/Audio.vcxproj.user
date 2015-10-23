@@ -8,6 +8,10 @@
     <LocalDebuggerWorkingDirectory>$(SolutionDir)$..\..\..\Workbed\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
+    <LocalDebuggerWorkingDirectory>$(SolutionDir)$..\..\..\Workbed\</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">
     <LocalDebuggerWorkingDirectory>$(SolutionDir)$..\..\..\Workbed\</LocalDebuggerWorkingDirectory>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

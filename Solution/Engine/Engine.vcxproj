@@ -5,6 +5,10 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="DLL_Release|Win32">
+      <Configuration>DLL_Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Internal|Win32">
       <Configuration>Internal</Configuration>
       <Platform>Win32</Platform>
@@ -32,6 +36,13 @@
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -48,6 +59,9 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -60,6 +74,13 @@
     <LibraryPath>$(SolutionDir)..\Libs3rdParty\;$(SolutionDir)..\DirectX\Libs\x86\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)..\Libs\</OutDir>
+    <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
+    <IncludePath>$(SolutionDir)\InputWrapper;$(SolutionDir)\DL_Debug;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\..\DirectX\Include;$(SolutionDir)\FBX\;$(FBX_SDK_ROOT)\include;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
+    <TargetName>$(ProjectName)_$(Configuration)</TargetName>
+    <LibraryPath>$(SolutionDir)..\Libs3rdParty\;$(SolutionDir)..\DirectX\Libs\x86\;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
     <OutDir>$(SolutionDir)..\Libs\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <IncludePath>$(SolutionDir)\InputWrapper;$(SolutionDir)\DL_Debug;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\..\DirectX\Include;$(SolutionDir)\FBX\;$(FBX_SDK_ROOT)\include;$(VTUNE_DIR)\include\;$(IncludePath)</IncludePath>
@@ -124,6 +145,34 @@
       <EntryPointName>main</EntryPointName>
     </FxCompile>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PreprocessorDefinitions>RELEASE_BUILD;DLL_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>Effects11_Release.lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;libfbxsdk-md_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\Libs\</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4099,4221,4006 %(AdditionalOptions)</AdditionalOptions>
+    </Lib>
+    <FxCompile>
+      <ShaderType>Effect</ShaderType>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+      <EntryPointName>main</EntryPointName>
+    </FxCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -152,6 +201,7 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BaseModel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DebugDataDisplay.cpp" />
     <ClCompile Include="DebugMenu.cpp" />
@@ -166,6 +216,7 @@
     <ClCompile Include="FBX\FbxLoader.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../stdafx.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">../stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">../stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="FileWatcher.cpp" />
@@ -176,7 +227,7 @@
     <ClCompile Include="GraphRenderer.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Model2D.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelProxy.cpp" />
     <ClCompile Include="Octree.cpp" />
@@ -185,6 +236,7 @@
     <ClCompile Include="SpotLight.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
@@ -196,6 +248,7 @@
     <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseModel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DebugDataDisplay.h" />
     <ClInclude Include="DebugMenu.h" />
@@ -223,7 +276,7 @@
     <ClInclude Include="LightStructs.h" />
     <ClInclude Include="LodStructs.h" />
     <ClInclude Include="Model.h" />
-    <ClInclude Include="Model2D.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelProxy.h" />
     <ClInclude Include="Octree.h" />

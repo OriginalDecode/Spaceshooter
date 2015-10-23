@@ -32,6 +32,7 @@ struct EntityData
 	std::string myModelFile;
 	std::string myTargetName;
 	std::string myWeaponType;
+	std::string myEmitterXMLPath;
 
 	CU::Vector3f myScale;
 	CU::Vector3f myAIAvoidancePoint;
@@ -85,8 +86,10 @@ private:
 	void LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement);
 	void LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement);
 	void LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent);
+	void LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aEmitterComponent);
 
 	ePowerUpType ConvertToPowerUpType(std::string aName);
+	eBulletType ConvertToBulletType(std::string aName);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 

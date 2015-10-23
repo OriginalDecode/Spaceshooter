@@ -7,7 +7,7 @@
 
 namespace Prism
 {
-	class Model2D;
+	class Sprite;
 	class Camera;
 }
 
@@ -20,8 +20,8 @@ public:
 	void Init(float aMaxDistanceToEnemies);
 
 	void Update(float aDeltaTime) override;
-	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
-		, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
+	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
+		, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
 
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 	
@@ -48,6 +48,7 @@ public:
 	Entity* GetClosestEnemy();
 
 private:
+<<<<<<< HEAD
 	Prism::Model2D* myReticle;
 	Prism::Model2D* myModel2DToRender;
 	Prism::Model2D* myEnemyArrow;
@@ -61,6 +62,20 @@ private:
 	Prism::Model2D* myHitMarker;
 	Prism::Model2D* myDamageIndicator;
 	Prism::Model2D* myHomingTarget;
+=======
+	Prism::Sprite* myReticle;
+	Prism::Sprite* myModel2DToRender;
+	Prism::Sprite* myEnemyArrow;
+	Prism::Sprite* myEnemyMarker;
+	Prism::Sprite* myWaypointMarker;
+	Prism::Sprite* myWaypointArrow;
+	Prism::Sprite* myDefendMarker;
+	Prism::Sprite* myDefendArrow;
+	Prism::Sprite* myCrosshair;
+	Prism::Sprite* mySteeringTarget;
+	Prism::Sprite* myHitMarker;
+	Prism::Sprite* myDamageIndicator;
+>>>>>>> 65621597537da5b9c530ff65ff0e070e4839f963
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;
 
@@ -73,8 +88,8 @@ private:
 	CU::Vector2<float> myClosestScreenPos;
 	float myClosestEnemyLength;
 
-	Prism::Model2D* myPowerUpArrow;
-	Prism::Model2D* myPowerUpMarker;
+	Prism::Sprite* myPowerUpArrow;
+	Prism::Sprite* myPowerUpMarker;
 	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
 
 	Prism::Camera* myCamera;
@@ -85,11 +100,11 @@ private:
 	int myHealthBarCount;
 	int myShieldBarCount;
 
-	Prism::Model2D* myHealthBar;
-	Prism::Model2D* myShieldBar;
+	Prism::Sprite* myHealthBar;
+	Prism::Sprite* myShieldBar;
 
-	Prism::Model2D* myHealthBarGlow;
-	Prism::Model2D* myShieldBarGlow;
+	Prism::Sprite* myHealthBarGlow;
+	Prism::Sprite* myShieldBarGlow;
 
 
 	CU::Vector2<float> myHealthBarRenderPosition;

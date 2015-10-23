@@ -3,7 +3,7 @@
 
 namespace Prism
 {
-	class Model2D;
+	class Sprite;
 	class Camera;
 }
 
@@ -30,7 +30,7 @@ public:
 private:
 
 	Prism::Camera* myCamera;
-	Prism::Model2D* myBackground;
+	Prism::Sprite* myBackground;
 
 	std::string myTextMessage;
 	CU::Vector2<float> myMessagePosition;

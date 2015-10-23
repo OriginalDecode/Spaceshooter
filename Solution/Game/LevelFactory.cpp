@@ -8,8 +8,6 @@
 #include "DefendMessage.h"
 #include "DirectionalLight.h"
 #include "HealthComponent.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
 #include "EffectContainer.h"
 #include <Engine.h>
 #include <EngineEnums.h>
@@ -34,6 +32,7 @@
 #include <Scene.h>
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
+#include "SoundComponent.h"
 #include <SpotLight.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
@@ -193,12 +192,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	
 	reader.CloseDocument();
 
-	Prism::EmitterData data;
-	data.LoadDataFile("Data/Resource/Particle/P_default_emitter.xml");
-
-	myCurrentLevel->myEmitter = new Prism::EmitterInstance();
-	myCurrentLevel->myEmitter->Initiate(data);
-	myCurrentLevel->myEmitter->SetPosition({ 5, 5, 5 });
+	
 
 	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
 	{
@@ -357,6 +351,7 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Initiate(7.5f);
 	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
 	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
+	myCurrentLevel->myPlayer->AddComponent<SoundComponent>();
 
 	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_machine_level_1")); // replace these with UpgradeWeapon later
 	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"));
