@@ -172,6 +172,7 @@
     <ClCompile Include="SoundComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="EmitterManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -396,6 +397,7 @@
     <ClInclude Include="SoundComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
+    <ClInclude Include="EmitterManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
