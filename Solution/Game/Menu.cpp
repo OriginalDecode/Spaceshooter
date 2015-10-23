@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Menu.h"
 #include "Button.h"
-#include <Model2D.h>
+#include <Sprite.h>
 #include <Camera.h>
 #include <InputWrapper.h>
 #include "GameStateMessage.h"
@@ -24,9 +24,9 @@ Menu::Menu(const std::string& aXMLPath)
 	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "sizeX", crosshairSize.x);
 	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "sizeY", crosshairSize.y);
 
-	myCrosshair = new Prism::Model2D;
+	myCrosshair = new Prism::Sprite;
 	myCrosshair->Init(crosshair, crosshairSize);
-	myBackground = new Prism::Model2D;
+	myBackground = new Prism::Sprite;
 	myBackground->Init(background, { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) });
 

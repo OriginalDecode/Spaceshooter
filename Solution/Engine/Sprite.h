@@ -17,11 +17,11 @@ namespace Prism
 	struct IndexBufferWrapper;
 	struct VertexBufferWrapper;
 
-	class Model2D : public EffectListener
+	class Sprite : public EffectListener
 	{
 	public:
-		Model2D();
-		~Model2D();
+		Sprite();
+		~Sprite();
 
 
 		void Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize);
@@ -69,12 +69,12 @@ namespace Prism
 	};
 }
 
-inline void Prism::Model2D::SetSize(const CU::Vector2<float> aTextureSize)
+inline void Prism::Sprite::SetSize(const CU::Vector2<float> aTextureSize)
 {
 	myTextureSize = aTextureSize;
 }
 
-inline const CU::Vector2<float>& Prism::Model2D::GetSize() const
+inline const CU::Vector2<float>& Prism::Sprite::GetSize() const
 {
 	return myTextureSize;
 }

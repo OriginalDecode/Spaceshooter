@@ -10,7 +10,7 @@
 #include "HealthComponent.h"
 #include "HealthNote.h"
 #include "MissionNote.h"
-#include <Model2D.h>
+#include <Sprite.h>
 #include "PostMaster.h"
 #include "PropComponent.h"
 #include "ResizeMessage.h"
@@ -24,27 +24,27 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
 	, myEnemiesPosition(16)
-	, myReticle(new Prism::Model2D)
-	, mySteeringTarget(new Prism::Model2D)
-	, myCrosshair(new Prism::Model2D)
-	, myEnemyMarker(new Prism::Model2D)
-	, myEnemyArrow(new Prism::Model2D)
-	, myWaypointArrow(new Prism::Model2D)
-	, myWaypointMarker(new Prism::Model2D)
+	, myReticle(new Prism::Sprite)
+	, mySteeringTarget(new Prism::Sprite)
+	, myCrosshair(new Prism::Sprite)
+	, myEnemyMarker(new Prism::Sprite)
+	, myEnemyArrow(new Prism::Sprite)
+	, myWaypointArrow(new Prism::Sprite)
+	, myWaypointMarker(new Prism::Sprite)
 	, myCamera(nullptr)
-	, myPowerUpArrow(new Prism::Model2D)
-	, myPowerUpMarker(new Prism::Model2D)
-	, myDefendMarker(new Prism::Model2D)
-	, myDefendArrow(new Prism::Model2D)
+	, myPowerUpArrow(new Prism::Sprite)
+	, myPowerUpMarker(new Prism::Sprite)
+	, myDefendMarker(new Prism::Sprite)
+	, myDefendArrow(new Prism::Sprite)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
-	, myHealthBar(new Prism::Model2D)
-	, myShieldBar(new Prism::Model2D)
-	, myHealthBarGlow(new Prism::Model2D)
-	, myShieldBarGlow(new Prism::Model2D)
-	, myHitMarker(new Prism::Model2D)
-	, myDamageIndicator(new Prism::Model2D)
+	, myHealthBar(new Prism::Sprite)
+	, myShieldBar(new Prism::Sprite)
+	, myHealthBarGlow(new Prism::Sprite)
+	, myShieldBarGlow(new Prism::Sprite)
+	, myHitMarker(new Prism::Sprite)
+	, myDamageIndicator(new Prism::Sprite)
 	, myHitMarkerTimer(-1.f)
 	, myDamageIndicatorTimer(-1.f)
 {
@@ -135,8 +135,8 @@ void GUIComponent::Update(float aDeltaTime)
 	myDamageIndicatorTimer -= aDeltaTime;
 }
 
-void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Model2D* aCurrentModel
-	, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist)
+void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
+	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist)
 {
 	float halfWidth = aWindowSize.x *0.5f;
 	float halfHeight = aWindowSize.y * 0.5f;

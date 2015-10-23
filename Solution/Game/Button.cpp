@@ -3,7 +3,7 @@
 #include <Camera.h>
 #include <Engine.h>
 #include "GameStateMessage.h"
-#include <Model2D.h>
+#include <Sprite.h>
 #include "PostMaster.h"
 #include <tinyxml2.h>
 #include <XMLReader.h>
@@ -39,10 +39,10 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
 	}
 	
-	myBackground = new Prism::Model2D;
+	myBackground = new Prism::Sprite;
 	myBackground->Init(picPath, mySize);
 
-	myHoverBackground = new Prism::Model2D;
+	myHoverBackground = new Prism::Sprite;
 	myHoverBackground->Init(picHoveredPath, mySize);
 
 	myIsHovered = false;

@@ -3,7 +3,7 @@
 
 namespace Prism
 {
-	class Model2D;
+	class Sprite;
 	class Camera;
 }
 

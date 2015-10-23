@@ -2,7 +2,7 @@
 
 namespace Prism
 {
-	class Model2D;
+	class Sprite;
 }
 
 namespace tinyxml2
@@ -33,8 +33,8 @@ private:
 	CU::Vector2<float> myPosition;
 	CU::Vector2<float> mySize;
 
-	Prism::Model2D* myBackground;
-	Prism::Model2D* myHoverBackground;
+	Prism::Sprite* myBackground;
+	Prism::Sprite* myHoverBackground;
 	GameStateMessage* myClickEvent;
 
 	bool myIsHovered;

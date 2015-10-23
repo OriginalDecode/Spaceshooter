@@ -53,9 +53,6 @@
     <ClCompile Include="Model.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Model2D.cpp">
-      <Filter>Rendering</Filter>
-    </ClCompile>
     <ClCompile Include="Surface.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -92,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="EmitterInstance.cpp">
       <Filter>Rendering\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="Sprite.cpp">
+      <Filter>Rendering</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -173,9 +173,6 @@
     <ClInclude Include="Model.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="Model2D.h">
-      <Filter>Rendering</Filter>
-    </ClInclude>
     <ClInclude Include="Vertices.h">
       <Filter>Rendering</Filter>
     </ClInclude>
@@ -220,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="ParticleData.h">
       <Filter>Rendering\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

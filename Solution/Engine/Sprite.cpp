@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "Model2D.h"
+#include "Sprite.h"
 #include <D3D11.h>
 #include <d3dx11effect.h>
 #include "DebugDataDisplay.h"
@@ -12,7 +12,7 @@
 #include "Surface.h"
 #include "TextureContainer.h"
 
-Prism::Model2D::Model2D()
+Prism::Sprite::Sprite()
 {
 	myLastDrawX = -999.f;
 	myLastDrawY = -999.f;
@@ -21,7 +21,7 @@ Prism::Model2D::Model2D()
 	myInitData = new D3D11_SUBRESOURCE_DATA();
 }
 
-Prism::Model2D::~Model2D()
+Prism::Sprite::~Sprite()
 {
 	delete myVertexBuffer;
 	delete myIndexBuffer;
@@ -41,14 +41,14 @@ Prism::Model2D::~Model2D()
 	}
 }
 
-void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
+void Prism::Sprite::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize)
 {
 	myTextureSize = aTextureSize;
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_sprite.fx");
 
 	if (myEffect == nullptr)
 	{
-		DL_MESSAGE_BOX("Failed to GetEffect", "Model2D::Init", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to GetEffect", "Sprite::Init", MB_ICONWARNING);
 	}
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
@@ -62,7 +62,7 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Model2D::Init", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Sprite::Init", MB_ICONWARNING);
 	}
 
 	myVertices.Init(6);
@@ -76,7 +76,7 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
-void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize
+void Prism::Sprite::Init(const std::string& aFileName, const CU::Vector2<float> aTextureSize
 			, const char* anEffectFilePath)
 {
 	myTextureSize = aTextureSize;
@@ -84,7 +84,7 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 
 	if (myEffect == nullptr)
 	{
-		DL_MESSAGE_BOX("Failed to GetEffect", "Model2D::Init", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to GetEffect", "Sprite::Init", MB_ICONWARNING);
 	}
 
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
@@ -98,7 +98,7 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Model2D::Init", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to CreateInputLayout", "Sprite::Init", MB_ICONWARNING);
 	}
 
 	myVertices.Init(6);
@@ -112,7 +112,7 @@ void Prism::Model2D::Init(const std::string& aFileName, const CU::Vector2<float>
 	ZeroMemory(myInitData, sizeof(myInitData));
 }
 
-void Prism::Model2D::InitVertexBuffer()
+void Prism::Sprite::InitVertexBuffer()
 {
 	myVertexBuffer = new VertexBufferWrapper();
 	myVertexBuffer->myStride = sizeof(VertexPosUV);
@@ -129,7 +129,7 @@ void Prism::Model2D::InitVertexBuffer()
 	myVertexBufferDesc->StructureByteStride = 0;
 }
 
-void Prism::Model2D::InitIndexBuffer()
+void Prism::Sprite::InitIndexBuffer()
 {
 	myIndexBuffer = new IndexBufferWrapper();
 	myIndexBuffer->myIndexBufferFormat = DXGI_FORMAT_R32_UINT;
@@ -144,7 +144,7 @@ void Prism::Model2D::InitIndexBuffer()
 	myIndexBufferDesc->StructureByteStride = 0;
 }
 
-void Prism::Model2D::InitSurface(const std::string& aFileName)
+void Prism::Sprite::InitSurface(const std::string& aFileName)
 {
 	mySurface = new Surface();
 
@@ -157,7 +157,7 @@ void Prism::Model2D::InitSurface(const std::string& aFileName)
 	mySurface->SetTexture("DiffuseTexture", aFileName, true);
 }
 
-void Prism::Model2D::InitBlendState()
+void Prism::Sprite::InitBlendState()
 {
 	D3D11_BLEND_DESC blendDesc;
 	blendDesc.AlphaToCoverageEnable = true;
@@ -178,7 +178,7 @@ void Prism::Model2D::InitBlendState()
 	}
 }
 
-void Prism::Model2D::Render(const float aDrawX, const float aDrawY)
+void Prism::Sprite::Render(const float aDrawX, const float aDrawY)
 {
 	if (aDrawX != myLastDrawX || aDrawY != myLastDrawY)
 	{
@@ -220,7 +220,7 @@ void Prism::Model2D::Render(const float aDrawX, const float aDrawY)
 	Engine::GetInstance()->EnableZBuffer();
 }
 
-void Prism::Model2D::SetupVertexBuffer()
+void Prism::Sprite::SetupVertexBuffer()
 {
 	TIME_FUNCTION
 
@@ -235,11 +235,11 @@ void Prism::Model2D::SetupVertexBuffer()
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData, &myVertexBuffer->myVertexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Model2D::SetupVertexBuffer", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to SetupVertexBuffer", "Sprite::SetupVertexBuffer", MB_ICONWARNING);
 	}
 }
 
-void Prism::Model2D::SetupIndexBuffer()
+void Prism::Sprite::SetupIndexBuffer()
 {
 	TIME_FUNCTION
 
@@ -254,16 +254,16 @@ void Prism::Model2D::SetupIndexBuffer()
 		&myIndexBuffer->myIndexBuffer);
 	if (FAILED(hr) != S_OK)
 	{
-		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Model2D::SetupIndexBuffer", MB_ICONWARNING);
+		DL_MESSAGE_BOX("Failed to SetupIndexBuffer", "Sprite::SetupIndexBuffer", MB_ICONWARNING);
 	}
 }
 
-void Prism::Model2D::OnEffectLoad()
+void Prism::Sprite::OnEffectLoad()
 {
 	mySurface->ReloadSurface();
 }
 
-void Prism::Model2D::Update(const float aDrawX, const float aDrawY)
+void Prism::Sprite::Update(const float aDrawX, const float aDrawY)
 {
 	TIME_FUNCTION
 
