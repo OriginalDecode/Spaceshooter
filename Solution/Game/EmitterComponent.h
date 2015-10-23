@@ -18,7 +18,7 @@ public:
 	static eComponentType GetType();
 private:
 
-
+	CU::Vector3f myPosition;
 	Prism::EmitterInstance* myEmitter;
 	std::string myXMLPath;
 };

@@ -22,25 +22,29 @@ namespace Prism
 		~EmitterInstance();
 		void Initiate(EmitterData someData);
 		void Render(Camera* aCamera);
-		void Update(float aDeltaTime);
-		void SetPosition(const CU::Vector3f& aPosition);
+		void Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
+	//	void SetPosition(const CU::Vector3f& aPosition);
+	//	void SetParent(const CU::Matrix44f& aParent);
 
 	private:
 
 		void CreateVertexBuffer();
 		void UpdateVertexBuffer();
 
-		void UpdateEmitter(float aDeltaTime);
+		void UpdateEmitter(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
 		void UpdateParticle(float aDeltaTime);
 
-		void EmittParticle();
+		void EmittParticle(const CU::Matrix44f& aWorldMatrix);
 
 		CU::GrowingArray<LogicalParticle> myLogicalParticles;
 		CU::GrowingArray<GraphicalParticle> myGraphicalParticles;
 
 		CU::Vector3f myDiffColor;
 
+		
 		CU::Matrix44f myOrientation;
+
+		//CU::Vector3f myPosition;
 
 		EmitterData myEmitterData;
 		VertexBufferWrapper *myVertexWrapper;

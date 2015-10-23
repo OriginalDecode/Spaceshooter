@@ -36,13 +36,14 @@ void EmitterComponent::Init(std::string aPath)
 	Prism::EmitterData data;
 	data.LoadDataFile(myXMLPath.c_str());
 	myEmitter->Initiate(data);
-
-	myEmitter->SetPosition(myEntity.myOrientation.GetPos());
+	//myEmitter->SetPosition(myEntity.myOrientation.GetPos());}
 }
 
 void EmitterComponent::Update(float aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime);
+	//myEmitter->SetParent(myEntity.myOrientation);
+
+	myEmitter->Update(aDeltaTime, myEntity.myOrientation);
 }
 
 void EmitterComponent::Render()

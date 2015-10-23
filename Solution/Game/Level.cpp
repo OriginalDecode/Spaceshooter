@@ -13,6 +13,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include "EmitterComponent.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -137,6 +138,19 @@ void Level::Render()
 	Prism::Engine::GetInstance()->EnableZBuffer();
 	
 	myScene->Render(myBulletManager->GetInstances());
+
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
+		{
+			continue;
+		}
+		else
+		{
+			myEntities[i]->GetComponent<EmitterComponent>()->Render();
+		}
+
+	}
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
