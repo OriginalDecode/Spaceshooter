@@ -67,9 +67,11 @@ private:
 	CU::Vector3<float> myWaypointPosition;
 
 	CU::GrowingArray<Entity*> myEnemies;
+
 	Entity* myClosestEnemy;
 	CU::Vector2<float> myClosestScreenPos;
 	float myClosestEnemyLength;
+	bool myHasHomingWeapon;
 
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;

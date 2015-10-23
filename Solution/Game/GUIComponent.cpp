@@ -24,6 +24,7 @@
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
+	, myHasHomingWeapon(false)
 	, myEnemies(16)
 	, myReticle(new Prism::Sprite)
 	, mySteeringTarget(new Prism::Sprite)

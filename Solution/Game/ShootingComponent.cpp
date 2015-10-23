@@ -98,7 +98,8 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				orientation.SetPos(pos);
 
 				PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
-					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity, myHomingTarget));
+					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+					, myPowerUpType == ePowerUpType::HOMING || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr ));
 				myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 			}
 		}
