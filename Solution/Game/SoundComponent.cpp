@@ -38,7 +38,7 @@ SoundComponent::~SoundComponent()
 	Prism::Audio::AudioInterface::GetInstance()->UnRegisterObject(myAudioSFXID);
 }
 
-void SoundComponent::Update(float aDeltaTime)
+void SoundComponent::Update(float)
 {
 	if (myEntity.GetType() == eEntityType::PLAYER)
 	{
