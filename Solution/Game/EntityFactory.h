@@ -89,6 +89,7 @@ private:
 	void LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aEmitterComponent);
 
 	ePowerUpType ConvertToPowerUpType(std::string aName);
+	eBulletType ConvertToBulletType(std::string aName);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 
