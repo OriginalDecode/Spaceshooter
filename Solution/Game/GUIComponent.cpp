@@ -23,8 +23,8 @@
 
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
+	, myEnemies(8)
 	, myWaypointActive(false)
-	, myEnemiesPosition(16)
 	, myCamera(nullptr)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
