@@ -68,3 +68,4 @@ Tools/ModelViewer/ModelViewer/obj/
 /Solution/Launcher/bin/Internal/Launcher.exe.config
 /Solution/DL_Debug/DL_Debug.vcxproj.user
 *.opensdf
+/fromLD
