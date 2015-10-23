@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
+#include "GUINote.h"
 #include "InputNote.h"
 #include <MathHelper.h>
 #include "PostMaster.h"
@@ -52,10 +53,7 @@ void ShootingComponent::Update(float aDeltaTime)
 			myPowerUpCoolDownReducer = 1.f;
 			myPowerUpDuration = 0.f;
 			myPowerUpValue = 0.f;
-		}
-		if (myPowerUpType == ePowerUpType::HOMING)
-		{
-
+			myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 		}
 	}
 }
@@ -127,6 +125,7 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 		myPowerUpDuration = aNote.myDuration;
 		myPowerUpType = aNote.myType;
 		myPowerUpValue = aNote.myValue;
+		myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 	}
 	else if (aNote.myType == ePowerUpType::FIRERATEBOOST)
 	{
@@ -190,4 +189,15 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 
 	myWeapons[aWeaponID].myID = aWeaponID;
 	myCurrentWeaponID = aWeaponID;
+}
+
+void ShootingComponent::SetCurrentWeaponID(int anID)
+{
+	myCurrentWeaponID = anID;
+
+	if (anID >= myWeapons.Size())
+	{
+		myCurrentWeaponID = myWeapons.Size() - 1;
+	}
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 }

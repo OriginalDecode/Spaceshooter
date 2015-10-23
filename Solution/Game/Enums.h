@@ -85,6 +85,7 @@ enum class eGUINoteType
 	ENEMY,
 	POWERUP,
 	STEERING_TARGET,
+	HOMING_TARGET
 };
 
 enum class eSoundNoteType

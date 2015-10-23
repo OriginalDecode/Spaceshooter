@@ -273,11 +273,14 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
 	}
 	
-	if (myClosestEnemy != nullptr)
+	if (myHasHomingWeapon == true)
 	{
-		CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true);
+		if (myClosestEnemy != nullptr)
+		{
+			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true);
+		}
+		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 	}
-	myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 
 	myEnemies.RemoveAll();
 	myPowerUpPositions.RemoveAll();
@@ -350,6 +353,9 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		break;
 	case eGUINoteType::STEERING_TARGET:
 		mySteeringTargetPosition = { aNote.myPosition.x, aNote.myPosition.y };
+		break;
+	case eGUINoteType::HOMING_TARGET:
+		myHasHomingWeapon = aNote.myIsHoming;
 		break;
 	default:
 		break;

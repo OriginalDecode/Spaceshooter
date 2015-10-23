@@ -63,16 +63,6 @@ inline eComponentType ShootingComponent::GetType()
 	return eComponentType::SHOOTING;
 }
 
-inline void ShootingComponent::SetCurrentWeaponID(int anID)
-{
-	myCurrentWeaponID = anID;
-	
-	if (anID >= myWeapons.Size())
-	{
-		myCurrentWeaponID = myWeapons.Size() - 1;
-	}
-}
-
 inline void ShootingComponent::ActivateEMP()
 {
 	myPowerUpValue = 1000.f;
