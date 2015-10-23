@@ -15,6 +15,7 @@
 #include "PropComponent.h"
 #include "ResizeMessage.h"
 #include "ShieldNote.h"
+#include "ShootingComponent.h"
 #include <sstream>
 #include <XMLReader.h>
 
@@ -23,7 +24,7 @@
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
-	, myEnemiesPosition(16)
+	, myEnemies(16)
 	, myReticle(new Prism::Model2D)
 	, mySteeringTarget(new Prism::Model2D)
 	, myCrosshair(new Prism::Model2D)
@@ -45,8 +46,10 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShieldBarGlow(new Prism::Model2D)
 	, myHitMarker(new Prism::Model2D)
 	, myDamageIndicator(new Prism::Model2D)
+	, myHomingTarget(new Prism::Model2D)
 	, myHitMarkerTimer(-1.f)
 	, myDamageIndicatorTimer(-1.f)
+	, myClosestEnemy(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -82,6 +85,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myHitMarker->Init("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds", { 256, 256 });
 	myDamageIndicator->Init("Data/Resource/Texture/UI/T_damage_indicator.dds", { float(Prism::Engine::GetInstance()->GetWindowSize().x)
 		, float(Prism::Engine::GetInstance()->GetWindowSize().y) });
+	myHomingTarget->Init("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", { 100.f, 100.f });
 }
 
 GUIComponent::~GUIComponent()
@@ -104,6 +108,7 @@ GUIComponent::~GUIComponent()
 	delete myDefendArrow;
 	delete myHitMarker;
 	delete myDamageIndicator;
+	delete myHomingTarget;
 	myReticle = nullptr;
 	myPowerUpArrow = nullptr;
 	myPowerUpMarker = nullptr;
@@ -118,6 +123,7 @@ GUIComponent::~GUIComponent()
 	myDefendMarker = nullptr;
 	myHitMarker = nullptr;
 	myDamageIndicator = nullptr;
+	myHomingTarget = nullptr;
 	delete myHealthBar;
 	myHealthBar = nullptr;
 
@@ -207,12 +213,18 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
 		}
 		aCurrentModel->Render(newRenderPos.x, newRenderPos.y);
+		if (aArrowModel == myEnemyArrow)
+		{
+			myClosestScreenPos.x = newRenderPos.x;
+			myClosestScreenPos.y = newRenderPos.y;
+		}
 	}
 }
 
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
-	//Prism::Engine::GetInstance()->EnableAlphaBlending();
+	myClosestEnemyLength = 100000.f;
+	myClosestEnemy = nullptr;
 
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	float halfHeight = aWindowSize.y * 0.5f;
@@ -235,12 +247,19 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);
 
-	for (int i = 0; i < myEnemiesPosition.Size(); ++i)
+	for (int i = 0; i < myEnemies.Size(); ++i)
 	{
-		if (CU::Length(myEnemiesPosition[i] - myCamera->GetOrientation().GetPos()) < myMaxDistanceToEnemies)
+		float lengthToEnemy = CU::Length(myEnemies[i]->myOrientation.GetPos() - myCamera->GetOrientation().GetPos());
+		if (lengthToEnemy < myMaxDistanceToEnemies)
 		{
-			CalculateAndRender(myEnemiesPosition[i], myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
-
+			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
+			CU::Vector2<float> enemyScreenPos = myClosestScreenPos;
+			float lengthFromMouseToEnemy = CU::Length(enemyScreenPos - CU::Vector2<float>(steeringPos.x, steeringPos.y));
+			if (lengthFromMouseToEnemy < myClosestEnemyLength)
+			{
+				myClosestEnemy = myEnemies[i];
+				myClosestEnemyLength = lengthFromMouseToEnemy;
+			}
 		}
 	}
 
@@ -253,8 +272,14 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	{
 		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
 	}
+	
+	if (myClosestEnemy != nullptr)
+	{
+		CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true);
+	}
+	myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 
-	myEnemiesPosition.RemoveAll();
+	myEnemies.RemoveAll();
 	myPowerUpPositions.RemoveAll();
 
 	for (int i = 0; i < myHealthBarCount; ++i)
@@ -299,6 +324,74 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	//Prism::Engine::GetInstance()->DisableAlpaBlending();
 }
 
+void GUIComponent::RenderHomingTarget(const CU::Vector2<int> aWindowSize)
+{
+	myClosestEnemyLength = 100000.f;
+	myClosestEnemy = nullptr;
+	float halfWidth = aWindowSize.x *0.5f;
+	float halfHeight = aWindowSize.y * 0.5f;
+	CU::Vector3<float> newRenderPos;
+
+	for (int i = 0; i < myEnemies.Size(); i++)
+	{
+		CU::Vector3<float> toTarget = myEnemies[i]->myOrientation.GetPos() - myCamera->GetOrientation().GetPos();
+		std::stringstream lengthToWaypoint;
+
+		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
+		if (CU::Length(toTarget) != 0)
+		{
+			CU::Normalize(toTarget);
+		}
+		if (CU::Length(forward) != 0)
+		{
+			CU::Normalize(forward);
+		}
+
+		float circleAroundPoint = (CU::Dot(toTarget, forward));
+
+		CU::Matrix44<float> renderPos;
+		renderPos.SetPos(myEnemies[i]->myOrientation.GetPos());
+		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
+		renderPos = renderPos * myCamera->GetProjection();
+
+		newRenderPos = renderPos.GetPos();
+		newRenderPos /= renderPos.GetPos4().w;
+
+		newRenderPos += 1.f;
+		newRenderPos *= 0.5f;
+		newRenderPos.x *= aWindowSize.x;
+		newRenderPos.y *= aWindowSize.y;
+		newRenderPos.y -= aWindowSize.y;
+
+		CU::Vector2<float> pos = { newRenderPos.x - halfWidth, newRenderPos.y - halfHeight };
+
+		float length = CU::Length(pos);
+		if (length < myClosestEnemyLength)
+		{
+			myClosestEnemyLength = length;
+			myClosestEnemy = myEnemies[i];
+		}
+	}
+
+	if (myClosestEnemy == nullptr)
+	{
+		return;
+	}
+
+	CU::Vector2<float> radius(halfWidth, halfHeight);
+	radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
+	float length = 0;
+	if (radius.x != 0 && radius.y != 0)
+	{
+		length = CU::Length(radius);
+	}
+
+	if (length < CIRCLERADIUS)
+	{
+		myHomingTarget->Render(newRenderPos.x, newRenderPos.y);
+	}
+}
+
 void GUIComponent::ReceiveNote(const MissionNote& aNote)
 {
 	if (aNote.myEvent == eMissionEvent::START && aNote.myType == eMissionType::WAYPOINT)
@@ -316,13 +409,13 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 	switch (aNote.myType)
 	{
 	case eGUINoteType::WAYPOINT:
-		myWaypointPosition = aNote.myPosition;
+		myWaypointPosition = aNote.myEntity->myOrientation.GetPos();
 		break;
 	case eGUINoteType::ENEMY:
-		myEnemiesPosition.Add(aNote.myPosition);
+		myEnemies.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::POWERUP:
-		myPowerUpPositions.Add(aNote.myPosition);
+		myPowerUpPositions.Add(aNote.myEntity->myOrientation.GetPos());
 		break;
 	case eGUINoteType::STEERING_TARGET:
 		mySteeringTargetPosition = { aNote.myPosition.x, aNote.myPosition.y };

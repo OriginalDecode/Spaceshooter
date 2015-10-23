@@ -25,6 +25,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myPowerUpValue(0.f)
 	, myPowerUpDuration(0.f)
 	, myPowerUpCoolDownReducer(1.f)
+	, myHomingTarget(nullptr)
 {
 }
 
@@ -51,6 +52,10 @@ void ShootingComponent::Update(float aDeltaTime)
 			myPowerUpCoolDownReducer = 1.f;
 			myPowerUpDuration = 0.f;
 			myPowerUpValue = 0.f;
+		}
+		if (myPowerUpType == ePowerUpType::HOMING)
+		{
+
 		}
 	}
 }
@@ -92,15 +97,8 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				orientation = rotation * orientation;
 				orientation.SetPos(pos);
 
-				bool isHoming = false;
-				if (myPowerUpType == ePowerUpType::HOMING)
-				{
-					isHoming = true;
-				}
-
 				PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
-					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity, 
-					(myPowerUpType == ePowerUpType::HOMING || myWeapons[myCurrentWeaponID].myIsHoming == true)));
+					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity, myHomingTarget));
 				myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 			}
 		}

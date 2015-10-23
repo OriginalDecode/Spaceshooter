@@ -38,11 +38,15 @@ public:
 
 	void SetCurrentWeaponID(int anID);
 
+	void SetHomingTarget(Entity* aTarget);
+
 	void ActivateEMP(); // test function
 
 private:
 
 	CU::GrowingArray<WeaponData, int> myWeapons;
+
+	Entity* myHomingTarget;
 
 	int myCurrentWeaponID;
 
@@ -73,6 +77,11 @@ inline void ShootingComponent::ActivateEMP()
 {
 	myPowerUpValue = 1000.f;
 	myPowerUpDuration = 5.f;
+}
+
+inline void ShootingComponent::SetHomingTarget(Entity* aTarget)
+{
+	myHomingTarget = aTarget;
 }
 
 inline eBulletType ConvertToBulletEnum(const std::string& aString)

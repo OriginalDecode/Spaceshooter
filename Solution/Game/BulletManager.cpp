@@ -57,7 +57,7 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetIsHoming());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetHomingTarget());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -148,7 +148,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
-	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, bool aIsHoming)
+	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, Entity* aHomingTarget)
 {
 
 	Entity* bullet = nullptr;
@@ -207,15 +207,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
 
-	if (aIsHoming == true)
+	if (aHomingTarget != nullptr)
 	{
-		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation, 2000.f); // replace this target lock
-		if (enemy != nullptr)
-		{
-			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity), 
-				eAITargetPositionMode::KAMIKAZE);
-			bullet->GetComponent<AIComponent>()->SetEntityToFollow(enemy);
-		}
+		bullet->AddComponent<AIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f), 
+			eAITargetPositionMode::KAMIKAZE);
+		bullet->GetComponent<AIComponent>()->SetEntityToFollow(aHomingTarget);
 	}
 
 	if (aEntityType == eEntityType::PLAYER)

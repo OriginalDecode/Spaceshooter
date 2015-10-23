@@ -6,13 +6,13 @@ class BulletMessage : public Message
 {
 public:
 	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, 
-		const CU::Vector3<float>& aEnitityVelocity, bool anIsHoming = false);
+		const CU::Vector3<float>& aEnitityVelocity, Entity* aHomingTarget = nullptr);
 
 	eBulletType GetBulletType() const;
 	eEntityType GetEntityType() const;
 	const CU::Matrix44<float>& GetOrientation() const;
 	const CU::Vector3<float>& GetEntityVelocity() const;
-	bool GetIsHoming() const;
+	Entity* GetHomingTarget() const;
 
 private:
 	void operator=(BulletMessage&) = delete;
@@ -20,7 +20,7 @@ private:
 	const eBulletType myType;
 	const eEntityType myEntityType;
 	const CU::Vector3<float> myEntityVelocity;
-	const bool myIsHoming;
+	Entity* myHomingTarget;
 };
 
 inline eBulletType BulletMessage::GetBulletType() const
@@ -43,7 +43,7 @@ inline const CU::Vector3<float>& BulletMessage::GetEntityVelocity() const
 	return myEntityVelocity;
 }
 
-inline bool BulletMessage::GetIsHoming() const
+inline Entity* BulletMessage::GetHomingTarget() const
 {
-	return myIsHoming;
+	return myHomingTarget;
 }

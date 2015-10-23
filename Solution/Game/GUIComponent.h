@@ -24,6 +24,8 @@ public:
 		, Prism::Model2D* aArrowModel, Prism::Model2D* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
 
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
+	
+	void RenderHomingTarget(const CU::Vector2<int> aWindowSize);
 
 	void SetCamera(Prism::Camera* aCamera);
 
@@ -43,6 +45,8 @@ public:
 
 	void Reset() override;
 
+	Entity* GetClosestEnemy();
+
 private:
 	Prism::Model2D* myReticle;
 	Prism::Model2D* myModel2DToRender;
@@ -56,6 +60,7 @@ private:
 	Prism::Model2D* mySteeringTarget;
 	Prism::Model2D* myHitMarker;
 	Prism::Model2D* myDamageIndicator;
+	Prism::Model2D* myHomingTarget;
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;
 
@@ -63,7 +68,10 @@ private:
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
 
-	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
+	CU::GrowingArray<Entity*> myEnemies;
+	Entity* myClosestEnemy;
+	CU::Vector2<float> myClosestScreenPos;
+	float myClosestEnemyLength;
 
 	Prism::Model2D* myPowerUpArrow;
 	Prism::Model2D* myPowerUpMarker;
@@ -107,4 +115,9 @@ inline eComponentType GUIComponent::GetType()
 inline void GUIComponent::SetCamera(Prism::Camera* aCamera)
 {
 	myCamera = aCamera;
+}
+
+inline Entity* GUIComponent::GetClosestEnemy()
+{
+	return myClosestEnemy;
 }

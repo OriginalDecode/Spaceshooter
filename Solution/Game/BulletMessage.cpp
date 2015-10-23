@@ -2,12 +2,12 @@
 #include "BulletMessage.h"
 
 BulletMessage::BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, 
-	const CU::Vector3<float>& aEnitityVelocity, bool anIsHoming)
+	const CU::Vector3<float>& aEnitityVelocity, Entity* aHomingTarget)
 	: myType(aType)
 	, myOrientation(anOrientation)
 	, myEntityType(aEntityType)
 	, myEntityVelocity(aEnitityVelocity)
-	, myIsHoming(anIsHoming)
+	, myHomingTarget(aHomingTarget)
 	, Message(eMessageType::ACTIVATE_BULLET)
 {
 }
