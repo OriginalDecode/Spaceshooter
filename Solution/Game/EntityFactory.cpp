@@ -18,6 +18,7 @@
 #include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
+#include "SoundComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -158,6 +159,11 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 			entityDocument.ReadAttribute(e, "zAxis", rotate);
 			newEntity.myEntity->SetShouldRotateZ(rotate);
 
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("SoundComponent").c_str()) == 0)
+		{
+			LoadSoundComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 
 		else
@@ -405,6 +411,13 @@ void EntityFactory::LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& 
 	}
 }
 
+void EntityFactory::LoadSoundComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aSoundComponent)
+{
+	aDocument;
+	aSoundComponent;
+	aEntityToAddTo.myEntity->AddComponent<SoundComponent>();
+}
+
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
 {
 	if (myEntities.find(aEntityTag) == myEntities.end())
@@ -486,8 +499,13 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		aTargetEntity->AddComponent<BulletComponent>();
 		if (it->second.myMaxTime > 0 && it->second.myDamage > 0)
 		{
-			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage, it->second.myDamageRadius);
+			eBulletType bulletType = ConvertToBulletType(sourceEntity->GetName());
+			aTargetEntity->GetComponent<BulletComponent>()->Init(it->second.myMaxTime, it->second.myDamage, it->second.myDamageRadius, bulletType);
 		}
+	}
+	if (sourceEntity->GetComponent<SoundComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<SoundComponent>();
 	}
 
 	if (sourceEntity->GetComponent<PowerUpComponent>() != nullptr)
@@ -553,4 +571,68 @@ ePowerUpType EntityFactory::ConvertToPowerUpType(std::string aName)
 	DL_ASSERT(errorMessage.c_str());
 	
 	return ePowerUpType::NO_POWERUP;
+}
+
+eBulletType EntityFactory::ConvertToBulletType(std::string aName) 
+{
+	std::string type = CU::ToLower(aName);
+	if (type == "machinegunbullet1") 
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_1;
+	}
+	else if (type == "machinegunbullet2")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_2;
+	}
+	else if (type == "machinegunbullet3")
+	{
+		return eBulletType::MACHINGUN_BULLET_LEVEL_3;
+	}
+	else if (type == "rocketmissile1")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_1;
+	}
+	else if (type == "rocketmissile2")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_2;
+	}
+	else if (type == "rocketmissile3")
+	{
+		return eBulletType::ROCKET_MISSILE_LEVEL_3;
+	}
+	else if (type == "shotgunbullet1")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_1;
+	}
+	else if (type == "shotgunbullet2")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_2;
+	}
+	else if (type == "shotgunbullet3")
+	{
+		return eBulletType::SHOTGUN_BULLET_LEVEL_3;
+	}
+	else if (type == "e_projectile_enemy_default")
+	{
+		return eBulletType::ENEMY_BULLET_DEFAULT;
+	}
+	else if (type == "e_projectile_enemy_fast")
+	{
+		return eBulletType::ENEMY_BULLET_FAST;
+	}
+	else if (type == "e_projectile_enemy_slow")
+	{
+		return eBulletType::ENEMY_BULLET_SLOW;
+	}
+	else if (type == "e_projectile_enemy_turret")
+	{
+		return eBulletType::ENEMY_BULLET_TURRET;
+	}
+	else if (type == "e_projectile_enemy_homing")
+	{
+		return eBulletType::ENEMY_BULLET_HOMING;
+	}
+	std::string errorText = "The bullet " + aName + " is not a supported bullet. Please contact a programmer to fix this!";
+	DL_ASSERT(errorText.c_str());
+	return eBulletType::COUNT;
 }

@@ -43,6 +43,8 @@ public:
 
 	void Reset() override;
 
+	Entity* GetClosestEnemy();
+
 private:
 	Prism::Sprite* myReticle;
 	Prism::Sprite* myModel2DToRender;
@@ -56,14 +58,20 @@ private:
 	Prism::Sprite* mySteeringTarget;
 	Prism::Sprite* myHitMarker;
 	Prism::Sprite* myDamageIndicator;
+	Prism::Sprite* myHomingTarget;
+	
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;
-
 
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
 
-	CU::GrowingArray<CU::Vector3<float>> myEnemiesPosition;
+	CU::GrowingArray<Entity*> myEnemies;
+
+	Entity* myClosestEnemy;
+	CU::Vector2<float> myClosestScreenPos;
+	float myClosestEnemyLength;
+	bool myHasHomingWeapon;
 
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
@@ -73,7 +81,6 @@ private:
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 
-
 	int myHealthBarCount;
 	int myShieldBarCount;
 
@@ -82,7 +89,6 @@ private:
 
 	Prism::Sprite* myHealthBarGlow;
 	Prism::Sprite* myShieldBarGlow;
-
 
 	CU::Vector2<float> myHealthBarRenderPosition;
 	CU::Vector2<float> myOriginalHealthBarRenderPosition;
@@ -107,4 +113,9 @@ inline eComponentType GUIComponent::GetType()
 inline void GUIComponent::SetCamera(Prism::Camera* aCamera)
 {
 	myCamera = aCamera;
+}
+
+inline Entity* GUIComponent::GetClosestEnemy()
+{
+	return myClosestEnemy;
 }

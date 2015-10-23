@@ -116,7 +116,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 		if (myEntities[i]->GetType() == eEntityType::ENEMY)
 		{
-			myPlayer->SendNote<GUINote>(GUINote(myEntities[i]->myOrientation.GetPos(), eGUINoteType::ENEMY));
+			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
 

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "AIComponent.h"
-#include <AudioInterface.h>
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -57,7 +56,7 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetIsHoming());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetHomingTarget());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -148,7 +147,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 }
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
-	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, bool aIsHoming)
+	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, Entity* aHomingTarget)
 {
 
 	Entity* bullet = nullptr;
@@ -160,29 +159,6 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	{
 		bullet = aWeaponData->myEnemyBullets[aWeaponData->myEnemyBulletCounter];
 	}
-
-	if (aEntityType == eEntityType::PLAYER)
-	{
-		if (aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
-			|| aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_2
-			|| aWeaponData->myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", bullet->GetAudioSFXID());
-		}
-		if (aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_1
-			|| aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_2
-			|| aWeaponData->myType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", bullet->GetAudioSFXID());
-		}
-		if (aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_1
-			|| aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_2
-			|| aWeaponData->myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", bullet->GetAudioSFXID());
-		}
-	}
-
 	DL_ASSERT_EXP(bullet != nullptr, "Non Player/Enemy cant activate bullets!");
 
 	if (bullet->GetComponent<BulletComponent>()->GetActive() == false)
@@ -207,15 +183,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
 
-	if (aIsHoming == true)
+	if (aHomingTarget != nullptr)
 	{
-		Entity* enemy = myCollisionManager.GetClosestEnemyWithinSphere(anOrientation, 2000.f); // replace this target lock
-		if (enemy != nullptr)
-		{
-			bullet->AddComponent<AIComponent>()->Init(CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity), 
-				eAITargetPositionMode::KAMIKAZE);
-			bullet->GetComponent<AIComponent>()->SetEntityToFollow(enemy);
-		}
+		bullet->AddComponent<AIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f), 
+			eAITargetPositionMode::KAMIKAZE);
+		bullet->GetComponent<AIComponent>()->SetEntityToFollow(aHomingTarget);
 	}
 
 	if (aEntityType == eEntityType::PLAYER)

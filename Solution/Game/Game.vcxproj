@@ -220,6 +220,7 @@
     <ClInclude Include="ShootingComponent.h" />
     <ClInclude Include="ShootNote.h" />
     <ClInclude Include="SoundComponent.h" />
+    <ClInclude Include="SoundNote.h" />
     <ClInclude Include="SpawnEnemyAction.h" />
     <ClInclude Include="SpawnEnemyMessage.h" />
     <ClInclude Include="EnqueueEventMessage.h" />

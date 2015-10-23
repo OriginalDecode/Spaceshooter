@@ -62,7 +62,7 @@ private:
 		const std::string& aProjectilePath);
 
 	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, 
-		const CU::Vector3<float>& aEnitityVelocity, bool aIsHoming);
+		const CU::Vector3<float>& aEnitityVelocity, Entity* aHomingTarget);
 	
 	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
 

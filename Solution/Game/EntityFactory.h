@@ -87,8 +87,10 @@ private:
 	void LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement);
 	void LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent);
 	void LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aEmitterComponent);
+	void LoadSoundComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aSoundComponent);
 
 	ePowerUpType ConvertToPowerUpType(std::string aName);
+	eBulletType ConvertToBulletType(std::string aName);
 
 	std::unordered_map<std::string, EntityData> myEntities;
 

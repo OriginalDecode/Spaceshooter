@@ -398,6 +398,9 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="EmitterManager.h" />
+    <ClInclude Include="SoundNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

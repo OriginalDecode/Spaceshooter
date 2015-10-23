@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
+#include "GUINote.h"
 #include "InputNote.h"
 #include <MathHelper.h>
 #include "PostMaster.h"
@@ -25,6 +26,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myPowerUpValue(0.f)
 	, myPowerUpDuration(0.f)
 	, myPowerUpCoolDownReducer(1.f)
+	, myHomingTarget(nullptr)
 {
 }
 
@@ -51,6 +53,7 @@ void ShootingComponent::Update(float aDeltaTime)
 			myPowerUpCoolDownReducer = 1.f;
 			myPowerUpDuration = 0.f;
 			myPowerUpValue = 0.f;
+			myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 		}
 	}
 }
@@ -92,15 +95,9 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				orientation = rotation * orientation;
 				orientation.SetPos(pos);
 
-				bool isHoming = false;
-				if (myPowerUpType == ePowerUpType::HOMING)
-				{
-					isHoming = true;
-				}
-
 				PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
-					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity, 
-					(myPowerUpType == ePowerUpType::HOMING || myWeapons[myCurrentWeaponID].myIsHoming == true)));
+					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+					, myPowerUpType == ePowerUpType::HOMING || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr ));
 				myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 			}
 		}
@@ -128,6 +125,7 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 		myPowerUpDuration = aNote.myDuration;
 		myPowerUpType = aNote.myType;
 		myPowerUpValue = aNote.myValue;
+		myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 	}
 	else if (aNote.myType == ePowerUpType::FIRERATEBOOST)
 	{
@@ -159,7 +157,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 		DL_ASSERT(errorMessage.c_str());
 	}
 
-	newWeapon.myID = static_cast<int>(newWeapon.myBulletType);
+	newWeapon.myID = myWeapons.Size();
 	myCurrentWeaponID = newWeapon.myID;
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
@@ -191,4 +189,15 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 
 	myWeapons[aWeaponID].myID = aWeaponID;
 	myCurrentWeaponID = aWeaponID;
+}
+
+void ShootingComponent::SetCurrentWeaponID(int anID)
+{
+	myCurrentWeaponID = anID;
+
+	if (anID >= myWeapons.Size())
+	{
+		myCurrentWeaponID = myWeapons.Size() - 1;
+	}
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 }

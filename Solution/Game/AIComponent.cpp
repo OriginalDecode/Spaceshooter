@@ -17,6 +17,7 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myPrevEntityToFollow(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+
 }
 
 AIComponent::~AIComponent()
@@ -45,6 +46,7 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myFollowingOffset = aAvoidancePoint;
 
 	myTargetPositionMode = aTargetPositionMode;
+
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
 
@@ -73,6 +75,8 @@ void AIComponent::Update(float aDeltaTime)
 	}
 
 	myVelocity = myPhysicsComponent->GetVelocity();
+
+
 	
 
 	if (myCanMove == true)

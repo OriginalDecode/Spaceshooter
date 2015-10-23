@@ -8,7 +8,7 @@ public:
 	BulletComponent(Entity& aEntity);
 	
 	void Update(float aDeltaTime) override;
-	void Init(float aMaxTime, int aDamage, float aDamageRadius);
+	void Init(float aMaxTime, int aDamage, float aDamageRadius, eBulletType aType);
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
@@ -35,11 +35,6 @@ inline eComponentType BulletComponent::GetType()
 inline void BulletComponent::SetMaxLifeTime(float aMaxTime)
 {
 	myMaxLifeTime = aMaxTime;
-}
-
-inline void BulletComponent::SetActive(bool aActive)
-{
-	myActive = aActive;
 }
 
 inline bool BulletComponent::GetActive() const
