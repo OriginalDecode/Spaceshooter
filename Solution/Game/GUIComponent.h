@@ -24,8 +24,6 @@ public:
 		, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
 
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
-	
-	void RenderHomingTarget(const CU::Vector2<int> aWindowSize);
 
 	void SetCamera(Prism::Camera* aCamera);
 
@@ -48,21 +46,6 @@ public:
 	Entity* GetClosestEnemy();
 
 private:
-<<<<<<< HEAD
-	Prism::Model2D* myReticle;
-	Prism::Model2D* myModel2DToRender;
-	Prism::Model2D* myEnemyArrow;
-	Prism::Model2D* myEnemyMarker;
-	Prism::Model2D* myWaypointMarker;
-	Prism::Model2D* myWaypointArrow;
-	Prism::Model2D* myDefendMarker;
-	Prism::Model2D* myDefendArrow;
-	Prism::Model2D* myCrosshair;
-	Prism::Model2D* mySteeringTarget;
-	Prism::Model2D* myHitMarker;
-	Prism::Model2D* myDamageIndicator;
-	Prism::Model2D* myHomingTarget;
-=======
 	Prism::Sprite* myReticle;
 	Prism::Sprite* myModel2DToRender;
 	Prism::Sprite* myEnemyArrow;
@@ -75,10 +58,10 @@ private:
 	Prism::Sprite* mySteeringTarget;
 	Prism::Sprite* myHitMarker;
 	Prism::Sprite* myDamageIndicator;
->>>>>>> 65621597537da5b9c530ff65ff0e070e4839f963
+	Prism::Sprite* myHomingTarget;
+	
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;
-
 
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
@@ -96,7 +79,6 @@ private:
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 
-
 	int myHealthBarCount;
 	int myShieldBarCount;
 
@@ -105,7 +87,6 @@ private:
 
 	Prism::Sprite* myHealthBarGlow;
 	Prism::Sprite* myShieldBarGlow;
-
 
 	CU::Vector2<float> myHealthBarRenderPosition;
 	CU::Vector2<float> myOriginalHealthBarRenderPosition;

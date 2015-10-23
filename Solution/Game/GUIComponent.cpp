@@ -24,17 +24,7 @@
 GUIComponent::GUIComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myWaypointActive(false)
-<<<<<<< HEAD
 	, myEnemies(16)
-	, myReticle(new Prism::Model2D)
-	, mySteeringTarget(new Prism::Model2D)
-	, myCrosshair(new Prism::Model2D)
-	, myEnemyMarker(new Prism::Model2D)
-	, myEnemyArrow(new Prism::Model2D)
-	, myWaypointArrow(new Prism::Model2D)
-	, myWaypointMarker(new Prism::Model2D)
-=======
-	, myEnemiesPosition(16)
 	, myReticle(new Prism::Sprite)
 	, mySteeringTarget(new Prism::Sprite)
 	, myCrosshair(new Prism::Sprite)
@@ -42,7 +32,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myEnemyArrow(new Prism::Sprite)
 	, myWaypointArrow(new Prism::Sprite)
 	, myWaypointMarker(new Prism::Sprite)
->>>>>>> 65621597537da5b9c530ff65ff0e070e4839f963
 	, myCamera(nullptr)
 	, myPowerUpArrow(new Prism::Sprite)
 	, myPowerUpMarker(new Prism::Sprite)
@@ -51,22 +40,13 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpPositions(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
-<<<<<<< HEAD
-	, myHealthBar(new Prism::Model2D)
-	, myShieldBar(new Prism::Model2D)
-	, myHealthBarGlow(new Prism::Model2D)
-	, myShieldBarGlow(new Prism::Model2D)
-	, myHitMarker(new Prism::Model2D)
-	, myDamageIndicator(new Prism::Model2D)
-	, myHomingTarget(new Prism::Model2D)
-=======
+	, myHomingTarget(new Prism::Sprite)
 	, myHealthBar(new Prism::Sprite)
 	, myShieldBar(new Prism::Sprite)
 	, myHealthBarGlow(new Prism::Sprite)
 	, myShieldBarGlow(new Prism::Sprite)
 	, myHitMarker(new Prism::Sprite)
 	, myDamageIndicator(new Prism::Sprite)
->>>>>>> 65621597537da5b9c530ff65ff0e070e4839f963
 	, myHitMarkerTimer(-1.f)
 	, myDamageIndicatorTimer(-1.f)
 	, myClosestEnemy(nullptr)
@@ -146,7 +126,6 @@ GUIComponent::~GUIComponent()
 	myHomingTarget = nullptr;
 	delete myHealthBar;
 	myHealthBar = nullptr;
-
 }
 
 void GUIComponent::Init(float aMaxDistanceToEnemies)
@@ -341,75 +320,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
-	//Prism::Engine::GetInstance()->DisableAlpaBlending();
-}
-
-void GUIComponent::RenderHomingTarget(const CU::Vector2<int> aWindowSize)
-{
-	myClosestEnemyLength = 100000.f;
-	myClosestEnemy = nullptr;
-	float halfWidth = aWindowSize.x *0.5f;
-	float halfHeight = aWindowSize.y * 0.5f;
-	CU::Vector3<float> newRenderPos;
-
-	for (int i = 0; i < myEnemies.Size(); i++)
-	{
-		CU::Vector3<float> toTarget = myEnemies[i]->myOrientation.GetPos() - myCamera->GetOrientation().GetPos();
-		std::stringstream lengthToWaypoint;
-
-		CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
-		if (CU::Length(toTarget) != 0)
-		{
-			CU::Normalize(toTarget);
-		}
-		if (CU::Length(forward) != 0)
-		{
-			CU::Normalize(forward);
-		}
-
-		float circleAroundPoint = (CU::Dot(toTarget, forward));
-
-		CU::Matrix44<float> renderPos;
-		renderPos.SetPos(myEnemies[i]->myOrientation.GetPos());
-		renderPos = renderPos * CU::InverseSimple(myCamera->GetOrientation());
-		renderPos = renderPos * myCamera->GetProjection();
-
-		newRenderPos = renderPos.GetPos();
-		newRenderPos /= renderPos.GetPos4().w;
-
-		newRenderPos += 1.f;
-		newRenderPos *= 0.5f;
-		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y *= aWindowSize.y;
-		newRenderPos.y -= aWindowSize.y;
-
-		CU::Vector2<float> pos = { newRenderPos.x - halfWidth, newRenderPos.y - halfHeight };
-
-		float length = CU::Length(pos);
-		if (length < myClosestEnemyLength)
-		{
-			myClosestEnemyLength = length;
-			myClosestEnemy = myEnemies[i];
-		}
-	}
-
-	if (myClosestEnemy == nullptr)
-	{
-		return;
-	}
-
-	CU::Vector2<float> radius(halfWidth, halfHeight);
-	radius = CU::Vector2<float>(newRenderPos.x, -newRenderPos.y) - radius;
-	float length = 0;
-	if (radius.x != 0 && radius.y != 0)
-	{
-		length = CU::Length(radius);
-	}
-
-	if (length < CIRCLERADIUS)
-	{
-		myHomingTarget->Render(newRenderPos.x, newRenderPos.y);
-	}
 }
 
 void GUIComponent::ReceiveNote(const MissionNote& aNote)
@@ -517,17 +427,11 @@ void GUIComponent::ReadXML()
 
 	reader.CloseDocument();
 
-
-
-	//myHealthBarRenderPosition = myOriginalHealthBarRenderPosition;
-	//myShieldBarRenderPosition = myOriginalShieldBarRenderPosition;
-
 	float offset = Prism::Engine::GetInstance()->GetWindowSize().y /
 		static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
 
 
 	myBarSize = (myOriginalBarSize * offset);
-
 }
 
 void GUIComponent::Reset()
