@@ -8,7 +8,15 @@ namespace CommonUtilities
 {
 	typedef Vector3<float> Vector3f;
 	template <typename T>
-	Vector3<T>::Vector3(T aX = 0, T aY = 0, T aZ = 0)
+	Vector3<T>::Vector3()
+	{
+		x = 0;
+		y = 0;
+		z = 0;
+	}
+
+	template <typename T>
+	Vector3<T>::Vector3(T aX, T aY, T aZ)
 	{
 		x = aX;
 		y = aY;
