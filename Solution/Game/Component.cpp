@@ -50,6 +50,10 @@ void Component::ReceiveNote(const ShieldNote&)
 {
 }
 
+void Component::ReceiveNote(const SoundNote&)
+{
+}
+
 void Component::Reset()
 {
 }

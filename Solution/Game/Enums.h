@@ -82,6 +82,12 @@ enum class eGUINoteType
 	STEERING_TARGET,
 };
 
+enum class eSoundNoteType
+{
+	PLAY,
+	STOP
+};
+
 enum class eComponentType
 {
 	NOT_USED,
