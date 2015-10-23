@@ -16,6 +16,10 @@ SoundComponent::SoundComponent(Entity& aEntity)
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Thrusters", myAudioSFXID);
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ThrusterBoost", myAudioSFXID);
 	}
+	else if (myEntity.GetType() == eEntityType::ENEMY)
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_EnemyThruster", myAudioSFXID);
+	}
 }
 
 
@@ -25,6 +29,10 @@ SoundComponent::~SoundComponent()
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Thrusters", myAudioSFXID);
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_ThrusterBoost", myAudioSFXID);
+	}
+	else if (myEntity.GetType() == eEntityType::ENEMY)
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_EnemyThruster", myAudioSFXID);
 	}
 
 	Prism::Audio::AudioInterface::GetInstance()->UnRegisterObject(myAudioSFXID);

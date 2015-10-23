@@ -160,6 +160,11 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 			newEntity.myEntity->SetShouldRotateZ(rotate);
 
 		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("SoundComponent").c_str()) == 0)
+		{
+			LoadSoundComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
+		}
 
 		else
 		{
@@ -235,7 +240,6 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 {
 	aEntityToAddTo.myDamageRadius = 0.f;
 	aEntityToAddTo.myEntity->AddComponent<BulletComponent>();
-	aEntityToAddTo.myEntity->AddComponent<SoundComponent>();
 	for (tinyxml2::XMLElement* e = aBulletComponentElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("lifeTime").c_str()) == 0)
@@ -405,6 +409,13 @@ void EntityFactory::LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& 
 			aDocument.ForceReadAttribute(e, "src", aEntityToAddTo.myEmitterXMLPath);
 		}
 	}
+}
+
+void EntityFactory::LoadSoundComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aSoundComponent)
+{
+	aDocument;
+	aSoundComponent;
+	aEntityToAddTo.myEntity->AddComponent<SoundComponent>();
 }
 
 void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag)
