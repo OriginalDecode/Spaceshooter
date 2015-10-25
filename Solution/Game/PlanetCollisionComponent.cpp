@@ -10,7 +10,7 @@ PlanetCollisionComponent::PlanetCollisionComponent(Entity& aEntity)
 	myCollisionType = eCollisionType::PLANET;
 }
 
-void PlanetCollisionComponent::Init(float someRadius)
+void PlanetCollisionComponent::Init(float)
 {
 	myOuterSphere.myCenterPosition = myEntity.myOrientation.GetPos();
 	myInnerSphere.myCenterPosition = myEntity.myOrientation.GetPos();
@@ -22,7 +22,7 @@ void PlanetCollisionComponent::Init(float someRadius)
 	myInnerSphere.myRadiusSquared = myInnerSphere.myRadius * myInnerSphere.myRadius;
 }
 
-void PlanetCollisionComponent::Update(float aDeltaTime)
+void PlanetCollisionComponent::Update(float)
 {
 	myOuterSphere.myCenterPosition = myEntity.myOrientation.GetPos();
 	myInnerSphere.myCenterPosition = myEntity.myOrientation.GetPos();
