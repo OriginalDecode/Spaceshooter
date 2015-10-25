@@ -139,6 +139,7 @@ void Game::UnPause()
 
 void Game::OnResize(int aWidth, int aHeight)
 {
+	Prism::Engine::GetInstance()->OnResize(aWidth, aHeight);
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
 	myStateStack.OnResizeCurrentState(aWidth, aHeight);

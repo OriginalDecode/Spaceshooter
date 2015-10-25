@@ -199,7 +199,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 void OnResize()
 {
 	globalGame->OnResize(globalClientWidth, globalClientHeight);
-	Prism::Engine::GetInstance()->OnResize(globalClientWidth, globalClientHeight);
 }
 
 void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)

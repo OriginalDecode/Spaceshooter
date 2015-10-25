@@ -39,13 +39,13 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
 	}
 	
+	OnResize();
+
 	myBackground = new Prism::Sprite(picPath, mySize, mySize / 2.f);
 
 	myHoverBackground = new Prism::Sprite(picHoveredPath, mySize, mySize / 2.f);
 
 	myIsHovered = false;
-
-	OnResize();
 }
 
 Button::~Button()
@@ -94,7 +94,4 @@ void Button::OnResize()
 
 	// ger lite weird resultat
 	mySize = myOriginalSize * resolutionOffset;
-
-	myBackground->SetSize(mySize);
-	myHoverBackground->SetSize(mySize);
 }
