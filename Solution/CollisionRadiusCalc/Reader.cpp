@@ -16,7 +16,9 @@ void Reader::ReadFile(const std::string& aFilePath)
 		float distance = CalcMaxDistance(vertices);
 		distance /= 100;
 
-		DL_ASSERT_EXP(distance < 1000, " FBX too huge (vertex position failed).");
+		auto planetPos = aFilePath.find("planet");
+
+		DL_ASSERT_EXP(distance < 1000 || planetPos != std::string::npos, " FBX too huge (vertex position failed).");
 
 		WriteXml(aFilePath, distance);
 	}
