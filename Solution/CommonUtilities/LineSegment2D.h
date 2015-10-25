@@ -1,14 +1,14 @@
 #pragma once
 #include "Vector.h"
-namespace CommonUtilities
+namespace CU
 {
 	namespace Intersection
 	{
 		class LineSegment2D
 		{
 		public:
-			CommonUtilities::Vector2<float> myStartPos;
-			CommonUtilities::Vector2<float> myEndPos;
+			CU::Vector2<float> myStartPos;
+			CU::Vector2<float> myEndPos;
 		};
 	}
 }

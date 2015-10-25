@@ -1,16 +1,16 @@
 #pragma once
 #include "Vector.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace Intersection
 	{
 		struct AABB
 		{
-			CommonUtilities::Vector3<float> myCenterPos;
-			CommonUtilities::Vector3<float> myExtents;
-			CommonUtilities::Vector3<float> myMinPos;
-			CommonUtilities::Vector3<float> myMaxPos;
+			CU::Vector3<float> myCenterPos;
+			CU::Vector3<float> myExtents;
+			CU::Vector3<float> myMinPos;
+			CU::Vector3<float> myMaxPos;
 		};
 	}
 }

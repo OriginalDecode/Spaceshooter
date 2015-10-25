@@ -4,7 +4,7 @@
 #include "StateStack.h"
 #include "Subscriber.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

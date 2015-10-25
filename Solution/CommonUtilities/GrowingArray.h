@@ -6,7 +6,7 @@
 #define GA_TEMPLATE template<typename ObjectType, typename SizeType = int>
 #define GA_TYPE GrowingArray<ObjectType, SizeType>
 
-namespace CommonUtilities
+namespace CU
 {
 
 	GA_TEMPLATE
@@ -62,9 +62,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CU = CommonUtilities;
-
-namespace CommonUtilities
+namespace CU
 {
 	GA_TEMPLATE
 	inline GA_TYPE::GrowingArray()

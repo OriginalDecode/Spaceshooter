@@ -5,24 +5,24 @@
 #include "TimerManager.h"
 #include <Windows.h>
 
-CommonUtilities::TimerManager* CommonUtilities::TimerManager::myInstance = nullptr;
+CU::TimerManager* CU::TimerManager::myInstance = nullptr;
 
-void CommonUtilities::TimerManager::Create()
+void CU::TimerManager::Create()
 {
 	myInstance = new TimerManager();
 }
 
-void CommonUtilities::TimerManager::Destroy()
+void CU::TimerManager::Destroy()
 {
 	delete myInstance;
 }
 
-CommonUtilities::TimerManager* CommonUtilities::TimerManager::GetInstance()
+CU::TimerManager* CU::TimerManager::GetInstance()
 {
 	return myInstance;
 }
 
-CommonUtilities::TimerManager::TimerManager()
+CU::TimerManager::TimerManager()
 {
 	LARGE_INTEGER largeInteger;
 	QueryPerformanceFrequency(&largeInteger);
@@ -33,11 +33,11 @@ CommonUtilities::TimerManager::TimerManager()
 }
 
 
-CommonUtilities::TimerManager::~TimerManager()
+CU::TimerManager::~TimerManager()
 {
 }
 
-void CommonUtilities::TimerManager::Update()
+void CU::TimerManager::Update()
 {
 	TimeUnit time = GetTime();
 
@@ -52,7 +52,7 @@ void CommonUtilities::TimerManager::Update()
 	myLastTime += time;
 }
 
-void CommonUtilities::TimerManager::StartTimer(const std::string& aName)
+void CU::TimerManager::StartTimer(const std::string& aName)
 {
 	LARGE_INTEGER current;
 	QueryPerformanceCounter(&current);
@@ -60,7 +60,7 @@ void CommonUtilities::TimerManager::StartTimer(const std::string& aName)
 	myTimers[aName] = current.QuadPart * 1000000 / myFrequency;
 }
 
-CommonUtilities::Time CommonUtilities::TimerManager::StopTimer(const std::string& aName)
+CU::Time CU::TimerManager::StopTimer(const std::string& aName)
 {
 	if (myTimers.find(aName) == myTimers.end())
 		return Time(0, 0);
@@ -73,12 +73,12 @@ CommonUtilities::Time CommonUtilities::TimerManager::StopTimer(const std::string
 	return Time(resultTime, 0);
 }
 
-const CommonUtilities::Timer& CommonUtilities::TimerManager::GetMasterTimer() const
+const CU::Timer& CU::TimerManager::GetMasterTimer() const
 {
 	return myMasterTimer;
 }
 
-CommonUtilities::TimeUnit CommonUtilities::TimerManager::GetTime()
+CU::TimeUnit CU::TimerManager::GetTime()
 {
 	LARGE_INTEGER current;
 	QueryPerformanceCounter(&current);
@@ -86,21 +86,21 @@ CommonUtilities::TimeUnit CommonUtilities::TimerManager::GetTime()
 	return (current.QuadPart * 1000000 / myFrequency) - myLastTime;
 }
 
-CommonUtilities::TimerHandle CommonUtilities::TimerManager::CreateTimer()
+CU::TimerHandle CU::TimerManager::CreateTimer()
 {
 	myTimerList.push_back(Timer());
 	return myTimerList.size() - 1;
 }
 
 
-const CommonUtilities::Timer& CommonUtilities::TimerManager::GetTimer(CommonUtilities::TimerHandle aId) const
+const CU::Timer& CU::TimerManager::GetTimer(CU::TimerHandle aId) const
 {
 	assert(aId < myTimerList.size() && "GetTimer handle out of bounds.");
 	return myTimerList[aId];
 }
 
 
-void CommonUtilities::TimerManager::PauseAll()
+void CU::TimerManager::PauseAll()
 {
 	for (unsigned int i = 0; i < myTimerList.size(); ++i)
 	{
@@ -108,7 +108,7 @@ void CommonUtilities::TimerManager::PauseAll()
 	}
 }
 
-void CommonUtilities::TimerManager::StartAll()
+void CU::TimerManager::StartAll()
 {
 	for (unsigned int i = 0; i < myTimerList.size(); ++i)
 	{

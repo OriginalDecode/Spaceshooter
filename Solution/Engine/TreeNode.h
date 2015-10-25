@@ -3,7 +3,7 @@
 #include <GrowingArray.h>
 #include <Vector.h>
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace Intersection
 	{
@@ -42,7 +42,7 @@ namespace Prism
 		CU::Vector3<float> GetMinCorner() const;
 		CU::Vector3<float> GetMaxCorner() const;
 		TreeNode* SpawnChild(int anId);
-		bool NodeVsAABB(const CommonUtilities::Intersection::AABB& aAABB) const;
+		bool NodeVsAABB(const CU::Intersection::AABB& aAABB) const;
 		bool CheckEnclosed(Instance* anObject) const;
 		void InsertObjectUp(Instance* anObject);
 

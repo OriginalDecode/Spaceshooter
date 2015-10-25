@@ -8,26 +8,26 @@
 #include "Line.h"
 
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace Intersection
 	{
 		//2D
-		bool LineVsLine(LineSegment2D aLine1, LineSegment2D aLine2, CommonUtilities::Vector2<float>& aIntersectionPoint);
+		bool LineVsLine(LineSegment2D aLine1, LineSegment2D aLine2, CU::Vector2<float>& aIntersectionPoint);
 		bool PointVsRect(Vector2<float> aPoint, Vector2<float> aRectTopLeft, Vector2<float> aRectBottomRight);
 		bool CircleVsCircle(Vector2<float> aCenter1, float aRadius1, Vector2<float> aCenter2, float aRadius2);
 		bool CircleVsRect(Vector2<float> aCenter, float aRadius, Vector2<float> aRectTopLeft, Vector2<float> aRectBottomRight);
 
 		//3D
 		bool AABBvsAABB(const Vector3<float>& aMin1, const Vector3<float>& aMax1, const Vector3<float>& aMin2, const Vector3<float>& aMax2);
-		bool PointInsideSphere(Sphere aSphere, CommonUtilities::Vector3<float> aPoint);
+		bool PointInsideSphere(Sphere aSphere, CU::Vector3<float> aPoint);
 		bool SphereVsSphere(Sphere aSphere, Sphere aOtherSphere);
-		bool PointInsideAABB(AABB aAABB, CommonUtilities::Vector3<float> aPoint);
-		bool LineVsSphere(LineSegment3D aLineSegment3D, Sphere aSphere, CommonUtilities::Vector3<float>& aIntersectionPoint);
-		int PlaneVsSphere(CommonUtilities::Plane<float> aPlane, Sphere aSphere);
+		bool PointInsideAABB(AABB aAABB, CU::Vector3<float> aPoint);
+		bool LineVsSphere(LineSegment3D aLineSegment3D, Sphere aSphere, CU::Vector3<float>& aIntersectionPoint);
+		int PlaneVsSphere(CU::Plane<float> aPlane, Sphere aSphere);
 		bool SwepthSphereVsSphere(LineSegment3D aLineSegment3D, float aRadius, Sphere aSphere);
 		bool SwepthSphereVsAABB(LineSegment3D aLineSegment3D, float aRadius, AABB aAABB);
-		bool LineVsAABB(LineSegment3D aLineSegment3D, AABB aAABB, CommonUtilities::Vector3<float>& aIntersectoinPoint);
+		bool LineVsAABB(LineSegment3D aLineSegment3D, AABB aAABB, CU::Vector3<float>& aIntersectoinPoint);
 		double perpDot(const CU::Vector2<float>& a, const CU::Vector2<float>& b);
 	}
 
@@ -56,10 +56,10 @@ namespace CommonUtilities
 		return PointVsRect(aCenter, Vector2<float>(aRectTopLeft.x - aRadius, aRectTopLeft.y - aRadius), Vector2<float>(aRectBottomRight.x + aRadius, aRectBottomRight.y + aRadius));
 	}
 
-	inline bool Intersection::LineVsLine(LineSegment2D aLine1, LineSegment2D aLine2, CommonUtilities::Vector2<float>& aIntersectionPoint)
+	inline bool Intersection::LineVsLine(LineSegment2D aLine1, LineSegment2D aLine2, CU::Vector2<float>& aIntersectionPoint)
 	{
-		CommonUtilities::Line<float> line1(aLine1.myStartPos, aLine1.myEndPos);
-		CommonUtilities::Line<float> line2(aLine2.myStartPos, aLine2.myEndPos); 
+		CU::Line<float> line1(aLine1.myStartPos, aLine1.myEndPos);
+		CU::Line<float> line2(aLine2.myStartPos, aLine2.myEndPos); 
 
 
 		float numX = line2.myABC.y * line1.myABC.z - line1.myABC.y * line2.myABC.z;
@@ -77,38 +77,38 @@ namespace CommonUtilities
 
 			// check segment overlap
 
-			CommonUtilities::Vector2<float> dir1 = aLine1.myEndPos - aLine1.myStartPos;
-			CommonUtilities::Vector2<float> dir2 = aLine2.myEndPos - aLine2.myStartPos;
+			CU::Vector2<float> dir1 = aLine1.myEndPos - aLine1.myStartPos;
+			CU::Vector2<float> dir2 = aLine2.myEndPos - aLine2.myStartPos;
 
-			float lengthDir1 = CommonUtilities::Length(dir1);
+			float lengthDir1 = CU::Length(dir1);
 			dir1 /= lengthDir1;
 
-			float lengthDir2 = CommonUtilities::Length(dir2);
+			float lengthDir2 = CU::Length(dir2);
 			dir2 /= lengthDir2;
 
-			if (CommonUtilities::Dot(dir1, aLine2.myEndPos - aLine1.myStartPos) < lengthDir1 &&
-				CommonUtilities::Dot(dir1, aLine2.myEndPos - aLine1.myStartPos) > 0)
+			if (CU::Dot(dir1, aLine2.myEndPos - aLine1.myStartPos) < lengthDir1 &&
+				CU::Dot(dir1, aLine2.myEndPos - aLine1.myStartPos) > 0)
 			{
 				aIntersectionPoint = aLine2.myEndPos;
 				return true;
 			}
 
-			if (CommonUtilities::Dot(dir1, aLine2.myStartPos - aLine1.myStartPos) < lengthDir1 &&
-				CommonUtilities::Dot(dir1, aLine2.myStartPos - aLine1.myStartPos) > 0)
+			if (CU::Dot(dir1, aLine2.myStartPos - aLine1.myStartPos) < lengthDir1 &&
+				CU::Dot(dir1, aLine2.myStartPos - aLine1.myStartPos) > 0)
 			{
 				aIntersectionPoint = aLine2.myStartPos;
 				return true;
 			}
 
-			if (CommonUtilities::Dot(dir2, aLine1.myEndPos - aLine2.myStartPos) < lengthDir2 &&
-				CommonUtilities::Dot(dir2, aLine1.myEndPos - aLine2.myStartPos) > 0)
+			if (CU::Dot(dir2, aLine1.myEndPos - aLine2.myStartPos) < lengthDir2 &&
+				CU::Dot(dir2, aLine1.myEndPos - aLine2.myStartPos) > 0)
 			{
 				aIntersectionPoint = aLine1.myEndPos;
 				return true;
 			}
 
-			if (CommonUtilities::Dot(dir2, aLine1.myStartPos - aLine2.myStartPos) < lengthDir2 &&
-				CommonUtilities::Dot(dir2, aLine1.myStartPos - aLine2.myStartPos) > 0)
+			if (CU::Dot(dir2, aLine1.myStartPos - aLine2.myStartPos) < lengthDir2 &&
+				CU::Dot(dir2, aLine1.myStartPos - aLine2.myStartPos) > 0)
 			{
 				aIntersectionPoint = aLine1.myStartPos;
 				return true;
@@ -117,23 +117,23 @@ namespace CommonUtilities
 			return false;
 		}
 
-		aIntersectionPoint = CommonUtilities::Vector2<float>(numX / denX, numY / denY);
+		aIntersectionPoint = CU::Vector2<float>(numX / denX, numY / denY);
 
 
-		CommonUtilities::Vector2<float> v1(aLine1.myEndPos - aLine1.myStartPos);
+		CU::Vector2<float> v1(aLine1.myEndPos - aLine1.myStartPos);
 
-		CommonUtilities::Vector2<float> v1intersect(aIntersectionPoint - aLine1.myStartPos);
+		CU::Vector2<float> v1intersect(aIntersectionPoint - aLine1.myStartPos);
 
-		if (CommonUtilities::Dot(v1, v1intersect) < 0 || CommonUtilities::Length2(v1intersect) > CommonUtilities::Length2(v1))
+		if (CU::Dot(v1, v1intersect) < 0 || CU::Length2(v1intersect) > CU::Length2(v1))
 		{
 			return false;
 		}
 
-		CommonUtilities::Vector2<float> v2(aLine2.myEndPos - aLine2.myStartPos);
+		CU::Vector2<float> v2(aLine2.myEndPos - aLine2.myStartPos);
 
-		CommonUtilities::Vector2<float> v2intersect(aIntersectionPoint - aLine2.myStartPos);
+		CU::Vector2<float> v2intersect(aIntersectionPoint - aLine2.myStartPos);
 
-		if (CommonUtilities::Dot(v2, v2intersect) < 0 || CommonUtilities::Length2(v2intersect) > CommonUtilities::Length2(v2))
+		if (CU::Dot(v2, v2intersect) < 0 || CU::Length2(v2intersect) > CU::Length2(v2))
 		{
 			return false;
 		}
@@ -153,9 +153,9 @@ namespace CommonUtilities
 		return true;
 	}
 
-	inline bool Intersection::PointInsideSphere(Sphere aSphere, CommonUtilities::Vector3<float> aPoint)
+	inline bool Intersection::PointInsideSphere(Sphere aSphere, CU::Vector3<float> aPoint)
 	{
-		if (CommonUtilities::Length2(aPoint - aSphere.myCenterPosition) < aSphere.myRadiusSquared)
+		if (CU::Length2(aPoint - aSphere.myCenterPosition) < aSphere.myRadiusSquared)
 		{
 			return true;
 		}
@@ -172,7 +172,7 @@ namespace CommonUtilities
 		return false;
 	}
 
-	inline bool Intersection::PointInsideAABB(AABB aAABB, CommonUtilities::Vector3<float> aPoint)
+	inline bool Intersection::PointInsideAABB(AABB aAABB, CU::Vector3<float> aPoint)
 	{
 		if (aPoint.x > aAABB.myMaxPos.x) return false;
 		if (aPoint.x < aAABB.myMinPos.x) return false;
@@ -184,14 +184,14 @@ namespace CommonUtilities
 		return true;
 	}
 
-	inline bool Intersection::LineVsSphere(LineSegment3D aLineSegment3D, Sphere aSphere, CommonUtilities::Vector3<float>& aIntersectionPoint)
+	inline bool Intersection::LineVsSphere(LineSegment3D aLineSegment3D, Sphere aSphere, CU::Vector3<float>& aIntersectionPoint)
 	{
-		CommonUtilities::Vector3<float> d = aLineSegment3D.myEndPos - aLineSegment3D.myStartPos;
-		CommonUtilities::Normalize(d);
-		CommonUtilities::Vector3<float> e = aSphere.myCenterPosition - aLineSegment3D.myStartPos;
-		float a = CommonUtilities::Dot(e, d);
+		CU::Vector3<float> d = aLineSegment3D.myEndPos - aLineSegment3D.myStartPos;
+		CU::Normalize(d);
+		CU::Vector3<float> e = aSphere.myCenterPosition - aLineSegment3D.myStartPos;
+		float a = CU::Dot(e, d);
 
-		float fSquared = aSphere.myRadiusSquared - CommonUtilities::Dot(e, e) + a * a;
+		float fSquared = aSphere.myRadiusSquared - CU::Dot(e, e) + a * a;
 		if (fSquared < 0)
 		{
 			return false;
@@ -200,7 +200,7 @@ namespace CommonUtilities
 		float t = a - sqrt(fSquared);
 		aIntersectionPoint = aLineSegment3D.myStartPos + d * t;
 
-		if (t*t > CommonUtilities::Length2(aLineSegment3D.myEndPos - aLineSegment3D.myStartPos))
+		if (t*t > CU::Length2(aLineSegment3D.myEndPos - aLineSegment3D.myStartPos))
 		{
 			return false;
 		}
@@ -208,9 +208,9 @@ namespace CommonUtilities
 		return true;
 	}
 
-	inline int Intersection::PlaneVsSphere(CommonUtilities::Plane<float> aPlane, Sphere aSphere)
+	inline int Intersection::PlaneVsSphere(CU::Plane<float> aPlane, Sphere aSphere)
 	{
-		float d = CommonUtilities::Dot(aPlane.GetNormal(), aSphere.myCenterPosition) - aPlane.myABCD.myW;
+		float d = CU::Dot(aPlane.GetNormal(), aSphere.myCenterPosition) - aPlane.myABCD.myW;
 
 		if (d >= aSphere.myRadius)
 		{
@@ -228,7 +228,7 @@ namespace CommonUtilities
 	{
 		aSphere.myRadius += aRadius;
 		aSphere.myRadiusSquared = aSphere.myRadius * aSphere.myRadius;
-		CommonUtilities::Vector3<float> intersectionPoint;
+		CU::Vector3<float> intersectionPoint;
 		return LineVsSphere(aLineSegment3D, aSphere, intersectionPoint);
 	}
 
@@ -236,14 +236,14 @@ namespace CommonUtilities
 	{
 		aAABB.myMinPos -= aRadius;
 		aAABB.myMaxPos += aRadius;
-		CommonUtilities::Vector3<float> intersectionPoint;
+		CU::Vector3<float> intersectionPoint;
 		return LineVsAABB(aLineSegment3D, aAABB, intersectionPoint);
 	}
 
-	inline bool Intersection::LineVsAABB(LineSegment3D aLineSegment3D, AABB aAABB, CommonUtilities::Vector3<float>& aIntersectoinPoint)
+	inline bool Intersection::LineVsAABB(LineSegment3D aLineSegment3D, AABB aAABB, CU::Vector3<float>& aIntersectoinPoint)
 	{
-		CommonUtilities::Vector3<float> rayOrg = aLineSegment3D.myStartPos;
-		CommonUtilities::Vector3<float> rayDelta = aLineSegment3D.myEndPos - aLineSegment3D.myStartPos;
+		CU::Vector3<float> rayOrg = aLineSegment3D.myStartPos;
+		CU::Vector3<float> rayDelta = aLineSegment3D.myEndPos - aLineSegment3D.myStartPos;
 
 		bool inside = true;
 

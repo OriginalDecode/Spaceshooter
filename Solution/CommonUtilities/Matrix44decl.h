@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CommonUtilities
+namespace CU
 {
 	template<typename T>
 
@@ -27,16 +27,16 @@ namespace CommonUtilities
 		//void SetRotation2D(T aRadian);
 
 
-		void SetPos(const CommonUtilities::Vector3<T>& aPos);
-		void SetPos(const CommonUtilities::Vector4<T>& aPos);
+		void SetPos(const CU::Vector3<T>& aPos);
+		void SetPos(const CU::Vector4<T>& aPos);
 		
 		void NormalizeRotationVectors();
 
-		CommonUtilities::Vector3<T> GetPos() const;
-		CommonUtilities::Vector4<T> GetPos4() const;
-		CommonUtilities::Vector3<T> GetForward() const;
-		CommonUtilities::Vector3<T> GetUp() const;
-		CommonUtilities::Vector3<T> GetRight() const;
+		CU::Vector3<T> GetPos() const;
+		CU::Vector4<T> GetPos4() const;
+		CU::Vector3<T> GetForward() const;
+		CU::Vector3<T> GetUp() const;
+		CU::Vector3<T> GetRight() const;
 
 		inline Matrix44<T> operator=(const Matrix44<T> aMatrix)
 		{

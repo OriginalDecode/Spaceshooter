@@ -4,7 +4,7 @@
 #include <cassert>
 #include "Vector3decl.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	typedef Vector3<float> Vector3f;
 	template <typename T>

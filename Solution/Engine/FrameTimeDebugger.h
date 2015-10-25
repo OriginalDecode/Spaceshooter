@@ -6,7 +6,7 @@
 
 #define NUM_FRAMES_TO_RECORD 120
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

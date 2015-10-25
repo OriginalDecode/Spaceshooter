@@ -4,7 +4,7 @@
 #include <GrowingArray.h>
 #include "Subscriber.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

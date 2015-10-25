@@ -1,11 +1,11 @@
 #include "InputWrapper.h"
 
-CommonUtilities::InputWrapper::InputWrapper()
+CU::InputWrapper::InputWrapper()
 {
 
 }
 
-void CommonUtilities::InputWrapper::Init(HWND aHwnd, HINSTANCE aHInstance, DWORD aKeyCoopFlags, DWORD aMouseCoopFlags)
+void CU::InputWrapper::Init(HWND aHwnd, HINSTANCE aHInstance, DWORD aKeyCoopFlags, DWORD aMouseCoopFlags)
 {
 
 	DirectInput8Create(aHInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<void**>(&myDirectInput), 0);
@@ -31,13 +31,13 @@ void CommonUtilities::InputWrapper::Init(HWND aHwnd, HINSTANCE aHInstance, DWORD
 
 
 
-CommonUtilities::InputWrapper::~InputWrapper()
+CU::InputWrapper::~InputWrapper()
 {
 	myKeyboardDevice->Unacquire();
 	myMouseDevice->Unacquire();
 }
 
-void CommonUtilities::InputWrapper::Update()
+void CU::InputWrapper::Update()
 {
 	CapturePreviousState();
 	HRESULT hr = myKeyboardDevice->GetDeviceState(sizeof(myKeyState), reinterpret_cast<void**>(&myKeyState));
@@ -75,72 +75,72 @@ void CommonUtilities::InputWrapper::Update()
 }
 
 
-void CommonUtilities::InputWrapper::PauseDeltaRecording()
+void CU::InputWrapper::PauseDeltaRecording()
 {
 	myIsRecordingDeltas = false;
 }
 
 
-void CommonUtilities::InputWrapper::ResumeDeltaRecording()
+void CU::InputWrapper::ResumeDeltaRecording()
 {
 	myIsRecordingDeltas = true;
 }
 
-const CommonUtilities::Vector2<float>& CommonUtilities::InputWrapper::GetMousePosition() const
+const CU::Vector2<float>& CU::InputWrapper::GetMousePosition() const
 {
 	return myMousePos;
 }
 
-void CommonUtilities::InputWrapper::CapturePreviousState()
+void CU::InputWrapper::CapturePreviousState()
 {
 	memcpy_s(myPreviousKeyState, sizeof(myPreviousKeyState), myKeyState, sizeof(myKeyState));
 	memcpy_s(&myPreviousMouseState, sizeof(myPreviousMouseState), &myMouseState, sizeof(myMouseState));
 }
 
-bool CommonUtilities::InputWrapper::KeyIsPressed(unsigned int aKey) const
+bool CU::InputWrapper::KeyIsPressed(unsigned int aKey) const
 {
 	UCHAR key = static_cast<UCHAR>(aKey);
 	return (myKeyState[key] & 0x80) != 0;
 }
 
-bool CommonUtilities::InputWrapper::KeyDown(unsigned int aKey) const
+bool CU::InputWrapper::KeyDown(unsigned int aKey) const
 {
 	UCHAR key = static_cast<UCHAR>(aKey);
 	return ((myKeyState[key] & 0x80) != 0 && (myPreviousKeyState[key] & 0x80) == 0);
 }
 
-bool CommonUtilities::InputWrapper::KeyUp(unsigned int aKey) const
+bool CU::InputWrapper::KeyUp(unsigned int aKey) const
 {
 	UCHAR key = static_cast<UCHAR>(aKey);
 	return ((myKeyState[key] & 0x80) == 0 && (myPreviousKeyState[key] & 0x80) != 0);
 }
 
-bool CommonUtilities::InputWrapper::MouseIsPressed(int aButton) const
+bool CU::InputWrapper::MouseIsPressed(int aButton) const
 {
 	return (myMouseState.rgbButtons[aButton] & 0x80) != 0;
 }
 
-bool CommonUtilities::InputWrapper::MouseDown(int aButton) const
+bool CU::InputWrapper::MouseDown(int aButton) const
 {
 	return ((myMouseState.rgbButtons[aButton] & 0x80) != 0 && (myPreviousMouseState.rgbButtons[aButton] & 0x80) == 0);
 }
 
-bool CommonUtilities::InputWrapper::MouseUp(int aButton) const
+bool CU::InputWrapper::MouseUp(int aButton) const
 {
 	return ((myMouseState.rgbButtons[aButton] & 0x80) == 0 && (myPreviousMouseState.rgbButtons[aButton] & 0x80) != 0);
 }
 
-float CommonUtilities::InputWrapper::GetMouseDX() const
+float CU::InputWrapper::GetMouseDX() const
 {
 	return static_cast<float>(myMouseState.lX);
 }
 
-float CommonUtilities::InputWrapper::GetMouseDY() const
+float CU::InputWrapper::GetMouseDY() const
 {
 	return static_cast<float>(myMouseState.lY);
 }
 
-float CommonUtilities::InputWrapper::GetMouseDZ() const
+float CU::InputWrapper::GetMouseDZ() const
 {
 	return static_cast<float>(myMouseState.lZ);
 }

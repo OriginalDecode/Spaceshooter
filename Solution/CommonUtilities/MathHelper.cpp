@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MathHelper.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace Math
 	{

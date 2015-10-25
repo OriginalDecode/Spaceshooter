@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CommonUtilities
+namespace CU
 {
 	template<typename T>
 	class Lesser

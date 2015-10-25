@@ -2,7 +2,7 @@
 
 #include "Time.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	class Timer
 	{
@@ -21,17 +21,17 @@ namespace CommonUtilities
 	};
 }
 
-inline CommonUtilities::Time CommonUtilities::Timer::GetTime() const
+inline CU::Time CU::Timer::GetTime() const
 {
-	return CommonUtilities::Time(myTotalTime, myFrameTime);
+	return CU::Time(myTotalTime, myFrameTime);
 }
 
-inline void CommonUtilities::Timer::Pause()
+inline void CU::Timer::Pause()
 {
 	myPaused = true;
 }
 
-inline void CommonUtilities::Timer::Start()
+inline void CU::Timer::Start()
 {
 	myPaused = false;
 }

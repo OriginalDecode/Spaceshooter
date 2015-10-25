@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	class Plane
@@ -23,7 +23,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	Plane<T>::Plane()

@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-namespace CommonUtilities
+namespace CU
 {
 	typedef unsigned long long TimeUnit;
 
@@ -26,38 +26,38 @@ namespace CommonUtilities
 	};
 }
 
-inline CommonUtilities::TimeUnit CommonUtilities::Time::GetHours() const
+inline CU::TimeUnit CU::Time::GetHours() const
 {
 	return GetMinutes() / 60;
 }
 
-inline CommonUtilities::TimeUnit CommonUtilities::Time::GetMinutes() const
+inline CU::TimeUnit CU::Time::GetMinutes() const
 {
 	return myMicroSeconds / 60000000;
 }
 
-inline CommonUtilities::TimeUnit CommonUtilities::Time::GetSeconds() const
+inline CU::TimeUnit CU::Time::GetSeconds() const
 {
 	return myMicroSeconds / 1000000;
 }
 
-inline CommonUtilities::TimeUnit CommonUtilities::Time::GetMilliseconds() const
+inline CU::TimeUnit CU::Time::GetMilliseconds() const
 {
 	return myMicroSeconds / 1000;
 }
 
-inline CommonUtilities::TimeUnit CommonUtilities::Time::GetMicroseconds() const
+inline CU::TimeUnit CU::Time::GetMicroseconds() const
 {
 	return myMicroSeconds;
 }
 
-inline CommonUtilities::TimeUnit CommonUtilities::Time::GetFPS() const
+inline CU::TimeUnit CU::Time::GetFPS() const
 {
 	assert(myFrameMicroSeconds > 0 && "GetFPS div by 0, can't check FPS on paused timer.");
 	return 1000000 / myFrameMicroSeconds;
 }
 
-inline float CommonUtilities::Time::GetFrameTime() const
+inline float CU::Time::GetFrameTime() const
 {
 	return myFrameMicroSeconds / 1000000.f;
 }

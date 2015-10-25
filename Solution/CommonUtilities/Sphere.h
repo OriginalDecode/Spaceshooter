@@ -1,13 +1,13 @@
 #pragma once
 #include "Vector.h"
-namespace CommonUtilities
+namespace CU
 {
 	namespace Intersection
 	{
 		class Sphere
 		{
 		public:
-			CommonUtilities::Vector3<float> myCenterPosition;
+			CU::Vector3<float> myCenterPosition;
 			float myRadius;
 			float myRadiusSquared;
 		};

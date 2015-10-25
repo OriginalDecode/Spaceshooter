@@ -5,7 +5,7 @@ namespace Prism
 	class Sprite;
 }
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

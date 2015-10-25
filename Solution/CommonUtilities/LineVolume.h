@@ -3,7 +3,7 @@
 #include "Line.h"
 #include <vector>
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	class LineVolume
@@ -20,7 +20,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	LineVolume<T>::LineVolume(GrowingArray<Line<T>> aLineList)

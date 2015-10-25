@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include "Vector.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace Math
 	{
@@ -31,6 +31,5 @@ namespace CommonUtilities
 		Vector4<float> RandomVector(const Vector4<float>& aMin, const Vector4<float>& aMax);
 	}
 }
-namespace CU = CommonUtilities;
 
 #endif

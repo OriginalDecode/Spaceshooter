@@ -1,7 +1,7 @@
 #pragma once
 #include "ControllerComponent.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

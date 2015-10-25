@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by CommonUtilities.rc
+// Used by CU.rc
 
 // Next default values for new objects
 // 

@@ -2,7 +2,7 @@
 
 #include "Matrix44decl.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	template<typename T>
 
@@ -23,10 +23,10 @@ namespace CommonUtilities
 
 		void Rotate2D(T aRadian);
 		void SetRotation2D(T aRadian);
-		void SetPos(const CommonUtilities::Vector2<T>& aPos);
-		void SetPos(const CommonUtilities::Vector3<T>& aPos);
-		CommonUtilities::Vector2<T> GetPos() const;
-		CommonUtilities::Vector3<T> GetPos3() const;
+		void SetPos(const CU::Vector2<T>& aPos);
+		void SetPos(const CU::Vector3<T>& aPos);
+		CU::Vector2<T> GetPos() const;
+		CU::Vector3<T> GetPos3() const;
 
 		inline Matrix33<T> operator=(const Matrix33<T> aMatrix)
 		{

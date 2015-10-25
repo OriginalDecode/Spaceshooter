@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <string>
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace XMLFunctions
 	{
@@ -13,4 +13,4 @@ namespace CommonUtilities
 		bool XMLCompareName(const char *aFirstName, const char *aSecondName);
 	}
 	namespace XMLF = XMLFunctions;
-}namespace CU = CommonUtilities;
+}

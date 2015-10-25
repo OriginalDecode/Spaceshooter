@@ -3,7 +3,7 @@
 #define VOS_TEMPLATE template <typename Type, int MaxSize, typename CountType = int, bool UseSafeModeFlag = true>
 #define VOS_TYPE VectorOnStack<Type, MaxSize, CountType, UseSafeModeFlag>
 
-namespace CommonUtilities
+namespace CU
 {
 	VOS_TEMPLATE
 	class VectorOnStack
@@ -37,9 +37,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CU = CommonUtilities;
-
-namespace CommonUtilities
+namespace CU
 {
 	VOS_TEMPLATE
 	VOS_TYPE::VectorOnStack()

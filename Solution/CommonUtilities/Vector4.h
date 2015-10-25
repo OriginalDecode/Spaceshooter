@@ -4,7 +4,7 @@
 #include <cassert>
 #include "Vector4decl.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	typedef Vector4<float> Vector4f;
 

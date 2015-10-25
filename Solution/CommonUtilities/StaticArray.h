@@ -3,7 +3,7 @@
 #define SA_TEMPLATE template<typename Type, int Size>
 #define SA_TYPE StaticArray<Type, Size>
 
-namespace CommonUtilities
+namespace CU
 {
 	SA_TEMPLATE
 	class StaticArray
@@ -28,9 +28,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CU = CommonUtilities;
-
-namespace CommonUtilities
+namespace CU
 {
 	SA_TEMPLATE
 	SA_TYPE::StaticArray()

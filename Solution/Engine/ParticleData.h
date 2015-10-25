@@ -1,5 +1,6 @@
 #pragma once
-#include "..\CommonUtilities\Vector.h"
+#include <Vector.h>
+
 struct ParticleData
 {
 

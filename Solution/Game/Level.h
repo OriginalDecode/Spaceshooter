@@ -14,7 +14,7 @@ namespace Prism
 	class Instance;
 };
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

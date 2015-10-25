@@ -8,7 +8,6 @@
     <ClInclude Include="StaticArray.h">
       <Filter>Array</Filter>
     </ClInclude>
-    <ClInclude Include="CommonUtilitiesTestClass.h" />
     <ClInclude Include="Vector.h">
       <Filter>Math\Vector</Filter>
     </ClInclude>
@@ -138,7 +137,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CommonUtilitiesTestClass.cpp" />
     <ClCompile Include="Camera2D.cpp">
       <Filter>Camera</Filter>
     </ClCompile>

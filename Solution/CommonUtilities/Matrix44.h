@@ -6,7 +6,7 @@
 #include <cmath>
 
 
-namespace CommonUtilities
+namespace CU
 {
 	typedef Matrix44<float> Matrix44f;
 	
@@ -469,13 +469,13 @@ namespace CommonUtilities
 	template <typename T>
 	Matrix44<T> InverseSimple(const Matrix44<T>& aMatrix)
 	{
-		CommonUtilities::Matrix44<float> inverse(aMatrix);
+		CU::Matrix44<float> inverse(aMatrix);
 
-		CommonUtilities::Vector4<float> translation = inverse.GetPos4();
-		inverse.SetPos(CommonUtilities::Vector4<float>(0, 0, 0, 1.f));
+		CU::Vector4<float> translation = inverse.GetPos4();
+		inverse.SetPos(CU::Vector4<float>(0, 0, 0, 1.f));
 		translation *= -1.f;
 		translation.w = 1.f;
-		inverse = CommonUtilities::Transpose(inverse);
+		inverse = CU::Transpose(inverse);
 		translation = translation * inverse;
 
 		inverse.SetPos(translation);
@@ -483,7 +483,7 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	void Matrix44<T>::SetPos(const CommonUtilities::Vector3<T>& aPos)
+	void Matrix44<T>::SetPos(const CU::Vector3<T>& aPos)
 	{
 		myMatrix[12] = aPos.x;
 		myMatrix[13] = aPos.y;
@@ -491,7 +491,7 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	void Matrix44<T>::SetPos(const CommonUtilities::Vector4<T>& aPos)
+	void Matrix44<T>::SetPos(const CU::Vector4<T>& aPos)
 	{
 		myMatrix[12] = aPos.x;
 		myMatrix[13] = aPos.y;
@@ -508,33 +508,33 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	CommonUtilities::Vector3<T> Matrix44<T>::GetPos() const
+	CU::Vector3<T> Matrix44<T>::GetPos() const
 	{
-		return CommonUtilities::Vector3<T>(myMatrix[12], myMatrix[13], myMatrix[14]);
+		return CU::Vector3<T>(myMatrix[12], myMatrix[13], myMatrix[14]);
 	}
 
 	template <typename T>
-	CommonUtilities::Vector4<T> Matrix44<T>::GetPos4() const
+	CU::Vector4<T> Matrix44<T>::GetPos4() const
 	{
-		return CommonUtilities::Vector4<T>(myMatrix[12], myMatrix[13], myMatrix[14], myMatrix[15]);
+		return CU::Vector4<T>(myMatrix[12], myMatrix[13], myMatrix[14], myMatrix[15]);
 	}
 
 	template <typename T>
-	CommonUtilities::Vector3<T> Matrix44<T>::GetForward() const
+	CU::Vector3<T> Matrix44<T>::GetForward() const
 	{
-		return CommonUtilities::Vector3<T>(myMatrix[8], myMatrix[9], myMatrix[10]);
+		return CU::Vector3<T>(myMatrix[8], myMatrix[9], myMatrix[10]);
 	}
 
 	template <typename T>
-	CommonUtilities::Vector3<T> Matrix44<T>::GetUp() const
+	CU::Vector3<T> Matrix44<T>::GetUp() const
 	{
-		return CommonUtilities::Vector3<T>(myMatrix[4], myMatrix[5], myMatrix[6]);
+		return CU::Vector3<T>(myMatrix[4], myMatrix[5], myMatrix[6]);
 	}
 
 	template <typename T>
-	CommonUtilities::Vector3<T> Matrix44<T>::GetRight() const
+	CU::Vector3<T> Matrix44<T>::GetRight() const
 	{
-		return CommonUtilities::Vector3<T>(myMatrix[0], myMatrix[1], myMatrix[2]);
+		return CU::Vector3<T>(myMatrix[0], myMatrix[1], myMatrix[2]);
 	}
 
 	template<typename T>

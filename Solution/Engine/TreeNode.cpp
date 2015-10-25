@@ -309,7 +309,7 @@ Prism::TreeNode* Prism::TreeNode::SpawnChild(int anId)
 	return new TreeNode(pos, myHalfWidth / 2.f, this, myDepth + 1, myMaxDepth);
 }
 
-bool Prism::TreeNode::NodeVsAABB(const CommonUtilities::Intersection::AABB& aAABB) const
+bool Prism::TreeNode::NodeVsAABB(const CU::Intersection::AABB& aAABB) const
 {
 	CU::Vector3<float> myCenter(myPosition.x, myPosition.y, myPosition.z);
 

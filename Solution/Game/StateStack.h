@@ -1,7 +1,7 @@
 #pragma once
 #include <GrowingArray.h>
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

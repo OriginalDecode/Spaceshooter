@@ -17,7 +17,7 @@
 #define END_TIME_BLOCK(NAME) 
 #endif
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

@@ -2,18 +2,18 @@
 
 #include "Timer.h"
 
-CommonUtilities::Timer::Timer()
+CU::Timer::Timer()
 {
 	myTotalTime = 0;
 	myFrameTime = 0;
 	myPaused = false;
 }
 
-CommonUtilities::Timer::~Timer()
+CU::Timer::~Timer()
 {
 }
 
-void CommonUtilities::Timer::AddTime(TimeUnit aMicroSeconds)
+void CU::Timer::AddTime(TimeUnit aMicroSeconds)
 {
 	if (myPaused == false)
 	{

@@ -4,7 +4,7 @@
 #include <cmath>
 
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	Matrix33<T>::Matrix33()
@@ -302,8 +302,8 @@ namespace CommonUtilities
 	template <typename T>
 	void Matrix33<T>::Rotate2D(T aRadian)
 	{
-		CommonUtilities::Matrix33<T> temp = CreateRotateAroundZ(aRadian);
-		CommonUtilities::Matrix33<T> temp2 = *this;
+		CU::Matrix33<T> temp = CreateRotateAroundZ(aRadian);
+		CU::Matrix33<T> temp2 = *this;
 
 		temp2 *= temp;
 
@@ -341,13 +341,13 @@ namespace CommonUtilities
 	template <typename T>
 	Matrix33<T> InverseSimple(const Matrix33<T>& aMatrix)
 	{
-		CommonUtilities::Matrix33<float> inverse(aMatrix);
+		CU::Matrix33<float> inverse(aMatrix);
 
-		CommonUtilities::Vector3<float> translation = inverse.GetPos3();
-		inverse.SetPos(CommonUtilities::Vector3<float>(0, 0, 1.f));
+		CU::Vector3<float> translation = inverse.GetPos3();
+		inverse.SetPos(CU::Vector3<float>(0, 0, 1.f));
 		translation *= -1.f;
 		translation.z = 1.f;
-		inverse = CommonUtilities::Transpose(inverse);
+		inverse = CU::Transpose(inverse);
 		translation = translation * inverse;
 
 		inverse.SetPos(translation);
@@ -355,14 +355,14 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	void Matrix33<T>::SetPos(const CommonUtilities::Vector2<T>& aPos)
+	void Matrix33<T>::SetPos(const CU::Vector2<T>& aPos)
 	{
 		myMatrix[6] = aPos.x;
 		myMatrix[7] = aPos.y;
 	}
 
 	template <typename T>
-	void Matrix33<T>::SetPos(const CommonUtilities::Vector3<T>& aPos)
+	void Matrix33<T>::SetPos(const CU::Vector3<T>& aPos)
 	{
 		myMatrix[6] = aPos.x;
 		myMatrix[7] = aPos.y;
@@ -370,14 +370,14 @@ namespace CommonUtilities
 	}
 
 	template <typename T>
-	CommonUtilities::Vector2<T> Matrix33<T>::GetPos() const
+	CU::Vector2<T> Matrix33<T>::GetPos() const
 	{
-		return CommonUtilities::Vector2<T>(myMatrix[6], myMatrix[7]);
+		return CU::Vector2<T>(myMatrix[6], myMatrix[7]);
 	}
 
 	template <typename T>
-	CommonUtilities::Vector3<T> Matrix33<T>::GetPos3() const
+	CU::Vector3<T> Matrix33<T>::GetPos3() const
 	{
-		return CommonUtilities::Vector3<T>(myMatrix[6], myMatrix[7], myMatrix[8]);
+		return CU::Vector3<T>(myMatrix[6], myMatrix[7], myMatrix[8]);
 	}
 }

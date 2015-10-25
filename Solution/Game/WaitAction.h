@@ -6,7 +6,7 @@ namespace tinyxml2
 	class XMLElement;
 }
 
-namespace CommonUtilities
+namespace CU
 {
 	class TimerManager;
 }
@@ -26,7 +26,7 @@ public:
 private:
 	void operator=(WaitAction&) = delete;
 
-	const CommonUtilities::TimerManager& myTimerManager;
+	const CU::TimerManager& myTimerManager;
 	float myStartTime;
 	float myTime;
 };

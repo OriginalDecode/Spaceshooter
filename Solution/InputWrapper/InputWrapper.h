@@ -6,7 +6,7 @@
 #include <Vector.h>
 
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper
 	{
@@ -20,7 +20,7 @@ namespace CommonUtilities
 		float GetMouseDY() const;
 		float GetMouseDZ() const; //scrollwheel
 
-		const CommonUtilities::Vector2<float>& GetMousePosition() const;
+		const CU::Vector2<float>& GetMousePosition() const;
 
 		bool MouseDown(int aButton) const; //specifik musknapp nere this frame
 		bool MouseUp(int aButton) const;
@@ -46,7 +46,7 @@ namespace CommonUtilities
 		DIMOUSESTATE myMouseState;
 		DIMOUSESTATE myPreviousMouseState;
 
-		CommonUtilities::Vector2<float> myMousePos;
+		CU::Vector2<float> myMousePos;
 
 		HWND myWindowHandler;
 

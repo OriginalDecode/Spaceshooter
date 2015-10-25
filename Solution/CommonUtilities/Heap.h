@@ -6,7 +6,7 @@
 
 #define HEAP_TEMPLATE template<typename T, typename Comparer>
 
-namespace CommonUtilities
+namespace CU
 {
 	HEAP_TEMPLATE
 	class Heap
@@ -28,9 +28,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CU = CommonUtilities;
-
-namespace CommonUtilities
+namespace CU
 {
 	HEAP_TEMPLATE
 	inline Heap<T, Comparer>::Heap()

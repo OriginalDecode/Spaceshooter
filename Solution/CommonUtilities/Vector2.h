@@ -4,7 +4,7 @@
 #include <cassert>
 #include "Vector2decl.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	Vector2<T>::Vector2()

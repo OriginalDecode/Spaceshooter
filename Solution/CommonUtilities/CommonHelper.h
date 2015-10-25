@@ -3,7 +3,7 @@
 #include <string>
 #include <DL_Debug.h>
 
-namespace CommonUtilities
+namespace CU
 {
 	inline std::string ToLower(const std::string& aString)
 	{
@@ -73,4 +73,3 @@ namespace CommonUtilities
 		return buffer;
 	}
 }
-namespace CU = CommonUtilities;

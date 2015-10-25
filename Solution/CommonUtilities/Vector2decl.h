@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector3decl.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	template<typename T>
 
@@ -38,5 +38,3 @@ namespace CommonUtilities
 		};
 	};
 }
-
-namespace CU = CommonUtilities;

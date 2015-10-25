@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
-namespace CommonUtilities
+namespace CU
 {
 	typedef unsigned int TimerHandle;
 
@@ -38,5 +38,3 @@ namespace CommonUtilities
 		static TimerManager* myInstance;
 	};
 }
-
-namespace CU = CommonUtilities;

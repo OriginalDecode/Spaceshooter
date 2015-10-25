@@ -168,7 +168,6 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Camera2D.h" />
     <ClInclude Include="CommonHelper.h" />
-    <ClInclude Include="CommonUtilitiesTestClass.h" />
     <ClInclude Include="Fov90Frustum.h" />
     <ClInclude Include="Greater.h" />
     <ClInclude Include="GrowingArray.h" />
@@ -206,7 +205,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera2D.cpp" />
-    <ClCompile Include="CommonUtilitiesTestClass.cpp" />
     <ClCompile Include="MathHelper.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="tinyxml2.cpp" />

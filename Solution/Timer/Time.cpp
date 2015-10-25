@@ -4,17 +4,17 @@
 #include "Time.h"
 #include <time.h>
 
-CommonUtilities::Time::Time(CommonUtilities::TimeUnit aMicroSeconds, CommonUtilities::TimeUnit aFrameMicroSeconds)
+CU::Time::Time(CU::TimeUnit aMicroSeconds, CU::TimeUnit aFrameMicroSeconds)
 {
 	myMicroSeconds = aMicroSeconds;
 	myFrameMicroSeconds = aFrameMicroSeconds;
 }
 
-CommonUtilities::Time::~Time()
+CU::Time::~Time()
 {
 }
 
-void CommonUtilities::Time::DoSrand()
+void CU::Time::DoSrand()
 {
 	srand(static_cast<unsigned int>(time(0)));
 }

@@ -2,7 +2,7 @@
 #include "PlaneVolume.h"
 #include "Matrix.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	namespace Intersection
 	{
@@ -12,28 +12,28 @@ namespace CommonUtilities
 			Fov90Frustum(float aNear, float aFar);
 			bool Inside(const Vector3<float>& aPos, float aRadius) const;
 
-			CommonUtilities::PlaneVolume<float> myVolume;
+			CU::PlaneVolume<float> myVolume;
 			float myNear;
 			float myFar;
 		};
 	}
 
 	inline Intersection::Fov90Frustum::Fov90Frustum(float aNear, float aFar) :
-		myVolume(CommonUtilities::GrowingArray<CommonUtilities::Plane<float>>())
+		myVolume(CU::GrowingArray<CU::Plane<float>>())
 	{
 		myNear = aNear;
 		myFar = aFar;
 		float rotated45 = sqrt(2.f) / 2.f;
 
-		CommonUtilities::Plane<float> nearPlane(CommonUtilities::Vector3<float>(0, 0, aNear)
-			, CommonUtilities::Vector3<float>(0, 0, -1));
-		CommonUtilities::Plane<float> farPlane(CommonUtilities::Vector3<float>(0, 0, aFar)
-			, CommonUtilities::Vector3<float>(0, 0, 1));
+		CU::Plane<float> nearPlane(CU::Vector3<float>(0, 0, aNear)
+			, CU::Vector3<float>(0, 0, -1));
+		CU::Plane<float> farPlane(CU::Vector3<float>(0, 0, aFar)
+			, CU::Vector3<float>(0, 0, 1));
 
-		CommonUtilities::Plane<float> right(CommonUtilities::Vector3<float>(0, 0, 0), CommonUtilities::Vector3<float>(rotated45, 0, -rotated45));
-		CommonUtilities::Plane<float> left(CommonUtilities::Vector3<float>(0, 0, 0), CommonUtilities::Vector3<float>(-rotated45, 0, -rotated45));
-		CommonUtilities::Plane<float> up(CommonUtilities::Vector3<float>(0, 0, 0), CommonUtilities::Vector3<float>(0, rotated45, -rotated45));
-		CommonUtilities::Plane<float> down(CommonUtilities::Vector3<float>(0, 0, 0), CommonUtilities::Vector3<float>(0, -rotated45, -rotated45));
+		CU::Plane<float> right(CU::Vector3<float>(0, 0, 0), CU::Vector3<float>(rotated45, 0, -rotated45));
+		CU::Plane<float> left(CU::Vector3<float>(0, 0, 0), CU::Vector3<float>(-rotated45, 0, -rotated45));
+		CU::Plane<float> up(CU::Vector3<float>(0, 0, 0), CU::Vector3<float>(0, rotated45, -rotated45));
+		CU::Plane<float> down(CU::Vector3<float>(0, 0, 0), CU::Vector3<float>(0, -rotated45, -rotated45));
 
 		myVolume.myPlanes.Init(6);
 		myVolume.AddPlane(nearPlane);
@@ -44,7 +44,7 @@ namespace CommonUtilities
 		myVolume.AddPlane(down);
 	}
 
-	inline bool CommonUtilities::Intersection::Fov90Frustum::Inside(const Vector3<float>& aPos, float aRadius) const
+	inline bool CU::Intersection::Fov90Frustum::Inside(const Vector3<float>& aPos, float aRadius) const
 	{
 		if (myVolume.Inside(aPos, aRadius) == true)
 		{

@@ -3,7 +3,7 @@
 #include "Plane.h"
 #include <vector>
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	class PlaneVolume
@@ -21,7 +21,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	PlaneVolume<T>::PlaneVolume(GrowingArray<Plane<T>> aPlaneList)

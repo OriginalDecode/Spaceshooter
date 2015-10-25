@@ -2,7 +2,7 @@
 
 #include "Vector3.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	template<typename T>
 

@@ -2,7 +2,7 @@
 #include "StateEnums.h"
 #include "StateStackProxy.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

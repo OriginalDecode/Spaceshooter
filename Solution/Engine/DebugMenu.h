@@ -5,7 +5,7 @@
 #define ADD_FUNCTION_TO_RADIAL_MENU(ELEMENT_NAME, FUNCTION, OBJECT_TO_CALL_FUNC_ON) \
 	(Prism::Engine::GetInstance()->GetDebugDisplay()->GetDebugMenu()->AddFunctionCallback(ELEMENT_NAME, std::bind(&FUNCTION, OBJECT_TO_CALL_FUNC_ON)))
 
-namespace CommonUtilities
+namespace CU
 {
 	class InputWrapper;
 }

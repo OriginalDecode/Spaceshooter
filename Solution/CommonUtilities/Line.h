@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector.h"
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	class Line
@@ -20,7 +20,7 @@ namespace CommonUtilities
 	};
 }
 
-namespace CommonUtilities
+namespace CU
 {
 	template <typename T>
 	Line<T>::Line()
