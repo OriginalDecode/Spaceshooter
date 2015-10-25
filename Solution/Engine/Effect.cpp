@@ -127,8 +127,6 @@ void Prism::Effect::UpdateTime(const float aDeltaTime)
 
 bool Prism::Effect::ReloadShader(const std::string& aFile)
 {
-	Sleep(100);
-
 	myFileName = aFile;
 
 	HRESULT hr;
