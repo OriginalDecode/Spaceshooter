@@ -238,9 +238,9 @@ void CollisionManager::CheckCollision(CollisionComponent* aComponent
 {
 	for (int i = someOtherComponents.Size() - 1; i >= 0; --i)
 	{
-		Entity& theOther = someOtherComponents[i]->GetEntity();
-		if (CU::Intersection::SphereVsSphere(aComponent->GetSphere(), someOtherComponents[i]->GetSphere()) == true)
+		if (aComponent->CheckCollision(someOtherComponents[i]) == true)
 		{
+			Entity& theOther = someOtherComponents[i]->GetEntity();
 			aComponent->GetEntity().SendNote(CollisionNote(theOther, *this));
 			break;
 		}

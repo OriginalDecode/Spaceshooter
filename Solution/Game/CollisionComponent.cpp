@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "Entity.h"
 #include "GraphicsComponent.h"
+#include <Intersection.h>
 
 CollisionComponent::CollisionComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -33,4 +34,9 @@ void CollisionComponent::Initiate(float someRadius)
 void CollisionComponent::Update(float)
 {
 	mySphere.myCenterPosition = myEntity.myOrientation.GetPos();
+}
+
+bool CollisionComponent::CheckCollision(CollisionComponent* anOtherComponent)
+{
+	return CU::Intersection::SphereVsSphere(mySphere, anOtherComponent->GetSphere());
 }

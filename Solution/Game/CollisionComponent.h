@@ -16,6 +16,7 @@ public:
 	void SetCollisionRadius(float someRadius = 0);
 	Sphere GetSphere();
 
+	bool CheckCollision(CollisionComponent* anOtherComponent);
 
 	static eComponentType GetType();
 
