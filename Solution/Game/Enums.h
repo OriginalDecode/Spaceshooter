@@ -48,6 +48,12 @@ enum eEntityType //Collision manager needs this as ints!
 	DEFENDABLE = 128
 };
 
+enum class eCollisionType
+{
+	NORMAL,
+	PLANET,
+};
+
 enum class ePowerUpType
 {
 	NO_POWERUP,

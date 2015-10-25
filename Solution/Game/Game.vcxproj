@@ -188,6 +188,7 @@
     <ClInclude Include="Mission.h" />
     <ClInclude Include="MissionManager.h" />
     <ClInclude Include="MissionNote.h" />
+    <ClInclude Include="PlanetCollisionComponent.h" />
     <ClInclude Include="PowerUpMessage.h" />
     <ClInclude Include="PowerUpNote.h" />
     <ClInclude Include="ColoursForBG.h" />
@@ -279,6 +280,7 @@
     <ClCompile Include="Mission.cpp" />
     <ClCompile Include="MissionManager.cpp" />
     <ClCompile Include="PhysicsComponent.cpp" />
+    <ClCompile Include="PlanetCollisionComponent.cpp" />
     <ClCompile Include="PostMaster.cpp" />
     <ClCompile Include="PowerUpComponent.cpp" />
     <ClCompile Include="PowerUpMessage.cpp" />

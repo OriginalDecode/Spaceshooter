@@ -348,7 +348,7 @@ void LevelFactory::LoadPlayer()
 		, "Data/Resource/Shader/S_effect_pbl.fx");
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
-	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Initiate(7.5f);
+	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Init(7.5f);
 	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
 	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 	myCurrentLevel->myPlayer->AddComponent<SoundComponent>();

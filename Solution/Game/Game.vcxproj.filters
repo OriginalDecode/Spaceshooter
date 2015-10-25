@@ -12,9 +12,6 @@
     <ClCompile Include="BulletComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="CollisionComponent.cpp">
-      <Filter>Components</Filter>
-    </ClCompile>
     <ClCompile Include="Component.cpp">
       <Filter>Components</Filter>
     </ClCompile>
@@ -173,6 +170,12 @@
       <Filter>Components</Filter>
     </ClCompile>
     <ClCompile Include="EmitterManager.cpp" />
+    <ClCompile Include="CollisionComponent.cpp">
+      <Filter>Components\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="PlanetCollisionComponent.cpp">
+      <Filter>Components\Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -187,9 +190,6 @@
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="BulletComponent.h">
-      <Filter>Components</Filter>
-    </ClInclude>
-    <ClInclude Include="CollisionComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
     <ClInclude Include="Component.h">
@@ -401,6 +401,12 @@
     <ClInclude Include="SoundNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionComponent.h">
+      <Filter>Components\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="PlanetCollisionComponent.h">
+      <Filter>Components\Collision</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
@@ -435,6 +441,9 @@
     </Filter>
     <Filter Include="Conversation">
       <UniqueIdentifier>{22a691e6-fa8a-44f1-80ee-e09d4f894ba2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Components\Collision">
+      <UniqueIdentifier>{edc93f4f-6dc9-41d3-8a90-19a1f3c91260}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

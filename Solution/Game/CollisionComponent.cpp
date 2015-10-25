@@ -9,15 +9,15 @@
 
 CollisionComponent::CollisionComponent(Entity& aEntity)
 	: Component(aEntity)
+	, myCollisionType(eCollisionType::NORMAL)
 {
-
 }
 
 CollisionComponent::~CollisionComponent()
 {
 }
 
-void CollisionComponent::Initiate(float someRadius)
+void CollisionComponent::Init(float someRadius)
 
 {
 	if (myEntity.GetComponent<GraphicsComponent>() != nullptr)

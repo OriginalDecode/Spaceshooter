@@ -14,6 +14,7 @@
 #include <Instance.h>
 #include <MathHelper.h>
 #include "PhysicsComponent.h"
+#include "PlanetCollisionComponent.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include <Scene.h>
@@ -116,7 +117,12 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("CollisionComponent").c_str()) == 0)
 		{
-			LoadCollisionComponent(newEntity, entityDocument, e);
+			LoadCollisionComponent(newEntity, entityDocument, e, eCollisionType::NORMAL);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PlanetCollisionComponent").c_str()) == 0)
+		{
+			LoadCollisionComponent(newEntity, entityDocument, e, eCollisionType::PLANET);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("PhysicsComponent").c_str()) == 0)
@@ -263,9 +269,17 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 	}
 }
 
-void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aCollisionComponenetElement)
+void EntityFactory::LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument
+	, tinyxml2::XMLElement* aCollisionComponenetElement, eCollisionType aCollisionType)
 {
-	aEntityToAddTo.myEntity->AddComponent<CollisionComponent>();
+	if (aCollisionType == eCollisionType::NORMAL)
+	{
+		aEntityToAddTo.myEntity->AddComponent<CollisionComponent>();
+	}
+	else if (aCollisionType == eCollisionType::PLANET)
+	{
+		aEntityToAddTo.myEntity->AddComponent<PlanetCollisionComponent>();
+	}
 
 	for (tinyxml2::XMLElement* e = aCollisionComponenetElement->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
@@ -478,12 +492,18 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	}
 	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
 	{
-		aTargetEntity->AddComponent<CollisionComponent>();
-
-		if (it->second.myCollisionSphereRadius > 0)
+		eCollisionType collisionType = sourceEntity->GetComponent<CollisionComponent>()->GetCollisionType();
+		
+		if (collisionType == eCollisionType::NORMAL)
 		{
-			aTargetEntity->GetComponent<CollisionComponent>()->Initiate(it->second.myCollisionSphereRadius);
+			aTargetEntity->AddComponent<CollisionComponent>();
 		}
+		else if (collisionType == eCollisionType::PLANET)
+		{
+			aTargetEntity->AddComponent<PlanetCollisionComponent>();
+		}
+		
+		aTargetEntity->GetComponent<CollisionComponent>()->Init(it->second.myCollisionSphereRadius);
 	}
 	if (sourceEntity->GetComponent<HealthComponent>() != nullptr)
 	{
