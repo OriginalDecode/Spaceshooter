@@ -62,6 +62,8 @@ Solution/Launcher/obj/
 Tools/LogReader/LogReader/LogReader/obj/
 Tools/LogReader/LogReader_temp/obj/
 Tools/ModelViewer/ModelViewer/obj/
+Tools/ParticleEditor/ParticleEditor/obj/
+Tools/CSharpUtilities/CSharpUtilities/obj/
 /NiklasOctree
 /octreeResearchNumbers.txt
 /NiklasQuadTree
