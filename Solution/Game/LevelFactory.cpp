@@ -396,11 +396,21 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOriginalOrientation;
 	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOriginalOrientation;
 
-	if (aEntityToCreate->GetType() == eEntityType::PROP)
+	//if (aEntityToCreate->GetType() == eEntityType::PROP)
+	//{
+	//	int health = 30;
+	//	aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
+	//}
+
+#ifdef _DEBUG //REMOVE THIS STUFF WHEN HENRIK HAS UPDATED Entities
+	if (aEntityToCreate->GetComponent<HealthComponent>() == nullptr)
 	{
 		int health = 30;
 		aEntityToCreate->AddComponent<HealthComponent>()->Init(health);
 	}
+#endif
+
+	DL_ASSERT_EXP(aEntityToCreate->GetComponent<HealthComponent>() != nullptr, aEntityToCreate->GetName() + ": Prop without healthcomponent has been loaded.");
 
 	aEntityToCreate->myOrientation = aEntityToCreate->myOriginalOrientation;
 	myCurrentLevel->myEntities.Add(aEntityToCreate);
