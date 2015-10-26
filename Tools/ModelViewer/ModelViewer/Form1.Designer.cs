@@ -134,7 +134,6 @@
             this.ModelViewer.Name = "ModelViewer";
             this.ModelViewer.Size = new System.Drawing.Size(890, 720);
             this.ModelViewer.TabIndex = 1;
-            this.ModelViewer.Paint += new System.Windows.Forms.PaintEventHandler(this.ModelViewer_Paint);
             // 
             // ModelViewerMenu
             // 
