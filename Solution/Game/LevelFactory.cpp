@@ -200,10 +200,10 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 		{
 			std::string targetName = myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->GetTargetName();
 			Entity* target = myCurrentLevel->GetEntityWithName(targetName);
-			myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myCurrentLevel->myPlayer);
+			myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myCurrentLevel->myPlayer, myCurrentLevel->myPlayer);
 			if (target != nullptr)
 			{
-				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target);
+				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target, myCurrentLevel->myPlayer);
 			}
 		}
 	}

@@ -117,12 +117,12 @@ void AIComponent::Update(float aDeltaTime)
 	myPhysicsComponent->SetVelocity(myVelocity);
 }
 
-void AIComponent::SetEntityToFollow(Entity* aEntity)
+void AIComponent::SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity)
 {
 	myEntityToFollow = aEntity;
 	if (myPrevEntityToFollow == nullptr)
 	{
-		myPrevEntityToFollow = myEntityToFollow;
+		myPrevEntityToFollow = aPlayerEntity;
 	}
 }
 

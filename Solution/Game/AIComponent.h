@@ -20,7 +20,7 @@ public:
 
 	void Update(float aDeltaTime) override;
 
-	void SetEntityToFollow(Entity* aEntity);
+	void SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity);
 
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 
