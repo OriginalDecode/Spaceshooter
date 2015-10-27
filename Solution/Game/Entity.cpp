@@ -5,6 +5,7 @@
 #include "EnemyKilledMessage.h"
 #include "Entity.h"
 #include "PostMaster.h"
+#include "SoundNote.h"
 
 Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName)
 	: myAlive(true)
@@ -49,7 +50,10 @@ void Entity::Update(float aDeltaTime)
 void Entity::Kill()
 {
 	DL_ASSERT_EXP(myAlive == true, "Tried to kill an entity thats allready dead.");
-
+	if (myComponents[static_cast<int>(eComponentType::SOUND)] != nullptr)
+	{
+		SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShipExplosion"));
+	}
 	myAlive = false;
 }
 
