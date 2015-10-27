@@ -215,10 +215,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 	int boostSpeed = static_cast<int>((myCurrentBoostValue / myMaxBoostValue) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
-
-	//myMovementSpeed = CU::Clip(movementSpeed, , myMaxMovementSpeed);
-	acceleration += myCurrentBoostValue * aDelta;
-
+	
 	if (myCurrentBoostCooldown == 0.f)
 	{
 		if (myBoost == true)
@@ -239,6 +236,8 @@ void InputComponent::UpdateMovement(const float& aDelta)
 			myCurrentBoostCooldown = 0.f;
 		}
 	}
+
+	acceleration += myCurrentBoostValue * aDelta;
 	
 	myEntity.GetComponent<PhysicsComponent>()->Accelerate(acceleration);
 
