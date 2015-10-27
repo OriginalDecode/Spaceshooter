@@ -206,14 +206,14 @@ void LoadModel(const char* aModelFile, const char* aEffectFile)
 	}
 	
 	WatchCurrentFiles(aModelFile, aEffectFile);
-
+	CU::Matrix44f currentOrientation = locObjectEntity->myOrientation;
 	delete locObjectEntity;
 
 	locObjectEntity = new Entity(eEntityType::PROP, *locScene, Prism::eOctreeType::DYNAMIC);
 	locObjectEntity->AddComponent<InputComponent>()->Init(locInput);
 
 	locObjectEntity->AddComponent<GraphicsComponent>()->InitDLL(aModelFile, aEffectFile);
-
+	locObjectEntity->myOrientation = currentOrientation;
 	GraphicsComponent* gfxComponent = locObjectEntity->GetComponent<GraphicsComponent>();
 	gfxComponent->GetInstance()->SetEffect(aEffectFile);
 

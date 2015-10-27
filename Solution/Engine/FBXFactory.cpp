@@ -180,11 +180,13 @@ Prism::Model* Prism::FBXFactory::CreateModel(FbxModelData* someModelData, Effect
 
 Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffect)
 {
+#ifndef DLL_EXPORT
 	if (myModels.find(aFilePath) != myModels.end())
 	{
 		return myModels[aFilePath];
 	}
-
+#endif
+	DL_DEBUG("Load Model %s", aFilePath);
 	CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 	FBXData* found = 0;
 	for (FBXData* data : myFBXData)
@@ -197,6 +199,7 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 	}
 
 	FbxModelData* modelData = nullptr;
+#ifndef DLL_EXPORT
 	if (found)
 	{
 		modelData = found->myData;
@@ -210,6 +213,14 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 		myFBXData.push_back(data);
 		modelData = data->myData;
 	}
+#else
+	FBXData* data = new FBXData();
+	FbxModelData* fbxModelData = myLoader->loadModel(aFilePath);
+	data->myData = fbxModelData;
+	data->myPath = aFilePath;
+	myFBXData.push_back(data);
+	modelData = data->myData;
+#endif
 
 
 	Model* returnModel = CreateModel(modelData, aEffect);
