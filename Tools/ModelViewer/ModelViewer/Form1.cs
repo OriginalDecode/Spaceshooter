@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-
+using CSharpUtilities;
 
 namespace ModelViewer
 {
@@ -27,6 +27,8 @@ namespace ModelViewer
 
         private CSharpUtilities.Components.DropDownComponent myModelList;
         private CSharpUtilities.Components.DropDownComponent myShaderList;
+
+        private CSharpUtilities.Components.DLLPreviewComponent myPreviewWindow;
 
         public ModelViewerWindow()
         {
@@ -49,26 +51,13 @@ namespace ModelViewer
 
             myPreviousMousePosition = MousePosition;
 
-            //myModelList = new CSharpUtilities.Components.DropDownComponent(new Point())
+            myPreviewWindow = new CSharpUtilities.Components.DLLPreviewComponent(new Point(ModelViewer.Location.X, ModelViewer.Location.Y - 20), ModelViewer.Size, "Preview", true);
+            myPreviewWindow.BindToPanel(ModelViewer);
+            myPreviewWindow.Show();
 
-            LoadEngine();
             FillEffectList();
 
             UpdateTimer.Start();
-        }
-
-        private void LoadEngine()
-        {
-            IntPtr windowHandle = ModelViewer.Handle;
-
-            ModelViewer.Invalidate();
-
-            Int32 width = ModelViewer.Width;
-            Int32 height = ModelViewer.Height;
-
-            NativeMethods.SetupWindow(width, height);
-            NativeMethods.StartEngine(windowHandle);
-            NativeMethods.Render();
         }
 
         private void Btn_OpenModel_Click(object sender, EventArgs e)
@@ -140,12 +129,6 @@ namespace ModelViewer
             return effectFile;
         }
 
-        private void ModelViewer_Paint(object sender, PaintEventArgs e)
-        {
-            NativeMethods.Update();
-            NativeMethods.Render();
-        }
-
         private void EffectFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
             for (int i = 0; i < myEffectFiles.Count; ++i)
@@ -153,14 +136,13 @@ namespace ModelViewer
                 if (myEffectFiles[i].Name == EffectFilter.SelectedItem)
                 {
                     myCurrentEffectFilePath = myEffectFiles[i].FullName;
-                    //NativeMethods.SetEffect(myCurrentEffectFilePath);
                 }
             }
         }
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
-            ModelViewer.Invalidate();
+            myPreviewWindow.Update();
         }
 
         private void Btn_LoadModel_Click(object sender, EventArgs e)
@@ -179,7 +161,7 @@ namespace ModelViewer
             {
                 if (Path.GetExtension(myCurrentModelFilePath) == ".fbx")
                 {
-                    NativeMethods.LoadModel(myCurrentModelFilePath, myCurrentEffectFilePath);
+                    CSharpUtilities.DLLImporter.NativeMethods.LoadModel(myCurrentModelFilePath, myCurrentEffectFilePath);
                 }
                 else
                 {
@@ -198,7 +180,7 @@ namespace ModelViewer
             float blueChannel =  (BackgroundColorDialog.Color.B)/ 255.0f;
             float alphaChannel = (BackgroundColorDialog.Color.A)/ 255.0f;
 
-            NativeMethods.SetClearColor(redChannel, greenChannel, blueChannel, alphaChannel);
+            CSharpUtilities.DLLImporter.NativeMethods.SetClearColor(redChannel, greenChannel, blueChannel, alphaChannel);
         }
 
         private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
@@ -207,7 +189,7 @@ namespace ModelViewer
             float xTruncatedValue = (float)(Math.Truncate((double)xValue * 100.0) / 100.0);
             DirectionLightXValue.Text = "X: " + xTruncatedValue.ToString();
 
-            NativeMethods.DirectionaLightRotateX(xTruncatedValue);
+            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateX(xTruncatedValue);
         }
 
         private void DirectionalLightY_Scroll(object sender, ScrollEventArgs e)
@@ -216,7 +198,7 @@ namespace ModelViewer
             float yTruncatedValue = (float)(Math.Truncate((double)yValue * 100.0) / 100.0);
             DirectionalLightYValue.Text = "Y: " + yTruncatedValue.ToString();
 
-            NativeMethods.DirectionaLightRotateY(yTruncatedValue);
+            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateY(yTruncatedValue);
         }
 
         private void DirectionalLightZ_Scroll(object sender, ScrollEventArgs e)
@@ -225,10 +207,7 @@ namespace ModelViewer
             float zTruncatedValue = (float)(Math.Truncate((double)zValue * 100.0) / 100.0);
             DirectionalLightZValue.Text = "Z: " + zTruncatedValue.ToString();
 
-            NativeMethods.DirectionaLightRotateZ(zTruncatedValue);
+            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateZ(zTruncatedValue);
         }
-
-
-
     }
 }

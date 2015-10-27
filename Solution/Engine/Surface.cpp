@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "CommonHelper.h"
 #include <d3dx11effect.h>
 #include "Effect.h"
 #include "Surface.h"
@@ -18,6 +19,9 @@ Prism::Surface::Surface()
 bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
 {
 	aUseSRGB;
+
+	DL_ASSERT_EXP(aFileName != ""
+		, CU::Concatenate("Shader resource ( %s ) tried to use invalid filePath", aResourceName.c_str()));
 
 	Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(aFileName);
 	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
@@ -65,8 +69,69 @@ void Prism::Surface::ReloadSurface()
 	}
 }
 
+
+bool Prism::Surface::VerityTextures(const std::string& aModelPath)
+{
+	bool diffuse = false;
+	bool albedo = false;
+	bool normal = false;
+	bool roughness = false;
+	bool metal = false;
+	bool ao = false;
+	bool emissiveness = false;
+
+	for (int i = 0; i < myShaderResourceNames.Size(); ++i)
+	{
+		if (myShaderResourceNames[i] == "DiffiuseTexture")
+		{
+			diffuse = true;
+		}
+		else if (myShaderResourceNames[i] == "AlbedoTexture")
+		{
+			albedo = true;
+		}
+		else if (myShaderResourceNames[i] == "NormalTexture")
+		{
+			normal = true;
+		}
+		else if (myShaderResourceNames[i] == "RoughnessTexture")
+		{
+			roughness = true;
+		}
+		else if (myShaderResourceNames[i] == "MetalnessTexture")
+		{
+			metal = true;
+		}
+		else if (myShaderResourceNames[i] == "AOTexture")
+		{
+			ao = true;
+		}
+		else if (myShaderResourceNames[i] == "EmissiveTexture")
+		{
+			emissiveness = true;
+		}
+	}
+
+
+	if (diffuse == true) return true;
+
+#ifndef _DEBUG
+	DL_ASSERT_EXP(albedo == true, CU::Concatenate("Albedo missing from %s", aModelPath.c_str()));
+	DL_ASSERT_EXP(normal == true, CU::Concatenate("NormalMap missing from %s", aModelPath.c_str()));
+	DL_ASSERT_EXP(roughness == true, CU::Concatenate("Roughness missing from %s", aModelPath.c_str()));
+	DL_ASSERT_EXP(metal == true, CU::Concatenate("Metalness missing from %s", aModelPath.c_str()));
+	DL_ASSERT_EXP(ao == true, CU::Concatenate("AmbientOcclusion missing from %s", aModelPath.c_str()));
+	DL_ASSERT_EXP(emissiveness == true, CU::Concatenate("Emissiveness missing from %s", aModelPath.c_str()));
+#endif
+
+	return true;
+}
+
 bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
 {
+	DL_ASSERT_EXP(aTexture != nullptr
+		, CU::Concatenate("Shader resource ( %s ) tried to use invalid texture", aResourceName.c_str()));
+
 	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
 	if (shaderVar->IsValid() == false)
 	{
@@ -82,6 +147,7 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aText
 
 	myTextures.Add(aTexture);
 	myShaderViews.Add(shaderVar);
+	myShaderResourceNames.Add(aResourceName);
 
 	return true;
 }

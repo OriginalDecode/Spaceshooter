@@ -53,7 +53,14 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 				aNote.myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() <= 0)
 		{
 			COMPONENT_LOG("No shield component found on entity or shield were depleted.");
-			aNote.myEntity.GetComponent<HealthComponent>()->RemoveHealth(myDamage);
+			if (aNote.myEntity.GetComponent<HealthComponent>() == nullptr)
+			{
+				DL_ASSERT(aNote.myEntity.GetName() + ": Entity without healthcomponent has been shot.");
+			}
+			else
+			{
+				aNote.myEntity.GetComponent<HealthComponent>()->RemoveHealth(myDamage);
+			}
 		}
 
 		SetActive(false);
@@ -81,7 +88,7 @@ void BulletComponent::SetActive(bool aActive)
 				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
 			{
 				//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", myEntity.GetAudioSFXID());
-				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Laser"));
+				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerMachineGun"));
 
 			}
 			if (myType == eBulletType::SHOTGUN_BULLET_LEVEL_1

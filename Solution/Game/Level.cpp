@@ -240,7 +240,15 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 
 	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 
-	newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer);
+	if (myEntityToDefend != nullptr)
+	{
+		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+	}
+	else
+	{
+		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+	}
+
 	myEntities.Add(newEntity);
 
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());

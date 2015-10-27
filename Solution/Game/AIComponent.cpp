@@ -16,7 +16,7 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myAvoidanceDistance(300.f)
 	, myPrevEntityToFollow(nullptr)
 {
-	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+	
 
 }
 
@@ -24,7 +24,10 @@ AIComponent::~AIComponent()
 {
 	if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
 	{
-		PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+		if (PostMaster::GetInstance()->IsSubscribed(eMessageType::DEFEND, this) == true)
+		{
+			PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+		}
 	}
 }
 
@@ -32,8 +35,8 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
 	, eAITargetPositionMode aTargetPositionMode)
 {
+	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	myEntityToFollow = nullptr;
-
 	myTargetName = aTargetName;
 
 	myTimeToNextDecision = aTimeBetweenDecisions;
@@ -116,9 +119,13 @@ void AIComponent::Update(float aDeltaTime)
 	myPhysicsComponent->SetVelocity(myVelocity);
 }
 
-void AIComponent::SetEntityToFollow(Entity* aEntity)
+void AIComponent::SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity)
 {
 	myEntityToFollow = aEntity;
+	if (myPrevEntityToFollow == nullptr)
+	{
+		myPrevEntityToFollow = aPlayerEntity;
+	}
 }
 
 void AIComponent::ReceiveMessage(const DefendMessage& aMessage)
