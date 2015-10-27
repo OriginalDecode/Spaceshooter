@@ -47,6 +47,7 @@ void PhysicsComponent::Reset()
 	myVelocity.x = 0.f;
 	myVelocity.y = 0.f;
 	myVelocity.z = 0.f;
+	mySpeed = 0.f;
 }
 
 void PhysicsComponent::BounceOff(Entity& anOtherEntity)
