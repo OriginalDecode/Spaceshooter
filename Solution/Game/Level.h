@@ -60,6 +60,7 @@ public:
 	void ReceiveMessage(const SpawnEnemyMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
+	void ReceiveMessage(const SpawnPowerUpMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 

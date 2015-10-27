@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "PostMaster.h"
 #include "SoundNote.h"
+#include "SpawnPowerUpMessage.h"
 
 Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName)
 	: myAlive(true)
@@ -57,7 +58,7 @@ void Entity::Kill()
 	}
 	if (myPowerUpName != "")
 	{
-		//PostMaster::GetInstance()->SendMessage(SpawnPowerUpMessage(myPowerUpName, myOrientation));
+		PostMaster::GetInstance()->SendMessage(SpawnPowerUpMessage(myPowerUpName, myOrientation));
 	}
 	myAlive = false;
 }

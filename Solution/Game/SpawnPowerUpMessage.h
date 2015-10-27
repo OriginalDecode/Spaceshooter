@@ -1,8 +1,12 @@
 #pragma once
-class SpawnPowerUpMessage
+#include "Message.h"
+
+class SpawnPowerUpMessage : public Message
 {
 public:
-	SpawnPowerUpMessage();
-	~SpawnPowerUpMessage();
+	SpawnPowerUpMessage(const std::string& aPowerUpName, const CU::Matrix44<float>& aOrientation);
+
+	const std::string myPowerUpName;
+	const CU::Matrix44<float> myOrientation;
 };
 
