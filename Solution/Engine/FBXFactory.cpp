@@ -213,8 +213,8 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 
 
 	Model* returnModel = CreateModel(modelData, aEffect);
+	returnModel->myFileName = aFilePath;
 	returnModel->Init();
-	returnModel->myFilePath = aFilePath;
 
 	myModels[aFilePath] = returnModel;
 
