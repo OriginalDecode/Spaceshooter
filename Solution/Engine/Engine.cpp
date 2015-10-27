@@ -1,18 +1,19 @@
 #include "stdafx.h"
 
+#include "DebugFontContainer.h"
 #include "DebugDataDisplay.h"
+#include "DebugText.h"
 #include "DirectX.h"
 #include "EffectContainer.h"
 #include "Engine.h"
 #include "FBXFactory.h"
 #include "FileWatcher.h"
-#include "FontFile.h"
-#include "DebugFontContainer.h"
+#include "Font.h"
 #include "Model.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
+#include "Text.h"
 #include <TimerManager.h>
-#include "DebugText.h"
 #include "TextureContainer.h"
 #include <Vector.h>
 #include "VTuneApi.h"
@@ -32,11 +33,8 @@ namespace Prism
 		myDebugDataDisplay = new DebugDataDisplay();
 		myFileWatcher = new FileWatcher();
 		myModelLoader = new ModelLoader();
-
 		myWireframeIsOn = false;
 		myWireframeShouldShow = false;
-		//std::vector<fontChar> fontChars;
-		//ParseFontFile(fontChars, "Data/Resource/Font/arial.ttf_sdf.txt", 512, 512);
 	}
 
 	Engine::~Engine()
@@ -88,6 +86,7 @@ namespace Prism
 
 		TIME_FUNCTION
 
+		myText->Render();
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
 			myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
@@ -171,6 +170,11 @@ namespace Prism
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
+
+		myFont = new Font("Data/Resource/Font/arial.ttf_sdf.txt", { 512, 512 });
+		myText = new Text(*myFont);
+		myText->SetPosition({ 800.f, -100.f });
+		myText->SetText("Häj!");
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 
