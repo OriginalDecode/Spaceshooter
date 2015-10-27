@@ -56,6 +56,11 @@ ID3D11ShaderResourceView* Prism::Texture::GetShaderView()
 	return myTexture;
 }
 
+void Prism::Texture::Release() 
+{
+	myTexture->Release();
+}
+
 bool Prism::Texture::IsValid(UINT aValue)
 {
 

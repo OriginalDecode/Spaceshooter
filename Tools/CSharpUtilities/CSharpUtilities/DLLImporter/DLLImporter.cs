@@ -24,6 +24,9 @@ namespace CSharpUtilities.DLLImporter
         public extern static unsafe void Update();
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void UpdateFilewatcher();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void LoadModel(string aModelFile, string aEffectFile);
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]

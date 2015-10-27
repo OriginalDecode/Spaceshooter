@@ -13,8 +13,8 @@ SoundComponent::SoundComponent(Entity& aEntity)
 
 	if (myEntity.GetType() == eEntityType::PLAYER)
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Thrusters", myAudioSFXID);
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ThrusterBoost", myAudioSFXID);
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_PlayerThrusters", myAudioSFXID);
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_PlayerThrusterBoost", myAudioSFXID);
 	}
 	else if (myEntity.GetType() == eEntityType::ENEMY)
 	{
@@ -27,9 +27,9 @@ SoundComponent::~SoundComponent()
 {
 	if (myEntity.GetType() == eEntityType::PLAYER)
 	{
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Thrusters", myAudioSFXID);
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_ThrusterBoost", myAudioSFXID);
-	}
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_PlayerThrusters", myAudioSFXID);
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_PlayerThrusterBoost", myAudioSFXID);
+	}																 
 	else if (myEntity.GetType() == eEntityType::ENEMY)
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_EnemyThruster", myAudioSFXID);

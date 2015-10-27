@@ -94,11 +94,6 @@ void ControllerComponent::Shoot(const CU::Vector3<float>& aVelocity, const CU::V
 	myEntity.SendNote(note);
 }
 
-void ControllerComponent::ResetMovementSpeed()
-{
-	myMovementSpeed = 0.f;
-}
-
 void ControllerComponent::DisableMovement(const float& aSeconds)
 {
 	myCanMove = false;

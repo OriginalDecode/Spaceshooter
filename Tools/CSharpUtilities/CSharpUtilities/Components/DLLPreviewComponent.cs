@@ -75,6 +75,7 @@ namespace CSharpUtilities.Components
             myPreviewWindow.Invalidate();
 
             DLLImporter.NativeMethods.Update();
+            DLLImporter.NativeMethods.UpdateFilewatcher();
             DLLImporter.NativeMethods.Render();
         }
     }

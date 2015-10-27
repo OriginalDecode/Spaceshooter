@@ -7,6 +7,7 @@
 #include <DL_Debug.h>
 #include <EngineEnums.h>
 #include <Entity.h>
+#include <FileWatcher.h>
 #include <InputComponent.h>
 #include <GraphicsComponent.h>
 #include <Game.h>
@@ -38,6 +39,9 @@ Prism::Camera* locCamera;
 Prism::DirectionalLight* locDirectionLight;
 CU::Matrix44f locPlayerPos;
 CU::InputWrapper locInput;
+
+std::string locCurrentModelFile;
+std::string locCurrentEffectFile;
 
 Entity* locObjectEntity;
 Entity* locCameraEntity;
@@ -165,6 +169,34 @@ void Update()
 	}
 }
 
+void UpdateFilewatcher() 
+{
+	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
+}
+
+void ReloadModel() 
+{
+	DL_DEBUG("Reload start!");
+
+	LoadModel(locCurrentModelFile.c_str(), locCurrentEffectFile.c_str());
+	std::stringstream watchMsg;
+	watchMsg << "[FileWatcher]: Reload " << locCurrentModelFile << " and " << locCurrentEffectFile;
+	DL_DEBUG(watchMsg.str().c_str());
+}
+
+void WatchCurrentFiles(const char* aModelFile, const char* aEffectFile)
+{
+	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
+	Prism::Engine::GetInstance()->GetFileWatcher()->WatchFile(aModelFile, ReloadModel);
+
+	locCurrentModelFile = aModelFile;
+	locCurrentEffectFile = aEffectFile;
+
+	std::stringstream watchMsg;
+	watchMsg <<"[FileWatcher]: Watch " << aModelFile << " and " << aEffectFile;
+	DL_DEBUG(watchMsg.str().c_str());
+}
+
 void LoadModel(const char* aModelFile, const char* aEffectFile)
 {
 
@@ -172,6 +204,8 @@ void LoadModel(const char* aModelFile, const char* aEffectFile)
 	{
 		aEffectFile = "Data/Resource/Shader/S_effect_basic.fx";
 	}
+	
+	WatchCurrentFiles(aModelFile, aEffectFile);
 
 	delete locObjectEntity;
 
@@ -194,7 +228,7 @@ void SetEffect(const char* aEffectFile)
 	{
 		std::stringstream ss; ss << "Shader: " << aEffectFile;
 		DL_DEBUG(ss.str().c_str());
-		locInstance->SetEffect(aEffectFile);
+		/*locInstance->SetEffect(aEffectFile);*/
 	}
 }
 

@@ -1,30 +1,33 @@
 #include "stdafx.h"
-
+#include "InputComponent.h"
 #include "ControllerComponent.h"
 #include "Entity.h"
 #include "PhysicsComponent.h"
 
 PhysicsComponent::PhysicsComponent(Entity& aEntity)
 	: Component(aEntity)
+	, myVelocity(0, 0, 0)
+	, mySpeed(0)
 {
-	myVelocity = { 0, 0, 0 };
 }
 
 void PhysicsComponent::Init(const CU::Matrix44<float>& anOrientation, const CU::Vector3<float>& aVelocity, int aWeight)
 {
-	myVelocity = aVelocity;
+	SetVelocity(aVelocity);
 	myWeight = aWeight;
 	myEntity.myOrientation = anOrientation;
 }
 
 void PhysicsComponent::Init(int aWeight, const CU::Vector3<float>& aVelocity)
 {
-	myVelocity = aVelocity;
+	SetVelocity(aVelocity);
 	myWeight = aWeight;
 }
 
 void PhysicsComponent::Update(float aDeltaTime)
 {
+	myPreviousOrientation2 = myPreviousOrientation; // needed to restore 2 frames back with prop collision
+	myPreviousOrientation = myEntity.myOrientation;
 	myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() + aDeltaTime * myVelocity);
 	
 	// object loses its speed, velocity approaches 0 every update
@@ -33,9 +36,10 @@ void PhysicsComponent::Update(float aDeltaTime)
 	myVelocity.z -= myVelocity.z * (aDeltaTime / 10);
 }
 
-void PhysicsComponent::MoveForward(float aDistance)
+void PhysicsComponent::Accelerate(float anAcceleration)
 {
-	myVelocity = (myEntity.myOrientation.GetForward() * (aDistance));
+	mySpeed += anAcceleration;
+	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
 }
 
 void PhysicsComponent::Reset()
@@ -43,11 +47,24 @@ void PhysicsComponent::Reset()
 	myVelocity.x = 0.f;
 	myVelocity.y = 0.f;
 	myVelocity.z = 0.f;
+	mySpeed = 0.f;
 }
 
-//void PhysicsComponent::BounceOff(float anEntityWeight)
-//{
-//	//myEntity.myOrientation.SetPos(myEntity.myOrientation.GetPos() - myVelocity * 2.f);
-//	//myVelocity = myVelocity * -anEntityWeight;
-//	//myEntity.GetComponent<ControllerComponent>()->ResetMovementSpeed();
-//}
+void PhysicsComponent::BounceOff(Entity& anOtherEntity)
+{
+	CU::Vector3<float> toOther = anOtherEntity.myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+	CU::Normalize(toOther);
+	
+	if (CU::Dot(myEntity.myOrientation.GetForward(), toOther) > 0)
+	{
+		mySpeed = -10.f;
+	}
+	else
+	{
+		mySpeed = 10.f;
+	}
+
+	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
+	myEntity.myOrientation = myPreviousOrientation2;
+	myEntity.GetComponent<InputComponent>()->SetSkyPosition();
+}

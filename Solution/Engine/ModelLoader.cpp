@@ -197,7 +197,7 @@ namespace Prism
 #else
 		ModelProxy* proxy = new ModelProxy();
 		Model* model = new Prism::Model();
-		model->InitLightCube(aWidth, aHeight, aDepth, aColour);
+		model->InitCube(aWidth, aHeight, aDepth, aColour);
 
 		proxy->SetModel(model);
 
