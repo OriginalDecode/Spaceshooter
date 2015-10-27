@@ -27,6 +27,7 @@ public:
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 
 	void SetCamera(Prism::Camera* aCamera);
+	Prism::Camera* GetCamera();
 
 	static eComponentType GetType();
 	void ReceiveNote(const MissionNote& aNote) override;
@@ -104,6 +105,11 @@ inline eComponentType GUIComponent::GetType()
 inline void GUIComponent::SetCamera(Prism::Camera* aCamera)
 {
 	myCamera = aCamera;
+}
+
+inline Prism::Camera* GUIComponent::GetCamera()
+{
+	return myCamera;
 }
 
 inline Entity* GUIComponent::GetClosestEnemy()

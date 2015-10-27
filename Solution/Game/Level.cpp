@@ -38,6 +38,7 @@
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
 #include "SpawnEnemyMessage.h"
+#include "SpawnPowerUpMessage.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -58,6 +59,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_POWERUP, this);
 }
 
 Level::~Level()
@@ -70,6 +72,7 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_POWERUP, this);
 	delete myCamera;
 
 	for (int i = 0; i < myEntities.Size(); i++)
@@ -129,7 +132,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myBulletManager->Update(aDeltaTime);
 	myMissionManager->Update(aDeltaTime);
 	myEventManager->Update();
-	myCamera->Update();
+	myCamera->Update(aDeltaTime);
 	return myComplete;
 }
 
@@ -228,6 +231,10 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 {
 	Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
 	myEntityFactory->CopyEntity(newEntity, aMessage.myType);
+	if (aMessage.myPowerUpName != "")
+	{
+		newEntity->SetPowerUpName(aMessage.myPowerUpName);
+	}
 
 	newEntity->myOrientation.SetPos(aMessage.myPosition);
 
@@ -272,6 +279,20 @@ void Level::ReceiveMessage(const DefendMessage& aMessage)
 	{
 		myEntityToDefend = nullptr;
 	}
+}
+
+void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
+{
+	Entity* newEntity = new Entity(eEntityType::POWERUP, *myScene, Prism::eOctreeType::STATIC);
+
+	newEntity->myOriginalOrientation.SetPos(aMessage.myOrientation.GetPos());
+	newEntity->myOrientation = aMessage.myOrientation;
+
+	myEntityFactory->CopyEntity(newEntity, aMessage.myPowerUpName);
+	newEntity->GetComponent<PowerUpComponent>()->SetPlayer(myPlayer);
+	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
+	myEntities.Add(newEntity);
+	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
 }
 
 void Level::CompleteLevel()
@@ -324,5 +345,10 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_J))
 	{
 		myPlayer->GetComponent<ShootingComponent>()->ActivateEMP();
+	}
+
+	if (myInputWrapper->KeyDown(DIK_H))
+	{
+		myCamera->ShakeCamera(0.1f, 0.1f, 0.5f);
 	}
 }

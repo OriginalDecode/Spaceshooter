@@ -1,6 +1,7 @@
 #pragma once
 
 #ifdef RELEASE_BUILD
+#ifndef DLL_EXPORT
 #define DL_ASSERT(string)
 #define DL_ASSERT_EXP(expression, string)
 
@@ -21,6 +22,28 @@
 #define ENTITY_LOG(...)
 #define POWERUP_LOG(...)
 #define COMPONENT_LOG(...)
+#else
+#define DL_ASSERT(string)
+#define DL_ASSERT_EXP(expression, string)
+
+#define DL_PRINT(string) DL_Debug::Debug::GetInstance()->PrintMessage(string)
+
+#define DL_DEBUG( ... ) DL_Debug::Debug::GetInstance()->DebugMessage(__FILE__,__LINE__,__FUNCTION__,__VA_ARGS__)
+
+#define DL_MESSAGE_BOX(ERRORTEXT, TITLETEXT, TYPE)
+#define DL_WRITELOG(log, ...)
+
+
+#define ENGINE_LOG(...)
+#define GAME_LOG(...)
+#define RESOURCE_LOG(...)
+#define DIRECTX_LOG(...)
+#define FBX_LOG(...)
+#define FUNCTION_TIMER_LOG(...)
+#define ENTITY_LOG(...)
+#define POWERUP_LOG(...)
+#define COMPONENT_LOG(...)
+#endif
 #else
 #define DL_ASSERT(string) DL_Debug::Debug::GetInstance()->AssertMessage(__FILE__,__LINE__,__FUNCTION__, string)
 #define DL_ASSERT_EXP(expression, string) DL_Debug::Debug::GetInstance()->AssertMessage(expression, __FILE__,__LINE__,__FUNCTION__, string)

@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "PostMaster.h"
 #include "SoundNote.h"
+#include "SpawnPowerUpMessage.h"
 
 Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName)
 	: myAlive(true)
@@ -14,6 +15,7 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	, myOctreeType(anOctreeType)
 	, myName(aName)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
+	, myPowerUpName("")
 
 {
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
@@ -54,6 +56,10 @@ void Entity::Kill()
 	{
 		SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShipExplosion"));
 	}
+	if (myPowerUpName != "")
+	{
+		PostMaster::GetInstance()->SendMessage(SpawnPowerUpMessage(myPowerUpName, myOrientation));
+	}
 	myAlive = false;
 }
 
@@ -68,4 +74,9 @@ void Entity::Reset()
 			myComponents[i]->Reset();
 		}
 	}
+}
+
+void Entity::SetPowerUpName(const std::string& aPowerUpName)
+{
+	myPowerUpName = aPowerUpName;
 }
