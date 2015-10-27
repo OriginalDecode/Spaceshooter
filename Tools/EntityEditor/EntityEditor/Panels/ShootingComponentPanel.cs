@@ -292,43 +292,36 @@ namespace EntityEditor.Panels
 
         protected override void LoadSettings()
         {
-            if (mySaveState == eSaveShootingState.BOTH || mySaveState == eSaveShootingState.WEAPON)
-            {
+           
                 myWeaponDataStats.GetCooldown().Text = myWeaponData.myCooldown.ToString();
                 myWeaponDataStats.GetSpread().Text = myWeaponData.mySpread.ToString();
                 myWeaponDataStats.GetPosition().SetPosition(myWeaponData.myPosition.myX.ToString()
                     , myWeaponData.myPosition.myY.ToString(), myWeaponData.myPosition.myZ.ToString());
                 myWeaponDataStats.GetBulletPerShot().Text = myWeaponData.myNumberOfBulletsPerShot.ToString();
-            }
-
-            if (mySaveState == eSaveShootingState.BOTH || mySaveState == eSaveShootingState.BULLET)
-            {
+           
                 myBulletDataStats.SetEntityType(myBulletData.myEntityType);
                 myBulletDataStats.SetMaxAmount(myBulletData.myMaxAmount);
                 myBulletDataStats.SetSpeed(myBulletData.mySpeed);
-            }
+            
         }
 
         protected override void SaveSettings()
         {
-            myShootingComponent.myWeaponType = (string)myWeaponTypes.GetDropDown().SelectedItem;
+            myShootingComponent.myWeaponType = (string)myWeaponTypes.GetDropDown().Text;
 
-            if (mySaveState == eSaveShootingState.BOTH || mySaveState == eSaveShootingState.WEAPON)
-            {
-                    myWeaponData.myBulletType = (string)myBulletTypes.GetDropDown().SelectedItem;
+            
+                    myWeaponData.myBulletType = (string)myBulletTypes.GetDropDown().Text;
                     myWeaponData.myCooldown = float.Parse(myWeaponDataStats.GetCooldown().Text);
                     myWeaponData.mySpread = int.Parse(myWeaponDataStats.GetSpread().Text);
                     myWeaponData.myNumberOfBulletsPerShot = int.Parse(myWeaponDataStats.GetBulletPerShot().Text);
                     myWeaponData.myPosition.myX = myWeaponDataStats.GetPosition().GetX();
                     myWeaponData.myPosition.myY = myWeaponDataStats.GetPosition().GetY();
                     myWeaponData.myPosition.myZ = myWeaponDataStats.GetPosition().GetZ();
-            }
-            if (mySaveState == eSaveShootingState.BOTH || mySaveState == eSaveShootingState.BULLET)
-            {
+            
                     myBulletData.myEntityType = myBulletDataStats.GetEntityType();
                     myBulletData.myMaxAmount = myBulletDataStats.GetMaxAmount();
                     myBulletData.mySpeed = myBulletDataStats.GetSpeed();
-            }
+            
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetShootingComponent(myShootingComponent);
@@ -370,14 +363,14 @@ namespace EntityEditor.Panels
         private void WeaponDropDown_SelectIndex_Changed(object sender, EventArgs e)
         {
             myWeaponData = myLoadedWeapons[myWeaponTypes.GetDropDown().SelectedIndex];
-            mySaveState = eSaveShootingState.WEAPON;
+            mySaveState = eSaveShootingState.BOTH;
             LoadSettings();
         }
 
         private void BulletDropDown_SelectIndex_Changed(object sender, EventArgs e)
         {
             myBulletData = myLoadedBullets[myBulletTypes.GetDropDown().SelectedIndex];
-            mySaveState = eSaveShootingState.BULLET;
+            mySaveState = eSaveShootingState.BOTH;
             LoadSettings();
         }
 

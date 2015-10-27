@@ -4,18 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
-namespace ModelViewer
+namespace CSharpUtilities.DLLImporter
 {
-    static class NativeMethods
+    public static class NativeMethods
     {
-#if DEBUG
-        const string EngineDLLName = "DLLExporter_Debug.dll";
-#else
         const string EngineDLLName = "DLLExporter_Release.dll";
-#endif
-        
+
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void StartEngine(IntPtr aHwnd);
 

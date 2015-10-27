@@ -16,6 +16,7 @@ EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aCo
 	PostMaster::GetInstance()->Subscribe(eMessageType::START_EVENT, this);
 	XMLReader reader;
 	reader.OpenDocument(aXmlPath);
+	std::unordered_map<std::string, int> eventNames;
 	tinyxml2::XMLElement* eventElement = reader.ForceFindFirstChild("root");
 	
 	for (eventElement = reader.FindFirstChild(eventElement, "event"); eventElement != nullptr;
@@ -24,6 +25,13 @@ EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aCo
 		std::string name;
 		reader.ForceReadAttribute(eventElement, "name", name);
 		name = CU::ToLower(name);
+
+		auto it = eventNames.find(name);
+		if (it != eventNames.end())
+		{
+			DL_ASSERT(name + ": Duplicated eventname in: " + aXmlPath);
+		}
+		eventNames[name] = 1;
 
 		CU::GrowingArray<Action*> actions(8);
 
