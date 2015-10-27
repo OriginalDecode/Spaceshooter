@@ -18,7 +18,7 @@ namespace Prism
 		const CU::Matrix44<float>& GetOrientation() const;
 		const CU::Matrix44<float>& GetProjection() const;
 
-		void Update();
+		void Update(float aDeltaTime);
 
 		const Frustum& GetFrustum() const;
 
@@ -32,6 +32,8 @@ namespace Prism
 		void MoveForward(const float aDistance);
 		void MoveRight(const float aDistance);
 
+		void ShakeCamera(float aRotationRate, float aMaxRotation, float aTime);
+
 	private:
 		void operator= (const Camera&) = delete;
 
@@ -41,6 +43,14 @@ namespace Prism
 		float myFar;
 		float myFOV;
 		Frustum* myFrustum;
+
+		bool myShakeCamera;
+		float myRotateRate;
+		float myMaxShake;
+		float myCurrentShake;
+		float myMaxShakeTime;
+		float myCurrentShakeTime;
+
 	};
 
 	inline const Frustum& Camera::GetFrustum() const
