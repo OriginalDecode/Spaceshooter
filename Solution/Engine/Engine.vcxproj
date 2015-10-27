@@ -222,6 +222,8 @@
     <ClCompile Include="FileWatcher.cpp" />
     <ClCompile Include="DebugFont.cpp" />
     <ClCompile Include="DebugFontContainer.cpp" />
+    <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FontFile.cpp" />
     <ClCompile Include="FrameTimeDebugger.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GraphRenderer.cpp" />
@@ -243,8 +245,12 @@
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="SystemMonitor.cpp" />
     <ClCompile Include="DebugText.cpp" />
+    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="TextFile.cpp" />
+    <ClCompile Include="TextParser.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureContainer.cpp" />
+    <ClCompile Include="Token.cpp" />
     <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -267,6 +273,8 @@
     <ClInclude Include="FileWatcher.h" />
     <ClInclude Include="DebugFont.h" />
     <ClInclude Include="DebugFontContainer.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="FontFile.h" />
     <ClInclude Include="FrameTimeDebugger.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GraphRenderer.h" />
@@ -289,8 +297,12 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="SystemMonitor.h" />
     <ClInclude Include="DebugText.h" />
+    <ClInclude Include="Text.h" />
+    <ClInclude Include="TextFile.h" />
+    <ClInclude Include="TextParser.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureContainer.h" />
+    <ClInclude Include="Token.h" />
     <ClInclude Include="TreeNode.h" />
     <ClInclude Include="VertexBufferWrapper.h" />
     <ClInclude Include="VertexDataWrapper.h" />

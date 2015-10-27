@@ -72,4 +72,24 @@ namespace CU
 
 		return buffer;
 	}
+
+	inline float StringToFloat(const std::string& aString)
+	{
+		const char* value = aString.c_str();
+		char* end;
+		float floatValue = strtof(value, &end);
+
+		DL_ASSERT_EXP(value != end, "Error reading float value: " + aString);
+		return floatValue;
+	}
+
+	inline int StringToInt(const std::string& aString)
+	{
+		const char* value = aString.c_str();
+		char* end;
+		int intValue = strtol(value, &end, 10);
+
+		DL_ASSERT_EXP(value != end, "Error reading int value: " + aString);
+		return intValue;
+	}
 }

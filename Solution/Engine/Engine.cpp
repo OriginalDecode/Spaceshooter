@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "FBXFactory.h"
 #include "FileWatcher.h"
+#include "FontFile.h"
 #include "DebugFontContainer.h"
 #include "Model.h"
 #include "ModelLoader.h"
@@ -34,6 +35,8 @@ namespace Prism
 
 		myWireframeIsOn = false;
 		myWireframeShouldShow = false;
+		//std::vector<fontChar> fontChars;
+		//ParseFontFile(fontChars, "Data/Resource/Font/arial.ttf_sdf.txt", 512, 512);
 	}
 
 	Engine::~Engine()
