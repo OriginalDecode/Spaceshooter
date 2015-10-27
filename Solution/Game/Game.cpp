@@ -8,7 +8,7 @@
 #include <DebugMenu.h>
 #include <DebugDataDisplay.h>
 #include <FileWatcher.h>
-#include <Font.h>
+#include <DebugFont.h>
 #include "Game.h"
 #include "GameStateMessage.h"
 #include "InGameState.h"

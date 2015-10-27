@@ -15,7 +15,7 @@ namespace Prism
 {
 	class Camera;
 	class GraphRenderer;
-	class Text;
+	class DebugText;
 
 	class FrameTimeDebugger
 	{
@@ -40,8 +40,8 @@ namespace Prism
 
 		struct FunctionData
 		{
-			Text* myNameText = nullptr;
-			Text* myTimeText = nullptr;
+			DebugText* myNameText = nullptr;
+			DebugText* myTimeText = nullptr;
 			int myHitCount = 0;
 			float myMS = 0.f;
 			unsigned long long myStart = 0;

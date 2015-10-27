@@ -10,7 +10,7 @@
 #include <Engine.h>
 #include "Entity.h"
 #include <FileWatcher.h>
-#include <Font.h>
+#include <DebugFont.h>
 #include "GameStateMessage.h"
 #include "InGameState.h"
 #include <InputWrapper.h>

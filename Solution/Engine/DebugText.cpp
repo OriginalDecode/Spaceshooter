@@ -7,14 +7,14 @@
 #include "Effect.h"
 #include "EffectContainer.h"
 #include "Engine.h"
-#include "Font.h"
-#include "Text.h"
+#include "DebugFont.h"
+#include "DebugText.h"
 #include <string.h>
 #include "VertexBufferWrapper.h"
 #include "IndexBufferWrapper.h"
 #include "Surface.h"
 
-void Prism::Text::Init(Font* aFont)
+void Prism::DebugText::Init(DebugFont* aFont)
 {
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_font.fx");
 	myFont = aFont;
@@ -40,7 +40,7 @@ void Prism::Text::Init(Font* aFont)
 	myIndices.Init(16);
 }
 
-void Prism::Text::Render(const std::string& aString, const CU::Vector2<float>& aPosition
+void Prism::DebugText::Render(const std::string& aString, const CU::Vector2<float>& aPosition
 	, const CU::Vector2<float>& aScale, const CU::Vector4<float>& aColor)
 {
 
@@ -81,7 +81,7 @@ void Prism::Text::Render(const std::string& aString, const CU::Vector2<float>& a
 }
 
 
-CU::Vector2<float> Prism::Text::GetTextSize(const std::string& aString) const
+CU::Vector2<float> Prism::DebugText::GetTextSize(const std::string& aString) const
 {
 	int numOfLetters = aString.length();
 	CU::Vector2<float> size;
@@ -93,12 +93,12 @@ CU::Vector2<float> Prism::Text::GetTextSize(const std::string& aString) const
 	return size;
 }
 
-const CU::Vector2<float>& Prism::Text::GetCharSize() const
+const CU::Vector2<float>& Prism::DebugText::GetCharSize() const
 {
 	return myCharSize;
 }
 
-void Prism::Text::ConstructBuffers(const std::string& aString)
+void Prism::DebugText::ConstructBuffers(const std::string& aString)
 {
 	TIME_FUNCTION;
 
@@ -115,7 +115,7 @@ void Prism::Text::ConstructBuffers(const std::string& aString)
 	VertexPosUV vert;
 	for (int i = 0; i < numOfLetters; ++i)
 	{
-		Font::CharacterData charData = myFont->GetCharData(aString[i]);
+		DebugFont::CharacterData charData = myFont->GetCharData(aString[i]);
 
 		float left = drawX;
 		float right = left + myCharSize.x;
@@ -163,7 +163,7 @@ void Prism::Text::ConstructBuffers(const std::string& aString)
 	myTextWidth = drawX - myTextWidth;
 }
 
-float Prism::Text::GetTextWidth() const
+float Prism::DebugText::GetTextWidth() const
 {
 	return myTextWidth;
 }

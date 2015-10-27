@@ -1,10 +1,10 @@
 #include "stdafx.h"
 
 #include "FrameTimeDebugger.h"
-#include "FontContainer.h"
+#include "DebugFontContainer.h"
 #include "GraphRenderer.h"
 #include <InputWrapper.h>
-#include "Text.h"
+#include "DebugText.h"
 
 namespace Prism
 {
@@ -95,11 +95,11 @@ namespace Prism
 				it->second.myNameString = myStringStream.str();
 		
 		
-				it->second.myNameText = new Text();
+				it->second.myNameText = new DebugText();
 				it->second.myNameText->Init(
 					Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 		
-				it->second.myTimeText = new Text();
+				it->second.myTimeText = new DebugText();
 				it->second.myTimeText->Init(
 					Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 			}

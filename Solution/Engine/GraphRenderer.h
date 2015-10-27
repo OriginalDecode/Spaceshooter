@@ -12,7 +12,7 @@ namespace Prism
 {
 	class Camera;
 	class Effect;
-	class Font;
+	class DebugFont;
 	class Surface;
 
 	struct IndexBufferWrapper;

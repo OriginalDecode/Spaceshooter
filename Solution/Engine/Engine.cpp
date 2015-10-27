@@ -6,12 +6,12 @@
 #include "Engine.h"
 #include "FBXFactory.h"
 #include "FileWatcher.h"
-#include "FontContainer.h"
+#include "DebugFontContainer.h"
 #include "Model.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include <TimerManager.h>
-#include "Text.h"
+#include "DebugText.h"
 #include "TextureContainer.h"
 #include <Vector.h>
 #include "VTuneApi.h"
@@ -27,7 +27,7 @@ namespace Prism
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
 		myModelFactory = new FBXFactory();
-		myFontContainer = new FontContainer();
+		myFontContainer = new DebugFontContainer();
 		myDebugDataDisplay = new DebugDataDisplay();
 		myFileWatcher = new FileWatcher();
 		myModelLoader = new ModelLoader();
@@ -163,7 +163,7 @@ namespace Prism
 		myDebugDataDisplay->Init();
 
 
-		myDebugText = new Text();
+		myDebugText = new DebugText();
 		myDebugText->Init(GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
@@ -178,7 +178,7 @@ namespace Prism
 	void Engine::PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale)
 	{
 		//myDebugText->Render(aText.c_str(), aPosition.x, aPosition.y, aScale);
-		DebugText toAdd;
+		DebugTextCommand toAdd;
 		toAdd.myText = aText;
 		toAdd.myPosition = aPosition;
 		toAdd.myScale = aScale;

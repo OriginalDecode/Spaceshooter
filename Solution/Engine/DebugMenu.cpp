@@ -2,9 +2,9 @@
 
 #include "DebugMenu.h"
 #include "Engine.h"
-#include "FontContainer.h"
+#include "DebugFontContainer.h"
 #include <InputWrapper.h>
-#include "Text.h"
+#include "DebugText.h"
 
 namespace Prism
 {
@@ -14,7 +14,7 @@ namespace Prism
 		, myRadius(200.f)
 		, myInteractRange(150.f)
 	{
-		myText = new Text();
+		myText = new DebugText();
 		myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 		myMenuElements.Init(4);

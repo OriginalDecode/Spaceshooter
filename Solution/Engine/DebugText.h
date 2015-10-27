@@ -4,12 +4,12 @@
 
 namespace Prism
 {
-	class Font;
+	class DebugFont;
 
-	class Text : public BaseModel
+	class DebugText : public BaseModel
 	{
 	public:
-		void Init(Font* aFont);
+		void Init(DebugFont* aFont);
 
 		void Render(const std::string& aString, const CU::Vector2<float>& aPosition
 			, const CU::Vector2<float>& aScale = {1.f, 1.f}
@@ -26,7 +26,7 @@ namespace Prism
 		CU::GrowingArray<VertexPosUV> myVertices;
 		CU::GrowingArray<int> myIndices;
 
-		Font* myFont;
+		DebugFont* myFont;
 
 		CU::Vector2<float> myCharSize;
 		float myTextWidth;

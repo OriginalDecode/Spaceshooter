@@ -5,7 +5,7 @@ namespace Prism
 {
 	class Texture;
 
-	class Font
+	class DebugFont
 	{
 	public:
 		struct CharacterData
@@ -14,7 +14,7 @@ namespace Prism
 			CU::Vector2<float> myBottomRightUV;
 		};
 
-		Font();
+		DebugFont();
 
 		bool Init(const char* aFontPath);
 		CharacterData GetCharData(char aChar);
@@ -29,12 +29,12 @@ namespace Prism
 	};
 }
 
-inline const CU::Vector2<float>& Prism::Font::GetCharSize() const
+inline const CU::Vector2<float>& Prism::DebugFont::GetCharSize() const
 {
 	return myCharSize;
 }
 
-inline Prism::Texture* Prism::Font::GetTexture()
+inline Prism::Texture* Prism::DebugFont::GetTexture()
 {
 	return myTexture;
 }

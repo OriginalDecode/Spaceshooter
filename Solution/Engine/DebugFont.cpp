@@ -1,21 +1,21 @@
 #include "stdafx.h"
-#include "Font.h"
+#include "DebugFont.h"
 #include "TextureContainer.h"
 
 
-Prism::Font::Font()
+Prism::DebugFont::DebugFont()
 	: myCharSize(32.f, 32.f)
 {
 }
 
-bool Prism::Font::Init(const char* aFontPath)
+bool Prism::DebugFont::Init(const char* aFontPath)
 {
 	myTexture = Engine::GetInstance()->GetTextureContainer()->GetTexture(aFontPath);
 
 	return true;
 }
 
-Prism::Font::CharacterData Prism::Font::GetCharData(char aChar)
+Prism::DebugFont::CharacterData Prism::DebugFont::GetCharData(char aChar)
 {
 	int x = aChar % 16;
 	int y = aChar / 16;
