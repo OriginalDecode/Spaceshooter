@@ -211,6 +211,11 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		acceleration -= myAcceleration * aDelta;
 	}
 
+	if (myInputWrapper->KeyIsPressed(DIK_SPACE))
+	{
+		Reset();
+	}
+
 	int soundSpeed = static_cast<int>((movementSpeed / myMaxMovementSpeed) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 	int boostSpeed = static_cast<int>((myCurrentBoostValue / myMaxBoostValue) * 100);
@@ -302,7 +307,7 @@ void InputComponent::Reset()
 	myCanMove = true;
 	myCurrentBoostCooldown = 0.f;
 	myCurrentBoostValue = 0.f;
-	myMaxBoostCooldown = 0.f;
+	myEntity.GetComponent<PhysicsComponent>()->Reset();
 }
 
 void InputComponent::SetSkyPosition()
