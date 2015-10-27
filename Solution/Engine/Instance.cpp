@@ -92,3 +92,8 @@ void Prism::Instance::UpdateSpotLights(
 		myProxy.GetEffect()->UpdateSpotLights(someSpotLightData);
 	}
 }
+
+Prism::ModelProxy& Prism::Instance::GetModel()
+{
+	return myProxy;
+}

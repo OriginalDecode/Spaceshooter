@@ -82,26 +82,9 @@ private:
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 
-	int myHealthBarCount;
-	int myShieldBarCount;
-
-	Prism::Sprite* myHealthBar;
-	Prism::Sprite* myShieldBar;
-
-	Prism::Sprite* myHealthBarGlow;
-	Prism::Sprite* myShieldBarGlow;
-
-	CU::Vector2<float> myHealthBarRenderPosition;
-	CU::Vector2<float> myOriginalHealthBarRenderPosition;
-
-	CU::Vector2<float> myShieldBarRenderPosition;
-	CU::Vector2<float> myOriginalShieldBarRenderPosition;
-
-	float myBarSize;
-	float myOriginalBarSize;
-
 	Prism::Instance* myGUIBars[2];
-	float myCullingRadius;
+	float myHealthBarRadius;
+	float myShieldBarRadius;
 
 	std::string myConversation;
 

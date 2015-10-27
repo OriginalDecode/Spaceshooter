@@ -4,6 +4,9 @@
 #include "Constants.h"
 #include "ConversationMessage.h"
 #include "DefendMessage.h"
+#include <Effect.h>
+#include <EffectContainer.h>
+#include <Engine.h>
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "Instance.h"
@@ -51,21 +54,33 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 
 	XMLReader reader;
-	reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_bar.xml");
+	reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_healthbar.xml");
 
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius")
-		, "value", myCullingRadius);
+		, "value", myHealthBarRadius);
+	reader.CloseDocument();
+	reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_shieldbar.xml");
+
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius")
+		, "value", myShieldBarRadius);
 	reader.CloseDocument();
 
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
-		"Data/Resource/Model/Player/SM_cockpit_bar.fbx", "Data/Resource/Shader/S_effect_bar.fx");
-	myGUIBars[0] = new Prism::Instance(*model, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myCullingRadius);
+		"Data/Resource/Model/Player/SM_cockpit_healthbar.fbx", "Data/Resource/Shader/S_effect_bar_health.fx");
+	myGUIBars[0] = new Prism::Instance(*model, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
 
 	Prism::ModelProxy* model2 = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
-		"Data/Resource/Model/Player/SM_cockpit_bar.fbx", "Data/Resource/Shader/S_effect_bar.fx");
-	myGUIBars[1] = new Prism::Instance(*model2, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myCullingRadius);
+		"Data/Resource/Model/Player/SM_cockpit_shieldbar.fbx", "Data/Resource/Shader/S_effect_bar_shield.fx");
+	myGUIBars[1] = new Prism::Instance(*model2, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
 
 
+	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_health.fx");
+	hpBarEffect->SetPlayerVariable(1000);
+
+	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_shield.fx");
+	shieldBarEffect->SetPlayerVariable(1000);
 
 
 
@@ -92,19 +107,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 	myDefendArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_defend_arrow.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
-
-	myOriginalBarSize = 32.f;
-	myBarSize = myOriginalBarSize;
-
-	CU::Vector2<float> barSize(myBarSize, myBarSize);
-	myHealthBarGlow = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", barSize, barSize / 2.f);
-	myHealthBar = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", barSize, barSize / 2.f);
-
-	myShieldBarGlow = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", barSize, barSize / 2.f);
-	myShieldBar = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_b.dds", barSize, barSize / 2.f);
-
-	myHealthBarCount = 20;
-	myShieldBarCount = 20;
 
 	myHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds"
 		, { 256, 256 }, { 128.f, 128.f });
@@ -152,8 +154,6 @@ GUIComponent::~GUIComponent()
 	myHitMarker = nullptr;
 	myDamageIndicator = nullptr;
 	myHomingTarget = nullptr;
-	delete myHealthBar;
-	myHealthBar = nullptr;
 
 	delete myGUIBars[0];
 	delete myGUIBars[1];
@@ -329,38 +329,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemies.RemoveAll();
 	myPowerUpPositions.RemoveAll();
 
-	/*
-	for (int i = 0; i < myHealthBarCount; ++i)
-	{
-		CU::Vector2<float> newRenderPos = { 0.518f, -0.820f };
-
-		newRenderPos += 1.f;
-		newRenderPos *= 0.5f;
-		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y *= aWindowSize.y;
-		newRenderPos.y -= aWindowSize.y;
-
-		myHealthBarGlow->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
-		myHealthBar->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
-	}
-
-	for (int i = 0; i < myShieldBarCount; ++i)
-	{
-		CU::Vector2<float> newRenderPos = { -0.739f, -0.812f };
-
-		newRenderPos += 1.f;
-		newRenderPos *= 0.5f;
-		newRenderPos.x *= aWindowSize.x;
-		newRenderPos.y *= aWindowSize.y;
-		newRenderPos.y -= aWindowSize.y;
-
-		myShieldBarGlow->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
-		myShieldBar->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
-	}
-	*/
-
 	myGUIBars[0]->Render(*myCamera);
-
+	myGUIBars[1]->Render(*myCamera);
 
 	if (myHitMarkerTimer >= 0.f)
 	{
@@ -418,13 +388,16 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 
 void GUIComponent::ReceiveNote(const HealthNote& aNote)
 {
-	myHealthBarCount = static_cast<int>(((aNote.myHealth / static_cast<float>(aNote.myMaxHealth) * 20 + 0.5f)));
+	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_health.fx");
+	hpBarEffect->SetPlayerVariable(aNote.myHealth);
 }
 
 void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 {
-	myShieldBarCount = static_cast<int>(((aNote.myShieldStrength / static_cast<float>(aNote.myMaxShieldStrength) *
-		20 + 0.5f)));
+	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_shield.fx");
+	shieldBarEffect->SetPlayerVariable(aNote.myShieldStrength);
 }
 
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
@@ -446,15 +419,6 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
-	float offset = aMessage.GetResolution().x / static_cast<float>(aMessage.GetResolution().y);
-
-	myBarSize = (myOriginalBarSize * offset) * 0.5f;
-
-	myHealthBar->SetSize({ myBarSize, myBarSize });
-	myHealthBarGlow->SetSize({ myBarSize, myBarSize });
-
-	myShieldBar->SetSize({ myBarSize, myBarSize });
-	myShieldBarGlow->SetSize({ myBarSize, myBarSize });
 }
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
@@ -478,7 +442,14 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 
 void GUIComponent::Reset()
 {
-	myHealthBarCount = 20;
-	myShieldBarCount = 20;
+
+	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_shield.fx");
+	shieldBarEffect->SetPlayerVariable(1000);
+	
+	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_health.fx");
+	hpBarEffect->SetPlayerVariable(1000);
+
 	myEnemiesTarget = nullptr;
 }

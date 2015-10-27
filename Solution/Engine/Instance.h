@@ -36,6 +36,8 @@ namespace Prism
 		float GetObjectCullingRadius() const;
 		eOctreeType GetOctreeType() const;
 
+		ModelProxy& GetModel();
+
 	private:
 		void operator=(Instance&) = delete;
 
