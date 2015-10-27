@@ -23,6 +23,7 @@
 #include "GUINote.h"
 #include "HealthComponent.h"
 #include "Instance.h"
+#include "InputComponent.h"
 #include <InputWrapper.h>
 #include "Level.h"
 #include "MissionManager.h"
@@ -120,8 +121,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
-
+	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
+	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
 	UpdateDebug();
 
 	myCollisionManager->Update();

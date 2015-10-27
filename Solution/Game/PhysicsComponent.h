@@ -15,17 +15,20 @@ public:
 	int GetWeight() const;
 
 	void SetVelocity(const CU::Vector3<float>& aVelocity);
-	void AddVelocity(const CU::Vector3<float>& aVelocity);
 	const CU::Vector3<float>& GetVelocity() const;
+	float GetSpeed() const;
 
-	void MoveForward(float aDistance);
+	void Accelerate(float anAcceleration);
 
 	void Reset() override;
-	//void BounceOff(float anEntityWeight);
+	void BounceOff(Entity& anOtherEntity);
 
 private:
+	float mySpeed;
 	CU::Vector3<float> myVelocity;
 	int myWeight;
+	CU::Matrix44<float> myPreviousOrientation;
+	CU::Matrix44<float> myPreviousOrientation2;
 };
 
 inline eComponentType PhysicsComponent::GetType()
@@ -41,14 +44,15 @@ inline int PhysicsComponent::GetWeight() const
 inline void PhysicsComponent::SetVelocity(const CU::Vector3<float>& aVelocity)
 {
 	myVelocity = aVelocity;
-}
-
-inline void PhysicsComponent::AddVelocity(const CU::Vector3<float>& aVelocity)
-{
-	myVelocity += aVelocity;
+	mySpeed = CU::Length(myVelocity);
 }
 
 inline const CU::Vector3<float>& PhysicsComponent::GetVelocity() const
 {
 	return myVelocity;
+}
+
+inline float PhysicsComponent::GetSpeed() const
+{
+	return mySpeed;
 }

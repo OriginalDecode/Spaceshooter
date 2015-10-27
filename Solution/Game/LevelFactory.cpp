@@ -444,6 +444,6 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	delete myCurrentLevel->mySkySphere;
 	myCurrentLevel->mySkySphereCullingRadius = 10.f;
 	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
-		, myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE
+		, myPlayer->GetComponent<InputComponent>()->GetSkyOrientation(), Prism::eOctreeType::NOT_IN_OCTREE
 		, myCurrentLevel->mySkySphereCullingRadius);
 }

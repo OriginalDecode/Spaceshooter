@@ -14,6 +14,10 @@ public:
 	void Init(CU::InputWrapper& aInputWrapper);
 	void Update(float aDeltaTime) override;
 
+	const CU::Matrix44<float>& GetSkyOrientation() const;
+
+	void SetSkyPosition();
+
 	static eComponentType GetType();
 
 	void Reset() override;
@@ -56,10 +60,16 @@ private:
 	bool myCameraIsLocked;
 	bool myBoost;
 
+	CU::Matrix44<float> mySkyOrientation;
 };
 
 
 inline eComponentType InputComponent::GetType()
 {
-	return eComponentType::INPUT;
+	return eComponentType::CONTROLLER;
+}
+
+inline const CU::Matrix44<float>& InputComponent::GetSkyOrientation() const
+{
+	return mySkyOrientation;
 }

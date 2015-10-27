@@ -27,7 +27,6 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myInputWrapper = &aInputWrapper;
 
 	myRollSpeed = 0.f;
-	myMovementSpeed = 0.f;
 	myMaxSteeringSpeed = 0;
 	myMaxRollSpeed = 0;
 	myCameraIsLocked = false;
@@ -75,11 +74,11 @@ void InputComponent::Update(float aDeltaTime)
 		}
 
 		UpdateMovement(aDeltaTime);
-		UpdateSteering(aDeltaTime);		
+		UpdateSteering(aDeltaTime);
 	}
 	else
 	{
-		myMovementSpeed = 0.f;
+		//myMovementSpeed = 0.f;
 
 		myTimeBeforeMovement -= aDeltaTime;
 
@@ -190,27 +189,35 @@ void InputComponent::ToggleCameraLock()
 
 void InputComponent::UpdateMovement(const float& aDelta)
 {
-	if (myInputWrapper->KeyIsPressed(DIK_W))
+	float acceleration = 0;
+	const float movementSpeed = myEntity.GetComponent<PhysicsComponent>()->GetSpeed();
+
+	if (movementSpeed < 0)
 	{
-		myMovementSpeed += myAcceleration * aDelta;
+		myCurrentBoostValue = 0;
 	}
-	else
+
+	if (myInputWrapper->KeyIsPressed(DIK_W) && movementSpeed < myMaxMovementSpeed)
 	{
-		myMovementSpeed -= myAcceleration * aDelta / 10;
+		acceleration += myAcceleration * aDelta;
+	}
+	else if (movementSpeed > myMinMovementSpeed)
+	{
+		acceleration -= myAcceleration * aDelta / 10;
 	}
 
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
-		myMovementSpeed -= myAcceleration * aDelta;
+		acceleration -= myAcceleration * aDelta;
 	}
 
-	int soundSpeed = static_cast<int>((myMovementSpeed / myMaxMovementSpeed) * 100);
+	int soundSpeed = static_cast<int>((movementSpeed / myMaxMovementSpeed) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 	int boostSpeed = static_cast<int>((myCurrentBoostValue / myMaxBoostValue) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 
-	myMovementSpeed = CU::Clip(myMovementSpeed, myMinMovementSpeed, myMaxMovementSpeed);
-	myMovementSpeed += myCurrentBoostValue;
+	//myMovementSpeed = CU::Clip(movementSpeed, , myMaxMovementSpeed);
+	acceleration += myCurrentBoostValue * aDelta;
 
 	if (myCurrentBoostCooldown == 0.f)
 	{
@@ -233,7 +240,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		}
 	}
 	
-	myEntity.GetComponent<PhysicsComponent>()->MoveForward(myMovementSpeed);
+	myEntity.GetComponent<PhysicsComponent>()->Accelerate(acceleration);
 
 	if (myBoost == false)
 	{
@@ -291,11 +298,15 @@ void InputComponent::UpdateSteering(const float& aDelta)
 void InputComponent::Reset()
 {
 	myRollSpeed = 0.f;
-	myMovementSpeed = 0.f;
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
 	myCurrentBoostCooldown = 0.f;
 	myCurrentBoostValue = 0.f;
 	myMaxBoostCooldown = 0.f;
+}
+
+void InputComponent::SetSkyPosition()
+{
+	mySkyOrientation.SetPos(myEntity.myOrientation.GetPos());
 }
