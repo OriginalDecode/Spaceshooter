@@ -1,6 +1,7 @@
 #include "stdafx.h"
 
 #include "CommonHelper.h"
+#include "FileWatcher.h"
 #include "Texture.h"
 #include "TextureContainer.h"
 
@@ -41,4 +42,14 @@ void Prism::TextureContainer::LoadTexture(const std::string& aFileName)
 	newTex->LoadTexture(aFileName);
 
 	myTextures[aFileName] = newTex;
+
+#ifdef DLL_EXPORT
+	WATCH_FILE(aFileName, Prism::TextureContainer::ReloadTexture);
+#endif
+}
+
+void Prism::TextureContainer::ReloadTexture(const std::string& aFileName) 
+{
+	myTextures[aFileName]->Release();
+	myTextures[aFileName]->LoadTexture(aFileName);
 }
