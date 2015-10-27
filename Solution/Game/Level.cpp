@@ -228,6 +228,10 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 {
 	Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
 	myEntityFactory->CopyEntity(newEntity, aMessage.myType);
+	if (aMessage.myPowerUpName != "")
+	{
+		newEntity->SetPowerUpName(aMessage.myPowerUpName);
+	}
 
 	newEntity->myOrientation.SetPos(aMessage.myPosition);
 
