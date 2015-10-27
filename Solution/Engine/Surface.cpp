@@ -72,6 +72,11 @@ void Prism::Surface::ReloadSurface()
 
 bool Prism::Surface::VerityTextures(const std::string& aModelPath)
 {
+	if (aModelPath.find("skySphere") != std::string::npos)
+	{
+		return true;
+	}
+
 	bool diffuse = false;
 	bool albedo = false;
 	bool normal = false;
