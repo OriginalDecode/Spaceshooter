@@ -121,7 +121,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-	mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
+	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
 	UpdateDebug();
 
