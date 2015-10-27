@@ -12,6 +12,7 @@
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
 #include "PowerUpNote.h"
+#include "SoundNote.h"
 
 PowerUpComponent::PowerUpComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -47,7 +48,7 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 		PowerUpNote note(myType, myValue, myDuration);
 		aNote.myEntity.SendNote(note);
 	}
-
+	aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PowerUpTaken"));
 	aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 	myEntity.Kill();
 }
