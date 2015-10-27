@@ -71,3 +71,5 @@ Tools/CSharpUtilities/CSharpUtilities/obj/
 /Solution/DL_Debug/DL_Debug.vcxproj.user
 *.opensdf
 /fromLD
+
+*.vcxproj.user
