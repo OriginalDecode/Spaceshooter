@@ -37,7 +37,7 @@ void BulletComponent::Init(float aMaxTime, int aDamage, float aDamageRadius, eBu
 	myDamage = aDamage;
 	myDamageRadius = aDamageRadius;
 	DL_ASSERT_EXP(myDamage >= 0, "Can't have negative damage.");
-} 
+}
 
 void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 {
@@ -49,8 +49,8 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 			aNote.myEntity.GetComponent<ShieldComponent>()->DamageShield(myDamage);
 		}
 
-		if (aNote.myEntity.GetComponent<ShieldComponent>() == nullptr || 
-				aNote.myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() <= 0)
+		if (aNote.myEntity.GetComponent<ShieldComponent>() == nullptr ||
+			aNote.myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() <= 0)
 		{
 			COMPONENT_LOG("No shield component found on entity or shield were depleted.");
 			if (aNote.myEntity.GetComponent<HealthComponent>() == nullptr)
@@ -65,7 +65,7 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 
 		SetActive(false);
 		aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
-		
+
 		if (myDamageRadius > 0.f)
 		{
 			aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), myDamageRadius, myDamage);
@@ -112,5 +112,12 @@ void BulletComponent::SetActive(bool aActive)
 	{
 		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Rocket", myEntity.GetAudioSFXID());
 		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::STOP, "Stop_Missiles"));
+		
+		if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
+			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
+			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
+		{
+			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShipExplosion"));
+		}
 	}
 }
