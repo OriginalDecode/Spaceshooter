@@ -37,6 +37,8 @@ namespace Prism{
 		bool GetEmissive() const;
 		void SetEmissive();
 
+		bool VerityTextures(const std::string& aModelPath);
+
 	private:
 		CU::GrowingArray<Texture*> myTextures;
 		CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderViews;

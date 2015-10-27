@@ -20,7 +20,7 @@ public:
 
 	void Update(float aDeltaTime) override;
 
-	void SetEntityToFollow(Entity* aEntity);
+	void SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity);
 
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 
@@ -59,5 +59,5 @@ inline const std::string& AIComponent::GetTargetName() const
 
 inline eComponentType AIComponent::GetType()
 {
-	return eComponentType::AI;
+	return eComponentType::CONTROLLER;
 }

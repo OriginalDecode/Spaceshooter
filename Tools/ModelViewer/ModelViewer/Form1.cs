@@ -209,5 +209,6 @@ namespace ModelViewer
 
             CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateZ(zTruncatedValue);
         }
+
     }
 }

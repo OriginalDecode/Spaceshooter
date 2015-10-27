@@ -187,7 +187,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	{
 		bullet->AddComponent<AIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f), 
 			eAITargetPositionMode::KAMIKAZE);
-		bullet->GetComponent<AIComponent>()->SetEntityToFollow(aHomingTarget);
+		bullet->GetComponent<AIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
 	}
 
 	if (aEntityType == eEntityType::PLAYER)

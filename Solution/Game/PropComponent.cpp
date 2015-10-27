@@ -35,21 +35,32 @@ void PropComponent::ReceiveNote(const CollisionNote& aNote)
 {
 	if (aNote.myEntity.GetAlive() == true)
 	{
-		if (aNote.myEntity.GetComponent<ShieldComponent>() != nullptr)
+		PhysicsComponent* physicsComponent = aNote.myEntity.GetComponent<PhysicsComponent>();
+		if (physicsComponent != nullptr && physicsComponent->GetSpeed() > 0)
 		{
-			COMPONENT_LOG("Shield component found on entity. (BulletComponent)");
-			aNote.myEntity.GetComponent<ShieldComponent>()->DamageShield(10);
-		}
+			if (aNote.myEntity.GetComponent<ShieldComponent>() != nullptr)
+			{
+				COMPONENT_LOG("Shield component found on entity. (Prop component)");
+				aNote.myEntity.GetComponent<ShieldComponent>()->DamageShield(10);
+			}
 
-		if (aNote.myEntity.GetComponent<ShieldComponent>() == nullptr ||
-			aNote.myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() <= 0)
-		{
-			COMPONENT_LOG("No shield component found on entity or shield were depleted.");
-			aNote.myEntity.GetComponent<HealthComponent>()->RemoveHealth(10);
+			if (aNote.myEntity.GetComponent<ShieldComponent>() == nullptr ||
+				aNote.myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() <= 0)
+			{
+				COMPONENT_LOG("No shield component found on entity or shield were depleted.");
+				aNote.myEntity.GetComponent<HealthComponent>()->RemoveHealth(10);
+			}
 		}
 	}
-	// should also bounce of prop
-	//aNote.myEntity.GetComponent<PhysicsComponent>()->BounceOff(1);
+
+	if (aNote.myEntity.GetComponent<PhysicsComponent>() == nullptr)
+	{
+		DL_ASSERT(aNote.myEntity.GetName() + "Collision with entity without PhysicsComponent.");
+	}
+	else
+	{
+		aNote.myEntity.GetComponent<PhysicsComponent>()->BounceOff(myEntity);
+	}
 }
 
 void PropComponent::ReceiveMessage(const DefendMessage& aMessage)

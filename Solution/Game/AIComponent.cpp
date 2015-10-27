@@ -40,8 +40,12 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myTargetName = aTargetName;
 
 	myTimeToNextDecision = aTimeBetweenDecisions;
-	myMovementSpeed = aSpeed;
-	myVelocity = myEntity.myOrientation.GetForward() * myMovementSpeed;
+	
+	PhysicsComponent* physicsComponent = myEntity.GetComponent<PhysicsComponent>();
+	if (physicsComponent != nullptr)
+	{
+		physicsComponent->SetVelocity(myEntity.myOrientation.GetForward() * aSpeed);
+	}
 
 	myCanMove = true;
 
@@ -57,8 +61,11 @@ void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
 {
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	myTargetPositionMode = aTargetPositionMode;
-	myMovementSpeed = aSpeed;
-	myVelocity = myEntity.myOrientation.GetForward() * myMovementSpeed;
+	PhysicsComponent* physicsComponent = myEntity.GetComponent<PhysicsComponent>();
+	if (physicsComponent != nullptr)
+	{
+		physicsComponent->SetVelocity(myEntity.myOrientation.GetForward() * aSpeed);
+	}
 	myEntityToFollow = nullptr;
 	myTimeToNextDecision = 0.f;
 	myAvoidanceDistance = 0.f;
@@ -76,11 +83,6 @@ void AIComponent::Update(float aDeltaTime)
 		myPhysicsComponent = myEntity.GetComponent<PhysicsComponent>();
 		DL_ASSERT_EXP(myPhysicsComponent != nullptr, "AI component needs physics component for movement."); // remove later
 	}
-
-	myVelocity = myPhysicsComponent->GetVelocity();
-
-
-	
 
 	if (myCanMove == true)
 	{
@@ -117,12 +119,12 @@ void AIComponent::Update(float aDeltaTime)
 	myPhysicsComponent->SetVelocity(myVelocity);
 }
 
-void AIComponent::SetEntityToFollow(Entity* aEntity)
+void AIComponent::SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity)
 {
 	myEntityToFollow = aEntity;
 	if (myPrevEntityToFollow == nullptr)
 	{
-		myPrevEntityToFollow = myEntityToFollow;
+		myPrevEntityToFollow = aPlayerEntity;
 	}
 }
 
@@ -177,11 +179,11 @@ void AIComponent::FollowEntity(float aDeltaTime)
 		myEntity.myOrientation.myMatrix[10] = myVelocity.z;
 		myEntity.myOrientation.myMatrix[11] = 0;
 
-		myVelocity *= myMovementSpeed;
+		myVelocity *= myEntity.GetComponent<PhysicsComponent>()->GetSpeed();
 	}
 	else
 	{
-
+		DL_ASSERT("myTargetPositionMode is MINE");
 	}
 }
 

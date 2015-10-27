@@ -56,6 +56,5 @@ namespace Prism
 		bool myInited;
 		bool myIsLodGroup;
 		LodGroup* myLodGroup;
-		std::string myFilePath;
 	};
 }

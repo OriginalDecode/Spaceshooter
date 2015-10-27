@@ -200,10 +200,10 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 		{
 			std::string targetName = myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->GetTargetName();
 			Entity* target = myCurrentLevel->GetEntityWithName(targetName);
-			myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myCurrentLevel->myPlayer);
+			myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(myCurrentLevel->myPlayer, myCurrentLevel->myPlayer);
 			if (target != nullptr)
 			{
-				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target);
+				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target, myCurrentLevel->myPlayer);
 			}
 		}
 	}
@@ -454,6 +454,6 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	delete myCurrentLevel->mySkySphere;
 	myCurrentLevel->mySkySphereCullingRadius = 10.f;
 	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
-		, myCurrentLevel->mySkySphereOrientation, Prism::eOctreeType::NOT_IN_OCTREE
+		, myPlayer->GetComponent<InputComponent>()->GetSkyOrientation(), Prism::eOctreeType::NOT_IN_OCTREE
 		, myCurrentLevel->mySkySphereCullingRadius);
 }

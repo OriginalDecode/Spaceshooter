@@ -13,6 +13,7 @@ namespace Prism
 
 	private:
 		void LoadTexture(const std::string& aFileName);
+		void ReloadTexture(const std::string& aFileName);
 
 		std::unordered_map<std::string, Texture*> myTextures;
 	};
