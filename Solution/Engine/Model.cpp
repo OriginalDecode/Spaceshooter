@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <CommonHelper.h>
 #include <d3dx11effect.h>
 #include "Effect.h"
 #include "EffectContainer.h"
@@ -62,11 +63,20 @@ void Prism::Model::Init()
 
 	for (int i = 0; i < myChildren.Size(); ++i)
 	{
+		myChildren[i]->myFileName = myFileName;
 		myChildren[i]->Init();
 	}
 
 	
 	myInited = true;
+
+	for (int i = 0; i < mySurfaces.Size(); ++i)
+	{
+		if (mySurfaces[i]->VerityTextures(myFileName) == false)
+		{
+			DL_ASSERT(CU::Concatenate("Missing PBL-texture from model: %s", myFileName.c_str()));
+		}
+	}
 }
 
 void Prism::Model::InitCube(const float aWidth, const float aHeight, const float aDepth, CU::Vector4f aColour)
