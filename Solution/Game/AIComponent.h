@@ -59,5 +59,5 @@ inline const std::string& AIComponent::GetTargetName() const
 
 inline eComponentType AIComponent::GetType()
 {
-	return eComponentType::AI;
+	return eComponentType::CONTROLLER;
 }

@@ -13,6 +13,8 @@ namespace Prism
 		const std::string& GetFileName() const;
 		ID3D11ShaderResourceView* GetShaderView();
 
+		void Release();
+
 	private:
 		std::string myFileName;
 		ID3D11ShaderResourceView* myTexture;
