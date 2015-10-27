@@ -4,12 +4,17 @@
 #include "Constants.h"
 #include "ConversationMessage.h"
 #include "DefendMessage.h"
+#include <EngineEnums.h>
 #include "Entity.h"
+#include "Instance.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
 #include "HealthComponent.h"
 #include "HealthNote.h"
 #include "MissionNote.h"
+#include "Model.h"
+#include "ModelLoader.h"
+#include "ModelProxy.h"
 #include <Sprite.h>
 #include "PostMaster.h"
 #include "PowerUpMessage.h"
@@ -43,6 +48,27 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 
+
+
+	XMLReader reader;
+	reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_bar.xml");
+
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius")
+		, "value", myCullingRadius);
+	reader.CloseDocument();
+
+	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		"Data/Resource/Model/Player/SM_cockpit_bar.fbx", "Data/Resource/Shader/S_effect_bar.fx");
+	myGUIBars[0] = new Prism::Instance(*model, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myCullingRadius);
+
+	Prism::ModelProxy* model2 = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		"Data/Resource/Model/Player/SM_cockpit_bar.fbx", "Data/Resource/Shader/S_effect_bar.fx");
+	myGUIBars[1] = new Prism::Instance(*model2, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myCullingRadius);
+
+
+
+
+
 	myReticle = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_circle.dds"
 		, { 1024.f, 1024.f }, { 512.f, 512.f });
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
@@ -69,8 +95,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	myOriginalBarSize = 32.f;
 	myBarSize = myOriginalBarSize;
-
-	ReadXML();
 
 	CU::Vector2<float> barSize(myBarSize, myBarSize);
 	myHealthBarGlow = new Prism::Sprite("Data/Resource/Texture/UI/T_health_bar_bar_a.dds", barSize, barSize / 2.f);
@@ -130,6 +154,12 @@ GUIComponent::~GUIComponent()
 	myHomingTarget = nullptr;
 	delete myHealthBar;
 	myHealthBar = nullptr;
+
+	delete myGUIBars[0];
+	delete myGUIBars[1];
+
+	myGUIBars[0] = nullptr;
+	myGUIBars[1] = nullptr;
 }
 
 void GUIComponent::Init(float aMaxDistanceToEnemies)
@@ -299,6 +329,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemies.RemoveAll();
 	myPowerUpPositions.RemoveAll();
 
+	/*
 	for (int i = 0; i < myHealthBarCount; ++i)
 	{
 		CU::Vector2<float> newRenderPos = { 0.518f, -0.820f };
@@ -326,6 +357,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		myShieldBarGlow->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
 		myShieldBar->Render({ newRenderPos.x + (i * 11.f), newRenderPos.y });
 	}
+	*/
+
+	myGUIBars[0]->Render(*myCamera);
+
 
 	if (myHitMarkerTimer >= 0.f)
 	{
@@ -439,32 +474,6 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 	myMessage = "Weapon upgrade received: " + aMessage.GetUprgade();
 	myMessageTime = 5.f;
 	myShowMessage = true;
-}
-
-void GUIComponent::ReadXML()
-{
-	XMLReader reader;
-	reader.OpenDocument("Data/Resource/GUI/GUI_bar_health.xml");
-	tinyxml2::XMLElement* root = reader.FindFirstChild("root");
-	tinyxml2::XMLElement* position = reader.FindFirstChild(root, "Position");
-	reader.ForceReadAttribute(position, "X", myOriginalHealthBarRenderPosition.x);
-	reader.ForceReadAttribute(position, "Y", myOriginalHealthBarRenderPosition.y);
-
-	reader.CloseDocument();
-
-	reader.OpenDocument("Data/Resource/GUI/GUI_bar_shield.xml");
-	root = reader.FindFirstChild("root");
-	position = reader.FindFirstChild(root, "Position");
-	reader.ForceReadAttribute(position, "X", myOriginalShieldBarRenderPosition.x);
-	reader.ForceReadAttribute(position, "Y", myOriginalShieldBarRenderPosition.y);
-
-	reader.CloseDocument();
-
-	float offset = Prism::Engine::GetInstance()->GetWindowSize().y /
-		static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
-
-
-	myBarSize = (myOriginalBarSize * offset);
 }
 
 void GUIComponent::Reset()

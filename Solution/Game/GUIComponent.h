@@ -9,6 +9,7 @@ namespace Prism
 {
 	class Sprite;
 	class Camera;
+	class Instance;
 }
 
 class GUIComponent : public Component, public Subscriber
@@ -40,7 +41,6 @@ public:
 	void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 
-	void ReadXML();
 
 	void Reset() override;
 
@@ -100,6 +100,8 @@ private:
 	float myBarSize;
 	float myOriginalBarSize;
 
+	Prism::Instance* myGUIBars[2];
+	float myCullingRadius;
 
 	std::string myConversation;
 
@@ -108,6 +110,7 @@ private:
 	bool myShowMessage;
 	std::string myMessage; 
 	float myMessageTime;
+
 };
 
 inline eComponentType GUIComponent::GetType()
