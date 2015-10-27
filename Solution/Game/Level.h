@@ -10,7 +10,7 @@ namespace Prism
 	class PointLight;
 	class Scene;
 	class SpotLight;
-	class Text;
+	class DebugText;
 	class Instance;
 };
 

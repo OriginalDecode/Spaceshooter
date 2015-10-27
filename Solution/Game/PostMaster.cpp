@@ -49,10 +49,9 @@ void PostMaster::Destroy()
 
 void PostMaster::Subscribe(const eMessageType aMessageType, Subscriber* aSubscriber, ePriorityLayer aPriority, bool aLetThrough)
 {
+#ifdef _DEBUG
 	CU::GrowingArray<SubscriberInfo>& subscribers
 		= mySubscribers[static_cast<int>(aMessageType)];
-
-#ifdef _DEBUG
 	for (int i = 0; i < subscribers.Size(); ++i)
 	{
 		DL_ASSERT_EXP(subscribers[i].mySubscriber != aSubscriber, "Tried to add the same subscriber to the same message twice.");

@@ -12,7 +12,7 @@ namespace CU
 
 namespace Prism
 {
-	class Text;
+	class DebugText;
 
 	class DebugMenu
 	{
@@ -33,7 +33,7 @@ namespace Prism
 		};
 
 		CU::GrowingArray<MenuElement> myMenuElements;
-		Text* myText;
+		DebugText* myText;
 		bool myIsVisible;
 		CU::Vector2<float> myCenterPosition;
 		int mySelectedIndex;

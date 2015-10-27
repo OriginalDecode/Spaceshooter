@@ -13,7 +13,7 @@ struct ID3D11DeviceContext;
 
 namespace Prism
 {
-	struct DebugText
+	struct DebugTextCommand
 	{
 		std::string myText;
 		CU::Vector2<float> myPosition;
@@ -28,12 +28,12 @@ namespace Prism
 	class Effect;
 	class FBXFactory;
 	class FileWatcher;
-	class FontContainer;
+	class DebugFontContainer;
 	class Model;
 	class ModelLoader;
 	class ModelProxy;
 	class TextureContainer;
-	class Text;
+	class DebugText;
 
 	struct SetupInfo;
 
@@ -50,7 +50,7 @@ namespace Prism
 		ID3D11DeviceContext* GetContex();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
-		FontContainer* GetFontContainer();
+		DebugFontContainer* GetFontContainer();
 		DebugDataDisplay* GetDebugDisplay();
 		FileWatcher* GetFileWatcher();
 		ModelLoader* GetModelLoader();
@@ -91,11 +91,11 @@ namespace Prism
 		TextureContainer* myTextureContainer;
 		EffectContainer* myEffectContainer;
 		FBXFactory* myModelFactory;
-		FontContainer* myFontContainer;
+		DebugFontContainer* myFontContainer;
 		DebugDataDisplay* myDebugDataDisplay;
 		FileWatcher* myFileWatcher;
 
-		Text* myDebugText;
+		DebugText* myDebugText;
 
 		CU::Vector4<float> myClearColor;
 		CU::Vector2<int> myWindowSize;
@@ -107,7 +107,7 @@ namespace Prism
 
 		static Engine* myInstance;
 
-		CU::GrowingArray<DebugText> myDebugTexts;
+		CU::GrowingArray<DebugTextCommand> myDebugTexts;
 	};
 }
 
@@ -121,7 +121,7 @@ inline Prism::EffectContainer* Prism::Engine::GetEffectContainer()
 	return myEffectContainer;
 }
 
-inline Prism::FontContainer* Prism::Engine::GetFontContainer()
+inline Prism::DebugFontContainer* Prism::Engine::GetFontContainer()
 {
 	return myFontContainer;
 }

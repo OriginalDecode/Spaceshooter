@@ -220,8 +220,8 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">../stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="FileWatcher.cpp" />
-    <ClCompile Include="Font.cpp" />
-    <ClCompile Include="FontContainer.cpp" />
+    <ClCompile Include="DebugFont.cpp" />
+    <ClCompile Include="DebugFontContainer.cpp" />
     <ClCompile Include="FrameTimeDebugger.cpp" />
     <ClCompile Include="Frustum.cpp" />
     <ClCompile Include="GraphRenderer.cpp" />
@@ -242,7 +242,7 @@
     </ClCompile>
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="SystemMonitor.cpp" />
-    <ClCompile Include="Text.cpp" />
+    <ClCompile Include="DebugText.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureContainer.cpp" />
     <ClCompile Include="TreeNode.cpp" />
@@ -265,8 +265,8 @@
     <ClInclude Include="FBXFactory.h" />
     <ClInclude Include="FBX\FbxLoader.h" />
     <ClInclude Include="FileWatcher.h" />
-    <ClInclude Include="Font.h" />
-    <ClInclude Include="FontContainer.h" />
+    <ClInclude Include="DebugFont.h" />
+    <ClInclude Include="DebugFontContainer.h" />
     <ClInclude Include="FrameTimeDebugger.h" />
     <ClInclude Include="Frustum.h" />
     <ClInclude Include="GraphRenderer.h" />
@@ -288,7 +288,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="SystemMonitor.h" />
-    <ClInclude Include="Text.h" />
+    <ClInclude Include="DebugText.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureContainer.h" />
     <ClInclude Include="TreeNode.h" />

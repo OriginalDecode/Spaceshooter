@@ -26,9 +26,9 @@ namespace Prism
 {
 	class Camera;
 	class DebugMenu;
-	class Font;
+	class DebugFont;
 	class FrameTimeDebugger;
-	class Text;
+	class DebugText;
 
 
 	class DebugDataDisplay
@@ -71,7 +71,7 @@ namespace Prism
 		void RenderCPUUsage();
 		void RenderFrameTime();
 
-		Text* myText;
+		DebugText* myText;
 
 		std::bitset<eBitSetEnum::count> myBoolContainer;
 

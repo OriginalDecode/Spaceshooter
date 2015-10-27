@@ -2,13 +2,13 @@
 
 #include "DebugMenu.h"
 #include "DebugDataDisplay.h"
-#include "Font.h"
-#include "FontContainer.h"
+#include "DebugFont.h"
+#include "DebugFontContainer.h"
 #include "FrameTimeDebugger.h"
 #include <InputWrapper.h>
 #include <sstream>
 #include "SystemMonitor.h"
-#include "Text.h"
+#include "DebugText.h"
 #include "VTuneApi.h"
 
 
@@ -31,7 +31,7 @@ Prism::DebugDataDisplay::~DebugDataDisplay()
 
 void Prism::DebugDataDisplay::Init()
 {
-	myText = new Text();
+	myText = new DebugText();
 	myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 	myFrameDebugger = new FrameTimeDebugger();
