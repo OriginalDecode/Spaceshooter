@@ -11,6 +11,12 @@ namespace Prism
 		: myOrientation(aPlayerMatrix)
 		, myNear(0.1f)
 		, myFar(2500.f)
+		, myShakeCamera(false)
+		, myCurrentShake(0.f)
+		, myMaxShake(0.f)
+		, myRotateRate(0.f)
+		, myMaxShakeTime(0.f)
+		, myCurrentShakeTime(0.f)
 	{
 		myFrustum = new Frustum(aPlayerMatrix, myNear, myFar);
 		WATCH_FILE("Data/Setting/SET_camera.xml", Camera::ReadXML);
@@ -52,8 +58,26 @@ namespace Prism
 		return myProjectionMatrix;
 	}
 
-	void Camera::Update()
+	void Camera::Update(float aDeltaTime)
 	{
+		if (myShakeCamera == true)
+		{
+			if (myCurrentShake < -myMaxShake || myCurrentShake > myMaxShake)
+			{
+				myRotateRate = -myRotateRate;
+			}
+			myCurrentShake += myRotateRate;
+
+			myCurrentShakeTime += aDeltaTime;
+			if (myCurrentShakeTime >= myMaxShakeTime)
+			{
+				myShakeCamera = false;
+				myCurrentShakeTime = 0.f;
+				myCurrentShake = 0.f;
+			}
+		}
+		RotateZ(myCurrentShake);
+
 		myFrustum->Update();
 	}
 	void Camera::SetOrientation(const CU::Matrix44<float>& aOrientation)
@@ -108,5 +132,15 @@ namespace Prism
 		TIME_FUNCTION
 
 		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetRight() * aDistance);
+	}
+
+	void Camera::ShakeCamera(float aRotationRate, float aMaxRotation, float aTime)
+	{
+		myRotateRate = aRotationRate;
+		myMaxShake = aMaxRotation;
+		myMaxShakeTime = aTime;
+		myCurrentShake = 0.f;
+		myCurrentShakeTime = 0.f;
+		myShakeCamera = true;
 	}
 }

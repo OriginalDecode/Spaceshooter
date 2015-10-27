@@ -129,7 +129,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myBulletManager->Update(aDeltaTime);
 	myMissionManager->Update(aDeltaTime);
 	myEventManager->Update();
-	myCamera->Update();
+	myCamera->Update(aDeltaTime);
 	return myComplete;
 }
 
@@ -328,5 +328,10 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_J))
 	{
 		myPlayer->GetComponent<ShootingComponent>()->ActivateEMP();
+	}
+
+	if (myInputWrapper->KeyDown(DIK_H))
+	{
+		myCamera->ShakeCamera(0.1f, 0.1f, 0.5f);
 	}
 }
