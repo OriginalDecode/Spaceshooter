@@ -66,7 +66,7 @@ private:
 
 inline eComponentType InputComponent::GetType()
 {
-	return eComponentType::CONTROLLER;
+	return eComponentType::INPUT;
 }
 
 inline const CU::Matrix44<float>& InputComponent::GetSkyOrientation() const

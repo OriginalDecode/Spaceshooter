@@ -194,7 +194,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	
 
-	for (int i = 1; i < myCurrentLevel->myEntities.Size(); ++i)
+	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
 	{
 		if (myCurrentLevel->myEntities[i]->GetComponent<AIComponent>() != nullptr)
 		{

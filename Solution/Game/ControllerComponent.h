@@ -38,5 +38,5 @@ inline void ControllerComponent::SetCanMove(const bool& aCanMove)
 
 inline eComponentType ControllerComponent::GetType()
 {
-	return eComponentType::CONTROLLER;
+	return eComponentType::NOT_USED;
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "AIComponent.h"
 #include <AudioInterface.h>
 #include "Constants.h"
 #include <DebugMenu.h>
@@ -19,7 +20,7 @@
 InputComponent::InputComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
 {
-
+	DL_ASSERT_EXP(aEntity.GetComponent<AIComponent>() == nullptr, "Tried to add InputComponent when there was a AIComponent");
 }
 
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)

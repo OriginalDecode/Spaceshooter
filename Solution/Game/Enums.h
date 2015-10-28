@@ -104,12 +104,13 @@ enum class eSoundNoteType
 enum class eComponentType
 {
 	NOT_USED,
+	AI,
 	BULLET,
 	COLLISION,
-	CONTROLLER,
 	GRAPHICS,
 	GUI,
 	HEALTH,
+	INPUT,
 	PHYSICS,
 	POWERUP,
 	PROP,
