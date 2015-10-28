@@ -75,6 +75,17 @@ namespace CSharpUtilities
             return convertedPath;
         }
 
+        public static string ConvertPathToRelativePath(string aPath, string aRelativeFolder)
+        {
+            int dataTagIndex = aPath.IndexOf(aRelativeFolder);
+            if (dataTagIndex <= 0) return "";
+            string convertedPath = aPath;
+            convertedPath = aPath.Substring(dataTagIndex);
+            convertedPath = convertedPath.Replace(aRelativeFolder, "");
+            convertedPath = convertedPath.Replace("\\", "/");
+            return convertedPath;
+        }
+
         public static float ToFloat(string aText)
         {
             float value = 0;

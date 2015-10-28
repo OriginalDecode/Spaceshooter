@@ -21,9 +21,8 @@ namespace Prism
 
 		const CU::Vector2<float>& GetCharSize() const;
 		Texture* GetTexture();
+
 	private:
-
-
 		CU::Vector2<float> myCharSize;
 		Texture* myTexture;
 	};

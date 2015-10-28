@@ -9,6 +9,7 @@ namespace Prism
 {
 	class Sprite;
 	class Camera;
+	class Instance;
 }
 
 class GUIComponent : public Component, public Subscriber
@@ -41,7 +42,6 @@ public:
 	void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 
-	void ReadXML();
 
 	void Reset() override;
 
@@ -83,24 +83,9 @@ private:
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 
-	int myHealthBarCount;
-	int myShieldBarCount;
-
-	Prism::Sprite* myHealthBar;
-	Prism::Sprite* myShieldBar;
-
-	Prism::Sprite* myHealthBarGlow;
-	Prism::Sprite* myShieldBarGlow;
-
-	CU::Vector2<float> myHealthBarRenderPosition;
-	CU::Vector2<float> myOriginalHealthBarRenderPosition;
-
-	CU::Vector2<float> myShieldBarRenderPosition;
-	CU::Vector2<float> myOriginalShieldBarRenderPosition;
-
-	float myBarSize;
-	float myOriginalBarSize;
-
+	Prism::Instance* myGUIBars[2];
+	float myHealthBarRadius;
+	float myShieldBarRadius;
 
 	std::string myConversation;
 
@@ -109,6 +94,7 @@ private:
 	bool myShowMessage;
 	std::string myMessage; 
 	float myMessageTime;
+
 };
 
 inline eComponentType GUIComponent::GetType()

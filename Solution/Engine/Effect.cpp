@@ -125,6 +125,14 @@ void Prism::Effect::UpdateTime(const float aDeltaTime)
 }
 
 
+void Prism::Effect::SetPlayerVariable(int someVariable)
+{
+	if (myPlayerVariable != nullptr)
+	{
+		myPlayerVariable->SetInt(someVariable);
+	}
+}
+
 bool Prism::Effect::ReloadShader(const std::string& aFile)
 {
 	myFileName = aFile;
@@ -218,6 +226,13 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	if (myTotalTime->IsValid() == false)
 	{
 		myTotalTime = nullptr;
+	}
+
+	myPlayerVariable = nullptr;
+	myPlayerVariable = myEffect->GetVariableByName("PlayerVariable")->AsScalar();
+	if (myPlayerVariable->IsValid() == false)
+	{
+		myPlayerVariable = nullptr;
 	}
 
 	myDirectionalLight = myEffect->GetVariableByName("DirectionalLights");

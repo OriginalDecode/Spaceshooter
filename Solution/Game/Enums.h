@@ -13,6 +13,7 @@ enum class eMessageType
 	DEFEND,
 	RESIZE,
 	BULLET_COLLISION_TO_GUI,
+	SPAWN_POWERUP,
 	COUNT,
 };
 

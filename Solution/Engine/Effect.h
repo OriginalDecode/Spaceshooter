@@ -45,6 +45,7 @@ namespace Prism
 		void UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData);
 		void UpdateTime(const float aDeltaTime);
 
+		void SetPlayerVariable(int someVariable);
 
 		void AddListener(EffectListener* aListener);
 		bool ReloadShader(const std::string& aFile);
@@ -59,6 +60,7 @@ namespace Prism
 
 		ID3DX11EffectScalarVariable* myEyePosition;
 		ID3DX11EffectScalarVariable* myTotalTime;
+		ID3DX11EffectScalarVariable* myPlayerVariable;
 
 		ID3DX11EffectVectorVariable* myScaleVector;
 
@@ -69,6 +71,8 @@ namespace Prism
 		ID3DX11EffectShaderResourceVariable	*myTexture;
 
 		ID3DX11EffectVectorVariable* mySpritePosAndScale;
+
+
 		CU::Vector4<float> mySpritePosAndScaleVector;
 		
 		std::string myFileName;

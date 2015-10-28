@@ -96,6 +96,24 @@
     <ClCompile Include="DebugFontContainer.cpp">
       <Filter>Rendering\DebugText</Filter>
     </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextFile.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextParser.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="FontFile.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -227,6 +245,24 @@
     <ClInclude Include="DebugFontContainer.h">
       <Filter>Rendering\DebugText</Filter>
     </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextFile.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextParser.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="FontFile.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
@@ -264,6 +300,9 @@
     </Filter>
     <Filter Include="Rendering\DebugText">
       <UniqueIdentifier>{baf2e884-b972-4bc8-9638-b545b2737981}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Text">
+      <UniqueIdentifier>{c692a68a-c85e-4a75-9e93-03f0b69dd9e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

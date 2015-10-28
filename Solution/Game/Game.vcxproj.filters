@@ -176,6 +176,9 @@
     <ClCompile Include="PlanetCollisionComponent.cpp">
       <Filter>Components\Collision</Filter>
     </ClCompile>
+    <ClCompile Include="SpawnPowerUpMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -406,6 +409,9 @@
     </ClInclude>
     <ClInclude Include="PlanetCollisionComponent.h">
       <Filter>Components\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnPowerUpMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

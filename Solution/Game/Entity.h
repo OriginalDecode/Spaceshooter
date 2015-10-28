@@ -55,6 +55,8 @@ public:
 	bool GetShouldRotateY();
 	bool GetShouldRotateZ();
 
+	void SetPowerUpName(const std::string& aPowerUpName);
+
 
 	void SetPowerUp(ePowerUpType someType);
 	ePowerUpType GetPowerUpType() const;
@@ -69,6 +71,7 @@ private:
 	
 	bool myAlive;
 	std::string myName;
+	std::string myPowerUpName;
 	const eEntityType myType;
 	Prism::Scene& myScene;
 	const Prism::eOctreeType myOctreeType;

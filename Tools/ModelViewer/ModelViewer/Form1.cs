@@ -14,16 +14,17 @@ namespace ModelViewer
 {
     public partial class ModelViewerWindow : Form
     {
-        private List<FileInfo> myEffectFiles = null;
-        private FileInfo myCurrentModelFile = null;
+        private List<string> myModelFiles = null;
+        private List<string> myShaderFiles = null;
 
-        private string myCurrentEffectFilePath = Properties.Settings.Default.DefaultEffectFilePath;
+        private string myCurrentShaderFilePath = Properties.Settings.Default.DefaultEffectFilePath;
         private string myCurrentModelFilePath = Properties.Settings.Default.DefaultModelFilePath;
 
-        private string myEffectFolderPath = Properties.Settings.Default.DefaultEffectFolderDirectory;
-        private string myModelFolderPath = Properties.Settings.Default.DefaultModelFolderDirectory;
+        private string myDataFolderPath = Properties.Settings.Default.DefaultDataFolderPath;
 
         private Point myPreviousMousePosition;
+
+        private Button myChooseDataFolderButton = new Button();
 
         private CSharpUtilities.Components.DropDownComponent myModelList;
         private CSharpUtilities.Components.DropDownComponent myShaderList;
@@ -33,110 +34,138 @@ namespace ModelViewer
         public ModelViewerWindow()
         {
             InitializeComponent();
-            if (myModelFolderPath == "")
+
+            if (myDataFolderPath == "")
             {
-                Properties.Settings.Default.DefaultModelFolderDirectory = Directory.GetCurrentDirectory();
-                myModelFolderPath = Properties.Settings.Default.DefaultModelFolderDirectory;
-                Properties.Settings.Default.Save();
-            }
-            if (myEffectFolderPath == "")
-            {
-                Properties.Settings.Default.DefaultEffectFolderDirectory = Directory.GetCurrentDirectory();
-                myEffectFolderPath = Properties.Settings.Default.DefaultEffectFolderDirectory;
+                Properties.Settings.Default.DefaultDataFolderPath = Directory.GetCurrentDirectory();
+                myDataFolderPath = Properties.Settings.Default.DefaultDataFolderPath;
                 Properties.Settings.Default.Save();
             }
 
-            modelFileBrowser.InitialDirectory = myModelFolderPath;
-            effectFolderBrowser.SelectedPath = myEffectFolderPath;
+            DataFolderBrowser.SelectedPath = myDataFolderPath;
 
             myPreviousMousePosition = MousePosition;
+
+            myChooseDataFolderButton.Text = "Open";
+            myChooseDataFolderButton.Location = new Point(Location.X + 5, Location.Y+10);
+            myChooseDataFolderButton.Size = new Size(50, 20);
+            myChooseDataFolderButton.Show();
+            myChooseDataFolderButton.Click += new EventHandler(this.Btn_OpenDataFolder_Click);
+            Menu_Panel.Controls.Add(myChooseDataFolderButton);
+
+            myModelList = new CSharpUtilities.Components.DropDownComponent(new Point(Location.X + 60, Location.Y+10), new Size(250, 13), "Model: ");
+            myModelList.AddSelectedIndexChangeEvent(this.ModelList_SelectedIndexChanged);
+            myModelList.BindToPanel(Menu_Panel);
+            myModelList.Show();
+
+            myShaderList = new CSharpUtilities.Components.DropDownComponent(new Point(Location.X + 310, Location.Y+10), new Size(250, 13), "Shader: ");
+            myShaderList.AddSelectedIndexChangeEvent(this.ShaderList_SelectedIndexChanged);
+            myShaderList.BindToPanel(Menu_Panel);
+            myShaderList.Show();
 
             myPreviewWindow = new CSharpUtilities.Components.DLLPreviewComponent(new Point(ModelViewer.Location.X, ModelViewer.Location.Y - 20), ModelViewer.Size, "Preview", true);
             myPreviewWindow.BindToPanel(ModelViewer);
             myPreviewWindow.Show();
 
-            FillEffectList();
+            FillModelList();
+            FillShaderList();
 
             UpdateTimer.Start();
         }
 
-        private void Btn_OpenModel_Click(object sender, EventArgs e)
+        private void Btn_OpenDataFolder_Click(object sender, EventArgs e)
         {
-            modelFileBrowser.ShowDialog();
-            myCurrentModelFilePath = modelFileBrowser.FileName;
-
-            if (myCurrentModelFilePath != "")
+            if (Directory.Exists(myDataFolderPath) == false)
             {
-                myModelFolderPath = myCurrentModelFilePath.Replace(modelFileBrowser.SafeFileName, "");
-                Properties.Settings.Default.DefaultModelFolderDirectory = myModelFolderPath;
-                Properties.Settings.Default.Save();
+                myDataFolderPath = Directory.GetCurrentDirectory();
+            }
+            DataFolderBrowser.SelectedPath = myDataFolderPath;
+            DataFolderBrowser.ShowDialog();
+            myDataFolderPath = DataFolderBrowser.SelectedPath;
+
+            if (myDataFolderPath != "")
+            {
+                FillModelList();
+                FillShaderList();
             }
 
-            modelFileBrowser.InitialDirectory = myModelFolderPath;
-        }
-
-        private void Btn_OpenEffectFolder_Click(object sender, EventArgs e)
-        {
-            if (Directory.Exists(myEffectFolderPath) == false)
-            {
-                myEffectFolderPath = Directory.GetCurrentDirectory();
-            }
-            effectFolderBrowser.SelectedPath = myEffectFolderPath;
-            effectFolderBrowser.ShowDialog();
-
-            myEffectFolderPath = effectFolderBrowser.SelectedPath;
-
-            if (myEffectFolderPath != "")
-            {
-                EffectFilter.Items.Clear();
-                FillEffectList();
-            }
-
-            Properties.Settings.Default.DefaultEffectFolderDirectory = myEffectFolderPath;
+            Properties.Settings.Default.DefaultDataFolderPath = myDataFolderPath;
             Properties.Settings.Default.Save();
         }
 
-        private void FillEffectList()
+        void FillModelList()
         {
-            if (Directory.Exists(myEffectFolderPath) == false)
+            myModelList.GetDropDown().Items.Clear();
+            myModelFiles = Directory.GetFiles(myDataFolderPath, "*.fbx", SearchOption.AllDirectories).ToList();
+            for (int i = 0; i < myModelFiles.Count; ++i)
             {
-                myEffectFolderPath = Directory.GetCurrentDirectory();
-            }
-
-            DirectoryInfo currentDirectory = new DirectoryInfo(myEffectFolderPath);
-
-            FileInfo[] filesInDirectory = currentDirectory.GetFiles();
-
-            myEffectFiles = SortOutEffectFiles(filesInDirectory);
-
-            for (int i = 0; i < myEffectFiles.Count; ++i)
-            {
-                EffectFilter.Items.Add(myEffectFiles[i].Name);
+                string file = StringUtilities.ConvertPathToRelativePath(myModelFiles[i], "Model\\");
+                myModelList.AddItem(file);
             }
         }
 
-        private List<FileInfo> SortOutEffectFiles(FileInfo[] someFiles)
+        private void FillShaderList()
         {
-            List<FileInfo> effectFile = new List<FileInfo>();
-
-            for (int i = 0; i < someFiles.Length; ++i)
+            myShaderList.GetDropDown().Items.Clear();
+            myShaderFiles = Directory.GetFiles(myDataFolderPath, "*.fx", SearchOption.AllDirectories).ToList();
+            for (int i = 0; i < myShaderFiles.Count; ++i)
             {
-                if (someFiles[i].Extension == ".fx")
+                string file = StringUtilities.ConvertPathToRelativePath(myShaderFiles[i], "Shader\\");
+                if (file.StartsWith("S_effect") == true && VerifyShader(file) == true)
                 {
-                    effectFile.Add(someFiles[i]);
+                    myShaderList.AddItem(file);
                 }
             }
-            return effectFile;
         }
 
-        private void EffectFilter_SelectedIndexChanged(object sender, EventArgs e)
+        private bool VerifyShader(string aFileName)
         {
-            for (int i = 0; i < myEffectFiles.Count; ++i)
+            if (aFileName.EndsWith("pbl.fx")
+                || aFileName.EndsWith("font.fx")
+                || aFileName.EndsWith("sprite.fx")
+                || aFileName.EndsWith("graph.fx")
+                || aFileName.EndsWith("debug.fx")
+                || aFileName.EndsWith("skybox.fx")
+                || aFileName.EndsWith("basic.fx"))
             {
-                if (myEffectFiles[i].Name == EffectFilter.SelectedItem)
+                return true;
+            }
+            return false;
+        }
+
+        private void ModelList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedItem = (string)myModelList.GetDropDown().SelectedItem;
+            selectedItem = selectedItem.Replace("/", "\\");
+            for (int i = 0; i < myModelFiles.Count; ++i)
+            {
+                if (myModelFiles[i].EndsWith(selectedItem) == true)
                 {
-                    myCurrentEffectFilePath = myEffectFiles[i].FullName;
+                    myCurrentModelFilePath = myModelFiles[i];
+                    break;
                 }
+            }
+            if (myCurrentShaderFilePath != "" && myCurrentModelFilePath != "")
+            {
+                Btn_LoadModel_Click(sender, e);
+            }
+        }
+
+        private void ShaderList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedItem = (string)myShaderList.GetDropDown().SelectedItem;
+            selectedItem = selectedItem.Replace("/", "\\");
+            for (int i = 0; i < myShaderFiles.Count; ++i)
+            {
+                if (myShaderFiles[i].EndsWith(selectedItem) == true)
+                {
+                    myCurrentShaderFilePath = myShaderFiles[i];
+                    break;
+                }
+            }
+            if (myCurrentShaderFilePath != "" && myCurrentModelFilePath != "")
+            {
+                Btn_LoadModel_Click(sender, e);
             }
         }
 
@@ -152,16 +181,16 @@ namespace ModelViewer
                 MessageBox.Show("Error: No model file is selected");
                 return;
             }
-            if (myCurrentEffectFilePath == "")
+            if (myCurrentShaderFilePath == "")
             {
                 MessageBox.Show("Error: No effect file is selected");
                 return;
             }
-            if (myCurrentModelFilePath != "" && myCurrentEffectFilePath != "")
+            if (myCurrentModelFilePath != "" && myCurrentShaderFilePath != "")
             {
                 if (Path.GetExtension(myCurrentModelFilePath) == ".fbx")
                 {
-                    CSharpUtilities.DLLImporter.NativeMethods.LoadModel(myCurrentModelFilePath, myCurrentEffectFilePath);
+                    CSharpUtilities.DLLImporter.NativeMethods.LoadModel(myCurrentModelFilePath, myCurrentShaderFilePath);
                 }
                 else
                 {
@@ -183,7 +212,7 @@ namespace ModelViewer
             CSharpUtilities.DLLImporter.NativeMethods.SetClearColor(redChannel, greenChannel, blueChannel, alphaChannel);
         }
 
-        private void hScrollBar1_Scroll(object sender, ScrollEventArgs e)
+        private void DirectionalLightX_Scroll(object sender, ScrollEventArgs e)
         {
             float xValue = DirectionLightX.Value / (360.0f / 2) - 1;
             float xTruncatedValue = (float)(Math.Truncate((double)xValue * 100.0) / 100.0);

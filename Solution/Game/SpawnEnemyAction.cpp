@@ -34,7 +34,22 @@ SpawnEnemyAction::SpawnEnemyAction(XMLReader& aReader, tinyxml2::XMLElement* aEl
 		aReader.ForceReadAttribute(element, "Y", scale.y);
 		aReader.ForceReadAttribute(element, "Z", scale.z);
 	}
-	myMessage = new SpawnEnemyMessage(type, position, rotation, scale);
+
+	int powerUpCount = 0;
+	std::string powerUpName;
+	for (element = aReader.FindFirstChild(aElement, "powerup"); element != nullptr;
+		element = aReader.FindNextElement(element, "powerup"))
+	{
+		DL_ASSERT_EXP(powerUpCount < 1, "To many powerups tried to be added to enemy from event.");
+		if (element != nullptr)
+		{
+			tinyxml2::XMLElement* powerup = aReader.FindFirstChild(element, "type");
+			aReader.ForceReadAttribute(powerup, "powerup", powerUpName);
+		}
+		++powerUpCount;
+	}
+
+	myMessage = new SpawnEnemyMessage(type, position, rotation, scale, powerUpName);
 }
 
 SpawnEnemyAction::~SpawnEnemyAction()

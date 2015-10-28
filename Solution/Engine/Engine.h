@@ -23,15 +23,17 @@ namespace Prism
 
 	class Camera;
 	class DebugDataDisplay;
+	class DebugFontContainer;
 	class DirectX;
 	class EffectContainer;
 	class Effect;
 	class FBXFactory;
 	class FileWatcher;
-	class DebugFontContainer;
+	class Font;
 	class Model;
 	class ModelLoader;
 	class ModelProxy;
+	class Text;
 	class TextureContainer;
 	class DebugText;
 
@@ -96,6 +98,8 @@ namespace Prism
 		FileWatcher* myFileWatcher;
 
 		DebugText* myDebugText;
+		Font* myFont;
+		Text* myText;
 
 		CU::Vector4<float> myClearColor;
 		CU::Vector2<int> myWindowSize;
