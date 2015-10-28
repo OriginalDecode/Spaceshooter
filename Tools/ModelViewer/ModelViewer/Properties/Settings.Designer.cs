@@ -70,5 +70,17 @@ namespace ModelViewer.Properties {
                 this["DefaultModelFilePath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DefaultDataFolderPath {
+            get {
+                return ((string)(this["DefaultDataFolderPath"]));
+            }
+            set {
+                this["DefaultDataFolderPath"] = value;
+            }
+        }
     }
 }

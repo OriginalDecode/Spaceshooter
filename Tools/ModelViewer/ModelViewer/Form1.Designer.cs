@@ -33,10 +33,6 @@
             this.Menu_Panel = new System.Windows.Forms.Panel();
             this.Btn_BackgroundColor = new System.Windows.Forms.Button();
             this.Btn_LoadModel = new System.Windows.Forms.Button();
-            this.Btn_OpenEffectFolder = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.EffectFilter = new System.Windows.Forms.ComboBox();
-            this.Btn_OpenModel = new System.Windows.Forms.Button();
             this.ModelViewer = new System.Windows.Forms.Panel();
             this.ModelViewerMenu = new System.Windows.Forms.Panel();
             this.DirectionalLightZValue = new System.Windows.Forms.Label();
@@ -46,10 +42,9 @@
             this.label2 = new System.Windows.Forms.Label();
             this.DirectionLightXValue = new System.Windows.Forms.Label();
             this.DirectionLightX = new System.Windows.Forms.HScrollBar();
-            this.effectFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
-            this.modelFileBrowser = new System.Windows.Forms.OpenFileDialog();
             this.BackgroundColorDialog = new System.Windows.Forms.ColorDialog();
+            this.DataFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.Menu_Panel.SuspendLayout();
             this.ModelViewerMenu.SuspendLayout();
             this.SuspendLayout();
@@ -58,10 +53,6 @@
             // 
             this.Menu_Panel.Controls.Add(this.Btn_BackgroundColor);
             this.Menu_Panel.Controls.Add(this.Btn_LoadModel);
-            this.Menu_Panel.Controls.Add(this.Btn_OpenEffectFolder);
-            this.Menu_Panel.Controls.Add(this.label1);
-            this.Menu_Panel.Controls.Add(this.EffectFilter);
-            this.Menu_Panel.Controls.Add(this.Btn_OpenModel);
             this.Menu_Panel.Dock = System.Windows.Forms.DockStyle.Top;
             this.Menu_Panel.Location = new System.Drawing.Point(0, 0);
             this.Menu_Panel.Name = "Menu_Panel";
@@ -71,60 +62,22 @@
             // Btn_BackgroundColor
             // 
             this.Btn_BackgroundColor.BackColor = System.Drawing.SystemColors.Control;
-            this.Btn_BackgroundColor.Location = new System.Drawing.Point(478, 5);
+            this.Btn_BackgroundColor.Location = new System.Drawing.Point(672, 10);
             this.Btn_BackgroundColor.Name = "Btn_BackgroundColor";
-            this.Btn_BackgroundColor.Size = new System.Drawing.Size(24, 23);
+            this.Btn_BackgroundColor.Size = new System.Drawing.Size(20, 20);
             this.Btn_BackgroundColor.TabIndex = 5;
             this.Btn_BackgroundColor.UseVisualStyleBackColor = false;
             this.Btn_BackgroundColor.Click += new System.EventHandler(this.Btn_BackgroundColor_Click);
             // 
             // Btn_LoadModel
             // 
-            this.Btn_LoadModel.Location = new System.Drawing.Point(397, 5);
+            this.Btn_LoadModel.Location = new System.Drawing.Point(591, 10);
             this.Btn_LoadModel.Name = "Btn_LoadModel";
-            this.Btn_LoadModel.Size = new System.Drawing.Size(75, 23);
+            this.Btn_LoadModel.Size = new System.Drawing.Size(75, 20);
             this.Btn_LoadModel.TabIndex = 4;
             this.Btn_LoadModel.Text = "Load Model";
             this.Btn_LoadModel.UseVisualStyleBackColor = true;
             this.Btn_LoadModel.Click += new System.EventHandler(this.Btn_LoadModel_Click);
-            // 
-            // Btn_OpenEffectFolder
-            // 
-            this.Btn_OpenEffectFolder.Location = new System.Drawing.Point(85, 5);
-            this.Btn_OpenEffectFolder.Name = "Btn_OpenEffectFolder";
-            this.Btn_OpenEffectFolder.Size = new System.Drawing.Size(116, 23);
-            this.Btn_OpenEffectFolder.TabIndex = 3;
-            this.Btn_OpenEffectFolder.Text = "Open Effect Folder";
-            this.Btn_OpenEffectFolder.UseVisualStyleBackColor = true;
-            this.Btn_OpenEffectFolder.Click += new System.EventHandler(this.Btn_OpenEffectFolder_Click);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(207, 10);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(57, 13);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Effect File:";
-            // 
-            // EffectFilter
-            // 
-            this.EffectFilter.FormattingEnabled = true;
-            this.EffectFilter.Location = new System.Drawing.Point(270, 7);
-            this.EffectFilter.Name = "EffectFilter";
-            this.EffectFilter.Size = new System.Drawing.Size(121, 21);
-            this.EffectFilter.TabIndex = 1;
-            this.EffectFilter.SelectedIndexChanged += new System.EventHandler(this.EffectFilter_SelectedIndexChanged);
-            // 
-            // Btn_OpenModel
-            // 
-            this.Btn_OpenModel.Location = new System.Drawing.Point(4, 5);
-            this.Btn_OpenModel.Name = "Btn_OpenModel";
-            this.Btn_OpenModel.Size = new System.Drawing.Size(75, 23);
-            this.Btn_OpenModel.TabIndex = 0;
-            this.Btn_OpenModel.Text = "Open";
-            this.Btn_OpenModel.UseVisualStyleBackColor = true;
-            this.Btn_OpenModel.Click += new System.EventHandler(this.Btn_OpenModel_Click);
             // 
             // ModelViewer
             // 
@@ -214,7 +167,7 @@
             this.DirectionLightX.Name = "DirectionLightX";
             this.DirectionLightX.Size = new System.Drawing.Size(120, 13);
             this.DirectionLightX.TabIndex = 1;
-            this.DirectionLightX.Scroll += new System.Windows.Forms.ScrollEventHandler(this.hScrollBar1_Scroll);
+            this.DirectionLightX.Scroll += new System.Windows.Forms.ScrollEventHandler(this.DirectionalLightX_Scroll);
             // 
             // UpdateTimer
             // 
@@ -232,7 +185,6 @@
             this.Name = "ModelViewerWindow";
             this.Text = "Prism Model Viewer";
             this.Menu_Panel.ResumeLayout(false);
-            this.Menu_Panel.PerformLayout();
             this.ModelViewerMenu.ResumeLayout(false);
             this.ModelViewerMenu.PerformLayout();
             this.ResumeLayout(false);
@@ -242,16 +194,10 @@
         #endregion
 
         private System.Windows.Forms.Panel Menu_Panel;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox EffectFilter;
-        private System.Windows.Forms.Button Btn_OpenModel;
         private System.Windows.Forms.Panel ModelViewer;
         private System.Windows.Forms.Panel ModelViewerMenu;
-        private System.Windows.Forms.Button Btn_OpenEffectFolder;
-        private System.Windows.Forms.FolderBrowserDialog effectFolderBrowser;
         private System.Windows.Forms.Timer UpdateTimer;
         private System.Windows.Forms.Button Btn_LoadModel;
-        private System.Windows.Forms.OpenFileDialog modelFileBrowser;
         private System.Windows.Forms.Button Btn_BackgroundColor;
         private System.Windows.Forms.ColorDialog BackgroundColorDialog;
         private System.Windows.Forms.HScrollBar DirectionLightX;
@@ -261,5 +207,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label DirectionalLightZValue;
         private System.Windows.Forms.HScrollBar DirectionalLightZ;
+        private System.Windows.Forms.FolderBrowserDialog DataFolderBrowser;
     }
 }

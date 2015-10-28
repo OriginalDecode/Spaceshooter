@@ -20,12 +20,16 @@ namespace CSharpUtilities.Components
 
         protected override void InitializeComponents(string aText)
         {
+            int textSize = aText.Length * 10;
+            if (textSize > 60) textSize = 60;
+            int sizePerObject = mySize.Width - textSize;
             myLabel.Text = aText;
             myLabel.Location = new Point(myLocation.X, myLocation.Y + 3);
-            myLabel.Size = new Size(50, mySize.Height + 2);
+            myLabel.Size = new Size(textSize, mySize.Height + 2);
 
-            myDropDown.Location = new Point(myLocation.X + 50, myLocation.Y);
-            myDropDown.Size = new Size(100, mySize.Height);
+            myDropDown.Location = new Point(myLocation.X + textSize, myLocation.Y);
+            myDropDown.Size = new Size(sizePerObject, mySize.Height);
+            myDropDown.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         public override void Show()
