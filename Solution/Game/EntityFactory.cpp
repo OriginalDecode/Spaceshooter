@@ -234,6 +234,9 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 			case 2:
 				aEntityToAddTo.myAITargetPositionMode = eAITargetPositionMode::ESCAPE_THEN_RETURN;
 				break;
+			case 3:
+				aEntityToAddTo.myAITargetPositionMode = eAITargetPositionMode::KAMIKAZE;
+				break;
 			default:
 				DL_ASSERT("Invalid AI-mode");
 				break;
@@ -472,6 +475,10 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		}
 
 	}
+	if (sourceEntity->GetComponent<PhysicsComponent>() != nullptr)
+	{
+		aTargetEntity->AddComponent<PhysicsComponent>();
+	}
 	if (sourceEntity->GetComponent<AIComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<AIComponent>();
@@ -509,10 +516,6 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	{
 		aTargetEntity->AddComponent<HealthComponent>();
 		aTargetEntity->GetComponent<HealthComponent>()->Init(it->second.myLife);
-	}
-	if (sourceEntity->GetComponent<PhysicsComponent>() != nullptr)
-	{
-		aTargetEntity->AddComponent<PhysicsComponent>();
 	}
 	if (sourceEntity->GetComponent<BulletComponent>() != nullptr)
 	{

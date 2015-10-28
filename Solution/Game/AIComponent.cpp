@@ -5,10 +5,12 @@
 #include <Engine.h>
 #include "Entity.h"
 #include <MathHelper.h>
+#include "InputComponent.h"
 #include "PhysicsComponent.h"
 #include "PostMaster.h"
 #include <sstream>
 #include <Vector.h>
+
 
 AIComponent::AIComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
@@ -16,8 +18,7 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myAvoidanceDistance(300.f)
 	, myPrevEntityToFollow(nullptr)
 {
-	
-
+	DL_ASSERT_EXP(aEntity.GetComponent<InputComponent>() == nullptr, "Tried to add AIComponent when there was a InputComponent");
 }
 
 AIComponent::~AIComponent()
@@ -83,7 +84,7 @@ void AIComponent::Update(float aDeltaTime)
 		myPhysicsComponent = myEntity.GetComponent<PhysicsComponent>();
 		DL_ASSERT_EXP(myPhysicsComponent != nullptr, "AI component needs physics component for movement."); // remove later
 	}
-
+	myVelocity = myPhysicsComponent->GetVelocity();
 	if (myCanMove == true)
 	{
 		myTimeToNextDecision -= aDeltaTime;
@@ -95,10 +96,13 @@ void AIComponent::Update(float aDeltaTime)
 			CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 
 			CU::Normalize(toTarget);
-			if (CU::Dot(myEntity.myOrientation.GetForward(), toTarget) > 0.72f && myTimeToNextDecision < 0)
+			if (myTimeToNextDecision < 0)
 			{
 				myTimeToNextDecision = myTimeBetweenDecisions;
-				Shoot(myPhysicsComponent->GetVelocity());
+				/*PhysicsComponent* targetPhys = myEntityToFollow->GetComponent<PhysicsComponent>();
+				CU::Vector3<float> targetVel = targetPhys->GetVelocity();*/
+
+				Shoot(toTarget*myPhysicsComponent->GetSpeed());
 			}
 		}
 	}
@@ -146,14 +150,17 @@ void AIComponent::FollowEntity(float aDeltaTime)
 	if (myTargetPositionMode != eAITargetPositionMode::MINE)
 	{
 		CalculateToTarget(myTargetPositionMode);
-		myVelocity += myToTarget * aDeltaTime;
+		
+		CU::Normalize(myToTarget);
+		float turnModifier = 1.0f;
+
+		myVelocity += myToTarget * turnModifier;
 
 		CU::Normalize(myVelocity);
 
-		CU::Vector3<float> up(0, 1.f, 0);
-		up = up * myEntity.myOrientation;
+		CU::Vector3<float> up(myEntity.myOrientation.GetUp());
 
-		CU::Normalize(myToTarget);
+		
 
 		up = up + myToTarget * aDeltaTime;
 
@@ -179,7 +186,7 @@ void AIComponent::FollowEntity(float aDeltaTime)
 		myEntity.myOrientation.myMatrix[10] = myVelocity.z;
 		myEntity.myOrientation.myMatrix[11] = 0;
 
-		myVelocity *= myEntity.GetComponent<PhysicsComponent>()->GetSpeed();
+		myVelocity *= myPhysicsComponent->GetSpeed();
 	}
 	else
 	{
