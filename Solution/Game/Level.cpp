@@ -328,6 +328,7 @@ void Level::UpdateDebug()
 
 	if (myInputWrapper->KeyDown(DIK_H))
 	{
+		//myPlayer->ShakeCamera(0.1f, 0.1f, 0.5f);
 		myCamera->ShakeCamera(0.1f, 0.1f, 0.5f);
 	}
 }

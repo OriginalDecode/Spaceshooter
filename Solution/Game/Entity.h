@@ -60,6 +60,9 @@ public:
 	ePowerUpType GetPowerUpType() const;
 	Prism::eOctreeType GetOctreeType() const;
 
+
+	//void ShakeCamera(float aRotationRate, float aMaxRotation, float aTime);
+
 private:
 	void operator=(Entity&) = delete;
 	CU::StaticArray<Component*, static_cast<int>(eComponentType::_COUNT)> myComponents;
@@ -77,6 +80,12 @@ private:
 	bool myRotateZ;
 
 
+	//bool myShakeCamera;
+	//float myRotateRate;
+	//float myMaxShake;
+	//float myCurrentShake;
+	//float myMaxShakeTime;
+	//float myCurrentShakeTime;
 
 };
 

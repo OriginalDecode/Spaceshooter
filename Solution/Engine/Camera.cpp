@@ -75,8 +75,8 @@ namespace Prism
 				myCurrentShakeTime = 0.f;
 				myCurrentShake = 0.f;
 			}
+			RotateZ(myCurrentShake);
 		}
-		RotateZ(myCurrentShake);
 
 		myFrustum->Update();
 	}
@@ -95,7 +95,7 @@ namespace Prism
 		TIME_FUNCTION
 
 		CU::Vector3<float> position = myOrientation.GetPos();
-		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
+		myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aDegrees * XM_PI / 180.f) * myOrientation;
 		myOrientation.SetPos(position);
 	}
@@ -105,7 +105,7 @@ namespace Prism
 		TIME_FUNCTION
 
 		CU::Vector3<float> position = myOrientation.GetPos();
-		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
+		myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundY(aDegrees * XM_PI / 180.f) * myOrientation;
 		myOrientation.SetPos(position);
 	}
@@ -115,7 +115,7 @@ namespace Prism
 		TIME_FUNCTION
 
 		CU::Vector3<float> position = myOrientation.GetPos();
-		myOrientation.SetPos({ 0.f, 0.f, 0.f, 0.f });
+		myOrientation.SetPos({ 0.f, 0.f, 0.0f, 1.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDegrees * XM_PI / 180.f) * myOrientation;
 		myOrientation.SetPos(position);
 	}
