@@ -430,6 +430,8 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
 		myDamageIndicatorTimer = 0.1f;
+
+		myCamera->ShakeCamera(100.f, 6.f, 0.5f); // pilla inte på dessa siffror!
 	}
 }
 
