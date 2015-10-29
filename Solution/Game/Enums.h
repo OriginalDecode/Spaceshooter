@@ -121,6 +121,7 @@ enum class eComponentType
 	WAY_POINT,
 	EMITTER,
 	SOUND,
+	POINT_LIGHT,
 	_COUNT,
 };
 
