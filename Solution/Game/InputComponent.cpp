@@ -66,7 +66,8 @@ void InputComponent::Update(float aDeltaTime)
 		}
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
-			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), mySteering * mySteeringModifier * myWeaponRotationModifier);
+			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), myEntity.myOrientation.GetForward()
+				, mySteering * mySteeringModifier * myWeaponRotationModifier);
 		}
 
 		if (myInputWrapper->KeyIsPressed(DIK_LSHIFT) || myInputWrapper->KeyIsPressed(DIK_RSHIFT))

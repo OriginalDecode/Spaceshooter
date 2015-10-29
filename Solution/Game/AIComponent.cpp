@@ -98,11 +98,18 @@ void AIComponent::Update(float aDeltaTime)
 			CU::Normalize(toTarget);
 			if (myTimeToNextDecision < 0)
 			{
+				CU::Vector3<float> shootingDir = toTarget;
 				myTimeToNextDecision = myTimeBetweenDecisions;
-				/*PhysicsComponent* targetPhys = myEntityToFollow->GetComponent<PhysicsComponent>();
-				CU::Vector3<float> targetVel = targetPhys->GetVelocity();*/
+				PhysicsComponent* targetPhys = myEntityToFollow->GetComponent<PhysicsComponent>();
+				if (targetPhys != nullptr)
+				{
+					CU::Vector3<float> targetVel = targetPhys->GetVelocity();
+					CU::Vector3<float> shootingTarget = myEntityToFollow->myOrientation.GetPos();
+					shootingTarget += myEntityToFollow->myOrientation.GetForward() * CU::Length(targetVel);
+					shootingDir = CU::GetNormalized(shootingTarget - myEntity.myOrientation.GetPos());
+				}
 
-				Shoot(toTarget*myPhysicsComponent->GetSpeed());
+				Shoot(shootingDir*myPhysicsComponent->GetSpeed(), shootingDir);
 			}
 		}
 	}
