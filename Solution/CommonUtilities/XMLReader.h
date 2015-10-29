@@ -121,6 +121,7 @@ private:
 	void DebugNextElement(tinyxml2::XMLElement* aParent) const;
 	void DebugNextElement(tinyxml2::XMLElement* aParent, const std::string& aChildName) const;
 
+	void InsertLineEndings(std::string& aTargetVariable) const;
 
 
 	tinyxml2::XMLDocument* myDoc;

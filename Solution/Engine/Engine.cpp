@@ -18,6 +18,8 @@
 #include <Vector.h>
 #include "VTuneApi.h"
 
+#include <algorithm>
+
 namespace Prism
 {
 	Engine* Engine::myInstance = nullptr;
