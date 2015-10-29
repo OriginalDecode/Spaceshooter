@@ -14,6 +14,7 @@
 #include "GUINote.h"
 #include "HealthComponent.h"
 #include "HealthNote.h"
+#include "KillStructureMessage.h"
 #include "MissionNote.h"
 #include "Model.h"
 #include "ModelLoader.h"
@@ -46,12 +47,16 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShowMessage(false)
 	, myMessage("")
 	, myMessageTime(0.f)
+	, myPowerUpCountDown(0.f)
+	, myHasPowerUp(false)
+	, myPowerUpMessage("")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::KILL_STRUCTURE, this);
 
 
 
@@ -126,6 +131,7 @@ GUIComponent::~GUIComponent()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::KILL_STRUCTURE, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -183,6 +189,17 @@ void GUIComponent::Update(float aDeltaTime)
 			myShowMessage = false;
 			myMessageTime = 0.f;
 			myMessage = "";
+		}
+	}
+
+	if (myHasPowerUp == true)
+	{
+		myPowerUpCountDown -= aDeltaTime;
+		if (myPowerUpCountDown <= 0.f)
+		{
+			myHasPowerUp = false;
+			myPowerUpCountDown = 0.f;
+			myPowerUpMessage = "";
 		}
 	}
 }
@@ -359,6 +376,12 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		Prism::Engine::GetInstance()->PrintDebugText(myMessage, { 100.f, -100.f });
 	}
 
+	if (myHasPowerUp == true)
+	{
+		std::string message = myPowerUpMessage + std::to_string(int(myPowerUpCountDown));
+		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f });
+	}
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
 
@@ -417,6 +440,13 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 	myMessage = "Powerup picked up: " + aNote.myIngameName;
 	myMessageTime = 3.f;
 	myShowMessage = true;
+
+	if (aNote.myDuration > 0.f)
+	{
+		myPowerUpCountDown = aNote.myDuration;
+		myPowerUpMessage = aNote.myIngameName + " is active: ";
+		myHasPowerUp = true;
+	}
 }
 
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
@@ -461,13 +491,22 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 	myShowMessage = true;
 }
 
+void GUIComponent::ReceiveMessage(const KillStructureMessage& aMessage)
+{
+	if (aMessage.myType == KillStructureMessage::eType::TO_GUI)
+	{
+		myEnemies.Add(aMessage.myEntity);
+	}
+
+}
+
 void GUIComponent::Reset()
 {
 
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
 	shieldBarEffect->SetPlayerVariable(1000);
-	
+
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_health.fx");
 	hpBarEffect->SetPlayerVariable(1000);

@@ -174,6 +174,28 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "eventxml"), "source", eventXML);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(levelElement, "conversationxml"), "source", conversationXML);
 
+	CU::Vector3<float> playerPos;
+	CU::Vector3<float> playerRot;
+	tinyxml2::XMLElement* playerPosElement;
+	playerPosElement = reader.ForceFindFirstChild(levelElement, "PlayerStartTranslate");
+	playerPosElement = reader.ForceFindFirstChild(playerPosElement, "position");
+	reader.ForceReadAttribute(playerPosElement, "X", playerPos.x);
+	reader.ForceReadAttribute(playerPosElement, "Y", playerPos.y);
+	reader.ForceReadAttribute(playerPosElement, "Z", playerPos.z);
+	
+	playerPosElement = reader.ForceFindFirstChild(levelElement, "PlayerStartTranslate");
+	playerPosElement = reader.ForceFindFirstChild(playerPosElement, "rotation");
+	reader.ForceReadAttribute(playerPosElement, "X", playerRot.x);
+	reader.ForceReadAttribute(playerPosElement, "Y", playerRot.y);
+	reader.ForceReadAttribute(playerPosElement, "Z", playerRot.z);
+
+	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundX(playerRot.x) * myPlayer->myOrientation;
+	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundY(playerRot.y) * myPlayer->myOrientation;
+	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundZ(playerRot.z) * myPlayer->myOrientation;
+
+	myPlayer->myOrientation.SetPos(playerPos);
+	myPlayer->myOriginalOrientation = myPlayer->myOrientation;
+
 	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);
 	myCurrentLevel->myMissionManager = new MissionManager(*myCurrentLevel, *myCurrentLevel->myPlayer, missionXML);
 	myCurrentLevel->myEventManager = new EventManager(eventXML, *myCurrentLevel->myConversationManager);

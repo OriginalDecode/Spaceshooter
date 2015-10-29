@@ -179,8 +179,17 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		bullet->RemoveComponent<AIComponent>();
 	}
 
-	bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
-		(aDirection * (aWeaponData->mySpeed)) + aEnitityVelocity);
+	if (aEntityType == eEntityType::PLAYER)
+	{
+		bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
+			(anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
+	}
+	else if (aEntityType == eEntityType::ENEMY)
+	{
+		bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
+			(aDirection * (aWeaponData->mySpeed)) + aEnitityVelocity);
+	}
+	
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
 

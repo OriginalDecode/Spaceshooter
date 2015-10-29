@@ -42,6 +42,8 @@ public:
 	void ReceiveMessage(const ResizeMessage& aMessage) override;
 	void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
+	void ReceiveMessage(const KillStructureMessage& aMessage) override;
+
 
 
 	void Reset() override;
@@ -71,6 +73,7 @@ private:
 
 	CU::GrowingArray<Entity*> myEnemies;
 
+
 	Entity* myClosestEnemy;
 	CU::Vector2<float> myClosestScreenPos;
 	float myClosestEnemyLength;
@@ -79,6 +82,9 @@ private:
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
 	CU::GrowingArray<Entity*> myPowerUps;
+	float myPowerUpCountDown;
+	bool myHasPowerUp;
+	std::string myPowerUpMessage;
 
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;
