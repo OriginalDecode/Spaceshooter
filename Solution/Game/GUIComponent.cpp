@@ -48,9 +48,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShowMessage(false)
 	, myMessage("")
 	, myMessageTime(0.f)
-	, myPowerUpCountDown(0.f)
-	, myHasPowerUp(false)
-	, myPowerUpMessage("")
+	, myActivePowerUps(8)
 	, myWeapon("Machinegun")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
@@ -194,14 +192,12 @@ void GUIComponent::Update(float aDeltaTime)
 		}
 	}
 
-	if (myHasPowerUp == true)
+	for (int i = myActivePowerUps.Size() - 1; i >= 0; --i)
 	{
-		myPowerUpCountDown -= aDeltaTime;
-		if (myPowerUpCountDown <= 0.f)
+		myActivePowerUps[i].myPowerUpCountDown -= aDeltaTime;
+		if (myActivePowerUps[i].myPowerUpCountDown <= 0.f)
 		{
-			myHasPowerUp = false;
-			myPowerUpCountDown = 0.f;
-			myPowerUpMessage = "";
+			myActivePowerUps.RemoveCyclicAtIndex(i);
 		}
 	}
 }
@@ -378,10 +374,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		Prism::Engine::GetInstance()->PrintDebugText(myMessage, { 100.f, -100.f });
 	}
 
-	if (myHasPowerUp == true)
+	for (int i = 0; i < myActivePowerUps.Size(); i++)
 	{
-		std::string message = myPowerUpMessage + std::to_string(int(myPowerUpCountDown));
-		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f });
+		std::string message = myActivePowerUps[i].myPowerUpMessage + std::to_string(int(myActivePowerUps[i].myPowerUpCountDown));
+		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f - (i * 50.f) });
 	}
 
 	Prism::Engine::GetInstance()->PrintDebugText(myWeapon, { 1400.f, -500.f });
@@ -447,9 +443,10 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 
 	if (aNote.myDuration > 0.f)
 	{
-		myPowerUpCountDown = aNote.myDuration;
-		myPowerUpMessage = aNote.myIngameName + " is active: ";
-		myHasPowerUp = true;
+		ActivePowerUp message;
+		message.myPowerUpCountDown = aNote.myDuration;
+		message.myPowerUpMessage = aNote.myIngameName + " is active: ";
+		myActivePowerUps.Add(message);
 	}
 }
 

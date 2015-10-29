@@ -16,6 +16,14 @@ struct WeaponData
 	std::string myType;
 };
 
+struct WeaponPowerUp
+{
+	ePowerUpType myPowerUpType;
+	float myPowerUpValue;
+	float myPowerUpDuration;
+	float myPowerUpCoolDownReducer;
+};
+
 class Entity;
 
 struct WeaponDataType;
@@ -51,11 +59,8 @@ private:
 	int myCurrentWeaponID;
 
 	bool myHasWeapon;
-	ePowerUpType myPowerUpType;
 
-	float myPowerUpValue;
-	float myPowerUpDuration;
-	float myPowerUpCoolDownReducer;
+	CU::GrowingArray<WeaponPowerUp> myPowerUps;
 };
 
 inline eComponentType ShootingComponent::GetType()
