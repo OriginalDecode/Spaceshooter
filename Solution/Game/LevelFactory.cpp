@@ -13,6 +13,8 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include "EmitterComponent.h"
+#include "EmitterManager.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -136,6 +138,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myCollisionManager = new CollisionManager();
 	myCurrentLevel->myBulletManager = new BulletManager(*myCurrentLevel->myCollisionManager, *myCurrentLevel->myScene);
 	myCurrentLevel->myBulletManager->LoadFromFactory(myCurrentLevel->myWeaponFactory, myCurrentLevel->myEntityFactory, "Data/Script/LI_list_projectile.xml");
+	myCurrentLevel->myEmitterManager = new EmitterManager();
+
 
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
@@ -230,7 +234,32 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 				myCurrentLevel->myEntities[i]->GetComponent<AIComponent>()->SetEntityToFollow(target, myCurrentLevel->myPlayer);
 			}
 		}
+
+		if (myCurrentLevel->myEntities[i]->GetComponent<EmitterComponent>() != nullptr)
+		{
+			myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myEntities[i]->GetComponent<EmitterComponent>());
+		}
 	}
+
+
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
+	{
+		if (i <= 8)
+		{
+			for (int j = 0; j < myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets.Size(); ++j)
+			{
+				if (myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets[j]->GetComponent<EmitterComponent>() != nullptr)
+				{
+					myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets[j]->GetComponent<EmitterComponent>());
+				}
+				if (myCurrentLevel->myBulletManager->GetBullet(i)->myEnemyBullets[j]->GetComponent<EmitterComponent>() != nullptr)
+				{
+					myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myBulletManager->GetBullet(i)->myEnemyBullets[j]->GetComponent<EmitterComponent>());
+				}
+			}
+		}
+	}
+
 
 	AddToScene();
 

@@ -15,6 +15,7 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "EmitterComponent.h"
+#include "EmitterManager.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -54,6 +55,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myEventManager(nullptr)
 	, myConversationManager(nullptr)
 	, myEntityToDefend(nullptr)
+	, myEmitterManager(nullptr)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
@@ -70,6 +72,7 @@ Level::~Level()
 	{
 	}
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BackgroundMusic", 0);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BattleMusic", 0);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
@@ -96,6 +99,10 @@ Level::~Level()
 	delete myScene;
 	mySkySphere = nullptr;
 	myScene = nullptr;
+	
+	delete myEmitterManager;
+	myEmitterManager = nullptr;
+
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
 
 }
@@ -125,6 +132,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	myEmitterManager->UpdateEmitters(aDeltaTime);
+
 	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
 	UpdateDebug();
@@ -145,22 +154,20 @@ void Level::Render()
 	
 	myScene->Render(myBulletManager->GetInstances());
 
-	for (int i = 0; i < myEntities.Size(); ++i)
-	{
-		if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
-		{
-			continue;
-		}
-		else
-		{
-			myEntities[i]->GetComponent<EmitterComponent>()->Render();
+	//for (int i = 0; i < myEntities.Size(); ++i)
+	//{
+	//	if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
+	//	{
+	//		continue;
+	//	}
+	//	else
+	//	{
+	//		myEntities[i]->GetComponent<EmitterComponent>()->Render();
+	//	}
+	//}
 
-			Prism::Engine::GetInstance()->PrintDebugText(myEntities[i]->GetComponent<EmitterComponent>()->GetEmitterCount()
-				, { 1600, 0 });
+	myEmitterManager->RenderEmitters();
 
-		}
-
-	}
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 

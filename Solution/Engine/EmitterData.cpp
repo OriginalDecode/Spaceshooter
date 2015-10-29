@@ -10,9 +10,9 @@ namespace Prism
 	void EmitterData::LoadDataFile(const char* aFilePath)
 	{
 		XMLReader read;
+		myFileName = aFilePath;
 
 		read.OpenDocument(aFilePath);
-
 		tinyxml2::XMLElement* emitter = read.ForceFindFirstChild("Emitter");
 		tinyxml2::XMLElement* element;
 		element = read.ForceFindFirstChild(emitter, "Shader");
@@ -64,14 +64,14 @@ namespace Prism
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleStartColor");
-		read.ReadAttribute(element, "r", myStartColor.x);
-		read.ReadAttribute(element, "g", myStartColor.y);
-		read.ReadAttribute(element, "b", myStartColor.z);
+		read.ReadAttribute(element, "r", myData.myStartColor.r);
+		read.ReadAttribute(element, "g", myData.myStartColor.g);
+		read.ReadAttribute(element, "b", myData.myStartColor.b);
 
 		element = read.ForceFindFirstChild(emitter, "ParticleEndColor");
-		read.ReadAttribute(element, "r", myEndColor.x);
-		read.ReadAttribute(element, "g", myEndColor.y);
-		read.ReadAttribute(element, "b", myEndColor.z);
+		read.ReadAttribute(element, "r", myData.myEndColor.r);
+		read.ReadAttribute(element, "g", myData.myEndColor.g);
+		read.ReadAttribute(element, "b", myData.myEndColor.b);
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleLifeTime");
@@ -80,9 +80,11 @@ namespace Prism
 		element = read.ForceFindFirstChild(emitter, "EmissionRate");
 		read.ReadAttribute(element, "value", myEmissionRate);
 
+		element = read.ForceFindFirstChild(emitter, "ParticlesPerEmitt");
+		read.ReadAttribute(element, "value", myParticlesPerEmitt);
+
 		element = read.ForceFindFirstChild(emitter, "EmissionRateDelta");
 		read.ReadAttribute(element, "value", myEmissionRateDelta);
-
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleMaxScale");
@@ -101,8 +103,13 @@ namespace Prism
 
 		read.CloseDocument();
 
-		myData.myStartColor = myStartColor;
-		myData.myEndColor = myEndColor;
+		myData.myStartColor.r = (myData.myStartColor.r / 255.f);
+		myData.myStartColor.g = (myData.myStartColor.g / 255.f);
+		myData.myStartColor.b = (myData.myStartColor.b / 255.f);
+
+		myData.myEndColor.r = (myData.myEndColor.r / 255.f);
+		myData.myEndColor.g = (myData.myEndColor.g / 255.f);
+		myData.myEndColor.b = (myData.myEndColor.b / 255.f);
 
 		myData.myMaxStartSize = myMaxScale;
 		myData.myMinStartSize = myMinScale;

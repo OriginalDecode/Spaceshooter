@@ -95,13 +95,13 @@ namespace Prism
 				it->second.myNameString = myStringStream.str();
 		
 		
-				it->second.myNameText = new DebugText();
-				it->second.myNameText->Init(
-					Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
+				//it->second.myNameText = new DebugText();
+				//it->second.myNameText->Init(
+				//	Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 		
-				it->second.myTimeText = new DebugText();
-				it->second.myTimeText->Init(
-					Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
+				//it->second.myTimeText = new DebugText();
+				//it->second.myTimeText->Init(
+				//	Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 			}
 		
 			LARGE_INTEGER time;

@@ -7,7 +7,7 @@
 
 #include <EmitterData.h>
 #include <EmitterInstance.h>
-
+#include "EmitterNote.h"
 #include "Entity.h"
 #include "Scene.h"
 
@@ -55,4 +55,17 @@ eComponentType EmitterComponent::GetType()
 int EmitterComponent::GetEmitterCount()
 {
 	return myEmitterCount;
+}
+
+Prism::EmitterInstance* EmitterComponent::GetEmitter()
+{
+	return myEmitter;
+}
+
+void EmitterComponent::ReceiveNote(const EmitterNote& aNote)
+{
+	if (aNote.myType == EmitterNote::eType::BULLET)
+	{
+		myEmitter->ToggleActive();
+	}
 }

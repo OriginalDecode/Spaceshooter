@@ -6,8 +6,6 @@
 #include <thread>
 #include <Windows.h>
 
-
-
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 
@@ -23,7 +21,6 @@ namespace Prism
 
 	class Camera;
 	class DebugDataDisplay;
-	class DebugFontContainer;
 	class DirectX;
 	class EffectContainer;
 	class Effect;
@@ -35,7 +32,6 @@ namespace Prism
 	class ModelProxy;
 	class Text;
 	class TextureContainer;
-	class DebugText;
 
 	struct SetupInfo;
 
@@ -52,7 +48,6 @@ namespace Prism
 		ID3D11DeviceContext* GetContex();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
-		DebugFontContainer* GetFontContainer();
 		DebugDataDisplay* GetDebugDisplay();
 		FileWatcher* GetFileWatcher();
 		ModelLoader* GetModelLoader();
@@ -93,11 +88,9 @@ namespace Prism
 		TextureContainer* myTextureContainer;
 		EffectContainer* myEffectContainer;
 		FBXFactory* myModelFactory;
-		DebugFontContainer* myFontContainer;
 		DebugDataDisplay* myDebugDataDisplay;
 		FileWatcher* myFileWatcher;
 
-		DebugText* myDebugText;
 		Font* myFont;
 		Text* myText;
 
@@ -123,11 +116,6 @@ inline Prism::TextureContainer* Prism::Engine::GetTextureContainer()
 inline Prism::EffectContainer* Prism::Engine::GetEffectContainer()
 {
 	return myEffectContainer;
-}
-
-inline Prism::DebugFontContainer* Prism::Engine::GetFontContainer()
-{
-	return myFontContainer;
 }
 
 inline Prism::DebugDataDisplay* Prism::Engine::GetDebugDisplay()
