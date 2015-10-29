@@ -238,3 +238,10 @@ void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
 		}
 	}
 }
+
+void ShootingComponent::Reset()
+{
+	myPowerUps.RemoveAll();
+	SetCurrentWeaponID(0);
+	myHomingTarget = nullptr;
+}
