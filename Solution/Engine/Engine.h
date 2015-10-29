@@ -74,7 +74,7 @@ namespace Prism
 		void EnableWireframe();
 		void DisableWireframe();
 
-
+		void SetShowDebugText(bool aShowDebug);
 		void SetClearColor(const CU::Vector4<float>& aClearColor);
 
 		bool myWireframeShouldShow;
@@ -109,6 +109,7 @@ namespace Prism
 
 		CU::GrowingArray<TextCommand> myTexts;
 		CU::GrowingArray<TextCommand> myDebugTexts;
+		bool myShowDebugText;
 	};
 }
 
@@ -145,4 +146,9 @@ inline const CU::Matrix44<float>& Prism::Engine::GetOrthogonalMatrix() const
 inline void Prism::Engine::SetClearColor(const CU::Vector4<float>& aClearColor)
 {
 	myClearColor = aClearColor;
+}
+
+inline void Prism::Engine::SetShowDebugText(bool aShowDebugText)
+{
+	myShowDebugText = aShowDebugText;
 }

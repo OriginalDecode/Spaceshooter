@@ -3,6 +3,7 @@
 #include "DefendMission.h"
 #include "Engine.h"
 #include "Entity.h"
+#include "HealthComponent.h"
 #include "Level.h"
 #include "PostMaster.h"
 #include <sstream>
@@ -57,15 +58,10 @@ bool DefendMission::Update(float aDeltaTime, int aMissionIndex, eMissionCategory
 
 	std::stringstream ss;
 	ss.precision(2);
-	if (myAbortMission == false)
-	{
-		ss << "Defend for " << myVisualTime << " seconds";
-	}
-	else
-	{
-		ss << "Defend (abort) for (visual) " << myVisualTime << " (real) " << myRealTime << " seconds";
-	}
-
+	int health = myEntityToDefend->GetComponent<HealthComponent>()->GetHealth();
+	
+	ss << "Defend for " << myVisualTime << " s, " << health << " hp left.";
+	
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
 		ss << " (Optional)";

@@ -218,7 +218,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	std::stringstream lengthToWaypoint;
 	if (aShowDist == true)
 	{
-		lengthToWaypoint << aPosition.x << " " << aPosition.y << " " << aPosition.z << " " << static_cast<int>(CU::Length(toTarget));
+		lengthToWaypoint << static_cast<int>(CU::Length(toTarget));
 	}
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toTarget) != 0)
@@ -284,7 +284,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	{
 		if (aCurrentModel == myWaypointMarker || aCurrentModel == myWaypointArrow)
 		{
-			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f }, Prism::eTextType::RELEASE_TEXT);
+			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
 		if (aArrowModel == myEnemyArrow)
@@ -306,7 +306,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	float halfWidth = aWindowSize.x * 0.5f;
 	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
-	Prism::Engine::GetInstance()->PrintText(myConversation, { halfWidth, -halfHeight - 200.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myConversation, { 50.f, -50.f }, Prism::eTextType::RELEASE_TEXT);
 	myReticle->Render({ halfWidth, -halfHeight });
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
 	myCrosshair->Render({ halfWidth, -(halfHeight) });

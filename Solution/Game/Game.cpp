@@ -25,11 +25,16 @@
 
 Game::Game()
 	: myLockMouse(true)
+#ifdef RELEASE_BUILD
 	, myShowSystemInfo(false)
+#else
+	, myShowSystemInfo(true)
+#endif
 {
 	PostMaster::Create();
 	Prism::Audio::AudioInterface::CreateInstance();
 	myInputWrapper = new CU::InputWrapper();
+	Prism::Engine::GetInstance()->SetShowDebugText(myShowSystemInfo);
 }
 
 Game::~Game()
@@ -112,6 +117,7 @@ bool Game::Update()
 	if (myInputWrapper->KeyDown(DIK_F8))
 	{
 		myShowSystemInfo = !myShowSystemInfo;
+		Prism::Engine::GetInstance()->SetShowDebugText(myShowSystemInfo);
 	}
 	if (myInputWrapper->KeyDown(DIK_F9))
 	{
