@@ -22,6 +22,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include <Sprite.h>
+#include "PhysicsComponent.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
@@ -412,6 +413,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	}
 
 	Prism::Engine::GetInstance()->PrintText(myWeapon, { 1400.f, -500.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
+		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
