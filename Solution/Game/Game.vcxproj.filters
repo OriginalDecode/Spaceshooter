@@ -179,6 +179,7 @@
     <ClCompile Include="SpawnPowerUpMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="KillStructureMission.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -413,6 +414,7 @@
     <ClInclude Include="SpawnPowerUpMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="KillStructureMission.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

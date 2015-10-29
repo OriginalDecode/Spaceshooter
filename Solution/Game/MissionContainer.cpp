@@ -76,6 +76,10 @@ MissionContainer::MissionContainer(Level& aLevel, Entity& aPlayer, XMLReader& aR
 		{
 			mission = new DefendMission(aReader, element, true);
 		}
+		else if (type == "killstructures")
+		{
+			//mission = KillStructureMission(aLevel, aReader, element);
+		}
 
 		DL_ASSERT_EXP(mission != nullptr, "Missiontype not recognized: " + type);
 
