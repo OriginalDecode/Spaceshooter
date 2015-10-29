@@ -344,8 +344,4 @@ void Level::UpdateDebug()
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_J))
-	{
-		myPlayer->GetComponent<ShootingComponent>()->ActivateEMP();
-	}
 }

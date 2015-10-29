@@ -48,9 +48,10 @@ public:
 
 	void SetHomingTarget(Entity* aTarget);
 
-	void ActivateEMP(); // test function
-
 private:
+
+	bool HasPowerUp(ePowerUpType aPowerUp);
+	void ActivatePowerUp(ePowerUpType aPowerUp); // only for emp
 
 	CU::GrowingArray<WeaponData, int> myWeapons;
 
@@ -66,12 +67,6 @@ private:
 inline eComponentType ShootingComponent::GetType()
 {
 	return eComponentType::SHOOTING;
-}
-
-inline void ShootingComponent::ActivateEMP()
-{
-	myPowerUpValue = 1000.f;
-	myPowerUpDuration = 5.f;
 }
 
 inline void ShootingComponent::SetHomingTarget(Entity* aTarget)
