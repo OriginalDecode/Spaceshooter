@@ -20,6 +20,7 @@
 #include "ModelProxy.h"
 #include <Sprite.h>
 #include "PostMaster.h"
+#include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
 #include "PropComponent.h"
 #include "ResizeMessage.h"
@@ -35,7 +36,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myWaypointActive(false)
 	, myEnemies(16)
 	, myCamera(nullptr)
-	, myPowerUpPositions(8)
+	, myPowerUps(8)
 	, myConversation(" ")
 	, myEnemiesTarget(nullptr)
 	, myHitMarkerTimer(-1.f)
@@ -186,8 +187,10 @@ void GUIComponent::Update(float aDeltaTime)
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
-	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist)
+	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize
+	, bool aShowDist, bool aIsPowerup, std::string aName)
 {
+	bool showName = false;
 	float halfWidth = aWindowSize.x *0.5f;
 	float halfHeight = aWindowSize.y * 0.5f;
 
@@ -242,12 +245,19 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	else
 	{
 		aCurrentModel = aMarkerModel;
+		showName = true;
 	}
 	if (circleAroundPoint < 0.f)
 	{
 		aCurrentModel = aArrowModel;
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
+		showName = false;
+	}
+
+	if (aIsPowerup == true && showName == true)
+	{
+		Prism::Engine::GetInstance()->PrintDebugText(aName, { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
 	}
 
 	if (aShowDist == true)
@@ -307,9 +317,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		}
 	}
 
-	for (int i = 0; i < myPowerUpPositions.Size(); ++i)
+	for (int i = 0; i < myPowerUps.Size(); ++i)
 	{
-		CalculateAndRender(myPowerUpPositions[i], myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, true);
+		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker
+			, aWindowSize, true, true, myPowerUps[i]->GetComponent<PowerUpComponent>()->GetInGameName());
 	}
 
 	if (myEnemiesTarget != nullptr)
@@ -327,7 +338,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	}
 
 	myEnemies.RemoveAll();
-	myPowerUpPositions.RemoveAll();
+	myPowerUps.RemoveAll();
 
 	myGUIBars[0]->Render(*myCamera);
 	myGUIBars[1]->Render(*myCamera);
@@ -373,7 +384,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		myEnemies.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::POWERUP:
-		myPowerUpPositions.Add(aNote.myEntity->myOrientation.GetPos());
+		myPowerUps.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::STEERING_TARGET:
 		mySteeringTargetPosition = { aNote.myPosition.x, aNote.myPosition.y };
