@@ -54,6 +54,10 @@ void Component::ReceiveNote(const SoundNote&)
 {
 }
 
+void Component::ReceiveNote(const EmitterNote&)
+{
+}
+
 void Component::Reset()
 {
 }

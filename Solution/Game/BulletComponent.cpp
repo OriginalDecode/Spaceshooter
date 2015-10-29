@@ -6,6 +6,7 @@
 #include "CollisionManager.h"
 #include "CollisionNote.h"
 #include "Entity.h"
+#include "EmitterNote.h"
 #include "HealthComponent.h"
 #include "PostMaster.h"
 #include "ShieldComponent.h"
@@ -79,6 +80,9 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 void BulletComponent::SetActive(bool aActive)
 {
 	myActive = aActive;
+	
+	myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET));
+
 	if (myActive == true)
 	{
 		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)

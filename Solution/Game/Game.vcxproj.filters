@@ -437,6 +437,9 @@
     <ClInclude Include="EmitterMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="EmitterNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

@@ -17,6 +17,9 @@ public:
 	static eComponentType GetType();
 	int GetEmitterCount();
 	Prism::EmitterInstance* GetEmitter();
+
+	void ReceiveNote(const EmitterNote& aNote) override;
+
 private:
 
 	CU::Matrix44f myOrientation;

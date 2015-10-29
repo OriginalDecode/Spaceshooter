@@ -171,6 +171,7 @@
     <ClInclude Include="EmitterComponent.h" />
     <ClInclude Include="EmitterManager.h" />
     <ClInclude Include="EmitterMessage.h" />
+    <ClInclude Include="EmitterNote.h" />
     <ClInclude Include="EnemyKilledMessage.h" />
     <ClInclude Include="Event.h" />
     <ClInclude Include="EventQueueEmptyMessage.h" />

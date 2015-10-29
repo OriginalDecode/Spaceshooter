@@ -1,12 +1,12 @@
 #include "stdafx.h"
-#include "EmitterMessage.h"
-
-
-EmitterMessage::EmitterMessage()
-{
-}
-
-
-EmitterMessage::~EmitterMessage()
-{
-}
+//#include "EmitterMessage.h"
+//
+////
+////EmitterMessage::EmitterMessage()
+////{
+////}
+////
+////
+////EmitterMessage::~EmitterMessage()
+////{
+////}
