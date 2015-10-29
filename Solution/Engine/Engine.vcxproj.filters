@@ -114,6 +114,12 @@
     <ClCompile Include="Font.cpp">
       <Filter>Rendering\Text</Filter>
     </ClCompile>
+    <ClCompile Include="FullScreenHelper.cpp">
+      <Filter>Rendering\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Rendering\PostProcessing</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -263,6 +269,12 @@
     <ClInclude Include="Font.h">
       <Filter>Rendering\Text</Filter>
     </ClInclude>
+    <ClInclude Include="FullScreenHelper.h">
+      <Filter>Rendering\PostProcessing</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Rendering\PostProcessing</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
@@ -303,6 +315,9 @@
     </Filter>
     <Filter Include="Rendering\Text">
       <UniqueIdentifier>{c692a68a-c85e-4a75-9e93-03f0b69dd9e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\PostProcessing">
+      <UniqueIdentifier>{9eae83a0-4dc4-4207-9000-7994f620f042}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

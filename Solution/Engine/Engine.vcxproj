@@ -226,9 +226,11 @@
     <ClCompile Include="FontFile.cpp" />
     <ClCompile Include="FrameTimeDebugger.cpp" />
     <ClCompile Include="Frustum.cpp" />
+    <ClCompile Include="FullScreenHelper.cpp" />
     <ClCompile Include="GraphRenderer.cpp" />
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelProxy.cpp" />
@@ -277,6 +279,7 @@
     <ClInclude Include="FontFile.h" />
     <ClInclude Include="FrameTimeDebugger.h" />
     <ClInclude Include="Frustum.h" />
+    <ClInclude Include="FullScreenHelper.h" />
     <ClInclude Include="GraphRenderer.h" />
     <ClInclude Include="IndexBufferWrapper.h" />
     <ClInclude Include="Instance.h" />
@@ -284,6 +287,7 @@
     <ClInclude Include="LightStructs.h" />
     <ClInclude Include="LodStructs.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelProxy.h" />
