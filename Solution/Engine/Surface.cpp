@@ -70,7 +70,7 @@ void Prism::Surface::ReloadSurface()
 }
 
 
-bool Prism::Surface::VerityTextures(const std::string& aModelPath)
+bool Prism::Surface::VerifyTextures(const std::string& aModelPath)
 {
 	if (aModelPath.find("skySphere") != std::string::npos)
 	{

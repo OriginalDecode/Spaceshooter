@@ -37,7 +37,7 @@ namespace Prism{
 		bool GetEmissive() const;
 		void SetEmissive();
 
-		bool VerityTextures(const std::string& aModelPath);
+		bool VerifyTextures(const std::string& aModelPath);
 
 	private:
 		CU::GrowingArray<Texture*> myTextures;

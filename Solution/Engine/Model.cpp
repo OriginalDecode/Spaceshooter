@@ -72,7 +72,7 @@ void Prism::Model::Init()
 
 	for (int i = 0; i < mySurfaces.Size(); ++i)
 	{
-		if (mySurfaces[i]->VerityTextures(myFileName) == false)
+		if (mySurfaces[i]->VerifyTextures(myFileName) == false)
 		{
 			DL_ASSERT(CU::Concatenate("Missing PBL-texture from model: %s", myFileName.c_str()));
 		}
