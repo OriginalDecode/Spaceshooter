@@ -318,7 +318,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	for (int i = 0; i < myPowerUps.Size(); ++i)
 	{
-		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, true, true, "Powerup");
+		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, true, true, myPowerUps[i]->GetName());
 	}
 
 	if (myEnemiesTarget != nullptr)

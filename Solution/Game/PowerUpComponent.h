@@ -18,6 +18,7 @@ private:
 
 	ePowerUpType myType;
 	std::string myUpgradeName;
+	std::string myInGameName;
 	float myDuration;
 	float myValue;
 	int myUpgradeID;
