@@ -2,11 +2,14 @@
 #include "Renderer.h"
 
 
-Renderer::Renderer()
+namespace Prism
 {
-}
-
-
-Renderer::~Renderer()
-{
+	Renderer::Renderer()
+	{
+	}
+	
+	
+	Renderer::~Renderer()
+	{
+	}
 }

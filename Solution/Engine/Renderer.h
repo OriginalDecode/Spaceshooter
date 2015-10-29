@@ -1,8 +1,11 @@
 #pragma once
-class Renderer
+namespace Prism
 {
-public:
-	Renderer();
-	~Renderer();
-};
+	class Renderer
+	{
+	public:
+		Renderer();
+		~Renderer();
+	};
+}
 

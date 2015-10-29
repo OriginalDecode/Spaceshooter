@@ -1,8 +1,11 @@
 #pragma once
-class FullScreenHelper
+namespace Prism
 {
-public:
-	FullScreenHelper();
-	~FullScreenHelper();
-};
+	class FullScreenHelper
+	{
+	public:
+		FullScreenHelper();
+		~FullScreenHelper();
+	};
+}
 
