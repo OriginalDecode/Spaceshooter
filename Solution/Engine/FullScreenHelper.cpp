@@ -2,11 +2,14 @@
 #include "FullScreenHelper.h"
 
 
-FullScreenHelper::FullScreenHelper()
+namespace Prism
 {
-}
-
-
-FullScreenHelper::~FullScreenHelper()
-{
+	FullScreenHelper::FullScreenHelper()
+	{
+	}
+	
+	
+	FullScreenHelper::~FullScreenHelper()
+	{
+	}
 }
