@@ -94,6 +94,7 @@ namespace Prism
 			myText->SetPosition(myDebugTexts[i].myPosition);
 			myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
 			myText->Render();
+			//myText->SetColor({ 1, 0, 1, 0.5f });
 			//myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
 			//	, { myDebugTexts[i].myScale, myDebugTexts[i].myScale }, { 1.f, 1.f, 1.f, 1.f });
 		}
