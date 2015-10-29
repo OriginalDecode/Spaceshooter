@@ -208,6 +208,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		acceleration -= myAcceleration * aDelta;
+		myCurrentBoostValue = 0;
 	}
 
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE))
@@ -241,7 +242,21 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		}
 	}
 
+	Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CurrentBoost: %f", myCurrentBoostValue), { 600.f, -600.f }, Prism::eTextType::DEBUG_TEXT);
 	acceleration += myCurrentBoostValue * aDelta;
+
+	if (myEntity.GetComponent<PhysicsComponent>()->GetSpeed() > myMaxMovementSpeed + myMaxBoostValue)
+	{
+		acceleration = fminf(acceleration, 0.f);
+	}
+
+	if (myEntity.GetComponent<PhysicsComponent>()->GetSpeed() < myMinMovementSpeed)
+	{
+		acceleration = fmax(acceleration, 0.f);
+	}
+	
+
+	Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Acceleration: %f", acceleration), { 600.f, -640.f }, Prism::eTextType::DEBUG_TEXT);
 	
 	myEntity.GetComponent<PhysicsComponent>()->Accelerate(acceleration);
 
