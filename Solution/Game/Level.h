@@ -25,6 +25,7 @@ class ConversationManager;
 class DefendMessage;
 class Entity;
 class EntityFactory;
+class EmitterManager;
 class EventManager;
 class MissionManager;
 class WeaponFactory;
@@ -94,6 +95,8 @@ private:
 
 	MissionManager* myMissionManager;
 	EventManager* myEventManager;
+
+	EmitterManager* myEmitterManager;
 
 	bool myComplete;
 };

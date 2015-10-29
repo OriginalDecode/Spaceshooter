@@ -56,3 +56,8 @@ int EmitterComponent::GetEmitterCount()
 {
 	return myEmitterCount;
 }
+
+Prism::EmitterInstance* EmitterComponent::GetEmitter()
+{
+	return myEmitter;
+}

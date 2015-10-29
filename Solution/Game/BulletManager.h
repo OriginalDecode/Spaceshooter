@@ -55,6 +55,8 @@ public:
 
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
+	BulletData* GetBullet(int anIndex);
+
 private:
 	void operator=(BulletManager&) = delete;
 

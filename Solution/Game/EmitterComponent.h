@@ -16,6 +16,7 @@ public:
 	void Render();
 	static eComponentType GetType();
 	int GetEmitterCount();
+	Prism::EmitterInstance* GetEmitter();
 private:
 
 	CU::Matrix44f myOrientation;
