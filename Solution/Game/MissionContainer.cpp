@@ -4,6 +4,7 @@
 #include "Enums.h"
 #include "KillAllAbortMission.h"
 #include "KillAllMission.h"
+#include "KillStructureMission.h"
 #include "KillXEnemiesAbortMission.h"
 #include "KillXEnemiesMission.h"
 #include <sstream>
@@ -78,7 +79,7 @@ MissionContainer::MissionContainer(Level& aLevel, Entity& aPlayer, XMLReader& aR
 		}
 		else if (type == "killstructures")
 		{
-			//mission = KillStructureMission(aLevel, aReader, element);
+			mission = new KillStructureMission(aReader, element);
 		}
 
 		DL_ASSERT_EXP(mission != nullptr, "Missiontype not recognized: " + type);

@@ -3,6 +3,7 @@
 #include "DefendMessage.h"
 #include "Entity.h"
 #include "HealthComponent.h"
+#include "KillStructureMessage.h"
 #include "PropComponent.h"
 #include "ShieldComponent.h"
 #include "PhysicsComponent.h"
@@ -20,14 +21,23 @@ PropComponent::~PropComponent()
 	{
 		PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	}
+	if (myStructureName != "")
+	{
+		PostMaster::GetInstance()->UnSubscribe(eMessageType::KILL_STRUCTURE, this);
+	}
 }
 
-void PropComponent::Init(const std::string& aDefendName)
+void PropComponent::Init(const std::string& aDefendName, const std::string& aStructureName)
 {
 	myDefendName = aDefendName;
 	if (myDefendName != "")
 	{
 		PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
+	}
+	myStructureName = aStructureName;
+	if (myStructureName != "")
+	{
+		PostMaster::GetInstance()->Subscribe(eMessageType::KILL_STRUCTURE, this);
 	}
 }
 
@@ -68,5 +78,13 @@ void PropComponent::ReceiveMessage(const DefendMessage& aMessage)
 	if (aMessage.myType == DefendMessage::eType::NAME && aMessage.myDefendName == myDefendName)
 	{
 		PostMaster::GetInstance()->SendMessage<DefendMessage>(DefendMessage(DefendMessage::eType::ENTITY, myDefendName, &GetEntity()));
+	}
+}
+
+void PropComponent::ReceiveMessage(const KillStructureMessage& aMessage)
+{
+	if (aMessage.myType == KillStructureMessage::eType::NAME && aMessage.myStructureName == myStructureName)
+	{
+		PostMaster::GetInstance()->SendMessage<KillStructureMessage>(KillStructureMessage(KillStructureMessage::eType::ENTITY, myStructureName, &GetEntity()));
 	}
 }

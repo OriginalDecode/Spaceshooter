@@ -1,8 +1,23 @@
 #pragma once
-class KillStructureMessage
+
+#include "Message.h"
+#include <string>
+
+class Entity;
+
+class KillStructureMessage : public Message
 {
 public:
-	KillStructureMessage();
-	~KillStructureMessage();
+	enum class eType
+	{
+		NAME,
+		ENTITY,
+	};
+
+	KillStructureMessage(eType aType, const std::string& aStructureName = "", Entity* aEntity = nullptr);
+
+	const eType myType;
+	const std::string myStructureName;
+	Entity* myEntity;
 };
 

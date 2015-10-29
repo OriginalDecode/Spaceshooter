@@ -186,8 +186,9 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	SetSkySphere(skySphere, "Data/Resource/Shader/S_effect_skybox.fx");
 
 	LoadLights(reader, levelElement);
-	LoadProps(reader, levelElement);
+	//LoadProps(reader, levelElement);
 	LoadDefendables(reader, levelElement);
+	LoadStructures(reader, levelElement);
 	LoadTriggers(reader, levelElement);
 	LoadPowerups(reader, levelElement);
 	
@@ -281,7 +282,7 @@ void LevelFactory::LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelEle
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
 
-		newEntity->AddComponent<PropComponent>()->Init("");
+		newEntity->AddComponent<PropComponent>()->Init("", "");
 		FillDataPropOrDefendable(aReader, entityElement, newEntity);
 	}
 }
@@ -300,7 +301,26 @@ void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLe
 		aReader.ForceReadAttribute(entityElement, "defendName", defendName);
 		defendName = CU::ToLower(defendName);
 
-		newEntity->AddComponent<PropComponent>()->Init(defendName);
+		newEntity->AddComponent<PropComponent>()->Init(defendName, "");
+		FillDataPropOrDefendable(aReader, entityElement, newEntity);
+	}
+}
+
+void LevelFactory::LoadStructures(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+{
+	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "structure"); entityElement != nullptr;
+		entityElement = aReader.FindNextElement(entityElement, "structure"))
+	{
+		Entity* newEntity = new Entity(eEntityType::STRUCTURE, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC);
+		std::string propType;
+		aReader.ForceReadAttribute(entityElement, "propType", propType);
+		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
+
+		std::string structureName;
+		aReader.ForceReadAttribute(entityElement, "structureName", structureName);
+		structureName = CU::ToLower(structureName);
+
+		newEntity->AddComponent<PropComponent>()->Init("", structureName);
 		FillDataPropOrDefendable(aReader, entityElement, newEntity);
 	}
 }

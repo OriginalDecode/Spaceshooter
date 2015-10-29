@@ -40,6 +40,7 @@ private:
 	int myPropFilter;
 	int myPowerUpFilter;
 	int myDefendableFilter;
+	int myStructureFilter;
 
 	CU::GrowingArray<CollisionComponent*> myPlayers;
 	CU::GrowingArray<CollisionComponent*> myEnemies;
@@ -49,6 +50,7 @@ private:
 	CU::GrowingArray<CollisionComponent*> myPowerUps;
 	CU::GrowingArray<CollisionComponent*> myProps;
 	CU::GrowingArray<CollisionComponent*> myDefendables;
+	CU::GrowingArray<CollisionComponent*> myStructures;
 };
 
 inline int CollisionManager::GetEnemiesAlive() const
