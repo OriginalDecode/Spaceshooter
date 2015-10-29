@@ -105,7 +105,7 @@ void AIComponent::Update(float aDeltaTime)
 				{
 					CU::Vector3<float> targetVel = targetPhys->GetVelocity();
 					CU::Vector3<float> shootingTarget = myEntityToFollow->myOrientation.GetPos();
-					shootingTarget += myEntityToFollow->myOrientation.GetForward() * CU::Length(targetVel);
+					shootingTarget += myEntityToFollow->myOrientation.GetForward() * (CU::Length(targetVel) / 2.f);
 					shootingDir = CU::GetNormalized(shootingTarget - myEntity.myOrientation.GetPos());
 				}
 

@@ -69,7 +69,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				CU::Matrix44<float> orientation = myEntity.myOrientation;
 				orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
 					+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
-
+				CU::Vector3<float> dir = aShootNote.myDirection;
 				if (myWeapons[myCurrentWeaponID].mySpread > 0)
 				{
 					float max = float(myWeapons[myCurrentWeaponID].mySpread);
@@ -85,6 +85,8 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 					CU::Vector4<float> pos = orientation.GetPos();
 					orientation = rotation * orientation;
 					orientation.SetPos(pos);
+
+					dir = dir * rotation;
 				}
 
 				CU::Matrix44<float> rotation;
@@ -97,7 +99,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 
 				PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
 					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-					, aShootNote.myDirection
+					, dir
 					, myPowerUpType == ePowerUpType::HOMING || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr ));
 				myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 			}
