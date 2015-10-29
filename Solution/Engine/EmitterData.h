@@ -25,17 +25,13 @@ namespace Prism
 		
 		Texture* myTexture;
 		Effect* myEffect;
-
+		std::string myFileName;
 		ParticleData myData;
 
 		ID3D11InputLayout* myInputLayout;
 
 		CU::Vector3f myEmitterSize;
 		CU::Vector3f myEmissionVelocityDelta;
-
-		CU::Vector3f myStartColor;
-		CU::Vector3f myEndColor;
-
 
 		CU::Vector3f myMaxRotation;
 		CU::Vector3f myMinRotation;
@@ -55,7 +51,7 @@ namespace Prism
 
 		float myMinScale;
 		float myMaxScale;
-
+		int myParticlesPerEmitt;
 		int	myMaxParticleAmount;
 
 	};

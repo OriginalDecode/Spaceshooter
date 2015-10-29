@@ -16,24 +16,12 @@
     <ClCompile Include="FBXFactory.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
-    <ClCompile Include="DebugDataDisplay.cpp">
-      <Filter>DebugServices</Filter>
-    </ClCompile>
-    <ClCompile Include="Debug_BlockTimer.cpp">
-      <Filter>DebugServices</Filter>
-    </ClCompile>
-    <ClCompile Include="GraphRenderer.cpp">
-      <Filter>DebugServices</Filter>
-    </ClCompile>
     <ClCompile Include="PointLight.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="FileWatcher.cpp" />
     <ClCompile Include="SpotLight.cpp">
       <Filter>Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="FrameTimeDebugger.cpp">
-      <Filter>DebugServices</Filter>
     </ClCompile>
     <ClCompile Include="SystemMonitor.cpp">
       <Filter>DebugServices</Filter>
@@ -43,9 +31,6 @@
     </ClCompile>
     <ClCompile Include="Surface.cpp">
       <Filter>Rendering</Filter>
-    </ClCompile>
-    <ClCompile Include="DebugMenu.cpp">
-      <Filter>DebugServices</Filter>
     </ClCompile>
     <ClCompile Include="TreeNode.cpp">
       <Filter>Octree</Filter>
@@ -99,6 +84,18 @@
     <ClCompile Include="Text.cpp">
       <Filter>Rendering\Text</Filter>
     </ClCompile>
+    <ClCompile Include="TextFile.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="TextParser.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="Token.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="FontFile.cpp">
+      <Filter>Rendering\Text</Filter>
+    </ClCompile>
     <ClCompile Include="Font.cpp">
       <Filter>Rendering\Text</Filter>
     </ClCompile>
@@ -107,18 +104,6 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Rendering\PostProcessing</Filter>
-    </ClCompile>
-    <ClCompile Include="FontFile.cpp">
-      <Filter>Rendering\Text\ParseText</Filter>
-    </ClCompile>
-    <ClCompile Include="TextFile.cpp">
-      <Filter>Rendering\Text\ParseText</Filter>
-    </ClCompile>
-    <ClCompile Include="TextParser.cpp">
-      <Filter>Rendering\Text\ParseText</Filter>
-    </ClCompile>
-    <ClCompile Include="Token.cpp">
-      <Filter>Rendering\Text\ParseText</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -152,15 +137,6 @@
     <ClInclude Include="FBXFactory.h">
       <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="DebugDataDisplay.h">
-      <Filter>DebugServices</Filter>
-    </ClInclude>
-    <ClInclude Include="Debug_BlockTimer.h">
-      <Filter>DebugServices</Filter>
-    </ClInclude>
-    <ClInclude Include="GraphRenderer.h">
-      <Filter>DebugServices</Filter>
-    </ClInclude>
     <ClInclude Include="VTuneApi.h">
       <Filter>DebugServices</Filter>
     </ClInclude>
@@ -179,9 +155,6 @@
       <Filter>Lights</Filter>
     </ClInclude>
     <ClInclude Include="EffectListener.h" />
-    <ClInclude Include="FrameTimeDebugger.h">
-      <Filter>DebugServices</Filter>
-    </ClInclude>
     <ClInclude Include="SystemMonitor.h">
       <Filter>DebugServices</Filter>
     </ClInclude>
@@ -194,7 +167,6 @@
     <ClInclude Include="Surface.h">
       <Filter>Rendering</Filter>
     </ClInclude>
-    <ClInclude Include="DebugMenu.h" />
     <ClInclude Include="TreeNode.h">
       <Filter>Octree</Filter>
     </ClInclude>
@@ -254,6 +226,18 @@
     <ClInclude Include="Text.h">
       <Filter>Rendering\Text</Filter>
     </ClInclude>
+    <ClInclude Include="TextFile.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="TextParser.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="Token.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="FontFile.h">
+      <Filter>Rendering\Text</Filter>
+    </ClInclude>
     <ClInclude Include="Font.h">
       <Filter>Rendering\Text</Filter>
     </ClInclude>
@@ -262,18 +246,6 @@
     </ClInclude>
     <ClInclude Include="Renderer.h">
       <Filter>Rendering\PostProcessing</Filter>
-    </ClInclude>
-    <ClInclude Include="FontFile.h">
-      <Filter>Rendering\Text\ParseText</Filter>
-    </ClInclude>
-    <ClInclude Include="TextFile.h">
-      <Filter>Rendering\Text\ParseText</Filter>
-    </ClInclude>
-    <ClInclude Include="TextParser.h">
-      <Filter>Rendering\Text\ParseText</Filter>
-    </ClInclude>
-    <ClInclude Include="Token.h">
-      <Filter>Rendering\Text\ParseText</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -318,9 +290,6 @@
     </Filter>
     <Filter Include="Rendering\PostProcessing">
       <UniqueIdentifier>{9eae83a0-4dc4-4207-9000-7994f620f042}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering\Text\ParseText">
-      <UniqueIdentifier>{4f292c63-3523-4aeb-9f4e-9b9424fa2840}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

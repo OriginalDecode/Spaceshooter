@@ -16,6 +16,14 @@ struct WeaponData
 	std::string myType;
 };
 
+struct WeaponPowerUp
+{
+	ePowerUpType myPowerUpType;
+	float myPowerUpValue;
+	float myPowerUpDuration;
+	float myPowerUpCoolDownReducer;
+};
+
 class Entity;
 
 struct WeaponDataType;
@@ -40,9 +48,11 @@ public:
 
 	void SetHomingTarget(Entity* aTarget);
 
-	void ActivateEMP(); // test function
-
+	void Reset() override;
 private:
+
+	bool HasPowerUp(ePowerUpType aPowerUp);
+	void ActivatePowerUp(ePowerUpType aPowerUp); // only for emp
 
 	CU::GrowingArray<WeaponData, int> myWeapons;
 
@@ -51,22 +61,13 @@ private:
 	int myCurrentWeaponID;
 
 	bool myHasWeapon;
-	ePowerUpType myPowerUpType;
 
-	float myPowerUpValue;
-	float myPowerUpDuration;
-	float myPowerUpCoolDownReducer;
+	CU::GrowingArray<WeaponPowerUp> myPowerUps;
 };
 
 inline eComponentType ShootingComponent::GetType()
 {
 	return eComponentType::SHOOTING;
-}
-
-inline void ShootingComponent::ActivateEMP()
-{
-	myPowerUpValue = 1000.f;
-	myPowerUpDuration = 5.f;
 }
 
 inline void ShootingComponent::SetHomingTarget(Entity* aTarget)

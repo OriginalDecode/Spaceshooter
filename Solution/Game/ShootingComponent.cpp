@@ -22,10 +22,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myCurrentWeaponID(0)
 	, Component(aEntity)
 	, myHasWeapon(false)
-	, myPowerUpType(ePowerUpType::NO_POWERUP)
-	, myPowerUpValue(0.f)
-	, myPowerUpDuration(0.f)
-	, myPowerUpCoolDownReducer(1.f)
+	, myPowerUps(8)
 	, myHomingTarget(nullptr)
 {
 }
@@ -40,27 +37,34 @@ void ShootingComponent::Update(float aDeltaTime)
 		}
 		else
 		{
-			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime * myPowerUpCoolDownReducer;
+			float totalReducer = 1.f;
+			for (int i = 0; i < myPowerUps.Size(); i++)
+			{
+				totalReducer += myPowerUps[i].myPowerUpCoolDownReducer;
+			}
+			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime * totalReducer;
 		}
 	}
 
-	if (myPowerUpType == ePowerUpType::FIRERATEBOOST || myPowerUpType == ePowerUpType::HOMING)
+	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
 	{
-		myPowerUpDuration -= aDeltaTime;
-		if (myPowerUpDuration <= 0.f)
+		if (myPowerUps[i].myPowerUpType == ePowerUpType::FIRERATEBOOST 
+			|| myPowerUps[i].myPowerUpType == ePowerUpType::HOMING)
 		{
-			myPowerUpType = ePowerUpType::NO_POWERUP;
-			myPowerUpCoolDownReducer = 1.f;
-			myPowerUpDuration = 0.f;
-			myPowerUpValue = 0.f;
-			myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+			myPowerUps[i].myPowerUpDuration -= aDeltaTime;
+			if (myPowerUps[i].myPowerUpDuration <= 0.f)
+			{
+				myPowerUps.RemoveCyclicAtIndex(i);
+
+				myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
+			}
 		}
 	}
 }
 
 void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 {
-	if (myPowerUpType != ePowerUpType::EMP)
+	if (HasPowerUp(ePowerUpType::EMP) == false)
 	{
 		if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 		{
@@ -100,17 +104,14 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
 					, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
 					, dir
-					, myPowerUpType == ePowerUpType::HOMING || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr ));
+					, HasPowerUp(ePowerUpType::HOMING) || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr));
 				myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 			}
 		}
 	}
 	else
 	{
-		myPowerUpType = ePowerUpType::NO_POWERUP;
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(ePowerUpType::EMP, myEntity.myOrientation.GetPos(), myPowerUpValue, myPowerUpDuration));
-		myPowerUpValue = 0.f;
-		myPowerUpDuration = 0.f;
+		ActivatePowerUp(ePowerUpType::EMP);
 	}
 }
 
@@ -124,18 +125,22 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	if (aNote.myType == ePowerUpType::EMP 
 		|| aNote.myType == ePowerUpType::HOMING)
 	{
-		myPowerUpCoolDownReducer = 1.f;
-		myPowerUpDuration = aNote.myDuration;
-		myPowerUpType = aNote.myType;
-		myPowerUpValue = aNote.myValue;
-		myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+		WeaponPowerUp powerUp;
+		powerUp.myPowerUpCoolDownReducer = 0.f;
+		powerUp.myPowerUpDuration = aNote.myDuration;
+		powerUp.myPowerUpType = aNote.myType;
+		powerUp.myPowerUpValue = aNote.myValue;
+		myPowerUps.Add(powerUp);
+		myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || powerUp.myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 	}
 	else if (aNote.myType == ePowerUpType::FIRERATEBOOST)
 	{
-		myPowerUpCoolDownReducer = aNote.myValue;
-		myPowerUpDuration = aNote.myDuration;
-		myPowerUpType = aNote.myType;
-		myPowerUpValue = 0.f;
+		WeaponPowerUp powerUp;
+		powerUp.myPowerUpCoolDownReducer = aNote.myValue;
+		powerUp.myPowerUpDuration = aNote.myDuration;
+		powerUp.myPowerUpType = aNote.myType;
+		powerUp.myPowerUpValue = 0.f;
+		myPowerUps.Add(powerUp);
 	}
 }
 
@@ -164,7 +169,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	myCurrentWeaponID = newWeapon.myID;
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
-	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 
 void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID)
@@ -193,7 +198,7 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 
 	myWeapons[aWeaponID].myID = aWeaponID;
 	myCurrentWeaponID = aWeaponID;
-	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 
 void ShootingComponent::SetCurrentWeaponID(int anID)
@@ -204,5 +209,39 @@ void ShootingComponent::SetCurrentWeaponID(int anID)
 	{
 		myCurrentWeaponID = myWeapons.Size() - 1;
 	}
-	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
+}
+
+bool ShootingComponent::HasPowerUp(ePowerUpType aPowerUp)
+{
+	for (int i = 0; i < myPowerUps.Size(); ++i)
+	{
+		if (myPowerUps[i].myPowerUpType == aPowerUp)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
+{
+	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
+	{
+		if (myPowerUps[i].myPowerUpType == aPowerUp)
+		{
+			PostMaster::GetInstance()->SendMessage(PowerUpMessage(aPowerUp, myEntity.myOrientation.GetPos()
+				, myPowerUps[i].myPowerUpValue, myPowerUps[i].myPowerUpDuration));
+			myPowerUps.RemoveCyclicAtIndex(i);
+			return;
+		}
+	}
+}
+
+void ShootingComponent::Reset()
+{
+	myPowerUps.RemoveAll();
+	SetCurrentWeaponID(0);
+	myHomingTarget = nullptr;
 }

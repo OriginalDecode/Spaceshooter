@@ -2,7 +2,6 @@
 #include "Sprite.h"
 #include <D3D11.h>
 #include <d3dx11effect.h>
-#include "DebugDataDisplay.h"
 #include "Camera.h"
 #include "Effect.h"
 #include "EffectContainer.h"
@@ -65,9 +64,6 @@ void Prism::Sprite::Render(const CU::Vector2<float>& aPosition, const CU::Vector
 
 void Prism::Sprite::CreateVertices()
 {
-	TIME_FUNCTION;
-
-
 	CU::GrowingArray<VertexPosUV> vertices(4);
 	CU::GrowingArray<int> indices(6);
 

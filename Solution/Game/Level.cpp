@@ -15,6 +15,7 @@
 #include "Entity.h"
 #include "EntityFactory.h"
 #include "EmitterComponent.h"
+#include "EmitterManager.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
@@ -54,6 +55,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myEventManager(nullptr)
 	, myConversationManager(nullptr)
 	, myEntityToDefend(nullptr)
+	, myEmitterManager(nullptr)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
@@ -61,6 +63,8 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_POWERUP, this);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 }
 
 Level::~Level()
@@ -97,6 +101,10 @@ Level::~Level()
 	delete myScene;
 	mySkySphere = nullptr;
 	myScene = nullptr;
+	
+	delete myEmitterManager;
+	myEmitterManager = nullptr;
+
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
 
 }
@@ -126,6 +134,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	myEmitterManager->UpdateEmitters(aDeltaTime);
+
 	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
 	UpdateDebug();
@@ -146,22 +156,20 @@ void Level::Render()
 	
 	myScene->Render(myBulletManager->GetInstances());
 
-	for (int i = 0; i < myEntities.Size(); ++i)
-	{
-		if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
-		{
-			continue;
-		}
-		else
-		{
-			myEntities[i]->GetComponent<EmitterComponent>()->Render();
+	//for (int i = 0; i < myEntities.Size(); ++i)
+	//{
+	//	if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
+	//	{
+	//		continue;
+	//	}
+	//	else
+	//	{
+	//		myEntities[i]->GetComponent<EmitterComponent>()->Render();
+	//	}
+	//}
 
-			Prism::Engine::GetInstance()->PrintText(myEntities[i]->GetComponent<EmitterComponent>()->GetEmitterCount()
-				, { 1600, 0 }, Prism::eTextType::DEBUG_TEXT);
+	myEmitterManager->RenderEmitters();
 
-		}
-
-	}
 
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
@@ -344,9 +352,5 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_T))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
-	}
-	if (myInputWrapper->KeyDown(DIK_J))
-	{
-		myPlayer->GetComponent<ShootingComponent>()->ActivateEMP();
 	}
 }

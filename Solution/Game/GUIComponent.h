@@ -5,6 +5,12 @@
 #include "Subscriber.h"
 #include <Vector.h>
 
+struct ActivePowerUp
+{
+	float myPowerUpCountDown;
+	std::string myPowerUpMessage;
+};
+
 namespace Prism
 {
 	class Sprite;
@@ -86,9 +92,8 @@ private:
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
 	CU::GrowingArray<Entity*> myPowerUps;
-	float myPowerUpCountDown;
-	bool myHasPowerUp;
-	std::string myPowerUpMessage;
+
+	CU::GrowingArray<ActivePowerUp> myActivePowerUps;
 
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;

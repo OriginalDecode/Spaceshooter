@@ -3,14 +3,6 @@
 #include "EmitterData.h"
 #include "ParticleData.h"
 
-//struct ParticleStruct
-//{
-//	float myAlphaDelta;
-//	float mySizeDelta;
-//	float myStartAlpha;
-//	float dummy; //Memory Alignment
-//};
-
 namespace Prism
 {
 	class Camera;
@@ -23,9 +15,8 @@ namespace Prism
 		void Initiate(EmitterData someData);
 		void Render(Camera* aCamera);
 		void Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
-	//	void SetPosition(const CU::Vector3f& aPosition);
-	//	void SetParent(const CU::Matrix44f& aParent);
-
+		bool GetIsActive();
+		void ToggleActive();
 	private:
 
 		void CreateVertexBuffer();
@@ -40,17 +31,16 @@ namespace Prism
 		CU::GrowingArray<GraphicalParticle> myGraphicalParticles;
 
 		CU::Vector3f myDiffColor;
-
-		
 		CU::Matrix44f myOrientation;
-
-		//CU::Vector3f myPosition;
 
 		EmitterData myEmitterData;
 		VertexBufferWrapper *myVertexWrapper;
 
 		float myEmissionTime;
+		float myEmissionRate;
 		int myParticleIndex;
+		float myParticleScaling;
 
+		bool myIsActive;
 	};
 }

@@ -295,3 +295,8 @@ CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()
 	}
 	return myInstances;
 }
+
+BulletData* BulletManager::GetBullet(int anIndex)
+{
+	return myBulletDatas[anIndex];
+}

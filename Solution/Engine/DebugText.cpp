@@ -2,7 +2,6 @@
 
 #include <D3D11.h>
 #include <d3dx11effect.h>
-#include "DebugDataDisplay.h"
 #include "Camera.h"
 #include "Effect.h"
 #include "EffectContainer.h"
@@ -100,8 +99,6 @@ const CU::Vector2<float>& Prism::DebugText::GetCharSize() const
 
 void Prism::DebugText::ConstructBuffers(const std::string& aString)
 {
-	TIME_FUNCTION;
-
 	myLastText = aString;
 	myTextWidth = 0;
 

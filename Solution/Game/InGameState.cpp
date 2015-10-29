@@ -6,7 +6,6 @@
 #include "CollisionManager.h"
 #include "ColoursForBG.h"
 #include "Constants.h"
-#include <DebugDataDisplay.h>
 #include <Engine.h>
 #include "Entity.h"
 #include <FileWatcher.h>
@@ -59,8 +58,6 @@ void InGameState::EndState()
 
 const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
-	BEGIN_TIME_BLOCK("InGameState::Update");
-
 	myPlayer = myLevel->GetPlayer();
 
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
@@ -81,8 +78,6 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 		return eStateStatus::eKeepState;
 	}
 
-	END_TIME_BLOCK("InGameState::Update");
-
 	return eStateStatus::eKeepState;
 }
 
@@ -90,11 +85,7 @@ void InGameState::Render()
 {
 	VTUNE_EVENT_BEGIN(VTUNE::GAME_RENDER);
 
-	BEGIN_TIME_BLOCK("Game::Render");
-
 	myLevel->Render();
-
-	END_TIME_BLOCK("Game::Render");
 
 	VTUNE_EVENT_END();
 }

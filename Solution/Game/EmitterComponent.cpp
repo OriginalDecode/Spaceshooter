@@ -7,7 +7,7 @@
 
 #include <EmitterData.h>
 #include <EmitterInstance.h>
-
+#include "EmitterNote.h"
 #include "Entity.h"
 #include "Scene.h"
 
@@ -39,12 +39,18 @@ void EmitterComponent::Init(std::string aPath)
 
 void EmitterComponent::Update(float aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime, myEntity.myOrientation );
+	if (myEntity.GetAlive() == true)
+	{
+		myEmitter->Update(aDeltaTime, myEntity.myOrientation);
+	}
 }
 
 void EmitterComponent::Render()
 {
-	myEmitter->Render(&myEntity.GetScene().GetCamera());
+	if (myEntity.GetAlive() == true)
+	{
+		myEmitter->Render(&myEntity.GetScene().GetCamera());
+	}
 }
 
 eComponentType EmitterComponent::GetType()
@@ -55,4 +61,21 @@ eComponentType EmitterComponent::GetType()
 int EmitterComponent::GetEmitterCount()
 {
 	return myEmitterCount;
+}
+
+Prism::EmitterInstance* EmitterComponent::GetEmitter()
+{
+	if (this != nullptr)
+		return myEmitter;
+
+	return nullptr;
+
+}
+
+void EmitterComponent::ReceiveNote(const EmitterNote& aNote)
+{
+	if (aNote.myType == EmitterNote::eType::BULLET)
+	{
+		myEmitter->ToggleActive();
+	}
 }
