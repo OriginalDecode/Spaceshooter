@@ -22,6 +22,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include <Sprite.h>
+#include "PhysicsComponent.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
@@ -50,7 +51,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myMessage("")
 	, myMessageTime(0.f)
 	, myActivePowerUps(8)
-	, myWeapon("Machinegun")
+	, myWeapon("MG")
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
@@ -412,6 +413,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	}
 
 	Prism::Engine::GetInstance()->PrintText(myWeapon, { 1400.f, -500.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
+		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
@@ -485,15 +488,15 @@ void GUIComponent::ReceiveNote(const InputNote& aMessage)
 {
 	if (aMessage.myKey == 0)
 	{
-		myWeapon = "Machinegun";
+		myWeapon = "MG";
 	}
 	else if (aMessage.myKey == 1)
 	{
-		myWeapon = "Shotgun";
+		myWeapon = "SG";
 	}
 	else if (aMessage.myKey == 2)
 	{
-		myWeapon = "Rocket launcher";
+		myWeapon = "RL";
 	}
 }
 
@@ -561,7 +564,7 @@ void GUIComponent::Reset()
 
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
-	myWeapon = "Machinegun";
+	myWeapon = "MG";
 
 	myActivePowerUps.RemoveAll();
 }

@@ -75,7 +75,7 @@ void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
 	myAvoidanceDistance = 0.f;
 	myFollowingOffset = CU::Vector3<float>();
 	myCanMove = true;
-	myTurnRateModifier = 1.f;
+	myTurnRateModifier = 10.f;
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
 

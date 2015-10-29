@@ -35,13 +35,6 @@
             this.Btn_LoadModel = new System.Windows.Forms.Button();
             this.ModelViewer = new System.Windows.Forms.Panel();
             this.ModelViewerMenu = new System.Windows.Forms.Panel();
-            this.DirectionalLightZValue = new System.Windows.Forms.Label();
-            this.DirectionalLightZ = new System.Windows.Forms.HScrollBar();
-            this.DirectionalLightYValue = new System.Windows.Forms.Label();
-            this.DirectionalLightY = new System.Windows.Forms.HScrollBar();
-            this.label2 = new System.Windows.Forms.Label();
-            this.DirectionLightXValue = new System.Windows.Forms.Label();
-            this.DirectionLightX = new System.Windows.Forms.HScrollBar();
             this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
             this.BackgroundColorDialog = new System.Windows.Forms.ColorDialog();
             this.DataFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
@@ -90,84 +83,11 @@
             // 
             // ModelViewerMenu
             // 
-            this.ModelViewerMenu.Controls.Add(this.DirectionalLightZValue);
-            this.ModelViewerMenu.Controls.Add(this.DirectionalLightZ);
-            this.ModelViewerMenu.Controls.Add(this.DirectionalLightYValue);
-            this.ModelViewerMenu.Controls.Add(this.DirectionalLightY);
-            this.ModelViewerMenu.Controls.Add(this.label2);
-            this.ModelViewerMenu.Controls.Add(this.DirectionLightXValue);
-            this.ModelViewerMenu.Controls.Add(this.DirectionLightX);
             this.ModelViewerMenu.Dock = System.Windows.Forms.DockStyle.Right;
-            this.ModelViewerMenu.Location = new System.Drawing.Point(887, 32);
+            this.ModelViewerMenu.Location = new System.Drawing.Point(885, 32);
             this.ModelViewerMenu.Name = "ModelViewerMenu";
-            this.ModelViewerMenu.Size = new System.Drawing.Size(198, 720);
+            this.ModelViewerMenu.Size = new System.Drawing.Size(200, 720);
             this.ModelViewerMenu.TabIndex = 0;
-            // 
-            // DirectionalLightZValue
-            // 
-            this.DirectionalLightZValue.AutoSize = true;
-            this.DirectionalLightZValue.Location = new System.Drawing.Point(7, 50);
-            this.DirectionalLightZValue.Name = "DirectionalLightZValue";
-            this.DirectionalLightZValue.Size = new System.Drawing.Size(26, 13);
-            this.DirectionalLightZValue.TabIndex = 7;
-            this.DirectionalLightZValue.Text = "Z: 0";
-            // 
-            // DirectionalLightZ
-            // 
-            this.DirectionalLightZ.LargeChange = 1;
-            this.DirectionalLightZ.Location = new System.Drawing.Point(45, 50);
-            this.DirectionalLightZ.Maximum = 360;
-            this.DirectionalLightZ.Name = "DirectionalLightZ";
-            this.DirectionalLightZ.Size = new System.Drawing.Size(120, 13);
-            this.DirectionalLightZ.TabIndex = 6;
-            this.DirectionalLightZ.Scroll += new System.Windows.Forms.ScrollEventHandler(this.DirectionalLightZ_Scroll);
-            // 
-            // DirectionalLightYValue
-            // 
-            this.DirectionalLightYValue.AutoSize = true;
-            this.DirectionalLightYValue.Location = new System.Drawing.Point(7, 36);
-            this.DirectionalLightYValue.Name = "DirectionalLightYValue";
-            this.DirectionalLightYValue.Size = new System.Drawing.Size(26, 13);
-            this.DirectionalLightYValue.TabIndex = 5;
-            this.DirectionalLightYValue.Text = "Y: 0";
-            // 
-            // DirectionalLightY
-            // 
-            this.DirectionalLightY.LargeChange = 1;
-            this.DirectionalLightY.Location = new System.Drawing.Point(45, 36);
-            this.DirectionalLightY.Maximum = 360;
-            this.DirectionalLightY.Name = "DirectionalLightY";
-            this.DirectionalLightY.Size = new System.Drawing.Size(120, 13);
-            this.DirectionalLightY.TabIndex = 4;
-            this.DirectionalLightY.Scroll += new System.Windows.Forms.ScrollEventHandler(this.DirectionalLightY_Scroll);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(24, 3);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(126, 13);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Directional Light Rotation";
-            // 
-            // DirectionLightXValue
-            // 
-            this.DirectionLightXValue.AutoSize = true;
-            this.DirectionLightXValue.Location = new System.Drawing.Point(7, 21);
-            this.DirectionLightXValue.Name = "DirectionLightXValue";
-            this.DirectionLightXValue.Size = new System.Drawing.Size(26, 13);
-            this.DirectionLightXValue.TabIndex = 2;
-            this.DirectionLightXValue.Text = "X: 0";
-            // 
-            // DirectionLightX
-            // 
-            this.DirectionLightX.LargeChange = 1;
-            this.DirectionLightX.Location = new System.Drawing.Point(45, 21);
-            this.DirectionLightX.Maximum = 360;
-            this.DirectionLightX.Name = "DirectionLightX";
-            this.DirectionLightX.Size = new System.Drawing.Size(120, 13);
-            this.DirectionLightX.TabIndex = 1;
-            this.DirectionLightX.Scroll += new System.Windows.Forms.ScrollEventHandler(this.DirectionalLightX_Scroll);
             // 
             // UpdateTimer
             // 
