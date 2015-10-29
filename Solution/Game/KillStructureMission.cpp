@@ -43,10 +43,11 @@ void KillStructureMission::Start()
 	}
 }
 
-bool KillStructureMission::Update(float aDeltaTime, int aMissionIndex, eMissionCategory aMissionCategory)
+bool KillStructureMission::Update(float, int aMissionIndex, eMissionCategory aMissionCategory)
 {
 	for (int i = myStructuresToKill.Size() - 1; i >= 0; --i)
 	{
+		PostMaster::GetInstance()->SendMessage<KillStructureMessage>(KillStructureMessage(KillStructureMessage::eType::TO_GUI, "", myStructuresToKill[i]));
 		if (myStructuresToKill[i]->GetAlive() == false)
 		{
 			myStructuresToKill.RemoveCyclicAtIndex(i);

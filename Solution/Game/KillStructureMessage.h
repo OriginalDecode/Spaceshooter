@@ -12,6 +12,7 @@ public:
 	{
 		NAME,
 		ENTITY,
+		TO_GUI
 	};
 
 	KillStructureMessage(eType aType, const std::string& aStructureName = "", Entity* aEntity = nullptr);

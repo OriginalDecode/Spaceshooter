@@ -42,6 +42,8 @@ public:
 	void ReceiveMessage(const ResizeMessage& aMessage) override;
 	void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage) override;
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
+	void ReceiveMessage(const KillStructureMessage& aMessage) override;
+
 
 
 	void Reset() override;
@@ -70,6 +72,7 @@ private:
 	CU::Vector3<float> myWaypointPosition;
 
 	CU::GrowingArray<Entity*> myEnemies;
+
 
 	Entity* myClosestEnemy;
 	CU::Vector2<float> myClosestScreenPos;

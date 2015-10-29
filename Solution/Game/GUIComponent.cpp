@@ -14,6 +14,7 @@
 #include "GUINote.h"
 #include "HealthComponent.h"
 #include "HealthNote.h"
+#include "KillStructureMessage.h"
 #include "MissionNote.h"
 #include "Model.h"
 #include "ModelLoader.h"
@@ -55,6 +56,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::KILL_STRUCTURE, this);
 
 
 
@@ -129,6 +131,7 @@ GUIComponent::~GUIComponent()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::KILL_STRUCTURE, this);
 	delete myReticle;
 	delete mySteeringTarget;
 	delete myCrosshair;
@@ -488,13 +491,22 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 	myShowMessage = true;
 }
 
+void GUIComponent::ReceiveMessage(const KillStructureMessage& aMessage)
+{
+	if (aMessage.myType == KillStructureMessage::eType::TO_GUI)
+	{
+		myEnemies.Add(aMessage.myEntity);
+	}
+
+}
+
 void GUIComponent::Reset()
 {
 
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
 	shieldBarEffect->SetPlayerVariable(1000);
-	
+
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_health.fx");
 	hpBarEffect->SetPlayerVariable(1000);
