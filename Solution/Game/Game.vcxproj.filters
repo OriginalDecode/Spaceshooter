@@ -185,6 +185,9 @@
     <ClCompile Include="KillStructureMission.cpp">
       <Filter>Mission</Filter>
     </ClCompile>
+    <ClCompile Include="PointLightComponent.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -424,6 +427,9 @@
     </ClInclude>
     <ClInclude Include="KillStructureMission.h">
       <Filter>Mission</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightComponent.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
