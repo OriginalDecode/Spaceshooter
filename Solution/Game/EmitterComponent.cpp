@@ -39,12 +39,18 @@ void EmitterComponent::Init(std::string aPath)
 
 void EmitterComponent::Update(float aDeltaTime)
 {
-	myEmitter->Update(aDeltaTime, myEntity.myOrientation );
+	if (myEntity.GetAlive() == true)
+	{
+		myEmitter->Update(aDeltaTime, myEntity.myOrientation);
+	}
 }
 
 void EmitterComponent::Render()
 {
-	myEmitter->Render(&myEntity.GetScene().GetCamera());
+	if (myEntity.GetAlive() == true)
+	{
+		myEmitter->Render(&myEntity.GetScene().GetCamera());
+	}
 }
 
 eComponentType EmitterComponent::GetType()
@@ -59,7 +65,11 @@ int EmitterComponent::GetEmitterCount()
 
 Prism::EmitterInstance* EmitterComponent::GetEmitter()
 {
-	return myEmitter;
+	if (this != nullptr)
+		return myEmitter;
+
+	return nullptr;
+
 }
 
 void EmitterComponent::ReceiveNote(const EmitterNote& aNote)

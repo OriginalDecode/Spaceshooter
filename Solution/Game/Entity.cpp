@@ -34,6 +34,7 @@ Entity::~Entity()
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
 	{
 		delete myComponents[i];
+		myComponents[i] = nullptr;
 	}
 
 }
