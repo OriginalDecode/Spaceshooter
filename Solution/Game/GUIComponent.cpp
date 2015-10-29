@@ -50,7 +50,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myMessage("")
 	, myMessageTime(0.f)
 	, myActivePowerUps(8)
-	, myWeapon("Machinegun")
+	, myWeapon("MG")
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
@@ -485,15 +485,15 @@ void GUIComponent::ReceiveNote(const InputNote& aMessage)
 {
 	if (aMessage.myKey == 0)
 	{
-		myWeapon = "Machinegun";
+		myWeapon = "MG";
 	}
 	else if (aMessage.myKey == 1)
 	{
-		myWeapon = "Shotgun";
+		myWeapon = "SG";
 	}
 	else if (aMessage.myKey == 2)
 	{
-		myWeapon = "Rocket launcher";
+		myWeapon = "RL";
 	}
 }
 
@@ -561,7 +561,7 @@ void GUIComponent::Reset()
 
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
-	myWeapon = "Machinegun";
+	myWeapon = "MG";
 
 	myActivePowerUps.RemoveAll();
 }
