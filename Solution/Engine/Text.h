@@ -13,6 +13,7 @@ namespace Prism
 		void SetPosition(const CU::Vector2<float>& aPosition);
 		void SetText(const std::string& aText);
 		void Render();
+		void SetScale(const CU::Vector2<float>& aScale);
 
 	private:
 		void operator=(Text&) = delete;
@@ -28,4 +29,9 @@ namespace Prism
 inline void Prism::Text::SetPosition(const CU::Vector2<float>& aPosition)
 {
 	myPosition = aPosition;
+}
+
+inline void Prism::Text::SetScale(const CU::Vector2<float>& aScale)
+{
+	myScale = aScale;
 }
