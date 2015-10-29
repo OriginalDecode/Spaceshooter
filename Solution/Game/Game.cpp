@@ -25,7 +25,7 @@
 
 Game::Game()
 	: myLockMouse(true)
-	, myShowSystemInfo(true)
+	, myShowSystemInfo(false)
 {
 	PostMaster::Create();
 	Prism::Audio::AudioInterface::CreateInstance();
