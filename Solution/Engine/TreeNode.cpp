@@ -107,11 +107,11 @@ void Prism::TreeNode::GetOccupantsInAABB(const Frustum& aFrustum
 		ss3 << "Max Static: " << maxNumOfStatic << " depth: " << maxStaticDepth << " halfWidth: " << maxStaticHalfWidth;
 		ss4 << "Total Dynamic: " << totalDynamicObjects;
 		ss5 << "Total Static: " << totalStaticObjects;
-		Engine::GetInstance()->PrintDebugText(ss.str(), { 700.f, -700.f });
-		Engine::GetInstance()->PrintDebugText(ss2.str(), { 700.f, -730.f });
-		Engine::GetInstance()->PrintDebugText(ss3.str(), { 700.f, -760.f });
-		Engine::GetInstance()->PrintDebugText(ss4.str(), { 700.f, -790.f });
-		Engine::GetInstance()->PrintDebugText(ss5.str(), { 700.f, -820.f });
+		Engine::GetInstance()->PrintText(ss.str(), { 700.f, -700.f });
+		Engine::GetInstance()->PrintText(ss2.str(), { 700.f, -730.f });
+		Engine::GetInstance()->PrintText(ss3.str(), { 700.f, -760.f });
+		Engine::GetInstance()->PrintText(ss4.str(), { 700.f, -790.f });
+		Engine::GetInstance()->PrintText(ss5.str(), { 700.f, -820.f });
 		ss.clear();
 		ss.str(std::string());
 		ss2.clear();

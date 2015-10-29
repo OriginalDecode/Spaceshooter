@@ -281,14 +281,14 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aIsPowerup == true && showName == true)
 	{
-		Prism::Engine::GetInstance()->PrintDebugText(aName, { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
+		Prism::Engine::GetInstance()->PrintText(aName, { newRenderPos.x - 16.f, newRenderPos.y + 64.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	if (aShowDist == true)
 	{
 		if (aCurrentModel == myWaypointMarker || aCurrentModel == myWaypointArrow)
 		{
-			Prism::Engine::GetInstance()->PrintDebugText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f });
+			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
 		if (aArrowModel == myEnemyArrow)
@@ -310,17 +310,17 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	float halfWidth = aWindowSize.x * 0.5f;
 	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
-	Prism::Engine::GetInstance()->PrintDebugText(myConversation, { halfWidth, -halfHeight - 200.f });
+	Prism::Engine::GetInstance()->PrintText(myConversation, { halfWidth, -halfHeight - 200.f }, Prism::eTextType::RELEASE_TEXT);
 	myReticle->Render({ halfWidth, -halfHeight });
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
 	myCrosshair->Render({ halfWidth, -(halfHeight) });
 
 	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
-		Prism::Engine::GetInstance()->PrintDebugText("DefendTarget "
+		Prism::Engine::GetInstance()->PrintText("DefendTarget "
 			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": "
 			+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
-			, { halfWidth, -halfHeight });
+			, { halfWidth, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
@@ -406,16 +406,16 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myShowMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintDebugText(myMessage, { 100.f, -100.f });
+		Prism::Engine::GetInstance()->PrintText(myMessage, { 100.f, -100.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	if (myHasPowerUp == true)
 	{
 		std::string message = myPowerUpMessage + std::to_string(int(myPowerUpCountDown));
-		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f });
+		Prism::Engine::GetInstance()->PrintText(message, { 100.f, -200.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
-	Prism::Engine::GetInstance()->PrintDebugText(myWeapon, { 1400.f, -500.f });
+	Prism::Engine::GetInstance()->PrintText(myWeapon, { 1400.f, -500.f }, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }

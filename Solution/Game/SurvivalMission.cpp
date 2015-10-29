@@ -15,17 +15,15 @@ bool SurvivalMission::Update(float aDeltaTime, int aMissionIndex, eMissionCatego
 {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << "Current mission: Survive for: " << myTime << " seconds";
+	ss << "Survive for: " << myTime << " seconds";
 
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
 		ss << " (Optional)";
 	}
 
-	Prism::Engine* engine = Prism::Engine::GetInstance();
-	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
+	PrintMissionText(ss.str(), aMissionIndex);
 
-	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
 	myTime -= aDeltaTime;
 	return myTime <= 0.f;
 }

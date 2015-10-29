@@ -24,6 +24,7 @@ namespace Prism
 
 	Engine::Engine()
 		: myClearColor({ 0.8f, 0.125f, 0.8f, 1.0f })
+		, myTexts(16)
 		, myDebugTexts(16)
 	{
 		myTextureContainer = new TextureContainer();
@@ -82,16 +83,24 @@ namespace Prism
 
 		TIME_FUNCTION
 
+		for (int i = 0; i < myTexts.Size(); ++i)
+		{
+			myText->SetText(myTexts[i].myText);
+			myText->SetPosition(myTexts[i].myPosition);
+			myText->SetScale({ myTexts[i].myScale / 2.f, myTexts[i].myScale / 2.f });
+			myText->SetColor(myTexts[i].myColor);
+			myText->Render();
+		}
+		myTexts.RemoveAll();
+
+		myText->SetColor({ 1.f, 0, 0, 0.8f });
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
 			myText->SetText(myDebugTexts[i].myText);
 			myText->SetPosition(myDebugTexts[i].myPosition);
 			myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
 			myText->Render();
-			//myText->SetColor({ 1, 0, 1, 0.5f });
-			//myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
-			//	, { myDebugTexts[i].myScale, myDebugTexts[i].myScale }, { 1.f, 1.f, 1.f, 1.f });
-		}
+	}
 		myDebugTexts.RemoveAll();
 		myDirectX->Present(0, 0);
 
@@ -170,7 +179,7 @@ namespace Prism
 		myFont = new Font("Data/Resource/Font/arial.ttf_sdf_512.txt", { 512, 512 });
 		myText = new Text(*myFont);
 		myText->SetPosition({ 800.f, -300.f });
-		myText->SetText("Häj! ÅÄÖ ååäö !\"#¤%&/()=?");
+		myText->SetText("");
 		myText->SetScale({ 0.5f, 0.5f });
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
@@ -179,30 +188,39 @@ namespace Prism
 		return true;
 	}
 
-	void Engine::PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale)
+	void Engine::PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)
 	{
-		//myDebugText->Render(aText.c_str(), aPosition.x, aPosition.y, aScale);
-		DebugTextCommand toAdd;
+		TextCommand toAdd;
 		toAdd.myText = aText;
 		toAdd.myPosition = aPosition;
 		toAdd.myScale = aScale;
-		myDebugTexts.Add(toAdd);
+		toAdd.myColor = { 1.f, 1.f, 1.f, 1.f };
+		if (aTextType == eTextType::RELEASE_TEXT)
+		{
+			myTexts.Add(toAdd);
+		}
+#ifndef RELEASE_BUILD
+		else if (aTextType == eTextType::DEBUG_TEXT)
+		{
+			myDebugTexts.Add(toAdd);
+		}
+#endif
 	}
 
-	void Engine::PrintDebugText(float aNumber, const CU::Vector2<float>& aPosition, float aScale)
+	void Engine::PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)
 	{
 		std::stringstream ss;
 		ss.precision(3);
 		ss << aNumber;
-		PrintDebugText(ss.str(), aPosition, aScale);
+		PrintText(ss.str(), aPosition, aTextType, aScale);
 	}
 
-	void Engine::PrintDebugText(int aNumber, const CU::Vector2<float>& aPosition, float aScale)
+	void Engine::PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)
 	{
 		std::stringstream ss;
 		ss.precision(3);
 		ss << aNumber;
-		PrintDebugText(ss.str(), aPosition, aScale);
+		PrintText(ss.str(), aPosition, aTextType, aScale);
 	}
 
 	void Engine::EnableZBuffer()

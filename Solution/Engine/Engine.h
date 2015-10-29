@@ -11,11 +11,18 @@ struct ID3D11DeviceContext;
 
 namespace Prism
 {
-	struct DebugTextCommand
+	struct TextCommand
 	{
 		std::string myText;
 		CU::Vector2<float> myPosition;
+		CU::Vector4<float> myColor;
 		float myScale;
+	};
+
+	enum class eTextType
+	{
+		DEBUG_TEXT,
+		RELEASE_TEXT,
 	};
 
 
@@ -57,9 +64,9 @@ namespace Prism
 		const CU::Vector2<int>& GetWindowSize() const;
 		const CU::Matrix44<float>& GetOrthogonalMatrix() const;
 
-		void PrintDebugText(const std::string& aText, const CU::Vector2<float>& aPosition, float aScale = 1.f);
-		void PrintDebugText(float aNumber, const CU::Vector2<float>& aPosition, float aScale = 1.f);
-		void PrintDebugText(int aNumber, const CU::Vector2<float>& aPosition, float aScale = 1.f);
+		void PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
+		void PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
+		void PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
 
 		void EnableZBuffer();
 		void DisableZBuffer();
@@ -104,7 +111,8 @@ namespace Prism
 
 		static Engine* myInstance;
 
-		CU::GrowingArray<DebugTextCommand> myDebugTexts;
+		CU::GrowingArray<TextCommand> myTexts;
+		CU::GrowingArray<TextCommand> myDebugTexts;
 	};
 }
 

@@ -30,14 +30,14 @@ bool KillXEnemiesMission::Update(float aDeltaTime, int aMissionIndex, eMissionCa
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
 	std::stringstream ss;
-	ss << "Current mission: Kill " << myEnemiesToKill << " enemies.";
+	ss << "Kill " << myEnemiesToKill << " enemies.";
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
 		ss << " (Optional)";
 	}
-	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
 
-
+	PrintMissionText(ss.str(), aMissionIndex);
+	
 	return myEnemiesToKill <= 0;
 }
 
