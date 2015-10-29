@@ -78,6 +78,9 @@ private:
 	CU::Vector2<float> myClosestScreenPos;
 	float myClosestEnemyLength;
 	bool myHasHomingWeapon;
+	float my3DClosestEnemyLength;
+	bool myBattlePlayed;
+	bool myBackgroundMusicPlayed;
 
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
