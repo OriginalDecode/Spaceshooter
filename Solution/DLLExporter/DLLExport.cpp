@@ -38,7 +38,11 @@ Prism::Instance* locInstance;
 Prism::Camera* locCamera;
 Prism::DirectionalLight* locDirectionLight;
 CU::Matrix44f locPlayerPos;
+CU::Matrix44f locStaticRotation;
 CU::InputWrapper locInput;
+float locDeltaTime = 0;
+
+CU::Vector3f locAutoRotationSpeed;
 
 std::string locCurrentModelFile;
 std::string locCurrentEffectFile;
@@ -112,61 +116,92 @@ void Render()
 	locScene->Render();
 }
 
+void RotateObjectAtY(float aSpeed, float deltaTime)
+{
+	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
+	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
+	locObjectEntity->GetComponent<InputComponent>()->RotateY(aSpeed * deltaTime);
+	locObjectEntity->myOrientation.SetPos(orginalPos);
+}
+
+void RotateObjectAtX(float aSpeed, float deltaTime)
+{
+	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
+	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
+	locObjectEntity->GetComponent<InputComponent>()->RotateX(aSpeed * deltaTime);
+	locObjectEntity->myOrientation.SetPos(orginalPos);
+}
+
+void RotateObjectAtZ(float aSpeed, float deltaTime)
+{
+	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
+	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
+	locObjectEntity->GetComponent<InputComponent>()->RotateZ(aSpeed * deltaTime);
+	locObjectEntity->myOrientation.SetPos(orginalPos);
+}
+
+void RotateObjectAtY(float aSpeed)
+{
+	locAutoRotationSpeed.myY = aSpeed;
+}
+
+void RotateObjectAtX(float aSpeed)
+{
+	locAutoRotationSpeed.myX = aSpeed;
+}
+
+void RotateObjectAtZ(float aSpeed)
+{
+	locAutoRotationSpeed.myZ = aSpeed;
+}
+
+void SetRotateObjectAtY(float aAngle)
+{
+	locAutoRotationSpeed = { 0, 0, 0 };
+	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
+	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
+	locStaticRotation = CU::Matrix44f::CreateRotateAroundY(aAngle / (3.14f * 180));
+	locObjectEntity->GetComponent<InputComponent>()->SetRotation(locObjectEntity->myOrientation * locStaticRotation);
+	locObjectEntity->myOrientation.SetPos(orginalPos);
+}
+
+void SetRotateObjectAtX(float aAngle)
+{
+	locAutoRotationSpeed = { 0, 0, 0 };
+	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
+	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
+	locStaticRotation = CU::Matrix44f::CreateRotateAroundX(aAngle / (3.14f * 180));
+	locObjectEntity->GetComponent<InputComponent>()->SetRotation(locObjectEntity->myOrientation * locStaticRotation);
+	locObjectEntity->myOrientation.SetPos(orginalPos);
+}
+
+void SetRotateObjectAtZ(float aAngle)
+{
+	locAutoRotationSpeed = { 0, 0, 0 };
+	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
+	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
+	locStaticRotation = CU::Matrix44f::CreateRotateAroundZ(aAngle / (3.14f * 180));
+	locObjectEntity->GetComponent<InputComponent>()->SetRotation(locObjectEntity->myOrientation * locStaticRotation);
+	locObjectEntity->myOrientation.SetPos(orginalPos);
+}
+
 void Update()
 {
 	CU::TimerManager::GetInstance()->Update();
-	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
+	float locDeltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 	locInput.Update();
 	if (locInput.KeyIsPressed(DIK_ADD) || locInput.GetMouseDZ() < 0)
 	{
-		locCamera->MoveForward(10.f * deltaTime);
+		locCamera->MoveForward(10.f * locDeltaTime);
 	}
 	if (locInput.KeyIsPressed(DIK_SUBTRACT) || locInput.GetMouseDZ() > 0)
 	{
-		locCamera->MoveForward(-10.f * deltaTime);
+		locCamera->MoveForward(-10.f * locDeltaTime);
 	}
-	if (locInput.KeyIsPressed(DIK_D))
-	{
-		CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-		locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-		locObjectEntity->GetComponent<InputComponent>()->RotateY(1.f * deltaTime);
-		locObjectEntity->myOrientation.SetPos(orginalPos);
-	}
-	else if (locInput.KeyIsPressed(DIK_A))
-	{
-		CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-		locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-		locObjectEntity->GetComponent<InputComponent>()->RotateY(-1.f * deltaTime);
-		locObjectEntity->myOrientation.SetPos(orginalPos);
-	}
-	if (locInput.KeyIsPressed(DIK_W))
-	{
-		CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-		locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-		locObjectEntity->GetComponent<InputComponent>()->RotateX(1.f * deltaTime);
-		locObjectEntity->myOrientation.SetPos(orginalPos);
-	}
-	else if (locInput.KeyIsPressed(DIK_S))
-	{
-		CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-		locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-		locObjectEntity->GetComponent<InputComponent>()->RotateX(-1.f * deltaTime);
-		locObjectEntity->myOrientation.SetPos(orginalPos);
-	}
-	if (locInput.KeyIsPressed(DIK_Q))
-	{
-		CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-		locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-		locObjectEntity->GetComponent<InputComponent>()->RotateZ(1.f * deltaTime);
-		locObjectEntity->myOrientation.SetPos(orginalPos);
-	}
-	else if (locInput.KeyIsPressed(DIK_E))
-	{
-		CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-		locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-		locObjectEntity->GetComponent<InputComponent>()->RotateZ(-1.f * deltaTime);
-		locObjectEntity->myOrientation.SetPos(orginalPos);
-	}
+
+	RotateObjectAtX(locAutoRotationSpeed.myX, locDeltaTime);
+	RotateObjectAtY(locAutoRotationSpeed.myY, locDeltaTime);
+	RotateObjectAtZ(locAutoRotationSpeed.myZ, locDeltaTime);
 }
 
 void UpdateFilewatcher() 
@@ -259,6 +294,21 @@ void DirectionaLightRotateZ(float aZAngle)
 	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
 	rotatedDirection.myZ = aZAngle;
 	locDirectionLight->SetDir(rotatedDirection);
+}
+
+float GetDirectionaLightXRotation()
+{
+	return locDirectionLight->GetCurrentDir().myX;
+}
+
+float GetDirectionaLightYRotation()
+{
+	return locDirectionLight->GetCurrentDir().myY;
+}
+
+float GetDirectionaLightZRotation()
+{
+	return locDirectionLight->GetCurrentDir().myZ;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
