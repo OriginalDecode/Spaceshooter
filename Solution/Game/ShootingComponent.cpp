@@ -164,6 +164,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	myCurrentWeaponID = newWeapon.myID;
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 }
 
 void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID)
@@ -192,6 +193,7 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 
 	myWeapons[aWeaponID].myID = aWeaponID;
 	myCurrentWeaponID = aWeaponID;
+	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
 }
 
 void ShootingComponent::SetCurrentWeaponID(int anID)

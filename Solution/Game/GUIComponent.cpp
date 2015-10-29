@@ -9,6 +9,7 @@
 #include <Engine.h>
 #include <EngineEnums.h>
 #include "Entity.h"
+#include "InputNote.h"
 #include "Instance.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
@@ -50,6 +51,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpCountDown(0.f)
 	, myHasPowerUp(false)
 	, myPowerUpMessage("")
+	, myWeapon("Machinegun")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -382,6 +384,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f });
 	}
 
+	Prism::Engine::GetInstance()->PrintDebugText(myWeapon, { 1400.f, -500.f });
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
 
@@ -446,6 +450,22 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 		myPowerUpCountDown = aNote.myDuration;
 		myPowerUpMessage = aNote.myIngameName + " is active: ";
 		myHasPowerUp = true;
+	}
+}
+
+void GUIComponent::ReceiveNote(const InputNote& aMessage)
+{
+	if (aMessage.myKey == 0)
+	{
+		myWeapon = "Machinegun";
+	}
+	else if (aMessage.myKey == 1)
+	{
+		myWeapon = "Shotgun";
+	}
+	else if (aMessage.myKey == 2)
+	{
+		myWeapon = "Rocket launcher";
 	}
 }
 

@@ -36,6 +36,7 @@ public:
 	void ReceiveNote(const HealthNote& aNote) override;
 	void ReceiveNote(const ShieldNote& aNote) override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
+	void ReceiveNote(const InputNote& aMessage) override;
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
@@ -101,6 +102,9 @@ private:
 	bool myShowMessage;
 	std::string myMessage; 
 	float myMessageTime;
+
+
+	std::string myWeapon;
 
 };
 
