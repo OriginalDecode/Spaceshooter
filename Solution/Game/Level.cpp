@@ -70,6 +70,7 @@ Level::~Level()
 	{
 	}
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BackgroundMusic", 0);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BattleMusic", 0);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
