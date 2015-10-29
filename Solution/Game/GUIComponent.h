@@ -79,6 +79,9 @@ private:
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
 	CU::GrowingArray<Entity*> myPowerUps;
+	float myPowerUpCountDown;
+	bool myHasPowerUp;
+	std::string myPowerUpMessage;
 
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;

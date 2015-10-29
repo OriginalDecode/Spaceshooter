@@ -46,6 +46,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShowMessage(false)
 	, myMessage("")
 	, myMessageTime(0.f)
+	, myPowerUpCountDown(0.f)
+	, myHasPowerUp(false)
+	, myPowerUpMessage("")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -183,6 +186,17 @@ void GUIComponent::Update(float aDeltaTime)
 			myShowMessage = false;
 			myMessageTime = 0.f;
 			myMessage = "";
+		}
+	}
+
+	if (myHasPowerUp == true)
+	{
+		myPowerUpCountDown -= aDeltaTime;
+		if (myPowerUpCountDown <= 0.f)
+		{
+			myHasPowerUp = false;
+			myPowerUpCountDown = 0.f;
+			myPowerUpMessage = "";
 		}
 	}
 }
@@ -359,6 +373,12 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		Prism::Engine::GetInstance()->PrintDebugText(myMessage, { 100.f, -100.f });
 	}
 
+	if (myHasPowerUp == true)
+	{
+		std::string message = myPowerUpMessage + std::to_string(int(myPowerUpCountDown));
+		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f });
+	}
+
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
 
@@ -417,6 +437,13 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 	myMessage = "Powerup picked up: " + aNote.myIngameName;
 	myMessageTime = 3.f;
 	myShowMessage = true;
+
+	if (aNote.myDuration > 0.f)
+	{
+		myPowerUpCountDown = aNote.myDuration;
+		myPowerUpMessage = aNote.myIngameName + " is active: ";
+		myHasPowerUp = true;
+	}
 }
 
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
