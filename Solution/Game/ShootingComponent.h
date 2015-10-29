@@ -48,6 +48,7 @@ public:
 
 	void SetHomingTarget(Entity* aTarget);
 
+	void Reset() override;
 private:
 
 	bool HasPowerUp(ePowerUpType aPowerUp);

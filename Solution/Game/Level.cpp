@@ -63,6 +63,8 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_POWERUP, this);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 }
 
 Level::~Level()
