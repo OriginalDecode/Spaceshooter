@@ -186,7 +186,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	SetSkySphere(skySphere, "Data/Resource/Shader/S_effect_skybox.fx");
 
 	LoadLights(reader, levelElement);
-	//LoadProps(reader, levelElement);
+	LoadProps(reader, levelElement);
 	LoadDefendables(reader, levelElement);
 	LoadStructures(reader, levelElement);
 	LoadTriggers(reader, levelElement);

@@ -49,7 +49,7 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 	}
 	else
 	{
-		PowerUpNote note(myType, myValue, myDuration);
+		PowerUpNote note(myType, myInGameName, myValue, myDuration);
 		aNote.myEntity.SendNote(note);
 	}
 	aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PowerUpTaken"));
