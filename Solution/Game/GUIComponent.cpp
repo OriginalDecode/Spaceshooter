@@ -23,6 +23,7 @@
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
+#include "PowerUpNote.h"
 #include "PropComponent.h"
 #include "ResizeMessage.h"
 #include "ShieldNote.h"
@@ -414,6 +415,13 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 	shieldBarEffect->SetPlayerVariable(aNote.myShieldStrength);
 }
 
+void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
+{
+	myMessage = "Powerup picked up: " + aNote.myIngameName;
+	myMessageTime = 3.f;
+	myShowMessage = true;
+}
+
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
 {
 	myConversation = aMessage.myText;
@@ -452,7 +460,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 {
 	myMessage = "Weapon upgrade received: " + aMessage.GetUprgade();
-	myMessageTime = 5.f;
+	myMessageTime = 3.f;
 	myShowMessage = true;
 }
 

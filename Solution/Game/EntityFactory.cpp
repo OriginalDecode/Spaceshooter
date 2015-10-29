@@ -242,6 +242,11 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 				break;
 			}
 		}
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("TurnRate").c_str()) == 0)
+		{
+			aEntityToAddTo.myAITurnRate = 1.f;
+			aDocument.ReadAttribute(e, "value", aEntityToAddTo.myAITurnRate);
+		}
 	}
 }
 
@@ -490,7 +495,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			it->second.myMaxTimeToNextDecision);
 		aTargetEntity->GetComponent<AIComponent>()->Init(speed, timeToNextDecision, it->second.myTargetName
 			, it->second.myAIAvoidanceDistance, it->second.myAIAvoidancePoint
-			, it->second.myAITargetPositionMode);
+			, it->second.myAITargetPositionMode, it->second.myAITurnRate);
 	}
 	if (sourceEntity->GetComponent<ShootingComponent>() != nullptr)
 	{

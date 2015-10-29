@@ -35,7 +35,7 @@ public:
 	void ReceiveNote(const GUINote& aNote) override;
 	void ReceiveNote(const HealthNote& aNote) override;
 	void ReceiveNote(const ShieldNote& aNote) override;
-
+	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
