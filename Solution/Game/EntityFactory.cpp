@@ -242,9 +242,10 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 				break;
 			}
 		}
+
+		aEntityToAddTo.myAITurnRate = 1.f;
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("TurnRate").c_str()) == 0)
 		{
-			aEntityToAddTo.myAITurnRate = 1.f;
 			aDocument.ReadAttribute(e, "value", aEntityToAddTo.myAITurnRate);
 		}
 	}

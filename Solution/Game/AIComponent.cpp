@@ -17,6 +17,7 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myPhysicsComponent(nullptr)
 	, myAvoidanceDistance(300.f)
 	, myPrevEntityToFollow(nullptr)
+	, myTurnRateModifier(1.f)
 {
 	DL_ASSERT_EXP(aEntity.GetComponent<InputComponent>() == nullptr, "Tried to add AIComponent when there was a InputComponent");
 }
@@ -74,6 +75,7 @@ void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
 	myAvoidanceDistance = 0.f;
 	myFollowingOffset = CU::Vector3<float>();
 	myCanMove = true;
+	myTurnRateModifier = 1.f;
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
 
@@ -205,37 +207,32 @@ void AIComponent::FollowEntity(float aDeltaTime)
 
 void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 {
+	if (myRandomizeMovementTimer <= 0.f)
+	{
+		myRandomizeMovementTimer = 2.f;
+		myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
+	}
+	CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
+	myToTarget = targetPos - myEntity.myOrientation.GetPos();
+	float distToTarget = CU::Length(myToTarget);
+
+	if (distToTarget > 1000)
+	{
+		return;
+	}
+
 	if (aMode == eAITargetPositionMode::KEEP_DISTANCE)
 	{
-		if (myRandomizeMovementTimer <= 0.f)
-		{
-			myRandomizeMovementTimer = 2.f;
-			myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
-		}
-		CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
-		myToTarget = targetPos - myEntity.myOrientation.GetPos();
-		float distToTarget = CU::Length(myToTarget);
-
 		if (distToTarget < myAvoidanceDistance)
 		{
 			float distCoef = 1.f - (distToTarget / myAvoidanceDistance);
 			myToTarget += myFollowingOffset * distCoef;
 		}
 	}
-
 	else if (aMode == eAITargetPositionMode::ESCAPE_THEN_RETURN)
 	{
 		if (myIsEscaping == false)
 		{
-			if (myRandomizeMovementTimer <= 0.f)
-			{
-				myRandomizeMovementTimer = 2.f;
-				myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
-			}
-			CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
-			myToTarget = targetPos - myEntity.myOrientation.GetPos();
-			float distToTarget = CU::Length(myToTarget);
-
 			if (distToTarget < myAvoidanceDistance)
 			{
 				float distCoef = 1.f - (distToTarget / (myAvoidanceDistance));
