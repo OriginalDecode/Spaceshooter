@@ -34,7 +34,7 @@ AIComponent::~AIComponent()
 
 void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
 	, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
-	, eAITargetPositionMode aTargetPositionMode)
+	, eAITargetPositionMode aTargetPositionMode, float aTurnRateModifier)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	myEntityToFollow = nullptr;
@@ -54,6 +54,8 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myFollowingOffset = aAvoidancePoint;
 
 	myTargetPositionMode = aTargetPositionMode;
+
+	myTurnRateModifier = aTurnRateModifier;
 
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
@@ -88,6 +90,7 @@ void AIComponent::Update(float aDeltaTime)
 	if (myCanMove == true)
 	{
 		myTimeToNextDecision -= aDeltaTime;
+		myRandomizeMovementTimer -= aDeltaTime;
 		FollowEntity(aDeltaTime);
 
 		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE 
@@ -159,9 +162,8 @@ void AIComponent::FollowEntity(float aDeltaTime)
 		CalculateToTarget(myTargetPositionMode);
 		
 		CU::Normalize(myToTarget);
-		float turnModifier = 1.0f;
 
-		myVelocity += myToTarget * turnModifier;
+		myVelocity += myToTarget * myTurnRateModifier;
 
 		CU::Normalize(myVelocity);
 
@@ -205,7 +207,13 @@ void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 {
 	if (aMode == eAITargetPositionMode::KEEP_DISTANCE)
 	{
-		myToTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+		if (myRandomizeMovementTimer <= 0.f)
+		{
+			myRandomizeMovementTimer = 2.f;
+			myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
+		}
+		CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
+		myToTarget = targetPos - myEntity.myOrientation.GetPos();
 		float distToTarget = CU::Length(myToTarget);
 
 		if (distToTarget < myAvoidanceDistance)
@@ -219,7 +227,13 @@ void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 	{
 		if (myIsEscaping == false)
 		{
-			myToTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+			if (myRandomizeMovementTimer <= 0.f)
+			{
+				myRandomizeMovementTimer = 2.f;
+				myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
+			}
+			CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
+			myToTarget = targetPos - myEntity.myOrientation.GetPos();
 			float distToTarget = CU::Length(myToTarget);
 
 			if (distToTarget < myAvoidanceDistance)
@@ -243,6 +257,12 @@ void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 	}
 	else if (aMode == eAITargetPositionMode::KAMIKAZE)
 	{
-		myToTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+		if (myRandomizeMovementTimer <= 0.f)
+		{
+			myRandomizeMovementTimer = 2.f;
+			myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
+		}
+		CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
+		myToTarget = targetPos - myEntity.myOrientation.GetPos();
 	}
 }

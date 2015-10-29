@@ -14,7 +14,7 @@ public:
 
 	void Init(float aSpeed, float aTimeBetweenDecisions, const std::string& aTargetName
 		, float aAvoidanceDistance, const CU::Vector3<float>& aAvoidancePoint
-		, eAITargetPositionMode aTargetPositionMode);
+		, eAITargetPositionMode aTargetPositionMode, float aTurnRateModifier);
 
 	void Init(float aSpeed, eAITargetPositionMode aTargetPositionMode);
 
@@ -46,6 +46,11 @@ private:
 
 	bool myIsEscaping;
 	CU::Vector3<float> myEscapePosition;
+
+	float myRandomizeMovementTimer;
+	CU::Vector3<float> myRandomMovementOffset;
+
+	float myTurnRateModifier;
 
 	eAITargetPositionMode myTargetPositionMode;
 
