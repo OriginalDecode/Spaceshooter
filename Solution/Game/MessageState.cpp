@@ -58,7 +58,7 @@ void MessageState::Render()
 
 	if (myTextMessage != "")
 	{
-		Prism::Engine::GetInstance()->PrintDebugText(myTextMessage, myMessagePosition);
+		Prism::Engine::GetInstance()->PrintText(myTextMessage, myMessagePosition, Prism::eTextType::RELEASE_TEXT);
 	}
 }
 

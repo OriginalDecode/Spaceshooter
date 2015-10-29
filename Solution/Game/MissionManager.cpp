@@ -74,7 +74,7 @@ void MissionManager::Update(float aDeltaTime)
 	DL_ASSERT_EXP(myCurrentMission < myMissions.Size(), "CurrentMission out of bounds!");
 	std::stringstream ss;
 	ss << myCurrentMission;
-	Prism::Engine::GetInstance()->PrintDebugText(ss.str(), { 400, -370 });
+	Prism::Engine::GetInstance()->PrintText(ss.str(), { 400, -370 }, Prism::eTextType::DEBUG_TEXT);
 	if (myEndEventsActive == false && myMissions[myCurrentMission]->Update(aDeltaTime, -1, eMissionCategory::DUMMY) == true)
 	{
 		myAllowedToStartNextMission = !myMissions[myCurrentMission]->EventsEnd();

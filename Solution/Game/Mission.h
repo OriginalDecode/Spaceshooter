@@ -26,6 +26,7 @@ public:
 	virtual void SetIndex(int aIndex);
 
 protected:
+	void PrintMissionText(const std::string& aText, int aMissionIndex);
 	int myIndex;
 	CU::GrowingArray<std::string> myStartEventNames;
 	CU::GrowingArray<std::string> myEndEventNames;

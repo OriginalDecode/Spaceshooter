@@ -25,11 +25,16 @@ namespace ModelViewer
         private Point myPreviousMousePosition;
 
         private Button myChooseDataFolderButton = new Button();
+        private CheckBox myEnableAutoRotation = new CheckBox();
 
         private CSharpUtilities.Components.DropDownComponent myModelList;
         private CSharpUtilities.Components.DropDownComponent myShaderList;
 
         private CSharpUtilities.Components.DLLPreviewComponent myPreviewWindow;
+
+        private CSharpUtilities.Components.Vector3SliderComponent myDirectionalLightRotation;
+        private CSharpUtilities.Components.Vector3SliderComponent myObjectManualRotation;
+        private CSharpUtilities.Components.Vector3SliderComponent myObjectAutoRotation;
 
         public ModelViewerWindow()
         {
@@ -66,6 +71,36 @@ namespace ModelViewer
             myPreviewWindow = new CSharpUtilities.Components.DLLPreviewComponent(new Point(ModelViewer.Location.X, ModelViewer.Location.Y - 20), ModelViewer.Size, "Preview", true);
             myPreviewWindow.BindToPanel(ModelViewer);
             myPreviewWindow.Show();
+
+            myDirectionalLightRotation = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 0), new Size(200, 50), "Directional Light Rotation", -360, 360, 180, true);
+            myDirectionalLightRotation.AddSelectedValueChangedEvent(this.DirectionalLight_Scroll);
+            myDirectionalLightRotation.BindToPanel(ModelViewerMenu);
+            myDirectionalLightRotation.Show();
+
+            myDirectionalLightRotation.SetXValue(CSharpUtilities.DLLImporter.NativeMethods.GetDirectionaLightXRotation());
+            myDirectionalLightRotation.SetYValue(CSharpUtilities.DLLImporter.NativeMethods.GetDirectionaLightYRotation());
+            myDirectionalLightRotation.SetZValue(CSharpUtilities.DLLImporter.NativeMethods.GetDirectionaLightZRotation());
+
+
+            myObjectManualRotation = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 60), new Size(200, 50), "Object Manual Rotation", -180, 180, 0, false);
+            myObjectManualRotation.AddSelectedXValueChangedEvent(this.ManualObjectXRotation_Scroll);
+            myObjectManualRotation.AddSelectedYValueChangedEvent(this.ManualObjectYRotation_Scroll);
+            myObjectManualRotation.AddSelectedZValueChangedEvent(this.ManualObjectZRotation_Scroll);
+            myObjectManualRotation.BindToPanel(ModelViewerMenu);
+            myObjectManualRotation.Hide();
+
+            myObjectAutoRotation = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 60), new Size(200, 50), "Object Auto Rotation", -360, 360, 0, true);
+            myObjectAutoRotation.AddSelectedValueChangedEvent(this.AutoRotation_Scroll);
+            myObjectAutoRotation.BindToPanel(ModelViewerMenu);
+            myObjectAutoRotation.Show();
+
+            myEnableAutoRotation.Text = "Activate Auto Rotation";
+            myEnableAutoRotation.CheckedChanged += new EventHandler(this.EnableAutoRotation_CheckStateChanged);
+            myEnableAutoRotation.Location = new Point(10, 120);
+            myEnableAutoRotation.Size = new Size(200, 20);
+            myEnableAutoRotation.Checked = true;
+            myEnableAutoRotation.Show();
+            ModelViewerMenu.Controls.Add(myEnableAutoRotation);
 
             FillModelList();
             FillShaderList();
@@ -212,32 +247,58 @@ namespace ModelViewer
             CSharpUtilities.DLLImporter.NativeMethods.SetClearColor(redChannel, greenChannel, blueChannel, alphaChannel);
         }
 
-        private void DirectionalLightX_Scroll(object sender, ScrollEventArgs e)
+        private void DirectionalLight_Scroll(object sender, EventArgs e)
         {
-            float xValue = DirectionLightX.Value / (360.0f / 2) - 1;
-            float xTruncatedValue = (float)(Math.Truncate((double)xValue * 100.0) / 100.0);
-            DirectionLightXValue.Text = "X: " + xTruncatedValue.ToString();
-
-            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateX(xTruncatedValue);
+            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateX(myDirectionalLightRotation.GetXValue());
+            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateY(myDirectionalLightRotation.GetZValue());
+            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateZ(myDirectionalLightRotation.GetYValue());
         }
 
-        private void DirectionalLightY_Scroll(object sender, ScrollEventArgs e)
+        private void ManualObjectXRotation_Scroll(object sender, EventArgs e)
         {
-            float yValue = DirectionalLightY.Value / (360.0f /2) - 1;
-            float yTruncatedValue = (float)(Math.Truncate((double)yValue * 100.0) / 100.0);
-            DirectionalLightYValue.Text = "Y: " + yTruncatedValue.ToString();
+            if (myEnableAutoRotation.Checked == true) return;
 
-            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateY(yTruncatedValue);
+            CSharpUtilities.DLLImporter.NativeMethods.SetRotateObjectAtX(myObjectManualRotation.GetXValue());
         }
 
-        private void DirectionalLightZ_Scroll(object sender, ScrollEventArgs e)
+        private void ManualObjectYRotation_Scroll(object sender, EventArgs e)
         {
-            float zValue = DirectionalLightZ.Value / (360.0f / 2) - 1;
-            float zTruncatedValue = (float)(Math.Truncate((double)zValue * 100.0) / 100.0);
-            DirectionalLightZValue.Text = "Z: " + zTruncatedValue.ToString();
+            if (myEnableAutoRotation.Checked == true) return;
 
-            CSharpUtilities.DLLImporter.NativeMethods.DirectionaLightRotateZ(zTruncatedValue);
+            CSharpUtilities.DLLImporter.NativeMethods.SetRotateObjectAtY(myObjectManualRotation.GetYValue());
         }
 
+        private void ManualObjectZRotation_Scroll(object sender, EventArgs e)
+        {
+            if (myEnableAutoRotation.Checked == true) return;
+
+            CSharpUtilities.DLLImporter.NativeMethods.SetRotateObjectAtZ(myObjectManualRotation.GetZValue());
+        }
+
+        private void AutoRotation_Scroll(object sender, EventArgs e)
+        {
+            if (myEnableAutoRotation.Checked == false) return;
+            CSharpUtilities.DLLImporter.NativeMethods.RotateObjectAtX(myObjectAutoRotation.GetXValue());
+            CSharpUtilities.DLLImporter.NativeMethods.RotateObjectAtY(myObjectAutoRotation.GetYValue());
+            CSharpUtilities.DLLImporter.NativeMethods.RotateObjectAtZ(myObjectAutoRotation.GetZValue());
+        }
+
+        private void EnableAutoRotation_CheckStateChanged(object sender, EventArgs e)
+        {
+            if (myEnableAutoRotation.Checked == true)
+            {
+                myObjectAutoRotation.Show();
+                myObjectManualRotation.Hide();
+            }
+            else
+            {
+                myObjectAutoRotation.Hide();
+                myObjectManualRotation.Show();
+            }
+            AutoRotation_Scroll(sender, e);
+            ManualObjectXRotation_Scroll(sender, e);
+            ManualObjectYRotation_Scroll(sender, e);
+            ManualObjectZRotation_Scroll(sender, e);
+        }
     }
 }

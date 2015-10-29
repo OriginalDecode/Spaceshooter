@@ -128,10 +128,10 @@ bool Game::Update()
 		int memory = Prism::SystemMonitor::GetMemoryUsageMB();
 		float cpuUsage = Prism::SystemMonitor::GetCPUUsage();
 
-		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("FPS: %d", fps), { 1000.f, -20.f });
-		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("FrameTime: %f", frameTime), { 1000.f, -50.f });
-		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("Mem: %d (MB)", memory), { 1000.f, -80.f });
-		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f });
+		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("FPS: %d", fps), { 1000.f, -20.f }, Prism::eTextType::DEBUG_TEXT);
+		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("FrameTime: %f", frameTime), { 1000.f, -50.f }, Prism::eTextType::DEBUG_TEXT);
+		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Mem: %d (MB)", memory), { 1000.f, -80.f }, Prism::eTextType::DEBUG_TEXT);
+		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f }, Prism::eTextType::DEBUG_TEXT);
 	}
 
 	return true;

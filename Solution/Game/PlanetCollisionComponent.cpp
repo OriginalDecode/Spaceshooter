@@ -32,23 +32,23 @@ bool PlanetCollisionComponent::CheckCollision(CollisionComponent* anOtherCompone
 {
 	if (CU::Intersection::SphereVsSphere(myOuterSphere, anOtherComponent->GetSphere()) == false)
 	{
-		Prism::Engine::GetInstance()->PrintDebugText("Completely Outside", { 800, -200 });
+		Prism::Engine::GetInstance()->PrintText("Completely Outside", { 800, -200 }, Prism::eTextType::DEBUG_TEXT);
 		return false;
 	}
 
 	if (CU::Intersection::SphereVsSphere(myInnerSphere, anOtherComponent->GetSphere()) == true)
 	{
-		Prism::Engine::GetInstance()->PrintDebugText("Completely Inside", { 800, -200 });
+		Prism::Engine::GetInstance()->PrintText("Completely Inside", { 800, -200 }, Prism::eTextType::DEBUG_TEXT);
 		return true;
 	}
 
 	if (fabsf(anOtherComponent->GetEntity().myOrientation.GetPos().y) > 30.f)
 	{
-		Prism::Engine::GetInstance()->PrintDebugText("Between, COLLISION", { 800, -200 });
+		Prism::Engine::GetInstance()->PrintText("Between, COLLISION", { 800, -200 }, Prism::eTextType::DEBUG_TEXT);
 		return true;
 	}
 	// object inside outer, but outside inner sphere
 
-	Prism::Engine::GetInstance()->PrintDebugText("Between, not collision", { 800, -200 });
+	Prism::Engine::GetInstance()->PrintText("Between, not collision", { 800, -200 }, Prism::eTextType::DEBUG_TEXT);
 	return false;
 }

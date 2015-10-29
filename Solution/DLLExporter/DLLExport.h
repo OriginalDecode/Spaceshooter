@@ -14,3 +14,15 @@ extern "C" DLLExport void SetClearColor(float aRChannel, float aGChannel, float 
 extern "C" DLLExport void DirectionaLightRotateX(float aXAngle);
 extern "C" DLLExport void DirectionaLightRotateY(float aYAngle);
 extern "C" DLLExport void DirectionaLightRotateZ(float aZAngle);
+
+extern "C" DLLExport float GetDirectionaLightXRotation();
+extern "C" DLLExport float GetDirectionaLightYRotation();
+extern "C" DLLExport float GetDirectionaLightZRotation();
+
+extern "C" DLLExport void RotateObjectAtX(float aSpeed);
+extern "C" DLLExport void RotateObjectAtY(float aSpeed);
+extern "C" DLLExport void RotateObjectAtZ(float aSpeed);
+
+extern "C" DLLExport void SetRotateObjectAtX(float aAngle);
+extern "C" DLLExport void SetRotateObjectAtY(float aAngle);
+extern "C" DLLExport void SetRotateObjectAtZ(float aAngle);

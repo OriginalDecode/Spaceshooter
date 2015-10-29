@@ -59,19 +59,14 @@ bool KillStructureMission::Update(float, int aMissionIndex, eMissionCategory aMi
 
 	int structuresKilled = myAmountOfStructures - myStructuresToKill.Size();
 
-	ss << "Current mission: KILL STRUCTURES" << structuresKilled << "/" << myAmountOfStructures;
+	ss << "Kill structures " << structuresKilled << "/" << myAmountOfStructures;
 
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
 		ss << " (Optional)";
 	}
 
-
-
-	Prism::Engine* engine = Prism::Engine::GetInstance();
-	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
-
-	engine->PrintDebugText(ss.str(), { screenCenter.x - 300, (-(screenCenter.y) + screenCenter.y * 0.5f) - aMissionIndex * 25.f });
+	PrintMissionText(ss.str(), aMissionIndex);
 
 	return myStructuresToKill.Size() <= 0;
 }

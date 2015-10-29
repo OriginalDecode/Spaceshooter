@@ -43,5 +43,32 @@ namespace CSharpUtilities.DLLImporter
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void DirectionaLightRotateZ(float aZValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetDirectionaLightXRotation();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetDirectionaLightYRotation();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetDirectionaLightZRotation();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void RotateObjectAtX(float aSpeed);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void RotateObjectAtY(float aSpeed);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void RotateObjectAtZ(float aSpeed);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetRotateObjectAtX(float aAngle);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetRotateObjectAtY(float aAngle);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetRotateObjectAtZ(float aAngle);
     }
 }

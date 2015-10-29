@@ -175,16 +175,16 @@ void Level::Render()
 
 
 #ifndef RELEASE_BUILD
-	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0));
-	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().y), CU::Vector2<float>(0, -30));
-	Prism::Engine::GetInstance()->PrintDebugText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60));
+	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0), Prism::eTextType::DEBUG_TEXT);
+	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().y), CU::Vector2<float>(0, -30), Prism::eTextType::DEBUG_TEXT);
+	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60), Prism::eTextType::DEBUG_TEXT);
 
-	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f });
-	Prism::Engine::GetInstance()->PrintDebugText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -120.f });
+	Prism::Engine::GetInstance()->PrintText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f }, Prism::eTextType::DEBUG_TEXT);
+	Prism::Engine::GetInstance()->PrintText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -120.f }, Prism::eTextType::DEBUG_TEXT);
 
-	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f });
-	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f });
-	Prism::Engine::GetInstance()->PrintDebugText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f });
+	Prism::Engine::GetInstance()->PrintText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f }, Prism::eTextType::DEBUG_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f }, Prism::eTextType::DEBUG_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f }, Prism::eTextType::DEBUG_TEXT);
 #endif
 }
 
