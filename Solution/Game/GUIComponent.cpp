@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "AudioInterface.h"
 #include <Camera.h>
 #include "BulletCollisionToGUIMessage.h"
 #include "Constants.h"
@@ -10,6 +9,7 @@
 #include <Engine.h>
 #include <EngineEnums.h>
 #include "Entity.h"
+#include "InputNote.h"
 #include "Instance.h"
 #include "GUIComponent.h"
 #include "GUINote.h"
@@ -51,9 +51,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myPowerUpCountDown(0.f)
 	, myHasPowerUp(false)
 	, myPowerUpMessage("")
-	, my3DClosestEnemyLength(10000)
-	, myBattlePlayed(false)
-	, myBackgroundMusicPlayed(true)
+	, myWeapon("Machinegun")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -299,7 +297,6 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
 {
-	my3DClosestEnemyLength = 10000.f;
 	myClosestEnemyLength = 100000.f;
 	myClosestEnemy = nullptr;
 
@@ -327,10 +324,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	for (int i = 0; i < myEnemies.Size(); ++i)
 	{
 		float lengthToEnemy = CU::Length(myEnemies[i]->myOrientation.GetPos() - myCamera->GetOrientation().GetPos());
-		if (lengthToEnemy < my3DClosestEnemyLength)
-		{
-			my3DClosestEnemyLength = lengthToEnemy;
-		}
 		if (lengthToEnemy < myMaxDistanceToEnemies)
 		{
 			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
@@ -342,28 +335,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 				myClosestEnemyLength = lengthFromMouseToEnemy;
 			}
 		}
-	}
-
-	if (myEnemies.Size() > 0 && my3DClosestEnemyLength < 1000)
-	{
-		if (myBattlePlayed == false)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BackgroundMusic", 0);
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
-
-		}
-		myBackgroundMusicPlayed = false;
-		myBattlePlayed = true;
-	}
-	else
-	{
-		if (myBackgroundMusicPlayed == false)
-		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BattleMusic", 0);
-		}
-		myBattlePlayed = false;
-		myBackgroundMusicPlayed = true;
 	}
 
 	for (int i = 0; i < myPowerUps.Size(); ++i)
@@ -412,6 +383,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		std::string message = myPowerUpMessage + std::to_string(int(myPowerUpCountDown));
 		Prism::Engine::GetInstance()->PrintDebugText(message, { 100.f, -200.f });
 	}
+
+	Prism::Engine::GetInstance()->PrintDebugText(myWeapon, { 1400.f, -500.f });
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
@@ -477,6 +450,22 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 		myPowerUpCountDown = aNote.myDuration;
 		myPowerUpMessage = aNote.myIngameName + " is active: ";
 		myHasPowerUp = true;
+	}
+}
+
+void GUIComponent::ReceiveNote(const InputNote& aMessage)
+{
+	if (aMessage.myKey == 0)
+	{
+		myWeapon = "Machinegun";
+	}
+	else if (aMessage.myKey == 1)
+	{
+		myWeapon = "Shotgun";
+	}
+	else if (aMessage.myKey == 2)
+	{
+		myWeapon = "Rocket launcher";
 	}
 }
 
