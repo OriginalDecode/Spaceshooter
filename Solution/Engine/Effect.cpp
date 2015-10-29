@@ -87,6 +87,11 @@ void Prism::Effect::SetPosAndScale(const CU::Vector2<float>& aPos
 	mySpritePosAndScale->SetFloatVector(&mySpritePosAndScaleVector.x);
 }
 
+void Prism::Effect::SetColor(const CU::Vector4<float>& aColor)
+{
+	mySpriteColor->SetFloatVector(&aColor.x);
+}
+
 void Prism::Effect::UpdateDirectionalLights(
 	const CU::StaticArray<Prism::DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
@@ -263,6 +268,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	if (mySpritePosAndScale->IsValid() == false)
 	{
 		mySpritePosAndScale = nullptr;
+	}
+
+	mySpriteColor = myEffect->GetVariableByName("SpriteColor")->AsVector();
+	if (mySpriteColor->IsValid() == false)
+	{
+		mySpriteColor = nullptr;
 	}
 
 	return true;

@@ -6,6 +6,7 @@
 
 Prism::Text::Text(const Font& aFont)
 	: myFont(aFont)
+	, myColor(1.f, 1.f, 1.f, 1.f)
 {
 	//from debugText
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_font.fx");
@@ -56,7 +57,7 @@ void Prism::Text::Render()
 	myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetPosAndScale(myPosition, myScale);
-	//myEffect->SetColor(aColor);
+	myEffect->SetColor(myColor);
 
 	BaseModel::Render();
 

@@ -38,6 +38,7 @@ namespace Prism
 		void SetTexture(Texture* aTexture);
 		void SetPosAndScale(const CU::Vector2<float>& aPos
 			, const CU::Vector2<float>& aScale = { 1.f, 1.f });
+		void SetColor(const CU::Vector4<float>& aColor);
 
 		void UpdateDirectionalLights(
 			const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData);
@@ -71,6 +72,7 @@ namespace Prism
 		ID3DX11EffectShaderResourceVariable	*myTexture;
 
 		ID3DX11EffectVectorVariable* mySpritePosAndScale;
+		ID3DX11EffectVectorVariable* mySpriteColor;
 
 
 		CU::Vector4<float> mySpritePosAndScaleVector;
