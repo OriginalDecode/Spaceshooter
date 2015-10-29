@@ -20,6 +20,7 @@
 #include "ModelProxy.h"
 #include <Sprite.h>
 #include "PostMaster.h"
+#include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
 #include "PropComponent.h"
 #include "ResizeMessage.h"
@@ -318,7 +319,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	for (int i = 0; i < myPowerUps.Size(); ++i)
 	{
-		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker, aWindowSize, true, true, myPowerUps[i]->GetName());
+		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker
+			, aWindowSize, true, true, myPowerUps[i]->GetComponent<PowerUpComponent>()->GetInGameName());
 	}
 
 	if (myEnemiesTarget != nullptr)

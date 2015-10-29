@@ -20,21 +20,25 @@ PowerUpComponent::PowerUpComponent(Entity& aEntity)
 	, myDuration(0)
 	, myValue(0)
 	, myUpgradeName("")
+	, myInGameName("")
 {
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, float someValue, float someDuration)
+void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, float someValue, float someDuration)
 {
 	myType = someType;
 	myValue = someValue;
 	myDuration = someDuration;
+	myInGameName = anInGameName;
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, std::string aUpgradeName, int anUpgradeID)
+void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, std::string aUpgradeName, int anUpgradeID)
 {
 	myType = someType;
-	myUpgradeName = aUpgradeName;
 	myUpgradeID = anUpgradeID;
+	myInGameName = anInGameName;
+	myUpgradeName = aUpgradeName;
+
 }
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
