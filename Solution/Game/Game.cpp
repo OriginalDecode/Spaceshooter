@@ -5,8 +5,6 @@
 #include <Camera.h>
 #include "ColoursForBG.h"
 #include "Constants.h"
-#include <DebugMenu.h>
-#include <DebugDataDisplay.h>
 #include <FileWatcher.h>
 #include <DebugFont.h>
 #include "Game.h"
@@ -70,13 +68,6 @@ bool Game::Init(HWND& aHwnd)
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
 
-
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle FPS", Prism::DebugDataDisplay::ToggleFrameTime, Prism::Engine::GetInstance()->GetDebugDisplay());
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Graph", Prism::DebugDataDisplay::ToggleFunctionTimers, Prism::Engine::GetInstance()->GetDebugDisplay());
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Mem", Prism::DebugDataDisplay::ToggleMemoryUsage, Prism::Engine::GetInstance()->GetDebugDisplay());
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle CPU", Prism::DebugDataDisplay::ToggleCPUUsage, Prism::Engine::GetInstance()->GetDebugDisplay());
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Wireframe", Prism::Engine::ToggleWireframe, Prism::Engine::GetInstance());
-
 	GAME_LOG("Init Successful");
 	return true;
 }
@@ -89,7 +80,6 @@ bool Game::Destroy()
 bool Game::Update()
 {
 	Prism::Audio::AudioInterface::GetInstance()->Update();
-	BEGIN_TIME_BLOCK("Game::Update");
 	myInputWrapper->Update();
 	CU::TimerManager::GetInstance()->Update();
 
@@ -117,12 +107,9 @@ bool Game::Update()
 	}
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Update(*myInputWrapper);
-	Prism::Engine::GetInstance()->GetDebugDisplay()->RecordFrameTime(deltaTime);
 
 
 	myStateStack.RenderCurrentState();
-	Prism::Engine::GetInstance()->GetDebugDisplay()->Render();
 
 	return true;
 }

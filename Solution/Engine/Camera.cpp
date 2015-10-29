@@ -92,8 +92,6 @@ namespace Prism
 
 	void Camera::RotateX(const float aDegrees)
 	{
-		TIME_FUNCTION
-
 		CU::Vector3<float> position = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aDegrees * XM_PI / 180.f) * myOrientation;
@@ -102,8 +100,6 @@ namespace Prism
 
 	void Camera::RotateY(const float aDegrees)
 	{
-		TIME_FUNCTION
-
 		CU::Vector3<float> position = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.f, 1.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundY(aDegrees * XM_PI / 180.f) * myOrientation;
@@ -112,8 +108,6 @@ namespace Prism
 
 	void Camera::RotateZ(const float aDegrees)
 	{
-		TIME_FUNCTION
-
 		CU::Vector3<float> position = myOrientation.GetPos();
 		myOrientation.SetPos({ 0.f, 0.f, 0.0f, 1.f });
 		myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDegrees * XM_PI / 180.f) * myOrientation;
@@ -122,15 +116,11 @@ namespace Prism
 
 	void Camera::MoveForward(const float aDistance)
 	{
-		TIME_FUNCTION
-
 		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetForward() * aDistance);
 	}
 
 	void Camera::MoveRight(const float aDistance)
 	{
-		TIME_FUNCTION
-
 		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetRight() * aDistance);
 	}
 

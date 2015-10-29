@@ -3,8 +3,6 @@
 #include "AIComponent.h"
 #include <AudioInterface.h>
 #include "Constants.h"
-#include <DebugMenu.h>
-#include <DebugDataDisplay.h>
 #include <Engine.h>
 #include "Entity.h"
 #include <FileWatcher.h>
@@ -41,7 +39,6 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 
 	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
 
-	ADD_FUNCTION_TO_RADIAL_MENU("Toggle Camera Lock", InputComponent::ToggleCameraLock, this);
 
 	ReadXML("Data/Setting/SET_player.xml");
 }

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 
-#include "DebugDataDisplay.h"
 #include "DirectX.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -29,7 +28,6 @@ namespace Prism
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
 		myModelFactory = new FBXFactory();
-		myDebugDataDisplay = new DebugDataDisplay();
 		myFileWatcher = new FileWatcher();
 		myModelLoader = new ModelLoader();
 		myWireframeIsOn = false;
@@ -41,7 +39,6 @@ namespace Prism
 		delete myTextureContainer;
 		delete myEffectContainer;
 		delete myModelFactory;
-		delete myDebugDataDisplay;
 		delete myFileWatcher;
 
 		Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
@@ -79,8 +76,6 @@ namespace Prism
 	void Engine::Render()
 	{
 		VTUNE_EVENT_BEGIN(VTUNE::RENDER);
-
-		TIME_FUNCTION
 
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
@@ -161,8 +156,6 @@ namespace Prism
 
 		ShowWindow(aHwnd, 10);
 		UpdateWindow(aHwnd);
-
-		myDebugDataDisplay->Init();
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);

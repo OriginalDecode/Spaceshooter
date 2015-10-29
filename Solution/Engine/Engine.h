@@ -20,7 +20,6 @@ namespace Prism
 
 
 	class Camera;
-	class DebugDataDisplay;
 	class DirectX;
 	class EffectContainer;
 	class Effect;
@@ -48,7 +47,6 @@ namespace Prism
 		ID3D11DeviceContext* GetContex();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
-		DebugDataDisplay* GetDebugDisplay();
 		FileWatcher* GetFileWatcher();
 		ModelLoader* GetModelLoader();
 
@@ -88,7 +86,6 @@ namespace Prism
 		TextureContainer* myTextureContainer;
 		EffectContainer* myEffectContainer;
 		FBXFactory* myModelFactory;
-		DebugDataDisplay* myDebugDataDisplay;
 		FileWatcher* myFileWatcher;
 
 		Font* myFont;
@@ -116,11 +113,6 @@ inline Prism::TextureContainer* Prism::Engine::GetTextureContainer()
 inline Prism::EffectContainer* Prism::Engine::GetEffectContainer()
 {
 	return myEffectContainer;
-}
-
-inline Prism::DebugDataDisplay* Prism::Engine::GetDebugDisplay()
-{
-	return myDebugDataDisplay;
 }
 
 inline Prism::FileWatcher* Prism::Engine::GetFileWatcher()

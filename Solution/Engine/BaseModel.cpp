@@ -171,8 +171,6 @@ namespace Prism
 
 	void BaseModel::SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData)
 	{
-		TIME_FUNCTION;
-
 		if (myVertexBuffer->myVertexBuffer != nullptr)
 			myVertexBuffer->myVertexBuffer->Release();
 
@@ -190,8 +188,6 @@ namespace Prism
 
 	void BaseModel::SetupIndexBuffer(int aIndexCount, char* aIndexData)
 	{
-		TIME_FUNCTION;
-
 		if (myIndexBuffer->myIndexBuffer != nullptr)
 			myIndexBuffer->myIndexBuffer->Release();
 
