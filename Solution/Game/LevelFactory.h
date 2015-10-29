@@ -36,6 +36,7 @@ private:
 	void LoadDirectionalLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
+	void LoadStructures(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadTriggers(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 

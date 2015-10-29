@@ -86,11 +86,14 @@ namespace Prism
 
 		TIME_FUNCTION
 
-		myText->Render();
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
-			myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
-				, { myDebugTexts[i].myScale, myDebugTexts[i].myScale }, { 1.f, 1.f, 1.f, 1.f });
+			myText->SetText(myDebugTexts[i].myText);
+			myText->SetPosition(myDebugTexts[i].myPosition);
+			myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
+			myText->Render();
+			//myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
+			//	, { myDebugTexts[i].myScale, myDebugTexts[i].myScale }, { 1.f, 1.f, 1.f, 1.f });
 		}
 		myDebugTexts.RemoveAll();
 		myDirectX->Present(0, 0);
@@ -171,10 +174,11 @@ namespace Prism
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
 
-		myFont = new Font("Data/Resource/Font/arial.ttf_sdf.txt", { 512, 512 });
+		myFont = new Font("Data/Resource/Font/arial.ttf_sdf_512.txt", { 512, 512 });
 		myText = new Text(*myFont);
-		myText->SetPosition({ 800.f, -100.f });
-		myText->SetText("Häj!");
+		myText->SetPosition({ 800.f, -300.f });
+		myText->SetText("Häj! ÅÄÖ ååäö !\"#¤%&/()=?");
+		myText->SetScale({ 0.5f, 0.5f });
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 

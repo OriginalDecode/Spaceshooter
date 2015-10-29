@@ -400,6 +400,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myDuration = 0.f;
 	aEntityToAddTo.myPowerUpValue = 0.f;
 	aEntityToAddTo.myUpgradeName = "";
+	aEntityToAddTo.myPowerUpName = "";
 	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 	
@@ -412,6 +413,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 			aDocument.ForceReadAttribute(e, "value", aEntityToAddTo.myPowerUpValue);
 			aDocument.ForceReadAttribute(e, "time", aEntityToAddTo.myDuration);
 			aEntityToAddTo.myPowerUpType = ConvertToPowerUpType(name);
+
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("WeaponUpgrade").c_str()) == 0)
 		{
@@ -419,6 +421,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
 			aEntityToAddTo.myPowerUpType = ePowerUpType::WEAPON_UPGRADE;
 		}
+		aEntityToAddTo.myPowerUpName = ConvertToPowerUpInGameName(aEntityToAddTo.myPowerUpType);
 	}
 }
 
@@ -542,11 +545,11 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		
 		if (it->second.myPowerUpType == ePowerUpType::WEAPON_UPGRADE)
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myUpgradeName, it->second.myUpgradeID);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myUpgradeName, it->second.myUpgradeID);
 		}
 		else
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpValue, it->second.myDuration);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myPowerUpValue, it->second.myDuration);
 		}
 	}
 
@@ -599,6 +602,41 @@ ePowerUpType EntityFactory::ConvertToPowerUpType(std::string aName)
 	DL_ASSERT(errorMessage.c_str());
 	
 	return ePowerUpType::NO_POWERUP;
+}
+
+std::string EntityFactory::ConvertToPowerUpInGameName(ePowerUpType aPowerUpType)
+{
+	if (aPowerUpType == ePowerUpType::HEALTHKIT)
+	{
+		return "Health";
+	}
+	else if (aPowerUpType == ePowerUpType::SHIELDBOOST)
+	{
+		return "Shield";
+	}
+	else if (aPowerUpType == ePowerUpType::FIRERATEBOOST)
+	{
+		return "Firerate";
+	}
+	else if (aPowerUpType == ePowerUpType::WEAPON_UPGRADE)
+	{
+		return "Upgrade";
+	}
+	else if (aPowerUpType == ePowerUpType::EMP)
+	{
+		return "EMP";
+	}
+	else if (aPowerUpType == ePowerUpType::HOMING)
+	{
+		return "Homing";
+	}
+	else if (aPowerUpType == ePowerUpType::INVULNERABLITY)
+	{
+		return "Invulnerable";
+	}
+
+	DL_ASSERT("[EntityFactory] Wrong powerup enum in ConvertToPowerUpInGameName.");
+	return "";
 }
 
 eBulletType EntityFactory::ConvertToBulletType(std::string aName) 

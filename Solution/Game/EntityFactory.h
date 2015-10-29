@@ -60,6 +60,7 @@ struct EntityData
 	float myDuration;
 	ePowerUpType myPowerUpType;
 	std::string myUpgradeName;
+	std::string myPowerUpName;
 	int myUpgradeID;
 
 	eEntityDataGraphicsType myGraphicsType;
@@ -91,6 +92,7 @@ private:
 	void LoadSoundComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aSoundComponent);
 
 	ePowerUpType ConvertToPowerUpType(std::string aName);
+	std::string ConvertToPowerUpInGameName(ePowerUpType aPowerUpType);
 	eBulletType ConvertToBulletType(std::string aName);
 
 	std::unordered_map<std::string, EntityData> myEntities;

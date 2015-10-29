@@ -62,3 +62,7 @@ void Subscriber::ReceiveMessage(const BulletCollisionToGUIMessage&)
 void Subscriber::ReceiveMessage(const SpawnPowerUpMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const KillStructureMessage&)
+{
+}

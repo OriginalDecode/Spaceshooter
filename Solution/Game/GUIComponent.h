@@ -22,7 +22,8 @@ public:
 
 	void Update(float aDeltaTime) override;
 	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
-		, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize, bool aShowDist);
+		, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize
+		, bool aShowDist, bool aIsPowerup = false, std::string aName = "");
 
 	void Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos);
 
@@ -34,7 +35,7 @@ public:
 	void ReceiveNote(const GUINote& aNote) override;
 	void ReceiveNote(const HealthNote& aNote) override;
 	void ReceiveNote(const ShieldNote& aNote) override;
-
+	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
@@ -77,7 +78,7 @@ private:
 
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
-	CU::GrowingArray<CU::Vector3<float>> myPowerUpPositions;
+	CU::GrowingArray<Entity*> myPowerUps;
 
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;

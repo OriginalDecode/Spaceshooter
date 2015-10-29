@@ -20,6 +20,7 @@ CollisionManager::CollisionManager()
 	, myProps(16)
 	, myPowerUps(16)
 	, myDefendables(16)
+	, myStructures(16)
 	, myPlayerFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
@@ -28,14 +29,16 @@ CollisionManager::CollisionManager()
 	, myPropFilter(0)
 	, myPowerUpFilter(0)
 	, myDefendableFilter(0)
+	, myStructureFilter(0)
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
-	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP | eEntityType::DEFENDABLE;
+	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP | eEntityType::DEFENDABLE | eEntityType::STRUCTURE;
 	myEnemyBulletFilter = eEntityType::PLAYER | eEntityType::DEFENDABLE;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
 	myPropFilter = eEntityType::PLAYER;
 	myDefendableFilter = eEntityType::PLAYER;
+	myStructureFilter = eEntityType::PLAYER;
 	//myEnemyFilter = eEntityType::PLAYER;
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 }
@@ -73,6 +76,9 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 	case eEntityType::DEFENDABLE:
 		myDefendables.Add(aComponent);
 		break;
+	case eEntityType::STRUCTURE:
+		myStructures.Add(aComponent);
+		break;
 	default:
 		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
 		break;
@@ -107,6 +113,9 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::DEFENDABLE:
 		myDefendables.RemoveCyclic(aComponent);
+		break;
+	case eEntityType::STRUCTURE:
+		myStructures.RemoveCyclic(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
@@ -147,6 +156,10 @@ void CollisionManager::Update()
 	for (int i = myDefendables.Size() - 1; i >= 0; --i)
 	{
 		CheckAllCollisions(myDefendables[i], myDefendableFilter);
+	}
+	for (int i = myStructures.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myStructures[i], myStructureFilter);
 	}
 }
 
@@ -190,6 +203,14 @@ void CollisionManager::CleanUp()
 			myDefendables.RemoveCyclicAtIndex(i);
 		}
 	}
+
+	for (int i = myStructures.Size() - 1; i >= 0; --i)
+	{
+		if (myStructures[i]->GetEntity().GetAlive() == false)
+		{
+			myStructures.RemoveCyclicAtIndex(i);
+		}
+	}
 }
 
 void CollisionManager::ReceiveMessage(const PowerUpMessage& aMessage)
@@ -230,6 +251,10 @@ void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aF
 	if (aFilter & eEntityType::DEFENDABLE)
 	{
 		CheckCollision(aComponent, myDefendables);
+	}
+	if (aFilter & eEntityType::STRUCTURE)
+	{
+		CheckCollision(aComponent, myStructures);
 	}
 }
 

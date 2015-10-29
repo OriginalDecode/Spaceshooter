@@ -14,6 +14,7 @@ enum class eMessageType
 	RESIZE,
 	BULLET_COLLISION_TO_GUI,
 	SPAWN_POWERUP,
+	KILL_STRUCTURE,
 	COUNT,
 };
 
@@ -46,7 +47,8 @@ enum eEntityType //Collision manager needs this as ints!
 	TRIGGER = 16,
 	PROP = 32,
 	POWERUP = 64,
-	DEFENDABLE = 128
+	DEFENDABLE = 128,
+	STRUCTURE = 256,
 };
 
 enum class eCollisionType
