@@ -83,8 +83,15 @@ void Prism::Text::ConstructBuffers()
 	myVertices.RemoveAll();
 	myIndices.RemoveAll();
 	VertexPosUV vert;
-	for (int i = 0; i < numOfLetters; ++i)
+	for (int i = 0, row = 0; i < numOfLetters; ++i)
 	{
+		if (myText[i] == '\n')
+		{
+			drawX = 0;
+			drawY -= 48.f;
+			++row;
+			continue;
+		}
 		Font::CharacterData charData = myFont.GetCharData(myText[i]);
 
 		float left = drawX + charData.myOffset.x;
@@ -110,7 +117,7 @@ void Prism::Text::ConstructBuffers()
 		myVertices.Add(vert);
 
 
-		int startIndex = i * 4;
+		int startIndex = (i - row) * 4;
 		myIndices.Add(startIndex + 0);
 		myIndices.Add(startIndex + 1);
 		myIndices.Add(startIndex + 2);

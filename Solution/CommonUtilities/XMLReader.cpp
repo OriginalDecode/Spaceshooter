@@ -279,6 +279,7 @@ bool XMLReader::ReadAttribute(const tinyxml2::XMLElement* aElementToReadFrom, co
 	if (aElementToReadFrom->FindAttribute(aAttributeToRead.c_str()) != 0)
 	{
 		aTargetVariable = aElementToReadFrom->Attribute(aAttributeToRead.c_str());
+		InsertLineEndings(aTargetVariable);
 		return true;
 	}
 
@@ -368,6 +369,7 @@ bool XMLReader::ForceReadAttribute(const tinyxml2::XMLElement* aElementToReadFro
 		&& aElementToReadFrom->FindAttribute(aAttributeToRead.c_str()) != 0)
 	{
 		aTargetVariable = aElementToReadFrom->Attribute(aAttributeToRead.c_str());
+		InsertLineEndings(aTargetVariable);
 		return true;
 	}
 
@@ -488,4 +490,9 @@ void XMLReader::DebugNextElement(tinyxml2::XMLElement* aParent, const std::strin
 	{
 		DL_ASSERT(CU::Concatenate("Failed to [ForceFindNextElement]. Parent: [ %s ], Child: [ %s ], File: [ %s ]", aParent->Name(), aChildName.c_str(), myFilePath.c_str()));
 	}
+}
+
+void XMLReader::InsertLineEndings(std::string& aTargetVariable) const
+{
+	std::replace(aTargetVariable.begin(), aTargetVariable.end(), '#', '\n');
 }
