@@ -80,7 +80,6 @@ namespace Prism
 		
 		bool myWireframeIsOn;
 
-
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;
 		TextureContainer* myTextureContainer;

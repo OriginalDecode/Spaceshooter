@@ -4,6 +4,7 @@
 #include "BulletManager.h"
 #include <Camera.h>
 #include "ColoursForBG.h"
+#include <CommonHelper.h>
 #include "Constants.h"
 #include <FileWatcher.h>
 #include <DebugFont.h>
@@ -16,6 +17,7 @@
 #include "MenuState.h"
 #include "PostMaster.h"
 #include "ResizeMessage.h"
+#include <SystemMonitor.h>
 #include <TimerManager.h>
 #include <VTuneApi.h>
 #include <Vector.h>
@@ -23,6 +25,7 @@
 
 Game::Game()
 	: myLockMouse(true)
+	, myShowSystemInfo(true)
 {
 	PostMaster::Create();
 	Prism::Audio::AudioInterface::CreateInstance();
@@ -106,10 +109,30 @@ bool Game::Update()
 		return false;
 	}
 
-	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
+	if (myInputWrapper->KeyDown(DIK_F8))
+	{
+		myShowSystemInfo = !myShowSystemInfo;
+	}
+	if (myInputWrapper->KeyDown(DIK_F9))
+	{
+		Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
+	}
 
 
 	myStateStack.RenderCurrentState();
+
+	if (myShowSystemInfo == true)
+	{
+		int fps = int(1.f / deltaTime);
+		float frameTime = deltaTime * 1000.f;
+		int memory = Prism::SystemMonitor::GetMemoryUsageMB();
+		float cpuUsage = Prism::SystemMonitor::GetCPUUsage();
+
+		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("FPS: %d", fps), { 1000.f, -20.f });
+		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("FrameTime: %f", frameTime), { 1000.f, -50.f });
+		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("Mem: %d (MB)", memory), { 1000.f, -80.f });
+		Prism::Engine::GetInstance()->PrintDebugText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f });
+	}
 
 	return true;
 }
