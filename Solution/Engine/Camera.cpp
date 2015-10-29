@@ -66,7 +66,7 @@ namespace Prism
 			{
 				myRotateRate = -myRotateRate;
 			}
-			myCurrentShake += myRotateRate;
+			myCurrentShake += myRotateRate * aDeltaTime;
 
 			myCurrentShakeTime += aDeltaTime;
 			if (myCurrentShakeTime >= myMaxShakeTime)
@@ -75,7 +75,7 @@ namespace Prism
 				myCurrentShakeTime = 0.f;
 				myCurrentShake = 0.f;
 			}
-			RotateZ(myCurrentShake);
+			RotateZ(myCurrentShake * aDeltaTime);
 		}
 
 		myFrustum->Update();
@@ -136,11 +136,14 @@ namespace Prism
 
 	void Camera::ShakeCamera(float aRotationRate, float aMaxRotation, float aTime)
 	{
-		myRotateRate = aRotationRate;
-		myMaxShake = aMaxRotation;
-		myMaxShakeTime = aTime;
-		myCurrentShake = 0.f;
-		myCurrentShakeTime = 0.f;
-		myShakeCamera = true;
+		if (myShakeCamera == false)
+		{
+			myRotateRate = aRotationRate;
+			myMaxShake = aMaxRotation;
+			myMaxShakeTime = aTime;
+			myCurrentShake = 0.f;
+			myCurrentShakeTime = 0.f;
+			myShakeCamera = true;
+		}
 	}
 }
