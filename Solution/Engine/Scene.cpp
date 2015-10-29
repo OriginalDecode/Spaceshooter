@@ -2,7 +2,6 @@
 
 #include <AABB.h>
 #include "Camera.h"
-#include "DebugDataDisplay.h"
 #include "Defines.h"
 #include "DirectionalLight.h"
 #include "Instance.h"
@@ -42,8 +41,6 @@ Prism::Scene::~Scene()
 
 void Prism::Scene::Render()
 {
-	TIME_FUNCTION;
-
 	for (int i = 0; i < myDirectionalLights.Size(); ++i)
 	{
 		myDirectionalLights[i]->Update();

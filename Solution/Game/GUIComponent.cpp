@@ -560,4 +560,8 @@ void GUIComponent::Reset()
 	hpBarEffect->SetPlayerVariable(1000);
 
 	myEnemiesTarget = nullptr;
+	myClosestEnemy = nullptr;
+	myWeapon = "Machinegun";
+
+	myActivePowerUps.RemoveAll();
 }
