@@ -6,6 +6,7 @@
 
 Prism::Text::Text(const Font& aFont)
 	: myFont(aFont)
+	, myColor(1.f, 1.f, 1.f, 1.f)
 {
 	//from debugText
 	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_font.fx");
@@ -56,7 +57,7 @@ void Prism::Text::Render()
 	myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetPosAndScale(myPosition, myScale);
-	//myEffect->SetColor(aColor);
+	myEffect->SetColor(myColor);
 
 	BaseModel::Render();
 
@@ -83,8 +84,15 @@ void Prism::Text::ConstructBuffers()
 	myVertices.RemoveAll();
 	myIndices.RemoveAll();
 	VertexPosUV vert;
-	for (int i = 0; i < numOfLetters; ++i)
+	for (int i = 0, row = 0; i < numOfLetters; ++i)
 	{
+		if (myText[i] == '\n')
+		{
+			drawX = 0;
+			drawY -= 48.f;
+			++row;
+			continue;
+		}
 		Font::CharacterData charData = myFont.GetCharData(myText[i]);
 
 		float left = drawX + charData.myOffset.x;
@@ -110,7 +118,7 @@ void Prism::Text::ConstructBuffers()
 		myVertices.Add(vert);
 
 
-		int startIndex = i * 4;
+		int startIndex = (i - row) * 4;
 		myIndices.Add(startIndex + 0);
 		myIndices.Add(startIndex + 1);
 		myIndices.Add(startIndex + 2);

@@ -36,6 +36,7 @@ public:
 	void ReceiveNote(const HealthNote& aNote) override;
 	void ReceiveNote(const ShieldNote& aNote) override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
+	void ReceiveNote(const InputNote& aMessage) override;
 
 	void ReceiveMessage(const ConversationMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
@@ -78,10 +79,16 @@ private:
 	CU::Vector2<float> myClosestScreenPos;
 	float myClosestEnemyLength;
 	bool myHasHomingWeapon;
+	float my3DClosestEnemyLength;
+	bool myBattlePlayed;
+	bool myBackgroundMusicPlayed;
 
 	Prism::Sprite* myPowerUpArrow;
 	Prism::Sprite* myPowerUpMarker;
 	CU::GrowingArray<Entity*> myPowerUps;
+	float myPowerUpCountDown;
+	bool myHasPowerUp;
+	std::string myPowerUpMessage;
 
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;
@@ -98,6 +105,9 @@ private:
 	bool myShowMessage;
 	std::string myMessage; 
 	float myMessageTime;
+
+
+	std::string myWeapon;
 
 };
 

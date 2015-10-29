@@ -1,8 +1,6 @@
 #include "stdafx.h"
 
-#include "DebugFontContainer.h"
 #include "DebugDataDisplay.h"
-#include "DebugText.h"
 #include "DirectX.h"
 #include "EffectContainer.h"
 #include "Engine.h"
@@ -18,6 +16,8 @@
 #include <Vector.h>
 #include "VTuneApi.h"
 
+#include <algorithm>
+
 namespace Prism
 {
 	Engine* Engine::myInstance = nullptr;
@@ -29,7 +29,6 @@ namespace Prism
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
 		myModelFactory = new FBXFactory();
-		myFontContainer = new DebugFontContainer();
 		myDebugDataDisplay = new DebugDataDisplay();
 		myFileWatcher = new FileWatcher();
 		myModelLoader = new ModelLoader();
@@ -39,12 +38,9 @@ namespace Prism
 
 	Engine::~Engine()
 	{
-		delete myDebugText;
-		myDebugText = nullptr;
 		delete myTextureContainer;
 		delete myEffectContainer;
 		delete myModelFactory;
-		delete myFontContainer;
 		delete myDebugDataDisplay;
 		delete myFileWatcher;
 
@@ -92,6 +88,7 @@ namespace Prism
 			myText->SetPosition(myDebugTexts[i].myPosition);
 			myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
 			myText->Render();
+			//myText->SetColor({ 1, 0, 1, 0.5f });
 			//myDebugText->Render(myDebugTexts[i].myText, myDebugTexts[i].myPosition
 			//	, { myDebugTexts[i].myScale, myDebugTexts[i].myScale }, { 1.f, 1.f, 1.f, 1.f });
 		}
@@ -166,10 +163,6 @@ namespace Prism
 		UpdateWindow(aHwnd);
 
 		myDebugDataDisplay->Init();
-
-
-		myDebugText = new DebugText();
-		myDebugText->Init(GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);

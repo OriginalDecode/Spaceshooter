@@ -12,6 +12,7 @@ namespace Prism
 		Text(const Font& aFont);
 		void SetPosition(const CU::Vector2<float>& aPosition);
 		void SetText(const std::string& aText);
+		void SetColor(const CU::Vector4<float>& aColor);
 		void Render();
 		void SetScale(const CU::Vector2<float>& aScale);
 
@@ -23,6 +24,8 @@ namespace Prism
 
 		CU::GrowingArray<VertexPosUV> myVertices;
 		CU::GrowingArray<int> myIndices;
+
+		CU::Vector4<float> myColor;
 	};
 }
 
@@ -34,4 +37,9 @@ inline void Prism::Text::SetPosition(const CU::Vector2<float>& aPosition)
 inline void Prism::Text::SetScale(const CU::Vector2<float>& aScale)
 {
 	myScale = aScale;
+}
+
+inline void Prism::Text::SetColor(const CU::Vector4<float>& aColor)
+{
+	myColor = aColor;
 }
