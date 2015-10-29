@@ -188,6 +188,9 @@
     <ClCompile Include="PointLightComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="EmitterMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -430,6 +433,9 @@
     </ClInclude>
     <ClInclude Include="PointLightComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EmitterMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
