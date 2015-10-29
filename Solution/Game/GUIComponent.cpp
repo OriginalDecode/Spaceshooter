@@ -346,8 +346,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	{
 		if (myBattlePlayed == false)
 		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BackgroundMusic", 0);
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BackgroundMusic", 0);
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_BattleMusic", 0);
 
 		}
 		myBackgroundMusicPlayed = false;
@@ -357,8 +357,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	{
 		if (myBackgroundMusicPlayed == false)
 		{
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
-			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_BattleMusic", 0);
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_BackgroundMusic", 0);
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusic", 0);
 		}
 		myBattlePlayed = false;
 		myBackgroundMusicPlayed = true;
