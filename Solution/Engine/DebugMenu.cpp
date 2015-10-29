@@ -14,8 +14,8 @@ namespace Prism
 		, myRadius(200.f)
 		, myInteractRange(150.f)
 	{
-		myText = new DebugText();
-		myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
+		//myText = new DebugText();
+		//myText->Init(Engine::GetInstance()->GetFontContainer()->GetFont("Data/Resource/Font/F_default.dds"));
 
 		myMenuElements.Init(4);
 	}
