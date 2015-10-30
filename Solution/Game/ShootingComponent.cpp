@@ -125,22 +125,56 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	if (aNote.myType == ePowerUpType::EMP 
 		|| aNote.myType == ePowerUpType::HOMING)
 	{
-		WeaponPowerUp powerUp;
-		powerUp.myPowerUpCoolDownReducer = 0.f;
-		powerUp.myPowerUpDuration = aNote.myDuration;
-		powerUp.myPowerUpType = aNote.myType;
-		powerUp.myPowerUpValue = aNote.myValue;
-		myPowerUps.Add(powerUp);
-		myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || powerUp.myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+		bool powerUpFound = false;
+		for (int i = 0; i < myPowerUps.Size(); ++i)
+		{
+			if (myPowerUps[i].myPowerUpType == aNote.myType)
+			{
+				myPowerUps[i].myPowerUpCoolDownReducer = 0.f;
+				myPowerUps[i].myPowerUpDuration += aNote.myDuration;
+				myPowerUps[i].myPowerUpType = aNote.myType;
+				myPowerUps[i].myPowerUpValue = aNote.myValue;
+				powerUpFound = true;
+				break;
+			}
+		}
+		if (powerUpFound == false)
+		{
+			WeaponPowerUp powerUp;
+			powerUp.myPowerUpCoolDownReducer = 0.f;
+			powerUp.myPowerUpDuration = aNote.myDuration;
+			powerUp.myPowerUpType = aNote.myType;
+			powerUp.myPowerUpValue = aNote.myValue;
+			myPowerUps.Add(powerUp);
+			myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || powerUp.myPowerUpType == ePowerUpType::HOMING, eGUINoteType::HOMING_TARGET));
+		}
+
 	}
 	else if (aNote.myType == ePowerUpType::FIRERATEBOOST)
 	{
-		WeaponPowerUp powerUp;
-		powerUp.myPowerUpCoolDownReducer = aNote.myValue;
-		powerUp.myPowerUpDuration = aNote.myDuration;
-		powerUp.myPowerUpType = aNote.myType;
-		powerUp.myPowerUpValue = 0.f;
-		myPowerUps.Add(powerUp);
+		bool powerUpFound = false;
+		for (int i = 0; i < myPowerUps.Size(); ++i)
+		{
+			if (myPowerUps[i].myPowerUpType == aNote.myType)
+			{
+				myPowerUps[i].myPowerUpCoolDownReducer = aNote.myValue;
+				myPowerUps[i].myPowerUpDuration += aNote.myDuration;
+				myPowerUps[i].myPowerUpType = aNote.myType;
+				myPowerUps[i].myPowerUpValue = 0.f;
+				powerUpFound = true;
+				break;
+			}
+		}
+		if (powerUpFound == false)
+		{
+			WeaponPowerUp powerUp;
+			powerUp.myPowerUpCoolDownReducer = aNote.myValue;
+			powerUp.myPowerUpDuration = aNote.myDuration;
+			powerUp.myPowerUpType = aNote.myType;
+			powerUp.myPowerUpValue = 0.f;
+			myPowerUps.Add(powerUp);
+		}
+
 	}
 }
 

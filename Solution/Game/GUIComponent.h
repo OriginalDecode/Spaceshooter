@@ -9,6 +9,7 @@ struct ActivePowerUp
 {
 	float myPowerUpCountDown;
 	std::string myPowerUpMessage;
+	ePowerUpType myType;
 };
 
 namespace Prism

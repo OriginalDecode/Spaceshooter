@@ -482,10 +482,25 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 
 	if (aNote.myDuration > 0.f)
 	{
-		ActivePowerUp message;
-		message.myPowerUpCountDown = aNote.myDuration;
-		message.myPowerUpMessage = aNote.myIngameName + " is active: ";
-		myActivePowerUps.Add(message);
+		bool powerUpFound = false;
+		for (int i = 0; i < myActivePowerUps.Size(); ++i)
+		{
+			if (myActivePowerUps[i].myType == aNote.myType)
+			{
+				myActivePowerUps[i].myPowerUpCountDown += aNote.myDuration;
+				powerUpFound = true;
+				break;
+			}
+		}
+		if (powerUpFound == false)
+		{
+			ActivePowerUp message;
+			message.myPowerUpCountDown = aNote.myDuration;
+			message.myPowerUpMessage = aNote.myIngameName + " is active: ";
+			message.myType = aNote.myType;
+			myActivePowerUps.Add(message);
+		}
+
 	}
 }
 
