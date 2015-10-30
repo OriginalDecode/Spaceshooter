@@ -191,6 +191,7 @@
     <ClCompile Include="DestroyEmitterMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUpGUIIcon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -440,6 +441,7 @@
     <ClInclude Include="DestroyEmitterMessage.h">
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
+    <ClInclude Include="PowerUpGUIIcon.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
