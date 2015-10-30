@@ -31,6 +31,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
+	myCanChangeWeapon = true;
 	myWeaponRotationModifier = 0.f;
 	myCurrentBoostCooldown = 0.f;
 	myCurrentBoostValue = 0.f;
@@ -49,18 +50,22 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myCanMove == true)
 	{
-		if (myInputWrapper->KeyIsPressed(DIK_1))
+		if (myCanChangeWeapon == true)
 		{
-			myEntity.SendNote(InputNote(0));
+			if (myInputWrapper->KeyIsPressed(DIK_1))
+			{
+				myEntity.SendNote(InputNote(0));
+			}
+			if (myInputWrapper->KeyIsPressed(DIK_2))
+			{
+				myEntity.SendNote(InputNote(1));
+			}
+			if (myInputWrapper->KeyIsPressed(DIK_3))
+			{
+				myEntity.SendNote(InputNote(2));
+			}
 		}
-		if (myInputWrapper->KeyIsPressed(DIK_2))
-		{
-			myEntity.SendNote(InputNote(1));
-		}
-		if (myInputWrapper->KeyIsPressed(DIK_3))
-		{
-			myEntity.SendNote(InputNote(2));
-		}
+		
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
 			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), myEntity.myOrientation.GetForward()
