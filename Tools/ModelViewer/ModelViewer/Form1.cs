@@ -36,6 +36,10 @@ namespace ModelViewer
         private CSharpUtilities.Components.Vector3SliderComponent myObjectManualRotation;
         private CSharpUtilities.Components.Vector3SliderComponent myObjectAutoRotation;
 
+        private CSharpUtilities.Components.SliderComponent myMouseSensitivitySlider;
+
+        private bool myHasFocus = true;
+
         public ModelViewerWindow()
         {
             InitializeComponent();
@@ -102,6 +106,11 @@ namespace ModelViewer
             myEnableAutoRotation.Show();
             ModelViewerMenu.Controls.Add(myEnableAutoRotation);
 
+            myMouseSensitivitySlider = new CSharpUtilities.Components.SliderComponent(new Point(0, 150), new Size(200, 15), "Mouse Sens", 0, 1000, 1, true, 0.0f, 100.0f);
+            myMouseSensitivitySlider.AddSelectedValueChangedEvent(this.MouseSensitivity_Changed);
+            myMouseSensitivitySlider.BindToPanel(ModelViewerMenu);
+            myMouseSensitivitySlider.Show();
+
             FillModelList();
             FillShaderList();
 
@@ -156,11 +165,6 @@ namespace ModelViewer
         private bool VerifyShader(string aFileName)
         {
             if (aFileName.EndsWith("pbl.fx")
-                || aFileName.EndsWith("font.fx")
-                || aFileName.EndsWith("sprite.fx")
-                || aFileName.EndsWith("graph.fx")
-                || aFileName.EndsWith("debug.fx")
-                || aFileName.EndsWith("skybox.fx")
                 || aFileName.EndsWith("basic.fx"))
             {
                 return true;
@@ -299,6 +303,12 @@ namespace ModelViewer
             ManualObjectXRotation_Scroll(sender, e);
             ManualObjectYRotation_Scroll(sender, e);
             ManualObjectZRotation_Scroll(sender, e);
+        }
+
+        private void MouseSensitivity_Changed(object sender, EventArgs e)
+        {
+            float value = myMouseSensitivitySlider.GetValue();
+            CSharpUtilities.DLLImporter.NativeMethods.SetMouseSensitivty(myMouseSensitivitySlider.GetValue());
         }
     }
 }

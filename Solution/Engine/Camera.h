@@ -31,6 +31,7 @@ namespace Prism
 
 		void MoveForward(const float aDistance);
 		void MoveRight(const float aDistance);
+		void MoveUp(const float aDistance);
 
 		void ShakeCamera(float aRotationRate, float aMaxRotation, float aTime);
 
