@@ -25,6 +25,7 @@ namespace Prism
 		: myClearColor({ 0.8f, 0.125f, 0.8f, 1.0f })
 		, myTexts(16)
 		, myDebugTexts(16)
+		, myShowDebugText(false)
 	{
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
@@ -190,12 +191,10 @@ namespace Prism
 		{
 			myTexts.Add(toAdd);
 		}
-#ifndef RELEASE_BUILD
-		else if (aTextType == eTextType::DEBUG_TEXT)
+		else if (aTextType == eTextType::DEBUG_TEXT && myShowDebugText == true)
 		{
 			myDebugTexts.Add(toAdd);
 		}
-#endif
 	}
 
 	void Engine::PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)

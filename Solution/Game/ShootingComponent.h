@@ -49,9 +49,9 @@ public:
 	void SetHomingTarget(Entity* aTarget);
 
 	void Reset() override;
+	bool HasPowerUp(ePowerUpType aPowerUp);
 private:
 
-	bool HasPowerUp(ePowerUpType aPowerUp);
 	void ActivatePowerUp(ePowerUpType aPowerUp); // only for emp
 
 	CU::GrowingArray<WeaponData, int> myWeapons;

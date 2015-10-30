@@ -4,11 +4,12 @@
 #include "Constants.h"
 
 #include "EmitterComponent.h"
-
 #include <EmitterData.h>
 #include <EmitterInstance.h>
 #include "EmitterNote.h"
+#include "DestroyEmitterMessage.h"
 #include "Entity.h"
+#include "PostMaster.h"
 #include "Scene.h"
 
 int EmitterComponent::myEmitterCount = 0;
@@ -22,6 +23,8 @@ EmitterComponent::EmitterComponent(Entity& aEntity)
 
 EmitterComponent::~EmitterComponent()
 {
+	PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
+
 	delete myEmitter;
 	myEmitter = nullptr;
 }
@@ -76,6 +79,6 @@ void EmitterComponent::ReceiveNote(const EmitterNote& aNote)
 {
 	if (aNote.myType == EmitterNote::eType::BULLET)
 	{
-		myEmitter->ToggleActive();
+		myEmitter->ToggleActive(aNote.myIsActive);
 	}
 }

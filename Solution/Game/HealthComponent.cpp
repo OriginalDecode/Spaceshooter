@@ -75,9 +75,18 @@ void HealthComponent::ReceiveNote(const PowerUpNote& aNote)
 	}
 	else if (aNote.myType == ePowerUpType::INVULNERABLITY)
 	{
-		myIsInvulnerable = true;
-		myInvulnerablityTimeCurrent = 0.f;
-		myInvulnerablityTimeMax = aNote.myDuration;
+		if (myIsInvulnerable == true)
+		{
+			myInvulnerablityTimeCurrent = 0.f;
+			myInvulnerablityTimeMax = aNote.myDuration;
+		}
+		else
+		{
+			myIsInvulnerable = true;
+			myInvulnerablityTimeCurrent = 0.f;
+			myInvulnerablityTimeMax = aNote.myDuration;
+		}
+
 	}
 }
 

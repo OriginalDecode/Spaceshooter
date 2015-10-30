@@ -14,6 +14,7 @@ class PowerUpMessage;
 class ResizeMessage;
 class SpawnPowerUpMessage;
 class KillStructureMessage;
+class DestroyEmitterMessage;
 
 class Subscriber
 {
@@ -35,5 +36,6 @@ public:
 	virtual void ReceiveMessage(const BulletCollisionToGUIMessage& aMessage);
 	virtual void ReceiveMessage(const SpawnPowerUpMessage& aMessage);
 	virtual void ReceiveMessage(const KillStructureMessage& aMessage);
+	virtual void ReceiveMessage(const DestroyEmitterMessage& aMessage);
 };
 

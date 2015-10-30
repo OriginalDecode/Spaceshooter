@@ -59,6 +59,7 @@ private:
 
 	bool myCameraIsLocked;
 	bool myBoost;
+	bool myCanChangeWeapon;
 
 	CU::Matrix44<float> mySkyOrientation;
 };

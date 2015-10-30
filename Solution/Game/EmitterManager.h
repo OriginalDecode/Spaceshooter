@@ -1,8 +1,9 @@
 #pragma once
+#include "Subscriber.h"
 
 class EmitterComponent;
 
-class EmitterManager
+class EmitterManager : public Subscriber
 {
 public:
 	EmitterManager();
@@ -13,6 +14,9 @@ public:
 
 	void UpdateEmitters(float aDeltaTime);
 	void RenderEmitters();
+
+	void ReceiveMessage(const DestroyEmitterMessage& aMessage) override;
+
 
 
 private:

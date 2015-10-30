@@ -22,6 +22,7 @@
 #include "ModelLoader.h"
 #include "ModelProxy.h"
 #include <Sprite.h>
+#include "PhysicsComponent.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
@@ -50,7 +51,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myMessage("")
 	, myMessageTime(0.f)
 	, myActivePowerUps(8)
-	, myWeapon("Machinegun")
+	, myWeapon("MG")
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
@@ -218,7 +219,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	std::stringstream lengthToWaypoint;
 	if (aShowDist == true)
 	{
-		lengthToWaypoint << aPosition.x << " " << aPosition.y << " " << aPosition.z << " " << static_cast<int>(CU::Length(toTarget));
+		lengthToWaypoint << static_cast<int>(CU::Length(toTarget));
 	}
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toTarget) != 0)
@@ -284,7 +285,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	{
 		if (aCurrentModel == myWaypointMarker || aCurrentModel == myWaypointArrow)
 		{
-			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 64.f }, Prism::eTextType::RELEASE_TEXT);
+			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
 		if (aArrowModel == myEnemyArrow)
@@ -306,7 +307,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	float halfWidth = aWindowSize.x * 0.5f;
 	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
-	Prism::Engine::GetInstance()->PrintText(myConversation, { halfWidth, -halfHeight - 200.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myConversation, { 50.f, -50.f }, Prism::eTextType::RELEASE_TEXT);
 	myReticle->Render({ halfWidth, -halfHeight });
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
 	myCrosshair->Render({ halfWidth, -(halfHeight) });
@@ -412,6 +413,13 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	}
 
 	Prism::Engine::GetInstance()->PrintText(myWeapon, { 1400.f, -500.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
+		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
+	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("EMP ready. Shoot to release."
+			, { 100.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
+	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
@@ -474,10 +482,25 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 
 	if (aNote.myDuration > 0.f)
 	{
-		ActivePowerUp message;
-		message.myPowerUpCountDown = aNote.myDuration;
-		message.myPowerUpMessage = aNote.myIngameName + " is active: ";
-		myActivePowerUps.Add(message);
+		bool powerUpFound = false;
+		for (int i = 0; i < myActivePowerUps.Size(); ++i)
+		{
+			if (myActivePowerUps[i].myType == aNote.myType)
+			{
+				myActivePowerUps[i].myPowerUpCountDown += aNote.myDuration;
+				powerUpFound = true;
+				break;
+			}
+		}
+		if (powerUpFound == false)
+		{
+			ActivePowerUp message;
+			message.myPowerUpCountDown = aNote.myDuration;
+			message.myPowerUpMessage = aNote.myIngameName + " is active: ";
+			message.myType = aNote.myType;
+			myActivePowerUps.Add(message);
+		}
+
 	}
 }
 
@@ -485,15 +508,15 @@ void GUIComponent::ReceiveNote(const InputNote& aMessage)
 {
 	if (aMessage.myKey == 0)
 	{
-		myWeapon = "Machinegun";
+		myWeapon = "MG";
 	}
 	else if (aMessage.myKey == 1)
 	{
-		myWeapon = "Shotgun";
+		myWeapon = "SG";
 	}
 	else if (aMessage.myKey == 2)
 	{
-		myWeapon = "Rocket launcher";
+		myWeapon = "RL";
 	}
 }
 
@@ -561,7 +584,7 @@ void GUIComponent::Reset()
 
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
-	myWeapon = "Machinegun";
+	myWeapon = "MG";
 
 	myActivePowerUps.RemoveAll();
 }

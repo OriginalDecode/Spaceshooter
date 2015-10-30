@@ -31,6 +31,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myCameraIsLocked = false;
 	myBoost = false;
 	myCanMove = true;
+	myCanChangeWeapon = true;
 	myWeaponRotationModifier = 0.f;
 	myCurrentBoostCooldown = 0.f;
 	myCurrentBoostValue = 0.f;
@@ -49,18 +50,22 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myCanMove == true)
 	{
-		if (myInputWrapper->KeyIsPressed(DIK_1))
+		if (myCanChangeWeapon == true)
 		{
-			myEntity.SendNote(InputNote(0));
+			if (myInputWrapper->KeyIsPressed(DIK_1))
+			{
+				myEntity.SendNote(InputNote(0));
+			}
+			if (myInputWrapper->KeyIsPressed(DIK_2))
+			{
+				myEntity.SendNote(InputNote(1));
+			}
+			if (myInputWrapper->KeyIsPressed(DIK_3))
+			{
+				myEntity.SendNote(InputNote(2));
+			}
 		}
-		if (myInputWrapper->KeyIsPressed(DIK_2))
-		{
-			myEntity.SendNote(InputNote(1));
-		}
-		if (myInputWrapper->KeyIsPressed(DIK_3))
-		{
-			myEntity.SendNote(InputNote(2));
-		}
+		
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
 			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), myEntity.myOrientation.GetForward()
@@ -208,6 +213,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	if (myInputWrapper->KeyIsPressed(DIK_S))
 	{
 		acceleration -= myAcceleration * aDelta;
+		myCurrentBoostValue = 0;
 	}
 
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE))
@@ -241,7 +247,21 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		}
 	}
 
+	Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CurrentBoost: %f", myCurrentBoostValue), { 600.f, -600.f }, Prism::eTextType::DEBUG_TEXT);
 	acceleration += myCurrentBoostValue * aDelta;
+
+	if (myEntity.GetComponent<PhysicsComponent>()->GetSpeed() > myMaxMovementSpeed + myMaxBoostValue)
+	{
+		acceleration = fminf(acceleration, 0.f);
+	}
+
+	if (myEntity.GetComponent<PhysicsComponent>()->GetSpeed() < myMinMovementSpeed)
+	{
+		acceleration = fmax(acceleration, 0.f);
+	}
+	
+
+	Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Acceleration: %f", acceleration), { 600.f, -640.f }, Prism::eTextType::DEBUG_TEXT);
 	
 	myEntity.GetComponent<PhysicsComponent>()->Accelerate(acceleration);
 

@@ -188,9 +188,10 @@
     <ClCompile Include="PointLightComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
-    <ClCompile Include="EmitterMessage.cpp">
+    <ClCompile Include="DestroyEmitterMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="PowerUpGUIIcon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -434,12 +435,13 @@
     <ClInclude Include="PointLightComponent.h">
       <Filter>Components</Filter>
     </ClInclude>
-    <ClInclude Include="EmitterMessage.h">
-      <Filter>PostMaster\Messages</Filter>
-    </ClInclude>
     <ClInclude Include="EmitterNote.h">
       <Filter>Components\Notes</Filter>
     </ClInclude>
+    <ClInclude Include="DestroyEmitterMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerUpGUIIcon.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
