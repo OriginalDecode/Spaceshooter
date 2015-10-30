@@ -248,11 +248,8 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	}
 
 	newEntity->myOrientation.SetPos(aMessage.myPosition);
-
-
-	newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundX(aMessage.myRotation.x) * newEntity->myOrientation;
-	newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundY(aMessage.myRotation.y) * newEntity->myOrientation;
-	newEntity->myOrientation = newEntity->myOrientation.CreateRotateAroundZ(aMessage.myRotation.z) * newEntity->myOrientation;
+	
+	newEntity->myOrientation = CU::GetOrientation(newEntity->myOrientation, aMessage.myRotation);
 
 	newEntity->GetComponent<GraphicsComponent>()->SetScale(aMessage.myScale);
 
