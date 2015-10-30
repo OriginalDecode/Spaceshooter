@@ -39,7 +39,6 @@
             this.BackgroundColorDialog = new System.Windows.Forms.ColorDialog();
             this.DataFolderBrowser = new System.Windows.Forms.FolderBrowserDialog();
             this.Menu_Panel.SuspendLayout();
-            this.ModelViewerMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // Menu_Panel
@@ -105,8 +104,6 @@
             this.Name = "ModelViewerWindow";
             this.Text = "Prism Model Viewer";
             this.Menu_Panel.ResumeLayout(false);
-            this.ModelViewerMenu.ResumeLayout(false);
-            this.ModelViewerMenu.PerformLayout();
             this.ResumeLayout(false);
 
         }

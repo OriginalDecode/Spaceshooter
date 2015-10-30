@@ -26,3 +26,6 @@ extern "C" DLLExport void RotateObjectAtZ(float aSpeed);
 extern "C" DLLExport void SetRotateObjectAtX(float aAngle);
 extern "C" DLLExport void SetRotateObjectAtY(float aAngle);
 extern "C" DLLExport void SetRotateObjectAtZ(float aAngle);
+
+extern "C" DLLExport void SetMouseSensitivty(float aValue);
+extern "C" DLLExport float GetMouseSensitivty();

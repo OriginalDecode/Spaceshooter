@@ -79,6 +79,6 @@ void EmitterComponent::ReceiveNote(const EmitterNote& aNote)
 {
 	if (aNote.myType == EmitterNote::eType::BULLET)
 	{
-		myEmitter->ToggleActive();
+		myEmitter->ToggleActive(aNote.myIsActive);
 	}
 }

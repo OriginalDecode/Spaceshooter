@@ -18,6 +18,8 @@ namespace CSharpUtilities.Components
         private int myMinValue;
         private int myStartValue;
 
+        private Vector2<float> myDownScaleValue;
+
         private int myCurrentValue;
         private float myCurrentFloatValue;
 
@@ -27,10 +29,14 @@ namespace CSharpUtilities.Components
         private bool myOneToOneScaleFlag = false;
 
         public SliderComponent(Point aLocation, Size aSize, string aText, 
-            float aMinValue, float aMaxValue, float aStartValue, bool aOneToOneFlag = false)
+            float aMinValue, float aMaxValue, float aStartValue, bool aOneToOneFlag = false, 
+            float aDownScaleMinValue = -1.0f, float aDownScaleMaxValue = 1.0f)
             : base(aLocation, aSize, aText)
         {
             myOneToOneScaleFlag = aOneToOneFlag;
+
+            myDownScaleValue.myX = aDownScaleMinValue;
+            myDownScaleValue.myY = aDownScaleMaxValue;
 
             myMaxValue = (int)aMaxValue;
             myMinValue = (int)aMinValue;
@@ -47,7 +53,8 @@ namespace CSharpUtilities.Components
             myScrollBar.LargeChange = 1;
             myScrollBar.TabIndex = 1;
 
-            myCurrentFloatValue = CSharpUtilities.MathUtilities.Remap(myCurrentValue, myMinValue, myMaxValue, -1.0f, 1.0f);
+            myCurrentFloatValue = CSharpUtilities.MathUtilities.Remap(myCurrentValue, myMinValue, myMaxValue, 
+                myDownScaleValue.myX, myDownScaleValue.myY);
             float truncatedValue = (float)(Math.Truncate((double)myCurrentFloatValue * 100.0) / 100.0);
             myCurrentFloatValue = truncatedValue;
 
@@ -67,7 +74,7 @@ namespace CSharpUtilities.Components
         {
             myText = aText;
             int textSize = (aText.Length + 3) * 10;
-            if(textSize > mySize.Width) textSize = mySize.Width;
+            if(textSize > mySize.Width/2) textSize = mySize.Width/2;
             myLabel.Text = aText;
             myLabel.Location = new Point(myLocation.X, myLocation.Y);
             myLabel.Size = new Size(textSize, mySize.Height);
@@ -103,7 +110,8 @@ namespace CSharpUtilities.Components
         private void ScrollValue_Changed(object sender, EventArgs e)
         {
             myCurrentValue = myScrollBar.Value;
-            myCurrentFloatValue = CSharpUtilities.MathUtilities.Remap(myCurrentValue, myMinValue, myMaxValue, -1.0f, 1.0f);
+            myCurrentFloatValue = CSharpUtilities.MathUtilities.Remap(myCurrentValue, myMinValue, myMaxValue, 
+                myDownScaleValue.myX, myDownScaleValue.myY);
             float truncatedValue = (float)(Math.Truncate((double)myCurrentFloatValue * 100.0) / 100.0);
             myCurrentFloatValue = truncatedValue;
             if (myOneToOneScaleFlag == false)
@@ -131,7 +139,9 @@ namespace CSharpUtilities.Components
         {
             myCurrentFloatValue = aValue;
             myCurrentValue = (int)(aValue * myMaxValue);
+            if (myCurrentValue > myMaxValue) myCurrentValue = myMaxValue;
             if (aValue < 0) myCurrentValue = (int)(aValue * myMinValue);
+            if (myCurrentValue < myMinValue) myCurrentValue = myMinValue;
             myScrollBar.Value = myCurrentValue;
         } 
     }

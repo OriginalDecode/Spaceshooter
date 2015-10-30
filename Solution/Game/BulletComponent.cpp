@@ -81,10 +81,10 @@ void BulletComponent::SetActive(bool aActive)
 {
 	myActive = aActive;
 	
-	myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET));
 
 	if (myActive == true)
 	{
+		myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET, true));
 		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)
 		{
 			if (myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
@@ -116,7 +116,7 @@ void BulletComponent::SetActive(bool aActive)
 	{
 		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Rocket", myEntity.GetAudioSFXID());
 		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::STOP, "Stop_Missiles"));
-		
+		myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET, false));
 		if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
 			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
 			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)

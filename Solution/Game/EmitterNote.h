@@ -8,8 +8,11 @@ struct EmitterNote
 	};
 
 	EmitterNote(eType aType);
+	EmitterNote(eType aType, bool aIsActive);
+
 	
 	eType myType;
+	bool myIsActive;
 
 private:
 
@@ -19,5 +22,11 @@ private:
 
 inline EmitterNote::EmitterNote(eType aType)
 	: myType(aType)
+{
+}
+
+inline EmitterNote::EmitterNote(eType aType, bool aIsActive)
+: myType(aType)
+, myIsActive(aIsActive)
 {
 }

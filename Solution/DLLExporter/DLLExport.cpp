@@ -41,6 +41,7 @@ CU::Matrix44f locPlayerPos;
 CU::Matrix44f locStaticRotation;
 CU::InputWrapper locInput;
 float locDeltaTime = 0;
+float locMouseSensitivty = 0.1f;
 
 CU::Vector3f locAutoRotationSpeed;
 
@@ -185,20 +186,61 @@ void SetRotateObjectAtZ(float aAngle)
 	locObjectEntity->myOrientation.SetPos(orginalPos);
 }
 
+void SetMouseSensitivty(float aValue)
+{
+	locMouseSensitivty = aValue;
+}
+
+float GetMouseSensitivty()
+{
+	return locMouseSensitivty;
+}
+
 void Update()
 {
 	CU::TimerManager::GetInstance()->Update();
 	float locDeltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 	locInput.Update();
-	if (locInput.KeyIsPressed(DIK_ADD) || locInput.GetMouseDZ() < 0)
-	{
-		locCamera->MoveForward(10.f * locDeltaTime);
+	if (GetActiveWindow()) {
+		if (locInput.KeyIsPressed(DIK_LALT) && locInput.MouseIsPressed(0))
+		{
+			if (locInput.GetMouseDY() < locMouseSensitivty || locInput.GetMouseDY() > locMouseSensitivty)
+			{
+				locCamera->MoveForward(locInput.GetMouseDY() * 10.f * locDeltaTime);
+			}
+			if (locInput.GetMouseDX() < locMouseSensitivty || locInput.GetMouseDX() > locMouseSensitivty)
+			{
+				locCamera->MoveForward(locInput.GetMouseDX() * 10.f * locDeltaTime);
+			}
+		}
+		if (locInput.KeyIsPressed(DIK_LALT) && locInput.MouseIsPressed(2))
+		{
+			if (locInput.GetMouseDX() < locMouseSensitivty || locInput.GetMouseDX() > locMouseSensitivty)
+			{
+				locCamera->MoveRight(locInput.GetMouseDX() * 10.f * locDeltaTime);
+			}
+			if (locInput.GetMouseDY() < locMouseSensitivty || locInput.GetMouseDY() > locMouseSensitivty)
+			{
+				locCamera->MoveUp(locInput.GetMouseDY() * 10.f * locDeltaTime);
+			}
+		}
+		if (locInput.KeyIsPressed(DIK_LALT) && locInput.MouseIsPressed(1))
+		{
+			CU::Matrix44f rotationAroundObject;
+			if (locInput.GetMouseDY() < locMouseSensitivty || locInput.GetMouseDY() > locMouseSensitivty)
+			{
+				rotationAroundObject = locCamera->GetOrientation() * CU::Matrix44f::CreateRotateAroundX(locInput.GetMouseDY()
+					* 1.f * locDeltaTime);
+				locCamera->SetOrientation(rotationAroundObject);
+			}
+			if (locInput.GetMouseDX() < locMouseSensitivty || locInput.GetMouseDX() > locMouseSensitivty)
+			{
+				rotationAroundObject = locCamera->GetOrientation() * CU::Matrix44f::CreateRotateAroundY(locInput.GetMouseDX()
+					* 1.f * locDeltaTime);
+				locCamera->SetOrientation(rotationAroundObject);
+			}
+		}
 	}
-	if (locInput.KeyIsPressed(DIK_SUBTRACT) || locInput.GetMouseDZ() > 0)
-	{
-		locCamera->MoveForward(-10.f * locDeltaTime);
-	}
-
 	RotateObjectAtX(locAutoRotationSpeed.myX, locDeltaTime);
 	RotateObjectAtY(locAutoRotationSpeed.myY, locDeltaTime);
 	RotateObjectAtZ(locAutoRotationSpeed.myZ, locDeltaTime);
@@ -298,17 +340,17 @@ void DirectionaLightRotateZ(float aZAngle)
 
 float GetDirectionaLightXRotation()
 {
-	return locDirectionLight->GetCurrentDir().myX;
+	return locDirectionLight->GetDir().myX;
 }
 
 float GetDirectionaLightYRotation()
 {
-	return locDirectionLight->GetCurrentDir().myY;
+	return locDirectionLight->GetDir().myY;
 }
 
 float GetDirectionaLightZRotation()
 {
-	return locDirectionLight->GetCurrentDir().myZ;
+	return locDirectionLight->GetDir().myZ;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

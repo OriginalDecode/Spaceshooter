@@ -70,5 +70,11 @@ namespace CSharpUtilities.DLLImporter
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void SetRotateObjectAtZ(float aAngle);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetMouseSensitivty(float aValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetMouseSensitivty();
     }
 }

@@ -124,6 +124,11 @@ namespace Prism
 		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetRight() * aDistance);
 	}
 
+	void Camera::MoveUp(const float aDistance)
+	{
+		myOrientation.SetPos(myOrientation.GetPos() + myOrientation.GetUp() * aDistance);
+	}
+
 	void Camera::ShakeCamera(float aRotationRate, float aMaxRotation, float aTime)
 	{
 		if (myShakeCamera == false)
