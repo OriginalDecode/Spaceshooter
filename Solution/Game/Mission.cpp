@@ -60,6 +60,6 @@ void Mission::PrintMissionText(const std::string& aText, int aMissionIndex)
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
 
-	engine->PrintText(aText, { screenCenter.x * 0.20f, -screenCenter.y * 1.2f - aMissionIndex * 25.f }
+	engine->PrintText(aText, { screenCenter.x * 0.15f, -screenCenter.y * 1.2f - aMissionIndex * 25.f }
 		, Prism::eTextType::RELEASE_TEXT);
 }

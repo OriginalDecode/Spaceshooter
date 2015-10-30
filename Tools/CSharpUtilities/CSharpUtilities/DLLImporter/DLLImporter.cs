@@ -30,9 +30,6 @@ namespace CSharpUtilities.DLLImporter
         public extern static unsafe void LoadModel(string aModelFile, string aEffectFile);
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
-        public extern static unsafe void SetEffect(string aEffectFile);
-
-        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel);
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
@@ -76,5 +73,23 @@ namespace CSharpUtilities.DLLImporter
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe float GetMouseSensitivty();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetCameraZoomSpeed(float aValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetCameraZoomSpeed();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetCameraMovementSpeed(float aValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetCameraMovementSpeed();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetCameraRotationSpeed(float aValue);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe float GetCameraRotationSpeed();
     }
 }
