@@ -1,106 +1,19 @@
 #pragma warning(disable : 4005)
 
+#include "DLLApp.h"
 #include "DLLExport.h"
 #include <Engine.h>
-#include <Windows.h>
-#include <SetupInfo.h>
-#include <DL_Debug.h>
-#include <EngineEnums.h>
-#include <Entity.h>
 #include <FileWatcher.h>
-#include <InputComponent.h>
-#include <GraphicsComponent.h>
-#include <Game.h>
-#include <TimerManager.h>
-#include <Scene.h>
-#include <Instance.h>
-#include <Model.h>
-#include <ModelLoader.h>
-#include <ModelProxy.h>
-#include <EffectContainer.h>
-#include <Camera.h>
-#include <DirectionalLight.h>
-#include <TimerManager.h>
-#include <InputWrapper.h>
-#include <PostMaster.h>
-#include <AudioInterface.h>
-
-#include <sstream>
+#include <SetupInfo.h>
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-HWND locEngineWindowHandler;
-HWND locPanelWindowHandler;
+
+DLLApp* locDLLApplication;
 Prism::SetupInfo locWindowSetup;
-Prism::Scene* locScene;
-Prism::Model* locModel;
-Prism::ModelProxy* locModelProxy;
-Prism::Instance* locInstance;
-Prism::Camera* locCamera;
-Prism::DirectionalLight* locDirectionLight;
-CU::Matrix44f locPlayerPos;
-CU::Matrix44f locStaticRotation;
-CU::InputWrapper locInput;
-float locDeltaTime = 0;
-float locMouseSensitivty = 0.1f;
-
-CU::Vector3f locAutoRotationSpeed;
-
-std::string locCurrentModelFile;
-std::string locCurrentEffectFile;
-
-Entity* locObjectEntity;
-Entity* locCameraEntity;
 
 void StartEngine(int* aHwnd)
 {
-	DL_Debug::Debug::Create();
-	CU::TimerManager::Create();
-
-	PostMaster::Create();
-	Prism::Audio::AudioInterface::CreateInstance();
-
-	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Resource/Sound/Init.bnk");
-	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Resource/Sound/SpaceShooterBank.bnk");
-
-	locScene = new Prism::Scene();
-	locPanelWindowHandler = (HWND)aHwnd;
-	DL_DEBUG("WindowHandler Set");
-	Prism::Engine::Create(locEngineWindowHandler, WndProc, locWindowSetup);
-	DL_DEBUG("Engine Created");
-	locDirectionLight = new Prism::DirectionalLight();
-	locDirectionLight->SetDir({ 0.f, 0.5f, -1.f });
-	locDirectionLight->SetColor({ 0.7f, 0.7f, 0.7f, 1.f });
-	DL_DEBUG("Direction light created");
-	locScene->AddLight(locDirectionLight);
-	DL_DEBUG("Direction light Set");
-	locInput.Init(locPanelWindowHandler, GetModuleHandle(NULL),
-		DISCL_NONEXCLUSIVE | DISCL_FOREGROUND, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
-	DL_DEBUG("Input Set");
-	SetParent(locEngineWindowHandler, locPanelWindowHandler);
-	SetWindowLong(locEngineWindowHandler, GWL_STYLE, WS_POPUP);
-	SetWindowPos(locEngineWindowHandler, HWND_TOP, 0, 0, locWindowSetup.myScreenWidth,
-		locWindowSetup.myScreenHeight, SWP_SHOWWINDOW);
-	DL_DEBUG("Window Resize to Panel");
-	Prism::Engine::GetInstance()->GetEffectContainer()->SetCubeMap("Data/Resource/Texture/CubeMap/T_cubemap_test.dds");
-	Prism::Engine::GetInstance()->SetClearColor({ 0.3f, 0.3f, 0.3f, 1.f });
-	DL_DEBUG("Cubemap and clear color Set");
-	std::stringstream ss;
-	ss << "Scene address: " << locScene << "\nWindow Handler address: " << &locPanelWindowHandler << "\nEngine Handler adress: " << &locEngineWindowHandler;
-	DL_DEBUG(ss.str().c_str());
-	DL_DEBUG(ss.str().c_str());
-	locObjectEntity = new Entity(eEntityType::PROP, *locScene, Prism::eOctreeType::DYNAMIC);
-	DL_DEBUG("Entity Created");
-	locObjectEntity->AddComponent<InputComponent>()->Init(locInput);
-	DL_DEBUG("Entity Input Set");
-	locCameraEntity = new Entity(eEntityType::PLAYER, *locScene, Prism::eOctreeType::DYNAMIC);
-	locCamera = new Prism::Camera(locCameraEntity->myOrientation);
-	DL_DEBUG("Camera Created");
-	locScene->SetCamera(locCamera);
-	DL_DEBUG("Camera Set");
-	locCamera->OnResize(locWindowSetup.myScreenWidth, locWindowSetup.myScreenHeight);
-	DL_DEBUG("Camera Resize");
-	locCameraEntity->AddComponent<InputComponent>()->Init(locInput);
-	DL_DEBUG("Camera Input Set");
+	locDLLApplication = new DLLApp(aHwnd, locWindowSetup, WndProc);
 }
 
 void SetupWindow(int aWidth, int aHeight)
@@ -113,244 +26,145 @@ void SetupWindow(int aWidth, int aHeight)
 
 void Render()
 {
-	Prism::Engine::GetInstance()->Render();
-	locScene->Render();
-}
-
-void RotateObjectAtY(float aSpeed, float deltaTime)
-{
-	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	locObjectEntity->GetComponent<InputComponent>()->RotateY(aSpeed * deltaTime);
-	locObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void RotateObjectAtX(float aSpeed, float deltaTime)
-{
-	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	locObjectEntity->GetComponent<InputComponent>()->RotateX(aSpeed * deltaTime);
-	locObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void RotateObjectAtZ(float aSpeed, float deltaTime)
-{
-	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	locObjectEntity->GetComponent<InputComponent>()->RotateZ(aSpeed * deltaTime);
-	locObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void RotateObjectAtY(float aSpeed)
-{
-	locAutoRotationSpeed.myY = aSpeed;
-}
-
-void RotateObjectAtX(float aSpeed)
-{
-	locAutoRotationSpeed.myX = aSpeed;
-}
-
-void RotateObjectAtZ(float aSpeed)
-{
-	locAutoRotationSpeed.myZ = aSpeed;
-}
-
-void SetRotateObjectAtY(float aAngle)
-{
-	locAutoRotationSpeed = { 0, 0, 0 };
-	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	locStaticRotation = CU::Matrix44f::CreateRotateAroundY(aAngle / (3.14f * 180));
-	locObjectEntity->GetComponent<InputComponent>()->SetRotation(locObjectEntity->myOrientation * locStaticRotation);
-	locObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void SetRotateObjectAtX(float aAngle)
-{
-	locAutoRotationSpeed = { 0, 0, 0 };
-	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	locStaticRotation = CU::Matrix44f::CreateRotateAroundX(aAngle / (3.14f * 180));
-	locObjectEntity->GetComponent<InputComponent>()->SetRotation(locObjectEntity->myOrientation * locStaticRotation);
-	locObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void SetRotateObjectAtZ(float aAngle)
-{
-	locAutoRotationSpeed = { 0, 0, 0 };
-	CU::Vector3f orginalPos(locObjectEntity->myOrientation.GetPos());
-	locObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	locStaticRotation = CU::Matrix44f::CreateRotateAroundZ(aAngle / (3.14f * 180));
-	locObjectEntity->GetComponent<InputComponent>()->SetRotation(locObjectEntity->myOrientation * locStaticRotation);
-	locObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void SetMouseSensitivty(float aValue)
-{
-	locMouseSensitivty = aValue;
-}
-
-float GetMouseSensitivty()
-{
-	return locMouseSensitivty;
+	locDLLApplication->Render();
 }
 
 void Update()
 {
-	CU::TimerManager::GetInstance()->Update();
-	float locDeltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-	locInput.Update();
-	if (GetActiveWindow()) {
-		if (locInput.KeyIsPressed(DIK_LALT) && locInput.MouseIsPressed(0))
-		{
-			if (locInput.GetMouseDY() < locMouseSensitivty || locInput.GetMouseDY() > locMouseSensitivty)
-			{
-				locCamera->MoveForward(locInput.GetMouseDY() * 10.f * locDeltaTime);
-			}
-			if (locInput.GetMouseDX() < locMouseSensitivty || locInput.GetMouseDX() > locMouseSensitivty)
-			{
-				locCamera->MoveForward(locInput.GetMouseDX() * 10.f * locDeltaTime);
-			}
-		}
-		if (locInput.KeyIsPressed(DIK_LALT) && locInput.MouseIsPressed(2))
-		{
-			if (locInput.GetMouseDX() < locMouseSensitivty || locInput.GetMouseDX() > locMouseSensitivty)
-			{
-				locCamera->MoveRight(locInput.GetMouseDX() * 10.f * locDeltaTime);
-			}
-			if (locInput.GetMouseDY() < locMouseSensitivty || locInput.GetMouseDY() > locMouseSensitivty)
-			{
-				locCamera->MoveUp(locInput.GetMouseDY() * 10.f * locDeltaTime);
-			}
-		}
-		if (locInput.KeyIsPressed(DIK_LALT) && locInput.MouseIsPressed(1))
-		{
-			CU::Matrix44f rotationAroundObject;
-			if (locInput.GetMouseDY() < locMouseSensitivty || locInput.GetMouseDY() > locMouseSensitivty)
-			{
-				rotationAroundObject = locCamera->GetOrientation() * CU::Matrix44f::CreateRotateAroundX(locInput.GetMouseDY()
-					* 1.f * locDeltaTime);
-				locCamera->SetOrientation(rotationAroundObject);
-			}
-			if (locInput.GetMouseDX() < locMouseSensitivty || locInput.GetMouseDX() > locMouseSensitivty)
-			{
-				rotationAroundObject = locCamera->GetOrientation() * CU::Matrix44f::CreateRotateAroundY(locInput.GetMouseDX()
-					* 1.f * locDeltaTime);
-				locCamera->SetOrientation(rotationAroundObject);
-			}
-		}
-	}
-	RotateObjectAtX(locAutoRotationSpeed.myX, locDeltaTime);
-	RotateObjectAtY(locAutoRotationSpeed.myY, locDeltaTime);
-	RotateObjectAtZ(locAutoRotationSpeed.myZ, locDeltaTime);
+	locDLLApplication->Update();
 }
 
-void UpdateFilewatcher() 
+void UpdateFilewatcher()
 {
 	Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 }
 
-void ReloadModel() 
+void RotateObjectAtX(float aSpeed)
 {
-	DL_DEBUG("Reload start!");
-
-	LoadModel(locCurrentModelFile.c_str(), locCurrentEffectFile.c_str());
-	std::stringstream watchMsg;
-	watchMsg << "[FileWatcher]: Reload " << locCurrentModelFile << " and " << locCurrentEffectFile;
-	DL_DEBUG(watchMsg.str().c_str());
+	CU::Vector3f rotationSpeed(locDLLApplication->GetAutoRotationSpeed());
+	rotationSpeed.myX = aSpeed;
+	locDLLApplication->SetAutoRotationSpeed(rotationSpeed);
 }
 
-void WatchCurrentFiles(const char* aModelFile, const char* aEffectFile)
+void RotateObjectAtY(float aSpeed)
 {
-	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
-	Prism::Engine::GetInstance()->GetFileWatcher()->WatchFile(aModelFile, ReloadModel);
-
-	locCurrentModelFile = aModelFile;
-	locCurrentEffectFile = aEffectFile;
-
-	std::stringstream watchMsg;
-	watchMsg <<"[FileWatcher]: Watch " << aModelFile << " and " << aEffectFile;
-	DL_DEBUG(watchMsg.str().c_str());
+	CU::Vector3f rotationSpeed(locDLLApplication->GetAutoRotationSpeed());
+	rotationSpeed.myY = aSpeed;
+	locDLLApplication->SetAutoRotationSpeed(rotationSpeed);
 }
 
-void LoadModel(const char* aModelFile, const char* aEffectFile)
+void RotateObjectAtZ(float aSpeed)
 {
-
-	if (aEffectFile == "")
-	{
-		aEffectFile = "Data/Resource/Shader/S_effect_basic.fx";
-	}
-	
-	WatchCurrentFiles(aModelFile, aEffectFile);
-	CU::Matrix44f currentOrientation = locObjectEntity->myOrientation;
-	delete locObjectEntity;
-
-	locObjectEntity = new Entity(eEntityType::PROP, *locScene, Prism::eOctreeType::DYNAMIC);
-	locObjectEntity->AddComponent<InputComponent>()->Init(locInput);
-
-	locObjectEntity->AddComponent<GraphicsComponent>()->InitDLL(aModelFile, aEffectFile);
-	locObjectEntity->myOrientation = currentOrientation;
-	GraphicsComponent* gfxComponent = locObjectEntity->GetComponent<GraphicsComponent>();
-	gfxComponent->GetInstance()->SetEffect(aEffectFile);
-
-	locInstance = gfxComponent->GetInstance();
-
-	locScene->AddInstance(locInstance);
+	CU::Vector3f rotationSpeed(locDLLApplication->GetAutoRotationSpeed());
+	rotationSpeed.myZ = aSpeed;
+	locDLLApplication->SetAutoRotationSpeed(rotationSpeed);
 }
 
-void SetEffect(const char* aEffectFile)
+void SetRotateObjectAtX(float aAngle)
 {
-	if (locInstance != nullptr)
-	{
-		std::stringstream ss; ss << "Shader: " << aEffectFile;
-		DL_DEBUG(ss.str().c_str());
-		/*locInstance->SetEffect(aEffectFile);*/
-	}
+	CU::Vector3f rotationAngle(locDLLApplication->GetManualRotationAngle());
+	rotationAngle.myX = aAngle;
+	locDLLApplication->SetManualRotationAngle(rotationAngle);
 }
 
-void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel)
+void SetRotateObjectAtY(float aAngle)
 {
-	Prism::Engine::GetInstance()->SetClearColor({ aRChannel, aGChannel, aBChannel, aAChannel });
-	std::stringstream ss;
-	ss << "R: " << aRChannel << ", G: " << aGChannel << ", B: " << aBChannel << ", A: " << aAChannel;
-	DL_DEBUG(ss.str().c_str());
+	CU::Vector3f rotationAngle(locDLLApplication->GetManualRotationAngle());
+	rotationAngle.myY = aAngle;
+	locDLLApplication->SetManualRotationAngle(rotationAngle);
 }
 
-void DirectionaLightRotateX(float aXAngle)
+void SetRotateObjectAtZ(float aAngle)
 {
-	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
-	rotatedDirection.myX = aXAngle;
-	locDirectionLight->SetDir(rotatedDirection);
+	CU::Vector3f rotationAngle(locDLLApplication->GetManualRotationAngle());
+	rotationAngle.myZ = aAngle;
+	locDLLApplication->SetManualRotationAngle(rotationAngle);
 }
 
-void DirectionaLightRotateY(float aYAngle)
+void SetMouseSensitivty(float aValue)
 {
-	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
-	rotatedDirection.myY = aYAngle;
-	locDirectionLight->SetDir(rotatedDirection);
+	locDLLApplication->SetMouseSensitivty(aValue);
 }
 
-void DirectionaLightRotateZ(float aZAngle)
+float GetMouseSensitivty()
 {
-	CU::Vector3<float> rotatedDirection(locDirectionLight->GetDir());
-	rotatedDirection.myZ = aZAngle;
-	locDirectionLight->SetDir(rotatedDirection);
+	return locDLLApplication->GetMouseSensitivty();
+}
+
+void SetCameraZoomSpeed(float aValue)
+{
+	locDLLApplication->SetCameraZoomSpeed(aValue);
+}
+
+float GetCameraZoomSpeed()
+{
+	return locDLLApplication->GetCameraZoomSpeed();
+}
+
+void SetCameraMovementSpeed(float aValue)
+{
+	locDLLApplication->SetCameraMovementSpeed(aValue);
+}
+
+float GetCameraMovementSpeed()
+{
+	return locDLLApplication->GetCameraMovementSpeed();
+}
+
+void SetCameraRotationSpeed(float aValue)
+{
+	locDLLApplication->SetCameraRotationSpeed(aValue);
+}
+
+float GetCameraRotationSpeed()
+{
+	return locDLLApplication->GetCameraRotationSpeed();
+}
+
+void DirectionaLightRotateX(float aAngle)
+{
+	CU::Vector3<float> rotatedDirection(locDLLApplication->GetDirectionalLightRotation());
+	rotatedDirection.myX = aAngle;
+	locDLLApplication->SetDirectionalLightRotation(rotatedDirection);
+}
+
+void DirectionaLightRotateY(float aAngle)
+{
+	CU::Vector3<float> rotatedDirection(locDLLApplication->GetDirectionalLightRotation());
+	rotatedDirection.myY = aAngle;
+	locDLLApplication->SetDirectionalLightRotation(rotatedDirection);
+}
+
+void DirectionaLightRotateZ(float aAngle)
+{
+	CU::Vector3<float> rotatedDirection(locDLLApplication->GetDirectionalLightRotation());
+	rotatedDirection.myZ = aAngle;
+	locDLLApplication->SetDirectionalLightRotation(rotatedDirection);
 }
 
 float GetDirectionaLightXRotation()
 {
-	return locDirectionLight->GetDir().myX;
+	return locDLLApplication->GetDirectionalLightRotation().myX;
 }
 
 float GetDirectionaLightYRotation()
 {
-	return locDirectionLight->GetDir().myY;
+	return locDLLApplication->GetDirectionalLightRotation().myY;
 }
 
 float GetDirectionaLightZRotation()
 {
-	return locDirectionLight->GetDir().myZ;
+	return locDLLApplication->GetDirectionalLightRotation().myZ;
+}
+
+void LoadModel(const char* aModelFile, const char* aShaderFile)
+{
+	locDLLApplication->LoadModel(aModelFile, aShaderFile);
+}
+
+void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel)
+{
+	locDLLApplication->SetClearColor(CU::Vector4f(aRChannel, aGChannel, aBChannel, aAChannel));
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

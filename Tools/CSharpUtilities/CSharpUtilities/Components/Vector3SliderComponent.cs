@@ -17,10 +17,13 @@ namespace CSharpUtilities.Components
         private SliderComponent myZSlider;
 
         public Vector3SliderComponent(Point aLocation, Size aSize, string aText, 
-            float aMinValue, float aMaxValue, float aStartValue, bool aOneToOneScaleFlag = false)
+            float aMinValue, float aMaxValue, float aStartValue, bool aOneToOneScaleFlag = false, 
+            string aXText = "X: ", string aYText ="Y: ", string aZText = "Z: ", 
+            float aDownScaleMinValue = -1.0f, float aDownScaleMaxValue = 1.0f)
             : base(aLocation, aSize, aText)
         {
-            InitializeComponents(aText, aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag);
+            InitializeComponents(aText, aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag, 
+                aXText, aYText, aZText, aDownScaleMinValue, aDownScaleMaxValue);
         }
 
         protected override void InitializeComponents(string aText)
@@ -32,14 +35,19 @@ namespace CSharpUtilities.Components
             myLabel.Size = new Size(textSize, 13);
         }
 
-        protected void InitializeComponents(string aText, float aMinValue, float aMaxValue, float aStartValue, bool aOneToOneScaleFlag)
+        protected void InitializeComponents(string aText, float aMinValue, float aMaxValue, float aStartValue,
+            bool aOneToOneScaleFlag, string aXText, string aYText, string aZText, 
+            float aDownScaleMinValue, float aDownScaleMaxValue)
         {
             myXSlider = new SliderComponent(new Point(myLocation.X, myLocation.Y + 15),
-                new Size(175, 13), "X: ", aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag);
+                new Size(175, 13), aXText, aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag, 
+                aDownScaleMinValue, aDownScaleMaxValue);
             myYSlider = new SliderComponent(new Point(myLocation.X, myLocation.Y + 30),
-                new Size(175, 13), "Y: ", aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag);
+                new Size(175, 13), aYText, aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag, 
+                aDownScaleMinValue, aDownScaleMaxValue);
             myZSlider = new SliderComponent(new Point(myLocation.X, myLocation.Y + 45),
-                new Size(175, 13), "Z: ", aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag);
+                new Size(175, 13), aZText, aMinValue, aMaxValue, aStartValue, aOneToOneScaleFlag, 
+                aDownScaleMinValue, aDownScaleMaxValue);
         }
 
         public void AddSelectedValueChangedEvent(EventHandler aEvent)
