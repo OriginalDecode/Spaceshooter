@@ -415,6 +415,11 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	Prism::Engine::GetInstance()->PrintText(myWeapon, { 1400.f, -500.f }, Prism::eTextType::RELEASE_TEXT);
 	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
 		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
+	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("EMP ready. Shoot to release."
+			, { 100.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
+	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
