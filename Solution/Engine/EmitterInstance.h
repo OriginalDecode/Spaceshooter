@@ -17,6 +17,7 @@ namespace Prism
 		void Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
 		bool GetIsActive();
 		void ToggleActive();
+		void ToggleActive(bool aIsActive);
 	private:
 
 		void CreateVertexBuffer();

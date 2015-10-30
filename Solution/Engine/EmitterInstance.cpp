@@ -87,6 +87,11 @@ namespace Prism
 		myIsActive = !myIsActive;
 	}
 
+	void EmitterInstance::ToggleActive(bool aIsActive)
+	{
+		myIsActive = aIsActive;
+	}
+
 	void EmitterInstance::CreateVertexBuffer()
 	{
 
