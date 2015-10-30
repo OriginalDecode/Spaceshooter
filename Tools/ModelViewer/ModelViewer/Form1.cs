@@ -35,10 +35,9 @@ namespace ModelViewer
         private CSharpUtilities.Components.Vector3SliderComponent myDirectionalLightRotation;
         private CSharpUtilities.Components.Vector3SliderComponent myObjectManualRotation;
         private CSharpUtilities.Components.Vector3SliderComponent myObjectAutoRotation;
+        private CSharpUtilities.Components.Vector3SliderComponent myCameraSettingsSliders;
 
         private CSharpUtilities.Components.SliderComponent myMouseSensitivitySlider;
-
-        private bool myHasFocus = true;
 
         public ModelViewerWindow()
         {
@@ -85,7 +84,6 @@ namespace ModelViewer
             myDirectionalLightRotation.SetYValue(CSharpUtilities.DLLImporter.NativeMethods.GetDirectionaLightYRotation());
             myDirectionalLightRotation.SetZValue(CSharpUtilities.DLLImporter.NativeMethods.GetDirectionaLightZRotation());
 
-
             myObjectManualRotation = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 60), new Size(200, 50), "Object Manual Rotation", -180, 180, 0, false);
             myObjectManualRotation.AddSelectedXValueChangedEvent(this.ManualObjectXRotation_Scroll);
             myObjectManualRotation.AddSelectedYValueChangedEvent(this.ManualObjectYRotation_Scroll);
@@ -110,6 +108,11 @@ namespace ModelViewer
             myMouseSensitivitySlider.AddSelectedValueChangedEvent(this.MouseSensitivity_Changed);
             myMouseSensitivitySlider.BindToPanel(ModelViewerMenu);
             myMouseSensitivitySlider.Show();
+
+            myCameraSettingsSliders = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 175), new Size(200, 50), "Camera Settings", -1000, 1000, 0, true, "Zoom: ", "Movement: ", "Rotation: ", -10.0f, 10.0f);
+            myCameraSettingsSliders.AddSelectedValueChangedEvent(this.CameraSettings_Changed);
+            myCameraSettingsSliders.BindToPanel(ModelViewerMenu);
+            myCameraSettingsSliders.Show();
 
             FillModelList();
             FillShaderList();
@@ -309,6 +312,13 @@ namespace ModelViewer
         {
             float value = myMouseSensitivitySlider.GetValue();
             CSharpUtilities.DLLImporter.NativeMethods.SetMouseSensitivty(myMouseSensitivitySlider.GetValue());
+        }
+
+        private void CameraSettings_Changed(object sender, EventArgs e)
+        {
+            CSharpUtilities.DLLImporter.NativeMethods.SetCameraZoomSpeed(myCameraSettingsSliders.GetXValue());
+            CSharpUtilities.DLLImporter.NativeMethods.SetCameraMovementSpeed(myCameraSettingsSliders.GetYValue());
+            CSharpUtilities.DLLImporter.NativeMethods.SetCameraRotationSpeed(myCameraSettingsSliders.GetZValue());
         }
     }
 }

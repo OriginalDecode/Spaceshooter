@@ -8,7 +8,6 @@ extern "C" DLLExport void Render();
 extern "C" DLLExport void Update();
 extern "C" DLLExport void UpdateFilewatcher();
 extern "C" DLLExport void LoadModel(const char* aModelFile, const char* aEffectFile);
-extern "C" DLLExport void SetEffect(const char* aEffectFile);
 extern "C" DLLExport void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel);
 
 extern "C" DLLExport void DirectionaLightRotateX(float aXAngle);
@@ -29,3 +28,12 @@ extern "C" DLLExport void SetRotateObjectAtZ(float aAngle);
 
 extern "C" DLLExport void SetMouseSensitivty(float aValue);
 extern "C" DLLExport float GetMouseSensitivty();
+
+extern "C" DLLExport void SetCameraZoomSpeed(float aValue);
+extern "C" DLLExport float GetCameraZoomSpeed();
+
+extern "C" DLLExport void SetCameraMovementSpeed(float aValue);
+extern "C" DLLExport float GetCameraMovementSpeed();
+
+extern "C" DLLExport void SetCameraRotationSpeed(float aValue);
+extern "C" DLLExport float GetCameraRotationSpeed();
