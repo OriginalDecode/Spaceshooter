@@ -1,7 +1,9 @@
 #pragma once
 #include <algorithm>
-#include <string>
 #include <DL_Debug.h>
+#include "Matrix.h"
+#include <string>
+#include "Vector.h"
 
 namespace CU
 {
@@ -91,5 +93,19 @@ namespace CU
 
 		DL_ASSERT_EXP(value != end, "Error reading int value: " + aString);
 		return intValue;
+	}
+
+
+	inline Matrix44<float> GetOrientation(Matrix44<float>& aMatrixToRotate, const Vector3<float>& aRotationInDegrees)
+	{
+		//to radians:
+		Vector3<float> rotation(aRotationInDegrees);
+		rotation *= 0.0174532925f;
+		
+		aMatrixToRotate = Matrix44<float>::CreateRotateAroundZ(rotation.z) * aMatrixToRotate;
+		aMatrixToRotate = Matrix44<float>::CreateRotateAroundY(rotation.y) * aMatrixToRotate;
+		aMatrixToRotate = Matrix44<float>::CreateRotateAroundX(rotation.x) * aMatrixToRotate;
+
+		return aMatrixToRotate;
 	}
 }
