@@ -15,6 +15,7 @@ public:
 	void UpdateEmitters(float aDeltaTime);
 	void RenderEmitters();
 
+	void ReceiveMessage(const DestroyEmitterMessage& aMessage) override;
 
 
 

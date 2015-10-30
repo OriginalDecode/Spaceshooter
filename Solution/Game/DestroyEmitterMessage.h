@@ -9,7 +9,7 @@ public:
 	DestroyEmitterMessage(EmitterComponent* anEmitterComponent);
 	~DestroyEmitterMessage();
 	
-	const EmitterComponent* myEmitterComponent;
+	EmitterComponent* myEmitterComponent;
 
 };
 

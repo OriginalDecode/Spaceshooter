@@ -1,16 +1,21 @@
 #include "stdafx.h"
+
 #include "Entity.h"
+
+#include "EmitterComponent.h"
 #include "EmitterInstance.h"
 #include "EmitterManager.h"
-#include "EmitterComponent.h"
-
+#include "DestroyEmitterMessage.h"
+#include "PostMaster.h"
 EmitterManager::EmitterManager()
+	: myEmitters(32)
 {
-	myEmitters.Init(32);
+	PostMaster::GetInstance()->Subscribe(eMessageType::DESTORY_EMITTER, this);
 }
 
 EmitterManager::~EmitterManager()
 {
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::DESTORY_EMITTER, this);
 }
 
 void EmitterManager::AddEmitter(EmitterComponent* anEmitter)
@@ -43,4 +48,9 @@ void EmitterManager::RenderEmitters()
 			myEmitters[i]->Render();
 		}
 	}
+}
+
+void EmitterManager::ReceiveMessage(const DestroyEmitterMessage& aMessage)
+{
+	myEmitters.RemoveNonCyclic(aMessage.myEmitterComponent);
 }
