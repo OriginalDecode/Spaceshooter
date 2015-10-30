@@ -12,13 +12,11 @@
 #include "PostMaster.h"
 #include "Scene.h"
 
-int EmitterComponent::myEmitterCount = 0;
 
 EmitterComponent::EmitterComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myEmitter(nullptr)
 {
-	myEmitterCount++;
 }
 
 EmitterComponent::~EmitterComponent()
@@ -59,11 +57,6 @@ void EmitterComponent::Render()
 eComponentType EmitterComponent::GetType()
 {
 	return eComponentType::EMITTER;
-}
-
-int EmitterComponent::GetEmitterCount()
-{
-	return myEmitterCount;
 }
 
 Prism::EmitterInstance* EmitterComponent::GetEmitter()

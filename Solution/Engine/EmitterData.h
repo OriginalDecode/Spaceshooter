@@ -37,13 +37,15 @@ namespace Prism
 		CU::Vector3f myMinRotation;
 		CU::Vector3f myRotationDelta;
 
-		CU::Vector3f myMaxVelocity;
-		CU::Vector3f myMinVelocity;
+		CU::Vector3f myMaxSpeed;
+		CU::Vector3f myMinSpeed;
+		CU::Vector3f myDirection;
 
 		std::string	myEffectName;
 		std::string	myTextureName;
 
 		float myParticlesLifeTime;
+		float myEmitterLifeTime;
 
 		float myEmissionLifeTime;
 		float myEmissionRate;
@@ -53,6 +55,10 @@ namespace Prism
 		float myMaxScale;
 		int myParticlesPerEmitt;
 		int	myMaxParticleAmount;
+
+		bool myIsActiveAtStart;
+		bool myUseEmitterLifeTime;
+
 
 	};
 }

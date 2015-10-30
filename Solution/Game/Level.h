@@ -12,6 +12,7 @@ namespace Prism
 	class SpotLight;
 	class DebugText;
 	class Instance;
+	class Renderer;
 };
 
 namespace CU
@@ -75,6 +76,7 @@ private:
 	CU::Matrix44<float> mySkySphereOrientation;
 	float mySkySphereCullingRadius;
 	Prism::Scene* myScene;
+	Prism::Renderer* myRenderer;
 	Prism::Camera* myCamera;
 	CU::Matrix44<float> myWorldMatrix;
 
@@ -98,6 +100,7 @@ private:
 
 	EmitterManager* myEmitterManager;
 
+	bool myUsePostProcessing;
 	bool myComplete;
 };
 

@@ -28,6 +28,5 @@ private:
 	CU::Vector3f myPosition;
 	Prism::EmitterInstance* myEmitter;
 	std::string myXMLPath;
-	static int myEmitterCount; //Emitter count duh.
 };
 

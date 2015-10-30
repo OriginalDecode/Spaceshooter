@@ -104,7 +104,7 @@ namespace Prism
 #endif
 #endif
 
-		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, myClearColor.myA };
+		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, 0.f };
 		myDirectX->Clear(clearColor);
 
 		VTUNE_EVENT_END();
@@ -142,6 +142,11 @@ namespace Prism
 	ID3D11DeviceContext* Engine::GetContex()
 	{
 		return myDirectX->GetContex();
+	}
+
+	ID3D11DepthStencilView* Engine::GetDepthView()
+	{
+		return myDirectX->GetDepthStencil();
 	}
 
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
@@ -215,6 +220,16 @@ namespace Prism
 		ss.precision(3);
 		ss << aNumber;
 		PrintText(ss.str(), aPosition, aTextType, aScale);
+	}
+
+	void Engine::RestoreViewPort()
+	{
+		myDirectX->RestoreViewPort();
+	}
+
+	void Engine::SetBackBufferAsTarget()
+	{
+		myDirectX->SetBackBufferAsTarget();
 	}
 
 	void Engine::EnableZBuffer()

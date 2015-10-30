@@ -4,8 +4,8 @@
 struct ParticleData
 {
 
-	CU::Vector3f myMaxVelocity;
-	CU::Vector3f myMinVelocity;
+	CU::Vector3f myMaxSpeed;
+	CU::Vector3f myMinSpeed;
 
 	CU::Vector3f myStartColor;
 	CU::Vector3f myEndColor;
@@ -42,7 +42,11 @@ struct LogicalParticle
 {
 	LogicalParticle()
 		: myVelocity(CU::Vector3f(0, 0, 0))
+		, myIsAlive(false)
 	{
 	}
+	bool myIsAlive;
 	CU::Vector3f myVelocity;
+	CU::Vector3f myDirection;
+
 };
