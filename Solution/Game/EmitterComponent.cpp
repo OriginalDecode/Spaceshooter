@@ -7,7 +7,7 @@
 #include <EmitterData.h>
 #include <EmitterInstance.h>
 #include "EmitterNote.h"
-#include "EmitterMessage.h"
+#include "DestroyEmitterMessage.h"
 #include "Entity.h"
 #include "PostMaster.h"
 #include "Scene.h"

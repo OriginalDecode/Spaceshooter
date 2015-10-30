@@ -1,6 +1,5 @@
 #include "stdafx.h"
-#include "EmitterMessage.h"
-
+#include "DestroyEmitterMessage.h"
 
 DestroyEmitterMessage::DestroyEmitterMessage(EmitterComponent* anEmitterComponent)
 	: Message(eMessageType::DESTORY_EMITTER)
