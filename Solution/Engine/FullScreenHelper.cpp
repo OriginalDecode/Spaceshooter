@@ -287,12 +287,9 @@ namespace Prism
 
 	void FullScreenHelper::DoBloom(Texture* aSource, Texture* aTarget)
 	{
-		float clearColor[4] = { 0.f, 0.f, 0.f, 0.f };
-		//Engine::GetInstance()->RestoreViewPort();
-
 		ID3D11RenderTargetView* target = myBloomData.myMiddleMan->GetRenderTargetView();
 		ID3D11DepthStencilView* depth = myBloomData.myMiddleMan->GetDepthStencilView();
-		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, clearColor);
+		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, myClearColor);
 		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
 		myBloomData.myBloomVariable->SetResource(aSource->GetShaderView());
 
@@ -300,7 +297,7 @@ namespace Prism
 
 		target = aTarget->GetRenderTargetView();
 		depth = aTarget->GetDepthStencilView();
-		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, clearColor);
+		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, myClearColor);
 		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
 		myBloomData.myBloomVariable->SetResource(myBloomData.myMiddleMan->GetShaderView());
 

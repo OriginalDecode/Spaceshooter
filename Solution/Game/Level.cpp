@@ -172,9 +172,11 @@ void Level::Render()
 		myEmitterManager->RenderEmitters();
 
 
-		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 
+		myRenderer->BeginScene();
+		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 		myRenderer->FinalRender();
 	}
 	else
