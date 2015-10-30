@@ -35,6 +35,7 @@
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
 #include "PropComponent.h"
+#include <Renderer.h>
 #include <Scene.h>
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
@@ -46,6 +47,7 @@
 Level::Level(CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
 	, myComplete(false)
+	, myUsePostProcessing(false)
 	, mySkySphere(nullptr)
 	, myEntityFactory(nullptr)
 	, myWeaponFactory(nullptr)
@@ -65,6 +67,8 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
+
+	myRenderer = new Prism::Renderer();
 }
 
 Level::~Level()
@@ -101,6 +105,9 @@ Level::~Level()
 	delete myScene;
 	mySkySphere = nullptr;
 	myScene = nullptr;
+
+	delete myRenderer;
+	myRenderer = nullptr;
 	
 	delete myEmitterManager;
 	myEmitterManager = nullptr;
@@ -150,28 +157,39 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 void Level::Render()
 {
-	Prism::Engine::GetInstance()->DisableZBuffer();
-	mySkySphere->Render(*myCamera);
-	Prism::Engine::GetInstance()->EnableZBuffer();
 	
-	myScene->Render(myBulletManager->GetInstances());
+	if (myUsePostProcessing == true)
+	{
+		myRenderer->BeginScene();
+		Prism::Engine::GetInstance()->DisableZBuffer();
+		mySkySphere->Render(*myCamera);
+		Prism::Engine::GetInstance()->EnableZBuffer();
+		myRenderer->EndScene(Prism::ePostProcessing::NONE);
 
-	//for (int i = 0; i < myEntities.Size(); ++i)
-	//{
-	//	if (myEntities[i]->GetComponent<EmitterComponent>() == nullptr)
-	//	{
-	//		continue;
-	//	}
-	//	else
-	//	{
-	//		myEntities[i]->GetComponent<EmitterComponent>()->Render();
-	//	}
-	//}
+		myRenderer->BeginScene();
+		myScene->Render(myBulletManager->GetInstances());
 
-	myEmitterManager->RenderEmitters();
+		myEmitterManager->RenderEmitters();
 
 
-	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+
+		myRenderer->FinalRender();
+	}
+	else
+	{
+		Prism::Engine::GetInstance()->DisableZBuffer();
+		mySkySphere->Render(*myCamera);
+		Prism::Engine::GetInstance()->EnableZBuffer();
+
+		myScene->Render(myBulletManager->GetInstances());
+
+		myEmitterManager->RenderEmitters();
+
+		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+	}
+	
 
 
 #ifndef RELEASE_BUILD
@@ -352,5 +370,9 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_T))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_F7))
+	{
+		myUsePostProcessing = !myUsePostProcessing;
 	}
 }

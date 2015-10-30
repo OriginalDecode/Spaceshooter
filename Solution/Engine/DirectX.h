@@ -12,6 +12,7 @@ struct ID3D11RasterizerState;
 struct ID3D11RenderTargetView;
 struct ID3D11Texture2D;
 struct IDXGISwapChain;
+struct D3D11_VIEWPORT;
 struct SetupInfo;
 
 
@@ -30,6 +31,10 @@ namespace Prism
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();
+		ID3D11DepthStencilView* GetDepthStencil();
+
+		void RestoreViewPort();
+		void SetBackBufferAsTarget();
 
 		void EnableZBuffer();
 		void DisableZBuffer();
@@ -65,6 +70,7 @@ namespace Prism
 		ID3D11Texture2D* myDepthBuffer;
 		ID3D11RasterizerState* mySolidRasterizer;
 		ID3D11RasterizerState* myWireframeRasterizer;
+		D3D11_VIEWPORT* myViewPort;
 
 		HWND& myHWND;
 		SetupInfo mySetupInfo;
