@@ -333,13 +333,13 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
 	myCrosshair->Render({ halfWidth, -(halfHeight) });
 
-	if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
+	/*if (myEnemiesTarget != nullptr && myEnemiesTarget != &GetEntity())
 	{
 		Prism::Engine::GetInstance()->PrintText("DefendTarget "
 			+ myEnemiesTarget->GetComponent<PropComponent>()->GetDefendName() + ": "
 			+ std::to_string(myEnemiesTarget->GetComponent<HealthComponent>()->GetHealth()) + " hp"
 			, { halfWidth, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
-	}
+	}*/
 
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);
