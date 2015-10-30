@@ -20,7 +20,7 @@ struct WeaponPowerUp
 {
 	ePowerUpType myPowerUpType;
 	float myPowerUpValue;
-	float myPowerUpDuration;
+	//float myPowerUpDuration;
 	float myPowerUpCoolDownReducer;
 };
 
@@ -50,9 +50,17 @@ public:
 
 	void Reset() override;
 	bool HasPowerUp(ePowerUpType aPowerUp);
-private:
 
+	const bool& GetFireRatePowerUp() const;
+	const bool& GetEMPPowerUp() const;
+	const bool& GetHomingPowerUp() const;
+
+	const float& GetFireRatePowerUpDuration() const;
+	const float& GetHomingPowerUpDuration() const;
+private:
+	void SetActivatePowerUp(ePowerUpType aType, bool aValue);
 	void ActivatePowerUp(ePowerUpType aPowerUp); // only for emp
+	void AddDuration(ePowerUpType aPowerUp, float aTime);
 
 	CU::GrowingArray<WeaponData, int> myWeapons;
 
@@ -63,6 +71,13 @@ private:
 	bool myHasWeapon;
 
 	CU::GrowingArray<WeaponPowerUp> myPowerUps;
+
+	bool myFireRatePowerUp;
+	bool myEMPPowerUp;
+	bool myHomingPowerUp;
+	float myFireRatePowerUpDuration;
+	float myEMPPowerUpDuration;
+	float myHomingPowerUpDuration;
 };
 
 inline eComponentType ShootingComponent::GetType()
@@ -142,4 +157,29 @@ inline eBulletType ConvertToBulletEnum(const std::string& aString)
 		return eBulletType::ENEMY_BULLET_HOMING;
 	}
 	return eBulletType::COUNT;
+}
+
+inline const bool& ShootingComponent::GetFireRatePowerUp() const
+{
+	return myFireRatePowerUp;
+}
+
+inline const bool& ShootingComponent::GetEMPPowerUp() const
+{
+	return myEMPPowerUp;
+}
+
+inline const bool& ShootingComponent::GetHomingPowerUp() const
+{
+	return myHomingPowerUp;
+}
+
+inline const float& ShootingComponent::GetFireRatePowerUpDuration() const
+{
+	return myFireRatePowerUpDuration;
+}
+
+inline const float& ShootingComponent::GetHomingPowerUpDuration() const
+{
+	return myHomingPowerUpDuration;
 }

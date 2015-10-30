@@ -25,6 +25,7 @@
 #include "PhysicsComponent.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
+#include "PowerUpGUIIcon.h"
 #include "PowerUpMessage.h"
 #include "PowerUpNote.h"
 #include "PropComponent.h"
@@ -50,8 +51,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShowMessage(false)
 	, myMessage("")
 	, myMessageTime(0.f)
-	, myActivePowerUps(8)
-	, myWeapon("MG")
+	, myWeapon("MG\nRDY")
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
@@ -127,6 +127,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
 	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", { 100.f, 100.f }, { 50.f, 50.f });
+
 }
 
 GUIComponent::~GUIComponent()
@@ -173,12 +174,41 @@ GUIComponent::~GUIComponent()
 
 	myGUIBars[0] = nullptr;
 	myGUIBars[1] = nullptr;
+
+	delete myPowerUpSlots[ePowerUpType::EMP];
+	delete myPowerUpSlots[ePowerUpType::FIRERATEBOOST];
+	delete myPowerUpSlots[ePowerUpType::HOMING];
+	delete myPowerUpSlots[ePowerUpType::INVULNERABLITY];
 }
 
 void GUIComponent::Init(float aMaxDistanceToEnemies)
 {
 	myMaxDistanceToEnemies = aMaxDistanceToEnemies;
 	myEnemiesTarget = &GetEntity();
+
+	CU::Vector2<float> halfScreenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x * 0.5f),
+		float(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) };
+
+	CU::Vector2<float> iconSize(64.f, 64.f);
+	float padding = 5.f;
+
+	ShootingComponent* shootingComponent = myEntity.GetComponent<ShootingComponent>();
+
+	myPowerUpSlots[ePowerUpType::EMP] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_emp_active.dds"
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_emp_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * 2.5f + padding * 2.f }
+		, shootingComponent->GetEMPPowerUp(), nullptr);
+	
+	myPowerUpSlots[ePowerUpType::FIRERATEBOOST] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_active.dds"
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_inactive.dds", { halfScreenSize.x + iconSize.x * 7.1f, -halfScreenSize.y + iconSize.y * 1.5f + padding * 1.f }
+		, shootingComponent->GetFireRatePowerUp(), &shootingComponent->GetFireRatePowerUpDuration());
+
+	myPowerUpSlots[ePowerUpType::HOMING] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_homing_active.dds"
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_homing_inactive.dds", { halfScreenSize.x + iconSize.x * 7.1f, -halfScreenSize.y + iconSize.y * -1.5f + padding * 0.f }
+		, shootingComponent->GetHomingPowerUp(), &shootingComponent->GetHomingPowerUpDuration());
+
+	myPowerUpSlots[ePowerUpType::INVULNERABLITY] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_active.dds"
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * -2.5f + padding * - 1.f }
+		, myEntity.GetComponent<HealthComponent>()->GetInvulnerability(), &myEntity.GetComponent<HealthComponent>()->GetInvulnerablityDuration());
 }
 
 void GUIComponent::Update(float aDeltaTime)
@@ -194,15 +224,6 @@ void GUIComponent::Update(float aDeltaTime)
 			myShowMessage = false;
 			myMessageTime = 0.f;
 			myMessage = "";
-		}
-	}
-
-	for (int i = myActivePowerUps.Size() - 1; i >= 0; --i)
-	{
-		myActivePowerUps[i].myPowerUpCountDown -= aDeltaTime;
-		if (myActivePowerUps[i].myPowerUpCountDown <= 0.f)
-		{
-			myActivePowerUps.RemoveCyclicAtIndex(i);
 		}
 	}
 }
@@ -403,16 +424,15 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myShowMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myMessage, { 100.f, -100.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
-	for (int i = 0; i < myActivePowerUps.Size(); i++)
-	{
-		std::string message = myActivePowerUps[i].myPowerUpMessage + std::to_string(int(myActivePowerUps[i].myPowerUpCountDown));
-		Prism::Engine::GetInstance()->PrintText(message, { 100.f, -200.f - (i * 50.f) }, Prism::eTextType::RELEASE_TEXT);
-	}
+	myPowerUpSlots[ePowerUpType::EMP]->Render();
+	myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render();
+	myPowerUpSlots[ePowerUpType::HOMING]->Render();
+	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render();
 
-	Prism::Engine::GetInstance()->PrintText(myWeapon, { 1400.f, -500.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myWeapon, { halfWidth * 1.47f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
 	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
 		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
 	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
@@ -476,47 +496,24 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 
 void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	myMessage = "Powerup picked up: " + aNote.myIngameName;
+	myMessage = aNote.myIngameName;
 	myMessageTime = 3.f;
 	myShowMessage = true;
-
-	if (aNote.myDuration > 0.f)
-	{
-		bool powerUpFound = false;
-		for (int i = 0; i < myActivePowerUps.Size(); ++i)
-		{
-			if (myActivePowerUps[i].myType == aNote.myType)
-			{
-				myActivePowerUps[i].myPowerUpCountDown += aNote.myDuration;
-				powerUpFound = true;
-				break;
-			}
-		}
-		if (powerUpFound == false)
-		{
-			ActivePowerUp message;
-			message.myPowerUpCountDown = aNote.myDuration;
-			message.myPowerUpMessage = aNote.myIngameName + " is active: ";
-			message.myType = aNote.myType;
-			myActivePowerUps.Add(message);
-		}
-
-	}
 }
 
 void GUIComponent::ReceiveNote(const InputNote& aMessage)
 {
 	if (aMessage.myKey == 0)
 	{
-		myWeapon = "MG";
+		myWeapon = "MG\nRDY";
 	}
 	else if (aMessage.myKey == 1)
 	{
-		myWeapon = "SG";
+		myWeapon = "SG\nRDY";
 	}
 	else if (aMessage.myKey == 2)
 	{
-		myWeapon = "RL";
+		myWeapon = "RL\nRDY";
 	}
 }
 
@@ -586,5 +583,4 @@ void GUIComponent::Reset()
 	myClosestEnemy = nullptr;
 	myWeapon = "MG";
 
-	myActivePowerUps.RemoveAll();
 }
