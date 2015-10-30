@@ -1,5 +1,7 @@
 #pragma once
 
+#include <Vector.h>
+
 namespace Prism
 {
 	class Sprite;
@@ -8,18 +10,19 @@ namespace Prism
 class PowerUpGUIIcon
 {
 public:
-	PowerUpGUIIcon();
+	PowerUpGUIIcon(const std::string& aActivePath, const std::string& aInactivePath
+		, const CU::Vector2<float>& aPosition, const bool& aActive, const float* aDuration = nullptr);
 	~PowerUpGUIIcon();
 
-	void SetActive(float aDuration);
-	void Update(float aDeltaTime);
+	void Render();
 
 private:
 	Prism::Sprite* myActiveIcon;
 	Prism::Sprite* myInactiveIcon;
-	float myActiveDuration;
 	CU::Vector2<float> myPosition;
-	bool myIsActive;
+	CU::Vector2<float> myTextPosition;
+	const bool& myActive;
+	const float* myDuration;
 
 };
 

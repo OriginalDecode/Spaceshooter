@@ -24,6 +24,12 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myHasWeapon(false)
 	, myPowerUps(8)
 	, myHomingTarget(nullptr)
+	, myFireRatePowerUp(false)
+	, myEMPPowerUp(false)
+	, myHomingPowerUp(false)
+	, myFireRatePowerUpDuration(0.f)
+	, myEMPPowerUpDuration(0.f)
+	, myHomingPowerUpDuration(0.f)
 {
 }
 
@@ -46,18 +52,25 @@ void ShootingComponent::Update(float aDeltaTime)
 		}
 	}
 
+
+	myFireRatePowerUpDuration = fmaxf(myFireRatePowerUpDuration - aDeltaTime, 0.f);
+	myHomingPowerUpDuration = fmaxf(myHomingPowerUpDuration - aDeltaTime, 0.f);
+	//Should emp count down?? WE dont know.
+	//myEMPPowerUpDuration = fmaxf(myEMPPowerUpDuration - aDeltaTime, 0.f);
+
 	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
 	{
-		if (myPowerUps[i].myPowerUpType == ePowerUpType::FIRERATEBOOST 
-			|| myPowerUps[i].myPowerUpType == ePowerUpType::HOMING)
+		if (myPowerUps[i].myPowerUpType == ePowerUpType::FIRERATEBOOST && myFireRatePowerUpDuration <= 0.f)
 		{
-			myPowerUps[i].myPowerUpDuration -= aDeltaTime;
-			if (myPowerUps[i].myPowerUpDuration <= 0.f)
-			{
-				myPowerUps.RemoveCyclicAtIndex(i);
-
-				myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
-			}
+			SetActivatePowerUp(ePowerUpType::FIRERATEBOOST, false);
+			myPowerUps.RemoveCyclicAtIndex(i);
+			myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
+		}
+		else if (myPowerUps[i].myPowerUpType == ePowerUpType::HOMING && myHomingPowerUpDuration <= 0.f)
+		{
+			SetActivatePowerUp(ePowerUpType::HOMING, false);
+			myPowerUps.RemoveCyclicAtIndex(i);
+			myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 		}
 	}
 }
@@ -111,6 +124,7 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 	}
 	else
 	{
+		SetActivatePowerUp(ePowerUpType::EMP, false);
 		ActivatePowerUp(ePowerUpType::EMP);
 	}
 }
@@ -122,7 +136,16 @@ void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 
 void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	if (aNote.myType == ePowerUpType::EMP 
+	if (aNote.myType == ePowerUpType::EMP || aNote.myType == ePowerUpType::HOMING
+		|| aNote.myType == ePowerUpType::FIRERATEBOOST)
+	{
+		SetActivatePowerUp(aNote.myType, true);
+	}
+	else
+	{
+		return;
+	}
+	if (aNote.myType == ePowerUpType::EMP
 		|| aNote.myType == ePowerUpType::HOMING)
 	{
 		bool powerUpFound = false;
@@ -131,7 +154,8 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 			if (myPowerUps[i].myPowerUpType == aNote.myType)
 			{
 				myPowerUps[i].myPowerUpCoolDownReducer = 0.f;
-				myPowerUps[i].myPowerUpDuration += aNote.myDuration;
+				//myPowerUps[i].myPowerUpDuration += aNote.myDuration;
+				AddDuration(aNote.myType, aNote.myDuration);
 				myPowerUps[i].myPowerUpType = aNote.myType;
 				myPowerUps[i].myPowerUpValue = aNote.myValue;
 				powerUpFound = true;
@@ -142,7 +166,8 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 		{
 			WeaponPowerUp powerUp;
 			powerUp.myPowerUpCoolDownReducer = 0.f;
-			powerUp.myPowerUpDuration = aNote.myDuration;
+			//powerUp.myPowerUpDuration = aNote.myDuration;
+			AddDuration(aNote.myType, aNote.myDuration);
 			powerUp.myPowerUpType = aNote.myType;
 			powerUp.myPowerUpValue = aNote.myValue;
 			myPowerUps.Add(powerUp);
@@ -158,7 +183,8 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 			if (myPowerUps[i].myPowerUpType == aNote.myType)
 			{
 				myPowerUps[i].myPowerUpCoolDownReducer = aNote.myValue;
-				myPowerUps[i].myPowerUpDuration += aNote.myDuration;
+				//myPowerUps[i].myPowerUpDuration += aNote.myDuration;
+				AddDuration(aNote.myType, aNote.myDuration);
 				myPowerUps[i].myPowerUpType = aNote.myType;
 				myPowerUps[i].myPowerUpValue = 0.f;
 				powerUpFound = true;
@@ -169,7 +195,8 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 		{
 			WeaponPowerUp powerUp;
 			powerUp.myPowerUpCoolDownReducer = aNote.myValue;
-			powerUp.myPowerUpDuration = aNote.myDuration;
+			//powerUp.myPowerUpDuration = aNote.myDuration;
+			AddDuration(aNote.myType, aNote.myDuration);
 			powerUp.myPowerUpType = aNote.myType;
 			powerUp.myPowerUpValue = 0.f;
 			myPowerUps.Add(powerUp);
@@ -259,17 +286,57 @@ bool ShootingComponent::HasPowerUp(ePowerUpType aPowerUp)
 	return false;
 }
 
+void ShootingComponent::SetActivatePowerUp(ePowerUpType aType, bool aValue)
+{
+	switch (aType)
+	{
+	case ePowerUpType::FIRERATEBOOST:
+		myFireRatePowerUp = aValue;
+		break;
+	case ePowerUpType::EMP:
+		myEMPPowerUp = aValue;
+		break;
+	case ePowerUpType::HOMING:
+		myHomingPowerUp = aValue;
+		break;
+	default:
+		DL_ASSERT("INVALID POWERUP");
+		break;
+	}
+}
+
 void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
 {
+	DL_ASSERT_EXP(aPowerUp == ePowerUpType::EMP, "Tried to activate anything other than EMP!!!");
 	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
 	{
 		if (myPowerUps[i].myPowerUpType == aPowerUp)
 		{
 			PostMaster::GetInstance()->SendMessage(PowerUpMessage(aPowerUp, myEntity.myOrientation.GetPos()
-				, myPowerUps[i].myPowerUpValue, myPowerUps[i].myPowerUpDuration));
+				, myPowerUps[i].myPowerUpValue, myEMPPowerUpDuration));
+			myEMPPowerUp = false;
 			myPowerUps.RemoveCyclicAtIndex(i);
 			return;
 		}
+	}
+}
+
+void ShootingComponent::AddDuration(ePowerUpType aPowerUp, float aTime)
+{
+	switch (aPowerUp)
+	{
+	case ePowerUpType::FIRERATEBOOST:
+		myFireRatePowerUpDuration += aTime;
+		break;
+	case ePowerUpType::EMP:
+		myEMPPowerUpDuration += aTime;
+		break;
+	case ePowerUpType::HOMING:
+		myHomingPowerUpDuration += aTime;
+		break;
+	default:
+		DL_ASSERT("INVALID POWERUP");
+		break;
 	}
 }
 

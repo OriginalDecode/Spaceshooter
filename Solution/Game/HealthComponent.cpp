@@ -18,7 +18,6 @@ void HealthComponent::Init(int aMaxHealth, bool anIsInvulnerable)
 	myCurrentHealth = myMaxHealth;
 	myIsInvulnerable = anIsInvulnerable;
 	myInvulnerablityTimeCurrent = 0.f;
-	myInvulnerablityTimeMax = 0.f;
 	DL_ASSERT_EXP(myMaxHealth > 0, "Health component inited to 0 hp.");
 }
 
@@ -57,11 +56,9 @@ void HealthComponent::Update(float aDeltaTime)
 {
 	if (myIsInvulnerable == true)
 	{
-		myInvulnerablityTimeCurrent += aDeltaTime;
-		if (myInvulnerablityTimeCurrent >= myInvulnerablityTimeMax)
+		myInvulnerablityTimeCurrent = fmaxf(myInvulnerablityTimeCurrent - aDeltaTime, 0.f);
+		if (myInvulnerablityTimeCurrent <= 0.f)
 		{
-			myInvulnerablityTimeCurrent = 0.f;
-			myInvulnerablityTimeMax = 0.f;
 			myIsInvulnerable = false;
 		}
 	}
@@ -75,23 +72,14 @@ void HealthComponent::ReceiveNote(const PowerUpNote& aNote)
 	}
 	else if (aNote.myType == ePowerUpType::INVULNERABLITY)
 	{
-		if (myIsInvulnerable == true)
-		{
-			myInvulnerablityTimeCurrent = 0.f;
-			myInvulnerablityTimeMax = aNote.myDuration;
-		}
-		else
-		{
-			myIsInvulnerable = true;
-			myInvulnerablityTimeCurrent = 0.f;
-			myInvulnerablityTimeMax = aNote.myDuration;
-		}
-
+		myIsInvulnerable = true;
+		myInvulnerablityTimeCurrent += aNote.myDuration;
 	}
 }
 
 void HealthComponent::Reset()
 {
+	myInvulnerablityTimeCurrent = 0.f;
 	myIsInvulnerable = false;
 	myCurrentHealth = myMaxHealth;
 }

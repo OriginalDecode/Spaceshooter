@@ -19,7 +19,9 @@ public:
 	int GetHealth() const;
 	
 	void SetInvulnerability();
-	bool GetInvulnerability() const;
+	const bool& GetInvulnerability() const;
+	const float& GetInvulnerablityDuration() const;
+
 
 	static eComponentType GetType();
 
@@ -30,7 +32,6 @@ private:
 	int myCurrentHealth;
 
 	bool myIsInvulnerable;
-	float myInvulnerablityTimeMax;
 	float myInvulnerablityTimeCurrent;
 };
 
@@ -48,18 +49,17 @@ inline void HealthComponent::SetInvulnerability()
 {
 	if (myIsInvulnerable == true)
 	{
-		myInvulnerablityTimeMax = 0.f;
+		myInvulnerablityTimeCurrent = 0.f;
 		myIsInvulnerable = false;
 	}
 	else
 	{
-		myInvulnerablityTimeMax = 1000000000000.f; // räcker det med nollor LINUS
-		myInvulnerablityTimeCurrent = 0.f;
+		myInvulnerablityTimeCurrent = 1000000000000.f; // räcker det med nollor LINUS
 		myIsInvulnerable = true;
 	}
 }
 
-inline bool HealthComponent::GetInvulnerability() const
+inline const bool& HealthComponent::GetInvulnerability() const
 {
 	return myIsInvulnerable;
 }
@@ -68,3 +68,9 @@ inline eComponentType HealthComponent::GetType()
 {
 	return eComponentType::HEALTH;
 }
+
+inline const float& HealthComponent::GetInvulnerablityDuration() const
+{
+	return myInvulnerablityTimeCurrent;
+}
+

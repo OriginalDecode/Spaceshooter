@@ -5,19 +5,14 @@
 #include "Subscriber.h"
 #include <Vector.h>
 
-struct ActivePowerUp
-{
-	float myPowerUpCountDown;
-	std::string myPowerUpMessage;
-	ePowerUpType myType;
-};
-
 namespace Prism
 {
 	class Sprite;
 	class Camera;
 	class Instance;
 }
+
+class PowerUpGUIIcon;
 
 class GUIComponent : public Component, public Subscriber
 {
@@ -94,7 +89,7 @@ private:
 	Prism::Sprite* myPowerUpMarker;
 	CU::GrowingArray<Entity*> myPowerUps;
 
-	CU::GrowingArray<ActivePowerUp> myActivePowerUps;
+	std::unordered_map<ePowerUpType, PowerUpGUIIcon*> myPowerUpSlots;
 
 	Prism::Camera* myCamera;
 	float myMaxDistanceToEnemies;
@@ -112,8 +107,8 @@ private:
 	std::string myMessage; 
 	float myMessageTime;
 
-
 	std::string myWeapon;
+
 
 };
 
