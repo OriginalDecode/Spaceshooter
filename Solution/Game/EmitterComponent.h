@@ -20,6 +20,7 @@ public:
 
 	void ReceiveNote(const EmitterNote& aNote) override;
 
+
 private:
 
 	CU::Matrix44f myOrientation;

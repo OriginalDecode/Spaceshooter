@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "Entity.h"
 #include "EmitterInstance.h"
 #include "EmitterManager.h"
 #include "EmitterComponent.h"
@@ -22,11 +23,11 @@ void EmitterManager::UpdateEmitters(float aDeltaTime)
 	for (int i = 0; i < myEmitters.Size(); ++i)
 	{
 
-	if (myEmitters[i]->GetEmitter()->GetIsActive() == true)
+		if (myEmitters[i]->GetEntity().GetAlive() == true && myEmitters[i]->GetEmitter()->GetIsActive() == true)
 		{
 			myEmitters[i]->Update(aDeltaTime);
 		}
-		else
+		else if (myEmitters[i]->GetEntity().GetAlive() == false)
 		{
 			myEmitters.RemoveNonCyclicAtIndex(i);
 		}
