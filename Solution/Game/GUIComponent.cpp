@@ -314,7 +314,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
-		if (aArrowModel == myEnemyArrow)
+		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
 			myClosestScreenPos.y = newRenderPos.y;
