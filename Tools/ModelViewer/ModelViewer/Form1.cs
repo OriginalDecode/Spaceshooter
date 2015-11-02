@@ -113,11 +113,15 @@ namespace ModelViewer
 
             myMouseSensitivitySlider = new CSharpUtilities.Components.SliderComponent(new Point(0, 150), new Size(200, 15), "Mouse Sens", 0, 1000, 1, true, 0.0f, 100.0f);
             myMouseSensitivitySlider.AddSelectedValueChangedEvent(this.MouseSensitivity_Changed);
+            myMouseSensitivitySlider.SetValue(Properties.Settings.Default.DefaultSettingMouseSensitivity);
             myMouseSensitivitySlider.BindToPanel(ModelViewerMenu);
             myMouseSensitivitySlider.Show();
 
             myCameraSettingsSliders = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 175), new Size(200, 50), "Camera Settings", -1000, 1000, 0, true, "Zoom: ", "Movement: ", "Rotation: ", -10.0f, 10.0f);
+            myCameraSettingsSliders.SetXValue(Properties.Settings.Default.DefaultSettingCameraZoom);
+            myCameraSettingsSliders.SetYValue(Properties.Settings.Default.DefaultSettingCameraMovement);
             myCameraSettingsSliders.AddSelectedValueChangedEvent(this.CameraSettings_Changed);
+            myCameraSettingsSliders.SetZValue(Properties.Settings.Default.DefaultSettingCameraRotation);
             myCameraSettingsSliders.BindToPanel(ModelViewerMenu);
             myCameraSettingsSliders.Show();
 
@@ -349,8 +353,9 @@ namespace ModelViewer
 
         private void MouseSensitivity_Changed(object sender, EventArgs e)
         {
-            float value = myMouseSensitivitySlider.GetValue();
             CSharpUtilities.DLLImporter.NativeMethods.SetMouseSensitivty(myMouseSensitivitySlider.GetValue());
+            Properties.Settings.Default.DefaultSettingMouseSensitivity = myMouseSensitivitySlider.GetValue();
+            Properties.Settings.Default.Save();
         }
 
         private void CameraSettings_Changed(object sender, EventArgs e)
@@ -358,6 +363,13 @@ namespace ModelViewer
             CSharpUtilities.DLLImporter.NativeMethods.SetCameraZoomSpeed(myCameraSettingsSliders.GetXValue());
             CSharpUtilities.DLLImporter.NativeMethods.SetCameraMovementSpeed(myCameraSettingsSliders.GetYValue());
             CSharpUtilities.DLLImporter.NativeMethods.SetCameraRotationSpeed(myCameraSettingsSliders.GetZValue());
+
+            float xValue = myCameraSettingsSliders.GetXValue();
+
+            Properties.Settings.Default.DefaultSettingCameraZoom = myCameraSettingsSliders.GetXValue();
+            Properties.Settings.Default.DefaultSettingCameraMovement = myCameraSettingsSliders.GetYValue();
+            Properties.Settings.Default.DefaultSettingCameraRotation = myCameraSettingsSliders.GetZValue();
+            Properties.Settings.Default.Save();
         }
     }
 }

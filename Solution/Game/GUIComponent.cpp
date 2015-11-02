@@ -55,6 +55,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
+	, myDeltaTime(0.f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -126,7 +127,12 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
-	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", { 100.f, 100.f }, { 50.f, 50.f });
+	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_enemy_lock.dds", { 100.f, 100.f }, { 50.f, 50.f });
+
+	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
+	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
 
 }
 
@@ -215,6 +221,7 @@ void GUIComponent::Update(float aDeltaTime)
 {
 	myHitMarkerTimer -= aDeltaTime;
 	myDamageIndicatorTimer -= aDeltaTime;
+	myDeltaTime = aDeltaTime;
 
 	if (myShowMessage == true)
 	{
@@ -283,6 +290,11 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
+		if (aArrowModel == myHomingTarget)
+		{
+			myClosestEnemy = nullptr;
+			return;
+		}
 	}
 	else
 	{
@@ -295,6 +307,11 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 		showName = false;
+		if (aArrowModel == myHomingTarget)
+		{
+			myClosestEnemy = nullptr;
+			return;
+		}
 	}
 
 	if (aIsPowerup == true && showName == true)
@@ -309,7 +326,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
-		if (aArrowModel == myEnemyArrow)
+		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
 			myClosestScreenPos.y = newRenderPos.y;
@@ -345,7 +362,14 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		}
 		if (lengthToEnemy < myMaxDistanceToEnemies)
 		{
-			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
+			if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
+			{
+				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
+			}
+			else
+			{
+				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
+			}
 			CU::Vector2<float> enemyScreenPos = myClosestScreenPos;
 			float lengthFromMouseToEnemy = CU::Length(enemyScreenPos - CU::Vector2<float>(steeringPos.x, steeringPos.y));
 			if (lengthFromMouseToEnemy < myClosestEnemyLength)
@@ -393,6 +417,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	{
 		if (myClosestEnemy != nullptr)
 		{
+			myHomingTarget->Rotate(myDeltaTime);
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true);
 		}
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);

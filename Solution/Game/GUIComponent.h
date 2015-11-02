@@ -67,15 +67,18 @@ private:
 	Prism::Sprite* myHitMarker;
 	Prism::Sprite* myDamageIndicator;
 	Prism::Sprite* myHomingTarget;
+
+	Prism::Sprite* myStructureArrow;
+	Prism::Sprite* myStructureMarker;
 	
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;
+	float myDeltaTime;
 
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;
 
 	CU::GrowingArray<Entity*> myEnemies;
-
 
 	Entity* myClosestEnemy;
 	CU::Vector2<float> myClosestScreenPos;
