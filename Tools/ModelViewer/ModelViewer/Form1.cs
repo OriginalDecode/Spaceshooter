@@ -16,6 +16,7 @@ namespace ModelViewer
     {
         private List<string> myModelFiles = null;
         private List<string> myShaderFiles = null;
+        private List<string> myCubeMapFiles = null;
 
         private string myCurrentShaderFilePath = Properties.Settings.Default.DefaultEffectFilePath;
         private string myCurrentModelFilePath = Properties.Settings.Default.DefaultModelFilePath;
@@ -29,6 +30,7 @@ namespace ModelViewer
 
         private CSharpUtilities.Components.DropDownComponent myModelList;
         private CSharpUtilities.Components.DropDownComponent myShaderList;
+        private CSharpUtilities.Components.DropDownComponent myCubeMapList;
 
         private CSharpUtilities.Components.DLLPreviewComponent myPreviewWindow;
 
@@ -70,6 +72,11 @@ namespace ModelViewer
             myShaderList.AddSelectedIndexChangeEvent(this.ShaderList_SelectedIndexChanged);
             myShaderList.BindToPanel(Menu_Panel);
             myShaderList.Show();
+
+            myCubeMapList = new CSharpUtilities.Components.DropDownComponent(new Point(Location.X + 560, Location.Y + 10), new Size(250, 13), "Cube Map: ");
+            myCubeMapList.AddSelectedIndexChangeEvent(this.CubeMapList_SelectedIndexChanged);
+            myCubeMapList.BindToPanel(Menu_Panel);
+            myCubeMapList.Show();
 
             myPreviewWindow = new CSharpUtilities.Components.DLLPreviewComponent(new Point(ModelViewer.Location.X, ModelViewer.Location.Y - 20), ModelViewer.Size, "Preview", true);
             myPreviewWindow.BindToPanel(ModelViewer);
@@ -116,9 +123,11 @@ namespace ModelViewer
 
             FillModelList();
             FillShaderList();
+            FillCubeMapList();
 
             UpdateTimer.Start();
         }
+
 
         private void Btn_OpenDataFolder_Click(object sender, EventArgs e)
         {
@@ -134,6 +143,7 @@ namespace ModelViewer
             {
                 FillModelList();
                 FillShaderList();
+                FillCubeMapList();
             }
 
             Properties.Settings.Default.DefaultDataFolderPath = myDataFolderPath;
@@ -161,6 +171,20 @@ namespace ModelViewer
                 if (file.StartsWith("S_effect") == true && VerifyShader(file) == true)
                 {
                     myShaderList.AddItem(file);
+                }
+            }
+        }
+
+        private void FillCubeMapList()
+        {
+            myCubeMapList.GetDropDown().Items.Clear();
+            myCubeMapFiles = Directory.GetFiles(myDataFolderPath, "*.dds", SearchOption.AllDirectories).ToList();
+            for (int i = 0; i < myCubeMapFiles.Count; ++i)
+            {
+                string file = StringUtilities.ConvertPathToRelativePath(myCubeMapFiles[i], "CubeMap\\");
+                if (file.StartsWith("T_cubemap") == true)
+                {
+                    myCubeMapList.AddItem(file);
                 }
             }
         }
@@ -210,6 +234,21 @@ namespace ModelViewer
                 Btn_LoadModel_Click(sender, e);
             }
         }
+
+        private void CubeMapList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedItem = (string)myCubeMapList.GetDropDown().SelectedItem;
+            selectedItem = selectedItem.Replace("/", "\\");
+            for (int i = 0; i < myShaderFiles.Count; ++i)
+            {
+                if (myCubeMapFiles[i].EndsWith(selectedItem) == true)
+                {
+                    CSharpUtilities.DLLImporter.NativeMethods.SetCubeMap(myCubeMapFiles[i]);
+                    break;
+                }
+            }
+        }
+
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {

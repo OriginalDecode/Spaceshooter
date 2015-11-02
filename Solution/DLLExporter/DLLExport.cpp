@@ -167,6 +167,12 @@ void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aACh
 	locDLLApplication->SetClearColor(CU::Vector4f(aRChannel, aGChannel, aBChannel, aAChannel));
 }
 
+void SetCubeMap(const char* aCubeMapFile) 
+{
+	DL_DEBUG("Stuff happend here first!");
+	locDLLApplication->SetCubeMap(aCubeMapFile);
+}
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)

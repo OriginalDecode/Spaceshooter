@@ -37,3 +37,5 @@ extern "C" DLLExport float GetCameraMovementSpeed();
 
 extern "C" DLLExport void SetCameraRotationSpeed(float aValue);
 extern "C" DLLExport float GetCameraRotationSpeed();
+
+extern "C" DLLExport void SetCubeMap(const char* aCubeMapFile);

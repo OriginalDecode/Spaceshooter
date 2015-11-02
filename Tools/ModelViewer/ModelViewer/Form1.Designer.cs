@@ -54,7 +54,7 @@
             // Btn_BackgroundColor
             // 
             this.Btn_BackgroundColor.BackColor = System.Drawing.SystemColors.Control;
-            this.Btn_BackgroundColor.Location = new System.Drawing.Point(672, 10);
+            this.Btn_BackgroundColor.Location = new System.Drawing.Point(966, 6);
             this.Btn_BackgroundColor.Name = "Btn_BackgroundColor";
             this.Btn_BackgroundColor.Size = new System.Drawing.Size(20, 20);
             this.Btn_BackgroundColor.TabIndex = 5;
@@ -63,7 +63,7 @@
             // 
             // Btn_LoadModel
             // 
-            this.Btn_LoadModel.Location = new System.Drawing.Point(591, 10);
+            this.Btn_LoadModel.Location = new System.Drawing.Point(885, 6);
             this.Btn_LoadModel.Name = "Btn_LoadModel";
             this.Btn_LoadModel.Size = new System.Drawing.Size(75, 20);
             this.Btn_LoadModel.TabIndex = 4;
