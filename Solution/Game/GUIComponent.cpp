@@ -128,6 +128,11 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
 	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", { 100.f, 100.f }, { 50.f, 50.f });
 
+	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
+	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
+
 }
 
 GUIComponent::~GUIComponent()
@@ -345,7 +350,14 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		}
 		if (lengthToEnemy < myMaxDistanceToEnemies)
 		{
-			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
+			if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
+			{
+				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
+			}
+			else
+			{
+				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
+			}
 			CU::Vector2<float> enemyScreenPos = myClosestScreenPos;
 			float lengthFromMouseToEnemy = CU::Length(enemyScreenPos - CU::Vector2<float>(steeringPos.x, steeringPos.y));
 			if (lengthFromMouseToEnemy < myClosestEnemyLength)
