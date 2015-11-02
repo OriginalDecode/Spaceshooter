@@ -101,7 +101,7 @@ Level::~Level()
 			myEntities[i] = nullptr;
 		}
 	}
-
+	delete myEMP;
 	delete mySkySphere;
 	delete myEntityFactory;
 	delete myWeaponFactory;
@@ -111,7 +111,6 @@ Level::~Level()
 	delete myEventManager;
 	delete myConversationManager;
 	delete myScene;
-	delete myEMP;
 	myEMP = nullptr;
 	mySkySphere = nullptr;
 	myScene = nullptr;
@@ -158,6 +157,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
+			myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 			myEMPActivated = false;
 		}
 	}
