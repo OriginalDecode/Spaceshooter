@@ -262,6 +262,9 @@
     <ClInclude Include="StreakEmitterInstance.h">
       <Filter>Rendering\Streak</Filter>
     </ClInclude>
+    <ClInclude Include="StreakInstance.h">
+      <Filter>Rendering\Streak</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
