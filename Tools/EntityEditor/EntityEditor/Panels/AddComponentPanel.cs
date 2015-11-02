@@ -41,7 +41,7 @@ namespace EntityEditor.Panels
             myComponents.Show();
 
             myAddButton.Text = "Add";
-            myAddButton.Location = new Point(Location.X + 150, Location.Y + 10);
+            myAddButton.Location = new Point(Location.X + 250, Location.Y + 10);
             myAddButton.Size = new Size(40, 20);
             myAddButton.Click += new EventHandler(AddButton_Click);
             myAddButton.Show();

@@ -334,6 +334,7 @@ namespace EntityEditor
         //----- Open Entity Buttons Section Start -----
         private void openEntityToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            HidePanels();
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             if (openEntityFile.InitialDirectory == "")
             {
@@ -360,9 +361,16 @@ namespace EntityEditor
         //----- Open Entity Buttons Section Ends -----
         private void saveEntityToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
-            DL_Debug.GetInstance.DL_MessageBox("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
-                    "Save Successfull!", MessageBoxButtons.OK);
+            if (myCurrentEntityFilePath != "")
+            {
+                myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
+                DL_Debug.GetInstance.DL_MessageBox("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
+                        "Save Successfull!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                saveAsToolStripMenuItem_Click(sender, e);
+            }
         }
 
         //----- Add Component Button Start -----
@@ -388,7 +396,11 @@ namespace EntityEditor
 
         private void newEntityToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            HidePanels();
             SetEntityName("");
+            myCurrentEntityFilePath = "";
+            myCurrentEntityFolderPath = "";
+            myEntityList = myEntityReader.LoadFiles(myDataFolderPath);
             OpenRenameEntityWindow();
             myShootingComponentPanel.ReloadXML(myDataFolderPath);
         }

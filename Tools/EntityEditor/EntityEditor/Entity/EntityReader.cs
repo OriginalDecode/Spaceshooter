@@ -56,6 +56,26 @@ namespace EntityEditor
             return myEntityData;
         }
 
+        public Entity.EntityListXML LoadFiles(string aCurrentFilePath)
+        {
+            if (myEntityList.myPaths == null)
+            {
+                myEntityList.myPaths = new List<string>();
+            }
+
+            myEntityData = new Entity.EntityData();
+            if (aCurrentFilePath == "") return myEntityList;
+            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aCurrentFilePath) + "Script/LI_list_entity.xml";
+
+            XmlDocument entityListDoc = myXMLWrapper.Open(entityListPath);
+            XmlNode rootElement = myXMLWrapper.FindFirstElement();
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(rootElement); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                ReadEntityListFile(e);
+            }
+            return myEntityList;
+        }
+
         private void ReadEntityListFile(XmlNode aNode)
         {
             if (aNode.Name == "path")
