@@ -23,7 +23,7 @@ namespace EntityEditor
             myEntityData = new Entity.EntityData();
             if (aFilePath == "") return myEntityData;
             myFilePath = aFilePath;
-            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
+            string entityListPath = StringUtilities.GetDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
 
             if (myEntityList.myPaths == null)
             {
@@ -65,7 +65,7 @@ namespace EntityEditor
 
             myEntityData = new Entity.EntityData();
             if (aCurrentFilePath == "") return myEntityList;
-            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aCurrentFilePath) + "Script/LI_list_entity.xml";
+            string entityListPath = StringUtilities.GetDataFolderPath(aCurrentFilePath) + "Script/LI_list_entity.xml";
 
             XmlDocument entityListDoc = myXMLWrapper.Open(entityListPath);
             XmlNode rootElement = myXMLWrapper.FindFirstElement();
@@ -92,45 +92,55 @@ namespace EntityEditor
 
         private void ReadElement(XmlNode aNode)
         {
-            if (aNode.Name == "GraphicsComponent")
-            {
-                myEntityData.myGraphicsComponent.myIsActive = true;
-                ReadGraphicsComponent(aNode);
-            }
-            else if (aNode.Name == "AIComponent")
+            if (aNode.Name == "AIComponent")
             {
                 myEntityData.myAIComponent.myIsActive = true;
                 ReadAIComponent(aNode);
-            }
-            else if (aNode.Name == "ShootingComponent")
-            {
-                myEntityData.myShootingComponent.myIsActive = true;
-                ReadShootingComponent(aNode);
-            }
-            else if (aNode.Name == "CollisionComponent")
-            {
-                myEntityData.myCollisionComponent.myIsActive = true;
-                ReadCollisionComponent(aNode);
-            }
-            else if (aNode.Name == "HealthComponent")
-            {
-                myEntityData.myHealthComponent.myIsActive = true;
-                ReadHealthComponent(aNode);
-            }
-            else if (aNode.Name == "PhysicsComponent")
-            {
-                myEntityData.myPhysicsComponent.myIsActive = true;
-                ReadPhysicsComponent(aNode);
             }
             else if (aNode.Name == "BulletComponent")
             {
                 myEntityData.myBulletComponent.myIsActive = true;
                 ReadBulletComponent(aNode);
             }
+            else if (aNode.Name == "CollisionComponent")
+            {
+                myEntityData.myCollisionComponent.myIsActive = true;
+                ReadCollisionComponent(aNode);
+            }
+            else if (aNode.Name == "GraphicsComponent")
+            {
+                myEntityData.myGraphicsComponent.myIsActive = true;
+                ReadGraphicsComponent(aNode);
+            }
+            else if (aNode.Name == "HealthComponent")
+            {
+                myEntityData.myHealthComponent.myIsActive = true;
+                ReadHealthComponent(aNode);
+            }
+            else if (aNode.Name == "ParticleEmitterComponent")
+            {
+                myEntityData.myParticleEmitterComponent.myIsActive = true;
+                ReadParticleEmitterComponent(aNode);
+            }
+            else if (aNode.Name == "PhysicsComponent")
+            {
+                myEntityData.myPhysicsComponent.myIsActive = true;
+                ReadPhysicsComponent(aNode);
+            }
             else if (aNode.Name == "PowerUpComponent")
             {
                 myEntityData.myPowerUpComponent.myIsActive = true;
                 ReadPowerUpComponent(aNode);
+            }
+            else if (aNode.Name == "ShootingComponent")
+            {
+                myEntityData.myShootingComponent.myIsActive = true;
+                ReadShootingComponent(aNode);
+            }
+            else if (aNode.Name == "SoundComponent")
+            {
+                myEntityData.mySoundComponent.myIsActive = true;
+                ReadSoundComponent(aNode);
             }
         }
 
@@ -199,6 +209,12 @@ namespace EntityEditor
                     myXMLWrapper.ReadAttribute(e, "modelFile", ref myEntityData.myGraphicsComponent.myModelPath);
                     myXMLWrapper.ReadAttribute(e, "effectFile", ref myEntityData.myGraphicsComponent.myEffectPath);
                 }
+                else if (e.Name == "Scale")
+                {
+                    myXMLWrapper.ReadAttribute(e, "x", ref myEntityData.myGraphicsComponent.myScale.myX);
+                    myXMLWrapper.ReadAttribute(e, "y", ref myEntityData.myGraphicsComponent.myScale.myY);
+                    myXMLWrapper.ReadAttribute(e, "z", ref myEntityData.myGraphicsComponent.myScale.myZ);
+                }
             }
         }
 
@@ -234,6 +250,10 @@ namespace EntityEditor
                     myXMLWrapper.ReadAttribute(e, "y", ref myEntityData.myAIComponent.myAvoidanceOffset.myY);
                     myXMLWrapper.ReadAttribute(e, "z", ref myEntityData.myAIComponent.myAvoidanceOffset.myZ);
                 }
+                else if (e.Name == "AITurnRate")
+                {
+                    myXMLWrapper.ReadAttribute(e, "value", ref myEntityData.myAIComponent.myAITurnRate);
+                }
             }
         }
 
@@ -257,6 +277,25 @@ namespace EntityEditor
                     myEntityData.myCollisionComponent.myHasSphere = true;
                     myXMLWrapper.ReadAttribute(e, "radius", ref myEntityData.myCollisionComponent.myRadius);
                 }
+            }
+        }
+
+        private void ReadParticleEmitterComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "path")
+                {
+                    myXMLWrapper.ReadAttribute(e, "src", ref myEntityData.myParticleEmitterComponent.myEmitterXML);
+                }
+            }
+        }
+
+        private void ReadSoundComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+
             }
         }
 

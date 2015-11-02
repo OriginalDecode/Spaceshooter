@@ -215,7 +215,7 @@ namespace EntityEditor.Panels
             myWeaponReader.LoadWeapons("Data/Script/LI_list_weapon.xml");
             myWeaponReader.LoadBullets("Data/Script/LI_list_projectile.xml");
 
-            myWeaponTypes = new DropDownComponent(new Point(Location.X, Location.Y + 10), new Size(Size.Width, 10), "Weapon");
+            myWeaponTypes = new DropDownComponent(new Point(Location.X, Location.Y + 10), new Size(245, 10), "Weapon");
             myWeaponTypes.GetDropDown().SelectedIndexChanged += new EventHandler(WeaponDropDown_SelectIndex_Changed);
             myWeaponTypes.BindToPanel(this);
             myWeaponTypes.Show();
@@ -224,7 +224,7 @@ namespace EntityEditor.Panels
             myWeaponDataStats.BindToPanel(this);
             myWeaponDataStats.Show();
 
-            myBulletTypes = new DropDownComponent(new Point(Location.X, Location.Y + 130), new Size(Size.Width, 10), "Bullet");
+            myBulletTypes = new DropDownComponent(new Point(Location.X, Location.Y + 130), new Size(245, 10), "Bullet");
             myBulletTypes.GetDropDown().SelectedIndexChanged += new EventHandler(BulletDropDown_SelectIndex_Changed);
             myBulletTypes.BindToPanel(this);
             myBulletTypes.Show();
