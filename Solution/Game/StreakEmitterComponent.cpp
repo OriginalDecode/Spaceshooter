@@ -39,6 +39,7 @@ void StreakEmitterComponent::Init(std::string aPath)
 
 void StreakEmitterComponent::Update(float aDeltaTime)
 {
+	myEmitter->SetOrientation(myEntity.myOrientation);
 	if (myEntity.GetAlive() == true)
 	{
 		myEmitter->Update(aDeltaTime);
