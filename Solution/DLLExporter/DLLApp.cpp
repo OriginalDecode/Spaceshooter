@@ -88,6 +88,13 @@ void DLLApp::SetClearColor(CU::Vector4f& aClearColor)
 	Prism::Engine::GetInstance()->SetClearColor({ aClearColor.myR, aClearColor.myG, aClearColor.myB, aClearColor.myA });
 }
 
+void DLLApp::SetCubeMap(const char* aCubeMapFile)
+{
+	DL_DEBUG("Stuff happend!");
+	EngineInstance->GetEffectContainer()->SetCubeMap(aCubeMapFile);
+	LoadModel(myModelFile.c_str(), myShaderFile.c_str());
+}
+
 void DLLApp::WatchCurrentFiles(const char* aModelFile, const char* aShaderFile)
 {
 	myModelFile = aModelFile;
@@ -222,4 +229,10 @@ void DLLApp::SetupLight()
 	myDirectionalLight->SetColor(CU::Vector4f(1.f, 1.f, 1.f, 1.f));
 
 	myScene->AddLight(myDirectionalLight);
+}
+
+void DLLApp::SetDirectionalLightRotation(CU::Vector3f aRotation)
+{
+	myDirectionalLightRotation = aRotation;
+	myDirectionalLight->SetDir(myDirectionalLightRotation);
 }

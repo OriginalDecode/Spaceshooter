@@ -91,5 +91,8 @@ namespace CSharpUtilities.DLLImporter
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe float GetCameraRotationSpeed();
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void SetCubeMap(string aCubeMapFile);
     }
 }
