@@ -75,6 +75,11 @@ Level* LevelFactory::LoadCurrentLevel()
 	myCurrentLevel = new Level(myInputWrapper);
 	ReadXML(myLevelPaths[myCurrentID]);
 
+	//for debug only, please delete:
+	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myStreakEntity->AddComponent<EmitterComponent>();
+	myCurrentLevel->myStreakEntity->GetComponent<EmitterComponent>()->Init("Data/Resource/Particle/P_powerup_emitter.xml");
+
 	return myCurrentLevel;
 }
 
