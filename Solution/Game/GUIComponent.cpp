@@ -288,6 +288,11 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
+		if (aArrowModel == myHomingTarget)
+		{
+			myClosestEnemy = nullptr;
+			return;
+		}
 	}
 	else
 	{
@@ -300,6 +305,11 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 		showName = false;
+		if (aArrowModel == myHomingTarget)
+		{
+			myClosestEnemy = nullptr;
+			return;
+		}
 	}
 
 	if (aIsPowerup == true && showName == true)
@@ -314,7 +324,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
-		if (aArrowModel == myEnemyArrow)
+		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
 			myClosestScreenPos.y = newRenderPos.y;
