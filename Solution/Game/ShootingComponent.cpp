@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "BulletMessage.h"
 #include <Camera.h>
-#include <Engine.h>
-#include <EngineEnums.h>
+#include "EMPMessage.h"
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
@@ -35,8 +34,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myFireRatePowerUpDuration(0.f)
 	, myEMPPowerUpDuration(0.f)
 	, myHomingPowerUpDuration(0.f)
-	, myEMPShot(false)
-	, myVisualEMPCount(0.f)
+	, myEMPTime(2.f)
 {
 
 }
@@ -62,15 +60,6 @@ void ShootingComponent::Update(float aDeltaTime)
 				totalReducer += myPowerUps[i].myPowerUpCoolDownReducer;
 			}
 			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime * totalReducer;
-		}
-	}
-
-	if (myEMPShot == true)
-	{
-		if (myVisualEMPCount <= 0.f)
-		{
-			//SKICKA MEDDELANDE TILL SCNENEN OM ATT DEN SKA SLUTA RENDERA EMP
-			myEMPShot = false;
 		}
 	}
 
@@ -335,8 +324,7 @@ void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
 		if (myPowerUps[i].myPowerUpType == aPowerUp)
 		{
 			//MAKE AWESOME THINGY
-			myEMPShot = true;
-			myVisualEMPCount = 5.f;
+			PostMaster::GetInstance()->SendMessage(EMPMessage(myEMPTime));
 			//SKICKA MEDDELANDE TILL SCNENEN OM ATT DEN FÅR RENDERA EMP
 			PostMaster::GetInstance()->SendMessage(PowerUpMessage(aPowerUp, myEntity.myOrientation.GetPos()
 				, myPowerUps[i].myPowerUpValue, myEMPPowerUpDuration));

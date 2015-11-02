@@ -78,7 +78,7 @@ Level* LevelFactory::LoadCurrentLevel()
 
 	myCurrentLevel->myEMP = new Entity(eEntityType::EMP, *myCurrentLevel->myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
-		, "Data/Resource/Model/Weapon/S_effect_pbl.fx");
+		, "Data/Resource/Shader/S_effect_emp.fx");
 
 	//for debug only, please delete:
 	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);

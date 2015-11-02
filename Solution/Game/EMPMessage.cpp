@@ -2,11 +2,8 @@
 #include "EMPMessage.h"
 
 
-EMPMessage::EMPMessage()
-{
-}
-
-
-EMPMessage::~EMPMessage()
+EMPMessage::EMPMessage(float aEMPTime)
+	: Message(eMessageType::EMP)
+	, myEMPTime(aEMPTime)
 {
 }

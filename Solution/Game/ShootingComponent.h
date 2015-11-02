@@ -81,8 +81,7 @@ private:
 	float myEMPPowerUpDuration;
 	float myHomingPowerUpDuration;
 
-	bool myEMPShot;
-	float myVisualEMPCount;
+	float myEMPTime;
 };
 
 inline eComponentType ShootingComponent::GetType()

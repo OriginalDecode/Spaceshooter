@@ -16,6 +16,7 @@ enum class eMessageType
 	SPAWN_POWERUP,
 	KILL_STRUCTURE,
 	DESTORY_EMITTER,
+	EMP,
 	COUNT,
 };
 

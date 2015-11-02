@@ -10,6 +10,7 @@
 #include "ConversationManager.h"
 #include "DefendMessage.h"
 #include "EffectContainer.h"
+#include "EMPMessage.h"
 #include <Engine.h>
 #include <EngineEnums.h>
 #include "Entity.h"
@@ -62,12 +63,14 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myEMP(nullptr)
 	, myEMPScale(1.f)
 	, myEMPTimer(0.f)
+	, myEMPActivated(false)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_POWERUP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::EMP, this);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
@@ -87,6 +90,7 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_POWERUP, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::EMP, this);
 	delete myCamera;
 
 	for (int i = 0; i < myEntities.Size(); i++)
@@ -146,6 +150,18 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	if (myEMPActivated == true)
+	{
+		myEMPTimer -= aDeltaTime;
+		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
+		myEMPScale += 100000 * aDeltaTime;
+		if (myEMPTimer <= 0.f)
+		{
+			myEMPScale = 1.f;
+			myEMPActivated = false;
+		}
+	}
+
 	myEmitterManager->UpdateEmitters(aDeltaTime);
 
 
@@ -186,7 +202,14 @@ void Level::Render()
 		myRenderer->EndScene(Prism::ePostProcessing::NONE);
 
 		myRenderer->BeginScene();
+
+		if (myEMPActivated == true)
+		{
+			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+		}
+
 		myScene->Render(myBulletManager->GetInstances());
+
 
 		myEmitterManager->RenderEmitters();
 
@@ -203,6 +226,11 @@ void Level::Render()
 		Prism::Engine::GetInstance()->DisableZBuffer();
 		mySkySphere->Render(*myCamera);
 		Prism::Engine::GetInstance()->EnableZBuffer();
+
+		if (myEMPActivated == true)
+		{
+			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+		}
 
 		myScene->Render(myBulletManager->GetInstances());
 
@@ -340,6 +368,13 @@ void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
 	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 	myEntities.Add(newEntity);
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
+}
+
+void Level::ReceiveMessage(const EMPMessage& aMessage)
+{
+	myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
+	myEMPTimer = aMessage.myEMPTime;
+	myEMPActivated = true;
 }
 
 void Level::CompleteLevel()
