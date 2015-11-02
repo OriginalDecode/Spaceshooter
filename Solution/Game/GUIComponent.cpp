@@ -55,6 +55,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
+	, myDeltaTime(0.f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -126,7 +127,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
-	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds", { 100.f, 100.f }, { 50.f, 50.f });
+	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_enemy_lock.dds", { 100.f, 100.f }, { 50.f, 50.f });
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
@@ -220,6 +221,7 @@ void GUIComponent::Update(float aDeltaTime)
 {
 	myHitMarkerTimer -= aDeltaTime;
 	myDamageIndicatorTimer -= aDeltaTime;
+	myDeltaTime = aDeltaTime;
 
 	if (myShowMessage == true)
 	{
@@ -415,6 +417,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	{
 		if (myClosestEnemy != nullptr)
 		{
+			myHomingTarget->Rotate(myDeltaTime);
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true);
 		}
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
