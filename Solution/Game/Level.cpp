@@ -177,9 +177,9 @@ void Level::Render()
 		Prism::Engine::GetInstance()->DisableZBuffer();
 		mySkySphere->Render(*myCamera);
 		Prism::Engine::GetInstance()->EnableZBuffer();
-		myRenderer->EndScene(Prism::ePostProcessing::NONE);
+		//myRenderer->EndScene(Prism::ePostProcessing::NONE);
 
-		myRenderer->BeginScene();
+		//myRenderer->BeginScene();
 		myScene->Render(myBulletManager->GetInstances());
 
 		myEmitterManager->RenderEmitters();
@@ -187,10 +187,10 @@ void Level::Render()
 
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 
-		myRenderer->BeginScene();
-		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
-		myRenderer->EndScene(Prism::ePostProcessing::NONE);
+		//myRenderer->BeginScene();
+		//myRenderer->EndScene(Prism::ePostProcessing::NONE);
 		myRenderer->FinalRender();
+		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	else
 	{

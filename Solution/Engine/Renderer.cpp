@@ -84,36 +84,36 @@ namespace Prism
 
 	void Renderer::FinalRender()
 	{
-		//Engine::GetInstance()->GetContex()->ClearRenderTargetView(myFinalTexture->GetRenderTargetView(), myClearColor);
-		//Engine::GetInstance()->GetContex()->ClearRenderTargetView(myCombineMiddleMan->GetRenderTargetView(), myClearColor);
-		//
-		//Engine::GetInstance()->DisableZBuffer();
-		//
-		//if (mySceneIndex > 1)
-		//{
-		//	myFullScreenHelper->CombineTextures(mySceneData[0].myFinished, mySceneData[1].myFinished, myCombineMiddleMan);
-		//	myFullScreenHelper->CopyTexture(myCombineMiddleMan, myFinalTexture);
-		//
-		//	for (int i = 2; i < mySceneIndex; ++i)
-		//	{
-		//		myFullScreenHelper->CombineTextures(mySceneData[i].myFinished, myFinalTexture, myCombineMiddleMan);
-		//		myFullScreenHelper->CopyTexture(myCombineMiddleMan, myFinalTexture);
-		//	}
-		//}
-		//else
-		//{
-		//	myFullScreenHelper->CopyTexture(mySceneData[0].myFinished, myFinalTexture);
-		//}
-		//
-		//
-		//myFullScreenHelper->RenderToScreen(myFinalTexture);
-
-		for (int i = 0; i < mySceneIndex; ++i)
+		Engine::GetInstance()->GetContex()->ClearRenderTargetView(myFinalTexture->GetRenderTargetView(), myClearColor);
+		Engine::GetInstance()->GetContex()->ClearRenderTargetView(myCombineMiddleMan->GetRenderTargetView(), myClearColor);
+		
+		Engine::GetInstance()->DisableZBuffer();
+		
+		if (mySceneIndex > 1)
 		{
-			Engine::GetInstance()->DisableZBuffer();
-			myFullScreenHelper->RenderToScreen(mySceneData[i].myFinished);
+			myFullScreenHelper->CombineTextures(mySceneData[0].myFinished, mySceneData[1].myFinished, myCombineMiddleMan);
+			myFullScreenHelper->CopyTexture(myCombineMiddleMan, myFinalTexture);
+		
+			for (int i = 2; i < mySceneIndex; ++i)
+			{
+				myFullScreenHelper->CombineTextures(mySceneData[i].myFinished, myFinalTexture, myCombineMiddleMan);
+				myFullScreenHelper->CopyTexture(myCombineMiddleMan, myFinalTexture);
+			}
 		}
-		Engine::GetInstance()->EnableZBuffer();
+		else
+		{
+			myFullScreenHelper->CopyTexture(mySceneData[0].myFinished, myFinalTexture);
+		}
+		
+		
+		myFullScreenHelper->RenderToScreen(myFinalTexture);
+
+		//for (int i = 0; i < mySceneIndex; ++i)
+		//{
+		//	Engine::GetInstance()->DisableZBuffer();
+		//	myFullScreenHelper->RenderToScreen(mySceneData[i].myFinished);
+		//}
+		//Engine::GetInstance()->EnableZBuffer();
 
 		mySceneIndex = 0;
 	}
