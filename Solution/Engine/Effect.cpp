@@ -92,6 +92,11 @@ void Prism::Effect::SetColor(const CU::Vector4<float>& aColor)
 	mySpriteColor->SetFloatVector(&aColor.x);
 }
 
+void Prism::Effect::SetSpriteOrientation(const CU::Matrix44<float>& aOrientation)
+{
+	mySpriteOrientation->SetMatrix(&aOrientation.myMatrix[0]);
+}
+
 void Prism::Effect::UpdateDirectionalLights(
 	const CU::StaticArray<Prism::DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData)
 {
@@ -274,6 +279,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	if (mySpriteColor->IsValid() == false)
 	{
 		mySpriteColor = nullptr;
+	}
+
+	mySpriteOrientation = myEffect->GetVariableByName("SpriteOrientation")->AsMatrix();
+	if (mySpriteOrientation->IsValid() == false)
+	{
+		mySpriteOrientation = nullptr;
 	}
 
 	return true;

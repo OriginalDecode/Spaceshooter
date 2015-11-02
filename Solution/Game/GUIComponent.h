@@ -73,6 +73,7 @@ private:
 	
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;
+	float myDeltaTime;
 
 	CU::Vector2<float> mySteeringTargetPosition;
 	CU::Vector3<float> myWaypointPosition;

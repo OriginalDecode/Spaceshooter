@@ -39,6 +39,7 @@ namespace Prism
 		void SetPosAndScale(const CU::Vector2<float>& aPos
 			, const CU::Vector2<float>& aScale = { 1.f, 1.f });
 		void SetColor(const CU::Vector4<float>& aColor);
+		void SetSpriteOrientation(const CU::Matrix44<float>& aOrientation);
 
 		void UpdateDirectionalLights(
 			const CU::StaticArray<DirectionalLightData, NUMBER_OF_DIRECTIONAL_LIGHTS>& someDirectionalLightData);
@@ -73,6 +74,7 @@ namespace Prism
 
 		ID3DX11EffectVectorVariable* mySpritePosAndScale;
 		ID3DX11EffectVectorVariable* mySpriteColor;
+		ID3DX11EffectMatrixVariable* mySpriteOrientation;
 
 
 		CU::Vector4<float> mySpritePosAndScaleVector;

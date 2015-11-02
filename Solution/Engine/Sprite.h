@@ -16,10 +16,12 @@ namespace Prism
 		void SetSize(const CU::Vector2<float> aTextureSize);
 		const CU::Vector2<float>& GetSize() const;
 
+		void Rotate(float aRadians);
+
 	private:
 
 		void CreateVertices();
-
+		CU::Matrix44<float> myOrientation;
 		CU::Vector2<float> mySize;
 		CU::Vector2<float> myHotspot;
 	};
