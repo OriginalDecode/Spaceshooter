@@ -2,12 +2,12 @@
 
 #include <d3dx11effect.h>
 
-#include "EmitterData.h"
+#include "ParticleEmitterData.h"
 #include <XMLReader.h>
 
 namespace Prism
 {
-	void EmitterData::LoadDataFile(const char* aFilePath)
+	void ParticleEmitterData::LoadDataFile(const char* aFilePath)
 	{
 		XMLReader read;
 		myFileName = aFilePath;
@@ -143,13 +143,13 @@ namespace Prism
 		CreateInputLayout();
 	}
 
-	void EmitterData::CreateInputLayout()
+	void ParticleEmitterData::CreateInputLayout()
 	{
 		HRESULT hr;
 
 		D3DX11_PASS_DESC passDesc;
 		hr = myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
-		DL_ASSERT_EXP(!FAILED(hr), "[EmitterData](CreateInputLayout) : Failed to get Pass Description!");
+		DL_ASSERT_EXP(!FAILED(hr), "[ParticleEmitterData](CreateInputLayout) : Failed to get Pass Description!");
 
 		const D3D11_INPUT_ELEMENT_DESC VertexParticleLayout[] =
 		{
@@ -167,6 +167,6 @@ namespace Prism
 			, passDesc.pIAInputSignature
 			, passDesc.IAInputSignatureSize
 			, &myInputLayout);
-		DL_ASSERT_EXP(!FAILED(hr), "[EmitterData](CreateInputLayout) : Failed to Create InputLayout!");
+		DL_ASSERT_EXP(!FAILED(hr), "[ParticleEmitterData](CreateInputLayout) : Failed to Create InputLayout!");
 	}
 }

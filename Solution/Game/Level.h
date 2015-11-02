@@ -102,6 +102,8 @@ private:
 
 	bool myUsePostProcessing;
 	bool myComplete;
+
+	Entity* myStreakEntity;
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)

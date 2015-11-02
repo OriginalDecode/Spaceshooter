@@ -14,7 +14,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include "EmitterComponent.h"
+#include "ParticleEmitterComponent.h"
 #include "EmitterManager.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
@@ -113,7 +113,6 @@ Level::~Level()
 	myEmitterManager = nullptr;
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
-
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
@@ -142,6 +141,20 @@ bool Level::LogicUpdate(float aDeltaTime)
 	}
 
 	myEmitterManager->UpdateEmitters(aDeltaTime);
+
+
+	////streak debug only, please remove later
+	//static float totalTime = 0;
+	//totalTime += aDeltaTime;
+
+	//float radius = 34.f;
+	//float distance = 100.f;
+
+	//myStreakEntity->myOrientation.SetPos(CU::Vector3<float>(sinf(totalTime) * radius, cosf(totalTime) * radius, distance));
+
+	//myStreakEntity->Update(aDeltaTime);
+	////streak debug only END
+
 
 	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
@@ -176,7 +189,7 @@ void Level::Render()
 
 		myRenderer->BeginScene();
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+		myRenderer->EndScene(Prism::ePostProcessing::NONE);
 		myRenderer->FinalRender();
 	}
 	else
@@ -188,11 +201,11 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 		myEmitterManager->RenderEmitters();
+		//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Render();
 
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	
-
 
 #ifndef RELEASE_BUILD
 	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0), Prism::eTextType::DEBUG_TEXT);

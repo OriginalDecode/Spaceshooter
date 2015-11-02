@@ -88,7 +88,7 @@ private:
 	void LoadShootingComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aShootingComponenetElement);
 	void LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement);
 	void LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent);
-	void LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aEmitterComponent);
+	void LoadParticleEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aParticleEmitterComponent);
 	void LoadSoundComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aSoundComponent);
 
 	ePowerUpType ConvertToPowerUpType(std::string aName);

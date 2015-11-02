@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EmitterData.h"
+#include "ParticleEmitterData.h"
 #include "ParticleData.h"
 
 namespace Prism
@@ -8,13 +8,13 @@ namespace Prism
 	class Camera;
 	struct VertexBufferWrapper;
 	
-	class EmitterInstance
+	class ParticleEmitterInstance
 	{
 	public:
 
-		EmitterInstance();
-		~EmitterInstance();
-		void Initiate(EmitterData someData);
+		ParticleEmitterInstance();
+		~ParticleEmitterInstance();
+		void Initiate(ParticleEmitterData someData);
 		void Render(Camera* aCamera);
 		void Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
 		bool GetIsActive();
@@ -28,7 +28,7 @@ namespace Prism
 		void UpdateEmitter(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
 		void UpdateParticle(float aDeltaTime);
 
-		void EmittParticle(const CU::Matrix44f& aWorldMatrix);
+		void EmitParticle(const CU::Matrix44f& aWorldMatrix);
 
 		CU::GrowingArray<LogicalParticle> myLogicalParticles;
 		CU::GrowingArray<GraphicalParticle> myGraphicalParticles;
@@ -36,7 +36,7 @@ namespace Prism
 		CU::Vector3f myDiffColor;
 		CU::Matrix44f myOrientation;
 
-		EmitterData myEmitterData;
+		ParticleEmitterData myParticleEmitterData;
 		VertexBufferWrapper *myVertexWrapper;
 
 		float myEmissionTime;

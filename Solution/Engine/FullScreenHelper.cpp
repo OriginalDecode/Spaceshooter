@@ -65,6 +65,14 @@ namespace Prism
 	{
 		ActivateBuffers();
 		Engine::GetInstance()->DisableZBuffer();
+
+		if (aEffect == ePostProcessing::NONE)
+		{
+			CopyTexture(aSource, aTarget);
+			Engine::GetInstance()->EnableZBuffer();
+			return;
+		}
+
 		Engine::GetInstance()->GetContex()->ClearRenderTargetView(myProcessingTexture->GetRenderTargetView(), myClearColor);
 		CopyTexture(aSource, myProcessingTexture);
 

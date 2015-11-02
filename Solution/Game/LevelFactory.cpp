@@ -13,7 +13,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include "EmitterComponent.h"
+#include "ParticleEmitterComponent.h"
 #include "EmitterManager.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
@@ -74,6 +74,11 @@ Level* LevelFactory::LoadCurrentLevel()
 
 	myCurrentLevel = new Level(myInputWrapper);
 	ReadXML(myLevelPaths[myCurrentID]);
+
+	//for debug only, please delete:
+	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myStreakEntity->AddComponent<ParticleEmitterComponent>();
+	myCurrentLevel->myStreakEntity->GetComponent<ParticleEmitterComponent>()->Init("Data/Resource/Particle/P_powerup_emitter.xml");
 
 	return myCurrentLevel;
 }
@@ -237,9 +242,9 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 			}
 		}
 
-		if (myCurrentLevel->myEntities[i]->GetComponent<EmitterComponent>() != nullptr)
+		if (myCurrentLevel->myEntities[i]->GetComponent<ParticleEmitterComponent>() != nullptr)
 		{
-			myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myEntities[i]->GetComponent<EmitterComponent>());
+			myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myEntities[i]->GetComponent<ParticleEmitterComponent>());
 		}
 	}
 
@@ -250,13 +255,13 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 		{
 			for (int j = 0; j < myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets.Size(); ++j)
 			{
-				if (myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets[j]->GetComponent<EmitterComponent>() != nullptr)
+				if (myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets[j]->GetComponent<ParticleEmitterComponent>() != nullptr)
 				{
-					myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets[j]->GetComponent<EmitterComponent>());
+					myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myBulletManager->GetBullet(i)->myPlayerBullets[j]->GetComponent<ParticleEmitterComponent>());
 				}
-				if (myCurrentLevel->myBulletManager->GetBullet(i)->myEnemyBullets[j]->GetComponent<EmitterComponent>() != nullptr)
+				if (myCurrentLevel->myBulletManager->GetBullet(i)->myEnemyBullets[j]->GetComponent<ParticleEmitterComponent>() != nullptr)
 				{
-					myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myBulletManager->GetBullet(i)->myEnemyBullets[j]->GetComponent<EmitterComponent>());
+					myCurrentLevel->myEmitterManager->AddEmitter(myCurrentLevel->myBulletManager->GetBullet(i)->myEnemyBullets[j]->GetComponent<ParticleEmitterComponent>());
 				}
 			}
 		}
