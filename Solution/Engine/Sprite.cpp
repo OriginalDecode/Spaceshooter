@@ -44,6 +44,7 @@ void Prism::Sprite::Render(const CU::Vector2<float>& aPosition, const CU::Vector
 	Engine::GetInstance()->DisableZBuffer();
 
 	myPosition = aPosition;
+	//myOrientation.SetPos(aPosition);
 	myScale = aScale;
 
 	float blendFactor[4];
@@ -56,6 +57,7 @@ void Prism::Sprite::Render(const CU::Vector2<float>& aPosition, const CU::Vector
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetPosAndScale(aPosition, aScale);
 	//myEffect->SetColor(aColor);
+	myEffect->SetSpriteOrientation(myOrientation);
 
 	BaseModel::Render();
 
@@ -103,4 +105,9 @@ void Prism::Sprite::CreateVertices()
 
 	mySurfaces[0]->SetVertexCount(vertices.Size());
 	mySurfaces[0]->SetIndexCount(indices.Size());
+}
+
+void Prism::Sprite::Rotate(float aRadians)
+{
+	myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aRadians) * myOrientation;
 }

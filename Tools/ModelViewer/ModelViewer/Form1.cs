@@ -16,6 +16,7 @@ namespace ModelViewer
     {
         private List<string> myModelFiles = null;
         private List<string> myShaderFiles = null;
+        private List<string> myCubeMapFiles = null;
 
         private string myCurrentShaderFilePath = Properties.Settings.Default.DefaultEffectFilePath;
         private string myCurrentModelFilePath = Properties.Settings.Default.DefaultModelFilePath;
@@ -29,6 +30,7 @@ namespace ModelViewer
 
         private CSharpUtilities.Components.DropDownComponent myModelList;
         private CSharpUtilities.Components.DropDownComponent myShaderList;
+        private CSharpUtilities.Components.DropDownComponent myCubeMapList;
 
         private CSharpUtilities.Components.DLLPreviewComponent myPreviewWindow;
 
@@ -71,6 +73,11 @@ namespace ModelViewer
             myShaderList.BindToPanel(Menu_Panel);
             myShaderList.Show();
 
+            myCubeMapList = new CSharpUtilities.Components.DropDownComponent(new Point(Location.X + 560, Location.Y + 10), new Size(250, 13), "Cube Map: ");
+            myCubeMapList.AddSelectedIndexChangeEvent(this.CubeMapList_SelectedIndexChanged);
+            myCubeMapList.BindToPanel(Menu_Panel);
+            myCubeMapList.Show();
+
             myPreviewWindow = new CSharpUtilities.Components.DLLPreviewComponent(new Point(ModelViewer.Location.X, ModelViewer.Location.Y - 20), ModelViewer.Size, "Preview", true);
             myPreviewWindow.BindToPanel(ModelViewer);
             myPreviewWindow.Show();
@@ -106,19 +113,25 @@ namespace ModelViewer
 
             myMouseSensitivitySlider = new CSharpUtilities.Components.SliderComponent(new Point(0, 150), new Size(200, 15), "Mouse Sens", 0, 1000, 1, true, 0.0f, 100.0f);
             myMouseSensitivitySlider.AddSelectedValueChangedEvent(this.MouseSensitivity_Changed);
+            myMouseSensitivitySlider.SetValue(Properties.Settings.Default.DefaultSettingMouseSensitivity);
             myMouseSensitivitySlider.BindToPanel(ModelViewerMenu);
             myMouseSensitivitySlider.Show();
 
             myCameraSettingsSliders = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 175), new Size(200, 50), "Camera Settings", -1000, 1000, 0, true, "Zoom: ", "Movement: ", "Rotation: ", -10.0f, 10.0f);
+            myCameraSettingsSliders.SetXValue(Properties.Settings.Default.DefaultSettingCameraZoom);
+            myCameraSettingsSliders.SetYValue(Properties.Settings.Default.DefaultSettingCameraMovement);
             myCameraSettingsSliders.AddSelectedValueChangedEvent(this.CameraSettings_Changed);
+            myCameraSettingsSliders.SetZValue(Properties.Settings.Default.DefaultSettingCameraRotation);
             myCameraSettingsSliders.BindToPanel(ModelViewerMenu);
             myCameraSettingsSliders.Show();
 
             FillModelList();
             FillShaderList();
+            FillCubeMapList();
 
             UpdateTimer.Start();
         }
+
 
         private void Btn_OpenDataFolder_Click(object sender, EventArgs e)
         {
@@ -134,6 +147,7 @@ namespace ModelViewer
             {
                 FillModelList();
                 FillShaderList();
+                FillCubeMapList();
             }
 
             Properties.Settings.Default.DefaultDataFolderPath = myDataFolderPath;
@@ -161,6 +175,20 @@ namespace ModelViewer
                 if (file.StartsWith("S_effect") == true && VerifyShader(file) == true)
                 {
                     myShaderList.AddItem(file);
+                }
+            }
+        }
+
+        private void FillCubeMapList()
+        {
+            myCubeMapList.GetDropDown().Items.Clear();
+            myCubeMapFiles = Directory.GetFiles(myDataFolderPath, "*.dds", SearchOption.AllDirectories).ToList();
+            for (int i = 0; i < myCubeMapFiles.Count; ++i)
+            {
+                string file = StringUtilities.ConvertPathToRelativePath(myCubeMapFiles[i], "CubeMap\\");
+                if (file.StartsWith("T_cubemap") == true)
+                {
+                    myCubeMapList.AddItem(file);
                 }
             }
         }
@@ -210,6 +238,21 @@ namespace ModelViewer
                 Btn_LoadModel_Click(sender, e);
             }
         }
+
+        private void CubeMapList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string selectedItem = (string)myCubeMapList.GetDropDown().SelectedItem;
+            selectedItem = selectedItem.Replace("/", "\\");
+            for (int i = 0; i < myShaderFiles.Count; ++i)
+            {
+                if (myCubeMapFiles[i].EndsWith(selectedItem) == true)
+                {
+                    CSharpUtilities.DLLImporter.NativeMethods.SetCubeMap(myCubeMapFiles[i]);
+                    break;
+                }
+            }
+        }
+
 
         private void UpdateTimer_Tick(object sender, EventArgs e)
         {
@@ -310,8 +353,9 @@ namespace ModelViewer
 
         private void MouseSensitivity_Changed(object sender, EventArgs e)
         {
-            float value = myMouseSensitivitySlider.GetValue();
             CSharpUtilities.DLLImporter.NativeMethods.SetMouseSensitivty(myMouseSensitivitySlider.GetValue());
+            Properties.Settings.Default.DefaultSettingMouseSensitivity = myMouseSensitivitySlider.GetValue();
+            Properties.Settings.Default.Save();
         }
 
         private void CameraSettings_Changed(object sender, EventArgs e)
@@ -319,6 +363,13 @@ namespace ModelViewer
             CSharpUtilities.DLLImporter.NativeMethods.SetCameraZoomSpeed(myCameraSettingsSliders.GetXValue());
             CSharpUtilities.DLLImporter.NativeMethods.SetCameraMovementSpeed(myCameraSettingsSliders.GetYValue());
             CSharpUtilities.DLLImporter.NativeMethods.SetCameraRotationSpeed(myCameraSettingsSliders.GetZValue());
+
+            float xValue = myCameraSettingsSliders.GetXValue();
+
+            Properties.Settings.Default.DefaultSettingCameraZoom = myCameraSettingsSliders.GetXValue();
+            Properties.Settings.Default.DefaultSettingCameraMovement = myCameraSettingsSliders.GetYValue();
+            Properties.Settings.Default.DefaultSettingCameraRotation = myCameraSettingsSliders.GetZValue();
+            Properties.Settings.Default.Save();
         }
     }
 }

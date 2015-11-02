@@ -206,8 +206,8 @@
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectContainer.cpp" />
-    <ClCompile Include="EmitterData.cpp" />
-    <ClCompile Include="EmitterInstance.cpp" />
+    <ClCompile Include="ParticleEmitterData.cpp" />
+    <ClCompile Include="ParticleEmitterInstance.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="FBXFactory.cpp" />
     <ClCompile Include="FBX\FbxLoader.cpp">
@@ -239,6 +239,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="StreakEmitterData.cpp" />
+    <ClCompile Include="StreakEmitterInstance.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="SystemMonitor.cpp" />
     <ClCompile Include="DebugText.cpp" />
@@ -258,8 +260,8 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectContainer.h" />
     <ClInclude Include="EffectListener.h" />
-    <ClInclude Include="EmitterData.h" />
-    <ClInclude Include="EmitterInstance.h" />
+    <ClInclude Include="ParticleEmitterData.h" />
+    <ClInclude Include="ParticleEmitterInstance.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineEnums.h" />
     <ClInclude Include="FBXFactory.h" />
@@ -288,6 +290,9 @@
     <ClInclude Include="SetupInfo.h" />
     <ClInclude Include="SpotLight.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StreakData.h" />
+    <ClInclude Include="StreakEmitterData.h" />
+    <ClInclude Include="StreakEmitterInstance.h" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="SystemMonitor.h" />
     <ClInclude Include="DebugText.h" />

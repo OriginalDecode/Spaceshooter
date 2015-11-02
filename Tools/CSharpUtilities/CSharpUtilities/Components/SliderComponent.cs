@@ -138,10 +138,8 @@ namespace CSharpUtilities.Components
         public void SetValue(float aValue)
         {
             myCurrentFloatValue = aValue;
-            myCurrentValue = (int)(aValue * myMaxValue);
-            if (myCurrentValue > myMaxValue) myCurrentValue = myMaxValue;
-            if (aValue < 0) myCurrentValue = (int)(aValue * myMinValue);
-            if (myCurrentValue < myMinValue) myCurrentValue = myMinValue;
+            myCurrentValue = (int)MathUtilities.Remap(aValue, myDownScaleValue.myX, myDownScaleValue.myY, myMinValue, myMaxValue);
+
             myScrollBar.Value = myCurrentValue;
         } 
     }

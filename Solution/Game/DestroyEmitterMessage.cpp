@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "DestroyEmitterMessage.h"
 
-DestroyEmitterMessage::DestroyEmitterMessage(EmitterComponent* anEmitterComponent)
+DestroyEmitterMessage::DestroyEmitterMessage(ParticleEmitterComponent* anParticleEmitterComponent)
 	: Message(eMessageType::DESTORY_EMITTER)
-	, myEmitterComponent(anEmitterComponent)
+	, myParticleEmitterComponent(anParticleEmitterComponent)
 {
 }
 

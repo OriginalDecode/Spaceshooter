@@ -35,6 +35,7 @@ public:
 	void LoadModel(const char* aModelFile, const char* aShaderFile);
 
 	void SetClearColor(CU::Vector4f& aClearColor);
+	void SetCubeMap(const char* aCubeMapFile);
 
 	void SetAutoRotationSpeed(const CU::Vector3f& aRotationSpeed);
 	const CU::Vector3f& GetAutoRotationSpeed() const;
@@ -146,10 +147,6 @@ inline void DLLApp::SetMouseSensitivty(float val)
 inline CU::Vector3f DLLApp::GetDirectionalLightRotation() const
 {
 	return myDirectionalLightRotation;
-}
-inline void DLLApp::SetDirectionalLightRotation(CU::Vector3f aRotation)
-{
-	myDirectionalLightRotation = aRotation;
 }
 
 inline void DLLApp::SetCameraZoomSpeed(float aValue)

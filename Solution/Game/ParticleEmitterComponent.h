@@ -3,20 +3,20 @@
 
 namespace Prism
 {
-	class EmitterInstance;
+	class ParticleEmitterInstance;
 }
 
-class EmitterComponent : public Component
+class ParticleEmitterComponent : public Component
 {
 public:
-	EmitterComponent(Entity& aEntity);
-	~EmitterComponent();
+	ParticleEmitterComponent(Entity& aEntity);
+	~ParticleEmitterComponent();
 	void Init(std::string aPath);
 	void Update(float aDeltaTime) override;
 	void Render();
 	static eComponentType GetType();
 	int GetEmitterCount();
-	Prism::EmitterInstance* GetEmitter();
+	Prism::ParticleEmitterInstance* GetEmitter();
 
 	void ReceiveNote(const EmitterNote& aNote) override;
 
@@ -26,7 +26,7 @@ private:
 	CU::Matrix44f myOrientation;
 
 	CU::Vector3f myPosition;
-	Prism::EmitterInstance* myEmitter;
+	Prism::ParticleEmitterInstance* myEmitter;
 	std::string myXMLPath;
 };
 

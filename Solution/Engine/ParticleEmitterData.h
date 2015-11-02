@@ -5,15 +5,15 @@ struct ID3D11InputLayout;
 
 namespace Prism
 {
-	class EmitterInstance;
+	class ParticleEmitterInstance;
 	class Texture;
 	class Effect;
 
 
-	class EmitterData
+	class ParticleEmitterData
 	{
 	
-		friend class EmitterInstance;
+		friend class ParticleEmitterInstance;
 	
 	public:
 

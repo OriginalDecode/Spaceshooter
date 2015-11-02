@@ -39,12 +39,6 @@
       <Filter>Octree</Filter>
     </ClCompile>
     <ClCompile Include="Frustum.cpp" />
-    <ClCompile Include="EmitterData.cpp">
-      <Filter>Rendering\Particle</Filter>
-    </ClCompile>
-    <ClCompile Include="EmitterInstance.cpp">
-      <Filter>Rendering\Particle</Filter>
-    </ClCompile>
     <ClCompile Include="Sprite.cpp">
       <Filter>Rendering</Filter>
     </ClCompile>
@@ -104,6 +98,18 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Rendering\PostProcessing</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterInstance.cpp">
+      <Filter>Rendering\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleEmitterData.cpp">
+      <Filter>Rendering\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="StreakEmitterData.cpp">
+      <Filter>Rendering\Streak</Filter>
+    </ClCompile>
+    <ClCompile Include="StreakEmitterInstance.cpp">
+      <Filter>Rendering\Streak</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,12 +184,6 @@
     <ClInclude Include="LodStructs.h">
       <Filter>FBX</Filter>
     </ClInclude>
-    <ClInclude Include="EmitterData.h">
-      <Filter>Rendering\Particle</Filter>
-    </ClInclude>
-    <ClInclude Include="EmitterInstance.h">
-      <Filter>Rendering\Particle</Filter>
-    </ClInclude>
     <ClInclude Include="ParticleData.h">
       <Filter>Rendering\Particle</Filter>
     </ClInclude>
@@ -247,6 +247,21 @@
     <ClInclude Include="Renderer.h">
       <Filter>Rendering\PostProcessing</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleEmitterInstance.h">
+      <Filter>Rendering\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleEmitterData.h">
+      <Filter>Rendering\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="StreakData.h">
+      <Filter>Rendering\Streak</Filter>
+    </ClInclude>
+    <ClInclude Include="StreakEmitterData.h">
+      <Filter>Rendering\Streak</Filter>
+    </ClInclude>
+    <ClInclude Include="StreakEmitterInstance.h">
+      <Filter>Rendering\Streak</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
@@ -290,6 +305,9 @@
     </Filter>
     <Filter Include="Rendering\PostProcessing">
       <UniqueIdentifier>{9eae83a0-4dc4-4207-9000-7994f620f042}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering\Streak">
+      <UniqueIdentifier>{dd92a4e0-d37f-466b-9b7a-966645f4818d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -166,7 +166,7 @@ namespace EntityEditor.Entity
             aWriter.WriteAttributeString("type", myBulletData.myType);
 
             aWriter.WriteStartElement("Entity");
-            aWriter.WriteAttributeString("type", myBulletData.myEntityType);
+            aWriter.WriteAttributeString("name", myBulletData.myEntityType);
             aWriter.WriteEndElement();
 
             aWriter.WriteStartElement("maxAmount");

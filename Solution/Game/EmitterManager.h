@@ -1,7 +1,7 @@
 #pragma once
 #include "Subscriber.h"
 
-class EmitterComponent;
+class ParticleEmitterComponent;
 
 class EmitterManager : public Subscriber
 {
@@ -9,7 +9,7 @@ public:
 	EmitterManager();
 	~EmitterManager();
 
-	void AddEmitter(EmitterComponent* anEmitter);
+	void AddEmitter(ParticleEmitterComponent* anEmitter);
 
 
 	void UpdateEmitters(float aDeltaTime);
@@ -22,7 +22,7 @@ public:
 private:
 
 
-	CU::GrowingArray<EmitterComponent*> myEmitters;
+	CU::GrowingArray<ParticleEmitterComponent*> myEmitters;
 
 };
 
