@@ -13,6 +13,8 @@
 Prism::StreakEmitterInstance::StreakEmitterInstance(StreakEmitterData& anEmitter)
 	: myEmitter(anEmitter)
 	, myTimeSinceLastSpawn(0)
+	, myStreaks(128)
+	, myStreakIndices(128)
 {
 	DL_ASSERT_EXP(myEmitter.myMaxNrOfStreaks <= MAX_NR_OF_StreakS_IN_EMITTER,
 		"Max number of Streaks too high.");
@@ -36,12 +38,12 @@ Prism::StreakEmitterInstance::StreakEmitterInstance(StreakEmitterData& anEmitter
 }
 
 
-void Prism::StreakEmitterInstance::Render(Camera& aCamera)
+void Prism::StreakEmitterInstance::Render(Camera* aCamera)
 {
 	UpdateVertexBuffer();
 
-	myEmitter.myEffect->SetProjectionMatrix(aCamera.GetProjection());
-	myEmitter.myEffect->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
+	myEmitter.myEffect->SetViewMatrix(CU::InverseSimple(aCamera->GetOrientation()));
+	myEmitter.myEffect->SetProjectionMatrix(aCamera->GetProjection());
 	if (myEmitter.myStreakData.myStreaksFollowEmitter == true)
 	{
 		myEmitter.myEffect->SetWorldMatrix(myOrientation);

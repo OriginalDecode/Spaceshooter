@@ -30,3 +30,9 @@ private:
 	std::string myXMLPath;
 };
 
+
+
+inline eComponentType StreakEmitterComponent::GetType()
+{
+	return eComponentType::STREAK_EMITTER;
+}

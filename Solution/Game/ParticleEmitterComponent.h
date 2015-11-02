@@ -30,3 +30,7 @@ private:
 	std::string myXMLPath;
 };
 
+inline eComponentType ParticleEmitterComponent::GetType()
+{
+	return eComponentType::PARTICLE_EMITTER;
+}

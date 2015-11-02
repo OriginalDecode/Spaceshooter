@@ -4,13 +4,13 @@
 #include <Matrix.h>
 #include <Vector.h>
 #include <GrowingArray.h>
+#include "StreakEmitterData.h"
 #include "VertexBufferWrapper.h"
 
 #define MAX_NR_OF_StreakS_IN_EMITTER 4096
 
 namespace Prism
 {
-	class StreakEmitterData;
 	class Camera;
 
 
@@ -18,7 +18,7 @@ namespace Prism
 	{
 	public:
 		StreakEmitterInstance(StreakEmitterData& anEmitter);
-		void Render(Camera& aCamera);
+		void Render(Camera* aCamera);
 		void Update(float aDeltaTime);
 		const CU::Matrix44f& GetOrientation() const;
 		const CU::Vector3f& GetPosition() const;
@@ -37,7 +37,7 @@ namespace Prism
 		void UpdateVertexBuffer();
 
 		CU::Matrix33<float> myEmissionOrientation;
-		StreakEmitterData& myEmitter;
+		StreakEmitterData myEmitter;
 		float myGravity;
 		IndexBufferWrapper myIndexBufferWrapper;
 		CU::Matrix44f myOrientation;
