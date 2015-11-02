@@ -45,7 +45,7 @@ namespace EntityEditor.Entity
 
             for(int i = 0; i < myWeaponPaths.myPaths.Count; ++i)
             {
-                string dataPath = StringUtilities.ConvertPathToDataFolderPath(aWeaponListPath);
+                string dataPath = StringUtilities.GetDataFolderPath(aWeaponListPath);
                 dataPath = dataPath.Replace("Data/", "");
                 XmlDocument weaponDoc = myXMLWrapper.Open(dataPath + myWeaponPaths.myPaths[i]);
                 rootElement = myXMLWrapper.FindFirstElement();
@@ -137,7 +137,7 @@ namespace EntityEditor.Entity
 
             for (int i = 0; i < myBulletPaths.myPaths.Count; ++i)
             {
-                string dataPath = StringUtilities.ConvertPathToDataFolderPath(aBulletListPath);
+                string dataPath = StringUtilities.GetDataFolderPath(aBulletListPath);
                 dataPath = dataPath.Replace("Data/", "");
                 XmlDocument bulletDoc = myXMLWrapper.Open(dataPath + myBulletPaths.myPaths[i]);
                 rootElement = myXMLWrapper.FindFirstElement();

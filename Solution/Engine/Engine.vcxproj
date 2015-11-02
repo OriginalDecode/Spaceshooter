@@ -293,6 +293,7 @@
     <ClInclude Include="StreakData.h" />
     <ClInclude Include="StreakEmitterData.h" />
     <ClInclude Include="StreakEmitterInstance.h" />
+    <ClInclude Include="StreakInstance.h" />
     <ClInclude Include="Surface.h" />
     <ClInclude Include="SystemMonitor.h" />
     <ClInclude Include="DebugText.h" />

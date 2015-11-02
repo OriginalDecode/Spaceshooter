@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #include "BulletMessage.h"
+#include <Camera.h>
+#include "EMPMessage.h"
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
 #include "GUINote.h"
+#include <Instance.h>
 #include "InputNote.h"
 #include <MathHelper.h>
+#include <ModelLoader.h>
 #include "PostMaster.h"
 #include "PhysicsComponent.h"
 #include "PowerUpNote.h"
@@ -30,7 +34,14 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myFireRatePowerUpDuration(0.f)
 	, myEMPPowerUpDuration(0.f)
 	, myHomingPowerUpDuration(0.f)
+	, myEMPTime(2.f)
 {
+
+}
+
+ShootingComponent::~ShootingComponent()
+{
+
 }
 
 void ShootingComponent::Update(float aDeltaTime)
@@ -55,7 +66,7 @@ void ShootingComponent::Update(float aDeltaTime)
 
 	myFireRatePowerUpDuration = fmaxf(myFireRatePowerUpDuration - aDeltaTime, 0.f);
 	myHomingPowerUpDuration = fmaxf(myHomingPowerUpDuration - aDeltaTime, 0.f);
-	//Should emp count down?? WE dont know.
+	//Should ' count down?? WE dont know.
 	//myEMPPowerUpDuration = fmaxf(myEMPPowerUpDuration - aDeltaTime, 0.f);
 
 	for (int i = myPowerUps.Size() - 1; i >= 0; --i)
@@ -312,6 +323,9 @@ void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
 	{
 		if (myPowerUps[i].myPowerUpType == aPowerUp)
 		{
+			//MAKE AWESOME THINGY
+			PostMaster::GetInstance()->SendMessage(EMPMessage(myEMPTime));
+			//SKICKA MEDDELANDE TILL SCNENEN OM ATT DEN FÅR RENDERA EMP
 			PostMaster::GetInstance()->SendMessage(PowerUpMessage(aPowerUp, myEntity.myOrientation.GetPos()
 				, myPowerUps[i].myPowerUpValue, myEMPPowerUpDuration));
 			myEMPPowerUp = false;

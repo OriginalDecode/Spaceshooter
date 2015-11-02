@@ -70,3 +70,7 @@ void Subscriber::ReceiveMessage(const KillStructureMessage&)
 void Subscriber::ReceiveMessage(const DestroyEmitterMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const EMPMessage&)
+{
+}

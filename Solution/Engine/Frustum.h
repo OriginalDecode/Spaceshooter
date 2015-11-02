@@ -17,6 +17,8 @@ namespace Prism
 
 		bool Inside(const CU::Vector3<float>& aPosition, float aRadius) const;
 
+		void OnResize(float aNearPlane, float aFarPlane);
+
 	private:
 		void operator=(Frustum&) = delete;
 

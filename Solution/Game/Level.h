@@ -24,6 +24,7 @@ class BulletManager;
 class CollisionManager;
 class ConversationManager;
 class DefendMessage;
+class EMPMessage;
 class Entity;
 class EntityFactory;
 class EmitterManager;
@@ -63,6 +64,7 @@ public:
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	void ReceiveMessage(const SpawnPowerUpMessage& aMessage) override;
+	void ReceiveMessage(const EMPMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 
@@ -104,6 +106,11 @@ private:
 	bool myComplete;
 
 	Entity* myStreakEntity;
+	Entity* myEMP;
+	float myEMPScale;
+	float myEMPTimer;
+	bool myEMPActivated;
+
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)
