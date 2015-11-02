@@ -113,7 +113,6 @@ Level::~Level()
 	myEmitterManager = nullptr;
 
 	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
-
 }
 
 bool Level::LogicUpdate(float aDeltaTime)
@@ -190,7 +189,7 @@ void Level::Render()
 
 		myRenderer->BeginScene();
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+		myRenderer->EndScene(Prism::ePostProcessing::NONE);
 		myRenderer->FinalRender();
 	}
 	else
