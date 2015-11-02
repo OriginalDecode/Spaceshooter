@@ -9,14 +9,6 @@ using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
 {
-    public enum eSaveShootingState
-    {
-        WEAPON,
-        BULLET,
-        BOTH,
-        NONE
-    }
-
     public class WeaponDataComponent : BaseComponent
     {
         private NumericTextComponent myCooldown;
@@ -191,8 +183,6 @@ namespace EntityEditor.Panels
         private BulletDataComponent myBulletDataStats;
         private Button mySaveButton = new Button();
 
-        private eSaveShootingState mySaveState;
-
         private string myDataFolder = "Data/";
 
         public ShootingComponentPanel(Point aLocation, Size aSize, Form aParent)
@@ -216,7 +206,6 @@ namespace EntityEditor.Panels
                         break;
                     }
                 }
-                mySaveState = eSaveShootingState.BOTH;
                 LoadSettings();
             }
         }
@@ -363,20 +352,17 @@ namespace EntityEditor.Panels
         private void WeaponDropDown_SelectIndex_Changed(object sender, EventArgs e)
         {
             myWeaponData = myLoadedWeapons[myWeaponTypes.GetDropDown().SelectedIndex];
-            mySaveState = eSaveShootingState.BOTH;
             LoadSettings();
         }
 
         private void BulletDropDown_SelectIndex_Changed(object sender, EventArgs e)
         {
             myBulletData = myLoadedBullets[myBulletTypes.GetDropDown().SelectedIndex];
-            mySaveState = eSaveShootingState.BOTH;
             LoadSettings();
         }
 
         private void SaveButton_Click(object sender, EventArgs e)
         {
-            mySaveState = eSaveShootingState.BOTH;
             SaveSettings();
             string pathToData = myDataFolder.Replace("Data/", "");
             myWeaponWriter.SaveBulletFile(pathToData + myBulletData.myFilePath, myBulletData, myWeaponReader.GetBulletListXml());

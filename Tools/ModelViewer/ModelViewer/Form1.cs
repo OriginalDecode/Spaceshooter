@@ -112,16 +112,16 @@ namespace ModelViewer
             ModelViewerMenu.Controls.Add(myEnableAutoRotation);
 
             myMouseSensitivitySlider = new CSharpUtilities.Components.SliderComponent(new Point(0, 150), new Size(200, 15), "Mouse Sens", 0, 1000, 1, true, 0.0f, 100.0f);
-            myMouseSensitivitySlider.SetValue(Properties.Settings.Default.DefaultSettingMouseSensitivity);
             myMouseSensitivitySlider.AddSelectedValueChangedEvent(this.MouseSensitivity_Changed);
+            myMouseSensitivitySlider.SetValue(Properties.Settings.Default.DefaultSettingMouseSensitivity);
             myMouseSensitivitySlider.BindToPanel(ModelViewerMenu);
             myMouseSensitivitySlider.Show();
 
             myCameraSettingsSliders = new CSharpUtilities.Components.Vector3SliderComponent(new Point(0, 175), new Size(200, 50), "Camera Settings", -1000, 1000, 0, true, "Zoom: ", "Movement: ", "Rotation: ", -10.0f, 10.0f);
             myCameraSettingsSliders.SetXValue(Properties.Settings.Default.DefaultSettingCameraZoom);
             myCameraSettingsSliders.SetYValue(Properties.Settings.Default.DefaultSettingCameraMovement);
-            myCameraSettingsSliders.SetZValue(Properties.Settings.Default.DefaultSettingCameraRotation);
             myCameraSettingsSliders.AddSelectedValueChangedEvent(this.CameraSettings_Changed);
+            myCameraSettingsSliders.SetZValue(Properties.Settings.Default.DefaultSettingCameraRotation);
             myCameraSettingsSliders.BindToPanel(ModelViewerMenu);
             myCameraSettingsSliders.Show();
 

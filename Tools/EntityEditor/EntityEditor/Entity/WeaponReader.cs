@@ -160,7 +160,11 @@ namespace EntityEditor.Entity
         {
             if (aNode.Name == "Entity")
             {
-                myXMLWrapper.ReadAttribute(aNode, "type", ref myNewBulletData.myEntityType);
+                myXMLWrapper.ReadAttribute(aNode, "name", ref myNewBulletData.myEntityType);
+                if (myNewBulletData.myEntityType != "")
+                {
+                    myXMLWrapper.ReadAttribute(aNode, "type", ref myNewBulletData.myEntityType);
+                }
             }
             else if (aNode.Name == "maxAmount")
             {
