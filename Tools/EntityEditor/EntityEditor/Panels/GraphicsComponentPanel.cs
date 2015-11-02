@@ -52,6 +52,8 @@ namespace EntityEditor.Panels
     {
         private GCP_ModelPanel myModelPanel;
 
+        private Vector3Component myScale;
+
         private OpenFileDialog myBrowseDialog = new OpenFileDialog();
         private string myGraphicsFolder;
 
@@ -80,18 +82,29 @@ namespace EntityEditor.Panels
             myModelPanel.GetEffectPath().GetButton().Click += new System.EventHandler(this.EffectBrosweClick);
 
             myModelPanel.Show();
+
+            myScale = new Vector3Component(new Point(Location.X, Location.Y + 60), new Size(275, 40), "Scale");
+            myScale.AddTextChangeEvent(this.PanelDataChanged);
+            myScale.BindToPanel(this);
+            myScale.Show();
         }
 
         protected override void LoadSettings()
         {
             myModelPanel.GetModelPath().GetTextBox().Text = myGraphicsComponentData.myModelPath;
             myModelPanel.GetEffectPath().GetTextBox().Text = myGraphicsComponentData.myEffectPath;
+
+            myScale.SetPosition(myGraphicsComponentData.myScale);
         }
 
         protected override void SaveSettings()
         {
             myGraphicsComponentData.myModelPath = myModelPanel.GetModelPath().GetTextBox().Text;
             myGraphicsComponentData.myEffectPath = myModelPanel.GetEffectPath().GetTextBox().Text;
+
+            myGraphicsComponentData.myScale.myX = myScale.GetX();
+            myGraphicsComponentData.myScale.myY = myScale.GetY();
+            myGraphicsComponentData.myScale.myZ = myScale.GetZ();
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
             eForm.SetGraphicsComponent(myGraphicsComponentData);

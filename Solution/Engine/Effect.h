@@ -47,6 +47,11 @@ namespace Prism
 		void UpdateSpotLights(const CU::StaticArray<SpotLightData, NUMBER_OF_SPOT_LIGHTS>& someSpotLightData);
 		void UpdateTime(const float aDeltaTime);
 
+		void SetStreakAlphaDelta(float aAlphaDelta);
+		void SetStreakSizeDelta(float aSizeDelta);
+		void SetStreakStartAlpha(float aStartAlpha);
+		void SetStreakTexture(Texture* aTexture);
+
 		void SetPlayerVariable(int someVariable);
 
 		void AddListener(EffectListener* aListener);
@@ -70,12 +75,16 @@ namespace Prism
 		ID3DX11EffectVariable* myPointLight;
 		ID3DX11EffectVariable* mySpotLight;
 
-		ID3DX11EffectShaderResourceVariable	*myTexture;
+		ID3DX11EffectShaderResourceVariable* myTexture;
 
 		ID3DX11EffectVectorVariable* mySpritePosAndScale;
 		ID3DX11EffectVectorVariable* mySpriteColor;
 		ID3DX11EffectMatrixVariable* mySpriteOrientation;
 
+		ID3DX11EffectShaderResourceVariable* myStreakDiffuse;
+		ID3DX11EffectScalarVariable* myStreakSizeDelta;
+		ID3DX11EffectScalarVariable* myStreakStartAlpha;
+		ID3DX11EffectScalarVariable* myStreakAlphaDelta;
 
 		CU::Vector4<float> mySpritePosAndScaleVector;
 		

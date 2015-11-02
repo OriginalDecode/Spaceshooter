@@ -134,6 +134,26 @@ void Prism::Effect::UpdateTime(const float aDeltaTime)
 	}
 }
 
+void Prism::Effect::SetStreakTexture(Texture* aTexture)
+{
+	myStreakDiffuse->SetResource(aTexture->GetShaderView());
+}
+
+void Prism::Effect::SetStreakSizeDelta(float aSizeDelta)
+{
+	myStreakSizeDelta->SetFloat(aSizeDelta);
+}
+
+void Prism::Effect::SetStreakStartAlpha(float aStartAlpha)
+{
+	myStreakStartAlpha->SetFloat(aStartAlpha);
+}
+
+void Prism::Effect::SetStreakAlphaDelta(float anAlphaDelta)
+{
+	myStreakAlphaDelta->SetFloat(anAlphaDelta);
+}
+
 
 void Prism::Effect::SetPlayerVariable(int someVariable)
 {
@@ -285,6 +305,30 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	if (mySpriteOrientation->IsValid() == false)
 	{
 		mySpriteOrientation = nullptr;
+	}
+
+	myStreakDiffuse = myEffect->GetVariableByName("DiffuseTexture")->AsShaderResource();
+	if (myStreakDiffuse->IsValid() == false)
+	{
+		myStreakDiffuse = nullptr;
+	}
+
+	myStreakSizeDelta = myEffect->GetVariableByName("StreakSizeDelta")->AsScalar();
+	if (myStreakSizeDelta->IsValid() == false)
+	{
+		myStreakSizeDelta = nullptr;
+	}
+
+	myStreakStartAlpha = myEffect->GetVariableByName("StreakStartAlpha")->AsScalar();
+	if (myStreakStartAlpha->IsValid() == false)
+	{
+		myStreakStartAlpha = nullptr;
+	}
+
+	myStreakAlphaDelta = myEffect->GetVariableByName("StreakAlphaDelta")->AsScalar();
+	if (myStreakAlphaDelta->IsValid() == false)
+	{
+		myStreakAlphaDelta = nullptr;
 	}
 
 	return true;

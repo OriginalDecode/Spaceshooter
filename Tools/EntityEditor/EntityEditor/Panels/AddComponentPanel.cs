@@ -19,7 +19,9 @@ namespace EntityEditor.Panels
         HealthComponent,
         PhysicsComponent,
         BulletComponent,
-        PowerUpComponent
+        PowerUpComponent,
+        ParticleEmitterComponent,
+        SoundComponent
     };
 
     public class AddComponentPanel : BasePanel
@@ -41,7 +43,7 @@ namespace EntityEditor.Panels
             myComponents.Show();
 
             myAddButton.Text = "Add";
-            myAddButton.Location = new Point(Location.X + 150, Location.Y + 10);
+            myAddButton.Location = new Point(Location.X + 250, Location.Y + 10);
             myAddButton.Size = new Size(40, 20);
             myAddButton.Click += new EventHandler(AddButton_Click);
             myAddButton.Show();
@@ -62,6 +64,10 @@ namespace EntityEditor.Panels
             {
                 myComponents.AddItem(eComponentType.AIComponent);
             }
+            if (myEntity.myBulletComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.BulletComponent);
+            }
             if (myEntity.myCollisionComponent.myIsActive == false)
             {
                 myComponents.AddItem(eComponentType.CollisionComponent);
@@ -70,25 +76,29 @@ namespace EntityEditor.Panels
             {
                 myComponents.AddItem(eComponentType.GraphicsComponent);
             }
-            if (myEntity.myShootingComponent.myIsActive == false)
-            {
-                myComponents.AddItem(eComponentType.ShootingComponent);
-            }
             if (myEntity.myHealthComponent.myIsActive == false)
             {
                 myComponents.AddItem(eComponentType.HealthComponent);
+            }
+            if (myEntity.myParticleEmitterComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.ParticleEmitterComponent);
             }
             if (myEntity.myPhysicsComponent.myIsActive == false)
             {
                 myComponents.AddItem(eComponentType.PhysicsComponent);
             }
-            if (myEntity.myBulletComponent.myIsActive == false)
-            {
-                myComponents.AddItem(eComponentType.BulletComponent);
-            }
             if (myEntity.myPowerUpComponent.myIsActive == false)
             {
                 myComponents.AddItem(eComponentType.PowerUpComponent);
+            }
+            if (myEntity.myShootingComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.ShootingComponent);
+            }
+            if (myEntity.mySoundComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.SoundComponent);
             }
         }
 
@@ -127,6 +137,14 @@ namespace EntityEditor.Panels
             {
                 eForm.SetPowerUpComponent(myEntity.myPowerUpComponent);
             }
+            if (myEntity.myParticleEmitterComponent.myIsActive == true)
+            {
+                eForm.SetParticleEmitterComponent(myEntity.myParticleEmitterComponent);
+            }
+            if (myEntity.mySoundComponent.myIsActive == true)
+            {
+                eForm.SetSoundComponent(myEntity.mySoundComponent);
+            }
             eForm.DisplayEntityData();
         }
 
@@ -159,6 +177,12 @@ namespace EntityEditor.Panels
                     break;
                 case eComponentType.PowerUpComponent:
                     myEntity.myPowerUpComponent.myIsActive = true;
+                    break;
+                case eComponentType.ParticleEmitterComponent:
+                    myEntity.myParticleEmitterComponent.myIsActive = true;
+                    break;
+                case eComponentType.SoundComponent:
+                    myEntity.mySoundComponent.myIsActive = true;
                     break;
                 default:
                     DL_Debug.GetInstance.DL_ErrorMessage("The component " 

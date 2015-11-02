@@ -13,7 +13,6 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include "ParticleEmitterComponent.h"
 #include "EmitterManager.h"
 #include "EventManager.h"
 #include <FileWatcher.h>
@@ -26,6 +25,7 @@
 #include "Level.h"
 #include "ModelLoader.h"
 #include "MissionManager.h"
+#include "ParticleEmitterComponent.h"
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
@@ -36,6 +36,7 @@
 #include "ShootingComponent.h"
 #include "SoundComponent.h"
 #include <SpotLight.h>
+#include "StreakEmitterComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -81,8 +82,8 @@ Level* LevelFactory::LoadCurrentLevel()
 
 	//for debug only, please delete:
 	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
-	myCurrentLevel->myStreakEntity->AddComponent<ParticleEmitterComponent>();
-	myCurrentLevel->myStreakEntity->GetComponent<ParticleEmitterComponent>()->Init("Data/Resource/Particle/P_powerup_emitter.xml");
+	myCurrentLevel->myStreakEntity->AddComponent<StreakEmitterComponent>();
+	myCurrentLevel->myStreakEntity->GetComponent<StreakEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter_streak.xml");
 
 	return myCurrentLevel;
 }

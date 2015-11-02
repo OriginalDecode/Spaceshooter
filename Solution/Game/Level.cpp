@@ -41,6 +41,7 @@
 #include "ShootingComponent.h"
 #include "SpawnEnemyMessage.h"
 #include "SpawnPowerUpMessage.h"
+#include "StreakEmitterComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -206,7 +207,7 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 		myEmitterManager->RenderEmitters();
-		//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Render();
+		//myStreakEntity->GetComponent<StreakEmitterComponent>()->Render();
 
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
