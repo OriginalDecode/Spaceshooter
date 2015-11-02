@@ -10,7 +10,7 @@ namespace Prism
 	Camera::Camera(CU::Matrix44f& aPlayerMatrix)
 		: myOrientation(aPlayerMatrix)
 		, myNear(0.1f)
-		, myFar(2500.f)
+		, myFar(1000.f)
 		, myShakeCamera(false)
 		, myCurrentShake(0.f)
 		, myMaxShake(0.f)
@@ -46,6 +46,7 @@ namespace Prism
 	void Camera::OnResize(const int aWidth, const int aHeight)
 	{
 		myProjectionMatrix = CU::Matrix44<float>::CreateProjectionMatrixLH(myNear, myFar, static_cast<float>(aHeight) / static_cast<float>(aWidth), myFOV);
+		myFrustum->OnResize(myNear, myFar);
 	}
 
 	const CU::Matrix44<float>& Camera::GetOrientation() const
