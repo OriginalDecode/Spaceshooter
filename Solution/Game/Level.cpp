@@ -235,6 +235,10 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 		myEmitterManager->RenderEmitters();
+
+		//debug only
+		//myStreakEntity->Update(1.f/30.f);
+		//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Render();
 		//myStreakEntity->GetComponent<StreakEmitterComponent>()->Render();
 
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());

@@ -1,6 +1,5 @@
 #pragma once
 #include "StreakData.h"
-#include "StreakEmitterInstance.h"
 #include <D3D11.h>
 #include <string>
 #include <Vector.h>
@@ -9,6 +8,7 @@ namespace Prism
 {
 	class Texture;
 	class Effect;
+	class StreakEmitterInstance;
 
 	class StreakEmitterData
 	{

@@ -54,11 +54,6 @@ void ParticleEmitterComponent::Render()
 	}
 }
 
-eComponentType ParticleEmitterComponent::GetType()
-{
-	return eComponentType::PARTICLE_EMITTER;
-}
-
 Prism::ParticleEmitterInstance* ParticleEmitterComponent::GetEmitter()
 {
 	if (this != nullptr)

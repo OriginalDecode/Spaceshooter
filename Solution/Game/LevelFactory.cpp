@@ -82,6 +82,8 @@ Level* LevelFactory::LoadCurrentLevel()
 
 	//for debug only, please delete:
 	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myStreakEntity->AddComponent<ParticleEmitterComponent>();
+	myCurrentLevel->myStreakEntity->GetComponent<ParticleEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter.xml");
 	myCurrentLevel->myStreakEntity->AddComponent<StreakEmitterComponent>();
 	myCurrentLevel->myStreakEntity->GetComponent<StreakEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter_streak.xml");
 

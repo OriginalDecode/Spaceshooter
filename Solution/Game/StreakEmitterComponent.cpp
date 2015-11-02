@@ -49,13 +49,8 @@ void StreakEmitterComponent::Render()
 {
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitter->Render(myEntity.GetScene().GetCamera());
+		myEmitter->Render(&myEntity.GetScene().GetCamera());
 	}
-}
-
-eComponentType StreakEmitterComponent::GetType()
-{
-	return eComponentType::STREAK_EMITTER;
 }
 
 Prism::StreakEmitterInstance* StreakEmitterComponent::GetEmitter()
