@@ -3,9 +3,9 @@
 #include "Camera.h"
 #include "Constants.h"
 
-#include "EmitterComponent.h"
-#include <EmitterData.h>
-#include <EmitterInstance.h>
+#include "ParticleEmitterComponent.h"
+#include <ParticleEmitterData.h>
+#include <ParticleEmitterInstance.h>
 #include "EmitterNote.h"
 #include "DestroyEmitterMessage.h"
 #include "Entity.h"
@@ -13,13 +13,13 @@
 #include "Scene.h"
 
 
-EmitterComponent::EmitterComponent(Entity& aEntity)
+ParticleEmitterComponent::ParticleEmitterComponent(Entity& aEntity)
 	: Component(aEntity)
 	, myEmitter(nullptr)
 {
 }
 
-EmitterComponent::~EmitterComponent()
+ParticleEmitterComponent::~ParticleEmitterComponent()
 {
 	PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
 
@@ -27,18 +27,18 @@ EmitterComponent::~EmitterComponent()
 	myEmitter = nullptr;
 }
 
-void EmitterComponent::Init(std::string aPath)
+void ParticleEmitterComponent::Init(std::string aPath)
 {
 	myXMLPath = aPath;
 
 	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
-	myEmitter = new Prism::EmitterInstance();
-	Prism::EmitterData data;
+	myEmitter = new Prism::ParticleEmitterInstance();
+	Prism::ParticleEmitterData data;
 	data.LoadDataFile(myXMLPath.c_str());
 	myEmitter->Initiate(data);
 }
 
-void EmitterComponent::Update(float aDeltaTime)
+void ParticleEmitterComponent::Update(float aDeltaTime)
 {
 	if (myEntity.GetAlive() == true)
 	{
@@ -46,7 +46,7 @@ void EmitterComponent::Update(float aDeltaTime)
 	}
 }
 
-void EmitterComponent::Render()
+void ParticleEmitterComponent::Render()
 {
 	if (myEntity.GetAlive() == true)
 	{
@@ -54,12 +54,12 @@ void EmitterComponent::Render()
 	}
 }
 
-eComponentType EmitterComponent::GetType()
+eComponentType ParticleEmitterComponent::GetType()
 {
 	return eComponentType::EMITTER;
 }
 
-Prism::EmitterInstance* EmitterComponent::GetEmitter()
+Prism::ParticleEmitterInstance* ParticleEmitterComponent::GetEmitter()
 {
 	if (this != nullptr)
 		return myEmitter;
@@ -68,7 +68,7 @@ Prism::EmitterInstance* EmitterComponent::GetEmitter()
 
 }
 
-void EmitterComponent::ReceiveNote(const EmitterNote& aNote)
+void ParticleEmitterComponent::ReceiveNote(const EmitterNote& aNote)
 {
 	if (aNote.myType == EmitterNote::eType::BULLET)
 	{

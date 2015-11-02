@@ -6,7 +6,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
-#include "EmitterComponent.h"
+#include "ParticleEmitterComponent.h"
 #include <FileWatcher.h>
 #include "GameStateMessage.h"
 #include "GraphicsComponent.h"
@@ -145,9 +145,9 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 			LoadPowerUpComponent(newEntity, entityDocument, e);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
-		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("EmitterComponent").c_str()) == 0)
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ParticleEmitterComponent").c_str()) == 0)
 		{
-			LoadEmitterComponent(newEntity, entityDocument, e);
+			LoadParticleEmitterComponent(newEntity, entityDocument, e);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("rotate").c_str()) == 0)
@@ -426,9 +426,9 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	}
 }
 
-void EntityFactory::LoadEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aEmitterComponent)
+void EntityFactory::LoadParticleEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aParticleEmitterComponent)
 {
-	for (tinyxml2::XMLElement* e = aEmitterComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	for (tinyxml2::XMLElement* e = aParticleEmitterComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Path").c_str()) == 0)
 		{
@@ -556,7 +556,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 
 	if (it->second.myEmitterXMLPath != "")
 	{ 
-		aTargetEntity->AddComponent<EmitterComponent>()->Init(it->second.myEmitterXMLPath);
+		aTargetEntity->AddComponent<ParticleEmitterComponent>()->Init(it->second.myEmitterXMLPath);
 	}
 
 	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());

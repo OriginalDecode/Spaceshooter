@@ -2,8 +2,8 @@
 
 #include "Entity.h"
 
-#include "EmitterComponent.h"
-#include "EmitterInstance.h"
+#include "ParticleEmitterComponent.h"
+#include "ParticleEmitterInstance.h"
 #include "EmitterManager.h"
 #include "DestroyEmitterMessage.h"
 #include "PostMaster.h"
@@ -18,7 +18,7 @@ EmitterManager::~EmitterManager()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DESTORY_EMITTER, this);
 }
 
-void EmitterManager::AddEmitter(EmitterComponent* anEmitter)
+void EmitterManager::AddEmitter(ParticleEmitterComponent* anEmitter)
 {
 	myEmitters.Add(anEmitter);
 }
@@ -52,5 +52,5 @@ void EmitterManager::RenderEmitters()
 
 void EmitterManager::ReceiveMessage(const DestroyEmitterMessage& aMessage)
 {
-	myEmitters.RemoveNonCyclic(aMessage.myEmitterComponent);
+	myEmitters.RemoveNonCyclic(aMessage.myParticleEmitterComponent);
 }

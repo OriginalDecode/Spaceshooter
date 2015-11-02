@@ -1,15 +1,15 @@
 #pragma once
 #include "Message.h"
 
-class EmitterComponent;
+class ParticleEmitterComponent;
 
 class DestroyEmitterMessage : public Message
 {
 public:
-	DestroyEmitterMessage(EmitterComponent* anEmitterComponent);
+	DestroyEmitterMessage(ParticleEmitterComponent* anParticleEmitterComponent);
 	~DestroyEmitterMessage();
 	
-	EmitterComponent* myEmitterComponent;
+	ParticleEmitterComponent* myParticleEmitterComponent;
 
 };
 
