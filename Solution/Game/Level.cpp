@@ -59,6 +59,9 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myConversationManager(nullptr)
 	, myEntityToDefend(nullptr)
 	, myEmitterManager(nullptr)
+	, myEMP(nullptr)
+	, myEMPScale(1.f)
+	, myEMPTimer(0.f)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
@@ -104,6 +107,8 @@ Level::~Level()
 	delete myEventManager;
 	delete myConversationManager;
 	delete myScene;
+	delete myEMP;
+	myEMP = nullptr;
 	mySkySphere = nullptr;
 	myScene = nullptr;
 

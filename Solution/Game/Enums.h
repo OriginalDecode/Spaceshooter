@@ -50,6 +50,7 @@ enum eEntityType //Collision manager needs this as ints!
 	POWERUP = 64,
 	DEFENDABLE = 128,
 	STRUCTURE = 256,
+	EMP = 512,
 };
 
 enum class eCollisionType

@@ -70,11 +70,14 @@ void Prism::Model::Init()
 	
 	myInited = true;
 
-	for (int i = 0; i < mySurfaces.Size(); ++i)
+	if (myEffect->GetFileName() == "Data/Resource/Shader/S_effect_pbl.fx")
 	{
-		if (mySurfaces[i]->VerifyTextures(myFileName) == false)
+		for (int i = 0; i < mySurfaces.Size(); ++i)
 		{
-			DL_ASSERT(CU::Concatenate("Missing PBL-texture from model: %s", myFileName.c_str()));
+			if (mySurfaces[i]->VerifyTextures(myFileName) == false)
+			{
+				DL_ASSERT(CU::Concatenate("Missing PBL-texture from model: %s", myFileName.c_str()));
+			}
 		}
 	}
 }

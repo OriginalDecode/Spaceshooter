@@ -32,6 +32,7 @@ class ShootingComponent : public Component
 {
 public:
 	ShootingComponent(Entity& aEntity);
+	~ShootingComponent();
 
 	void Update(float aDeltaTime) override;
 
@@ -57,6 +58,7 @@ public:
 
 	const float& GetFireRatePowerUpDuration() const;
 	const float& GetHomingPowerUpDuration() const;
+
 private:
 	void SetActivatePowerUp(ePowerUpType aType, bool aValue);
 	void ActivatePowerUp(ePowerUpType aPowerUp); // only for emp
@@ -78,6 +80,9 @@ private:
 	float myFireRatePowerUpDuration;
 	float myEMPPowerUpDuration;
 	float myHomingPowerUpDuration;
+
+	bool myEMPShot;
+	float myVisualEMPCount;
 };
 
 inline eComponentType ShootingComponent::GetType()

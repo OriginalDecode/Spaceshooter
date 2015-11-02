@@ -104,6 +104,10 @@ private:
 	bool myComplete;
 
 	Entity* myStreakEntity;
+	Entity* myEMP;
+	float myEMPScale;
+	float myEMPTimer;
+
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)

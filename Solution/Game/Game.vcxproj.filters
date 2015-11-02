@@ -195,6 +195,9 @@
     <ClCompile Include="StreakEmitterComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="EMPMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -447,6 +450,9 @@
     </ClInclude>
     <ClInclude Include="StreakEmitterComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="EMPMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
