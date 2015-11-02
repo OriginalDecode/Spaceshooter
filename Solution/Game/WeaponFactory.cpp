@@ -93,7 +93,14 @@ void WeaponFactory::LoadProjectile(const std::string& aProjectileFilePath)
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Entity").c_str()) == 0)
 		{
-			projectileDocument.ForceReadAttribute(e, "type", projectileType.myEntityType);
+			if (e->Attribute("type") != nullptr) 
+			{
+				projectileDocument.ForceReadAttribute(e, "type", projectileType.myEntityType);
+			}
+			else 
+			{
+				projectileDocument.ForceReadAttribute(e, "name", projectileType.myEntityType);
+			}
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("maxAmount").c_str()) == 0)
 		{
