@@ -8,6 +8,7 @@
 
 struct ID3D11Device;
 struct ID3D11DeviceContext;
+struct ID3D11DepthStencilView;
 
 namespace Prism
 {
@@ -52,6 +53,7 @@ namespace Prism
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();
+		ID3D11DepthStencilView* GetDepthView();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
 		FileWatcher* GetFileWatcher();
@@ -65,6 +67,9 @@ namespace Prism
 		void PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
 		void PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
 		void PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
+
+		void RestoreViewPort();
+		void SetBackBufferAsTarget();
 
 		void EnableZBuffer();
 		void DisableZBuffer();

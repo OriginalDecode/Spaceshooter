@@ -6,6 +6,16 @@
 #include "VertexBufferWrapper.h"
 namespace Prism
 {
+	EmitterInstance::EmitterInstance()
+		: myVertexWrapper(nullptr)
+		, myIsActive(false)
+		, myEmissionTime(0)
+		, myEmitterLife(0)
+		, myParticleIndex(0)
+		, myDeadParticleCount(0)
+	{
+	}
+
 	EmitterInstance::~EmitterInstance()
 	{
 		delete myVertexWrapper;
@@ -14,18 +24,14 @@ namespace Prism
 
 	void EmitterInstance::Initiate(EmitterData someData)
 	{
-		myIsActive = false;
-
 		myEmitterData = someData;
-		myParticleIndex = 0;
-		myEmissionRate = 1 / myEmitterData.myEmissionRate;
 
-		int particleCount = static_cast<int>(myEmitterData.myParticlesLifeTime / myEmissionRate) + 1;
+		int particleCount = static_cast<int>(myEmitterData.myParticlesLifeTime / myEmitterData.myEmissionRate) + 1;
 
 		myGraphicalParticles.Init(particleCount);
 		myLogicalParticles.Init(particleCount);
 
-		myEmissionTime = 1;
+		myEmissionTime = myEmitterData.myEmissionRate;
 
 		myDiffColor = (myEmitterData.myData.myEndColor - myEmitterData.myData.myStartColor) / myEmitterData.myParticlesLifeTime;
 
@@ -36,6 +42,10 @@ namespace Prism
 			LogicalParticle tempLogic;
 			myLogicalParticles.Add(tempLogic);
 		}
+
+		myIsActive = myEmitterData.myIsActiveAtStart;
+
+		myEmitterLife = myEmitterData.myEmitterLifeTime;
 
 		CreateVertexBuffer();
 	}
@@ -73,7 +83,6 @@ namespace Prism
 
 	void EmitterInstance::Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix)
 	{
-		//myOrientation *= aWorldMatrix;
 		UpdateEmitter(aDeltaTime,aWorldMatrix);
 	}
 
@@ -85,11 +94,15 @@ namespace Prism
 	void EmitterInstance::ToggleActive()
 	{
 		myIsActive = !myIsActive;
+		myEmitterLife = myEmitterData.myEmitterLifeTime;
+		myDeadParticleCount = 0;
 	}
 
 	void EmitterInstance::ToggleActive(bool aIsActive)
 	{
 		myIsActive = aIsActive;
+		myEmitterLife = myEmitterData.myEmitterLifeTime;
+		myDeadParticleCount = 0;
 	}
 
 	void EmitterInstance::CreateVertexBuffer()
@@ -142,16 +155,21 @@ namespace Prism
 	void EmitterInstance::UpdateEmitter(float aDeltaTime, const CU::Matrix44f& aWorldMatrix)
 	{
 		myEmissionTime -= aDeltaTime;
+		myEmitterLife -= aDeltaTime;
 
 		UpdateParticle(aDeltaTime);
 
-		if (myEmissionTime <= 0.f)
+		if (myEmissionTime <= 0.f && (myEmitterLife > 0.f || myEmitterData.myUseEmitterLifeTime == false))
 		{
 			EmittParticle(aWorldMatrix);
+			myEmissionTime = myEmitterData.myEmissionRate;
+		}
+		
+		if (myEmitterLife <= 0.f && myDeadParticleCount == myLogicalParticles.Size())
+		{
+			myIsActive = false;
 		}
 
-		myEmissionTime = myEmissionRate;
-		
 	}
 
 	void EmitterInstance::UpdateParticle(float aDeltaTime)
@@ -160,26 +178,26 @@ namespace Prism
 		{
 			if (myGraphicalParticles[i].myAlpha <= 0.0f)
 			{
+				myDeadParticleCount++;
+				myLogicalParticles[i].myIsAlive = false;
 				continue;
 			}
 			
 			myGraphicalParticles[i].myPosition = myGraphicalParticles[i].myPosition -
-				myLogicalParticles[i].myVelocity * aDeltaTime;
+				(myLogicalParticles[i].myDirection * myLogicalParticles[i].myVelocity) * aDeltaTime;
 
-			float alphaDiff = 0 - myGraphicalParticles[i].myAlpha;
-			myGraphicalParticles[i].myAlpha += (alphaDiff * aDeltaTime) / myGraphicalParticles[i].myLifeTime;
-
-			float sizeDiff = 0 - myGraphicalParticles[i].mySize;
-			myGraphicalParticles[i].mySize += (sizeDiff * aDeltaTime) / myGraphicalParticles[i].myLifeTime;
+			myGraphicalParticles[i].myAlpha += myEmitterData.myData.myAlphaDelta * aDeltaTime; 
+			myGraphicalParticles[i].mySize += myEmitterData.myData.mySizeDelta * aDeltaTime;
 
 			myGraphicalParticles[i].myColor += myDiffColor * aDeltaTime;
 
 			myGraphicalParticles[i].myLifeTime -= aDeltaTime;
 
+			
 		}
 	}
 
-	void EmitterInstance::EmittParticle( const CU::Matrix44f& aWorldMatrix)
+	void EmitterInstance::EmittParticle(const CU::Matrix44f& aWorldMatrix)
 	{
 		for (int i = 0; i < myEmitterData.myParticlesPerEmitt; ++i)
 		{
@@ -187,7 +205,10 @@ namespace Prism
 			{
 				myParticleIndex = 0;
 			}
+			myDeadParticleCount--;
+			myLogicalParticles[myParticleIndex].myIsAlive = true;
 
+			myLogicalParticles[myParticleIndex].myDirection = myEmitterData.myDirection;
 			myGraphicalParticles[myParticleIndex].myColor = myEmitterData.myData.myStartColor;
 
 			myGraphicalParticles[myParticleIndex].myPosition =
@@ -201,16 +222,16 @@ namespace Prism
 
 			myGraphicalParticles[myParticleIndex].mySize = 1 * myParticleScaling;
 
-			myLogicalParticles[myParticleIndex].myVelocity.x = CU::Math::RandomRange(myEmitterData.myData.myMinVelocity.x,
-				myEmitterData.myData.myMaxVelocity.x);
+			myLogicalParticles[myParticleIndex].myVelocity.x = CU::Math::RandomRange(myEmitterData.myData.myMinSpeed.x,
+				myEmitterData.myData.myMaxSpeed.x);
 
-			myLogicalParticles[myParticleIndex].myVelocity.y = CU::Math::RandomRange(myEmitterData.myData.myMinVelocity.y,
-				myEmitterData.myData.myMaxVelocity.y);
+			myLogicalParticles[myParticleIndex].myVelocity.y = CU::Math::RandomRange(myEmitterData.myData.myMinSpeed.y,
+				myEmitterData.myData.myMaxSpeed.y);
 
-			myLogicalParticles[myParticleIndex].myVelocity.z = CU::Math::RandomRange(myEmitterData.myData.myMinVelocity.z,
-				myEmitterData.myData.myMaxVelocity.z);
+			myLogicalParticles[myParticleIndex].myVelocity.z = CU::Math::RandomRange(myEmitterData.myData.myMinSpeed.z,
+				myEmitterData.myData.myMaxSpeed.z);
 
-			myGraphicalParticles[myParticleIndex].myAlpha = 1;
+			myGraphicalParticles[myParticleIndex].myAlpha = myEmitterData.myData.myStartAlpha;
 
 			myParticleIndex += 1;
 		}

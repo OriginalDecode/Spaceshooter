@@ -93,7 +93,11 @@ void Prism::EffectContainer::VerifyShader(const std::string& aFilePath)
 		|| aFilePath == "Data/Resource/Shader/S_effect_basic.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_particle.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_bar_health.fx"
-		|| aFilePath == "Data/Resource/Shader/S_effect_bar_shield.fx",
+		|| aFilePath == "Data/Resource/Shader/S_effect_bar_shield.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_combine.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_render_to_texture.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_bloom.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_down_sample.fx",
 		CU::Concatenate("Found invalid Shader: %s", aFilePath.c_str()));
 }
 

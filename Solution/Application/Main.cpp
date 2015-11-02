@@ -80,8 +80,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 		return 1;
 	}
 
-	OnResize();
-
 	MSG msg;
 	while (1)
 	{

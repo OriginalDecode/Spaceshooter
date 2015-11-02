@@ -197,6 +197,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundY(playerRot.y) * myPlayer->myOrientation;
 	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundZ(playerRot.z) * myPlayer->myOrientation;
 
+	myPlayer->myOrientation = CU::GetOrientation(myPlayer->myOrientation, playerRot);
+
 	myPlayer->myOrientation.SetPos(playerPos);
 	myPlayer->myOriginalOrientation = myPlayer->myOrientation;
 
@@ -464,9 +466,7 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aReader.ForceReadAttribute(propElement, "Y", propRotation.y);
 	aReader.ForceReadAttribute(propElement, "Z", propRotation.z);
 
-	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundX(propRotation.x) * aEntityToCreate->myOriginalOrientation;
-	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundY(propRotation.y) * aEntityToCreate->myOriginalOrientation;
-	aEntityToCreate->myOriginalOrientation = aEntityToCreate->myOriginalOrientation.CreateRotateAroundZ(propRotation.z) * aEntityToCreate->myOriginalOrientation;
+	aEntityToCreate->myOriginalOrientation = CU::GetOrientation(aEntityToCreate->myOriginalOrientation, propRotation);
 
 	//if (aEntityToCreate->GetType() == eEntityType::PROP)
 	//{

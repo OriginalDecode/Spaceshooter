@@ -8,4 +8,10 @@ namespace Prism
 		STATIC,
 		DYNAMIC,
 	};
+
+	enum ePostProcessing
+	{
+		NONE = 0,
+		BLOOM = 1,
+	};
 }

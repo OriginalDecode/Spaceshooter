@@ -81,7 +81,7 @@ namespace Prism
 		{
 			myText->SetText(myTexts[i].myText);
 			myText->SetPosition(myTexts[i].myPosition);
-			myText->SetScale({ myTexts[i].myScale / 2.f, myTexts[i].myScale / 2.f });
+			//myText->SetScale({ myTexts[i].myScale / 2.f, myTexts[i].myScale / 2.f });
 			myText->SetColor(myTexts[i].myColor);
 			myText->Render();
 		}
@@ -92,7 +92,7 @@ namespace Prism
 		{
 			myText->SetText(myDebugTexts[i].myText);
 			myText->SetPosition(myDebugTexts[i].myPosition);
-			myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
+			//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
 			myText->Render();
 	}
 		myDebugTexts.RemoveAll();
@@ -104,7 +104,7 @@ namespace Prism
 #endif
 #endif
 
-		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, myClearColor.myA };
+		float clearColor[4] = { myClearColor.myR, myClearColor.myG, myClearColor.myB, 0.f };
 		myDirectX->Clear(clearColor);
 
 		VTUNE_EVENT_END();
@@ -144,6 +144,11 @@ namespace Prism
 		return myDirectX->GetContex();
 	}
 
+	ID3D11DepthStencilView* Engine::GetDepthView()
+	{
+		return myDirectX->GetDepthStencil();
+	}
+
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	{
 		myWindowSize.x = mySetupInfo->myScreenWidth;
@@ -168,11 +173,15 @@ namespace Prism
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
 
-		myFont = new Font("Data/Resource/Font/arial.ttf_sdf_512.txt", { 512, 512 });
+		//myFont = new Font("Data/Resource/Font/arial.ttf_sdf_512.txt", { 512, 512 });
+		myFont = new Font("Data/Resource/Font/consola.ttf_sdf.txt", { 256, 256 });
+		//myFont = new Font("Data/Resource/Font/consolab.ttf_sdf.txt", { 256, 256 });
+		//myFont = new Font("Data/Resource/Font/consolab.ttf_sdf_512.txt", { 512, 512 });
+		//myFont = new Font("Data/Resource/Font/consola.ttf_sdf_512.txt", { 512, 512 });
 		myText = new Text(*myFont);
 		myText->SetPosition({ 800.f, -300.f });
-		myText->SetText("");
-		myText->SetScale({ 0.5f, 0.5f });
+		myText->SetText("едц");
+		myText->SetScale({ 1.f, 1.f });
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 
@@ -211,6 +220,16 @@ namespace Prism
 		ss.precision(3);
 		ss << aNumber;
 		PrintText(ss.str(), aPosition, aTextType, aScale);
+	}
+
+	void Engine::RestoreViewPort()
+	{
+		myDirectX->RestoreViewPort();
+	}
+
+	void Engine::SetBackBufferAsTarget()
+	{
+		myDirectX->SetBackBufferAsTarget();
 	}
 
 	void Engine::EnableZBuffer()

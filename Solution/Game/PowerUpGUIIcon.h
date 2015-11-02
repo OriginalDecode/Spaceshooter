@@ -17,6 +17,8 @@ public:
 	void Render();
 
 private:
+	void operator=(PowerUpGUIIcon&) = delete;
+
 	Prism::Sprite* myActiveIcon;
 	Prism::Sprite* myInactiveIcon;
 	CU::Vector2<float> myPosition;

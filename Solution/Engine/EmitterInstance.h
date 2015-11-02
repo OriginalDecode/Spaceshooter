@@ -11,6 +11,8 @@ namespace Prism
 	class EmitterInstance
 	{
 	public:
+
+		EmitterInstance();
 		~EmitterInstance();
 		void Initiate(EmitterData someData);
 		void Render(Camera* aCamera);
@@ -38,9 +40,11 @@ namespace Prism
 		VertexBufferWrapper *myVertexWrapper;
 
 		float myEmissionTime;
-		float myEmissionRate;
-		int myParticleIndex;
+		float myEmitterLife;
 		float myParticleScaling;
+
+		int myParticleIndex;
+		int myDeadParticleCount;
 
 		bool myIsActive;
 	};

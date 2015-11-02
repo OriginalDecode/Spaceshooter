@@ -88,6 +88,21 @@ void Prism::DirectX::CleanD3D()
 #endif
 }
 
+ID3D11DepthStencilView* Prism::DirectX::GetDepthStencil()
+{
+	return myDepthBufferView;
+}
+
+void Prism::DirectX::RestoreViewPort()
+{
+	myContext->RSSetViewports(1, myViewPort);
+}
+
+void Prism::DirectX::SetBackBufferAsTarget()
+{
+	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
+}
+
 void Prism::DirectX::EnableZBuffer()
 {
 	myContext->OMSetDepthStencilState(myEnabledDepthStencilState, 1);
@@ -238,17 +253,17 @@ bool Prism::DirectX::D3DSwapChainSetup()
 
 bool Prism::DirectX::D3DViewPortSetup(int aWidth, int aHeight)
 {
-	D3D11_VIEWPORT viewPort;
-	ZeroMemory(&viewPort, sizeof(D3D11_VIEWPORT));
+	myViewPort = new D3D11_VIEWPORT();
+	ZeroMemory(myViewPort, sizeof(D3D11_VIEWPORT));
 
-	viewPort.TopLeftX = 0;
-	viewPort.TopLeftY = 0;
-	viewPort.Width = static_cast<FLOAT>(aWidth);
-	viewPort.Height = static_cast<FLOAT>(aHeight);
-	viewPort.MinDepth = 0.f;
-	viewPort.MaxDepth = 1.f;
+	myViewPort->TopLeftX = 0;
+	myViewPort->TopLeftY = 0;
+	myViewPort->Width = static_cast<FLOAT>(aWidth);
+	myViewPort->Height = static_cast<FLOAT>(aHeight);
+	myViewPort->MinDepth = 0.f;
+	myViewPort->MaxDepth = 1.f;
 
-	myContext->RSSetViewports(1, &viewPort);
+	myContext->RSSetViewports(1, myViewPort);
 
 	return true;
 }
