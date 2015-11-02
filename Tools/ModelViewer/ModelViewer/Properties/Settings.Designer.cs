@@ -82,5 +82,53 @@ namespace ModelViewer.Properties {
                 this["DefaultDataFolderPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float DefaultSettingCameraZoom {
+            get {
+                return ((float)(this["DefaultSettingCameraZoom"]));
+            }
+            set {
+                this["DefaultSettingCameraZoom"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float DefaultSettingCameraMovement {
+            get {
+                return ((float)(this["DefaultSettingCameraMovement"]));
+            }
+            set {
+                this["DefaultSettingCameraMovement"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float DefaultSettingCameraRotation {
+            get {
+                return ((float)(this["DefaultSettingCameraRotation"]));
+            }
+            set {
+                this["DefaultSettingCameraRotation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public float DefaultSettingMouseSensitivity {
+            get {
+                return ((float)(this["DefaultSettingMouseSensitivity"]));
+            }
+            set {
+                this["DefaultSettingMouseSensitivity"] = value;
+            }
+        }
     }
 }
