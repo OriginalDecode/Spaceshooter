@@ -8,6 +8,7 @@ namespace Prism
 	class DirectionalLight;
 	class Model;
 	class PointLight;
+	class RenderProcessTarget;
 	class Scene;
 	class SpotLight;
 	class DebugText;
@@ -110,6 +111,9 @@ private:
 	float myEMPScale;
 	float myEMPTimer;
 	bool myEMPActivated;
+
+	Prism::RenderProcessTarget* myRenderProcessTarget;
+	int myRenderSystem;
 
 };
 

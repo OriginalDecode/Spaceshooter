@@ -23,27 +23,19 @@ Prism::Instance::~Instance()
 	delete &myProxy;
 }
 
-void Prism::Instance::Render(Camera& aCamera)
+void Prism::Instance::Render(Camera& aCamera, RenderProcessTarget& aRenderProcessTarget)
 {
 	if (myProxy.IsLoaded())
 	{
-		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
-		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
-		myProxy.GetEffect()->SetScaleVector(myScale);
-
-		myProxy.Render(myOrientation, aCamera.GetOrientation().GetPos());
+		myProxy.Render(myOrientation, aRenderProcessTarget);
 	}
 }
 
-void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera)
+void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera, RenderProcessTarget& aRenderProcessTarget)
 {
 	if (myProxy.IsLoaded())
 	{
-		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
-		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
-		myProxy.GetEffect()->SetScaleVector(myScale);
-
-		myProxy.Render(myOrientation * aParentMatrix, aCamera.GetOrientation().GetPos());
+		myProxy.Render(myOrientation * aParentMatrix, aRenderProcessTarget);
 	}
 }
 

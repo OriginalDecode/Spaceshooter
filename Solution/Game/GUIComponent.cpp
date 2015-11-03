@@ -426,8 +426,8 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	myEnemies.RemoveAll();
 	myPowerUps.RemoveAll();
 
-	myGUIBars[0]->Render(*myCamera);
-	myGUIBars[1]->Render(*myCamera);
+	//myGUIBars[0]->Render(*myCamera);
+	//myGUIBars[1]->Render(*myCamera);
 
 	if (myHitMarkerTimer >= 0.f)
 	{

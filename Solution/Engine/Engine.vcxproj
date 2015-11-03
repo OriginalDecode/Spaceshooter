@@ -226,6 +226,7 @@
     <ClCompile Include="Instance.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="RenderProcessTarget.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="ModelProxy.cpp" />
@@ -280,6 +281,7 @@
     <ClInclude Include="LodStructs.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="RenderProcessTarget.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="ModelProxy.h" />

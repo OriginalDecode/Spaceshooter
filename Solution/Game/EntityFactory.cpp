@@ -315,6 +315,10 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 			std::string effectFile;
 
 			aDocument.ForceReadAttribute(e, "modelFile", modelFile);
+
+			//For instancing only, remove later
+			modelFile = "Data/Resource/Model/InstanceTest/pbl_metalness_arm_binary.fbx";
+
 			aDocument.ForceReadAttribute(e, "effectFile", effectFile);
 
 			aEntityToAddTo.myModelFile = modelFile;

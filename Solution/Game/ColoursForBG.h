@@ -8,4 +8,5 @@
 #define GREEN 0.f, 1.f, 0.f, 1.f
 #define NEONPINK 1.f, 0.43137254902f, 0.78039215686f, 0
 #define MAGENTA 1.f,0.f,1.f,1.f
+#define GRAY 0.7f,0.7f,0.7f,1.f
 

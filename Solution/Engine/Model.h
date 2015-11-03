@@ -12,6 +12,7 @@
 namespace Prism
 {
 	class Effect;
+	class RenderProcessTarget;
 	class Surface;
 
 	struct IndexBufferWrapper;
@@ -38,7 +39,11 @@ namespace Prism
 		Effect* GetEffect();
 		void SetEffect(Effect* aEffect);
 
-		void Render(const CU::Matrix44<float>& aOrientation, const CU::Vector3<float>& aCameraPosition);
+		void BeginRender();
+		void Render(const CU::Matrix44<float>& aOrientation);
+		void Render(const CU::Matrix44<float>& aOrientation, RenderProcessTarget& aRenderProcessTarget);
+
+		unsigned int GetIndexCount() const;
 
 	private:
 		bool myIsNULLObject;

@@ -31,6 +31,7 @@
 #include "PowerUpComponent.h"
 #include "PropComponent.h"
 #include "PhysicsComponent.h"
+#include <RenderProcessTarget.h>
 #include <Scene.h>
 #include "ShieldComponent.h"
 #include "ShootingComponent.h"
@@ -171,6 +172,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myPlayer->myOriginalOrientation = myCurrentLevel->myPlayer->myOrientation;
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
+	myCurrentLevel->myRenderProcessTarget->SetCamera(myCurrentLevel->myCamera);
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
 
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
@@ -198,7 +200,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	reader.ForceReadAttribute(playerPosElement, "X", playerPos.x);
 	reader.ForceReadAttribute(playerPosElement, "Y", playerPos.y);
 	reader.ForceReadAttribute(playerPosElement, "Z", playerPos.z);
-	
+
 	playerPosElement = reader.ForceFindFirstChild(levelElement, "PlayerStartTranslate");
 	playerPosElement = reader.ForceFindFirstChild(playerPosElement, "rotation");
 	reader.ForceReadAttribute(playerPosElement, "X", playerRot.x);
@@ -471,6 +473,9 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aReader.ForceReadAttribute(propElement, "Y", propPosition.y);
 	aReader.ForceReadAttribute(propElement, "Z", propPosition.z);
 	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*10.f);
+
+	//Debug only, remove later:
+	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*0.01f);
 
 	propElement = aReader.ForceFindFirstChild(aLevelElement, "rotation");
 	CU::Vector3<float> propRotation;

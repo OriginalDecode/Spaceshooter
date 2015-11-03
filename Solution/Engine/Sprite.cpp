@@ -41,27 +41,27 @@ Prism::Sprite::Sprite(const std::string& aFileName, const CU::Vector2<float>& aS
 void Prism::Sprite::Render(const CU::Vector2<float>& aPosition, const CU::Vector2<float>& aScale
 	, const CU::Vector4<float>& aColor)
 {
-	Engine::GetInstance()->DisableZBuffer();
+	//Engine::GetInstance()->DisableZBuffer();
 
-	myPosition = aPosition;
-	//myOrientation.SetPos(aPosition);
-	myScale = aScale;
+	//myPosition = aPosition;
+	////myOrientation.SetPos(aPosition);
+	//myScale = aScale;
 
-	float blendFactor[4];
-	blendFactor[0] = 0.f;
-	blendFactor[1] = 0.f;
-	blendFactor[2] = 0.f;
-	blendFactor[3] = 0.f;
+	//float blendFactor[4];
+	//blendFactor[0] = 0.f;
+	//blendFactor[1] = 0.f;
+	//blendFactor[2] = 0.f;
+	//blendFactor[3] = 0.f;
 
-	//myEffect->SetBlendState(myBlendState, blendFactor);
-	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
-	myEffect->SetPosAndScale(aPosition, aScale);
-	//myEffect->SetColor(aColor);
-	myEffect->SetSpriteOrientation(myOrientation);
+	////myEffect->SetBlendState(myBlendState, blendFactor);
+	//myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
+	//myEffect->SetPosAndScale(aPosition, aScale);
+	////myEffect->SetColor(aColor);
+	//myEffect->SetSpriteOrientation(myOrientation);
 
-	BaseModel::Render();
+	//BaseModel::Render();
 
-	Engine::GetInstance()->EnableZBuffer();
+	//Engine::GetInstance()->EnableZBuffer();
 }
 
 void Prism::Sprite::CreateVertices()

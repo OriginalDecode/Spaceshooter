@@ -52,7 +52,7 @@ namespace Prism
 		mySurfaces.DeleteAll();
 	}
 
-	void BaseModel::Render()
+	void BaseModel::BeginRender()
 	{
 		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 		Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
@@ -60,11 +60,16 @@ namespace Prism
 			, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
 		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
 			, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
-
 		for (int s = 0; s < mySurfaces.Size(); ++s)
 		{
 			mySurfaces[s]->Activate();
+		}
+	}
 
+	void BaseModel::Render()
+	{
+		for (int s = 0; s < mySurfaces.Size(); ++s)
+		{
 			ID3DX11EffectTechnique* tech = nullptr;
 			D3DX11_TECHNIQUE_DESC techDesc;
 

@@ -4,13 +4,14 @@ namespace Prism
 {
 	class Effect;
 	class Model;
+	class RenderProcessTarget;
 
 	class ModelProxy
 	{
 	public:
 		ModelProxy();
 
-		void Render(const CU::Matrix44<float>& aOrientation, const CU::Vector3<float>& aCameraPosition);
+		void Render(const CU::Matrix44<float>& aOrientation, RenderProcessTarget& aRenderProcessTarget);
 
 		void SetModel(Model* aModel);
 

@@ -53,6 +53,9 @@ bool Game::Init(HWND& aHwnd)
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
+#ifdef _DEBUG
+	startInMenu = false;
+#endif
 	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
@@ -74,7 +77,7 @@ bool Game::Init(HWND& aHwnd)
 		myLockMouse = false;
 	}
 
-	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
+	Prism::Engine::GetInstance()->SetClearColor({ GRAY });
 
 	GAME_LOG("Init Successful");
 	return true;

@@ -111,6 +111,9 @@
     <ClCompile Include="StreakEmitterInstance.cpp">
       <Filter>Rendering\Streak</Filter>
     </ClCompile>
+    <ClCompile Include="RenderProcessTarget.cpp">
+      <Filter>Rendering</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -264,6 +267,9 @@
     </ClInclude>
     <ClInclude Include="StreakInstance.h">
       <Filter>Rendering\Streak</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderProcessTarget.h">
+      <Filter>Rendering</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

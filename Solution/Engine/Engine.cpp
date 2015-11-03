@@ -77,24 +77,24 @@ namespace Prism
 
 	void Engine::Render()
 	{
-		for (int i = 0; i < myTexts.Size(); ++i)
-		{
-			myText->SetText(myTexts[i].myText);
-			myText->SetPosition(myTexts[i].myPosition);
-			//myText->SetScale({ myTexts[i].myScale / 2.f, myTexts[i].myScale / 2.f });
-			myText->SetColor(myTexts[i].myColor);
-			myText->Render();
-		}
-		myTexts.RemoveAll();
+		//for (int i = 0; i < myTexts.Size(); ++i)
+		//{
+		//	myText->SetText(myTexts[i].myText);
+		//	myText->SetPosition(myTexts[i].myPosition);
+		//	//myText->SetScale({ myTexts[i].myScale / 2.f, myTexts[i].myScale / 2.f });
+		//	myText->SetColor(myTexts[i].myColor);
+		//	myText->Render();
+		//}
+		//myTexts.RemoveAll();
 
-		myText->SetColor({ 1.f, 0, 0, 0.8f });
-		for (int i = 0; i < myDebugTexts.Size(); ++i)
-		{
-			myText->SetText(myDebugTexts[i].myText);
-			myText->SetPosition(myDebugTexts[i].myPosition);
-			//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
-			myText->Render();
-	}
+		//myText->SetColor({ 1.f, 0, 0, 0.8f });
+		//for (int i = 0; i < myDebugTexts.Size(); ++i)
+		//{
+		//	myText->SetText(myDebugTexts[i].myText);
+		//	myText->SetPosition(myDebugTexts[i].myPosition);
+		//	//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
+		//	myText->Render();
+		//}
 		myDebugTexts.RemoveAll();
 		myDirectX->Present(0, 0);
 

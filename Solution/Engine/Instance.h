@@ -10,6 +10,8 @@ namespace Prism
 	class Camera;
 	class Light;
 	class ModelProxy;
+	class RenderProcessTarget;
+
 	enum class eOctreeType;
 
 	class Instance
@@ -19,8 +21,8 @@ namespace Prism
 			, const float& aObjectCullingRadius);
 		~Instance();
 
-		void Render(Camera& aCamera);
-		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera);
+		void Render(Camera& aCamera, RenderProcessTarget& aRenderProcessTarget);
+		void Render(const CU::Matrix44<float>& aParentMatrix, Camera& aCamera, RenderProcessTarget& aRenderProcessTarget);
 
 		CU::Vector3<float> GetPosition() const;
 

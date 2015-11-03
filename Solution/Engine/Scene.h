@@ -10,6 +10,7 @@ namespace Prism
 	class DirectionalLight;
 	class Instance;
 	class PointLight;
+	class RenderProcessTarget;
 	class SpotLight;
 #ifdef SCENE_USE_OCTREE
 	class Octree;
@@ -21,8 +22,8 @@ namespace Prism
 		Scene();
 		~Scene();
 
-		void Render();
-		void Render(CU::GrowingArray<Instance*>& someBulletInstances);
+		void Render(RenderProcessTarget& aRenderProcessTarget);
+		void Render(CU::GrowingArray<Instance*>& someBulletInstances, RenderProcessTarget& aRenderProcessTarget);
 
 		void AddInstance(Instance* aInstance);
 		void AddLight(DirectionalLight* aLight);

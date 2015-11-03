@@ -10,11 +10,11 @@ namespace Prism
 	{
 	}
 
-	void ModelProxy::Render(const CU::Matrix44<float>& aOrientation, const CU::Vector3<float>& aCameraPosition)
+	void ModelProxy::Render(const CU::Matrix44<float>& aOrientation, RenderProcessTarget& aRenderProcessTarget)
 	{
 		if (myModel != nullptr)
 		{
-			myModel->Render(aOrientation, aCameraPosition);
+			myModel->Render(aOrientation, aRenderProcessTarget);
 		}
 	}
 

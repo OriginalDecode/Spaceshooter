@@ -36,6 +36,7 @@
 #include "PowerUpComponent.h"
 #include "PowerUpMessage.h"
 #include "PropComponent.h"
+#include <RenderProcessTarget.h>
 #include <Renderer.h>
 #include <Scene.h>
 #include "ShieldComponent.h"
@@ -64,6 +65,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myEMPScale(1.f)
 	, myEMPTimer(0.f)
 	, myEMPActivated(false)
+	, myRenderSystem(1)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
@@ -76,6 +78,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 
 	myRenderer = new Prism::Renderer();
+	myRenderProcessTarget = new Prism::RenderProcessTarget();
 }
 
 Level::~Level()
@@ -91,7 +94,6 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_POWERUP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::EMP, this);
-	delete myCamera;
 
 	for (int i = 0; i < myEntities.Size(); i++)
 	{
@@ -117,6 +119,9 @@ Level::~Level()
 
 	delete myRenderer;
 	myRenderer = nullptr;
+	delete myRenderProcessTarget;
+	myRenderProcessTarget = nullptr;
+	delete myCamera;
 	
 	delete myEmitterManager;
 	myEmitterManager = nullptr;
@@ -126,6 +131,19 @@ Level::~Level()
 
 bool Level::LogicUpdate(float aDeltaTime)
 {
+	if (myInputWrapper->KeyDown(DIK_1) == true)
+	{
+		myRenderSystem = 1;
+	}
+	if (myInputWrapper->KeyDown(DIK_2) == true)
+	{
+		myRenderSystem = 2;
+	}
+	if (myInputWrapper->KeyDown(DIK_3) == true)
+	{
+		myRenderSystem = 3;
+	}
+
 	myCollisionManager->CleanUp();
 
 	if (myPlayer->GetAlive() == false || myEntityToDefend != nullptr && myEntityToDefend->GetAlive() == false)
@@ -193,65 +211,18 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 void Level::Render()
 {
-	
-	if (myUsePostProcessing == true)
+	//Sleep(10);
+
+	myScene->Render(myBulletManager->GetInstances(), *myRenderProcessTarget);
+
+	if (myRenderSystem == 1)
 	{
-		myRenderer->BeginScene();
-		Prism::Engine::GetInstance()->DisableZBuffer();
-		mySkySphere->Render(*myCamera);
-		Prism::Engine::GetInstance()->EnableZBuffer();
-		//myRenderer->EndScene(Prism::ePostProcessing::NONE);
-
-		//myRenderer->BeginScene();
-		myScene->Render(myBulletManager->GetInstances());
-
-
-		myEmitterManager->RenderEmitters();
-
-
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
-
-		//myRenderer->BeginScene();
-		//myRenderer->EndScene(Prism::ePostProcessing::NONE);
-		myRenderer->FinalRender();
-		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+		myRenderProcessTarget->RenderNormal();
 	}
-	else
+	else if (myRenderSystem == 3)
 	{
-		Prism::Engine::GetInstance()->DisableZBuffer();
-		mySkySphere->Render(*myCamera);
-		Prism::Engine::GetInstance()->EnableZBuffer();
-
-		if (myEMPActivated == true)
-		{
-			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
-		}
-
-		myScene->Render(myBulletManager->GetInstances());
-
-		myEmitterManager->RenderEmitters();
-
-		//debug only
-		//myStreakEntity->Update(1.f/30.f);
-	//	myStreakEntity->GetComponent<ParticleEmitterComponent>()->Render();
-		//myStreakEntity->GetComponent<StreakEmitterComponent>()->Render();
-
-		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+		myRenderProcessTarget->RenderNormalOld();
 	}
-	
-
-#ifndef RELEASE_BUILD
-	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0), Prism::eTextType::DEBUG_TEXT);
-	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().y), CU::Vector2<float>(0, -30), Prism::eTextType::DEBUG_TEXT);
-	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().z), CU::Vector2<float>(0, -60), Prism::eTextType::DEBUG_TEXT);
-
-	Prism::Engine::GetInstance()->PrintText(std::to_string(myPlayer->GetComponent<HealthComponent>()->GetHealth()), { 0, -100.f }, Prism::eTextType::DEBUG_TEXT);
-	Prism::Engine::GetInstance()->PrintText(std::to_string(myPlayer->GetComponent<ShieldComponent>()->GetCurrentShieldStrength()), { 0, -120.f }, Prism::eTextType::DEBUG_TEXT);
-
-	Prism::Engine::GetInstance()->PrintText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().x, { 0, -140.f }, Prism::eTextType::DEBUG_TEXT);
-	Prism::Engine::GetInstance()->PrintText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().y, { 0, -160.f }, Prism::eTextType::DEBUG_TEXT);
-	Prism::Engine::GetInstance()->PrintText(myPlayer->GetComponent<PhysicsComponent>()->GetVelocity().z, { 0, -180.f }, Prism::eTextType::DEBUG_TEXT);
-#endif
 }
 
 void Level::OnResize(int aWidth, int aHeight)

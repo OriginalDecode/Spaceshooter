@@ -23,6 +23,7 @@ namespace Prism
 		~BaseModel();
 
 	protected:
+		void BeginRender();
 		void Render();
 
 		void InitInputLayout(D3D11_INPUT_ELEMENT_DESC* aVertexDescArray, int aArraySize);
