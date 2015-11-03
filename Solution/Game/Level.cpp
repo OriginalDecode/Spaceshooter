@@ -367,6 +367,11 @@ void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
 	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 	myEntities.Add(newEntity);
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
+
+	if (newEntity->GetComponent<ParticleEmitterComponent>() != nullptr)
+	{
+		myEmitterManager->AddEmitter(newEntity->GetComponent<ParticleEmitterComponent>());
+	}
 }
 
 void Level::ReceiveMessage(const EMPMessage& aMessage)

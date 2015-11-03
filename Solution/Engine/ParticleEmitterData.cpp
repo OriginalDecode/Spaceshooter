@@ -7,6 +7,14 @@
 
 namespace Prism
 {
+	ParticleEmitterData::ParticleEmitterData()
+	{
+	}
+
+	ParticleEmitterData::~ParticleEmitterData()
+	{
+	}
+
 	void ParticleEmitterData::LoadDataFile(const char* aFilePath)
 	{
 		XMLReader read;

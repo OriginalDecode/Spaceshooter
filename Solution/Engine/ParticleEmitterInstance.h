@@ -14,7 +14,7 @@ namespace Prism
 
 		ParticleEmitterInstance();
 		~ParticleEmitterInstance();
-		void Initiate(ParticleEmitterData someData);
+		void Initiate(ParticleEmitterData* someData);
 		void Render(Camera* aCamera);
 		void Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);
 		bool GetIsActive();
@@ -36,7 +36,7 @@ namespace Prism
 		CU::Vector3f myDiffColor;
 		CU::Matrix44f myOrientation;
 
-		ParticleEmitterData myParticleEmitterData;
+		ParticleEmitterData* myParticleEmitterData;
 		VertexBufferWrapper *myVertexWrapper;
 
 		float myEmissionTime;

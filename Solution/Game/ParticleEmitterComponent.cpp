@@ -11,6 +11,7 @@
 #include "Entity.h"
 #include "PostMaster.h"
 #include "Scene.h"
+#include <EmitterDataContainer.h>
 
 
 ParticleEmitterComponent::ParticleEmitterComponent(Entity& aEntity)
@@ -33,9 +34,7 @@ void ParticleEmitterComponent::Init(std::string aPath)
 
 	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
 	myEmitter = new Prism::ParticleEmitterInstance();
-	Prism::ParticleEmitterData data;
-	data.LoadDataFile(myXMLPath.c_str());
-	myEmitter->Initiate(data);
+	myEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(aPath));
 }
 
 void ParticleEmitterComponent::Update(float aDeltaTime)

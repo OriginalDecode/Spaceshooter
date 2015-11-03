@@ -17,6 +17,9 @@ namespace Prism
 	
 	public:
 
+		ParticleEmitterData();
+		~ParticleEmitterData();
+
 		void LoadDataFile(const char* aFilePath);
 		void Release();
 	private:
