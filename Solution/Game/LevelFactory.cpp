@@ -86,7 +86,7 @@ Level* LevelFactory::LoadCurrentLevel()
 	myCurrentLevel->myStreakEntity->GetComponent<ParticleEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter.xml");
 	myCurrentLevel->myStreakEntity->AddComponent<StreakEmitterComponent>();
 	myCurrentLevel->myStreakEntity->GetComponent<StreakEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter_streak.xml");
-
+	myCurrentLevel->myStreakEntity->myOrientation.SetPos({ 0.f, 0.f, 70.f });
 	return myCurrentLevel;
 }
 

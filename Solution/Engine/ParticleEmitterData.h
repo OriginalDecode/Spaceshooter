@@ -18,45 +18,47 @@ namespace Prism
 	public:
 
 		void LoadDataFile(const char* aFilePath);
-
+		void Release();
 	private:
 
 		void CreateInputLayout();
 		
-		Texture* myTexture;
-		Effect* myEffect;
-		std::string myFileName;
-		ParticleData myData;
+		Texture*			myTexture;
+		Effect*				myEffect;
+		std::string			myFileName;
+		ParticleData		myData;
 
-		ID3D11InputLayout* myInputLayout;
+		ID3D11InputLayout*	myInputLayout;
 
-		CU::Vector3f myEmitterSize;
+		CU::Vector3f		myEmitterSize;
 
-		float		 myMinRotation;
-		float		 myMaxRotation;
+		float				myMinRotation;
+		float				myMaxRotation;
 
-		float		 myMaxSpeed;
-		float		 myMinSpeed;
-		CU::Vector3f myDirection;
+		float				mySpeedMultiplier;
 
-		std::string	myEffectName;
-		std::string	myTextureName;
+		CU::Vector3f		myMaxVelocity;
+		CU::Vector3f		myMinVelocity;
 
-		float myParticlesLifeTime;
-		float myEmitterLifeTime;
 
-		float myEmissionLifeTime;
-		float myEmissionRate;
-		float myEmissionRateDelta;
+		std::string			myEffectName;
+		std::string			myTextureName;
 
-		float myMinScale;
-		float myMaxScale;
+		float				myParticlesLifeTime;
+		float				myEmitterLifeTime;
+
+		float				myEmissionLifeTime;
+		float				myEmissionRate;
+		float				myEmissionRateDelta;
+
+		float				myMinScale;
+		float				myMaxScale;
 		
-		int myParticlesPerEmitt;
-		int	myMaxParticleAmount;
+		int					myParticlesPerEmitt;
+		int					myMaxParticleAmount;
 
-		bool myIsActiveAtStart;
-		bool myUseEmitterLifeTime;
+		bool				myIsActiveAtStart;
+		bool				myUseEmitterLifeTime;
 
 
 

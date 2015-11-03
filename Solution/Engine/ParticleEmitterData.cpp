@@ -34,17 +34,20 @@ namespace Prism
 		element = read.ForceFindFirstChild(emitter, "ParticleMinRotation");
 		read.ReadAttribute(element, "value", myMinRotation);
 
-		element = read.ForceFindFirstChild(emitter, "ParticleDirection");
-		read.ReadAttribute(element, "x", myDirection.x);
-		read.ReadAttribute(element, "y", myDirection.y);
-		read.ReadAttribute(element, "z", myDirection.z);
+		element = read.ForceFindFirstChild(emitter, "ParticleMaxVelocity");
+		read.ReadAttribute(element, "x", myMaxVelocity.x);
+		read.ReadAttribute(element, "y", myMaxVelocity.y);
+		read.ReadAttribute(element, "z", myMaxVelocity.z);
 
-		element = read.ForceFindFirstChild(emitter, "ParticleMaxSpeed");
-		read.ReadAttribute(element, "value", myMaxSpeed);
+		element = read.ForceFindFirstChild(emitter, "ParticleMinVelocity");
+		read.ReadAttribute(element, "x", myMinVelocity.x);
+		read.ReadAttribute(element, "y", myMinVelocity.y);
+		read.ReadAttribute(element, "z", myMinVelocity.z);
+
+		element = read.ForceFindFirstChild(emitter, "ParticleSpeedMultiplier");
+		read.ReadAttribute(element, "value", mySpeedMultiplier);
 
 
-		element = read.ForceFindFirstChild(emitter, "ParticleMinSpeed");
-		read.ReadAttribute(element, "value", myMinSpeed);
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleStartColor");
@@ -111,8 +114,8 @@ namespace Prism
 		myData.myMaxStartSize = myMaxScale;
 		myData.myMinStartSize = myMinScale;
 		
-		myData.myMaxSpeed = myMaxSpeed;
-		myData.myMinSpeed = myMinSpeed;
+		myData.myMaxVelocity = myMaxVelocity;;
+		myData.myMinVelocity = myMinVelocity;;
 
 		myData.myLifeTime = myParticlesLifeTime;
 
@@ -149,4 +152,11 @@ namespace Prism
 			, &myInputLayout);
 		DL_ASSERT_EXP(!FAILED(hr), "[ParticleEmitterData](CreateInputLayout) : Failed to Create InputLayout!");
 	}
+
+	void ParticleEmitterData::Release()
+	{
+		myInputLayout->Release();
+		myInputLayout = nullptr;
+	}
+
 }
