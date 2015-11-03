@@ -433,3 +433,8 @@ void Level::UpdateDebug()
 		myUsePostProcessing = !myUsePostProcessing;
 	}
 }
+
+void Level::ReceiveMessage(const ExplosionMessage& aMessage) 
+{
+
+}

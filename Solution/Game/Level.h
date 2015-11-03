@@ -25,6 +25,7 @@ class CollisionManager;
 class ConversationManager;
 class DefendMessage;
 class EMPMessage;
+class ExplosionMessage;
 class Entity;
 class EntityFactory;
 class EmitterManager;
@@ -65,7 +66,7 @@ public:
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	void ReceiveMessage(const SpawnPowerUpMessage& aMessage) override;
 	void ReceiveMessage(const EMPMessage& aMessage) override;
-	void RecieveMessage(const ExplosionMessage& aMessage) override;
+	void ReceiveMessage(const ExplosionMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 

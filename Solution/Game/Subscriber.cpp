@@ -74,3 +74,7 @@ void Subscriber::ReceiveMessage(const DestroyEmitterMessage&)
 void Subscriber::ReceiveMessage(const EMPMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const ExplosionMessage&)
+{
+}
