@@ -189,7 +189,7 @@ namespace Prism
 			myGraphicalParticles[i].myAlpha += myParticleEmitterData->myData.myAlphaDelta * aDeltaTime; 
 			myGraphicalParticles[i].mySize += myParticleEmitterData->myData.mySizeDelta * aDeltaTime;
 
-			myGraphicalParticles[i].myColor += myDiffColor * aDeltaTime;
+			myGraphicalParticles[i].myColor += (myDiffColor - (myGraphicalParticles[i].myAlpha/2)) * aDeltaTime;
 
 			myGraphicalParticles[i].myRotation += myLogicalParticles[i].myRotation * aDeltaTime;
 
