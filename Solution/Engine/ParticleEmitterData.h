@@ -31,14 +31,12 @@ namespace Prism
 		ID3D11InputLayout* myInputLayout;
 
 		CU::Vector3f myEmitterSize;
-		CU::Vector3f myEmissionVelocityDelta;
 
-		CU::Vector3f myMaxRotation;
-		CU::Vector3f myMinRotation;
-		CU::Vector3f myRotationDelta;
+		float		 myMinRotation;
+		float		 myMaxRotation;
 
-		CU::Vector3f myMaxSpeed;
-		CU::Vector3f myMinSpeed;
+		float		 myMaxSpeed;
+		float		 myMinSpeed;
 		CU::Vector3f myDirection;
 
 		std::string	myEffectName;
@@ -53,11 +51,14 @@ namespace Prism
 
 		float myMinScale;
 		float myMaxScale;
+		
 		int myParticlesPerEmitt;
 		int	myMaxParticleAmount;
 
 		bool myIsActiveAtStart;
 		bool myUseEmitterLifeTime;
+
+
 
 
 	};

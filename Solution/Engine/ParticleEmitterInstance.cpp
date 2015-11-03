@@ -184,12 +184,14 @@ namespace Prism
 			}
 			
 			myGraphicalParticles[i].myPosition = myGraphicalParticles[i].myPosition -
-				(myLogicalParticles[i].myDirection * myLogicalParticles[i].myVelocity) * aDeltaTime;
+				(myLogicalParticles[i].myDirection * myLogicalParticles[i].mySpeed) * aDeltaTime;
 
 			myGraphicalParticles[i].myAlpha += myParticleEmitterData.myData.myAlphaDelta * aDeltaTime; 
 			myGraphicalParticles[i].mySize += myParticleEmitterData.myData.mySizeDelta * aDeltaTime;
 
 			myGraphicalParticles[i].myColor += myDiffColor * aDeltaTime;
+
+			myGraphicalParticles[i].myRotation += myLogicalParticles[i].myRotation * aDeltaTime;
 
 			myGraphicalParticles[i].myLifeTime -= aDeltaTime;
 
@@ -208,7 +210,7 @@ namespace Prism
 			myDeadParticleCount--;
 			myLogicalParticles[myParticleIndex].myIsAlive = true;
 
-			myLogicalParticles[myParticleIndex].myDirection = myParticleEmitterData.myDirection;
+
 			myGraphicalParticles[myParticleIndex].myColor = myParticleEmitterData.myData.myStartColor;
 
 			myGraphicalParticles[myParticleIndex].myPosition =
@@ -222,15 +224,12 @@ namespace Prism
 
 			myGraphicalParticles[myParticleIndex].mySize = 1 * myParticleScaling;
 
-			myLogicalParticles[myParticleIndex].myVelocity.x = CU::Math::RandomRange(myParticleEmitterData.myData.myMinSpeed.x,
-				myParticleEmitterData.myData.myMaxSpeed.x);
+			myLogicalParticles[myParticleIndex].mySpeed = CU::Math::RandomRange(myParticleEmitterData.myData.myMinSpeed,
+				myParticleEmitterData.myData.myMaxSpeed);
 
-			myLogicalParticles[myParticleIndex].myVelocity.y = CU::Math::RandomRange(myParticleEmitterData.myData.myMinSpeed.y,
-				myParticleEmitterData.myData.myMaxSpeed.y);
-
-			myLogicalParticles[myParticleIndex].myVelocity.z = CU::Math::RandomRange(myParticleEmitterData.myData.myMinSpeed.z,
-				myParticleEmitterData.myData.myMaxSpeed.z);
-
+			
+			myLogicalParticles[myParticleIndex].myRotation = CU::Math::RandomRange(myParticleEmitterData.myMinRotation, myParticleEmitterData.myMaxRotation);
+			
 			myGraphicalParticles[myParticleIndex].myAlpha = myParticleEmitterData.myData.myStartAlpha;
 
 			myParticleIndex += 1;

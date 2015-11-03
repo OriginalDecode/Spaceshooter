@@ -27,23 +27,12 @@ namespace Prism
 		read.ReadAttribute(element, "z", myEmitterSize.z);
 
 
-		element = read.ForceFindFirstChild(emitter, "ParticleRotationDelta");
-		read.ReadAttribute(element, "x", myRotationDelta.x);
-		read.ReadAttribute(element, "y", myRotationDelta.y);
-		read.ReadAttribute(element, "z", myRotationDelta.z);
-
-
 		element = read.ForceFindFirstChild(emitter, "ParticleMaxRotation");
-		read.ReadAttribute(element, "x", myMaxRotation.x);
-		read.ReadAttribute(element, "y", myMaxRotation.y);
-		read.ReadAttribute(element, "z", myMaxRotation.z);
+		read.ReadAttribute(element, "value", myMaxRotation);
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleMinRotation");
-		read.ReadAttribute(element, "x", myMinRotation.x);
-		read.ReadAttribute(element, "y", myMinRotation.y);
-		read.ReadAttribute(element, "z", myMinRotation.z);
-
+		read.ReadAttribute(element, "value", myMinRotation);
 
 		element = read.ForceFindFirstChild(emitter, "ParticleDirection");
 		read.ReadAttribute(element, "x", myDirection.x);
@@ -51,21 +40,11 @@ namespace Prism
 		read.ReadAttribute(element, "z", myDirection.z);
 
 		element = read.ForceFindFirstChild(emitter, "ParticleMaxSpeed");
-		read.ReadAttribute(element, "x", myMaxSpeed.x);
-		read.ReadAttribute(element, "y", myMaxSpeed.y);
-		read.ReadAttribute(element, "z", myMaxSpeed.z);
+		read.ReadAttribute(element, "value", myMaxSpeed);
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleMinSpeed");
-		read.ReadAttribute(element, "x", myMinSpeed.x);
-		read.ReadAttribute(element, "y", myMinSpeed.y);
-		read.ReadAttribute(element, "z", myMinSpeed.z);
-
-
-		element = read.ForceFindFirstChild(emitter, "EmissionVeloctiyDelta");
-		read.ReadAttribute(element, "x", myEmissionVelocityDelta.x);
-		read.ReadAttribute(element, "y", myEmissionVelocityDelta.y);
-		read.ReadAttribute(element, "z", myEmissionVelocityDelta.z);
+		read.ReadAttribute(element, "value", myMinSpeed);
 
 
 		element = read.ForceFindFirstChild(emitter, "ParticleStartColor");
@@ -153,11 +132,12 @@ namespace Prism
 
 		const D3D11_INPUT_ELEMENT_DESC VertexParticleLayout[] =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "ALPHA", 0, DXGI_FORMAT_R32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "SIZE", 0, DXGI_FORMAT_R32_FLOAT, 0, 28, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TIME", 0, DXGI_FORMAT_R32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "COLOR",		0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "ALPHA",		0, DXGI_FORMAT_R32_FLOAT,		0, 24,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "SIZE",		0, DXGI_FORMAT_R32_FLOAT,		0, 28,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "TIME",		0, DXGI_FORMAT_R32_FLOAT,		0, 32,	D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{ "ROTATION",	0, DXGI_FORMAT_R32_FLOAT,		0, 36,	D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
 		UINT size = ARRAYSIZE(VertexParticleLayout);
