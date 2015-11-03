@@ -42,20 +42,28 @@ void Prism::Model::Init()
 
 	if (myIsNULLObject == false)
 	{
-		const int size = myVertexFormat.Size();
+		const int size = myVertexFormat.Size() + 4;
 		D3D11_INPUT_ELEMENT_DESC* vertexDesc = new D3D11_INPUT_ELEMENT_DESC[size];
 		for (int i = 0; i < myVertexFormat.Size(); ++i)
 		{
 			vertexDesc[i] = *myVertexFormat[i];
 		}
 
+		vertexDesc[myVertexFormat.Size() + 0] = { "myWorld", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 };
+		vertexDesc[myVertexFormat.Size() + 1] = { "myWorld", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 16, D3D11_INPUT_PER_INSTANCE_DATA, 1 };
+		vertexDesc[myVertexFormat.Size() + 2] = { "myWorld", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 32, D3D11_INPUT_PER_INSTANCE_DATA, 1 };
+		vertexDesc[myVertexFormat.Size() + 3] = { "myWorld", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 48, D3D11_INPUT_PER_INSTANCE_DATA, 1 };
+
 		InitInputLayout(vertexDesc, size);
 
 		InitVertexBuffer(myVertexBaseData->myStride, D3D11_USAGE_IMMUTABLE, 0);
+		InitInstanceBuffer(sizeof(CU::Matrix44<float>), D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 		InitIndexBuffer();
 
 		SetupVertexBuffer(myVertexBaseData->myNumberOfVertices
 			, myVertexBaseData->myStride, myVertexBaseData->myVertexData);
+
+		SetupInstanceBuffer(1024, sizeof(CU::Matrix44<float>));
 
 		SetupIndexBuffer(myIndexBaseData->myNumberOfIndices, myIndexBaseData->myIndexData);
 
@@ -266,7 +274,7 @@ void Prism::Model::SetEffect(Effect* aEffect)
 	}
 }
 
-void Prism::Model::BeginRender()
+void Prism::Model::BeginRender(const CU::GrowingArray<CU::Matrix44<float>>& someOrientations)
 {
 	if (myIsNULLObject == false)
 	{
@@ -277,11 +285,30 @@ void Prism::Model::BeginRender()
 		blendFactor[3] = 0.f;
 
 		myEffect->SetBlendState(NULL, blendFactor);
-		BaseModel::BeginRender();
+		BaseModel::BeginRender(someOrientations);
 	}
 	for (int i = 0; i < myChildren.Size(); ++i)
 	{
-		myChildren[i]->BeginRender();
+		myChildren[i]->BeginRender(someOrientations);
+	}
+}
+
+void Prism::Model::BeginRenderNormal()
+{
+	if (myIsNULLObject == false)
+	{
+		float blendFactor[4];
+		blendFactor[0] = 0.f;
+		blendFactor[1] = 0.f;
+		blendFactor[2] = 0.f;
+		blendFactor[3] = 0.f;
+
+		myEffect->SetBlendState(NULL, blendFactor);
+		BaseModel::BeginRenderNormal();
+	}
+	for (int i = 0; i < myChildren.Size(); ++i)
+	{
+		myChildren[i]->BeginRenderNormal();
 	}
 }
 
@@ -317,6 +344,21 @@ unsigned int Prism::Model::GetIndexCount() const
 		for (int i = 0; i < myChildren.Size(); ++i)
 		{
 			return myChildren[i]->GetIndexCount();
+		}
+	}
+}
+
+unsigned int Prism::Model::GetVertexCount() const
+{
+	if (myIsNULLObject == false)
+	{
+		return mySurfaces[0]->GetVertexCount();
+	}
+	else
+	{
+		for (int i = 0; i < myChildren.Size(); ++i)
+		{
+			return myChildren[i]->GetVertexCount();
 		}
 	}
 }

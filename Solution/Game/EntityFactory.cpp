@@ -318,8 +318,8 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 
 			//For instancing only, remove later
 			modelFile = "Data/Resource/Model/InstanceTest/pbl_metalness_arm_binary.fbx";
-
 			aDocument.ForceReadAttribute(e, "effectFile", effectFile);
+			effectFile = "Data/Resource/Shader/S_effect_pbl_instance.fx";
 
 			aEntityToAddTo.myModelFile = modelFile;
 			aEntityToAddTo.myEffectFile = effectFile;

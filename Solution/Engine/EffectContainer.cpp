@@ -84,6 +84,7 @@ void Prism::EffectContainer::ReloadEffect(const std::string& aFilePath)
 void Prism::EffectContainer::VerifyShader(const std::string& aFilePath)
 {
 	DL_ASSERT_EXP(aFilePath == "Data/Resource/Shader/S_effect_pbl.fx"
+		|| aFilePath == "Data/Resource/Shader/S_effect_pbl_instance.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_font.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_fontDebug.fx"
 		|| aFilePath == "Data/Resource/Shader/S_effect_sprite.fx"

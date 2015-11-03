@@ -170,6 +170,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	ReadLevelSettings();
 	myCurrentLevel->myPlayer->myOriginalOrientation = myCurrentLevel->myPlayer->myOrientation;
+
+	//removed for debug only
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 	myCurrentLevel->myRenderProcessTarget->SetCamera(myCurrentLevel->myCamera);
@@ -433,7 +435,7 @@ void LevelFactory::LoadPlayer()
 
 	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
 	myCurrentLevel->myPlayer->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
-		, "Data/Resource/Shader/S_effect_pbl.fx");
+		, "Data/Resource/Shader/S_effect_pbl_instance.fx");
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
 	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Init(7.5f);
@@ -475,7 +477,7 @@ void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLEle
 	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*10.f);
 
 	//Debug only, remove later:
-	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*0.01f);
+	aEntityToCreate->myOriginalOrientation.SetPos(propPosition*0.1f);
 
 	propElement = aReader.ForceFindFirstChild(aLevelElement, "rotation");
 	CU::Vector3<float> propRotation;

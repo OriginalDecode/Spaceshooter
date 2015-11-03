@@ -23,16 +23,19 @@ namespace Prism
 		~BaseModel();
 
 	protected:
-		void BeginRender();
+		void BeginRender(const CU::GrowingArray<CU::Matrix44<float>>& someOrientations);
+		void BeginRenderNormal();
 		void Render();
 
 		void InitInputLayout(D3D11_INPUT_ELEMENT_DESC* aVertexDescArray, int aArraySize);
 		void InitVertexBuffer(int aVertexSize, int aBufferUsage, int aCPUUsage);
+		void InitInstanceBuffer(int aVertexSize, int aBufferUsage, int aCPUUsage);
 		void InitIndexBuffer();
 		void InitSurface(const std::string& aResourceName, const std::string& aFileName);
 		void InitBlendState();
 
 		void SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData);
+		void SetupInstanceBuffer(int aVertexCount, int aVertexSize);
 		void SetupIndexBuffer(int aVertexCount, char* aIndexData);
 
 		virtual void OnEffectLoad();
@@ -43,10 +46,13 @@ namespace Prism
 		ID3D11InputLayout* myVertexLayout;
 		ID3D11BlendState* myBlendState;
 		D3D11_BUFFER_DESC* myVertexBufferDesc;
+		D3D11_BUFFER_DESC* myInstanceBufferDesc;
 		D3D11_BUFFER_DESC* myIndexBufferDesc;
 		D3D11_SUBRESOURCE_DATA* myInitData;
 
 		VertexBufferWrapper* myVertexBuffer;
+		VertexBufferWrapper* myInstanceBuffer;
+		ID3D11Buffer* myVertexBuffers[2];
 		IndexBufferWrapper* myIndexBuffer;
 
 		CU::Vector2<float> myPosition;

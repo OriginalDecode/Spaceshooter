@@ -139,10 +139,6 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		myRenderSystem = 2;
 	}
-	if (myInputWrapper->KeyDown(DIK_3) == true)
-	{
-		myRenderSystem = 3;
-	}
 
 	myCollisionManager->CleanUp();
 
@@ -219,9 +215,9 @@ void Level::Render()
 	{
 		myRenderProcessTarget->RenderNormal();
 	}
-	else if (myRenderSystem == 3)
+	else if (myRenderSystem == 2)
 	{
-		myRenderProcessTarget->RenderNormalOld();
+		myRenderProcessTarget->RenderInstance();
 	}
 }
 

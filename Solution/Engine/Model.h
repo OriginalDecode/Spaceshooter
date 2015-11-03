@@ -39,11 +39,13 @@ namespace Prism
 		Effect* GetEffect();
 		void SetEffect(Effect* aEffect);
 
-		void BeginRender();
+		void BeginRender(const CU::GrowingArray<CU::Matrix44<float>>& someOrientations);
+		void BeginRenderNormal();
 		void Render(const CU::Matrix44<float>& aOrientation);
 		void Render(const CU::Matrix44<float>& aOrientation, RenderProcessTarget& aRenderProcessTarget);
 
 		unsigned int GetIndexCount() const;
+		unsigned int GetVertexCount() const;
 
 	private:
 		bool myIsNULLObject;

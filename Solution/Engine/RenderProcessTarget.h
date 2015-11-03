@@ -21,8 +21,8 @@ namespace Prism
 
 		void SetCamera(Camera* aCamera);
 		void Render(Model* aModel, const CU::Matrix44<float>& aOrientation);
+		void RenderInstance();
 		void RenderNormal();
-		void RenderNormalOld();
 
 	private:
 		void operator=(RenderProcessTarget&) = delete;

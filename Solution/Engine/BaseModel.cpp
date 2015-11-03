@@ -14,6 +14,7 @@ namespace Prism
 	BaseModel::BaseModel()
 	{
 		myVertexBufferDesc = new D3D11_BUFFER_DESC();
+		myInstanceBufferDesc = new D3D11_BUFFER_DESC();
 		myIndexBufferDesc = new D3D11_BUFFER_DESC();
 		myInitData = new D3D11_SUBRESOURCE_DATA();
 
@@ -47,16 +48,76 @@ namespace Prism
 		}
 
 		delete myVertexBufferDesc;
+		delete myInstanceBufferDesc;
 		delete myIndexBufferDesc;
 		delete myInitData;
 		mySurfaces.DeleteAll();
 	}
 
-	void BaseModel::BeginRender()
+	void BaseModel::BeginRender(const CU::GrowingArray<CU::Matrix44<float>>& someOrientations)
 	{
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+		Engine::GetInstance()->GetContex()->Map(myInstanceBuffer->myVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		if (mappedResource.pData != nullptr)
+		{
+			CU::Matrix44f* data = (CU::Matrix44f*)mappedResource.pData;
+			for (int i = 0; i < someOrientations.Size(); ++i)
+			{
+				data[i] = someOrientations[i];
+			}
+		}
+
+		Engine::GetInstance()->GetContex()->Unmap(myInstanceBuffer->myVertexBuffer, 0);
+		UINT strides[2] = { myVertexBuffer->myStride, sizeof(CU::Matrix44f) };
+		UINT offsets[2] = { 0, 0 };
+
+		myVertexBuffers[0] = myVertexBuffer->myVertexBuffer;
+		myVertexBuffers[1] = myInstanceBuffer->myVertexBuffer;
+
+		Engine::GetInstance()->GetContex()->IASetVertexBuffers(0, 2, myVertexBuffers, strides, offsets);
+
+		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
+		//Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
+		//	, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer
+		//	, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
+		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
+			, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
+		for (int s = 0; s < mySurfaces.Size(); ++s)
+		{
+			mySurfaces[s]->Activate();
+		}
+	}
+
+	void BaseModel::BeginRenderNormal()
+	{
+
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+		Engine::GetInstance()->GetContex()->Map(myInstanceBuffer->myVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+		if (mappedResource.pData != nullptr)
+		{
+			CU::Matrix44f* data = (CU::Matrix44f*)mappedResource.pData;
+			for (int i = 0; i < 0; ++i)
+			{
+				//data[i] = someOrientations[i];
+			}
+		}
+
+		Engine::GetInstance()->GetContex()->Unmap(myInstanceBuffer->myVertexBuffer, 0);
+		UINT strides[2] = { myVertexBuffer->myStride, sizeof(CU::Matrix44f) };
+		UINT offsets[2] = { 0, 0 };
+
+		myVertexBuffers[0] = myVertexBuffer->myVertexBuffer;
+		myVertexBuffers[1] = myInstanceBuffer->myVertexBuffer;
+
+		Engine::GetInstance()->GetContex()->IASetVertexBuffers(0, 2, myVertexBuffers, strides, offsets);
+
+		//Engine::GetInstance()->GetContex()->IASetVertexBuffers(0, 1, myVertexBuffers, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
+
 		Engine::GetInstance()->GetContex()->IASetInputLayout(myVertexLayout);
 		Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBuffer->myStartSlot
-			, myVertexBuffer->myNumberOfBuffers, &myVertexBuffer->myVertexBuffer
+			, 1, &myVertexBuffer->myVertexBuffer
 			, &myVertexBuffer->myStride, &myVertexBuffer->myByteOffset);
 		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
 			, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
@@ -113,7 +174,7 @@ namespace Prism
 		myVertexBuffer->myStride = aVertexSize;
 		myVertexBuffer->myByteOffset = 0;
 		myVertexBuffer->myStartSlot = 0;
-		myVertexBuffer->myNumberOfBuffers = 1;
+		myVertexBuffer->myNumberOfBuffers = 2;
 
 
 		ZeroMemory(myVertexBufferDesc, sizeof(myVertexBufferDesc));
@@ -122,6 +183,23 @@ namespace Prism
 		myVertexBufferDesc->CPUAccessFlags = aCPUUsage;
 		myVertexBufferDesc->MiscFlags = 0;
 		myVertexBufferDesc->StructureByteStride = 0;
+	}
+
+	void BaseModel::InitInstanceBuffer(int aVertexSize, int aBufferUsage, int aCPUUsage)
+	{
+		myInstanceBuffer = new VertexBufferWrapper();
+		myInstanceBuffer->myStride = aVertexSize; // or 1024x too small
+		myInstanceBuffer->myByteOffset = 0;
+		myInstanceBuffer->myStartSlot = 0;
+		myInstanceBuffer->myNumberOfBuffers = 2;
+
+
+		ZeroMemory(myInstanceBufferDesc, sizeof(myInstanceBufferDesc));
+		myInstanceBufferDesc->Usage = static_cast<D3D11_USAGE>(aBufferUsage);
+		myInstanceBufferDesc->BindFlags = D3D11_BIND_VERTEX_BUFFER;
+		myInstanceBufferDesc->CPUAccessFlags = aCPUUsage;
+		myInstanceBufferDesc->MiscFlags = 0;
+		myInstanceBufferDesc->StructureByteStride = 0;
 	}
 
 	void BaseModel::InitIndexBuffer()
@@ -185,6 +263,22 @@ namespace Prism
 
 		HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myVertexBufferDesc, myInitData
 			, &myVertexBuffer->myVertexBuffer);
+		if (FAILED(hr) != S_OK)
+		{
+			DL_ASSERT("BaseModel::SetupVertexBuffer: Failed to SetupVertexBuffer");
+		}
+	}
+
+	void BaseModel::SetupInstanceBuffer(int aVertexCount, int aVertexSize)
+	{
+		if (myInstanceBuffer->myVertexBuffer != nullptr)
+			myInstanceBuffer->myVertexBuffer->Release();
+
+		myInstanceBufferDesc->ByteWidth = aVertexSize * aVertexCount;
+
+
+		HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(myInstanceBufferDesc, nullptr
+			, &myInstanceBuffer->myVertexBuffer);
 		if (FAILED(hr) != S_OK)
 		{
 			DL_ASSERT("BaseModel::SetupVertexBuffer: Failed to SetupVertexBuffer");
