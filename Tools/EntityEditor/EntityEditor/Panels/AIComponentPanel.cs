@@ -13,7 +13,8 @@ namespace EntityEditor.Panels
     public enum eAIMode
     {
         KEEP_DISTANCE,
-        ESCAPE_THEN_RETURN
+        ESCAPE_THEN_RETURN,
+        KAMIKAZE
     };
 
     public class AIComponentPanel : BasePanel
@@ -24,6 +25,7 @@ namespace EntityEditor.Panels
         private MinMaxComponent myTimeToNextDecision;
         private NumericTextComponent myFollowEntity;
         private NumericTextComponent myAvoidanceDistance;
+        private NumericTextComponent myAiTurnRate;
         private Vector3Component myAvoidanceOffset;
         private DropDownComponent myAIMode;
         private Label myAvoidanceLabel = new Label();
@@ -56,24 +58,31 @@ namespace EntityEditor.Panels
             myAIMode.BindToPanel(this);
             myAIMode.Show();
 
+            myAiTurnRate = new NumericTextComponent(new Point(Location.X, Location.Y + 100), new Size(275, 13), "AITurnRate");
+            myAiTurnRate.AddTextChangeEvent(this.PanelDataChanged);
+            myAiTurnRate.BindToPanel(this);
+            myAiTurnRate.Show();
+
             myAvoidanceLabel.Text = "Avoidance";
-            myAvoidanceLabel.Location = new Point(Location.X, Location.Y + 100);
+            myAvoidanceLabel.Location = new Point(Location.X, Location.Y + 120);
             myAvoidanceLabel.Size = new Size(100, 13);
             myAvoidanceLabel.Show();
             this.Controls.Add(myAvoidanceLabel);
 
-            myAvoidanceDistance = new NumericTextComponent(new Point(Location.X, Location.Y + 120), new Size(150, 13), "Distance");
+            myAvoidanceDistance = new NumericTextComponent(new Point(Location.X, Location.Y + 140), new Size(150, 13), "Distance");
             myAvoidanceDistance.AddTextChangeEvent(this.PanelDataChanged);
             myAvoidanceDistance.BindToPanel(this);
             myAvoidanceDistance.Show();
 
-            myAvoidanceOffset = new Vector3Component(new Point(Location.X, Location.Y + 140), new Size(275, 13), "Offset");
+
+            myAvoidanceOffset = new Vector3Component(new Point(Location.X, Location.Y + 160), new Size(275, 13), "Offset");
             myAvoidanceOffset.AddTextChangeEvent(this.PanelDataChanged);
             myAvoidanceOffset.BindToPanel(this);
             myAvoidanceOffset.Show();
 
             myAIMode.AddItem("Keep Distance");
             myAIMode.AddItem("Escape then return");
+            myAIMode.AddItem("Kamikaze");
         }
 
         public void Load(Entity.AIComponentData aAIComponent)
@@ -108,6 +117,8 @@ namespace EntityEditor.Panels
                 myAIMode.GetDropDown().SelectedIndex = myAIComponent.myAIMode - 1;
             }
 
+            myAiTurnRate.GetTextBox().Text = myAIComponent.myAITurnRate.ToString();
+
             myAvoidanceDistance.GetTextBox().Text = myAIComponent.myAvoidanceDistance.ToString();
 
             myAvoidanceOffset.SetPosition(myAIComponent.myAvoidanceOffset);
@@ -123,6 +134,8 @@ namespace EntityEditor.Panels
 
             myAIComponent.myEntityToFollow = myFollowEntity.GetTextBox().Text;
             myAIComponent.myAIMode = myAIMode.GetDropDown().SelectedIndex + 1;
+
+            myAIComponent.myAITurnRate = StringUtilities.ToFloat(myAiTurnRate.GetTextBox().Text);
 
             float avoidanceDistance = 0;
             if (myAvoidanceDistance.GetTextBox().Text != "") 

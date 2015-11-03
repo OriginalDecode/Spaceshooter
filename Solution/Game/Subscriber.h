@@ -15,6 +15,7 @@ class ResizeMessage;
 class SpawnPowerUpMessage;
 class KillStructureMessage;
 class DestroyEmitterMessage;
+class EMPMessage;
 
 class Subscriber
 {
@@ -37,5 +38,6 @@ public:
 	virtual void ReceiveMessage(const SpawnPowerUpMessage& aMessage);
 	virtual void ReceiveMessage(const KillStructureMessage& aMessage);
 	virtual void ReceiveMessage(const DestroyEmitterMessage& aMessage);
+	virtual void ReceiveMessage(const EMPMessage& aMessage);
 };
 

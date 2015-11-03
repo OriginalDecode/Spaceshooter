@@ -21,7 +21,7 @@ namespace EntityEditor.Entity
             myEntityData = aEntityData;
             myEntityList = aEntityList;
 
-            string entityListPath = StringUtilities.ConvertPathToDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
+            string entityListPath = StringUtilities.GetDataFolderPath(aFilePath) + "Script/LI_list_entity.xml";
 
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.OmitXmlDeclaration = true;
@@ -84,37 +84,45 @@ namespace EntityEditor.Entity
             aWriter.WriteStartElement("Entity");
             aWriter.WriteAttributeString("name", myEntityData.myName);
 
-            if (myEntityData.myGraphicsComponent.myIsActive == true)
-            {
-                WriteGraphicsComponent(aWriter);
-            }
             if (myEntityData.myAIComponent.myIsActive == true)
             {
                 WriteAIComponent(aWriter);
-            }
-            if (myEntityData.myShootingComponent.myIsActive == true)
-            {
-                WriteShootingComponent(aWriter);
-            }
-            if (myEntityData.myCollisionComponent.myIsActive == true)
-            {
-                WriteCollisionComponent(aWriter);
-            }
-            if (myEntityData.myHealthComponent.myIsActive == true)
-            {
-                WriteHealthComponent(aWriter);
-            }
-            if (myEntityData.myPhysicsComponent.myIsActive == true)
-            {
-                WritePhysicsComponent(aWriter);
             }
             if (myEntityData.myBulletComponent.myIsActive == true)
             {
                 WriteBulletComponent(aWriter);
             }
+            if (myEntityData.myCollisionComponent.myIsActive == true)
+            {
+                WriteCollisionComponent(aWriter);
+            }
+            if (myEntityData.myGraphicsComponent.myIsActive == true)
+            {
+                WriteGraphicsComponent(aWriter);
+            }
+            if (myEntityData.myHealthComponent.myIsActive == true)
+            {
+                WriteHealthComponent(aWriter);
+            }
+            if (myEntityData.myParticleEmitterComponent.myIsActive == true)
+            {
+                WriteParticleEmitterComponent(aWriter);
+            }
+            if (myEntityData.myPhysicsComponent.myIsActive == true)
+            {
+                WritePhysicsComponent(aWriter);
+            }
             if (myEntityData.myPowerUpComponent.myIsActive == true)
             {
                 WritePowerUpComponent(aWriter);
+            }
+            if (myEntityData.myShootingComponent.myIsActive == true)
+            {
+                WriteShootingComponent(aWriter);
+            }
+            if (myEntityData.mySoundComponent.myIsActive == true)
+            {
+                WriteSoundComponent(aWriter);
             }
 
             aWriter.WriteEndElement();
@@ -172,6 +180,11 @@ namespace EntityEditor.Entity
             aWriter.WriteAttributeString("effectFile", myEntityData.myGraphicsComponent.myEffectPath);
 
             aWriter.WriteEndElement();
+            aWriter.WriteStartElement("Scale");
+            aWriter.WriteAttributeString("x", myEntityData.myGraphicsComponent.myScale.myX.ToString());
+            aWriter.WriteAttributeString("y", myEntityData.myGraphicsComponent.myScale.myY.ToString());
+            aWriter.WriteAttributeString("z", myEntityData.myGraphicsComponent.myScale.myZ.ToString());
+            aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
 
@@ -199,6 +212,9 @@ namespace EntityEditor.Entity
             aWriter.WriteAttributeString("x", myEntityData.myAIComponent.myAvoidanceOffset.myX.ToString());
             aWriter.WriteAttributeString("y", myEntityData.myAIComponent.myAvoidanceOffset.myY.ToString());
             aWriter.WriteAttributeString("z", myEntityData.myAIComponent.myAvoidanceOffset.myZ.ToString());
+            aWriter.WriteEndElement();
+            aWriter.WriteStartElement("AITurnRate");
+            aWriter.WriteAttributeString("value", myEntityData.myAIComponent.myAITurnRate.ToString());
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
@@ -241,5 +257,21 @@ namespace EntityEditor.Entity
 
             aWriter.WriteEndElement();
         }
+
+        private void WriteParticleEmitterComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("ParticleEmitterComponent");
+            aWriter.WriteStartElement("path");
+            aWriter.WriteAttributeString("src", myEntityData.myParticleEmitterComponent.myEmitterXML);
+            aWriter.WriteEndElement();
+            aWriter.WriteEndElement();
+        }
+
+        private void WriteSoundComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("SoundComponent");
+            aWriter.WriteEndElement();
+        }
+
     }
 }

@@ -65,6 +65,9 @@
     <Compile Include="Panels\HealthComponentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Panels\ParticleEmitterComponentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Panels\PhysicsComponentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -88,6 +91,9 @@
     </Compile>
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Panels\SoundComponentPanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

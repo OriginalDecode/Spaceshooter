@@ -30,6 +30,8 @@ namespace EntityEditor
         private Panels.GraphicsComponentPanel myGraphicsComponentPanel = null;
         private Panels.HealthComponentPanel myHealthComponentPanel = null;
         private Panels.ShootingComponentPanel myShootingComponentPanel = null;
+        private Panels.SoundComponentPanel mySoundComponentPanel = null;
+        private Panels.ParticleEmitterComponentPanel myParticleEmitterComponentPanel = null;
         private Panels.PhysicsComponentPanel myPhysicsComponentPanel = null;
         private Panels.PowerUpComponentPanel myPowerUpComponentPanel = null;
         private Panels.RenamePanel myRenameEntityPanel = null;
@@ -43,7 +45,7 @@ namespace EntityEditor
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             DL_Debug.GetInstance.Init("EntityEditorLog");
 
-            myDataFolderPath = StringUtilities.ConvertPathToDataFolderPath(myCurrentEntityFolderPath);
+            myDataFolderPath = StringUtilities.GetDataFolderPath(myCurrentEntityFolderPath);
 
             if (myCurrentEntityFolderPath == "")
             {
@@ -62,6 +64,8 @@ namespace EntityEditor
             myGraphicsComponentPanel = new Panels.GraphicsComponentPanel(panelLocation, panelSize, this);
             myHealthComponentPanel = new Panels.HealthComponentPanel(panelLocation, panelSize, this);
             myShootingComponentPanel = new Panels.ShootingComponentPanel(panelLocation, panelSize, this);
+            mySoundComponentPanel = new Panels.SoundComponentPanel(panelLocation, panelSize, this);
+            myParticleEmitterComponentPanel = new Panels.ParticleEmitterComponentPanel(panelLocation, panelSize, this);
             myPhysicsComponentPanel = new Panels.PhysicsComponentPanel(panelLocation, panelSize, this);
             myPowerUpComponentPanel = new Panels.PowerUpComponentPanel(panelLocation, panelSize, this);
             myRenameEntityPanel = new Panels.RenamePanel(panelLocation, panelSize, this);
@@ -73,6 +77,8 @@ namespace EntityEditor
             PropertyPanel.Controls.Add(myGraphicsComponentPanel);
             PropertyPanel.Controls.Add(myHealthComponentPanel);
             PropertyPanel.Controls.Add(myShootingComponentPanel);
+            PropertyPanel.Controls.Add(mySoundComponentPanel);
+            PropertyPanel.Controls.Add(myParticleEmitterComponentPanel);
             PropertyPanel.Controls.Add(myPhysicsComponentPanel);
             PropertyPanel.Controls.Add(myPowerUpComponentPanel);
             PropertyPanel.Controls.Add(myRenameEntityPanel);
@@ -90,33 +96,41 @@ namespace EntityEditor
             {
                 EntityContentList.Items.Add("AIComponent");
             }
+            if (myCurrentEntity.myBulletComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("BulletComponent");
+            }
             if (myCurrentEntity.myCollisionComponent.myIsActive)
             {
                 EntityContentList.Items.Add("CollisionComponent");
-            }
-            if (myCurrentEntity.myHealthComponent.myIsActive)
-            {
-                EntityContentList.Items.Add("HealthComponent");
             }
             if (myCurrentEntity.myGraphicsComponent.myIsActive)
             {
                 EntityContentList.Items.Add("GraphicsComponent");
             }
-            if (myCurrentEntity.myShootingComponent.myIsActive)
+            if (myCurrentEntity.myHealthComponent.myIsActive)
             {
-                EntityContentList.Items.Add("ShootingComponent");
+                EntityContentList.Items.Add("HealthComponent");
+            }
+            if (myCurrentEntity.myParticleEmitterComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("ParticleEmitterComponent");
             }
             if (myCurrentEntity.myPhysicsComponent.myIsActive)
             {
                 EntityContentList.Items.Add("PhysicsComponent");
             }
-            if (myCurrentEntity.myBulletComponent.myIsActive)
-            {
-                EntityContentList.Items.Add("BulletComponent");
-            }
             if (myCurrentEntity.myPowerUpComponent.myIsActive)
             {
                 EntityContentList.Items.Add("PowerUpComponent");
+            }
+            if (myCurrentEntity.myShootingComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("ShootingComponent");
+            }
+            if (myCurrentEntity.mySoundComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("SoundComponent");
             }
         }
 
@@ -168,6 +182,14 @@ namespace EntityEditor
         public void SetPowerUpComponent(Entity.PowerUpComponentData aPowerUpComponent)
         {
             myCurrentEntity.myPowerUpComponent = aPowerUpComponent;
+        }
+        public void SetSoundComponent(Entity.SoundComponentData aSoundComponent)
+        {
+            myCurrentEntity.mySoundComponent = aSoundComponent;
+        }
+        public void SetParticleEmitterComponent(Entity.ParticleEmitterComponentData aParticleEmitterComponent)
+        {
+            myCurrentEntity.myParticleEmitterComponent = aParticleEmitterComponent;
         }
         //Set Components To EntityData End
 
@@ -262,6 +284,17 @@ namespace EntityEditor
                 myCurrentEntity.myPowerUpComponent.myWeaponID = 0;
                 return;
             }
+            if (aComponentName.StartsWith("ParticleEmitter") == true)
+            {
+                myCurrentEntity.myParticleEmitterComponent.myIsActive = false;
+                myCurrentEntity.myParticleEmitterComponent.myEmitterXML = "";
+                return;
+            }
+            if (aComponentName.StartsWith("Sound") == true)
+            {
+                myCurrentEntity.mySoundComponent.myIsActive = false;
+                return;
+            }
         }
 
         private void HidePanels()
@@ -273,6 +306,8 @@ namespace EntityEditor
             myGraphicsComponentPanel.Hide();
             myHealthComponentPanel.Hide();
             myShootingComponentPanel.Hide();
+            mySoundComponentPanel.Hide();
+            myParticleEmitterComponentPanel.Hide();
             myPhysicsComponentPanel.Hide();
             myPowerUpComponentPanel.Hide();
             myRenameEntityPanel.Hide();
@@ -329,11 +364,24 @@ namespace EntityEditor
                 myPowerUpComponentPanel.Load(myCurrentEntity.myPowerUpComponent);
                 return;
             }
+            if (aComponentName.StartsWith("ParticleEmitter") == true)
+            {
+                myParticleEmitterComponentPanel.Show();
+                myParticleEmitterComponentPanel.Load(myCurrentEntity.myParticleEmitterComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("Sound") == true)
+            {
+                mySoundComponentPanel.Show();
+                mySoundComponentPanel.Load(myCurrentEntity.mySoundComponent);
+                return;
+            }
         }
 
         //----- Open Entity Buttons Section Start -----
         private void openEntityToolStripMenuItem1_Click(object sender, EventArgs e)
         {
+            HidePanels();
             openEntityFile.InitialDirectory = myCurrentEntityFolderPath;
             if (openEntityFile.InitialDirectory == "")
             {
@@ -347,7 +395,7 @@ namespace EntityEditor
 
                 myCurrentEntityFilePath = openEntityFile.FileName;
                 myCurrentEntityFolderPath = myCurrentEntityFilePath.Replace(openEntityFile.SafeFileName, "");
-                myDataFolderPath = StringUtilities.ConvertPathToDataFolderPath(myCurrentEntityFolderPath);
+                myDataFolderPath = StringUtilities.GetDataFolderPath(myCurrentEntityFolderPath);
                 myShootingComponentPanel.ReloadXML(myDataFolderPath);
                 Properties.Settings.Default.DefaultEntityFolderPath = myCurrentEntityFolderPath;
                 Properties.Settings.Default.DefaultEntityFileName = myCurrentEntityFilePath;
@@ -360,9 +408,16 @@ namespace EntityEditor
         //----- Open Entity Buttons Section Ends -----
         private void saveEntityToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
-            DL_Debug.GetInstance.DL_MessageBox("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
-                    "Save Successfull!", MessageBoxButtons.OK);
+            if (myCurrentEntityFilePath != "")
+            {
+                myEntityWriter.SaveFile(myCurrentEntityFilePath, myCurrentEntity, myEntityList);
+                DL_Debug.GetInstance.DL_MessageBox("Save entity " + myCurrentEntity.myName + " at\n" + myCurrentEntityFilePath,
+                        "Save Successfull!", MessageBoxButtons.OK);
+            }
+            else
+            {
+                saveAsToolStripMenuItem_Click(sender, e);
+            }
         }
 
         //----- Add Component Button Start -----
@@ -388,7 +443,11 @@ namespace EntityEditor
 
         private void newEntityToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            HidePanels();
             SetEntityName("");
+            myCurrentEntityFilePath = "";
+            myCurrentEntityFolderPath = "";
+            myEntityList = myEntityReader.LoadFiles(myDataFolderPath);
             OpenRenameEntityWindow();
             myShootingComponentPanel.ReloadXML(myDataFolderPath);
         }
@@ -431,5 +490,8 @@ namespace EntityEditor
                 EditSelectedComponent((string)EntityContentList.Items[EntityContentList.SelectedIndex]);
             }
         }
+
+        
+
     }
 }

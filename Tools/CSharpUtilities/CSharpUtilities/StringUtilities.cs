@@ -68,9 +68,8 @@ namespace CSharpUtilities
             int dataTagIndex = aPath.IndexOf("Data");
             if (dataTagIndex <= 0) return "Data/";
             string convertedPath = aPath;
-            convertedPath = aPath.Substring(0, dataTagIndex);
+            convertedPath = aPath.Substring(dataTagIndex);
             convertedPath = convertedPath.Replace("\\", "/");
-            convertedPath += "Data/";
 
             return convertedPath;
         }
@@ -83,6 +82,18 @@ namespace CSharpUtilities
             convertedPath = aPath.Substring(dataTagIndex);
             convertedPath = convertedPath.Replace(aRelativeFolder, "");
             convertedPath = convertedPath.Replace("\\", "/");
+            return convertedPath;
+        }
+
+        public static string GetDataFolderPath(string aPath)
+        {
+            int dataTagIndex = aPath.IndexOf("Data");
+            if (dataTagIndex <= 0) return "Data/";
+            string convertedPath = aPath;
+            convertedPath = aPath.Substring(0, dataTagIndex);
+            convertedPath = convertedPath.Replace("\\", "/");
+            convertedPath += "Data/";
+
             return convertedPath;
         }
 

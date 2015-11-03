@@ -16,6 +16,7 @@ enum class eMessageType
 	SPAWN_POWERUP,
 	KILL_STRUCTURE,
 	DESTORY_EMITTER,
+	EMP,
 	COUNT,
 };
 
@@ -50,6 +51,7 @@ enum eEntityType //Collision manager needs this as ints!
 	POWERUP = 64,
 	DEFENDABLE = 128,
 	STRUCTURE = 256,
+	EMP = 512,
 };
 
 enum class eCollisionType
@@ -120,7 +122,8 @@ enum class eComponentType
 	SHEILD,
 	SHOOTING,
 	WAY_POINT,
-	EMITTER,
+	PARTICLE_EMITTER,
+	STREAK_EMITTER,
 	SOUND,
 	POINT_LIGHT,
 	_COUNT,

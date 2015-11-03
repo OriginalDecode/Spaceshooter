@@ -15,23 +15,17 @@ namespace EntityEditor.Entity
         public BulletComponentData myBulletComponent;
         public CollisionComponentData myCollisionComponent;
         public GraphicsComponentData myGraphicsComponent;
-        public ShootingComponentData myShootingComponent;
         public HealthComponentData myHealthComponent;
+        public ParticleEmitterComponentData myParticleEmitterComponent;
         public PhysicsComponentData myPhysicsComponent;
         public PowerUpComponentData myPowerUpComponent;
+        public ShootingComponentData myShootingComponent;
+        public SoundComponentData mySoundComponent;
     }
 
     public struct EntityListXML
     {
         public List<string> myPaths;
-    }
-
-    public struct GraphicsComponentData
-    {
-        public bool myIsActive;
-
-        public string myEffectPath;
-        public string myModelPath;
     }
 
     public struct AIComponentData
@@ -42,15 +36,34 @@ namespace EntityEditor.Entity
         public Vector2<float> myTimeToNextDecision;
         public Vector3<float> myAvoidanceOffset;
         public float myAvoidanceDistance;
+        public float myAITurnRate;
         public int myAIMode;
         public string myEntityToFollow;
     }
 
-    public struct ShootingComponentData
+    public struct BulletComponentData
     {
         public bool myIsActive;
 
-        public string myWeaponType;
+        public float myLifeTime;
+        public float myDamage;
+    }
+
+    public struct CollisionComponentData
+    {
+        public bool myIsActive;
+
+        public bool myHasSphere;
+        public float myRadius;
+    }
+
+    public struct GraphicsComponentData
+    {
+        public Vector3<float> myScale;
+        public bool myIsActive;
+
+        public string myEffectPath;
+        public string myModelPath;
     }
 
     public struct HealthComponentData
@@ -79,19 +92,23 @@ namespace EntityEditor.Entity
         public int myWeaponID;
     }
 
-    public struct BulletComponentData
+    public struct ParticleEmitterComponentData
     {
         public bool myIsActive;
 
-        public float myLifeTime;
-        public float myDamage;
+        public string myEmitterXML;
     }
 
-    public struct CollisionComponentData
+    public struct ShootingComponentData
     {
         public bool myIsActive;
 
-        public bool myHasSphere;
-        public float myRadius;
+        public string myWeaponType;
+    }
+
+    public struct SoundComponentData
+    {
+        public bool myIsActive;
+
     }
 }

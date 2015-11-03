@@ -24,7 +24,7 @@ namespace EntityEditor.Entity
             myWeaponData = aWeaponData;
             myWeaponListXml = aWeaponList;
 
-            string dataFolder = StringUtilities.ConvertPathToDataFolderPath(aFilePath);
+            string dataFolder = StringUtilities.GetDataFolderPath(aFilePath);
             dataFolder = dataFolder.Replace("Data/", "");
             string weaponListPath = dataFolder + "Data/Script/LI_list_weapon.xml";
 
@@ -111,7 +111,7 @@ namespace EntityEditor.Entity
             myBulletData = aBulletData;
             myBulletListXml = aBulletList;
 
-            string dataFolder = StringUtilities.ConvertPathToDataFolderPath(aFilePath);
+            string dataFolder = StringUtilities.GetDataFolderPath(aFilePath);
             dataFolder = dataFolder.Replace("Data/", "");
             string projectileListPath = dataFolder + "Data/Script/LI_list_projectile.xml";
 
