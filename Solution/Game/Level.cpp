@@ -207,16 +207,18 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
+		
+
+		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+		myRenderer->FinalRender();
+	
+
 		if (myEMPActivated == true)
 		{
 			//Prism::Engine::GetInstance()->DisableZBuffer();
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
-
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
-		myRenderer->FinalRender();
-		myEmitterManager->RenderEmitters(myCamera);
 
 		myEmitterManager->RenderEmitters(myCamera);
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
