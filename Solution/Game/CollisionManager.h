@@ -30,7 +30,7 @@ public:
 
 private:
 	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);
-	void CheckCollision(CollisionComponent* aComponent, CU::GrowingArray<CollisionComponent*>& someOtherComponents);
+	bool CheckCollision(CollisionComponent* aComponent, CU::GrowingArray<CollisionComponent*>& someOtherComponents);
 
 	int myPlayerFilter;
 	int myEnemyFilter;
