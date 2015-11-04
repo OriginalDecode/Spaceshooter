@@ -202,19 +202,19 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 
 	myPowerUpSlots[ePowerUpType::EMP] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_emp_active.dds"
 		, "Data/Resource/Texture/UI/PowerUp/T_powerup_emp_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * 2.5f + padding * 2.f }
-		, shootingComponent->GetEMPPowerUp(), nullptr);
-	
+	, shootingComponent->GetEMPPowerUp(), nullptr);
+
 	myPowerUpSlots[ePowerUpType::FIRERATEBOOST] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_active.dds"
 		, "Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_inactive.dds", { halfScreenSize.x + iconSize.x * 7.1f, -halfScreenSize.y + iconSize.y * 1.5f + padding * 1.f }
-		, shootingComponent->GetFireRatePowerUp(), &shootingComponent->GetFireRatePowerUpDuration());
+	, shootingComponent->GetFireRatePowerUp(), &shootingComponent->GetFireRatePowerUpDuration());
 
 	myPowerUpSlots[ePowerUpType::HOMING] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_homing_active.dds"
 		, "Data/Resource/Texture/UI/PowerUp/T_powerup_homing_inactive.dds", { halfScreenSize.x + iconSize.x * 7.1f, -halfScreenSize.y + iconSize.y * -1.5f + padding * 0.f }
-		, shootingComponent->GetHomingPowerUp(), &shootingComponent->GetHomingPowerUpDuration());
+	, shootingComponent->GetHomingPowerUp(), &shootingComponent->GetHomingPowerUpDuration());
 
 	myPowerUpSlots[ePowerUpType::INVULNERABLITY] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_active.dds"
-		, "Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * -2.5f + padding * - 1.f }
-		, myEntity.GetComponent<HealthComponent>()->GetInvulnerability(), &myEntity.GetComponent<HealthComponent>()->GetInvulnerablityDuration());
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * -2.5f + padding * -1.f }
+	, myEntity.GetComponent<HealthComponent>()->GetInvulnerability(), &myEntity.GetComponent<HealthComponent>()->GetInvulnerablityDuration());
 }
 
 void GUIComponent::Update(float aDeltaTime)
@@ -360,23 +360,24 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		{
 			my3DClosestEnemyLength = lengthToEnemy;
 		}
-		if (lengthToEnemy < myMaxDistanceToEnemies)
+
+		if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
 		{
-			if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
-			{
-				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
-			}
-			else
+			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
+		}
+		else
+		{
+			if (lengthToEnemy < myMaxDistanceToEnemies)
 			{
 				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myEnemyArrow, myEnemyMarker, aWindowSize, true);
 			}
-			CU::Vector2<float> enemyScreenPos = myClosestScreenPos;
-			float lengthFromMouseToEnemy = CU::Length(enemyScreenPos - CU::Vector2<float>(steeringPos.x, steeringPos.y));
-			if (lengthFromMouseToEnemy < myClosestEnemyLength)
-			{
-				myClosestEnemy = myEnemies[i];
-				myClosestEnemyLength = lengthFromMouseToEnemy;
-			}
+		}
+		CU::Vector2<float> enemyScreenPos = myClosestScreenPos;
+		float lengthFromMouseToEnemy = CU::Length(enemyScreenPos - CU::Vector2<float>(steeringPos.x, steeringPos.y));
+		if (lengthFromMouseToEnemy < myClosestEnemyLength)
+		{
+			myClosestEnemy = myEnemies[i];
+			myClosestEnemyLength = lengthFromMouseToEnemy;
 		}
 	}
 

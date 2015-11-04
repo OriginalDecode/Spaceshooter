@@ -414,21 +414,38 @@ void Level::UpdateDebug()
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
-	if (myInputWrapper->KeyDown(DIK_I))
+	if (myInputWrapper->KeyDown(DIK_7))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_U))
+	if (myInputWrapper->KeyDown(DIK_8))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_Y))
+	if (myInputWrapper->KeyDown(DIK_9))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_T))
+	if (myInputWrapper->KeyDown(DIK_0))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
+	}
+
+	if (myInputWrapper->KeyDown(DIK_T))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("MuteMusic", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_Y))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMuteMusic", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_U))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerMusic", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_I))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseMusic", 0);
 	}
 	if (myInputWrapper->KeyDown(DIK_F7))
 	{
