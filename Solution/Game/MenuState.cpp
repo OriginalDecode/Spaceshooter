@@ -17,8 +17,8 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 	
 	myMenu = new Menu(aXMLPath);
 
-	CU::Vector2<float> windowSize = CU::Vector2<float>(Prism::Engine::GetInstance()->GetWindowSize().x,
-		Prism::Engine::GetInstance()->GetWindowSize().y);
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		float(Prism::Engine::GetInstance()->GetWindowSize().y));
 
 	CU::Vector2<float> overlaySize(4096.f, 4096.f);
 	myBlackOverlay = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
@@ -67,17 +67,24 @@ const eStateStatus MenuState::Update(const float&)
 	myCurrentTime += deltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	myMenu->Update(myInputWrapper);
+	if (myMenu->Update(myInputWrapper) == false)
+	{
+		return eStateStatus::ePopMainState;
+	}
 
-	return eKeepState;
+	return eStateStatus::eKeepState;
 }
 
 void MenuState::Render()
 {
 	myMenu->Render(myInputWrapper);
-	CU::Vector2<float> windowSize = CU::Vector2<float>(Prism::Engine::GetInstance()->GetWindowSize().x,
-		-Prism::Engine::GetInstance()->GetWindowSize().y);
-	myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, myOverlayAlpha});
+
+	if (myMenu->GetMainMenu() == true)
+	{
+		CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
+			float(-Prism::Engine::GetInstance()->GetWindowSize().y));
+		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, myOverlayAlpha });
+	}
 }
 
 void MenuState::ResumeState()

@@ -21,7 +21,7 @@ public:
 	
 	void Render(CU::InputWrapper* anInputWrapper);
 
-	void Update(CU::InputWrapper* anInputWrapper);
+	bool Update(CU::InputWrapper* anInputWrapper);
 
 	void OnResize(int aWidth, int aHeight);
 

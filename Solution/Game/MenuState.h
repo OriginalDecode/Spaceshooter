@@ -25,7 +25,6 @@ public:
 	void OnResize(int aWidth, int aHeight) override;
 
 protected:
-
 	Prism::Sprite* myBlackOverlay;
 	float myFadeInTime;
 	float myCurrentTime;

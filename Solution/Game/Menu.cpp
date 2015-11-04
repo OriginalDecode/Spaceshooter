@@ -61,15 +61,20 @@ void Menu::Render(CU::InputWrapper* anInputWrapper)
 	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
 
-void Menu::Update(CU::InputWrapper* anInputWrapper)
+bool Menu::Update(CU::InputWrapper* anInputWrapper)
 {
 	bool isMouseClicked = anInputWrapper->MouseDown(0);
 	CU::Vector2<float> mousePos = anInputWrapper->GetMousePosition();
 
+	bool returnValue = true;
 	for (int i = 0; i < myButtons.Size(); i++)
 	{
-		myButtons[i]->Update(mousePos, isMouseClicked);
+		if (myButtons[i]->Update(mousePos, isMouseClicked) == false)
+		{
+			returnValue = false;
+		}
 	}
+	return returnValue;
 }
 
 void Menu::OnResize(int aWidth, int aHeight)
