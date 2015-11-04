@@ -31,7 +31,8 @@ namespace Prism
 
 inline void Prism::Text::SetPosition(const CU::Vector2<float>& aPosition)
 {
-	myPosition = aPosition;
+	myPosition.x = static_cast<float>(static_cast<int>(aPosition.x + 0.5f));
+	myPosition.y = static_cast<float>(static_cast<int>(aPosition.y + 0.5f));
 }
 
 inline void Prism::Text::SetScale(const CU::Vector2<float>& aScale)
