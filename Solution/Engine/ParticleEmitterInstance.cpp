@@ -245,4 +245,10 @@ namespace Prism
 		}
 
 	}
+
+	void ParticleEmitterInstance::SetPosition(CU::Vector3f aPosition)
+	{
+		myOrientation.SetPos(aPosition);
+	}
+
 }

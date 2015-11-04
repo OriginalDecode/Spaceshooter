@@ -163,7 +163,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-	myEmitterManager->UpdateEmitters(aDeltaTime);
+	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 
 	////streak debug only, please remove later
@@ -207,7 +207,7 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
-		myEmitterManager->RenderEmitters();
+		myEmitterManager->RenderEmitters(myCamera);
 
 
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
@@ -232,7 +232,7 @@ void Level::Render()
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
 
-		myEmitterManager->RenderEmitters();
+		myEmitterManager->RenderEmitters(myCamera);
 
 		//debug only
 		//myStreakEntity->Update(1.f/30.f);
@@ -434,9 +434,4 @@ void Level::UpdateDebug()
 	{
 		myUsePostProcessing = !myUsePostProcessing;
 	}
-}
-
-void Level::ReceiveMessage(const ExplosionMessage& aMessage) 
-{
-
 }

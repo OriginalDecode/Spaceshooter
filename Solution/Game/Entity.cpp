@@ -6,6 +6,7 @@
 #include "Entity.h"
 #include "PostMaster.h"
 #include "SoundNote.h"
+#include "SpawnExplosionMessage.h"
 #include "SpawnPowerUpMessage.h"
 
 Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName)
@@ -61,6 +62,13 @@ void Entity::Kill()
 	{
 		PostMaster::GetInstance()->SendMessage(SpawnPowerUpMessage(myPowerUpName, myOrientation));
 	}
+
+	if (myType == eEntityType::ENEMY)
+	{
+		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH
+				, myOrientation.GetPos()));
+	}
+
 	myAlive = false;
 }
 

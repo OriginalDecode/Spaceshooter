@@ -1,27 +1,41 @@
 #include "stdafx.h"
 
+#include "DestroyEmitterMessage.h"
+#include "EmitterManager.h"
+#include <EmitterDataContainer.h>
 #include "Entity.h"
-
 #include "ParticleEmitterComponent.h"
 #include "ParticleEmitterInstance.h"
-#include "EmitterManager.h"
-#include "DestroyEmitterMessage.h"
 #include "PostMaster.h"
+#include "SpawnExplosionMessage.h"
+
 EmitterManager::EmitterManager()
 	: myEmitters(32)
+	, myEmitterIndex(0)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DESTORY_EMITTER, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 
-	//Create explosions
 
-
+	for (int i = 0; i < PREALLOCATED_EMITTER_SIZE; i++)
+	{
+		Prism::ParticleEmitterInstance* newEmitter = new Prism::ParticleEmitterInstance();
+		newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData("Data/Resource/Particle/P_powerup_health.xml"));
+		newEmitter->ToggleActive();
+		myFireExplosion.Insert(i, newEmitter);
+	}
 }
 
 EmitterManager::~EmitterManager()
 {
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DESTORY_EMITTER, this);
-
-	//Delete
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 }
 
 void EmitterManager::AddEmitter(ParticleEmitterComponent* anEmitter)
@@ -29,7 +43,7 @@ void EmitterManager::AddEmitter(ParticleEmitterComponent* anEmitter)
 	myEmitters.Add(anEmitter);
 }
 
-void EmitterManager::UpdateEmitters(float aDeltaTime)
+void EmitterManager::UpdateEmitters(float aDeltaTime, CU::Matrix44f aWorldMatrix)
 {
 	for (int i = 0; i < myEmitters.Size(); ++i)
 	{
@@ -43,9 +57,18 @@ void EmitterManager::UpdateEmitters(float aDeltaTime)
 			myEmitters.RemoveNonCyclicAtIndex(i);
 		}
 	}
+
+	for (int i = 0; i < PREALLOCATED_EMITTER_SIZE; ++i)
+	{
+		if (myFireExplosion[i]->GetIsActive() == true)
+		{
+			myFireExplosion[i]->Update(aDeltaTime, aWorldMatrix);
+		}
+	}
+
 }
 
-void EmitterManager::RenderEmitters()
+void EmitterManager::RenderEmitters(Prism::Camera* aCamera)
 {
 	for (int i = 0; i < myEmitters.Size(); ++i)
 	{
@@ -54,9 +77,24 @@ void EmitterManager::RenderEmitters()
 			myEmitters[i]->Render();
 		}
 	}
+
+	for (int i = 0; i < PREALLOCATED_EMITTER_SIZE; ++i)
+	{
+		if (myFireExplosion[i]->GetIsActive() == true)
+		{
+			myFireExplosion[i]->Render(aCamera);
+		}
+	}
 }
 
 void EmitterManager::ReceiveMessage(const DestroyEmitterMessage& aMessage)
 {
 	myEmitters.RemoveNonCyclic(aMessage.myParticleEmitterComponent);
+}
+
+
+void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
+{
+	myFireExplosion[myEmitterIndex]->SetPosition(aMessage.myPosition);
+	myFireExplosion[myEmitterIndex]->ToggleActive();
 }
