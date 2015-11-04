@@ -316,8 +316,6 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	
 	newEntity->myOrientation = CU::GetOrientation(newEntity->myOrientation, aMessage.myRotation);
 
-	newEntity->GetComponent<GraphicsComponent>()->SetScale(aMessage.myScale);
-
 	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
 
 	if (myEntityToDefend != nullptr)
