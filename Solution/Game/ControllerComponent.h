@@ -20,7 +20,7 @@ public:
 	void Rotate(const CU::Matrix44<float>& aRotation);
 	void SetRotation(const CU::Matrix44<float>& aRotation);
 	void Shoot(const CU::Vector3<float>& aVelocity, const CU::Vector3<float>& aDirection,
-		const CU::Vector2<float>& aSteering = { 0.f, 0.f });
+		const CU::Vector2<float>& aSteering = { 0.f, 0.f }, bool aIsRocket = false);
 
 	void SetCanMove(const bool& aCanMove);
 	void DisableMovement(const float& aSeconds);

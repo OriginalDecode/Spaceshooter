@@ -88,10 +88,10 @@ void ControllerComponent::SetRotation(const CU::Matrix44<float>& aRotation)
 }
 
 void ControllerComponent::Shoot(const CU::Vector3<float>& aVelocity, const CU::Vector3<float>& aDirection
-	, const CU::Vector2<float>& aSteering)
+	, const CU::Vector2<float>& aSteering, bool aIsRocket)
 {
 	DL_ASSERT_EXP(myEntity.GetComponent<ShootingComponent>() != nullptr, "Cant Shoot without ShootingComponent");
-	ShootNote note(aVelocity, aDirection, aSteering);
+	ShootNote note(aVelocity, aDirection, aSteering, aIsRocket);
 	myEntity.SendNote(note);
 }
 

@@ -37,9 +37,11 @@ void MenuState::InitState(StateStackProxy* aStateStackProxy)
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, false));
 
-	myStateStack->PushSubGameState(new SplashState("Data/Resource/Texture/Menu/Splash/T_logo_other.dds", myInputWrapper));
-	myStateStack->PushSubGameState(new SplashState("Data/Resource/Texture/Menu/Splash/T_logo_our.dds", myInputWrapper));
-
+	if (myMenu->GetMainMenu() == true)
+	{
+		myStateStack->PushSubGameState(new SplashState("Data/Resource/Texture/Menu/Splash/T_logo_other.dds", myInputWrapper));
+		myStateStack->PushSubGameState(new SplashState("Data/Resource/Texture/Menu/Splash/T_logo_our.dds", myInputWrapper));
+	}
 	myCurrentTime = 0;
 	myFadeInTime = 0.5f;
 	myOverlayAlpha = 1.f;

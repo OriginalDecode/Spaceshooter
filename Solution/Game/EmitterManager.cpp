@@ -11,11 +11,17 @@ EmitterManager::EmitterManager()
 	: myEmitters(32)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DESTORY_EMITTER, this);
+
+	//Create explosions
+
+
 }
 
 EmitterManager::~EmitterManager()
 {
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DESTORY_EMITTER, this);
+
+	//Delete
 }
 
 void EmitterManager::AddEmitter(ParticleEmitterComponent* anEmitter)

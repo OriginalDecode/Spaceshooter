@@ -25,10 +25,16 @@ public:
 
 	void OnResize(int aWidth, int aHeight);
 
-private:
+	bool GetMainMenu() const;
 
+private:
+	bool myMainMenu;
 	CU::GrowingArray<Button*> myButtons;
 	Prism::Sprite* myBackground;
 	Prism::Sprite* myCrosshair;
 };
 
+inline bool Menu::GetMainMenu() const
+{
+	return myMainMenu;
+}
