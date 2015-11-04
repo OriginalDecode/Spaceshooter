@@ -155,7 +155,7 @@
   <ItemGroup>
     <ClInclude Include="Action.h" />
     <ClInclude Include="AIComponent.h" />
-    <ClInclude Include="BulletAI.h" />
+    <ClInclude Include="BulletAIComponent.h" />
     <ClInclude Include="BulletComponent.h" />
     <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletMessage.h" />
@@ -253,7 +253,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AIComponent.cpp" />
-    <ClCompile Include="BulletAI.cpp" />
+    <ClCompile Include="BulletAIComponent.cpp" />
     <ClCompile Include="BulletComponent.cpp" />
     <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletMessage.cpp" />

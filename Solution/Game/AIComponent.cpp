@@ -1,5 +1,7 @@
 #include "stdafx.h"
+
 #include "AIComponent.h"
+#include "BulletAIComponent.h"
 #include "Constants.h"
 #include "DefendMessage.h"
 #include <Engine.h>
@@ -20,7 +22,10 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myTurnRateModifier(1.f)
 	, myRandomizeMovementTimer(2.f)
 {
-	DL_ASSERT_EXP(aEntity.GetComponent<InputComponent>() == nullptr, "Tried to add AIComponent when there was a InputComponent");
+	DL_ASSERT_EXP(aEntity.GetComponent<InputComponent>() == nullptr
+		, "Tried to add AIComponent when there was a InputComponent");
+	DL_ASSERT_EXP(aEntity.GetComponent<BulletAIComponent>() == nullptr
+		, "Tried to add AIComponent when there was a BulletAIComponent");
 }
 
 AIComponent::~AIComponent()
