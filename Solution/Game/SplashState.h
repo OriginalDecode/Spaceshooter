@@ -9,11 +9,11 @@ namespace Prism
 
 class Menu;
 
-class MenuState : public GameState
+class SplashState : public GameState
 {
 public:
-	MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper);
-	~MenuState();
+	SplashState(const std::string& aTexturePath, CU::InputWrapper* anInputWrapper);
+	~SplashState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
 	void EndState() override;
@@ -25,12 +25,16 @@ public:
 	void OnResize(int aWidth, int aHeight) override;
 
 protected:
+	bool myFadeOut;
+	bool myDisplay;
+	float myLogoAlpha;
 
-	Prism::Sprite* myBlackOverlay;
 	float myFadeInTime;
+	float myFadeOutTime;
+	float myDisplayTime;
 	float myCurrentTime;
-	float myOverlayAlpha;
-	Menu* myMenu;
+	Prism::Sprite* myBackground;
+	Prism::Sprite* myLogo;
 	Prism::Camera* myCamera;
 };
 

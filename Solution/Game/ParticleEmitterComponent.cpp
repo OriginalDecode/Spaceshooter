@@ -67,5 +67,6 @@ void ParticleEmitterComponent::ReceiveNote(const EmitterNote& aNote)
 	if (aNote.myType == EmitterNote::eType::BULLET)
 	{
 		myEmitter->ToggleActive(aNote.myIsActive);
+		myEmitter->ShouldLive(aNote.myShouldLive);
 	}
 }

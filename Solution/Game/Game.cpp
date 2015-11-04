@@ -6,6 +6,7 @@
 #include "ColoursForBG.h"
 #include <CommonHelper.h>
 #include "Constants.h"
+#include <Engine.h>
 #include <FileWatcher.h>
 #include <DebugFont.h>
 #include "Game.h"
@@ -35,6 +36,8 @@ Game::Game()
 	Prism::Audio::AudioInterface::CreateInstance();
 	myInputWrapper = new CU::InputWrapper();
 	Prism::Engine::GetInstance()->SetShowDebugText(myShowSystemInfo);
+
+	
 }
 
 Game::~Game()
@@ -53,6 +56,9 @@ bool Game::Init(HWND& aHwnd)
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
+#ifdef _DEBUG
+	startInMenu = false;
+#endif
 	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
@@ -75,6 +81,10 @@ bool Game::Init(HWND& aHwnd)
 	}
 
 	Prism::Engine::GetInstance()->SetClearColor({ MAGENTA });
+
+	myWindowSize.x = Prism::Engine::GetInstance()->GetWindowSize().x;
+	myWindowSize.y = Prism::Engine::GetInstance()->GetWindowSize().y;
+
 
 	GAME_LOG("Init Successful");
 	return true;

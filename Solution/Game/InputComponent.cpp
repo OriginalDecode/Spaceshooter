@@ -97,25 +97,25 @@ void InputComponent::Update(float aDeltaTime)
 
 	Roll(aDeltaTime);
 
-	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
-	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
+	float xRotation = mySteering.x * mySteeringModifier * aDeltaTime;
+	float yRotation = mySteering.y * mySteeringModifier * aDeltaTime;
 
-	if (xRotation > myMaxSteeringSpeed)
+	if (xRotation > myMaxSteeringSpeed * aDeltaTime)
 	{
-		xRotation = myMaxSteeringSpeed;
+		xRotation = myMaxSteeringSpeed * aDeltaTime;
 	}
-	if (xRotation < -myMaxSteeringSpeed)
+	if (xRotation < -myMaxSteeringSpeed * aDeltaTime)
 	{
-		xRotation = -myMaxSteeringSpeed;
+		xRotation = -myMaxSteeringSpeed * aDeltaTime;
 	}
 
-	if (yRotation > myMaxSteeringSpeed)
+	if (yRotation > myMaxSteeringSpeed * aDeltaTime)
 	{
-		yRotation = myMaxSteeringSpeed;
+		yRotation = myMaxSteeringSpeed * aDeltaTime;
 	}
-	if (yRotation < -myMaxSteeringSpeed)
+	if (yRotation < -myMaxSteeringSpeed * aDeltaTime)
 	{
-		yRotation = -myMaxSteeringSpeed;
+		yRotation = -myMaxSteeringSpeed * aDeltaTime;
 	}
 
 	RotateX(yRotation);
@@ -279,8 +279,8 @@ void InputComponent::UpdateSteering(const float& aDelta)
 {
 	if (myCameraIsLocked == false || myCanMove == false)
 	{
-		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
-		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
+		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip) ;
+		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip) ;
 	}
 
 	if (mySteering.x > mySteeringDeaccelerationLowerLimit)
