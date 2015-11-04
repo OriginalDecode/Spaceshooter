@@ -347,6 +347,10 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 	if (aMessage.GetPowerupType() == ePowerUpType::WEAPON_UPGRADE)
 	{
 		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
+		if (aMessage.GetUpgradeID() < 2)
+		{
+			myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(aMessage.GetUpgradeID()); // Autochanges weapon on upgrade
+		}
 	}
 }
 
