@@ -97,29 +97,29 @@ void InputComponent::Update(float aDeltaTime)
 
 	Roll(aDeltaTime);
 
-	float xRotation = mySteering.x  * mySteeringModifier;
-	float yRotation = mySteering.y  * mySteeringModifier;
+	float xRotation = mySteering.x * mySteeringModifier * aDeltaTime;
+	float yRotation = mySteering.y * mySteeringModifier * aDeltaTime;
 
-	if (xRotation > myMaxSteeringSpeed)
+	if (xRotation > myMaxSteeringSpeed * aDeltaTime)
 	{
-		xRotation = myMaxSteeringSpeed;
+		xRotation = myMaxSteeringSpeed * aDeltaTime;
 	}
-	if (xRotation < -myMaxSteeringSpeed)
+	if (xRotation < -myMaxSteeringSpeed * aDeltaTime)
 	{
-		xRotation = -myMaxSteeringSpeed;
-	}
-
-	if (yRotation > myMaxSteeringSpeed)
-	{
-		yRotation = myMaxSteeringSpeed;
-	}
-	if (yRotation < -myMaxSteeringSpeed)
-	{
-		yRotation = -myMaxSteeringSpeed;
+		xRotation = -myMaxSteeringSpeed * aDeltaTime;
 	}
 
-	RotateX(yRotation * aDeltaTime);
-	RotateY(xRotation * aDeltaTime);
+	if (yRotation > myMaxSteeringSpeed * aDeltaTime)
+	{
+		yRotation = myMaxSteeringSpeed * aDeltaTime;
+	}
+	if (yRotation < -myMaxSteeringSpeed * aDeltaTime)
+	{
+		yRotation = -myMaxSteeringSpeed * aDeltaTime;
+	}
+
+	RotateX(yRotation);
+	RotateY(xRotation);
 
 	myEntity.SendNote<GUINote>(GUINote({ mySteering.x, mySteering.y, 0 }, eGUINoteType::STEERING_TARGET));
 }
