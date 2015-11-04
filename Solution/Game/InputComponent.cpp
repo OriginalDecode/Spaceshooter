@@ -2,6 +2,7 @@
 
 #include "AIComponent.h"
 #include <AudioInterface.h>
+#include "BulletAIComponent.h"
 #include "Constants.h"
 #include <Engine.h>
 #include "Entity.h"
@@ -18,7 +19,10 @@
 InputComponent::InputComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
 {
-	DL_ASSERT_EXP(aEntity.GetComponent<AIComponent>() == nullptr, "Tried to add InputComponent when there was a AIComponent");
+	DL_ASSERT_EXP(aEntity.GetComponent<AIComponent>() == nullptr
+		, "Tried to add InputComponent when there was a AIComponent");
+	DL_ASSERT_EXP(aEntity.GetComponent<BulletAIComponent>() == nullptr
+		, "Tried to add InputComponent when there was a BulletAIComponent");
 }
 
 void InputComponent::Init(CU::InputWrapper& aInputWrapper)

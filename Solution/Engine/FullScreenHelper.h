@@ -20,9 +20,10 @@ namespace Prism
 		void Process(Texture* aSource, Texture* aTarget, int aEffect);
 		void CopyTexture(Texture* aSource, Texture* aTarget);
 		void CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget, bool aUseDepth);
-		void FullScreenHelper::CombineTextures(Texture* aSourceA, ID3D11ShaderResourceView* aDepthA
-			, Texture* aSourceB, ID3D11ShaderResourceView* aDepthB, Texture* aTarget);
+		void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aDepthA
+			, Texture* aSourceB, Texture* aDepthB, Texture* aTarget);
 		void RenderToScreen(Texture* aSource);
+		void RenderToScreen(Texture* aSource, Texture* aDepth);
 
 	private:
 		struct CombineData

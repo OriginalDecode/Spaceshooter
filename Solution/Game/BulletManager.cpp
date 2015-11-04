@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "AIComponent.h"
+#include "BulletAIComponent.h"
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -174,9 +174,9 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		}
 	}
 
-	if (bullet->GetComponent<AIComponent>() != nullptr)
+	if (bullet->GetComponent<BulletAIComponent>() != nullptr)
 	{
-		bullet->RemoveComponent<AIComponent>();
+		bullet->RemoveComponent<BulletAIComponent>();
 	}
 
 	if (aEntityType == eEntityType::PLAYER)
@@ -195,9 +195,9 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 	if (aHomingTarget != nullptr)
 	{
-		bullet->AddComponent<AIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f), 
-			eAITargetPositionMode::KAMIKAZE);
-		bullet->GetComponent<AIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
+		bullet->AddComponent<BulletAIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f),
+			1.f);
+		bullet->GetComponent<BulletAIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
 	}
 
 	if (aEntityType == eEntityType::PLAYER)
@@ -232,9 +232,9 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (playerBulletComp->GetActive() == false)
 			{
-				if (playerBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				if (playerBulletComp->GetEntity().GetComponent<BulletAIComponent>() != nullptr)
 				{
-					playerBulletComp->GetEntity().RemoveComponent<AIComponent>();
+					playerBulletComp->GetEntity().RemoveComponent<BulletAIComponent>();
 				}
 				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
@@ -248,9 +248,9 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (enemyBulletComp->GetActive() == false)
 			{
-				if (enemyBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				if (enemyBulletComp->GetEntity().GetComponent<BulletAIComponent>() != nullptr)
 				{
-					enemyBulletComp->GetEntity().RemoveComponent<AIComponent>();
+					enemyBulletComp->GetEntity().RemoveComponent<BulletAIComponent>();
 				}
 				myCollisionManager.Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::ENEMY_BULLET);

@@ -1,7 +1,9 @@
 #pragma warning(disable : 4005)
 
 #include "DLLApp.h"
+#include "DLLCamera.h"
 #include "DLLExport.h"
+#include "DLLModel.h"
 #include <Engine.h>
 #include <FileWatcher.h>
 #include <SetupInfo.h>
@@ -41,44 +43,44 @@ void UpdateFilewatcher()
 
 void RotateObjectAtX(float aSpeed)
 {
-	CU::Vector3f rotationSpeed(locDLLApplication->GetAutoRotationSpeed());
+	CU::Vector3f rotationSpeed(locDLLApplication->GetModel()->GetAutoRotationSpeed());
 	rotationSpeed.myX = aSpeed;
-	locDLLApplication->SetAutoRotationSpeed(rotationSpeed);
+	locDLLApplication->GetModel()->SetAutoRotationSpeed(rotationSpeed);
 }
 
 void RotateObjectAtY(float aSpeed)
 {
-	CU::Vector3f rotationSpeed(locDLLApplication->GetAutoRotationSpeed());
+	CU::Vector3f rotationSpeed(locDLLApplication->GetModel()->GetAutoRotationSpeed());
 	rotationSpeed.myY = aSpeed;
-	locDLLApplication->SetAutoRotationSpeed(rotationSpeed);
+	locDLLApplication->GetModel()->SetAutoRotationSpeed(rotationSpeed);
 }
 
 void RotateObjectAtZ(float aSpeed)
 {
-	CU::Vector3f rotationSpeed(locDLLApplication->GetAutoRotationSpeed());
+	CU::Vector3f rotationSpeed(locDLLApplication->GetModel()->GetAutoRotationSpeed());
 	rotationSpeed.myZ = aSpeed;
-	locDLLApplication->SetAutoRotationSpeed(rotationSpeed);
+	locDLLApplication->GetModel()->SetAutoRotationSpeed(rotationSpeed);
 }
 
 void SetRotateObjectAtX(float aAngle)
 {
-	CU::Vector3f rotationAngle(locDLLApplication->GetManualRotationAngle());
+	CU::Vector3f rotationAngle(locDLLApplication->GetModel()->GetManualRotationAngle());
 	rotationAngle.myX = aAngle;
-	locDLLApplication->SetManualRotationAngle(rotationAngle);
+	locDLLApplication->GetModel()->SetManualRotationAngle(rotationAngle);
 }
 
 void SetRotateObjectAtY(float aAngle)
 {
-	CU::Vector3f rotationAngle(locDLLApplication->GetManualRotationAngle());
+	CU::Vector3f rotationAngle(locDLLApplication->GetModel()->GetManualRotationAngle());
 	rotationAngle.myY = aAngle;
-	locDLLApplication->SetManualRotationAngle(rotationAngle);
+	locDLLApplication->GetModel()->SetManualRotationAngle(rotationAngle);
 }
 
 void SetRotateObjectAtZ(float aAngle)
 {
-	CU::Vector3f rotationAngle(locDLLApplication->GetManualRotationAngle());
+	CU::Vector3f rotationAngle(locDLLApplication->GetModel()->GetManualRotationAngle());
 	rotationAngle.myZ = aAngle;
-	locDLLApplication->SetManualRotationAngle(rotationAngle);
+	locDLLApplication->GetModel()->SetManualRotationAngle(rotationAngle);
 }
 
 void SetMouseSensitivty(float aValue)
@@ -93,32 +95,32 @@ float GetMouseSensitivty()
 
 void SetCameraZoomSpeed(float aValue)
 {
-	locDLLApplication->SetCameraZoomSpeed(aValue);
+	locDLLApplication->GetCamera()->SetZoomSpeed(aValue);
 }
 
 float GetCameraZoomSpeed()
 {
-	return locDLLApplication->GetCameraZoomSpeed();
+	return locDLLApplication->GetCamera()->GetZoomSpeed();
 }
 
 void SetCameraMovementSpeed(float aValue)
 {
-	locDLLApplication->SetCameraMovementSpeed(aValue);
+	locDLLApplication->GetCamera()->SetMovementSpeed(aValue);
 }
 
 float GetCameraMovementSpeed()
 {
-	return locDLLApplication->GetCameraMovementSpeed();
+	return locDLLApplication->GetCamera()->GetMovementSpeed();
 }
 
 void SetCameraRotationSpeed(float aValue)
 {
-	locDLLApplication->SetCameraRotationSpeed(aValue);
+	locDLLApplication->GetCamera()->SetRotationSpeed(aValue);
 }
 
 float GetCameraRotationSpeed()
 {
-	return locDLLApplication->GetCameraRotationSpeed();
+	return locDLLApplication->GetCamera()->GetRotationSpeed();
 }
 
 void DirectionaLightRotateX(float aAngle)

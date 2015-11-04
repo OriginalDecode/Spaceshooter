@@ -151,6 +151,11 @@ namespace Prism
 		return myDirectX->GetDepthStencil();
 	}
 
+	ID3D11RenderTargetView* Engine::GetDepthBuffer()
+	{
+		return myDirectX->GetDepthBuffer();
+	}
+
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	{
 		myWindowSize.x = mySetupInfo->myScreenWidth;
@@ -223,7 +228,7 @@ namespace Prism
 		ss << aNumber;
 		PrintText(ss.str(), aPosition, aTextType, aScale);
 	}
-
+	
 	void Engine::RestoreViewPort()
 	{
 		myDirectX->RestoreViewPort();

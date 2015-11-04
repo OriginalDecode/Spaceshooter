@@ -115,6 +115,7 @@ enum class eComponentType
 	NOT_USED,
 	AI,
 	BULLET,
+	BULLET_AI,
 	COLLISION,
 	GRAPHICS,
 	GUI,
