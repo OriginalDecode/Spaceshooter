@@ -17,7 +17,8 @@ namespace Prism
 		CU::Vector2<float> screenSize(static_cast<float>(Engine::GetInstance()->GetWindowSize().x)
 			, static_cast<float>(Engine::GetInstance()->GetWindowSize().y));
 		myProcessingTexture = new Texture();
-		myProcessingTexture->Init(screenSize.x, screenSize.y, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE
+		myProcessingTexture->Init(screenSize.x, screenSize.y
+			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL
 			, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 
@@ -88,7 +89,7 @@ namespace Prism
 			BloomEffect(myProcessingTexture);
 
 			Engine::GetInstance()->RestoreViewPort();
-			CombineTextures(myBloomData.myFinalTexture, aSource, myProcessingTexture);
+			CombineTextures(myBloomData.myFinalTexture, aSource, myProcessingTexture, false);
 		}
 		
 		CopyTexture(myProcessingTexture, aTarget);
@@ -119,19 +120,53 @@ namespace Prism
 		myRenderToTextureData.mySource->SetResource(NULL);
 	}
 
-	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget)
+	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget, bool aUseDepth)
 	{
 		DL_ASSERT_EXP(aSourceA != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 		DL_ASSERT_EXP(aSourceB != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 
 		myCombineData.mySourceA->SetResource(aSourceA->GetShaderView());
+		myCombineData.myDepthA->SetResource(aSourceA->GetDepthStencilShaderView());
 		myCombineData.mySourceB->SetResource(aSourceB->GetShaderView());
+		myCombineData.myDepthB->SetResource(aSourceB->GetDepthStencilShaderView());
+
 
 		ID3D11RenderTargetView* target = aTarget->GetRenderTargetView();
-		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target
-			, Engine::GetInstance()->GetDepthView());
+		ID3D11DepthStencilView* depth = aTarget->GetDepthStencilView();
+		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, myClearColor);
+		Engine::GetInstance()->GetContex()->ClearDepthStencilView(depth, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
 
-		Render(myCombineData.myEffect);
+		if (aUseDepth == true)
+		{
+			Render(myCombineData.myEffect, "Depth");
+		}
+		else
+		{
+			Render(myCombineData.myEffect, "NoDepth");
+		}
+		
+	}
+
+	void FullScreenHelper::CombineTextures(Texture* aSourceA, ID3D11ShaderResourceView* aDepthA
+		, Texture* aSourceB, ID3D11ShaderResourceView* aDepthB, Texture* aTarget)
+	{
+		DL_ASSERT_EXP(aSourceA != aTarget, "[Combine]: Cant use Texture as both Source and Target");
+		DL_ASSERT_EXP(aSourceB != aTarget, "[Combine]: Cant use Texture as both Source and Target");
+
+		myCombineData.mySourceA->SetResource(aSourceA->GetShaderView());
+		myCombineData.myDepthA->SetResource(aDepthA);
+		myCombineData.mySourceB->SetResource(aSourceB->GetShaderView());
+		myCombineData.myDepthB->SetResource(aDepthB);
+
+
+		ID3D11RenderTargetView* target = aTarget->GetRenderTargetView();
+		ID3D11DepthStencilView* depth = aTarget->GetDepthStencilView();
+		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, myClearColor);
+		Engine::GetInstance()->GetContex()->ClearDepthStencilView(depth, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
+
+		Render(myCombineData.myEffect, "Depth");
 	}
 
 	void FullScreenHelper::CreateCombineData()
@@ -141,8 +176,12 @@ namespace Prism
 
 		myCombineData.mySourceA
 			= myCombineData.myEffect->GetEffect()->GetVariableByName("SourceA")->AsShaderResource();
+		myCombineData.myDepthA
+			= myCombineData.myEffect->GetEffect()->GetVariableByName("DepthA")->AsShaderResource();
 		myCombineData.mySourceB
 			= myCombineData.myEffect->GetEffect()->GetVariableByName("SourceB")->AsShaderResource();
+		myCombineData.myDepthB
+			= myCombineData.myEffect->GetEffect()->GetVariableByName("DepthB")->AsShaderResource();
 	}
 
 	void FullScreenHelper::CreateRenderToTextureData()

@@ -49,7 +49,7 @@
 Level::Level(CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
 	, myComplete(false)
-	, myUsePostProcessing(false)
+	, myUsePostProcessing(true)
 	, mySkySphere(nullptr)
 	, myEntityFactory(nullptr)
 	, myWeaponFactory(nullptr)
@@ -154,7 +154,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPTimer -= aDeltaTime;
 		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 		myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
-		myEMPScale += 10000 * aDeltaTime;
+		myEMPScale += 100000 * aDeltaTime;
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
@@ -201,9 +201,9 @@ void Level::Render()
 		Prism::Engine::GetInstance()->DisableZBuffer();
 		mySkySphere->Render(*myCamera);
 		Prism::Engine::GetInstance()->EnableZBuffer();
-		//myRenderer->EndScene(Prism::ePostProcessing::NONE);
+		myRenderer->EndScene(Prism::ePostProcessing::NONE);
 
-		//myRenderer->BeginScene();
+		myRenderer->BeginScene();
 		myScene->Render(myBulletManager->GetInstances());
 
 
@@ -211,10 +211,8 @@ void Level::Render()
 
 
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
-
-		//myRenderer->BeginScene();
-		//myRenderer->EndScene(Prism::ePostProcessing::NONE);
 		myRenderer->FinalRender();
+
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	else
@@ -414,21 +412,38 @@ void Level::UpdateDebug()
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();
 	}
-	if (myInputWrapper->KeyDown(DIK_I))
+	if (myInputWrapper->KeyDown(DIK_7))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_U))
+	if (myInputWrapper->KeyDown(DIK_8))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_Y))
+	if (myInputWrapper->KeyDown(DIK_9))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerVolume", 0);
 	}
-	if (myInputWrapper->KeyDown(DIK_T))
+	if (myInputWrapper->KeyDown(DIK_0))
 	{
 		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseVolume", 0);
+	}
+
+	if (myInputWrapper->KeyDown(DIK_T))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("MuteMusic", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_Y))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMuteMusic", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_U))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("LowerMusic", 0);
+	}
+	if (myInputWrapper->KeyDown(DIK_I))
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("IncreaseMusic", 0);
 	}
 	if (myInputWrapper->KeyDown(DIK_F7))
 	{

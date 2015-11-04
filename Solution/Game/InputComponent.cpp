@@ -50,26 +50,25 @@ void InputComponent::Update(float aDeltaTime)
 
 	if (myCanMove == true)
 	{
-		if (myCanChangeWeapon == true)
+		if (myInputWrapper->KeyIsPressed(DIK_1))
 		{
-			if (myInputWrapper->KeyIsPressed(DIK_1))
-			{
-				myEntity.SendNote(InputNote(0));
-			}
-			if (myInputWrapper->KeyIsPressed(DIK_2))
-			{
-				myEntity.SendNote(InputNote(1));
-			}
-			if (myInputWrapper->KeyIsPressed(DIK_3))
-			{
-				myEntity.SendNote(InputNote(2));
-			}
+			myEntity.SendNote(InputNote(0));
 		}
-		
+		if (myInputWrapper->KeyIsPressed(DIK_2))
+		{
+			myEntity.SendNote(InputNote(1));
+		}
+
 		if (myInputWrapper->MouseIsPressed(0) == true)
 		{
 			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), myEntity.myOrientation.GetForward()
 				, mySteering * mySteeringModifier * myWeaponRotationModifier);
+		}
+
+		if (myInputWrapper->MouseIsPressed(1) == true)
+		{
+			Shoot(myEntity.GetComponent<PhysicsComponent>()->GetVelocity(), myEntity.myOrientation.GetForward()
+				, mySteering * mySteeringModifier * myWeaponRotationModifier, true);
 		}
 
 		if (myInputWrapper->KeyIsPressed(DIK_LSHIFT) || myInputWrapper->KeyIsPressed(DIK_RSHIFT))
@@ -225,7 +224,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
 	int boostSpeed = static_cast<int>((myCurrentBoostValue / myMaxBoostValue) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_Storm", boostSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
-	
+
 	if (myCurrentBoostCooldown == 0.f)
 	{
 		if (myBoost == true)
@@ -259,10 +258,10 @@ void InputComponent::UpdateMovement(const float& aDelta)
 	{
 		acceleration = fmax(acceleration, 0.f);
 	}
-	
+
 
 	Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Acceleration: %f", acceleration), { 600.f, -640.f }, Prism::eTextType::DEBUG_TEXT);
-	
+
 	myEntity.GetComponent<PhysicsComponent>()->Accelerate(acceleration);
 
 	if (myBoost == false)
@@ -279,8 +278,8 @@ void InputComponent::UpdateSteering(const float& aDelta)
 {
 	if (myCameraIsLocked == false || myCanMove == false)
 	{
-		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip) ;
-		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip) ;
+		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
+		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
 	}
 
 	if (mySteering.x > mySteeringDeaccelerationLowerLimit)

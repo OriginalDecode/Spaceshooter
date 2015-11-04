@@ -15,6 +15,7 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 {
 	myTexture = nullptr;
 	myRenderTargetView = nullptr;
+	myDepthStencilView = nullptr;
 
 	if ((aBindFlag & D3D11_BIND_SHADER_RESOURCE) > 0 || (aBindFlag & D3D11_BIND_RENDER_TARGET) > 0)
 	{
@@ -53,7 +54,7 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 
 	if ((aBindFlag & D3D11_BIND_DEPTH_STENCIL) > 0)
 	{
-		CreateDepthStencilView(aWidth, aHeight);
+		CreateDepthStencilView(aWidth, aHeight, aFormat);
 	}
 }
 
@@ -116,23 +117,29 @@ ID3D11DepthStencilView* Prism::Texture::GetDepthStencilView()
 	return myDepthStencilView;
 }
 
+ID3D11ShaderResourceView* Prism::Texture::GetDepthStencilShaderView()
+{
+	DL_ASSERT_EXP(myDepthStencilShaderView != nullptr, "[Texture]: Tried to GetDepthStencilShaderView, but texture wasnt created with D3D11_BIND_DEPTH_STENCIL");
+	return myDepthStencilShaderView;
+}
+
 void Prism::Texture::Release()
 {
 	myTexture->Release();
 }
 
-void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
+void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight, unsigned int aFormat)
 {
 	D3D11_TEXTURE2D_DESC tempBufferInfo;
 	tempBufferInfo.Width = static_cast<unsigned int>(aWidth);
 	tempBufferInfo.Height = static_cast<unsigned int>(aHeight);
 	tempBufferInfo.MipLevels = 1;
 	tempBufferInfo.ArraySize = 1;
-	tempBufferInfo.Format = DXGI_FORMAT_D32_FLOAT;
+	tempBufferInfo.Format = DXGI_FORMAT_R32_TYPELESS;
 	tempBufferInfo.SampleDesc.Count = 1;
 	tempBufferInfo.SampleDesc.Quality = 0;
 	tempBufferInfo.Usage = D3D11_USAGE_DEFAULT;
-	tempBufferInfo.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	tempBufferInfo.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 	tempBufferInfo.CPUAccessFlags = 0;
 	tempBufferInfo.MiscFlags = 0;
 
@@ -140,8 +147,27 @@ void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &tempBuffer);
 
 
-	tempBufferInfo.Format = DXGI_FORMAT_D32_FLOAT;
-	hr = Engine::GetInstance()->GetDevice()->CreateDepthStencilView(tempBuffer, NULL, &myDepthStencilView);
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthDesc;
+	ZeroMemory(&depthDesc, sizeof(D3D11_DEPTH_STENCIL_VIEW_DESC));
+	depthDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	depthDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthDesc.Texture2D.MipSlice = 0;
+
+	//tempBufferInfo.Format = DXGI_FORMAT_D32_FLOAT;
+	hr = Engine::GetInstance()->GetDevice()->CreateDepthStencilView(tempBuffer, &depthDesc, &myDepthStencilView);
+	if (FAILED(hr))
+		assert(0);
+
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
+	ZeroMemory(&viewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));
+	viewDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	viewDesc.Texture2D.MipLevels = 1;
+	viewDesc.Texture2D.MostDetailedMip = 0;
+
+	//tempBufferInfo.Format = static_cast<DXGI_FORMAT>(aFormat);
+	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(tempBuffer, &viewDesc, &myDepthStencilShaderView);
 	if (FAILED(hr))
 		assert(0);
 
