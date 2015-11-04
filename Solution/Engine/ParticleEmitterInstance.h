@@ -21,6 +21,7 @@ namespace Prism
 		void ToggleActive();
 		void ToggleActive(bool aIsActive);
 		void ShouldLive(bool aToStop);
+		void SetPosition(CU::Vector3f aPosition);
 	private:
 
 		void CreateVertexBuffer();

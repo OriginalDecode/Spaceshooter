@@ -283,20 +283,28 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 void LevelFactory::ReadLevelSettings()
 {
 	XMLReader reader;
-	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID) + "/L_level_0" + std::to_string(myCurrentID) + "_settings.xml";
+	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID - 1) + "/L_level_0" + std::to_string(myCurrentID - 1) + "_settings.xml";
 	reader.OpenDocument(settingsPath);
 
-	std::string firstWeapon;
-	std::string secondWeapon;
-	std::string thirdWeapon;
+	std::string firstWeapon = "";
+	std::string secondWeapon = "";
+	std::string thirdWeapon = "";
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "first", firstWeapon);
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "second", secondWeapon);
 	reader.ReadAttribute(reader.FindFirstChild("startWeapon"), "third", thirdWeapon);
 
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon), 0); // replace these with UpgradeWeapon later
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon), 1);
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon), 2);
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(0);
+	if (firstWeapon != "")
+	{
+		myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(firstWeapon), 0); // replace these with UpgradeWeapon later
+	}
+	if (secondWeapon != "")
+	{
+		myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(secondWeapon), 1);
+	}
+	if (thirdWeapon != "")
+	{
+		myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon), 2);
+	}
 
 	reader.CloseDocument();
 }
@@ -439,9 +447,9 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 	myCurrentLevel->myPlayer->AddComponent<SoundComponent>();
 
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_machine_level_1")); // replace these with UpgradeWeapon later
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"));
-	myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_rocket_launcher_level_1"));
+	//myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_machine_level_1")); // replace these with UpgradeWeapon later
+	//myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"));
+	//myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->AddWeapon(myCurrentLevel->myWeaponFactory->GetWeapon("W_gun_rocket_launcher_level_1"));
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_player.xml");

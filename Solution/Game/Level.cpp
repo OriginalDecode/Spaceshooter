@@ -163,7 +163,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-	myEmitterManager->UpdateEmitters(aDeltaTime);
+	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 
 	////streak debug only, please remove later
@@ -207,12 +207,18 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
-
+		if (myEMPActivated == true)
+		{
+			//Prism::Engine::GetInstance()->DisableZBuffer();
+			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+			//Prism::Engine::GetInstance()->EnableZBuffer();
+		}
 
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 		myRenderer->FinalRender();
+		myEmitterManager->RenderEmitters(myCamera);
 
-		myEmitterManager->RenderEmitters();
+		myEmitterManager->RenderEmitters(myCamera);
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	else
@@ -230,7 +236,7 @@ void Level::Render()
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
 
-		myEmitterManager->RenderEmitters();
+		myEmitterManager->RenderEmitters(myCamera);
 
 		//debug only
 		//myStreakEntity->Update(1.f/30.f);
@@ -449,9 +455,4 @@ void Level::UpdateDebug()
 	{
 		myUsePostProcessing = !myUsePostProcessing;
 	}
-}
-
-void Level::ReceiveMessage(const ExplosionMessage& aMessage) 
-{
-
 }

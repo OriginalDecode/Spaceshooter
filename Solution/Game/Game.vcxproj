@@ -170,6 +170,7 @@
     <ClInclude Include="DefendMission.h" />
     <ClInclude Include="EMPMessage.h" />
     <ClInclude Include="ExplosionMessage.h" />
+    <ClInclude Include="InGameMenuState.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="EmitterManager.h" />
     <ClInclude Include="DestroyEmitterMessage.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="DefendMission.cpp" />
     <ClCompile Include="EMPMessage.cpp" />
     <ClCompile Include="ExplosionMessage.cpp" />
+    <ClCompile Include="InGameMenuState.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="EmitterManager.cpp" />
     <ClCompile Include="DestroyEmitterMessage.cpp" />

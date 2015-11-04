@@ -75,6 +75,6 @@ void Subscriber::ReceiveMessage(const EMPMessage&)
 {
 }
 
-void Subscriber::ReceiveMessage(const ExplosionMessage&)
+void Subscriber::ReceiveMessage(const SpawnExplosionMessage&)
 {
 }
