@@ -160,7 +160,6 @@ namespace Prism
 
 		Model* model = myModelFactory->LoadModel(aModelPath.c_str(),
 			Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
-		model->Init();
 
 		int elapsed = static_cast<int>(
 			CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());

@@ -204,6 +204,9 @@
     <ClCompile Include="SplashState.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
+    <ClCompile Include="SpawnExplosionMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -465,6 +468,9 @@
     </ClInclude>
     <ClInclude Include="SplashState.h">
       <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="SpawnExplosionMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

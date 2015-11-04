@@ -233,6 +233,7 @@
     <ClInclude Include="SpawnEnemyAction.h" />
     <ClInclude Include="SpawnEnemyMessage.h" />
     <ClInclude Include="EnqueueEventMessage.h" />
+    <ClInclude Include="SpawnExplosionMessage.h" />
     <ClInclude Include="SpawnPowerUpMessage.h" />
     <ClInclude Include="SplashState.h" />
     <ClInclude Include="StateEnums.h" />
@@ -309,6 +310,7 @@
     <ClCompile Include="SpawnEnemyAction.cpp" />
     <ClCompile Include="SpawnEnemyMessage.cpp" />
     <ClCompile Include="EnqueueEventMessage.cpp" />
+    <ClCompile Include="SpawnExplosionMessage.cpp" />
     <ClCompile Include="SpawnPowerUpMessage.cpp" />
     <ClCompile Include="SplashState.cpp" />
     <ClCompile Include="StateStack.cpp" />
