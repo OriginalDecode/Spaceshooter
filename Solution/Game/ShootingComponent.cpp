@@ -107,93 +107,96 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 {
 	if (HasPowerUp(ePowerUpType::EMP) == false)
 	{
-		if (aShootNote.myIsRocket == false)
+		if (myHasWeapon == true)
 		{
-			if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
+			if (aShootNote.myIsRocket == false)
 			{
-				for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; ++i)
+				if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
 				{
-					CU::Matrix44<float> orientation = myEntity.myOrientation;
-					orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-						+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
-					CU::Vector3<float> dir = aShootNote.myDirection;
-					if (myWeapons[myCurrentWeaponID].mySpread > 0)
+					for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; ++i)
 					{
-						float max = float(myWeapons[myCurrentWeaponID].mySpread);
-						float min = float(-myWeapons[myCurrentWeaponID].mySpread);
+						CU::Matrix44<float> orientation = myEntity.myOrientation;
+						orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+							+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
+						CU::Vector3<float> dir = aShootNote.myDirection;
+						if (myWeapons[myCurrentWeaponID].mySpread > 0)
+						{
+							float max = float(myWeapons[myCurrentWeaponID].mySpread);
+							float min = float(-myWeapons[myCurrentWeaponID].mySpread);
 
-						float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
-						float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
+							float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
+							float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
+
+							CU::Matrix44<float> rotation;
+							rotation.myMatrix[8] = randomSpreadX;
+							rotation.myMatrix[9] = randomSpreadY;
+
+							CU::Vector4<float> pos = orientation.GetPos();
+							orientation = rotation * orientation;
+							orientation.SetPos(pos);
+
+							dir = dir * rotation;
+						}
 
 						CU::Matrix44<float> rotation;
-						rotation.myMatrix[8] = randomSpreadX;
-						rotation.myMatrix[9] = randomSpreadY;
+						rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
+						rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
 
 						CU::Vector4<float> pos = orientation.GetPos();
 						orientation = rotation * orientation;
 						orientation.SetPos(pos);
 
-						dir = dir * rotation;
+						PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
+							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+							, dir
+							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr));
+						myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 					}
-
-					CU::Matrix44<float> rotation;
-					rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
-					rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
-
-					CU::Vector4<float> pos = orientation.GetPos();
-					orientation = rotation * orientation;
-					orientation.SetPos(pos);
-
-					PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
-						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-						, dir
-						, HasPowerUp(ePowerUpType::HOMING) || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr));
-					myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
 				}
 			}
-		}
-		else
-		{
-			if (myWeapons[2].myCurrentTime == myWeapons[2].myCoolDownTime)
+			else if (myWeapons.Size() >= 3)
 			{
-				for (int i = 0; i < myWeapons[2].myBulletsPerShot; ++i)
+				if (myWeapons[2].myCurrentTime == myWeapons[2].myCoolDownTime)
 				{
-					CU::Matrix44<float> orientation = myEntity.myOrientation;
-					orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-						+ (myWeapons[2].myPosition * myEntity.myOrientation));
-					CU::Vector3<float> dir = aShootNote.myDirection;
-					if (myWeapons[2].mySpread > 0)
+					for (int i = 0; i < myWeapons[2].myBulletsPerShot; ++i)
 					{
-						float max = float(myWeapons[2].mySpread);
-						float min = float(-myWeapons[2].mySpread);
+						CU::Matrix44<float> orientation = myEntity.myOrientation;
+						orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+							+ (myWeapons[2].myPosition * myEntity.myOrientation));
+						CU::Vector3<float> dir = aShootNote.myDirection;
+						if (myWeapons[2].mySpread > 0)
+						{
+							float max = float(myWeapons[2].mySpread);
+							float min = float(-myWeapons[2].mySpread);
 
-						float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
-						float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
+							float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
+							float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
+
+							CU::Matrix44<float> rotation;
+							rotation.myMatrix[8] = randomSpreadX;
+							rotation.myMatrix[9] = randomSpreadY;
+
+							CU::Vector4<float> pos = orientation.GetPos();
+							orientation = rotation * orientation;
+							orientation.SetPos(pos);
+
+							dir = dir * rotation;
+						}
 
 						CU::Matrix44<float> rotation;
-						rotation.myMatrix[8] = randomSpreadX;
-						rotation.myMatrix[9] = randomSpreadY;
+						rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
+						rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
 
 						CU::Vector4<float> pos = orientation.GetPos();
 						orientation = rotation * orientation;
 						orientation.SetPos(pos);
 
-						dir = dir * rotation;
+						PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[2].myBulletType
+							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+							, dir
+							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr));
+						myWeapons[2].myCurrentTime = 0.f;
 					}
-
-					CU::Matrix44<float> rotation;
-					rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
-					rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
-
-					CU::Vector4<float> pos = orientation.GetPos();
-					orientation = rotation * orientation;
-					orientation.SetPos(pos);
-
-					PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[2].myBulletType
-						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-						, dir
-						, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr));
-					myWeapons[2].myCurrentTime = 0.f;
 				}
 			}
 		}
@@ -207,7 +210,10 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 
 void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 {
-	SetCurrentWeaponID(aMessage.myKey);
+	if (myHasWeapon == true)
+	{
+		SetCurrentWeaponID(aMessage.myKey);
+	}
 }
 
 void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
@@ -303,7 +309,10 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	}
 
 	newWeapon.myID = myWeapons.Size();
-	myCurrentWeaponID = newWeapon.myID;
+	if (newWeapon.myID < 2)
+	{
+		myCurrentWeaponID = newWeapon.myID;
+	}
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
 	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
@@ -311,10 +320,12 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 
 void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID)
 {
-	if (aWeaponID > myWeapons.Size())
+	if (aWeaponID >= myWeapons.Size())
 	{
-		std::string errorMessage = "[ShootingComponent] Tried to upgrade non existing weapon with ID " + aWeaponID;
-		DL_ASSERT(errorMessage.c_str());
+		//std::string errorMessage = "[ShootingComponent] Tried to upgrade non existing weapon with ID " + aWeaponID;
+		//DL_ASSERT(errorMessage.c_str());
+		AddWeapon(aWeapon);
+		return;
 	}
 
 	myWeapons[aWeaponID].myBulletsPerShot = aWeapon.myBulletsPerShot;
@@ -334,7 +345,6 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 	}
 
 	myWeapons[aWeaponID].myID = aWeaponID;
-	myCurrentWeaponID = aWeaponID;
 	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 
@@ -422,6 +432,5 @@ void ShootingComponent::AddDuration(ePowerUpType aPowerUp, float aTime)
 void ShootingComponent::Reset()
 {
 	myPowerUps.RemoveAll();
-	SetCurrentWeaponID(0);
 	myHomingTarget = nullptr;
 }
