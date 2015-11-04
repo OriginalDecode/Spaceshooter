@@ -94,6 +94,7 @@ namespace Prism
 
 	void ParticleEmitterInstance::ToggleActive()
 	{
+		myEmissionTime = myParticleEmitterData->myEmissionRate;
 		myIsActive = !myIsActive;
 		myEmitterLife = myParticleEmitterData->myEmitterLifeTime;
 		myDeadParticleCount = 0;
@@ -101,6 +102,7 @@ namespace Prism
 
 	void ParticleEmitterInstance::ToggleActive(bool aIsActive)
 	{
+		myEmissionTime = myParticleEmitterData->myEmissionRate;
 		myIsActive = aIsActive;
 		myEmitterLife = myParticleEmitterData->myEmitterLifeTime;
 		myDeadParticleCount = 0;
