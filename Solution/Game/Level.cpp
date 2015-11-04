@@ -49,7 +49,7 @@
 Level::Level(CU::InputWrapper* aInputWrapper)
 	: myEntities(16)
 	, myComplete(false)
-	, myUsePostProcessing(false)
+	, myUsePostProcessing(true)
 	, mySkySphere(nullptr)
 	, myEntityFactory(nullptr)
 	, myWeaponFactory(nullptr)
