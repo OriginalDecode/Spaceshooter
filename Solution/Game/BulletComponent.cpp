@@ -80,11 +80,9 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 void BulletComponent::SetActive(bool aActive)
 {
 	myActive = aActive;
-	
 
 	if (myActive == true)
 	{
-		myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET, true));
 		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)
 		{
 			if (myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
@@ -107,6 +105,7 @@ void BulletComponent::SetActive(bool aActive)
 				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
 			{
 				//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", myEntity.GetAudioSFXID());
+				myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET, true, true));
 				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Missiles"));
 			}
 		}
@@ -120,6 +119,7 @@ void BulletComponent::SetActive(bool aActive)
 			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
 			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
 		{
+			myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET, true, false));
 			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShipExplosion"));
 		}
 	}

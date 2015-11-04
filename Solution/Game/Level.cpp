@@ -153,7 +153,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		myEMPTimer -= aDeltaTime;
 		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
-		myEMPScale += 100000 * aDeltaTime;
+		myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
+		myEMPScale += 10000 * aDeltaTime;
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
@@ -222,12 +223,14 @@ void Level::Render()
 		mySkySphere->Render(*myCamera);
 		Prism::Engine::GetInstance()->EnableZBuffer();
 
+		myScene->Render(myBulletManager->GetInstances());
+
 		if (myEMPActivated == true)
 		{
+			//Prism::Engine::GetInstance()->DisableZBuffer();
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
-
-		myScene->Render(myBulletManager->GetInstances());
 
 		myEmitterManager->RenderEmitters();
 
@@ -376,6 +379,7 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 {
 	myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myEMPTimer = aMessage.myEMPTime;
+	myEMPScale = 1.f;
 	myEMPActivated = true;
 }
 

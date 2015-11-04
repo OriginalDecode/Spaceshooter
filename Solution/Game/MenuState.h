@@ -26,6 +26,10 @@ public:
 
 protected:
 
+	Prism::Sprite* myBlackOverlay;
+	float myFadeInTime;
+	float myCurrentTime;
+	float myOverlayAlpha;
 	Menu* myMenu;
 	Prism::Camera* myCamera;
 };

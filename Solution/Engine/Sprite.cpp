@@ -56,7 +56,7 @@ void Prism::Sprite::Render(const CU::Vector2<float>& aPosition, const CU::Vector
 	//myEffect->SetBlendState(myBlendState, blendFactor);
 	myEffect->SetProjectionMatrix(Engine::GetInstance()->GetOrthogonalMatrix());
 	myEffect->SetPosAndScale(aPosition, aScale);
-	//myEffect->SetColor(aColor);
+	myEffect->SetColor(aColor);
 	myEffect->SetSpriteOrientation(myOrientation);
 
 	BaseModel::Render();

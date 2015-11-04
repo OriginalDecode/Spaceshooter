@@ -9,6 +9,7 @@ namespace Prism
 	ParticleEmitterInstance::ParticleEmitterInstance()
 		: myVertexWrapper(nullptr)
 		, myIsActive(false)
+		, myShouldLive(true)
 		, myEmissionTime(0)
 		, myEmitterLife(0)
 		, myParticleIndex(0)
@@ -159,7 +160,8 @@ namespace Prism
 
 		UpdateParticle(aDeltaTime);
 
-		if (myEmissionTime <= 0.f && (myEmitterLife > 0.f || myParticleEmitterData->myUseEmitterLifeTime == false))
+		if (myEmissionTime <= 0.f && (myEmitterLife > 0.f || myParticleEmitterData->myUseEmitterLifeTime == false)
+			&& myShouldLive == true)
 		{
 			EmitParticle(aWorldMatrix);
 			myEmissionTime = myParticleEmitterData->myEmissionRate;

@@ -7,12 +7,12 @@ struct EmitterNote
 		BULLET
 	};
 
-	EmitterNote(eType aType);
-	EmitterNote(eType aType, bool aIsActive);
+	EmitterNote(eType aType, bool aIsActive, bool aUseEmitterLife);
 
 	
 	eType myType;
 	bool myIsActive;
+	bool myShouldLive;
 
 private:
 
@@ -20,13 +20,9 @@ private:
 
 };
 
-inline EmitterNote::EmitterNote(eType aType)
+inline EmitterNote::EmitterNote(eType aType, bool aIsActive, bool aUseEmitterLife)
 	: myType(aType)
-{
-}
-
-inline EmitterNote::EmitterNote(eType aType, bool aIsActive)
-: myType(aType)
-, myIsActive(aIsActive)
+	, myIsActive(aIsActive)
+	, myShouldLive(aUseEmitterLife)
 {
 }
