@@ -3,6 +3,12 @@
 
 class ParticleEmitterComponent;
 
+namespace Prism
+{
+	class ParticleEmitterInstance;
+};
+
+
 class EmitterManager : public Subscriber
 {
 public:
@@ -23,6 +29,23 @@ private:
 
 
 	CU::GrowingArray<ParticleEmitterComponent*> myEmitters;
+
+
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> myFireExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySmokeExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
+	//
+	//
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> myFireExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySmokeExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
+	//
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> myFireExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySmokeExplosion;
+	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
+
+
 
 };
 
