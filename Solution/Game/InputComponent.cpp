@@ -97,8 +97,8 @@ void InputComponent::Update(float aDeltaTime)
 
 	Roll(aDeltaTime);
 
-	float xRotation = mySteering.x * aDeltaTime * mySteeringModifier;
-	float yRotation = mySteering.y * aDeltaTime * mySteeringModifier;
+	float xRotation = mySteering.x  * mySteeringModifier;
+	float yRotation = mySteering.y  * mySteeringModifier;
 
 	if (xRotation > myMaxSteeringSpeed)
 	{
@@ -118,8 +118,8 @@ void InputComponent::Update(float aDeltaTime)
 		yRotation = -myMaxSteeringSpeed;
 	}
 
-	RotateX(yRotation);
-	RotateY(xRotation);
+	RotateX(yRotation * aDeltaTime);
+	RotateY(xRotation * aDeltaTime);
 
 	myEntity.SendNote<GUINote>(GUINote({ mySteering.x, mySteering.y, 0 }, eGUINoteType::STEERING_TARGET));
 }
@@ -279,8 +279,8 @@ void InputComponent::UpdateSteering(const float& aDelta)
 {
 	if (myCameraIsLocked == false || myCanMove == false)
 	{
-		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip);
-		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip);
+		mySteering.x += CU::Clip(myInputWrapper->GetMouseDX(), -mySteeringDeltaClip, mySteeringDeltaClip) ;
+		mySteering.y += CU::Clip(myInputWrapper->GetMouseDY(), -mySteeringDeltaClip, mySteeringDeltaClip) ;
 	}
 
 	if (mySteering.x > mySteeringDeaccelerationLowerLimit)

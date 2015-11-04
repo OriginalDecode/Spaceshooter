@@ -18,6 +18,7 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myAvoidanceDistance(300.f)
 	, myPrevEntityToFollow(nullptr)
 	, myTurnRateModifier(1.f)
+	, myRandomizeMovementTimer(2.f)
 {
 	DL_ASSERT_EXP(aEntity.GetComponent<InputComponent>() == nullptr, "Tried to add AIComponent when there was a InputComponent");
 }
@@ -57,6 +58,7 @@ void AIComponent::Init(float aSpeed, float aTimeBetweenDecisions, const std::str
 	myTargetPositionMode = aTargetPositionMode;
 
 	myTurnRateModifier = aTurnRateModifier;
+	myRandomizeMovementTimer = 2.f;
 
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
@@ -76,6 +78,7 @@ void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
 	myFollowingOffset = CU::Vector3<float>();
 	myCanMove = true;
 	myTurnRateModifier = 10.f;
+	myRandomizeMovementTimer = 2.f;
 	DL_ASSERT_EXP(myTargetPositionMode != eAITargetPositionMode::NOT_USED, "No AIMode was set!");
 }
 
@@ -92,7 +95,10 @@ void AIComponent::Update(float aDeltaTime)
 	if (myCanMove == true)
 	{
 		myTimeToNextDecision -= aDeltaTime;
-		myRandomizeMovementTimer -= aDeltaTime;
+		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
+		{
+			myRandomizeMovementTimer -= aDeltaTime;
+		}
 		FollowEntity(aDeltaTime);
 
 		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE 
@@ -254,11 +260,6 @@ void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 	}
 	else if (aMode == eAITargetPositionMode::KAMIKAZE)
 	{
-		if (myRandomizeMovementTimer <= 0.f)
-		{
-			myRandomizeMovementTimer = 2.f;
-			myRandomMovementOffset = CU::Math::RandomVector({ -100.f, -100.f, -100.f }, { 100.f, 100.f, 100.f });
-		}
 		CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
 		myToTarget = targetPos - myEntity.myOrientation.GetPos();
 	}
