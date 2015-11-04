@@ -32,6 +32,7 @@ namespace Prism
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();
 		ID3D11DepthStencilView* GetDepthStencil();
+		ID3D11RenderTargetView* GetDepthBuffer();
 
 		void RestoreViewPort();
 		void SetBackBufferAsTarget();

@@ -47,6 +47,7 @@ void EmitterManager::UpdateEmitters(float aDeltaTime)
 
 void EmitterManager::RenderEmitters()
 {
+	Prism::Engine::GetInstance()->DisableZBuffer();
 	for (int i = 0; i < myEmitters.Size(); ++i)
 	{
 		if (myEmitters[i]->GetEmitter()->GetIsActive() == true)
@@ -54,6 +55,7 @@ void EmitterManager::RenderEmitters()
 			myEmitters[i]->Render();
 		}
 	}
+	Prism::Engine::GetInstance()->EnableZBuffer();
 }
 
 void EmitterManager::ReceiveMessage(const DestroyEmitterMessage& aMessage)

@@ -105,6 +105,19 @@ namespace Prism
 		Render(myRenderToTextureData.myEffect);
 	}
 
+	void FullScreenHelper::RenderToScreen(Texture* aSource, Texture* aDepth)
+	{
+		Engine::GetInstance()->RestoreViewPort();
+		Engine::GetInstance()->SetBackBufferAsTarget();
+
+		ID3D11RenderTargetView* target = Engine::GetInstance()->GetDepthBuffer();
+		ID3D11DepthStencilView* depth = aDepth->GetDepthStencilView();
+		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
+
+		myRenderToTextureData.mySource->SetResource(aSource->GetShaderView());
+		Render(myRenderToTextureData.myEffect);
+	}
+
 	void FullScreenHelper::CopyTexture(Texture* aSource, Texture* aTarget)
 	{
 		DL_ASSERT_EXP(aSource != aTarget, "[Combine]: Cant use Texture as both Source and Target");
@@ -148,16 +161,16 @@ namespace Prism
 		
 	}
 
-	void FullScreenHelper::CombineTextures(Texture* aSourceA, ID3D11ShaderResourceView* aDepthA
-		, Texture* aSourceB, ID3D11ShaderResourceView* aDepthB, Texture* aTarget)
+	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aDepthA
+		, Texture* aSourceB, Texture* aDepthB, Texture* aTarget)
 	{
 		DL_ASSERT_EXP(aSourceA != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 		DL_ASSERT_EXP(aSourceB != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 
 		myCombineData.mySourceA->SetResource(aSourceA->GetShaderView());
-		myCombineData.myDepthA->SetResource(aDepthA);
+		myCombineData.myDepthA->SetResource(aDepthA->GetDepthStencilShaderView());
 		myCombineData.mySourceB->SetResource(aSourceB->GetShaderView());
-		myCombineData.myDepthB->SetResource(aDepthB);
+		myCombineData.myDepthB->SetResource(aDepthB->GetDepthStencilShaderView());
 
 
 		ID3D11RenderTargetView* target = aTarget->GetRenderTargetView();

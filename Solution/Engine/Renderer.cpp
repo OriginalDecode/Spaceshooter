@@ -95,13 +95,15 @@ namespace Prism
 		
 		Engine::GetInstance()->DisableZBuffer();
 
-		myFullScreenHelper->CombineTextures(mySceneData[0].myFinished, mySceneData[0].myScene->GetDepthStencilShaderView()
-			, mySceneData[1].myFinished, mySceneData[1].myScene->GetDepthStencilShaderView(), myFinalTexture);
+		myFullScreenHelper->CombineTextures(mySceneData[0].myFinished, mySceneData[0].myScene
+			, mySceneData[1].myFinished, mySceneData[1].myScene, myFinalTexture);
 
 		
-		myFullScreenHelper->RenderToScreen(myFinalTexture);
+		myFullScreenHelper->RenderToScreen(myFinalTexture, mySceneData[1].myScene);
 
 		mySceneIndex = 0;
+
+		Engine::GetInstance()->EnableZBuffer();
 	}
 
 }
