@@ -20,6 +20,7 @@ namespace Prism
 		bool GetIsActive();
 		void ToggleActive();
 		void ToggleActive(bool aIsActive);
+		void ShouldLive(bool aToStop);
 	private:
 
 		void CreateVertexBuffer();
@@ -47,5 +48,13 @@ namespace Prism
 		int myDeadParticleCount;
 
 		bool myIsActive;
+		bool myShouldLive;
 	};
+
+	inline void ParticleEmitterInstance::ShouldLive(bool aToStop)
+	{
+		myShouldLive = aToStop;
+	}
+
+
 }
