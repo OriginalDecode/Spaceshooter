@@ -210,6 +210,9 @@
     <ClCompile Include="InGameMenuState.cpp">
       <Filter>StateStack</Filter>
     </ClCompile>
+    <ClCompile Include="BulletAI.cpp">
+      <Filter>Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -477,6 +480,9 @@
     </ClInclude>
     <ClInclude Include="InGameMenuState.h">
       <Filter>StateStack</Filter>
+    </ClInclude>
+    <ClInclude Include="BulletAI.h">
+      <Filter>Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
