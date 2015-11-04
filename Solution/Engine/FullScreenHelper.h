@@ -3,6 +3,7 @@
 #include "BaseModel.h"
 
 struct ID3DX11EffectShaderResourceVariable;
+struct ID3D11ShaderResourceView;
 struct D3D11_VIEWPORT;
 
 namespace Prism
@@ -18,7 +19,9 @@ namespace Prism
 
 		void Process(Texture* aSource, Texture* aTarget, int aEffect);
 		void CopyTexture(Texture* aSource, Texture* aTarget);
-		void CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget);
+		void CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget, bool aUseDepth);
+		void FullScreenHelper::CombineTextures(Texture* aSourceA, ID3D11ShaderResourceView* aDepthA
+			, Texture* aSourceB, ID3D11ShaderResourceView* aDepthB, Texture* aTarget);
 		void RenderToScreen(Texture* aSource);
 
 	private:
@@ -26,12 +29,15 @@ namespace Prism
 		{
 			Effect* myEffect = nullptr;
 			ID3DX11EffectShaderResourceVariable* mySourceA = nullptr;
+			ID3DX11EffectShaderResourceVariable* myDepthA = nullptr;
 			ID3DX11EffectShaderResourceVariable* mySourceB = nullptr;
+			ID3DX11EffectShaderResourceVariable* myDepthB = nullptr;
 		};
 		struct RenderToTextureData
 		{
 			Effect* myEffect = nullptr;
 			ID3DX11EffectShaderResourceVariable* mySource = nullptr;
+			ID3DX11EffectShaderResourceVariable* myDepth = nullptr;
 		};
 		struct BloomData
 		{

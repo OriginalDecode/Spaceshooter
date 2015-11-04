@@ -2,7 +2,7 @@
 
 #include "EngineEnums.h"
 
-#define MAX_NUMBER_OF_SCENES 3
+#define MAX_NUMBER_OF_SCENES 2
 namespace Prism
 {
 	class FullScreenHelper;
@@ -28,6 +28,7 @@ namespace Prism
 			Texture* myFinished;
 		};
 		
+		Engine* myEngine;
 		SceneData mySceneData[MAX_NUMBER_OF_SCENES];
 
 		FullScreenHelper* myFullScreenHelper;
