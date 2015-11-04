@@ -207,6 +207,13 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
+		if (myEMPActivated == true)
+		{
+			//Prism::Engine::GetInstance()->DisableZBuffer();
+			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+			//Prism::Engine::GetInstance()->EnableZBuffer();
+		}
+
 		myEmitterManager->RenderEmitters();
 
 
