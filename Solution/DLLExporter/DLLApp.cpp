@@ -1,9 +1,11 @@
-#include "DLLApp.h"
 
 #include <AudioInterface.h>
 #include <Camera.h>
 #include <DirectionalLight.h>
 #include <DL_Debug.h>
+#include "DLLApp.h"
+#include "DLLCamera.h"
+#include "DLLModel.h"
 #include <EffectContainer.h>
 #include <Engine.h>
 #include <EngineEnums.h>
@@ -13,6 +15,7 @@
 #include <Instance.h>
 #include <InputComponent.h>
 #include <InputWrapper.h>
+#include <Matrix.h>
 #include <PostMaster.h>
 #include <Scene.h>
 #include <SetupInfo.h>
@@ -39,12 +42,20 @@ DLLApp::DLLApp(int* aHwnd, Prism::SetupInfo& aWindowSetup, WNDPROC aWindowProc)
 	SetupInput();
 	SetParentWindow(aWindowSetup);
 	SetupCubeMap();
-	SetupObject();
-	SetupCamera(aWindowSetup);
+	myCamera = new DLLCamera(myInput, aWindowSetup, *myScene, 1.0f, 1.0f, 1.0f);
+	myModel = new DLLModel(myInput, *myScene);
 }
 
 DLLApp::~DLLApp()
 {
+	delete myScene;
+	myScene = nullptr;
+
+	delete myCamera;
+	myCamera = nullptr;
+
+	delete myModel;
+	myModel = nullptr;
 }
 
 void DLLApp::Render()
@@ -63,24 +74,9 @@ void DLLApp::Update()
 
 void DLLApp::LoadModel(const char* aModelFile, const char* aShaderFile)
 {
-	if (aShaderFile == "")
-	{
-		aShaderFile = "Data/Resource/Shader/S_effect_basic.fx";
-	}
-
-	WatchCurrentFiles(aModelFile, aShaderFile);
-	CU::Matrix44f currentOrientation = myObjectEntity->myOrientation;
-	delete myObjectEntity;
-
-	myObjectEntity = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::DYNAMIC);
-	myObjectEntity->AddComponent<InputComponent>()->Init(myInput);
-
-	myObjectEntity->AddComponent<GraphicsComponent>()->InitDLL(aModelFile, aShaderFile);
-	myObjectEntity->myOrientation = currentOrientation;
-	GraphicsComponent* gfxComponent = myObjectEntity->GetComponent<GraphicsComponent>();
-	gfxComponent->GetInstance()->SetEffect(aShaderFile);
-
-	myScene->AddInstance(gfxComponent->GetInstance());
+	myModel->LoadModel(aModelFile, aShaderFile);
+	myModelFile = aModelFile;
+	myShaderFile = aShaderFile;
 }
 
 void DLLApp::SetClearColor(CU::Vector4f& aClearColor)
@@ -95,111 +91,23 @@ void DLLApp::SetCubeMap(const char* aCubeMapFile)
 	LoadModel(myModelFile.c_str(), myShaderFile.c_str());
 }
 
-void DLLApp::WatchCurrentFiles(const char* aModelFile, const char* aShaderFile)
-{
-	myModelFile = aModelFile;
-	myShaderFile = aShaderFile;
-
-	Prism::Engine::GetInstance()->GetFileWatcher()->Clear();
-	Prism::Engine::GetInstance()->GetFileWatcher()->WatchFile(aModelFile, std::bind(&DLLApp::LoadModel, this, aModelFile, aShaderFile));
-}
-
 void DLLApp::LogicUpdate(float aDeltaTime)
 {
 	if (GetActiveWindow()) {
 		if (myInput.KeyIsPressed(DIK_LALT) && myInput.MouseIsPressed(0))
 		{
-			CameraZoom(aDeltaTime);
+			myCamera->Zoom(aDeltaTime, myMouseSensitivty);
 		}
 		if (myInput.KeyIsPressed(DIK_LALT) && myInput.MouseIsPressed(2))
 		{
-			CameraPan(aDeltaTime);
+			myCamera->Pan(aDeltaTime, myMouseSensitivty);
 		}
 		if (myInput.KeyIsPressed(DIK_LALT) && myInput.MouseIsPressed(1))
 		{
-			CameraRotation(aDeltaTime);
+			myCamera->Rotate(aDeltaTime, myMouseSensitivty);
 		}
 	}
-	AutoRotateObject(aDeltaTime);
-}
-
-void DLLApp::AutoRotateObject(float aDeltaTime)
-{
-	CU::Vector3f orginalPos(myObjectEntity->myOrientation.GetPos());
-	myObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	myObjectEntity->GetComponent<InputComponent>()->RotateX(myAutoRotationSpeed.myX * aDeltaTime);
-	myObjectEntity->GetComponent<InputComponent>()->RotateY(myAutoRotationSpeed.myY * aDeltaTime);
-	myObjectEntity->GetComponent<InputComponent>()->RotateZ(myAutoRotationSpeed.myZ * aDeltaTime);
-	myObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void DLLApp::ManualRotateObject()
-{
-	myAutoRotationSpeed = { 0, 0, 0 };
-	CU::Matrix44f staticRotation;
-	CU::Vector3f orginalPos(myObjectEntity->myOrientation.GetPos());
-	myObjectEntity->myOrientation.SetPos(CU::Vector3f());
-	staticRotation = CU::Matrix44f::CreateRotateAroundX(myManualRotationAngle.myX / (3.14f * 180));
-	staticRotation = CU::Matrix44f::CreateRotateAroundY(myManualRotationAngle.myY / (3.14f * 180));
-	staticRotation = CU::Matrix44f::CreateRotateAroundZ(myManualRotationAngle.myZ / (3.14f * 180));
-	myObjectEntity->GetComponent<InputComponent>()->SetRotation(myObjectEntity->myOrientation * staticRotation);
-	myObjectEntity->myOrientation.SetPos(orginalPos);
-}
-
-void DLLApp::CameraZoom(float aDeltaTime)
-{
-	if (HasMouseDeltaYMoved() == true)
-	{
-		myCamera->MoveForward(myInput.GetMouseDY() * myCameraZoomSpeed * aDeltaTime);
-	}
-	if (HasMouseDeltaXMoved() == true)
-	{
-		myCamera->MoveForward(myInput.GetMouseDX() * myCameraZoomSpeed * aDeltaTime);
-	}
-}
-
-void DLLApp::CameraPan(float aDeltaTime)
-{
-	if (HasMouseDeltaXMoved() == true)
-	{
-		myCamera->MoveRight(myInput.GetMouseDX() * myCameraMovementSpeed * aDeltaTime);
-	}
-	if (HasMouseDeltaYMoved() == true)
-	{
-		myCamera->MoveUp(myInput.GetMouseDY() * myCameraMovementSpeed * aDeltaTime);
-	}
-}
-
-void DLLApp::CameraRotation(float aDeltaTime)
-{
-	CU::Matrix44f rotationAroundObject;
-	if (HasMouseDeltaYMoved() == true)
-	{
-		rotationAroundObject = myCamera->GetOrientation() * CU::Matrix44f::CreateRotateAroundX(myInput.GetMouseDY()
-			* myCameraRotationSpeed * aDeltaTime);
-		myCamera->SetOrientation(rotationAroundObject);
-	}
-	if (HasMouseDeltaXMoved() == true)
-	{
-		rotationAroundObject = myCamera->GetOrientation() * CU::Matrix44f::CreateRotateAroundY(myInput.GetMouseDX()
-			* myCameraRotationSpeed * aDeltaTime);
-		myCamera->SetOrientation(rotationAroundObject);
-	}
-}
-void DLLApp::SetupCamera(Prism::SetupInfo& aWindowSetup)
-{
-	myCameraEntity = new Entity(eEntityType::PLAYER, *myScene, Prism::eOctreeType::DYNAMIC);
-	myCameraEntity->AddComponent<InputComponent>()->Init(myInput);
-
-	myCamera = new Prism::Camera(myCameraEntity->myOrientation);
-	myCamera->OnResize(aWindowSetup.myScreenWidth, aWindowSetup.myScreenHeight);
-	myScene->SetCamera(myCamera);
-}
-
-void DLLApp::SetupObject()
-{
-	myObjectEntity = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::DYNAMIC);
-	myObjectEntity->AddComponent<InputComponent>()->Init(myInput);
+	myModel->Update(aDeltaTime);
 }
 
 void DLLApp::SetupCubeMap()
