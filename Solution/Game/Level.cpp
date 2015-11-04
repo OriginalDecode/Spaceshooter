@@ -101,7 +101,7 @@ Level::~Level()
 			myEntities[i] = nullptr;
 		}
 	}
-
+	delete myEMP;
 	delete mySkySphere;
 	delete myEntityFactory;
 	delete myWeaponFactory;
@@ -111,7 +111,6 @@ Level::~Level()
 	delete myEventManager;
 	delete myConversationManager;
 	delete myScene;
-	delete myEMP;
 	myEMP = nullptr;
 	mySkySphere = nullptr;
 	myScene = nullptr;
@@ -158,6 +157,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
+			myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 			myEMPActivated = false;
 		}
 	}
@@ -176,6 +176,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	//myStreakEntity->Update(aDeltaTime);
 	////streak debug only END
+	//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Update(aDeltaTime);
 
 
 	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
@@ -364,6 +365,11 @@ void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
 	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::POWERUP);
 	myEntities.Add(newEntity);
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
+
+	if (newEntity->GetComponent<ParticleEmitterComponent>() != nullptr)
+	{
+		myEmitterManager->AddEmitter(newEntity->GetComponent<ParticleEmitterComponent>());
+	}
 }
 
 void Level::ReceiveMessage(const EMPMessage& aMessage)
@@ -424,4 +430,9 @@ void Level::UpdateDebug()
 	{
 		myUsePostProcessing = !myUsePostProcessing;
 	}
+}
+
+void Level::ReceiveMessage(const ExplosionMessage& aMessage) 
+{
+
 }

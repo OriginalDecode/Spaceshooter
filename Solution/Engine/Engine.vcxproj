@@ -206,6 +206,7 @@
     <ClCompile Include="DirectX.cpp" />
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectContainer.cpp" />
+    <ClCompile Include="EmitterDataContainer.cpp" />
     <ClCompile Include="ParticleEmitterData.cpp" />
     <ClCompile Include="ParticleEmitterInstance.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -260,6 +261,7 @@
     <ClInclude Include="Effect.h" />
     <ClInclude Include="EffectContainer.h" />
     <ClInclude Include="EffectListener.h" />
+    <ClInclude Include="EmitterDataContainer.h" />
     <ClInclude Include="ParticleEmitterData.h" />
     <ClInclude Include="ParticleEmitterInstance.h" />
     <ClInclude Include="Engine.h" />

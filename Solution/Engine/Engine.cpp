@@ -2,6 +2,7 @@
 
 #include "DirectX.h"
 #include "EffectContainer.h"
+#include "EmitterDataContainer.h"
 #include "Engine.h"
 #include "FBXFactory.h"
 #include "FileWatcher.h"
@@ -29,6 +30,7 @@ namespace Prism
 	{
 		myTextureContainer = new TextureContainer();
 		myEffectContainer = new EffectContainer();
+		myEmitterDataContainer = new EmitterDataContainer();
 		myModelFactory = new FBXFactory();
 		myFileWatcher = new FileWatcher();
 		myModelLoader = new ModelLoader();

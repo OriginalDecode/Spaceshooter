@@ -31,6 +31,7 @@ namespace Prism
 	class DirectX;
 	class EffectContainer;
 	class Effect;
+	class EmitterDataContainer;
 	class FBXFactory;
 	class FileWatcher;
 	class Font;
@@ -56,6 +57,7 @@ namespace Prism
 		ID3D11DepthStencilView* GetDepthView();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
+		EmitterDataContainer* GetEmitterDataContainer();
 		FileWatcher* GetFileWatcher();
 		ModelLoader* GetModelLoader();
 
@@ -96,9 +98,9 @@ namespace Prism
 		SetupInfo* mySetupInfo;
 		TextureContainer* myTextureContainer;
 		EffectContainer* myEffectContainer;
+		EmitterDataContainer* myEmitterDataContainer;
 		FBXFactory* myModelFactory;
 		FileWatcher* myFileWatcher;
-
 		Font* myFont;
 		Text* myText;
 
@@ -126,6 +128,12 @@ inline Prism::TextureContainer* Prism::Engine::GetTextureContainer()
 inline Prism::EffectContainer* Prism::Engine::GetEffectContainer()
 {
 	return myEffectContainer;
+}
+
+inline Prism::EmitterDataContainer* Prism::Engine::GetEmitterDataContainer()
+{
+	DL_ASSERT_EXP(myEmitterDataContainer != nullptr, "EmitterDataContainer were nullptr! Couldn't get it.");
+	return myEmitterDataContainer;
 }
 
 inline Prism::FileWatcher* Prism::Engine::GetFileWatcher()

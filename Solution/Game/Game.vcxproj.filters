@@ -198,6 +198,12 @@
     <ClCompile Include="EMPMessage.cpp">
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
+    <ClCompile Include="ExplosionMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="SplashState.cpp">
+      <Filter>StateStack</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -453,6 +459,12 @@
     </ClInclude>
     <ClInclude Include="EMPMessage.h">
       <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="SplashState.h">
+      <Filter>StateStack</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
