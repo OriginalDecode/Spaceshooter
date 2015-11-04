@@ -13,6 +13,8 @@ Button::Button()
 }
 
 Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
+	: myClickEvent(nullptr)
+	, myBack(false)
 {
 	std::string picPath;
 	std::string picHoveredPath;
@@ -37,6 +39,10 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 		std::string menuID;
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", menuID);
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
+	}
+	else if (eventType == "back")
+	{
+		myBack = true;
 	}
 	
 	OnResize();
@@ -68,7 +74,7 @@ void Button::Render()
 	}
 }
 
-void Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed)
+bool Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed)
 {
 	myIsHovered = false;
 
@@ -77,12 +83,20 @@ void Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPre
 		(-aMousePos.y - mySize.y / 2) <= myPosition.y &&
 		(-aMousePos.y - mySize.y / 2) >= myPosition.y - mySize.y)
 	{
-		if (myClickEvent != nullptr && aMouseIsPressed == true)
+		if (aMouseIsPressed == true)
 		{
-			PostMaster::GetInstance()->SendMessage(*myClickEvent);
+			if (myBack == true)
+			{
+				return false;
+			}
+			else if (myClickEvent != nullptr)
+			{
+				PostMaster::GetInstance()->SendMessage(*myClickEvent);
+			}
 		}
 		myIsHovered = true;
 	}
+	return true;
 }
 
 void Button::OnResize()

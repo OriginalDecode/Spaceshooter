@@ -220,45 +220,47 @@ void CollisionManager::ReceiveMessage(const PowerUpMessage& aMessage)
 
 void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aFilter)
 {
-	if (aFilter & eEntityType::PLAYER)
+	bool collided = false;
+
+	if (collided == false && aFilter & eEntityType::PLAYER)
 	{
-		CheckCollision(aComponent, myPlayers);
+		collided = CheckCollision(aComponent, myPlayers);
 	}
-	if (aFilter & eEntityType::ENEMY)
+	if (collided == false && aFilter & eEntityType::ENEMY)
 	{
-		CheckCollision(aComponent, myEnemies);
+		collided = CheckCollision(aComponent, myEnemies);
 	}
-	if (aFilter & eEntityType::PLAYER_BULLET)
+	if (collided == false && aFilter & eEntityType::PLAYER_BULLET)
 	{
-		CheckCollision(aComponent, myPlayerBullets);
+		collided = CheckCollision(aComponent, myPlayerBullets);
 	}
-	if (aFilter & eEntityType::ENEMY_BULLET)
+	if (collided == false && aFilter & eEntityType::ENEMY_BULLET)
 	{
-		CheckCollision(aComponent, myEnemyBullets);
+		collided = CheckCollision(aComponent, myEnemyBullets);
 	}
-	if (aFilter & eEntityType::TRIGGER)
+	if (collided == false && aFilter & eEntityType::TRIGGER)
 	{
-		CheckCollision(aComponent, myTriggers);
+		collided = CheckCollision(aComponent, myTriggers);
 	}
-	if (aFilter & eEntityType::PROP)
+	if (collided == false && aFilter & eEntityType::PROP)
 	{
-		CheckCollision(aComponent, myProps);
+		collided = CheckCollision(aComponent, myProps);
 	}
-	if (aFilter & eEntityType::POWERUP)
+	if (collided == false && aFilter & eEntityType::POWERUP)
 	{
-		CheckCollision(aComponent, myPowerUps);
+		collided = CheckCollision(aComponent, myPowerUps);
 	}
-	if (aFilter & eEntityType::DEFENDABLE)
+	if (collided == false && aFilter & eEntityType::DEFENDABLE)
 	{
-		CheckCollision(aComponent, myDefendables);
+		collided = CheckCollision(aComponent, myDefendables);
 	}
-	if (aFilter & eEntityType::STRUCTURE)
+	if (collided == false && aFilter & eEntityType::STRUCTURE)
 	{
-		CheckCollision(aComponent, myStructures);
+		collided = CheckCollision(aComponent, myStructures);
 	}
 }
 
-void CollisionManager::CheckCollision(CollisionComponent* aComponent
+bool CollisionManager::CheckCollision(CollisionComponent* aComponent
 	, CU::GrowingArray<CollisionComponent*>& someOtherComponents)
 {
 	for (int i = someOtherComponents.Size() - 1; i >= 0; --i)
@@ -267,9 +269,10 @@ void CollisionManager::CheckCollision(CollisionComponent* aComponent
 		{
 			Entity& theOther = someOtherComponents[i]->GetEntity();
 			aComponent->GetEntity().SendNote(CollisionNote(theOther, *this));
-			break;
+			return true;
 		}
 	}
+	return false;
 }
 
 void CollisionManager::DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aTime)

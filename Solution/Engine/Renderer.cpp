@@ -8,26 +8,32 @@ namespace Prism
 {
 	Renderer::Renderer()
 	{
+		myEngine = Engine::GetInstance();
+
 		CU::Vector2<float> screenSize(static_cast<float>(Engine::GetInstance()->GetWindowSize().x)
 			, static_cast<float>(Engine::GetInstance()->GetWindowSize().y));
 
 		for (int i = 0; i < MAX_NUMBER_OF_SCENES; ++i)
 		{
 			mySceneData[i].myScene = new Texture();
-			mySceneData[i].myScene->Init(screenSize.x, screenSize.y, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE
+			mySceneData[i].myScene->Init(screenSize.x, screenSize.y
+				, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL
 				, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 			mySceneData[i].myFinished = new Texture();
-			mySceneData[i].myFinished->Init(screenSize.x, screenSize.y, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE
+			mySceneData[i].myFinished->Init(screenSize.x, screenSize.y
+				, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL
 				, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		}
 
 		myFinalTexture = new Texture();
-		myFinalTexture->Init(screenSize.x, screenSize.y, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE
+		myFinalTexture->Init(screenSize.x, screenSize.y
+			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL
 			, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 		myCombineMiddleMan = new Texture();
-		myCombineMiddleMan->Init(screenSize.x, screenSize.y, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE
+		myCombineMiddleMan->Init(screenSize.x, screenSize.y
+			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL
 			, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 		myFullScreenHelper = new FullScreenHelper();
@@ -63,9 +69,10 @@ namespace Prism
 		SceneData& data = mySceneData[mySceneIndex];
 
 		ID3D11RenderTargetView* renderTarget = data.myScene->GetRenderTargetView();
-		Engine::GetInstance()->GetContex()->ClearRenderTargetView(renderTarget, myClearColor);
-		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &renderTarget
-			, Engine::GetInstance()->GetDepthView());
+		ID3D11DepthStencilView* depth = data.myScene->GetDepthStencilView();
+		myEngine->GetContex()->ClearRenderTargetView(renderTarget, myClearColor);
+		myEngine->GetContex()->ClearDepthStencilView(depth, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		myEngine->GetContex()->OMSetRenderTargets(1, &renderTarget, depth);
 	}
 
 	void Renderer::EndScene(int aEffect)
@@ -75,7 +82,7 @@ namespace Prism
 		SceneData& data = mySceneData[mySceneIndex];
 
 		ID3D11RenderTargetView* renderTarget = data.myFinished->GetRenderTargetView();
-		Engine::GetInstance()->GetContex()->ClearRenderTargetView(renderTarget, myClearColor);
+		myEngine->GetContex()->ClearRenderTargetView(renderTarget, myClearColor);
 
 		myFullScreenHelper->Process(data.myScene, data.myFinished, aEffect);
 
@@ -84,38 +91,19 @@ namespace Prism
 
 	void Renderer::FinalRender()
 	{
-		Engine::GetInstance()->GetContex()->ClearRenderTargetView(myFinalTexture->GetRenderTargetView(), myClearColor);
-		Engine::GetInstance()->GetContex()->ClearRenderTargetView(myCombineMiddleMan->GetRenderTargetView(), myClearColor);
+		myEngine->GetContex()->ClearRenderTargetView(myFinalTexture->GetRenderTargetView(), myClearColor);
 		
 		Engine::GetInstance()->DisableZBuffer();
-		
-		if (mySceneIndex > 1)
-		{
-			myFullScreenHelper->CombineTextures(mySceneData[0].myFinished, mySceneData[1].myFinished, myCombineMiddleMan);
-			myFullScreenHelper->CopyTexture(myCombineMiddleMan, myFinalTexture);
-		
-			for (int i = 2; i < mySceneIndex; ++i)
-			{
-				myFullScreenHelper->CombineTextures(mySceneData[i].myFinished, myFinalTexture, myCombineMiddleMan);
-				myFullScreenHelper->CopyTexture(myCombineMiddleMan, myFinalTexture);
-			}
-		}
-		else
-		{
-			myFullScreenHelper->CopyTexture(mySceneData[0].myFinished, myFinalTexture);
-		}
-		
-		
-		myFullScreenHelper->RenderToScreen(myFinalTexture);
 
-		//for (int i = 0; i < mySceneIndex; ++i)
-		//{
-		//	Engine::GetInstance()->DisableZBuffer();
-		//	myFullScreenHelper->RenderToScreen(mySceneData[i].myFinished);
-		//}
-		//Engine::GetInstance()->EnableZBuffer();
+		myFullScreenHelper->CombineTextures(mySceneData[0].myFinished, mySceneData[0].myScene
+			, mySceneData[1].myFinished, mySceneData[1].myScene, myFinalTexture);
+
+		
+		myFullScreenHelper->RenderToScreen(myFinalTexture, mySceneData[1].myScene);
 
 		mySceneIndex = 0;
+
+		Engine::GetInstance()->EnableZBuffer();
 	}
 
 }

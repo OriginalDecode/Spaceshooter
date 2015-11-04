@@ -21,7 +21,7 @@ public:
 	~Button();
 
 	void Render();
-	void Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
+	bool Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
 
 	void OnResize();
 
@@ -38,5 +38,6 @@ private:
 	GameStateMessage* myClickEvent;
 
 	bool myIsHovered;
+	bool myBack;
 };
 

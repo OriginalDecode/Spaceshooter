@@ -9,6 +9,7 @@
 
 Menu::Menu(const std::string& aXMLPath)
 	: myButtons(8)
+	, myMainMenu(false)
 {
 	XMLReader reader;
 	reader.OpenDocument(aXMLPath);
@@ -19,10 +20,11 @@ Menu::Menu(const std::string& aXMLPath)
 
 	tinyxml2::XMLElement* menuElement = reader.FindFirstChild("menu");
 
-	reader.ReadAttribute(reader.FindFirstChild(menuElement, "background"), "path", background);
-	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "path", crosshair);
-	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "sizeX", crosshairSize.x);
-	reader.ReadAttribute(reader.FindFirstChild(menuElement, "crosshair"), "sizeY", crosshairSize.y);
+	reader.ReadAttribute(menuElement, "mainMenu", myMainMenu);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "path", background);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "path", crosshair);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "sizeX", crosshairSize.x);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "sizeY", crosshairSize.y);
 
 	myCrosshair = new Prism::Sprite(crosshair, crosshairSize, crosshairSize/2.f);
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
@@ -59,15 +61,20 @@ void Menu::Render(CU::InputWrapper* anInputWrapper)
 	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
 
-void Menu::Update(CU::InputWrapper* anInputWrapper)
+bool Menu::Update(CU::InputWrapper* anInputWrapper)
 {
 	bool isMouseClicked = anInputWrapper->MouseDown(0);
 	CU::Vector2<float> mousePos = anInputWrapper->GetMousePosition();
 
+	bool returnValue = true;
 	for (int i = 0; i < myButtons.Size(); i++)
 	{
-		myButtons[i]->Update(mousePos, isMouseClicked);
+		if (myButtons[i]->Update(mousePos, isMouseClicked) == false)
+		{
+			returnValue = false;
+		}
 	}
+	return returnValue;
 }
 
 void Menu::OnResize(int aWidth, int aHeight)
