@@ -461,7 +461,21 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	aTargetEntity->SetShouldRotateY(sourceEntity->GetShouldRotateY());
 	aTargetEntity->SetShouldRotateZ(sourceEntity->GetShouldRotateZ());
 
+	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
+	{
+		eCollisionType collisionType = sourceEntity->GetComponent<CollisionComponent>()->GetCollisionType();
 
+		if (collisionType == eCollisionType::NORMAL)
+		{
+			aTargetEntity->AddComponent<CollisionComponent>();
+		}
+		else if (collisionType == eCollisionType::PLANET)
+		{
+			aTargetEntity->AddComponent<PlanetCollisionComponent>();
+		}
+
+		aTargetEntity->GetComponent<CollisionComponent>()->Init(it->second.myCollisionSphereRadius);
+	}
 	if (sourceEntity->GetComponent<GraphicsComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<GraphicsComponent>();
@@ -481,6 +495,12 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		if (it->second.myScale != CU::Vector3f())
 		{
 			aTargetEntity->GetComponent<GraphicsComponent>()->SetScale(it->second.myScale);
+			if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr) 
+			{
+				float scale = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius;
+				scale *= CU::Math::GetMaximumValueFromVector(it->second.myScale);
+				aTargetEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(scale);
+			}
 		}
 
 	}
@@ -505,21 +525,6 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		{
 			aTargetEntity->GetComponent<ShootingComponent>()->AddWeapon(myWeaponFactoryPointer->GetWeapon(it->second.myWeaponType));
 		}
-	}
-	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
-	{
-		eCollisionType collisionType = sourceEntity->GetComponent<CollisionComponent>()->GetCollisionType();
-		
-		if (collisionType == eCollisionType::NORMAL)
-		{
-			aTargetEntity->AddComponent<CollisionComponent>();
-		}
-		else if (collisionType == eCollisionType::PLANET)
-		{
-			aTargetEntity->AddComponent<PlanetCollisionComponent>();
-		}
-		
-		aTargetEntity->GetComponent<CollisionComponent>()->Init(it->second.myCollisionSphereRadius);
 	}
 	if (sourceEntity->GetComponent<HealthComponent>() != nullptr)
 	{

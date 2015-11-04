@@ -10,6 +10,10 @@ namespace CU
 		int CapValue(int aMinValue, int aMaxValue, int aValueToCap);
 		float CapValue(const float aMinValue, const float aMaxValue, float aValueToCap);
 
+		float GetMaximumValueFromVector(const Vector2<float>& aVector);
+		float GetMaximumValueFromVector(const Vector3<float>& aVector);
+		float GetMaximumValueFromVector(const Vector4<float>& aVector);
+
 		float Saturate(const float aValue);
 
 		template <typename T>
