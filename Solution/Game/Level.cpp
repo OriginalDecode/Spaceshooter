@@ -222,7 +222,6 @@ void Level::Render()
 		}
 
 		myEmitterManager->RenderEmitters(myCamera);
-		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	else
 	{
@@ -240,15 +239,18 @@ void Level::Render()
 		}
 
 		myEmitterManager->RenderEmitters(myCamera);
-
-		//debug only
-		//myStreakEntity->Update(1.f/30.f);
-		//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Render();
-		//myStreakEntity->GetComponent<StreakEmitterComponent>()->Render();
-
-		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	
+	for (int i = 0; i < myEntities.Size(); ++i)
+	{
+		StreakEmitterComponent* emitter = myEntities[i]->GetComponent<StreakEmitterComponent>();
+		if (emitter != nullptr)
+		{
+			emitter->Render();
+		}
+	}
+
+	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 #ifndef RELEASE_BUILD
 	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0), Prism::eTextType::DEBUG_TEXT);
@@ -267,7 +269,7 @@ void Level::Render()
 void Level::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
-	myRenderer->OnResize(aWidth, aHeight);
+	myRenderer->OnResize(float(aWidth), float(aHeight));
 }
 
 Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)

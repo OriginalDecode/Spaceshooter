@@ -136,7 +136,7 @@ void Prism::StreakEmitterInstance::EmitterUpdate(float aDeltaTime)
 	{
 		if (myTimeSinceLastSpawn > myEmitter.myEmissionRate && myStreaks.Size() < myEmitter.myMaxNrOfStreaks)
 		{
-			EmitStreak(aDeltaTime);
+			EmitStreak();
 			myTimeSinceLastSpawn = 0;
 		}
 
@@ -146,7 +146,7 @@ void Prism::StreakEmitterInstance::EmitterUpdate(float aDeltaTime)
 	myEmitter.myEmissionLifeTime -= aDeltaTime;
 }
 
-void Prism::StreakEmitterInstance::EmitStreak(float aDeltaTime)
+void Prism::StreakEmitterInstance::EmitStreak()
 {
 	StreakInstance Streak;
 
@@ -175,6 +175,9 @@ void Prism::StreakEmitterInstance::StreakUpdate(float aDeltaTime)
 		myStreaks[i].myPosition += myStreaks[i].myVelocity * aDeltaTime;
 		myStreaks[i].myTime += aDeltaTime;
 		myStreaks[i].myRotation += myStreaks[i].myRotationDelta * aDeltaTime;
+		myStreaks[i].mySize += myEmitter.myStreakData.mySizeDelta * aDeltaTime;
+
+		myStreaks[i].mySize = fmaxf(myStreaks[i].mySize, 0);
 
 		if (myEmitter.myStreakData.myAffectedByGravity == true)
 		{

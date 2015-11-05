@@ -19,6 +19,7 @@
 #include "PowerUpComponent.h"
 #include <Scene.h>
 #include "ShootingComponent.h"
+#include "StreakEmitterComponent.h"
 #include "SoundComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
@@ -166,6 +167,11 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("ParticleEmitterComponent").c_str()) == 0)
 		{
 			LoadParticleEmitterComponent(newEntity, entityDocument, e);
+			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("StreakEmitterComponent").c_str()) == 0)
+		{
+			LoadStreakEmitterComponent(newEntity, entityDocument, e);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("rotate").c_str()) == 0)
@@ -452,7 +458,18 @@ void EntityFactory::LoadParticleEmitterComponent(EntityData& aEntityToAddTo, XML
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Path").c_str()) == 0)
 		{
-			aDocument.ForceReadAttribute(e, "src", aEntityToAddTo.myEmitterXMLPath);
+			aDocument.ForceReadAttribute(e, "src", aEntityToAddTo.myParticleEmitterXMLPath);
+		}
+	}
+}
+
+void EntityFactory::LoadStreakEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aStreakEmitterComponent)
+{
+	for (tinyxml2::XMLElement* e = aStreakEmitterComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
+	{
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Path").c_str()) == 0)
+		{
+			aDocument.ForceReadAttribute(e, "src", aEntityToAddTo.myStreakEmitterXMLPath);
 		}
 	}
 }
@@ -586,9 +603,14 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		}
 	}
 
-	if (it->second.myEmitterXMLPath != "")
-	{ 
-		aTargetEntity->AddComponent<ParticleEmitterComponent>()->Init(it->second.myEmitterXMLPath);
+	if (it->second.myParticleEmitterXMLPath != "")
+	{
+		aTargetEntity->AddComponent<ParticleEmitterComponent>()->Init(it->second.myParticleEmitterXMLPath);
+	}
+
+	if (it->second.myStreakEmitterXMLPath != "")
+	{
+		aTargetEntity->AddComponent<StreakEmitterComponent>()->Init(it->second.myStreakEmitterXMLPath);
 	}
 
 	ENTITY_LOG("Entity %s copying succeded", aTargetEntity->GetName().c_str());
