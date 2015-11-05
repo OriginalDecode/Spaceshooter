@@ -62,6 +62,9 @@ public:
 
 	const int GetWeaponSize() const;
 
+	const float& GetRocketCurrentTime() const;
+	const float& GetRocketMaxTime() const;
+
 private:
 	void SetActivatePowerUp(ePowerUpType aType, bool aValue);
 	void ActivatePowerUp(ePowerUpType aPowerUp); // only for emp
@@ -199,4 +202,14 @@ inline const int ShootingComponent::GetWeaponSize() const
 inline const int& ShootingComponent::GetCurrentWeaponID() const
 {
 	return myCurrentWeaponID;
+}
+
+inline const float& ShootingComponent::GetRocketCurrentTime() const
+{
+	return myWeapons[2].myCurrentTime;
+}
+
+inline const float& ShootingComponent::GetRocketMaxTime() const
+{
+	return myWeapons[2].myCoolDownTime;
 }

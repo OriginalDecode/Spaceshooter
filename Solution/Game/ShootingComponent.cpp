@@ -62,7 +62,7 @@ void ShootingComponent::Update(float aDeltaTime)
 			myWeapons[myCurrentWeaponID].myCurrentTime += aDeltaTime * totalReducer;
 		}
 
-		if (myWeapons.Size() == 3)
+		if (myWeapons.Size() >= 3) // for rockets
 		{
 			if (myWeapons[2].myCurrentTime >= (myWeapons[2].myCoolDownTime))
 			{
