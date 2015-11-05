@@ -58,7 +58,7 @@ void Prism::StreakEmitterInstance::Render(Camera* aCamera)
 	myEmitter.myEffect->SetStreakStartAlpha(myEmitter.myStreakData.myStartAlpha);
 
 	Engine::GetInstance()->GetContex()->IASetInputLayout(myEmitter.myStreakInputLayout);
-	Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+	Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ);
 	Engine::GetInstance()->GetContex()->IASetVertexBuffers(myVertexBufferWrapper.myStartSlot
 		, myVertexBufferWrapper.myNumberOfBuffers
 		, &myVertexBufferWrapper.myVertexBuffer
