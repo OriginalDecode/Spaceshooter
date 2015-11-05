@@ -154,7 +154,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPTimer -= aDeltaTime;
 		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 		//myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
-		myEMPScale += 10000 * aDeltaTime;
+		myEMPScale += 50000 * aDeltaTime;
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;

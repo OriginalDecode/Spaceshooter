@@ -5,6 +5,7 @@
 #include <istream>
 #include <atlstr.h>
 #include <TimerManager.h>
+#include <CommonHelper.h>
 //#include <vld.h>
 
 
@@ -65,7 +66,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
+#ifdef RELEASE_BUILD
+	ReadSetup(setup, CU::GetMyDocumentFolderPath() + "/SpaceShooter/" + "Data/Setting/SET_config.bin");
+#else
 	ReadSetup(setup, "Data/Setting/SET_config.bin");
+#endif
 
 	HWND hwnd;
 
@@ -224,6 +229,16 @@ void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 		file.read(buffer, 4);
 		windowed = *(reinterpret_cast<int*>(buffer));
 	}
+#ifdef RELEASE_BUILD
+	else if (aFilePath == CU::GetMyDocumentFolderPath() + "/SpaceShooter/" + "Data/Setting/SET_config.bin")
+	{
+		RECT window;
+		const HWND desktopHandler = GetDesktopWindow();
+		GetWindowRect(desktopHandler, &window);
+		width = window.right;
+		height = window.bottom;
+	}
+#endif
 
 	aSetup.myScreenWidth = width;
 	aSetup.myScreenHeight = height;
