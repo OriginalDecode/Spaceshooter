@@ -417,7 +417,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
 	}
 
-	float percentageToReady = 0.f;
+	float percentageToReady = 1.f;
 
 	if (myHasRockets == true)
 	{
@@ -595,12 +595,6 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 	else if (aMessage.GetUpgradeID() == 1)
 	{
 		myWeapon = "SG\nRDY";
-	}
-	else if (aMessage.GetUpgradeID() == 2)
-	{
-		myHasRockets = true;
-		myRocketCurrentTime = &myEntity.GetComponent<ShootingComponent>()->GetRocketCurrentTime();
-		myRocketMaxTime = &myEntity.GetComponent<ShootingComponent>()->GetRocketMaxTime();
 	}
 }
 

@@ -52,6 +52,7 @@ public:
 	void Reset() override;
 
 	Entity* GetClosestEnemy();
+	void SetRocketValues(const float& aRocketCurrentTime, const float& aRocketMaxTime);
 
 private:
 	Prism::Sprite* myReticle;
@@ -135,4 +136,11 @@ inline Prism::Camera* GUIComponent::GetCamera()
 inline Entity* GUIComponent::GetClosestEnemy()
 {
 	return myClosestEnemy;
+}
+
+inline void GUIComponent::SetRocketValues(const float& aRocketCurrentTime, const float& aRocketMaxTime)
+{
+	myRocketCurrentTime = &aRocketCurrentTime;
+	myRocketMaxTime = &aRocketMaxTime;
+	myHasRockets = true;
 }
