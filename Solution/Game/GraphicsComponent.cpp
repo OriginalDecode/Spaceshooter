@@ -3,6 +3,7 @@
 #include "CollisionComponent.h"
 #include "Constants.h"
 #include "GraphicsComponent.h"
+#include <Effect.h>
 #include "Entity.h"
 #include <Engine.h>
 #include <EngineEnums.h>
@@ -12,6 +13,7 @@
 #include "ModelLoader.h"
 #include <ModelProxy.h>
 #include <Scene.h>
+#include <Texture.h>
 #include <XMLReader.h>
 
 
@@ -110,4 +112,9 @@ void GraphicsComponent::SetPosition(const CU::Vector3<float>& aPosition)
 void GraphicsComponent::SetScale(const CU::Vector3<float>& aScale)
 {
 	myInstance->SetScale(aScale);
+}
+
+void GraphicsComponent::ApplyExtraTexture(Prism::Texture* aTexture)
+{
+	myInstance->GetModel().GetEffect()->SetExtraTexture(aTexture);
 }

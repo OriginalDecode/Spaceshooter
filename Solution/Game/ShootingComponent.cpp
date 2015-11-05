@@ -34,7 +34,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myFireRatePowerUpDuration(0.f)
 	, myEMPPowerUpDuration(0.f)
 	, myHomingPowerUpDuration(0.f)
-	, myEMPTime(1.5f)
+	, myEMPTime(2.f)
 {
 
 }

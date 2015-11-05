@@ -57,6 +57,8 @@ namespace Prism
 		void AddListener(EffectListener* aListener);
 		bool ReloadShader(const std::string& aFile);
 
+		void SetExtraTexture(Texture* aTexture);
+
 	private:
 		ID3DX11Effect* myEffect;
 		ID3DX11EffectTechnique* myTechnique;
@@ -85,6 +87,8 @@ namespace Prism
 		ID3DX11EffectScalarVariable* myStreakSizeDelta;
 		ID3DX11EffectScalarVariable* myStreakStartAlpha;
 		ID3DX11EffectScalarVariable* myStreakAlphaDelta;
+
+		ID3DX11EffectShaderResourceVariable* myExtraTexture;
 
 		CU::Vector4<float> mySpritePosAndScaleVector;
 		
