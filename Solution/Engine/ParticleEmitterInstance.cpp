@@ -9,7 +9,7 @@ namespace Prism
 	ParticleEmitterInstance::ParticleEmitterInstance()
 		: myVertexWrapper(nullptr)
 		, myIsActive(false)
-		, myShouldLive(true)
+		, myShouldLive(false)
 		, myEmissionTime(0)
 		, myEmitterLife(0)
 		, myParticleIndex(0)
