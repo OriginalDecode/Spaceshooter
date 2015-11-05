@@ -584,8 +584,8 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 {
-	myMessage = "Weapon upgrade received: " + aMessage.GetUprgade();
-	myMessageTime = 3.f;
+	myMessage = aMessage.GetPickupMessage();
+	myMessageTime = 4.f;
 	myShowMessage = true;
 
 	if (aMessage.GetUpgradeID() == 0)
