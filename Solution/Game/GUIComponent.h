@@ -66,11 +66,14 @@ private:
 	Prism::Sprite* myCrosshair;
 	Prism::Sprite* mySteeringTarget;
 	Prism::Sprite* myHitMarker;
+	Prism::Sprite* myDefendHitMarker;
+	Prism::Sprite* myCurrentHitmarker;
 	Prism::Sprite* myDamageIndicator;
 	Prism::Sprite* myHomingTarget;
 
 	Prism::Sprite* myStructureArrow;
 	Prism::Sprite* myStructureMarker;
+
 	
 	float myHitMarkerTimer;
 	float myDamageIndicatorTimer;

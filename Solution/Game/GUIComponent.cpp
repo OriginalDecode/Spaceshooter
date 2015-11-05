@@ -59,6 +59,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myHasRockets(false)
 	, myRocketCurrentTime(nullptr)
 	, myRocketMaxTime(nullptr)
+	, myCurrentHitmarker(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -127,6 +128,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds"
 		, { 256, 256 }, { 128.f, 128.f });
 
+	myDefendHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_defend.dds"
+		, { 256, 256 }, { 128.f, 128.f });
+
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
@@ -162,6 +166,10 @@ GUIComponent::~GUIComponent()
 	delete myHitMarker;
 	delete myDamageIndicator;
 	delete myHomingTarget;
+	delete myCurrentHitmarker;
+	delete myDefendHitMarker;
+	myCurrentHitmarker = nullptr;
+	myDefendHitMarker = nullptr;
 	myReticle = nullptr;
 	myPowerUpArrow = nullptr;
 	myPowerUpMarker = nullptr;
@@ -446,7 +454,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myHitMarkerTimer >= 0.f)
 	{
-		myHitMarker->Render({ steeringPos.x, steeringPos.y });
+		myCurrentHitmarker->Render({ steeringPos.x, steeringPos.y });
 	}
 
 	if (myDamageIndicatorTimer >= 0.f)
@@ -573,6 +581,16 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
+		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY 
+			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::STRUCTURE
+			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::PROP)
+		{
+			myCurrentHitmarker = myHitMarker;
+		}
+		else if (aMessage.myEntityCollidedWith.GetType() == eEntityType::DEFENDABLE)
+		{
+			myCurrentHitmarker = myDefendHitMarker;
+		}
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
