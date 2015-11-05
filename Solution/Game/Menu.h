@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StateEnums.h"
+
 namespace Prism
 {
 	class Sprite;
@@ -21,7 +23,7 @@ public:
 	
 	void Render(CU::InputWrapper* anInputWrapper);
 
-	bool Update(CU::InputWrapper* anInputWrapper);
+	eStateStatus Update(CU::InputWrapper* anInputWrapper);
 
 	void OnResize(int aWidth, int aHeight);
 
@@ -32,6 +34,8 @@ private:
 	CU::GrowingArray<Button*> myButtons;
 	Prism::Sprite* myBackground;
 	Prism::Sprite* myCrosshair;
+	CU::Vector2<float> myScreenSize;
+	bool myRenderCenter;
 };
 
 inline bool Menu::GetMainMenu() const

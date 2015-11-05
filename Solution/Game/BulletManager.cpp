@@ -56,7 +56,8 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetDirection(), aMessage.GetHomingTarget());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetDirection(), aMessage.GetHomingTarget()
+		, aMessage.GetHomingTurnRateModifier());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -148,7 +149,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
 	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, const CU::Vector3<float>& aDirection
-	, Entity* aHomingTarget)
+	, Entity* aHomingTarget, float aHomingTurnRateModifier)
 {
 
 	Entity* bullet = nullptr;
@@ -195,8 +196,8 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 	if (aHomingTarget != nullptr)
 	{
-		bullet->AddComponent<BulletAIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f),
-			1.f);
+		bullet->AddComponent<BulletAIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f)
+			, aHomingTurnRateModifier);
 		bullet->GetComponent<BulletAIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
 	}
 

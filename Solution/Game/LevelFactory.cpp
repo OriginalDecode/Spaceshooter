@@ -211,7 +211,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	myPlayer->myOrientation = CU::GetOrientation(myPlayer->myOrientation, playerRot);
 
-	myPlayer->myOrientation.SetPos(playerPos);
+	myPlayer->myOrientation.SetPos(playerPos * 10.f);
 	myPlayer->myOriginalOrientation = myPlayer->myOrientation;
 
 	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);

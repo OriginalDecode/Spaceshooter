@@ -57,6 +57,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myBackgroundMusicPlayed(true)
 	, myDeltaTime(0.f)
 	, myHasRockets(false)
+	, myRocketCurrentTime(nullptr)
+	, myRocketMaxTime(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -415,7 +417,18 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
 	}
 
-	if (myHasHomingWeapon == true || myHasRockets == true)
+	float percentageToReady = 0.f;
+
+	if (myHasRockets == true)
+	{
+		percentageToReady = *myRocketCurrentTime / *myRocketMaxTime;
+		if (percentageToReady >= 1.f)
+		{
+			Prism::Engine::GetInstance()->PrintText("RL\nRDY", { halfWidth * 1.57f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
+		}
+	}
+
+	if (myHasHomingWeapon == true || (myHasRockets == true && percentageToReady >= 1.f))
 	{
 		if (myClosestEnemy != nullptr)
 		{
@@ -444,11 +457,6 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	if (myShowMessage == true)
 	{
 		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
-	}
-
-	if (myHasRockets == true)
-	{
-		Prism::Engine::GetInstance()->PrintText("RL\nRDY", { halfWidth * 1.57f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render();
@@ -591,6 +599,8 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 	else if (aMessage.GetUpgradeID() == 2)
 	{
 		myHasRockets = true;
+		myRocketCurrentTime = &myEntity.GetComponent<ShootingComponent>()->GetRocketCurrentTime();
+		myRocketMaxTime = &myEntity.GetComponent<ShootingComponent>()->GetRocketMaxTime();
 	}
 }
 
@@ -618,10 +628,11 @@ void GUIComponent::Reset()
 	myClosestEnemy = nullptr;
 	myHasRockets = false;
 
-	int weaponSize = myEntity.GetComponent<ShootingComponent>()->GetWeaponSize();
+	ShootingComponent* shootingComp = myEntity.GetComponent<ShootingComponent>();
+	int weaponSize = shootingComp->GetWeaponSize();
 	if (weaponSize > 0)
 	{
-		int weaponID = myEntity.GetComponent<ShootingComponent>()->GetCurrentWeaponID();
+		int weaponID = shootingComp->GetCurrentWeaponID();
 		if (weaponID == 0)
 		{
 			myWeapon = "MG\nRDY";
@@ -633,6 +644,8 @@ void GUIComponent::Reset()
 		if (weaponSize >= 2)
 		{
 			myHasRockets = true;
+			myRocketCurrentTime = &shootingComp->GetRocketCurrentTime();
+			myRocketMaxTime = &shootingComp->GetRocketMaxTime();
 		}
 	}
 	else

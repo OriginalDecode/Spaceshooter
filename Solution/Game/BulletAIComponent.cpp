@@ -43,6 +43,7 @@ void BulletAIComponent::Init(float aSpeed, float aTurnRateModifier)
 	myCanMove = true;
 
 	myTurnRateModifier = aTurnRateModifier;
+	myTurnRateModifier = 10.f;
 }
 
 void BulletAIComponent::Update(float aDeltaTime)
