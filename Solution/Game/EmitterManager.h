@@ -15,7 +15,7 @@ namespace Prism
 struct ExplosionData
 {
 
-#ifdef _DEBUG
+
 	ExplosionData(std::string aType)
 		: myType(aType)
 		, myEmitterIndex(0)
@@ -29,15 +29,15 @@ struct ExplosionData
 		mySparkExplosion.DeleteAll();
 	}
 
-#endif
+
 
 	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myFireExplosion;
 	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> mySmokeExplosion;
 	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> mySparkExplosion;
 
-#ifdef _DEBUG
+
 	std::string myType;
-#endif
+
 
 	int myEmitterIndex;
 };
