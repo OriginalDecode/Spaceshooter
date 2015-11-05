@@ -61,8 +61,26 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 		rootDocument.ForceReadAttribute(e, "src", entityPath);
 		if (entityPath != "")
 		{
-			LoadEntity(entityPath);
-			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);
+			/*LoadEntity(entityPath);
+			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);*/
+
+			XMLReader entityReader;
+			entityReader.OpenDocument(entityPath);
+			tinyxml2::XMLElement* entityElement;
+			tinyxml2::XMLElement* rootElement = entityReader.FindFirstChild("root");
+			if (rootElement == nullptr)
+			{
+				entityElement = entityReader.FindFirstChild("Entity");
+			}
+			else
+			{
+				entityElement = entityReader.FindFirstChild(rootElement, "Entity");
+			}
+
+			std::string entityName;
+			entityReader.ForceReadAttribute(entityElement, "name", entityName);
+			myEntityTags[entityName] = entityPath;
+			entityReader.CloseDocument();
 		}
 	}
 
@@ -448,8 +466,13 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 {
 	if (myEntities.find(aEntityTag) == myEntities.end())
 	{
-		std::string error = "[EntityFactory] No entity with name " + aEntityTag;
-		DL_ASSERT(error);
+		if (myEntityTags.find(aEntityTag) == myEntityTags.end())
+		{
+			std::string error = "[EntityFactory] No entity with name " + aEntityTag;
+			DL_ASSERT(error);
+		}
+		
+		LoadEntity(myEntityTags[aEntityTag]);
 	}
 	auto it = myEntities.find(aEntityTag);
 	Entity* sourceEntity = it->second.myEntity;
