@@ -4,6 +4,11 @@
 #include "ParticleEmitterData.h"
 #include "StreakEmitterData.h"
 
+#ifdef DLL_EXPORT
+#include "Engine.h"
+#include "FileWatcher.h"
+#endif
+
 namespace Prism
 {
 	EmitterDataContainer::~EmitterDataContainer()
@@ -41,7 +46,7 @@ namespace Prism
 
 		if (it == myStreakData.end())
 		{
-			LoadParticleData(aFilePath);
+			LoadStreakData(aFilePath);
 		}
 
 		return myStreakData[aFilePath];
@@ -50,7 +55,10 @@ namespace Prism
 	void EmitterDataContainer::LoadParticleData(const std::string& aFilePath)
 	{
 		ParticleEmitterData* newData = new ParticleEmitterData();
-
+#ifdef DLL_EXPORT
+		Engine::GetInstance()->GetFileWatcher()->WatchFile(aFilePath, 
+			std::bind(&Prism::EmitterDataContainer::LoadParticleData, this, aFilePath));
+#endif
 		newData->LoadDataFile(aFilePath.c_str());
 		DL_ASSERT_EXP(newData != nullptr, "Failed to load data. newData became nullptr.");
 
@@ -61,7 +69,10 @@ namespace Prism
 	void EmitterDataContainer::LoadStreakData(const std::string& aFilePath)
 	{
 		StreakEmitterData* newData = new StreakEmitterData();
-
+//#ifdef DLL_EXPORT
+//		Engine::GetInstance()->GetFileWatcher()->WatchFile(aFilePath,
+//			std::bind(&Prism::StreakEmitterData::LoadDataFile, this, aFilePath));
+//#endif
 		newData->LoadDataFile(aFilePath.c_str());
 		DL_ASSERT_EXP(newData != nullptr, "Failed to load data. newData became nullptr.");
 

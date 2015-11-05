@@ -9,6 +9,7 @@
 struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11DepthStencilView;
+struct ID3D11RenderTargetView;
 
 namespace Prism
 {
@@ -55,6 +56,7 @@ namespace Prism
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();
 		ID3D11DepthStencilView* GetDepthView();
+		ID3D11RenderTargetView* GetDepthBuffer();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
 		EmitterDataContainer* GetEmitterDataContainer();

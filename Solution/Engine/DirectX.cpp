@@ -93,6 +93,11 @@ ID3D11DepthStencilView* Prism::DirectX::GetDepthStencil()
 	return myDepthBufferView;
 }
 
+ID3D11RenderTargetView* Prism::DirectX::GetDepthBuffer()
+{
+	return myRenderTargetView;
+}
+
 void Prism::DirectX::RestoreViewPort()
 {
 	myContext->RSSetViewports(1, myViewPort);

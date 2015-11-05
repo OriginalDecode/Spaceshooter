@@ -207,6 +207,12 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
+		
+
+		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+		myRenderer->FinalRender();
+	
+
 		if (myEMPActivated == true)
 		{
 			//Prism::Engine::GetInstance()->DisableZBuffer();
@@ -214,10 +220,7 @@ void Level::Render()
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
 
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
-		myRenderer->FinalRender();
 		myEmitterManager->RenderEmitters(myCamera);
-
 		myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 	}
 	else
@@ -344,6 +347,10 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 	if (aMessage.GetPowerupType() == ePowerUpType::WEAPON_UPGRADE)
 	{
 		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
+		if (aMessage.GetUpgradeID() < 2)
+		{
+			myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(aMessage.GetUpgradeID()); // Autochanges weapon on upgrade
+		}
 	}
 }
 

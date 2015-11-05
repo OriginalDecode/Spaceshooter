@@ -166,7 +166,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="DLLApp.h" />
+    <ClInclude Include="DLLCamera.h" />
     <ClInclude Include="DLLExport.h" />
+    <ClInclude Include="DLLModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommonUtilities\CommonUtilities.vcxproj">
@@ -184,7 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DLLApp.cpp" />
+    <ClCompile Include="DLLCamera.cpp" />
     <ClCompile Include="DLLExport.cpp" />
+    <ClCompile Include="DLLModel.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

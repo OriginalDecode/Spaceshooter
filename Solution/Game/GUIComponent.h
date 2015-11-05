@@ -112,6 +112,7 @@ private:
 
 	std::string myWeapon;
 
+	bool myHasRockets;
 
 };
 

@@ -51,11 +51,12 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myShowMessage(false)
 	, myMessage("")
 	, myMessageTime(0.f)
-	, myWeapon("MG\nRDY")
+	, myWeapon("")
 	, my3DClosestEnemyLength(10000)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
 	, myDeltaTime(0.f)
+	, myHasRockets(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -414,7 +415,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		CalculateAndRender(myEnemiesTarget->myOrientation.GetPos(), myModel2DToRender, myDefendArrow, myDefendMarker, aWindowSize, true);
 	}
 
-	if (myHasHomingWeapon == true)
+	if (myHasHomingWeapon == true || myHasRockets == true)
 	{
 		if (myClosestEnemy != nullptr)
 		{
@@ -445,14 +446,21 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
+	if (myHasRockets == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("RL\nRDY", { halfWidth * 1.57f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
+	}
+
 	myPowerUpSlots[ePowerUpType::EMP]->Render();
 	myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render();
 	myPowerUpSlots[ePowerUpType::HOMING]->Render();
 	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render();
 
 	Prism::Engine::GetInstance()->PrintText(myWeapon, { halfWidth * 1.47f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
+
 	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
 		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
+
 	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("EMP ready. Shoot to release."
@@ -521,17 +529,13 @@ void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 
 void GUIComponent::ReceiveNote(const InputNote& aMessage)
 {
-	if (aMessage.myKey == 0)
+	if (aMessage.myKey == 0 && myEntity.GetComponent<ShootingComponent>()->GetWeaponSize() > 0)
 	{
 		myWeapon = "MG\nRDY";
 	}
-	else if (aMessage.myKey == 1)
+	else if (aMessage.myKey == 1 && myEntity.GetComponent<ShootingComponent>()->GetWeaponSize() > 1)
 	{
 		myWeapon = "SG\nRDY";
-	}
-	else if (aMessage.myKey == 2)
-	{
-		myWeapon = "RL\nRDY";
 	}
 }
 
@@ -575,6 +579,19 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 	myMessage = "Weapon upgrade received: " + aMessage.GetUprgade();
 	myMessageTime = 3.f;
 	myShowMessage = true;
+
+	if (aMessage.GetUpgradeID() == 0)
+	{
+		myWeapon = "MG\nRDY";
+	}
+	else if (aMessage.GetUpgradeID() == 1)
+	{
+		myWeapon = "SG\nRDY";
+	}
+	else if (aMessage.GetUpgradeID() == 2)
+	{
+		myHasRockets = true;
+	}
 }
 
 void GUIComponent::ReceiveMessage(const KillStructureMessage& aMessage)
@@ -599,6 +616,27 @@ void GUIComponent::Reset()
 
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
-	myWeapon = "MG";
+	myHasRockets = false;
 
+	int weaponSize = myEntity.GetComponent<ShootingComponent>()->GetWeaponSize();
+	if (weaponSize > 0)
+	{
+		int weaponID = myEntity.GetComponent<ShootingComponent>()->GetCurrentWeaponID();
+		if (weaponID == 0)
+		{
+			myWeapon = "MG\nRDY";
+		}
+		else if (weaponID == 1)
+		{
+			myWeapon = "SG\nRDY";
+		}
+		if (weaponSize >= 2)
+		{
+			myHasRockets = true;
+		}
+	}
+	else
+	{
+		myWeapon = "";
+	}
 }
