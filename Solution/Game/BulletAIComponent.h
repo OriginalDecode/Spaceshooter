@@ -4,6 +4,7 @@
 #include "Enums.h"
 #include "Subscriber.h"
 
+class BulletComponent;
 class PhysicsComponent;
 
 class BulletAIComponent : public ControllerComponent
@@ -32,6 +33,7 @@ private:
 	float myTurnRateModifier;
 
 	PhysicsComponent* myPhysicsComponent;
+	BulletComponent* myBulletComponent;
 };
 
 inline eComponentType BulletAIComponent::GetType()
