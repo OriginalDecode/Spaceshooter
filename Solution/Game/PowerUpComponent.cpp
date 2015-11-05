@@ -24,22 +24,25 @@ PowerUpComponent::PowerUpComponent(Entity& aEntity)
 {
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, float someValue, float someDuration)
+void PowerUpComponent::Init(ePowerUpType someType, const std::string& anInGameName, float someValue, float someDuration)
 {
 	myType = someType;
 	myValue = someValue;
 	myDuration = someDuration;
 	myInGameName = anInGameName;
+	myUpgradePickupMessage = "";
+	myUpgradePickupMessageTime = 0.f;
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, std::string aUpgradeName
-	, std::string aPickupMessage, int anUpgradeID)
+void PowerUpComponent::Init(ePowerUpType someType, const std::string& anInGameName, const std::string& aUpgradeName
+	, const std::string& aPickupMessage, int anUpgradeID, float aMessageTime)
 {
 	myType = someType;
 	myUpgradeID = anUpgradeID;
 	myInGameName = anInGameName;
 	myUpgradeName = aUpgradeName;
 	myUpgradePickupMessage = aPickupMessage;
+	myUpgradePickupMessageTime = aMessageTime;
 }
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
@@ -47,7 +50,7 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 	if (myType == ePowerUpType::WEAPON_UPGRADE)
 	{
 		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName
-			, myUpgradePickupMessage, myUpgradeID));
+			, myUpgradePickupMessage, myUpgradeID, myUpgradePickupMessageTime));
 	}
 	else
 	{

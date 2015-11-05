@@ -11,10 +11,12 @@ PowerUpMessage::PowerUpMessage(ePowerUpType aType, CU::Vector3<float> aPos, floa
 	, myUpgrade("")
 	, myPickupMessage("")
 	, myUpgradeID(-1)
+	, myPickupMessageTime(0.f)
 {
 }
 
-PowerUpMessage::PowerUpMessage(ePowerUpType aType, std::string anUpgrade, std::string aPickupMessage, int anUpgradeID)
+PowerUpMessage::PowerUpMessage(ePowerUpType aType, const std::string& anUpgrade, const std::string& aPickupMessage
+	, int anUpgradeID, float aPickupMessageTime)
 	: Message(eMessageType::POWER_UP)
 	, myPowerupType(aType)
 	, myPosition({0.f, 0.f, 0.f})
@@ -23,5 +25,6 @@ PowerUpMessage::PowerUpMessage(ePowerUpType aType, std::string anUpgrade, std::s
 	, myUpgrade(anUpgrade)
 	, myUpgradeID(anUpgradeID)
 	, myPickupMessage(aPickupMessage)
+	, myPickupMessageTime(aPickupMessageTime)
 {
 }

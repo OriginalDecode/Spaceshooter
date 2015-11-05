@@ -7,6 +7,9 @@
 #include "DL_StackWalker.h"
 #include <sys/types.h>
 #include <sys/timeb.h>
+#ifdef RELEASE_BUILD
+#include <ShlObj.h>
+#endif
 
 DL_Debug::Debug* DL_Debug::Debug::ourInstance = nullptr;
 
@@ -60,7 +63,18 @@ bool DL_Debug::Debug::Create(std::string aFile)
 
 	strftime(buf, sizeof(buf), "%Y-%m-%d_%H_%M_%S", &tstruct);
 
+#ifdef RELEASE_BUILD
+	char documents[MAX_PATH];
+	HRESULT hResult = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, documents);
+	std::stringstream documentPath;
+	documentPath << documents;
+	std::string logFolder = documentPath.str() + "\\SpaceShooter";
+	CreateDirectory(logFolder.c_str(), NULL);
+	logFolder += "\\log";
+	CreateDirectory(logFolder.c_str(), NULL);
+#else
 	CreateDirectory("log", NULL);
+#endif
 	std::stringstream ss;
 	ss << "log\\" << buf << "_" << aFile;
 	ourInstance->myDebugFile.open(ss.str().c_str());

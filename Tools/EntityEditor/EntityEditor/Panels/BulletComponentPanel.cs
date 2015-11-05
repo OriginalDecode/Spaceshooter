@@ -39,6 +39,7 @@ namespace EntityEditor.Panels
         {
             myBulletComponent = aBulletComponent;
             LoadSettings();
+            myHasLoadedComponent = true;
         }
 
         protected override void LoadSettings()

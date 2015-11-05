@@ -615,7 +615,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 {
 	myMessage = aMessage.GetPickupMessage();
-	myMessageTime = 4.f;
+	myMessageTime = aMessage.GetPickupMessageTime();
 	myShowMessage = true;
 
 	if (aMessage.GetUpgradeID() == 0)

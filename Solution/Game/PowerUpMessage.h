@@ -5,7 +5,8 @@ class PowerUpMessage : public Message
 {
 public:
 	PowerUpMessage(ePowerUpType aType, CU::Vector3<float> aPos, float aRadius, float aTime);
-	PowerUpMessage(ePowerUpType aType, std::string anUpgrade, std::string aPickupMessage, int anUpgradeID);
+	PowerUpMessage(ePowerUpType aType, const std::string& anUpgrade, const std::string& aPickupMessage
+		, int anUpgradeID, float aPickupMessageTime);
 
 	ePowerUpType GetPowerupType() const;
 	const std::string& GetUprgade() const;
@@ -13,6 +14,7 @@ public:
 	CU::Vector3<float> GetPosition() const;
 	float GetRadius() const;
 	float GetTime() const;
+	float GetPickupMessageTime() const;
 	int GetUpgradeID() const;
 
 private:
@@ -24,6 +26,8 @@ private:
 
 	float myDamage;
 	float myTime;
+
+	float myPickupMessageTime;
 
 	int myUpgradeID;
 };
@@ -56,6 +60,11 @@ inline float PowerUpMessage::GetRadius() const
 inline float PowerUpMessage::GetTime() const
 {
 	return myTime;
+}
+
+inline float PowerUpMessage::GetPickupMessageTime() const
+{
+	return myPickupMessageTime;
 }
 
 inline int PowerUpMessage::GetUpgradeID() const

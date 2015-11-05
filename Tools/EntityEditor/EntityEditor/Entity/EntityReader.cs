@@ -142,6 +142,11 @@ namespace EntityEditor
                 myEntityData.mySoundComponent.myIsActive = true;
                 ReadSoundComponent(aNode);
             }
+            else if (aNode.Name == "StreakEmitterComponent")
+            {
+                myEntityData.myStreakEmitterComponent.myIsActive = true;
+                ReadStreakEmitterComponent(aNode);
+            }
         }
 
         private void ReadPowerUpComponent(XmlNode aNode)
@@ -296,6 +301,17 @@ namespace EntityEditor
             for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
             {
 
+            }
+        }
+
+        private void ReadStreakEmitterComponent(XmlNode aNode)
+        {
+            for (XmlNode e = myXMLWrapper.FindFirstChildElement(aNode); e != null; e = myXMLWrapper.FindNextSiblingElement(e))
+            {
+                if (e.Name == "path")
+                {
+                    myXMLWrapper.ReadAttribute(e, "src", ref myEntityData.myStreakEmitterComponent.myEmitterXML);
+                }
             }
         }
 

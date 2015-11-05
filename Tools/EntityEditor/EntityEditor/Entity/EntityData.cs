@@ -21,6 +21,7 @@ namespace EntityEditor.Entity
         public PowerUpComponentData myPowerUpComponent;
         public ShootingComponentData myShootingComponent;
         public SoundComponentData mySoundComponent;
+        public StreakEmitterComponentData myStreakEmitterComponent;
     }
 
     public struct EntityListXML
@@ -93,6 +94,13 @@ namespace EntityEditor.Entity
     }
 
     public struct ParticleEmitterComponentData
+    {
+        public bool myIsActive;
+
+        public string myEmitterXML;
+    }
+
+    public struct StreakEmitterComponentData
     {
         public bool myIsActive;
 

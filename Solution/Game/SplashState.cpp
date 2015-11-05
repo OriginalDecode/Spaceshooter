@@ -15,8 +15,8 @@ SplashState::SplashState(const std::string& aTexturePath, CU::InputWrapper* anIn
 	CU::Vector2<float> size(1024.f, 1024.f);
 	myLogo = new Prism::Sprite(aTexturePath, size, size / 2.f);
 
-	CU::Vector2<float> windowSize = CU::Vector2<float>(Prism::Engine::GetInstance()->GetWindowSize().x,
-		Prism::Engine::GetInstance()->GetWindowSize().y);
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x)
+		, float(Prism::Engine::GetInstance()->GetWindowSize().y));
 
 	CU::Vector2<float> backgroundSize(4096.f, 4096.f);
 	myBackground = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
@@ -103,8 +103,8 @@ const eStateStatus SplashState::Update(const float&)
 
 void SplashState::Render()
 {
-	CU::Vector2<float> windowSize = CU::Vector2<float>(Prism::Engine::GetInstance()->GetWindowSize().x,
-		-Prism::Engine::GetInstance()->GetWindowSize().y);
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		-float(Prism::Engine::GetInstance()->GetWindowSize().y));
 	myBackground->Render(windowSize / 2.f);
 	myLogo->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, myLogoAlpha});
 }
@@ -116,8 +116,8 @@ void SplashState::ResumeState()
 
 void SplashState::OnResize(int aWidth, int aHeight)
 {
-	CU::Vector2<float> windowSize = CU::Vector2<float>(Prism::Engine::GetInstance()->GetWindowSize().x,
-		Prism::Engine::GetInstance()->GetWindowSize().y);
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x)
+		, float(Prism::Engine::GetInstance()->GetWindowSize().y));
 
 	if (myBackground != nullptr)
 	{
