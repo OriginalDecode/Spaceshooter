@@ -36,27 +36,24 @@ namespace Launcher
         public Form1()
         {
             InitializeComponent();
-            if (Directory.GetCurrentDirectory() == "C://Program Files//SpaceShooter")
+            if (File.Exists(myExePath[0]) == true)
             {
-                if (File.Exists(myExePath[0]) == true)
+                string releaseConfig = myDocumentFolder + "\\SpaceShooter\\" + myConfigPath;
+                myConfigPath = releaseConfig;
+                string subString = myDocumentFolder + "\\SpaceShooter";
+                if (Directory.Exists(subString) == false)
                 {
-                    string releaseConfig = myDocumentFolder + "\\SpaceShooter\\" + myConfigPath;
-                    myConfigPath = releaseConfig;
-                    string subString = myDocumentFolder + "\\SpaceShooter";
-                    if (Directory.Exists(subString) == false)
-                    {
-                        Directory.CreateDirectory(subString);
-                    }
-                    subString += "\\Data";
-                    if (Directory.Exists(subString) == false)
-                    {
-                        Directory.CreateDirectory(subString);
-                    }
-                    subString += "\\Setting";
-                    if (Directory.Exists(subString) == false)
-                    {
-                        Directory.CreateDirectory(subString);
-                    }
+                    Directory.CreateDirectory(subString);
+                }
+                subString += "\\Data";
+                if (Directory.Exists(subString) == false)
+                {
+                    Directory.CreateDirectory(subString);
+                }
+                subString += "\\Setting";
+                if (Directory.Exists(subString) == false)
+                {
+                    Directory.CreateDirectory(subString);
                 }
             }
         }
