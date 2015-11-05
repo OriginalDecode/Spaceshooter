@@ -14,6 +14,7 @@ namespace Prism
 
 		ParticleEmitterInstance();
 		~ParticleEmitterInstance();
+		void ReleaseData();
 		void Initiate(ParticleEmitterData* someData);
 		void Render(Camera* aCamera);
 		void Update(float aDeltaTime, const CU::Matrix44f& aWorldMatrix);

@@ -62,6 +62,12 @@ const eStateStatus InGameMenuState::Update(const float&)
 
 		return eStateStatus::ePopSubState;
 	}
+#ifndef RELEASE_BUILD
+	if (myInputWrapper->KeyDown(DIK_SPACE) == true)
+	{
+		return eStateStatus::ePopMainState;
+	}
+#endif
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
 	deltaTime = fminf(1.f / 30.f, deltaTime);
 

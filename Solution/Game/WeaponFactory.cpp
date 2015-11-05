@@ -166,6 +166,7 @@ void WeaponFactory::LoadWeapon(const std::string& aWeaponFilePath)
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("homing").c_str()) == 0)
 		{
 			weaponDocument.ForceReadAttribute(e, "bool", weaponDataType.myIsHoming);
+			weaponDocument.ForceReadAttribute(e, "turnRate", weaponDataType.myHomingTurnRateModifier);
 		}
 	}
 

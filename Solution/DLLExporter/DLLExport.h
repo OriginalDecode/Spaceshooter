@@ -8,6 +8,7 @@ extern "C" DLLExport void Render();
 extern "C" DLLExport void Update();
 extern "C" DLLExport void UpdateFilewatcher();
 extern "C" DLLExport void LoadModel(const char* aModelFile, const char* aEffectFile);
+extern "C" DLLExport void LoadParticle(const char* aParticleFile);
 extern "C" DLLExport void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel);
 
 extern "C" DLLExport void DirectionaLightRotateX(float aXAngle);

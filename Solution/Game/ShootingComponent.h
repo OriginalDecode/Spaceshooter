@@ -12,6 +12,7 @@ struct WeaponData
 	float myCoolDownTime;
 	float myCurrentTime;
 	bool myIsHoming;
+	float myHomingTurnRateModifier;
 	CU::Vector3<float> myPosition;
 	std::string myType;
 };

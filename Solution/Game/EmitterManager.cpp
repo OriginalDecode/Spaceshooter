@@ -52,6 +52,13 @@ EmitterManager::~EmitterManager()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
+
+	myFireExplosion.DeleteAll();
+	mySmokeExplosion.DeleteAll();
+	mySparkExplosion.DeleteAll();
+
+
+
 }
 
 void EmitterManager::AddEmitter(ParticleEmitterComponent* anEmitter)

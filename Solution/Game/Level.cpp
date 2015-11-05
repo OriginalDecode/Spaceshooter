@@ -417,10 +417,6 @@ void Level::UpdateDebug()
 	{
 		CompleteLevel();
 	}
-	if (myInputWrapper->KeyDown(DIK_C))
-	{
-		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::RELOAD_LEVEL));
-	}
 	if (myInputWrapper->KeyDown(DIK_P))
 	{
 		Prism::Engine::GetInstance()->ToggleWireframe();

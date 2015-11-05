@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
+#include "GUIComponent.h"
 #include "GUINote.h"
 #include <Instance.h>
 #include "InputNote.h"
@@ -194,7 +195,8 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 						PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[2].myBulletType
 							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
 							, dir
-							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr));
+							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr
+							, myWeapons[2].myHomingTurnRateModifier));
 						myWeapons[2].myCurrentTime = 0.f;
 					}
 				}
@@ -291,6 +293,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 {
 	WeaponData newWeapon;
 
+	newWeapon.myHomingTurnRateModifier = aWeapon.myHomingTurnRateModifier;
 	newWeapon.myBulletsPerShot = aWeapon.myBulletsPerShot;
 	newWeapon.myCoolDownTime = aWeapon.myCoolDownTime;
 	newWeapon.myCurrentTime = aWeapon.myCoolDownTime;
@@ -313,8 +316,14 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	{
 		myCurrentWeaponID = newWeapon.myID;
 	}
+
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
+
+	if (myWeapons.Size() >= 3)
+	{
+		myEntity.GetComponent<GUIComponent>()->SetRocketValues(myWeapons[2].myCurrentTime, myWeapons[2].myCoolDownTime);
+	}
 	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 
@@ -327,7 +336,7 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 		AddWeapon(aWeapon);
 		return;
 	}
-
+	myWeapons[aWeaponID].myHomingTurnRateModifier = aWeapon.myHomingTurnRateModifier;
 	myWeapons[aWeaponID].myBulletsPerShot = aWeapon.myBulletsPerShot;
 	myWeapons[aWeaponID].myCoolDownTime = aWeapon.myCoolDownTime;
 	myWeapons[aWeaponID].myCurrentTime = aWeapon.myCoolDownTime;

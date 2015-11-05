@@ -30,6 +30,9 @@ namespace CSharpUtilities.DLLImporter
         public extern static unsafe void LoadModel(string aModelFile, string aEffectFile);
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
+        public extern static unsafe void LoadParticle(string aParticleFile);
+
+        [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]
         public extern static unsafe void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel);
 
         [DllImport(EngineDLLName, CallingConvention = CallingConvention.Cdecl)]

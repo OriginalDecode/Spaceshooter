@@ -164,6 +164,12 @@ void LoadModel(const char* aModelFile, const char* aShaderFile)
 	locDLLApplication->LoadModel(aModelFile, aShaderFile);
 }
 
+void LoadParticle(const char* aParticleFile)
+{
+	locDLLApplication->LoadParticle(aParticleFile);
+	DL_DEBUG("Loaded Particle %s", aParticleFile);
+}
+
 void SetClearColor(float aRChannel, float aGChannel, float aBChannel, float aAChannel)
 {
 	locDLLApplication->SetClearColor(CU::Vector4f(aRChannel, aGChannel, aBChannel, aAChannel));

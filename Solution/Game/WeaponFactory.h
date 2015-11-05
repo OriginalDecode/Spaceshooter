@@ -12,6 +12,7 @@ struct WeaponDataType
 	float myCurrentTime;
 	CU::Vector3<float> myPosition;
 	bool myIsHoming;
+	float myHomingTurnRateModifier;
 };
 
 struct ProjectileDataType
