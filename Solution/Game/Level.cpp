@@ -266,6 +266,7 @@ void Level::Render()
 void Level::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
+	myRenderer->OnResize(aWidth, aHeight);
 }
 
 Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)

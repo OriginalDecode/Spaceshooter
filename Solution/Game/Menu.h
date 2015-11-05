@@ -35,6 +35,7 @@ private:
 	Prism::Sprite* myBackground;
 	Prism::Sprite* myCrosshair;
 	CU::Vector2<float> myScreenSize;
+	CU::Vector2<float> myBackgroundSize;
 	bool myRenderCenter;
 };
 

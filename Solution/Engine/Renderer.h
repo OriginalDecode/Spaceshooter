@@ -21,6 +21,8 @@ namespace Prism
 
 		void FinalRender();
 
+		void OnResize(float aWidth, float aHeight);
+
 	private:
 		struct SceneData
 		{

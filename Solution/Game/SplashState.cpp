@@ -116,9 +116,12 @@ void SplashState::ResumeState()
 
 void SplashState::OnResize(int aWidth, int aHeight)
 {
+	CU::Vector2<float> windowSize = CU::Vector2<float>(Prism::Engine::GetInstance()->GetWindowSize().x,
+		Prism::Engine::GetInstance()->GetWindowSize().y);
+
 	if (myBackground != nullptr)
 	{
-		myBackground->SetSize({ float(aWidth), float(aHeight) });
+		myBackground->SetSize(windowSize, windowSize/2.f);
 	}
 	myCamera->OnResize(aWidth, aHeight);
 }

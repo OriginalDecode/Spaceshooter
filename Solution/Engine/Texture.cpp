@@ -16,6 +16,8 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 	myTexture = nullptr;
 	myRenderTargetView = nullptr;
 	myDepthStencilView = nullptr;
+	myDepthStencilShaderView = nullptr;
+	myTextureFormat = aFormat;
 
 	if ((aBindFlag & D3D11_BIND_SHADER_RESOURCE) > 0 || (aBindFlag & D3D11_BIND_RENDER_TARGET) > 0)
 	{
@@ -24,7 +26,7 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 		tempBufferInfo.Height = static_cast<unsigned int>(aHeight);
 		tempBufferInfo.MipLevels = 1;
 		tempBufferInfo.ArraySize = 1;
-		tempBufferInfo.Format = static_cast<DXGI_FORMAT>(aFormat);
+		tempBufferInfo.Format = static_cast<DXGI_FORMAT>(myTextureFormat);
 		tempBufferInfo.SampleDesc.Count = 1;
 		tempBufferInfo.SampleDesc.Quality = 0;
 		tempBufferInfo.Usage = D3D11_USAGE_DEFAULT;
@@ -54,7 +56,7 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 
 	if ((aBindFlag & D3D11_BIND_DEPTH_STENCIL) > 0)
 	{
-		CreateDepthStencilView(aWidth, aHeight, aFormat);
+		CreateDepthStencilView(aWidth, aHeight);
 	}
 }
 
@@ -128,7 +130,36 @@ void Prism::Texture::Release()
 	myTexture->Release();
 }
 
-void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight, unsigned int aFormat)
+void Prism::Texture::Resize(float aWidth, float aHeight)
+{
+	int bindFlag = 0;
+	if (myTexture != nullptr)
+	{
+		bindFlag |= D3D11_BIND_SHADER_RESOURCE;
+		myTexture->Release();
+		myTexture = nullptr;
+	}
+
+	if (myRenderTargetView != nullptr)
+	{
+		bindFlag |= D3D11_BIND_RENDER_TARGET;
+		myRenderTargetView->Release();
+		myRenderTargetView = nullptr;
+	}
+	
+	if (myDepthStencilView != nullptr)
+	{
+		bindFlag |= D3D11_BIND_DEPTH_STENCIL;
+		myDepthStencilView->Release();
+		myDepthStencilView = nullptr;
+		myDepthStencilShaderView->Release();
+		myDepthStencilShaderView = nullptr;
+	}
+
+	Init(aWidth, aHeight, bindFlag, myTextureFormat);
+}
+
+void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 {
 	D3D11_TEXTURE2D_DESC tempBufferInfo;
 	tempBufferInfo.Width = static_cast<unsigned int>(aWidth);

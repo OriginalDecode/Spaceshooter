@@ -13,7 +13,7 @@ namespace Prism
 		void Render(const CU::Vector2<float>& aPosition, const CU::Vector2<float>& aScale = { 1.f, 1.f }
 			, const CU::Vector4<float>& aColor = { 1.f, 1.f, 1.f, 1.f });
 
-		void SetSize(const CU::Vector2<float> aTextureSize);
+		void SetSize(const CU::Vector2<float> aTextureSize, const CU::Vector2<float>& aHotSpot);
 		const CU::Vector2<float>& GetSize() const;
 
 		void Rotate(float aRadians);
@@ -27,9 +27,11 @@ namespace Prism
 	};
 }
 
-inline void Prism::Sprite::SetSize(const CU::Vector2<float> aTextureSize)
+inline void Prism::Sprite::SetSize(const CU::Vector2<float> aTextureSize, const CU::Vector2<float>& aHotSpot)
 {
-	//myTextureSize = aTextureSize;
+	myHotspot = aHotSpot;
+	mySize = aTextureSize;
+	CreateVertices();
 }
 
 inline const CU::Vector2<float>& Prism::Sprite::GetSize() const

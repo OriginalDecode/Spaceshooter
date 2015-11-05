@@ -363,4 +363,14 @@ namespace Prism
 
 		Render(myBloomData.myBloomEffect, "BLOOM_Y");
 	}
+
+	void FullScreenHelper::OnResize(float aWidth, float aHeight)
+	{
+		myBloomData.myFinalTexture->Resize(aWidth/4.f, aHeight/4.f);
+		myBloomData.myMiddleMan->Resize(aWidth/4.f, aHeight/4.f);
+		myBloomData.myDownSampleTextures[0]->Resize(aWidth/2.f, aHeight/2.f);
+		myBloomData.myDownSampleTextures[1]->Resize(aWidth/4.f, aHeight/4.f);
+
+		myProcessingTexture->Resize(aWidth, aHeight);
+	}
 }
