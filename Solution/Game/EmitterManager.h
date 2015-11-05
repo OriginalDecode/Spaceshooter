@@ -30,24 +30,19 @@ public:
 
 private:
 
+	void ReadListOfLists(std::string aPath);
+	void ReadList(std::string aPath);
+
+
+
 	CU::GrowingArray<ParticleEmitterComponent*> myEmitters;
+	CU::GrowingArray<std::string> myXMLPaths;
 
 
 	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myFireExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySmokeExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
-	//
-	//
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> myFireExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySmokeExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
-	//
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> myFireExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySmokeExplosion;
-	//CU::StaticArray<Prism::ParticleEmitterInstance*, 10> mySparkExplosion;
+	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> mySmokeExplosion;
+	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> mySparkExplosion;
 
-
-	unsigned int myEmitterIndex;
+	 int myEmitterIndex;
 };
 

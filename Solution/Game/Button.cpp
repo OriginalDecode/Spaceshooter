@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <AudioInterface.h>
 #include "Button.h"
 #include <Camera.h>
 #include <Engine.h>
@@ -15,11 +16,15 @@ Button::Button()
 Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	: myClickEvent(nullptr)
 	, myBack(false)
+	, myCalcFromCenter(false)
+	, myQuit(false)
+	, myPostSoundEvent(false)
 {
 	std::string picPath;
 	std::string picHoveredPath;
 	std::string eventType;
-
+	
+	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "startFromCenter", myCalcFromCenter);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "x", myOriginalPosition.x);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "position"), "y", myOriginalPosition.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "path", picPath);
@@ -27,6 +32,12 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "picture"), "sizeY", myOriginalSize.y);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "hoveredPicture"), "path", picHoveredPath);
 	aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "event", eventType);
+
+	if (myCalcFromCenter == true)
+	{
+		myOriginalPosition.x += Prism::Engine::GetInstance()->GetWindowSize().x / 2.f;
+		myOriginalPosition.y += -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f;
+	}
 
 	if (eventType == "level")
 	{
@@ -43,6 +54,15 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 	else if (eventType == "back")
 	{
 		myBack = true;
+	}
+	else if (eventType == "quit")
+	{
+		myQuit = true;
+	}
+	else if (eventType == "wwise")
+	{
+		myPostSoundEvent = true;
+		aReader.ReadAttribute(aReader.ForceFindFirstChild(aButtonElement, "onClick"), "eventname", myWwiseEvent);
 	}
 	
 	OnResize();
@@ -74,7 +94,7 @@ void Button::Render()
 	}
 }
 
-bool Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed)
+eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed)
 {
 	myIsHovered = false;
 
@@ -87,16 +107,24 @@ bool Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPre
 		{
 			if (myBack == true)
 			{
-				return false;
+				return eStateStatus::ePopSubState;
+			}
+			else if (myQuit == true)
+			{
+				return eStateStatus::ePopMainState;
 			}
 			else if (myClickEvent != nullptr)
 			{
 				PostMaster::GetInstance()->SendMessage(*myClickEvent);
 			}
+			else if (myPostSoundEvent == true)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent(myWwiseEvent.c_str(), 0);
+			}
 		}
 		myIsHovered = true;
 	}
-	return true;
+	return eStateStatus::eKeepState;
 }
 
 void Button::OnResize()
@@ -104,8 +132,8 @@ void Button::OnResize()
 	float windowSizeX = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
 	float windowSizeY = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().y);
 	float resolutionOffset = windowSizeY / windowSizeX;
-	myPosition = myOriginalPosition * resolutionOffset;
+	myPosition = myOriginalPosition; // *resolutionOffset;
 
 	// ger lite weird resultat
-	mySize = myOriginalSize * resolutionOffset;
+	mySize = myOriginalSize;// *resolutionOffset;
 }

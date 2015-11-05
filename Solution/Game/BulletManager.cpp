@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "AIComponent.h"
+#include "BulletAIComponent.h"
 #include "BulletComponent.h"
 #include "BulletManager.h"
 #include <Camera.h>
@@ -56,7 +56,8 @@ void BulletManager::Update(float aDeltaTime)
 void BulletManager::ReceiveMessage(const BulletMessage& aMessage)
 {
 	ActivateBullet(myBulletDatas[static_cast<int>(aMessage.GetBulletType())], aMessage.GetOrientation()
-		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetDirection(), aMessage.GetHomingTarget());
+		, aMessage.GetEntityType(), aMessage.GetEntityVelocity(), aMessage.GetDirection(), aMessage.GetHomingTarget()
+		, aMessage.GetHomingTurnRateModifier());
 }
 
 void BulletManager::LoadFromFactory(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
@@ -148,7 +149,7 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 
 void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation
 	, eEntityType aEntityType, const CU::Vector3<float>& aEnitityVelocity, const CU::Vector3<float>& aDirection
-	, Entity* aHomingTarget)
+	, Entity* aHomingTarget, float aHomingTurnRateModifier)
 {
 
 	Entity* bullet = nullptr;
@@ -174,9 +175,9 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		}
 	}
 
-	if (bullet->GetComponent<AIComponent>() != nullptr)
+	if (bullet->GetComponent<BulletAIComponent>() != nullptr)
 	{
-		bullet->RemoveComponent<AIComponent>();
+		bullet->RemoveComponent<BulletAIComponent>();
 	}
 
 	if (aEntityType == eEntityType::PLAYER)
@@ -195,9 +196,9 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 
 	if (aHomingTarget != nullptr)
 	{
-		bullet->AddComponent<AIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f), 
-			eAITargetPositionMode::KAMIKAZE);
-		bullet->GetComponent<AIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
+		bullet->AddComponent<BulletAIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f)
+			, aHomingTurnRateModifier);
+		bullet->GetComponent<BulletAIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
 	}
 
 	if (aEntityType == eEntityType::PLAYER)
@@ -232,9 +233,9 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (playerBulletComp->GetActive() == false)
 			{
-				if (playerBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				if (playerBulletComp->GetEntity().GetComponent<BulletAIComponent>() != nullptr)
 				{
-					playerBulletComp->GetEntity().RemoveComponent<AIComponent>();
+					playerBulletComp->GetEntity().RemoveComponent<BulletAIComponent>();
 				}
 				myCollisionManager.Remove(aWeaponData->myPlayerBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::PLAYER_BULLET);
@@ -248,9 +249,9 @@ void BulletManager::UpdateBullet(BulletData* aWeaponData, const float& aDeltaTim
 
 			if (enemyBulletComp->GetActive() == false)
 			{
-				if (enemyBulletComp->GetEntity().GetComponent<AIComponent>() != nullptr)
+				if (enemyBulletComp->GetEntity().GetComponent<BulletAIComponent>() != nullptr)
 				{
-					enemyBulletComp->GetEntity().RemoveComponent<AIComponent>();
+					enemyBulletComp->GetEntity().RemoveComponent<BulletAIComponent>();
 				}
 				myCollisionManager.Remove(aWeaponData->myEnemyBullets[i]->GetComponent<CollisionComponent>()
 					, eEntityType::ENEMY_BULLET);

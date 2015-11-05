@@ -1,5 +1,7 @@
 #pragma once
 
+#include "StateEnums.h"
+
 namespace Prism
 {
 	class Sprite;
@@ -21,7 +23,7 @@ public:
 	~Button();
 
 	void Render();
-	bool Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
+	eStateStatus Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
 
 	void OnResize();
 
@@ -39,5 +41,9 @@ private:
 
 	bool myIsHovered;
 	bool myBack;
+	bool myQuit;
+	bool myCalcFromCenter;
+	bool myPostSoundEvent;
+	std::string myWwiseEvent;
 };
 

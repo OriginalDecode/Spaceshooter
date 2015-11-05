@@ -5,9 +5,10 @@
 #include <TimerManager.h>
 #include <XMLReader.h>
 
-Conversation::Conversation(const std::string& aName, XMLReader& aReader, tinyxml2::XMLElement* aElement)
+Conversation::Conversation(const std::string& aName, XMLReader& aReader, tinyxml2::XMLElement* aElement
+		, float aConversationTime)
 	: mySentences(16)
-	, myShowTime(3)
+	, myShowTime(aConversationTime)
 	, myName(aName)
 {
 	for (tinyxml2::XMLElement* element = aReader.ForceFindFirstChild(aElement, "sentence");

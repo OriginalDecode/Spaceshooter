@@ -11,7 +11,7 @@ class XMLReader;
 class Conversation
 {
 public:
-	Conversation(const std::string& aName, XMLReader& aReader, tinyxml2::XMLElement* aElement);
+	Conversation(const std::string& aName, XMLReader& aReader, tinyxml2::XMLElement* aElement, float aConversationTime);
 	~Conversation();
 
 	void Start();

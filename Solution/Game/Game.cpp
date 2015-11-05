@@ -16,6 +16,7 @@
 #include "Level.h"
 #include "LevelFactory.h"
 #include "MenuState.h"
+#include <ModelLoader.h>
 #include "PostMaster.h"
 #include "ResizeMessage.h"
 #include <SystemMonitor.h>

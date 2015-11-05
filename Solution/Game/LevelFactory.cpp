@@ -164,11 +164,11 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	else
 	{
 		myCurrentLevel->myPlayer = myPlayer;
-		myCurrentLevel->myPlayer->Reset();
 	}
 
 	ReadLevelSettings();
 	myCurrentLevel->myPlayer->myOriginalOrientation = myCurrentLevel->myPlayer->myOrientation;
+	myCurrentLevel->myPlayer->Reset();
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
@@ -211,7 +211,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	myPlayer->myOrientation = CU::GetOrientation(myPlayer->myOrientation, playerRot);
 
-	myPlayer->myOrientation.SetPos(playerPos);
+	myPlayer->myOrientation.SetPos(playerPos * 10.f);
 	myPlayer->myOriginalOrientation = myPlayer->myOrientation;
 
 	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);

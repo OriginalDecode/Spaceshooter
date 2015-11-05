@@ -12,6 +12,7 @@ struct WeaponData
 	float myCoolDownTime;
 	float myCurrentTime;
 	bool myIsHoming;
+	float myHomingTurnRateModifier;
 	CU::Vector3<float> myPosition;
 	std::string myType;
 };
@@ -46,6 +47,7 @@ public:
 	static eComponentType GetType();
 
 	void SetCurrentWeaponID(int anID);
+	const int& GetCurrentWeaponID() const;
 
 	void SetHomingTarget(Entity* aTarget);
 
@@ -58,6 +60,11 @@ public:
 
 	const float& GetFireRatePowerUpDuration() const;
 	const float& GetHomingPowerUpDuration() const;
+
+	const int GetWeaponSize() const;
+
+	const float& GetRocketCurrentTime() const;
+	const float& GetRocketMaxTime() const;
 
 private:
 	void SetActivatePowerUp(ePowerUpType aType, bool aValue);
@@ -186,4 +193,24 @@ inline const float& ShootingComponent::GetFireRatePowerUpDuration() const
 inline const float& ShootingComponent::GetHomingPowerUpDuration() const
 {
 	return myHomingPowerUpDuration;
+}
+
+inline const int ShootingComponent::GetWeaponSize() const
+{
+	return myWeapons.Size();
+}
+
+inline const int& ShootingComponent::GetCurrentWeaponID() const
+{
+	return myCurrentWeaponID;
+}
+
+inline const float& ShootingComponent::GetRocketCurrentTime() const
+{
+	return myWeapons[2].myCurrentTime;
+}
+
+inline const float& ShootingComponent::GetRocketMaxTime() const
+{
+	return myWeapons[2].myCoolDownTime;
 }

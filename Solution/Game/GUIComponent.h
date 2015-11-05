@@ -112,7 +112,9 @@ private:
 
 	std::string myWeapon;
 
-
+	bool myHasRockets;
+	const float* myRocketCurrentTime;
+	const float* myRocketMaxTime;
 };
 
 inline eComponentType GUIComponent::GetType()
