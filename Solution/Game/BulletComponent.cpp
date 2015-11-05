@@ -11,6 +11,7 @@
 #include "PostMaster.h"
 #include "ShieldComponent.h"
 #include "SoundNote.h"
+#include "SpawnExplosionMessage.h"
 
 BulletComponent::BulletComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -75,6 +76,19 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 		PostMaster::GetInstance()->SendMessage<BulletCollisionToGUIMessage>(BulletCollisionToGUIMessage(this->GetEntity(), aNote.myEntity));
 	}
 
+
+	if ((myType == eBulletType::ROCKET_MISSILE_LEVEL_1) ||
+		(myType == eBulletType::ROCKET_MISSILE_LEVEL_2) ||
+		(myType == eBulletType::ROCKET_MISSILE_LEVEL_3))
+	{
+		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH
+			, myEntity.myOrientation.GetPos()));
+	}
+	else
+	{
+		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EFFECT_ON_HIT
+			, myEntity.myOrientation.GetPos()));
+	}
 }
 
 void BulletComponent::SetActive(bool aActive)
