@@ -105,6 +105,18 @@ void StateStack::OnResizeCurrentState(int aWidth, int aHeight)
 	myGameStates[myMainIndex][mySubIndex]->OnResize(aWidth, aHeight);
 }
 
+void StateStack::OnResize(int aWidth, int aHeight)
+{
+	for (int i = 0; i < myGameStates.Size(); ++i)
+	{
+		for (int j = 0; j < myGameStates[i].Size(); ++j)
+		{
+			myGameStates[i][j]->OnResize(aWidth, aHeight);
+		}
+	}
+}
+
+
 void StateStack::RenderStateAtIndex(int aIndex)
 {
 	if (aIndex < 0)

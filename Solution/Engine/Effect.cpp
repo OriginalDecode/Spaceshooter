@@ -289,6 +289,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		myTexture = nullptr;
 	}
 
+	myExtraTexture = myEffect->GetVariableByName("ExtraTexture")->AsShaderResource();
+	if (myExtraTexture->IsValid() == false)
+	{
+		myExtraTexture = nullptr;
+	}
+
 	mySpritePosAndScale = myEffect->GetVariableByName("SpritePositionAndScale")->AsVector();
 	if (mySpritePosAndScale->IsValid() == false)
 	{
@@ -332,5 +338,10 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	}
 
 	return true;
+}
+
+void Prism::Effect::SetExtraTexture(Texture* aTexture)
+{
+	myExtraTexture->SetResource(aTexture->GetShaderView());
 }
 

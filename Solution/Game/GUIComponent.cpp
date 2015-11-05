@@ -59,6 +59,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myHasRockets(false)
 	, myRocketCurrentTime(nullptr)
 	, myRocketMaxTime(nullptr)
+	, myCurrentHitmarker(nullptr)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -127,6 +128,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks.dds"
 		, { 256, 256 }, { 128.f, 128.f });
 
+	myDefendHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_defend.dds"
+		, { 256, 256 }, { 128.f, 128.f });
+
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
@@ -162,6 +166,10 @@ GUIComponent::~GUIComponent()
 	delete myHitMarker;
 	delete myDamageIndicator;
 	delete myHomingTarget;
+	delete myCurrentHitmarker;
+	delete myDefendHitMarker;
+	myCurrentHitmarker = nullptr;
+	myDefendHitMarker = nullptr;
 	myReticle = nullptr;
 	myPowerUpArrow = nullptr;
 	myPowerUpMarker = nullptr;
@@ -240,7 +248,7 @@ void GUIComponent::Update(float aDeltaTime)
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
 	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize
-	, bool aShowDist, bool aIsPowerup, std::string aName)
+	, bool aShowDist, float anAlpha, bool aIsPowerup, std::string aName)
 {
 	bool showName = false;
 	float halfWidth = aWindowSize.x *0.5f;
@@ -328,7 +336,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		{
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
-		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y });
+		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, anAlpha });
 		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
@@ -409,7 +417,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 	for (int i = 0; i < myPowerUps.Size(); ++i)
 	{
 		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker
-			, aWindowSize, true, true, myPowerUps[i]->GetComponent<PowerUpComponent>()->GetInGameName());
+			, aWindowSize, true, true, 1.f, myPowerUps[i]->GetComponent<PowerUpComponent>()->GetInGameName());
 	}
 
 	if (myEnemiesTarget != nullptr)
@@ -428,14 +436,26 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		}
 	}
 
-	if (myHasHomingWeapon == true || (myHasRockets == true && percentageToReady >= 1.f))
+	if (myHasHomingWeapon == true)
 	{
 		if (myClosestEnemy != nullptr)
 		{
 			myHomingTarget->Rotate(myDeltaTime);
-			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true);
+			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
 		}
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
+	}
+	else if (myHasRockets == true)
+	{
+		if (myClosestEnemy != nullptr)
+		{
+			myHomingTarget->Rotate(myDeltaTime);
+			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
+		}
+		if (percentageToReady >= 1.f)
+		{
+			myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
+		}
 	}
 
 	myEnemies.RemoveAll();
@@ -446,7 +466,7 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 
 	if (myHitMarkerTimer >= 0.f)
 	{
-		myHitMarker->Render({ steeringPos.x, steeringPos.y });
+		myCurrentHitmarker->Render({ steeringPos.x, steeringPos.y });
 	}
 
 	if (myDamageIndicatorTimer >= 0.f)
@@ -573,6 +593,16 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
+		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY 
+			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::STRUCTURE
+			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::PROP)
+		{
+			myCurrentHitmarker = myHitMarker;
+		}
+		else if (aMessage.myEntityCollidedWith.GetType() == eEntityType::DEFENDABLE)
+		{
+			myCurrentHitmarker = myDefendHitMarker;
+		}
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
@@ -584,8 +614,8 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 {
-	myMessage = "Weapon upgrade received: " + aMessage.GetUprgade();
-	myMessageTime = 3.f;
+	myMessage = aMessage.GetPickupMessage();
+	myMessageTime = 4.f;
 	myShowMessage = true;
 
 	if (aMessage.GetUpgradeID() == 0)

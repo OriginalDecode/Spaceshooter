@@ -14,7 +14,7 @@ DLLParticle::DLLParticle(Prism::Scene& aScene)
 	: myIsLoaded(false)
 {
 	myEntity = new Entity(eEntityType::PROP, aScene, Prism::eOctreeType::DYNAMIC);
-	myEntity->myOrientation.SetPos({0.f, 0.f, -10000.f});
+	myEntity->myOrientation.SetPos({0.f, 0.f, 80.f});
 	myScene = &aScene;
 }
 
@@ -56,6 +56,7 @@ void DLLParticle::LoadParticle(std::string& aParticleFile)
 	delete myEntity;
 	DL_DEBUG("delete the old entity");
 	myEntity = new Entity(eEntityType::PROP, *myScene, Prism::eOctreeType::DYNAMIC);
+	myEntity->myOrientation = currentOrientation;
 	DL_DEBUG("Create a new entity");
 	myEntity->AddComponent<ParticleEmitterComponent>();
 	DL_DEBUG("Added a ParticleEmitterComponent");

@@ -22,7 +22,9 @@ ParticleEmitterComponent::ParticleEmitterComponent(Entity& aEntity)
 
 ParticleEmitterComponent::~ParticleEmitterComponent()
 {
+#ifndef DLL_EXPORT
 	PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
+#endif
 
 	delete myEmitter;
 	myEmitter = nullptr;

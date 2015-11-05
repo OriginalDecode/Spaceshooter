@@ -420,6 +420,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myPowerUpValue = 0.f;
 	aEntityToAddTo.myUpgradeName = "";
 	aEntityToAddTo.myPowerUpName = "";
+	aEntityToAddTo.myUpgradePickupMessage = "";
 	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 	
@@ -438,6 +439,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			aDocument.ForceReadAttribute(e, "entityName", aEntityToAddTo.myUpgradeName);
 			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
+			aDocument.ForceReadAttribute(e, "pickupMessage", aEntityToAddTo.myUpgradePickupMessage);
 			aEntityToAddTo.myPowerUpType = ePowerUpType::WEAPON_UPGRADE;
 		}
 		aEntityToAddTo.myPowerUpName = ConvertToPowerUpInGameName(aEntityToAddTo.myPowerUpType);
@@ -574,11 +576,13 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		
 		if (it->second.myPowerUpType == ePowerUpType::WEAPON_UPGRADE)
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myUpgradeName, it->second.myUpgradeID);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myUpgradeName
+				, it->second.myUpgradePickupMessage, it->second.myUpgradeID);
 		}
 		else
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myPowerUpValue, it->second.myDuration);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myPowerUpValue
+				, it->second.myDuration);
 		}
 	}
 

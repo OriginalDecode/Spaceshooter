@@ -18,6 +18,8 @@ public:
 	void SetActive(bool aActive);
 	bool GetActive() const;
 
+	float GetCurrentLifeTime() const;
+
 private:
 	eBulletType myType;
 	float myCurrentLifeTime;
@@ -40,4 +42,9 @@ inline void BulletComponent::SetMaxLifeTime(float aMaxTime)
 inline bool BulletComponent::GetActive() const
 {
 	return myActive;
+}
+
+inline float BulletComponent::GetCurrentLifeTime() const
+{
+	return myCurrentLifeTime;
 }

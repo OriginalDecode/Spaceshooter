@@ -32,20 +32,22 @@ void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, flo
 	myInGameName = anInGameName;
 }
 
-void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, std::string aUpgradeName, int anUpgradeID)
+void PowerUpComponent::Init(ePowerUpType someType, std::string anInGameName, std::string aUpgradeName
+	, std::string aPickupMessage, int anUpgradeID)
 {
 	myType = someType;
 	myUpgradeID = anUpgradeID;
 	myInGameName = anInGameName;
 	myUpgradeName = aUpgradeName;
-
+	myUpgradePickupMessage = aPickupMessage;
 }
 
 void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 {
 	if (myType == ePowerUpType::WEAPON_UPGRADE)
 	{
-		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName, myUpgradeID));
+		PostMaster::GetInstance()->SendMessage(PowerUpMessage(myType, myUpgradeName
+			, myUpgradePickupMessage, myUpgradeID));
 	}
 	else
 	{

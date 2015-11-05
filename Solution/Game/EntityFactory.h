@@ -61,6 +61,7 @@ struct EntityData
 	ePowerUpType myPowerUpType;
 	std::string myUpgradeName;
 	std::string myPowerUpName;
+	std::string myUpgradePickupMessage;
 	int myUpgradeID;
 
 	eEntityDataGraphicsType myGraphicsType;
