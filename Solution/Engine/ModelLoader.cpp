@@ -155,15 +155,9 @@ namespace Prism
 		return proxy;
 #else
 		ModelProxy* proxy = new ModelProxy();
-		
-		CU::TimerManager::GetInstance()->StartTimer("LoadModel");
 
 		Model* model = myModelFactory->LoadModel(aModelPath.c_str(),
 			Engine::GetInstance()->GetEffectContainer()->GetEffect(aEffectPath));
-
-		int elapsed = static_cast<int>(
-			CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
-		RESOURCE_LOG("Model \"%s\" took %d ms to load", aModelPath.c_str(), elapsed);
 
 		proxy->SetModel(model);
 

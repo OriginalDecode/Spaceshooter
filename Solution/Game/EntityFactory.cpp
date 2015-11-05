@@ -61,8 +61,26 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 		rootDocument.ForceReadAttribute(e, "src", entityPath);
 		if (entityPath != "")
 		{
-			LoadEntity(entityPath);
-			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);
+			/*LoadEntity(entityPath);
+			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);*/
+
+			XMLReader entityReader;
+			entityReader.OpenDocument(entityPath);
+			tinyxml2::XMLElement* entityElement;
+			tinyxml2::XMLElement* rootElement = entityReader.FindFirstChild("root");
+			if (rootElement == nullptr)
+			{
+				entityElement = entityReader.FindFirstChild("Entity");
+			}
+			else
+			{
+				entityElement = entityReader.FindFirstChild(rootElement, "Entity");
+			}
+
+			std::string entityName;
+			entityReader.ForceReadAttribute(entityElement, "name", entityName);
+			myEntityTags[entityName] = entityPath;
+			entityReader.CloseDocument();
 		}
 	}
 
@@ -402,6 +420,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myPowerUpValue = 0.f;
 	aEntityToAddTo.myUpgradeName = "";
 	aEntityToAddTo.myPowerUpName = "";
+	aEntityToAddTo.myUpgradePickupMessage = "";
 	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
 	
@@ -420,6 +439,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 		{
 			aDocument.ForceReadAttribute(e, "entityName", aEntityToAddTo.myUpgradeName);
 			aDocument.ForceReadAttribute(e, "weaponID", aEntityToAddTo.myUpgradeID);
+			aDocument.ForceReadAttribute(e, "pickupMessage", aEntityToAddTo.myUpgradePickupMessage);
 			aEntityToAddTo.myPowerUpType = ePowerUpType::WEAPON_UPGRADE;
 		}
 		aEntityToAddTo.myPowerUpName = ConvertToPowerUpInGameName(aEntityToAddTo.myPowerUpType);
@@ -448,8 +468,13 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 {
 	if (myEntities.find(aEntityTag) == myEntities.end())
 	{
-		std::string error = "[EntityFactory] No entity with name " + aEntityTag;
-		DL_ASSERT(error);
+		if (myEntityTags.find(aEntityTag) == myEntityTags.end())
+		{
+			std::string error = "[EntityFactory] No entity with name " + aEntityTag;
+			DL_ASSERT(error);
+		}
+		
+		LoadEntity(myEntityTags[aEntityTag]);
 	}
 	auto it = myEntities.find(aEntityTag);
 	Entity* sourceEntity = it->second.myEntity;
@@ -551,11 +576,13 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		
 		if (it->second.myPowerUpType == ePowerUpType::WEAPON_UPGRADE)
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myUpgradeName, it->second.myUpgradeID);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myUpgradeName
+				, it->second.myUpgradePickupMessage, it->second.myUpgradeID);
 		}
 		else
 		{
-			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myPowerUpValue, it->second.myDuration);
+			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myPowerUpValue
+				, it->second.myDuration);
 		}
 	}
 
