@@ -23,6 +23,11 @@ namespace Prism
 		myVertexWrapper = nullptr;
 	}
 
+	void ParticleEmitterInstance::ReleaseData() 
+	{
+		myParticleEmitterData = nullptr;
+	}
+
 	void ParticleEmitterInstance::Initiate(ParticleEmitterData* someData)
 	{
 		myParticleEmitterData = someData;
