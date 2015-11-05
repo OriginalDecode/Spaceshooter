@@ -62,6 +62,7 @@ struct EntityData
 	std::string myUpgradeName;
 	std::string myPowerUpName;
 	std::string myUpgradePickupMessage;
+	float myUpgradePickupMessageTime;
 	int myUpgradeID;
 
 	eEntityDataGraphicsType myGraphicsType;
