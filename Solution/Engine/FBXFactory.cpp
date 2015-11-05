@@ -231,7 +231,16 @@ Prism::Model* Prism::FBXFactory::LoadModel(const char* aFilePath, Effect* aEffec
 
 	int elapsed = static_cast<int>(
 		CU::TimerManager::GetInstance()->StopTimer("LoadModel").GetMilliseconds());
-	RESOURCE_LOG("Model \"%s\" took %d ms to load", aFilePath, elapsed);
+
+	if (elapsed > 700)
+	{
+		RESOURCE_LOG("Model \"%s\" took %d ms to load!!!", aFilePath, elapsed);
+	}
+	else
+	{
+		RESOURCE_LOG("Model \"%s\" took %d ms to load", aFilePath, elapsed);
+	}
+	
 	return returnModel;
 }
 
