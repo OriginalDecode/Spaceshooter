@@ -7,7 +7,7 @@ class BulletMessage : public Message
 public:
 	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType
 		, const CU::Vector3<float>& aEnitityVelocity, const CU::Vector3<float>& aDirection
-		, Entity* aHomingTarget = nullptr, float aHomingTurnRateModifier = 0);
+		, Entity* aHomingTarget = nullptr, float aHomingTurnRateModifier = 1337.f); // used for timed homing powerup
 
 	eBulletType GetBulletType() const;
 	eEntityType GetEntityType() const;
