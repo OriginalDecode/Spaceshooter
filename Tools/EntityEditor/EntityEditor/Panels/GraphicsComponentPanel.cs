@@ -68,6 +68,7 @@ namespace EntityEditor.Panels
         {
             myGraphicsComponentData = aGraphicsComponentData;
             LoadSettings();
+            myHasLoadedComponent = true;
         }
 
         protected override void IntitalizeControls()

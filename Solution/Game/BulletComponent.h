@@ -19,7 +19,7 @@ public:
 	bool GetActive() const;
 
 	float GetCurrentLifeTime() const;
-
+	eBulletType GetBulletType();
 private:
 	eBulletType myType;
 	float myCurrentLifeTime;
@@ -47,4 +47,9 @@ inline bool BulletComponent::GetActive() const
 inline float BulletComponent::GetCurrentLifeTime() const
 {
 	return myCurrentLifeTime;
+}
+
+inline eBulletType BulletComponent::GetBulletType()
+{
+	return myType;
 }

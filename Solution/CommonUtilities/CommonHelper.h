@@ -4,6 +4,10 @@
 #include "Matrix.h"
 #include <string>
 #include "Vector.h"
+#ifdef RELEASE_BUILD
+#include <ShlObj.h>
+#include <sstream>
+#endif
 
 namespace CU
 {
@@ -61,8 +65,22 @@ namespace CU
 
 		return aStringToReadFrom;
 	}
-
-
+	inline std::string GetMyDocumentFolderPath()
+	{
+#ifdef RELEASE_BUILD
+		char documents[MAX_PATH];
+		HRESULT hr = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, documents);
+		if (hr != S_OK) 
+		{
+			DL_ASSERT("Can't get document folder!");
+		}
+		std::stringstream ss;
+		ss << documents;
+		return ss.str();
+#else
+		return "";
+#endif
+	}
 	inline std::string Concatenate(const char* aFormattedString, ...)
 	{
 		char buffer[1024];

@@ -31,6 +31,7 @@ namespace EntityEditor
         private Panels.HealthComponentPanel myHealthComponentPanel = null;
         private Panels.ShootingComponentPanel myShootingComponentPanel = null;
         private Panels.SoundComponentPanel mySoundComponentPanel = null;
+        private Panels.StreakEmitterComponentPanel myStreakComponentPanel = null;
         private Panels.ParticleEmitterComponentPanel myParticleEmitterComponentPanel = null;
         private Panels.PhysicsComponentPanel myPhysicsComponentPanel = null;
         private Panels.PowerUpComponentPanel myPowerUpComponentPanel = null;
@@ -65,6 +66,7 @@ namespace EntityEditor
             myHealthComponentPanel = new Panels.HealthComponentPanel(panelLocation, panelSize, this);
             myShootingComponentPanel = new Panels.ShootingComponentPanel(panelLocation, panelSize, this);
             mySoundComponentPanel = new Panels.SoundComponentPanel(panelLocation, panelSize, this);
+            myStreakComponentPanel = new Panels.StreakEmitterComponentPanel(panelLocation, panelSize, this);
             myParticleEmitterComponentPanel = new Panels.ParticleEmitterComponentPanel(panelLocation, panelSize, this);
             myPhysicsComponentPanel = new Panels.PhysicsComponentPanel(panelLocation, panelSize, this);
             myPowerUpComponentPanel = new Panels.PowerUpComponentPanel(panelLocation, panelSize, this);
@@ -78,6 +80,7 @@ namespace EntityEditor
             PropertyPanel.Controls.Add(myHealthComponentPanel);
             PropertyPanel.Controls.Add(myShootingComponentPanel);
             PropertyPanel.Controls.Add(mySoundComponentPanel);
+            PropertyPanel.Controls.Add(myStreakComponentPanel);
             PropertyPanel.Controls.Add(myParticleEmitterComponentPanel);
             PropertyPanel.Controls.Add(myPhysicsComponentPanel);
             PropertyPanel.Controls.Add(myPowerUpComponentPanel);
@@ -131,6 +134,10 @@ namespace EntityEditor
             if (myCurrentEntity.mySoundComponent.myIsActive)
             {
                 EntityContentList.Items.Add("SoundComponent");
+            }
+            if (myCurrentEntity.myStreakEmitterComponent.myIsActive)
+            {
+                EntityContentList.Items.Add("StreakEmitterComponent");
             }
         }
 
@@ -190,6 +197,10 @@ namespace EntityEditor
         public void SetParticleEmitterComponent(Entity.ParticleEmitterComponentData aParticleEmitterComponent)
         {
             myCurrentEntity.myParticleEmitterComponent = aParticleEmitterComponent;
+        }
+        public void SetStreakEmitterComponent(Entity.StreakEmitterComponentData aStreakEmitterComponent)
+        {
+            myCurrentEntity.myStreakEmitterComponent = aStreakEmitterComponent;
         }
         //Set Components To EntityData End
 
@@ -290,6 +301,12 @@ namespace EntityEditor
                 myCurrentEntity.myParticleEmitterComponent.myEmitterXML = "";
                 return;
             }
+            if (aComponentName.StartsWith("StreakEmitter") == true)
+            {
+                myCurrentEntity.myStreakEmitterComponent.myIsActive = false;
+                myCurrentEntity.myStreakEmitterComponent.myEmitterXML = "";
+                return;
+            }
             if (aComponentName.StartsWith("Sound") == true)
             {
                 myCurrentEntity.mySoundComponent.myIsActive = false;
@@ -307,6 +324,7 @@ namespace EntityEditor
             myHealthComponentPanel.Hide();
             myShootingComponentPanel.Hide();
             mySoundComponentPanel.Hide();
+            myStreakComponentPanel.Hide();
             myParticleEmitterComponentPanel.Hide();
             myPhysicsComponentPanel.Hide();
             myPowerUpComponentPanel.Hide();
@@ -368,6 +386,12 @@ namespace EntityEditor
             {
                 myParticleEmitterComponentPanel.Show();
                 myParticleEmitterComponentPanel.Load(myCurrentEntity.myParticleEmitterComponent);
+                return;
+            }
+            if (aComponentName.StartsWith("StreakEmitter") == true)
+            {
+                myStreakComponentPanel.Show();
+                myStreakComponentPanel.Load(myCurrentEntity.myStreakEmitterComponent);
                 return;
             }
             if (aComponentName.StartsWith("Sound") == true)
@@ -490,6 +514,8 @@ namespace EntityEditor
                 EditSelectedComponent((string)EntityContentList.Items[EntityContentList.SelectedIndex]);
             }
         }
+
+        
 
         
 

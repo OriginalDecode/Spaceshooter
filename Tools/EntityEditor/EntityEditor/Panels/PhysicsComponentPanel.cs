@@ -34,6 +34,7 @@ namespace EntityEditor.Panels
         {
             myPhysicsComponent = aPhysicsComponent;
             LoadSettings();
+            myHasLoadedComponent = true;
         }
 
         protected override void LoadSettings()

@@ -1,15 +1,18 @@
 #include "stdafx.h"
 
+#include "BulletComponent.h"
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
 #include "CollisionNote.h"
 #include "Entity.h"
+#include "Enums.h"
 #include <Intersection.h>
 
 #include "AIComponent.h"
 #include "HealthComponent.h"
 #include "PostMaster.h"
 #include "PowerUpMessage.h"
+#include "SpawnExplosionMessage.h"
 
 CollisionManager::CollisionManager()
 	: myPlayers(1)

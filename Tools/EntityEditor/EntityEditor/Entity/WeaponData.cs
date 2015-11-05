@@ -26,7 +26,7 @@ namespace EntityEditor.Entity
     {
         public float myCooldown;
         public Vector3<float> myPosition;
-        public int mySpread;
+        public float mySpread;
         public int myNumberOfBulletsPerShot;
         public string myBulletType;
         public string myType;

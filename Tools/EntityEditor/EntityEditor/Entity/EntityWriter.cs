@@ -124,6 +124,10 @@ namespace EntityEditor.Entity
             {
                 WriteSoundComponent(aWriter);
             }
+            if (myEntityData.myStreakEmitterComponent.myIsActive == true)
+            {
+                WriteStreakEmitterComponent(aWriter);
+            }
 
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
@@ -261,7 +265,7 @@ namespace EntityEditor.Entity
         private void WriteParticleEmitterComponent(XmlWriter aWriter)
         {
             aWriter.WriteStartElement("ParticleEmitterComponent");
-            aWriter.WriteStartElement("path");
+            aWriter.WriteStartElement("Path");
             aWriter.WriteAttributeString("src", myEntityData.myParticleEmitterComponent.myEmitterXML);
             aWriter.WriteEndElement();
             aWriter.WriteEndElement();
@@ -270,6 +274,15 @@ namespace EntityEditor.Entity
         private void WriteSoundComponent(XmlWriter aWriter)
         {
             aWriter.WriteStartElement("SoundComponent");
+            aWriter.WriteEndElement();
+        }
+
+        private void WriteStreakEmitterComponent(XmlWriter aWriter)
+        {
+            aWriter.WriteStartElement("StreakEmitterComponent");
+            aWriter.WriteStartElement("Path");
+            aWriter.WriteAttributeString("src", myEntityData.myStreakEmitterComponent.myEmitterXML);
+            aWriter.WriteEndElement();
             aWriter.WriteEndElement();
         }
 

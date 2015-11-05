@@ -166,7 +166,7 @@ GUIComponent::~GUIComponent()
 	delete myHitMarker;
 	delete myDamageIndicator;
 	delete myHomingTarget;
-	delete myCurrentHitmarker;
+	//delete myCurrentHitmarker; // dont delete, please!
 	delete myDefendHitMarker;
 	myCurrentHitmarker = nullptr;
 	myDefendHitMarker = nullptr;
@@ -615,7 +615,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 {
 	myMessage = aMessage.GetPickupMessage();
-	myMessageTime = 4.f;
+	myMessageTime = aMessage.GetPickupMessageTime();
 	myShowMessage = true;
 
 	if (aMessage.GetUpgradeID() == 0)
