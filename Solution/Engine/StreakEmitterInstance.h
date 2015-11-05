@@ -32,7 +32,7 @@ namespace Prism
 		void CreateIndexBuffer();
 		void CreateVertexBuffer();
 		void EmitterUpdate(float aDeltaTime);
-		void EmitStreak(float aDeltaTime);
+		void EmitStreak();
 		void StreakUpdate(float aDeltaTime);
 		void UpdateVertexBuffer();
 

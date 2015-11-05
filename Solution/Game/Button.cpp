@@ -129,9 +129,9 @@ eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMo
 
 void Button::OnResize()
 {
-	float windowSizeX = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
-	float windowSizeY = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().y);
-	float resolutionOffset = windowSizeY / windowSizeX;
+	//float windowSizeX = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().x);
+	//float windowSizeY = static_cast<float>(Prism::Engine::GetInstance()->GetWindowSize().y);
+	//float resolutionOffset = windowSizeY / windowSizeX;
 	myPosition = myOriginalPosition; // *resolutionOffset;
 
 	// ger lite weird resultat

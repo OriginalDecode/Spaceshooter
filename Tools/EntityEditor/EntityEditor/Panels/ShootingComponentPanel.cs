@@ -208,6 +208,7 @@ namespace EntityEditor.Panels
                 }
                 LoadSettings();
             }
+            myHasLoadedComponent = true;
         }
 
         protected override void IntitalizeControls()

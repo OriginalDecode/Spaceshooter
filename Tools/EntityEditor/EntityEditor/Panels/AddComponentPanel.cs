@@ -21,7 +21,8 @@ namespace EntityEditor.Panels
         BulletComponent,
         PowerUpComponent,
         ParticleEmitterComponent,
-        SoundComponent
+        SoundComponent,
+        StreakEmitterComponent
     };
 
     public class AddComponentPanel : BasePanel
@@ -100,6 +101,10 @@ namespace EntityEditor.Panels
             {
                 myComponents.AddItem(eComponentType.SoundComponent);
             }
+            if (myEntity.myStreakEmitterComponent.myIsActive == false)
+            {
+                myComponents.AddItem(eComponentType.StreakEmitterComponent);
+            }
         }
 
         protected override void SaveSettings()
@@ -145,6 +150,10 @@ namespace EntityEditor.Panels
             {
                 eForm.SetSoundComponent(myEntity.mySoundComponent);
             }
+            if (myEntity.myStreakEmitterComponent.myIsActive == true)
+            {
+                eForm.SetStreakEmitterComponent(myEntity.myStreakEmitterComponent);
+            }
             eForm.DisplayEntityData();
         }
 
@@ -183,6 +192,9 @@ namespace EntityEditor.Panels
                     break;
                 case eComponentType.SoundComponent:
                     myEntity.mySoundComponent.myIsActive = true;
+                    break;
+                case eComponentType.StreakEmitterComponent:
+                    myEntity.myStreakEmitterComponent.myIsActive = true;
                     break;
                 default:
                     DL_Debug.GetInstance.DL_ErrorMessage("The component " 

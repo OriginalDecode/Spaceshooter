@@ -68,6 +68,7 @@ namespace EntityEditor.Panels
         {
             myPowerUpComponent = aPowerUpComponent;
             LoadSettings();
+            myHasLoadedComponent = true;
         }
 
         protected override void LoadSettings()

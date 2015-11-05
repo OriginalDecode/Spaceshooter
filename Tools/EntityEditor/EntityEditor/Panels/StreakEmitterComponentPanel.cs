@@ -11,12 +11,12 @@ using CSharpUtilities.Components;
 
 namespace EntityEditor.Panels
 {
-    public class ParticleEmitterComponentPanel : BasePanel
+    public class StreakEmitterComponentPanel : BasePanel
     {
-        private Entity.ParticleEmitterComponentData myParticleEmitterComponent;
+        private Entity.StreakEmitterComponentData myStreakEmitterComponent;
         private PathBrowseComponent myEmitterXml;
         private OpenFileDialog myBrowseEmitterXML = new OpenFileDialog();
-        public ParticleEmitterComponentPanel(Point aLocation, Size aSize, Form aParent)
+        public StreakEmitterComponentPanel(Point aLocation, Size aSize, Form aParent)
             : base(aLocation, aSize, aParent)
         {
 
@@ -33,23 +33,23 @@ namespace EntityEditor.Panels
             myEmitterXml.Show();
         }
 
-        public void Load(Entity.ParticleEmitterComponentData aComponent)
+        public void Load(Entity.StreakEmitterComponentData aComponent)
         {
-            myParticleEmitterComponent = aComponent;
+            myStreakEmitterComponent = aComponent;
             myHasLoadedComponent = true;
         }
 
         protected override void LoadSettings()
         {
-            myEmitterXml.GetTextBox().Text = myParticleEmitterComponent.myEmitterXML;
+            myEmitterXml.GetTextBox().Text = myStreakEmitterComponent.myEmitterXML;
         }
 
         protected override void SaveSettings()
         {
-            myParticleEmitterComponent.myEmitterXML = myEmitterXml.GetTextBox().Text;
+            myStreakEmitterComponent.myEmitterXML = myEmitterXml.GetTextBox().Text;
 
             EntityEditorForm eForm = (EntityEditorForm)myOwnerForm;
-            eForm.SetParticleEmitterComponent(myParticleEmitterComponent);
+            eForm.SetStreakEmitterComponent(myStreakEmitterComponent);
         }
 
         private void BroweseEmitterButton_Click(object sender, EventArgs e)

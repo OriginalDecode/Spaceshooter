@@ -95,6 +95,9 @@
     <Compile Include="Panels\SoundComponentPanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Panels\StreakEmitterComponentPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Form1.resx">

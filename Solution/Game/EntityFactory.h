@@ -32,7 +32,8 @@ struct EntityData
 	std::string myModelFile;
 	std::string myTargetName;
 	std::string myWeaponType;
-	std::string myEmitterXMLPath;
+	std::string myParticleEmitterXMLPath;
+	std::string myStreakEmitterXMLPath;
 
 	CU::Vector3f myScale;
 	CU::Vector3f myAIAvoidancePoint;
@@ -91,6 +92,7 @@ private:
 	void LoadPhysicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPhysicsComponentElement);
 	void LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aPowerUpComponent);
 	void LoadParticleEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aParticleEmitterComponent);
+	void LoadStreakEmitterComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aStreakEmitterComponent);
 	void LoadSoundComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aSoundComponent);
 
 	ePowerUpType ConvertToPowerUpType(std::string aName);
