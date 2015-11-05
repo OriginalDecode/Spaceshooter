@@ -10,6 +10,13 @@ ConversationManager::ConversationManager(const std::string& aXmlPath)
 	reader.OpenDocument(aXmlPath);
 	tinyxml2::XMLElement* element = reader.ForceFindFirstChild("root");
 
+	element = reader.FindFirstChild(element, "conversationTime");
+	float conversationTime = 3.f;
+	if (element != nullptr)
+	{
+		reader.ReadAttribute(element, "value", conversationTime);
+	}
+
 	for (element = reader.FindFirstChild(element, "conversation"); element != nullptr;
 		element = reader.FindNextElement(element, "conversation"))
 	{
@@ -17,7 +24,7 @@ ConversationManager::ConversationManager(const std::string& aXmlPath)
 		reader.ForceReadAttribute(element, "name", name);
 		name = CU::ToLower(name);
 
-		myConversations[name] = new Conversation(name, reader, element);
+		myConversations[name] = new Conversation(name, reader, element, conversationTime);
 	}
 	reader.CloseDocument();
 
