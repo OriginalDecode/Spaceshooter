@@ -18,14 +18,13 @@ Menu::Menu(const std::string& aXMLPath)
 	std::string background;
 	std::string crosshair;
 	CU::Vector2<float> crosshairSize;
-	CU::Vector2<float> backgroundSize;
 
 	tinyxml2::XMLElement* menuElement = reader.FindFirstChild("menu");
 
 	reader.ReadAttribute(menuElement, "mainMenu", myMainMenu);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "path", background);
-	reader.ReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "sizeX", backgroundSize.x);
-	reader.ReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "sizeY", backgroundSize.y);
+	reader.ReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "sizeX", myBackgroundSize.x);
+	reader.ReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "sizeY", myBackgroundSize.y);
 	reader.ReadAttribute(reader.ForceFindFirstChild(menuElement, "background"), "renderCenter", myRenderCenter);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "path", crosshair);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "sizeX", crosshairSize.x);
@@ -34,9 +33,9 @@ Menu::Menu(const std::string& aXMLPath)
 	myCrosshair = new Prism::Sprite(crosshair, crosshairSize, crosshairSize/2.f);
 	myScreenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
-	if (backgroundSize.x != 0 && backgroundSize.y != 0)
+	if (myBackgroundSize.x != 0 && myBackgroundSize.y != 0)
 	{
-		myBackground = new Prism::Sprite(background, backgroundSize, backgroundSize / 2.f);
+		myBackground = new Prism::Sprite(background, myBackgroundSize, myBackgroundSize / 2.f);
 	}
 	else
 	{
@@ -103,9 +102,19 @@ eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper)
 
 void Menu::OnResize(int aWidth, int aHeight)
 {
+	myScreenSize = { float(aWidth),	float(aHeight) };
+
 	if (myBackground != nullptr)
 	{
-		myBackground->SetSize( { float(aWidth), float(aHeight) });
+		if (myBackgroundSize.x != 0 && myBackgroundSize.y != 0)
+		{
+			myBackground->SetSize(myBackgroundSize, myBackgroundSize / 2.f);
+		}
+		else
+		{
+			myBackground->SetSize(myScreenSize, myScreenSize / 2.f);
+		}
+		
 	}
 
 	for (int i = 0; i < myButtons.Size(); i++)

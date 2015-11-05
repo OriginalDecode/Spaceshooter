@@ -21,6 +21,10 @@ namespace Prism
 
 		void FinalRender();
 
+		void OnResize(float aWidth, float aHeight);
+
+		Texture* GetFinalTexture();
+
 	private:
 		struct SceneData
 		{
@@ -38,5 +42,10 @@ namespace Prism
 		Texture* myFinalTexture;
 		Texture* myCombineMiddleMan;
 	};
+
+	inline Texture* Renderer::GetFinalTexture()
+	{
+		return myFinalTexture;
+	}
 }
 

@@ -25,6 +25,8 @@ namespace Prism
 		void RenderToScreen(Texture* aSource);
 		void RenderToScreen(Texture* aSource, Texture* aDepth);
 
+		void OnResize(float aWidth, float aHeight);
+
 	private:
 		struct CombineData
 		{

@@ -2,6 +2,7 @@
 
 #include "AIComponent.h"
 #include "BulletAIComponent.h"
+#include "BulletComponent.h"
 #include "Constants.h"
 #include "DefendMessage.h"
 #include <Engine.h>
@@ -40,6 +41,8 @@ void BulletAIComponent::Init(float aSpeed, float aTurnRateModifier)
 		physicsComponent->SetVelocity(myEntity.myOrientation.GetForward() * aSpeed);
 	}
 
+	myBulletComponent = myEntity.GetComponent<BulletComponent>();
+
 	myCanMove = true;
 
 	myTurnRateModifier = aTurnRateModifier;
@@ -77,7 +80,7 @@ void BulletAIComponent::FollowEntity(float aDeltaTime)
 
 	CU::Normalize(myToTarget);
 
-	myVelocity += myToTarget * myTurnRateModifier;
+	myVelocity += myToTarget * (myBulletComponent->GetCurrentLifeTime() * myTurnRateModifier);
 
 	CU::Normalize(myVelocity);
 

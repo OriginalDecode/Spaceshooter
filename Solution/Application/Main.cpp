@@ -161,17 +161,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		else if (LOWORD(wParam) == SIZE_MAXIMIZED)
 		{
-			if (globalGame != nullptr)
-			{
-				globalGame->UnPause();
-				OnResize();
-			}
+			OnResize();
 		}
 		else if (LOWORD(wParam) == SIZE_RESTORED)
 		{
-			if (globalGame != nullptr && globalIsResizing == false)
+			if (globalIsResizing == false)
 			{
-				globalGame->UnPause();
 				OnResize();
 			}
 		}
@@ -187,7 +182,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_EXITSIZEMOVE:
 		if (globalGame != nullptr)
 		{
-			globalGame->UnPause();
 			globalIsResizing = false;
 			OnResize();
 			
@@ -201,7 +195,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void OnResize()
 {
-	globalGame->OnResize(globalClientWidth, globalClientHeight);
+	Prism::Engine::GetInstance()->OnResize(globalClientWidth, globalClientHeight);
+
+	if (globalGame != nullptr)
+	{
+		globalGame->UnPause();
+		globalGame->OnResize(globalClientWidth, globalClientHeight);
+	}
 }
 
 void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
