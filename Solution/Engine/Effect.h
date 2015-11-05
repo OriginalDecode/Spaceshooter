@@ -58,11 +58,13 @@ namespace Prism
 		bool ReloadShader(const std::string& aFile);
 
 		void SetExtraTexture(Texture* aTexture);
+		void SetCameraPosition(const CU::Vector3<float>& aCameraPos);
 
 	private:
 		ID3DX11Effect* myEffect;
 		ID3DX11EffectTechnique* myTechnique;
 
+		ID3DX11EffectVectorVariable* myCameraPosition;
 		ID3DX11EffectMatrixVariable* myProjectionMatrix;
 		ID3DX11EffectMatrixVariable* myViewMatrix;
 		ID3DX11EffectMatrixVariable* myWorldMatrix;

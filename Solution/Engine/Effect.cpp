@@ -337,11 +337,25 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		myStreakAlphaDelta = nullptr;
 	}
 
+	myCameraPosition = myEffect->GetVariableByName("cameraPosition")->AsVector();
+	if (myCameraPosition->IsValid() == false)
+	{
+		myCameraPosition = nullptr;
+	}
+
 	return true;
 }
 
 void Prism::Effect::SetExtraTexture(Texture* aTexture)
 {
 	myExtraTexture->SetResource(aTexture->GetShaderView());
+}
+
+void Prism::Effect::SetCameraPosition(const CU::Vector3<float>& aCameraPos)
+{
+	if (myCameraPosition != nullptr)
+	{
+		myCameraPosition->SetFloatVector(static_cast<const float*>(&aCameraPos.x));
+	}
 }
 
