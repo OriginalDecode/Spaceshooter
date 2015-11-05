@@ -12,6 +12,7 @@
 #include <DebugFont.h>
 #include "GameStateMessage.h"
 #include "InGameState.h"
+#include "InGameMenuState.h"
 #include <InputWrapper.h>
 #include "Level.h"
 #include "LevelFactory.h"
@@ -62,13 +63,8 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
 	{
-		Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
-		while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
-		{
-			//wait for ModelLoader to exit its loading-loop
-		}
+		myStateStack->PushSubGameState(new InGameMenuState("Data/Menu/MN_ingame_menu.xml", myInputWrapper));
 
-		return eStateStatus::ePopMainState;
 	}
 
 	if (myLevel->LogicUpdate(aDeltaTime) == true)
