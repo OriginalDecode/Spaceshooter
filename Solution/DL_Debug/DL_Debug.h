@@ -23,7 +23,7 @@
 #define POWERUP_LOG(...)
 #define COMPONENT_LOG(...)
 #else
-#define DL_ASSERT(string)
+#define DL_ASSERT(string) DL_Debug::Debug::GetInstance()->AssertMessage(__FILE__,__LINE__,__FUNCTION__, string)
 #define DL_ASSERT_EXP(expression, string)
 
 #define DL_PRINT(string) DL_Debug::Debug::GetInstance()->PrintMessage(string)
