@@ -33,17 +33,14 @@ EmitterManager::EmitterManager()
 		{
 			Prism::ParticleEmitterInstance* newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index]));
-			newEmitter->ToggleActive();
 			myExplosions[i]->myFireExplosion.Insert(j, newEmitter);
 
 			newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 1]));
-			newEmitter->ToggleActive();
 			myExplosions[i]->mySmokeExplosion.Insert(j, newEmitter);
 
 			newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 2]));
-			newEmitter->ToggleActive();
 			myExplosions[i]->mySparkExplosion.Insert(j, newEmitter);
 		}
 		index += 3;
@@ -229,16 +226,23 @@ void EmitterManager::ReadList(std::string aPath)
 void EmitterManager::EnemyExplosion(const SpawnExplosionMessage& aMessage)
 {
 	int index = static_cast<int>(eExplosionID::ENEMY_EXPLOSION);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
 	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -246,16 +250,25 @@ void EmitterManager::EnemyExplosion(const SpawnExplosionMessage& aMessage)
 void EmitterManager::PropExplosion(const SpawnExplosionMessage& aMessage)
 {
 	int index = static_cast<int>(eExplosionID::PROP_EXPLOSION);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+	
 
 	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -263,16 +276,23 @@ void EmitterManager::PropExplosion(const SpawnExplosionMessage& aMessage)
 void EmitterManager::AstroidExplosion(const SpawnExplosionMessage& aMessage)
 {
 	int index = static_cast<int>(eExplosionID::ASTROID_EXPLOSION);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
 	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -280,16 +300,23 @@ void EmitterManager::AstroidExplosion(const SpawnExplosionMessage& aMessage)
 void EmitterManager::RocketExplosion(const SpawnExplosionMessage& aMessage)
 {
 	int index = static_cast<int>(eExplosionID::ROCKET_EXPLOSION);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
 	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -297,16 +324,24 @@ void EmitterManager::RocketExplosion(const SpawnExplosionMessage& aMessage)
 void EmitterManager::OnHitEffect(const SpawnExplosionMessage& aMessage)
 {
 	int index = static_cast<int>(eExplosionID::ONHIT_EFFECT);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
 	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
+
 
 	myExplosions[index]->myEmitterIndex++;
 }

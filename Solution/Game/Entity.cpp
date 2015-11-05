@@ -69,6 +69,11 @@ void Entity::Kill()
 				, myOrientation.GetPos()));
 	}
 
+	if (myType == eEntityType::PROP)
+	{
+		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH
+			, myOrientation.GetPos()));
+	}
 	myAlive = false;
 }
 

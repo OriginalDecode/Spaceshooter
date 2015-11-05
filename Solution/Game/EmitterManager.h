@@ -21,6 +21,14 @@ struct ExplosionData
 		, myEmitterIndex(0)
 	{
 	}
+
+	~ExplosionData()
+	{
+		myFireExplosion.DeleteAll();
+		mySmokeExplosion.DeleteAll();
+		mySparkExplosion.DeleteAll();
+	}
+
 #endif
 
 	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myFireExplosion;
