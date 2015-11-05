@@ -194,7 +194,8 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 						PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[2].myBulletType
 							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
 							, dir
-							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr));
+							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr
+							, myWeapons[2].myHomingTurnRateModifier));
 						myWeapons[2].myCurrentTime = 0.f;
 					}
 				}
@@ -291,6 +292,7 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 {
 	WeaponData newWeapon;
 
+	newWeapon.myHomingTurnRateModifier = aWeapon.myHomingTurnRateModifier;
 	newWeapon.myBulletsPerShot = aWeapon.myBulletsPerShot;
 	newWeapon.myCoolDownTime = aWeapon.myCoolDownTime;
 	newWeapon.myCurrentTime = aWeapon.myCoolDownTime;
@@ -327,7 +329,7 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 		AddWeapon(aWeapon);
 		return;
 	}
-
+	myWeapons[aWeaponID].myHomingTurnRateModifier = aWeapon.myHomingTurnRateModifier;
 	myWeapons[aWeaponID].myBulletsPerShot = aWeapon.myBulletsPerShot;
 	myWeapons[aWeaponID].myCoolDownTime = aWeapon.myCoolDownTime;
 	myWeapons[aWeaponID].myCurrentTime = aWeapon.myCoolDownTime;

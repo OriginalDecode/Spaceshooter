@@ -7,7 +7,7 @@ class BulletMessage : public Message
 public:
 	BulletMessage(eBulletType aType, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType
 		, const CU::Vector3<float>& aEnitityVelocity, const CU::Vector3<float>& aDirection
-		, Entity* aHomingTarget = nullptr);
+		, Entity* aHomingTarget = nullptr, float aHomingTurnRateModifier = 0);
 
 	eBulletType GetBulletType() const;
 	eEntityType GetEntityType() const;
@@ -15,7 +15,7 @@ public:
 	const CU::Vector3<float>& GetEntityVelocity() const;
 	const CU::Vector3<float>& GetDirection() const;
 	Entity* GetHomingTarget() const;
-
+	float GetHomingTurnRateModifier() const;
 private:
 	void operator=(BulletMessage&) = delete;
 	CU::Matrix44<float> myOrientation;
@@ -24,6 +24,7 @@ private:
 	const CU::Vector3<float> myEntityVelocity;
 	const CU::Vector3<float> myDirection;
 	Entity* myHomingTarget;
+	float myHomingTurnRateModifier;
 };
 
 inline eBulletType BulletMessage::GetBulletType() const
@@ -54,4 +55,9 @@ inline const CU::Vector3<float>& BulletMessage::GetDirection() const
 inline Entity* BulletMessage::GetHomingTarget() const
 {
 	return myHomingTarget;
+}
+
+inline float BulletMessage::GetHomingTurnRateModifier() const
+{
+	return myHomingTurnRateModifier;
 }

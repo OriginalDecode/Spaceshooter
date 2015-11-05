@@ -63,8 +63,9 @@ private:
 	void LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory* aEntityFactory, 
 		const std::string& aProjectilePath);
 
-	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType, 
-		const CU::Vector3<float>& aEnitityVelocity, const CU::Vector3<float>& aDirection, Entity* aHomingTarget);
+	void ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<float>& anOrientation, eEntityType aEntityType
+		, const CU::Vector3<float>& aEnitityVelocity, const CU::Vector3<float>& aDirection, Entity* aHomingTarget
+		, float aHomingTurnRateModifier);
 	
 	void UpdateBullet(BulletData* aWeaponData, const float& aDeltaTime);
 
