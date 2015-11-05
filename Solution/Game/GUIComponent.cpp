@@ -166,7 +166,7 @@ GUIComponent::~GUIComponent()
 	delete myHitMarker;
 	delete myDamageIndicator;
 	delete myHomingTarget;
-	delete myCurrentHitmarker;
+	//delete myCurrentHitmarker; // dont delete, please!
 	delete myDefendHitMarker;
 	myCurrentHitmarker = nullptr;
 	myDefendHitMarker = nullptr;
