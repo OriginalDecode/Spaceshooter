@@ -5,6 +5,7 @@
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
+#include "GUIComponent.h"
 #include "GUINote.h"
 #include <Instance.h>
 #include "InputNote.h"
@@ -34,7 +35,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myFireRatePowerUpDuration(0.f)
 	, myEMPPowerUpDuration(0.f)
 	, myHomingPowerUpDuration(0.f)
-	, myEMPTime(1.5f)
+	, myEMPTime(2.f)
 {
 
 }
@@ -315,8 +316,14 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	{
 		myCurrentWeaponID = newWeapon.myID;
 	}
+
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
+
+	if (myWeapons.Size() >= 3)
+	{
+		myEntity.GetComponent<GUIComponent>()->SetRocketValues(myWeapons[2].myCurrentTime, myWeapons[2].myCoolDownTime);
+	}
 	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 

@@ -20,6 +20,7 @@ public:
 	bool UpdateCurrentState(const float& aDeltaTime);
 	void RenderCurrentState();
 	void OnResizeCurrentState(int aWidth, int aHeight);
+	void OnResize(int aWidth, int aHeight);
 	void Clear();
 
 	void SetInputWrapper(CU::InputWrapper* anInputWrapper);

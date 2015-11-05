@@ -6,6 +6,7 @@
 #include "DLLApp.h"
 #include "DLLCamera.h"
 #include "DLLModel.h"
+#include "DLLParticle.h"
 #include <EffectContainer.h>
 #include <Engine.h>
 #include <EngineEnums.h>
@@ -44,6 +45,7 @@ DLLApp::DLLApp(int* aHwnd, Prism::SetupInfo& aWindowSetup, WNDPROC aWindowProc)
 	SetupCubeMap();
 	myCamera = new DLLCamera(myInput, aWindowSetup, *myScene, 1.0f, 1.0f, 1.0f);
 	myModel = new DLLModel(myInput, *myScene);
+	myParticle = new DLLParticle(*myScene);
 }
 
 DLLApp::~DLLApp()
@@ -62,6 +64,7 @@ void DLLApp::Render()
 {
 	Prism::Engine::GetInstance()->Render();
 	myScene->Render();
+	myParticle->Render();
 }
 
 void DLLApp::Update()
@@ -77,6 +80,13 @@ void DLLApp::LoadModel(const char* aModelFile, const char* aShaderFile)
 	myModel->LoadModel(aModelFile, aShaderFile);
 	myModelFile = aModelFile;
 	myShaderFile = aShaderFile;
+}
+
+void DLLApp::LoadParticle(const char* aParticleFile)
+{
+	DL_ASSERT_EXP(myParticle != nullptr, "myParticle dont exists!");
+	std::string particleFile = aParticleFile;
+	myParticle->LoadParticle(particleFile);
 }
 
 void DLLApp::SetClearColor(CU::Vector4f& aClearColor)
@@ -108,6 +118,7 @@ void DLLApp::LogicUpdate(float aDeltaTime)
 		}
 	}
 	myModel->Update(aDeltaTime);
+	myParticle->Update(aDeltaTime);
 }
 
 void DLLApp::SetupCubeMap()

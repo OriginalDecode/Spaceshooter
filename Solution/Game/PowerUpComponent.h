@@ -6,7 +6,8 @@ class PowerUpComponent : public Component
 public:
 	PowerUpComponent(Entity& aEntity);
 	void Init(ePowerUpType someType, std::string anInGameName, float someValue, float someDuration);
-	void Init(ePowerUpType someType, std::string anInGameName, std::string aUpgradeName, int anUpgradeID);
+	void Init(ePowerUpType someType, std::string anInGameName, std::string aUpgradeName
+		, std::string aPickupMessage, int anUpgradeID);
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
@@ -21,6 +22,7 @@ private:
 
 	ePowerUpType myType;
 	std::string myUpgradeName;
+	std::string myUpgradePickupMessage;
 	std::string myInGameName;
 	float myDuration;
 	float myValue;

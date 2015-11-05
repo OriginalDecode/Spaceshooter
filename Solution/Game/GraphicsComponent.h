@@ -6,6 +6,7 @@ namespace Prism
 	class Instance;
 	struct MeshData;
 	class Camera;
+	class Texture;
 };
 
 class GraphicsComponent : public Component
@@ -26,6 +27,8 @@ public:
 	void SetScale(const CU::Vector3<float>& aScale);
 
 	float GetCullingRadius() const;
+
+	void ApplyExtraTexture(Prism::Texture* aTexture);
 
 private:
 	Prism::Instance* myInstance;

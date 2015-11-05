@@ -153,8 +153,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		myEMPTimer -= aDeltaTime;
 		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
-		myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
-		myEMPScale += 100000 * aDeltaTime;
+		//myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
+		myEMPScale += 10000 * aDeltaTime;
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
@@ -216,6 +216,7 @@ void Level::Render()
 		if (myEMPActivated == true)
 		{
 			//Prism::Engine::GetInstance()->DisableZBuffer();
+			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myRenderer->GetFinalTexture());
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
@@ -266,6 +267,7 @@ void Level::Render()
 void Level::OnResize(int aWidth, int aHeight)
 {
 	myCamera->OnResize(aWidth, aHeight);
+	myRenderer->OnResize(aWidth, aHeight);
 }
 
 Entity* Level::AddTrigger(XMLReader& aReader, tinyxml2::XMLElement* aElement)

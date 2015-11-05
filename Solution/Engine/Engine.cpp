@@ -308,8 +308,8 @@ namespace Prism
 			"DirectX Window",
 			"DirectX Window",
 			WS_OVERLAPPEDWINDOW,
-			-1,
-			-2,
+			0,
+			0,
 			rc.right - rc.left,
 			rc.bottom - rc.top,
 			NULL, 
@@ -323,10 +323,10 @@ namespace Prism
 			return FALSE;
 		}
 
-		if (mySetupInfo->myWindowed == false)
+		/*if (mySetupInfo->myWindowed == false)
 		{
 			SetWindowLong(aHwnd, GWL_STYLE, WS_POPUP);
-		}
+		}*/
 
 		ENGINE_LOG("Window Setup Successful");
 		return TRUE;

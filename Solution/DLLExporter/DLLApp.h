@@ -7,6 +7,7 @@
 
 class DLLCamera;
 class DLLModel;
+class DLLParticle;
 
 namespace Prism
 {
@@ -31,6 +32,7 @@ public:
 	void Update();
 
 	void LoadModel(const char* aModelFile, const char* aShaderFile);
+	void LoadParticle(const char* aParticleFile);
 
 	void SetClearColor(CU::Vector4f& aClearColor);
 	void SetCubeMap(const char* aCubeMapFile);
@@ -60,6 +62,7 @@ private:
 
 	DLLCamera* myCamera;
 	DLLModel* myModel;
+	DLLParticle* myParticle;
 
 	Prism::DirectionalLight* myDirectionalLight;
 	Prism::Scene* myScene;

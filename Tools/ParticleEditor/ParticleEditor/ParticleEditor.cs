@@ -23,6 +23,8 @@ namespace ParticleEditor
             myPreviewWindow.BindToPanel(myParticleWindow);
             myPreviewWindow.Show();
 
+            CSharpUtilities.DLLImporter.NativeMethods.LoadParticle("Data/Resource/Particle/P_default_health.xml");
+
             UpdateTimer.Start();
         }
 

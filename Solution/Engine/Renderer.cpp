@@ -106,4 +106,20 @@ namespace Prism
 		Engine::GetInstance()->EnableZBuffer();
 	}
 
+	void Renderer::OnResize(float aWidth, float aHeight)
+	{
+		for (int i = 0; i < MAX_NUMBER_OF_SCENES; ++i)
+		{
+			mySceneData[i].myScene->Resize(aWidth, aHeight);
+
+			mySceneData[i].myFinished->Resize(aWidth, aHeight);
+		}
+
+		myFinalTexture->Resize(aWidth, aHeight);
+
+		myCombineMiddleMan->Resize(aWidth, aHeight);
+
+
+		myFullScreenHelper->OnResize(aWidth, aHeight);
+	}
 }
