@@ -61,9 +61,6 @@ bool Game::Init(HWND& aHwnd)
 #ifdef _DEBUG
 	startInMenu = false;
 #endif
-
-	startInMenu = true;
-
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
