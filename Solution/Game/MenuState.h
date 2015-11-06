@@ -12,7 +12,7 @@ class Menu;
 class MenuState : public GameState
 {
 public:
-	MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper);
+	MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool aShowVictoryScreen = false);
 	~MenuState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -31,5 +31,7 @@ protected:
 	float myOverlayAlpha;
 	Menu* myMenu;
 	Prism::Camera* myCamera;
+	bool myHasFadeIn;
+	bool myShowVictoryScreen;
 };
 

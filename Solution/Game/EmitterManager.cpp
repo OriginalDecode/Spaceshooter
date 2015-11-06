@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <CommonHelper.h>
 #include "DestroyEmitterMessage.h"
 #include "EmitterManager.h"
 #include <EmitterDataContainer.h>
@@ -22,7 +23,6 @@ EmitterManager::EmitterManager()
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
 
-
 	int index = 0;
 
 	ReadListOfLists("Data/Resource/Particle/LI_emitter_lists.xml");
@@ -31,17 +31,18 @@ EmitterManager::EmitterManager()
 	{
 		for (int j = 0; j < PREALLOCATED_EMITTER_SIZE; ++j)
 		{
+			
 			Prism::ParticleEmitterInstance* newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index]));
-			myExplosions[i]->myFireExplosion.Insert(j, newEmitter);
+			myExplosions[i]->myEmitterA.Insert(j, newEmitter);
 
 			newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 1]));
-			myExplosions[i]->mySmokeExplosion.Insert(j, newEmitter);
+			myExplosions[i]->myEmitterB.Insert(j, newEmitter);
 
 			newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 2]));
-			myExplosions[i]->mySparkExplosion.Insert(j, newEmitter);
+			myExplosions[i]->myEmitterC.Insert(j, newEmitter);
 		}
 		index += 3;
 	}
@@ -57,10 +58,6 @@ EmitterManager::~EmitterManager()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
 
 	myExplosions.DeleteAll();
-
-
-
-
 }
 
 void EmitterManager::AddEmitter(ParticleEmitterComponent* anEmitter)
@@ -87,15 +84,14 @@ void EmitterManager::UpdateEmitters(float aDeltaTime, CU::Matrix44f aWorldMatrix
 	{
 		for (int j = 0; j < PREALLOCATED_EMITTER_SIZE; ++j)
 		{
-			if (myExplosions[i]->myFireExplosion[j]->GetIsActive() == true)
+			if (myExplosions[i]->myEmitterA[j]->GetIsActive() == true)
 			{
-				myExplosions[i]->myFireExplosion[j]->Update(aDeltaTime, aWorldMatrix);
-				myExplosions[i]->mySmokeExplosion[j]->Update(aDeltaTime, aWorldMatrix);
-				myExplosions[i]->mySparkExplosion[j]->Update(aDeltaTime, aWorldMatrix);
+				myExplosions[i]->myEmitterA[j]->Update(aDeltaTime, aWorldMatrix);
+				myExplosions[i]->myEmitterB[j]->Update(aDeltaTime, aWorldMatrix);
+				myExplosions[i]->myEmitterC[j]->Update(aDeltaTime, aWorldMatrix);
 			}
 		}
 	}
-
 }
 
 void EmitterManager::RenderEmitters(Prism::Camera* aCamera)
@@ -112,11 +108,11 @@ void EmitterManager::RenderEmitters(Prism::Camera* aCamera)
 	{
 		for (int j = 0; j < PREALLOCATED_EMITTER_SIZE; ++j)
 		{
-			if (myExplosions[i]->myFireExplosion[j]->GetIsActive() == true)
+			if (myExplosions[i]->myEmitterA[j]->GetIsActive() == true)
 			{
-				myExplosions[i]->myFireExplosion[j]->Render(aCamera);
-				myExplosions[i]->mySmokeExplosion[j]->Render(aCamera);
-				myExplosions[i]->mySparkExplosion[j]->Render(aCamera);
+				myExplosions[i]->myEmitterA[j]->Render(aCamera); 
+				myExplosions[i]->myEmitterB[j]->Render(aCamera);
+				myExplosions[i]->myEmitterC[j]->Render(aCamera);
 			}
 		}
 	}
@@ -126,7 +122,6 @@ void EmitterManager::ReceiveMessage(const DestroyEmitterMessage& aMessage)
 {
 	myEmitters.RemoveNonCyclic(aMessage.myParticleEmitterComponent);
 }
-
 
 void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
 {
@@ -216,7 +211,7 @@ void EmitterManager::ReadList(std::string aPath)
 		std::string entityPath = "";
 		rootDocument.ForceReadAttribute(e, "src", entityPath);
 		if (entityPath != "")
-		{
+		{	
 			myXMLPaths.Add(entityPath);
 		}
 	}
@@ -232,17 +227,17 @@ void EmitterManager::EnemyExplosion(const SpawnExplosionMessage& aMessage)
 	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
-	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -256,19 +251,17 @@ void EmitterManager::PropExplosion(const SpawnExplosionMessage& aMessage)
 	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
-	
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
-
-	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -282,17 +275,17 @@ void EmitterManager::AstroidExplosion(const SpawnExplosionMessage& aMessage)
 	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
-	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -306,17 +299,17 @@ void EmitterManager::RocketExplosion(const SpawnExplosionMessage& aMessage)
 	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
-	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -330,18 +323,34 @@ void EmitterManager::OnHitEffect(const SpawnExplosionMessage& aMessage)
 	}
 	int emitterIndex = myExplosions[index]->myEmitterIndex;
 
-	myExplosions[index]->myFireExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myFireExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySmokeExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
 
-	myExplosions[index]->mySparkExplosion[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->mySparkExplosion[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
 
 	myExplosions[index]->myEmitterIndex++;
 }
+
+
+//Data
+ExplosionData::ExplosionData(std::string aType)
+	: myType(aType)
+	, myEmitterIndex(0)
+{
+}
+
+ExplosionData::~ExplosionData()
+{
+	myEmitterA.DeleteAll();
+	myEmitterB.DeleteAll();
+	myEmitterC.DeleteAll();
+}
+

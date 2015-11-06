@@ -34,6 +34,9 @@ namespace Prism
 
 		int particleCount = static_cast<int>(myParticleEmitterData->myParticlesLifeTime / myParticleEmitterData->myEmissionRate) + 1;
 
+		DL_ASSERT_EXP(particleCount <= 201, "Can't have more than 201 particles in an emitter!");
+
+
 		myGraphicalParticles.Init(particleCount);
 		myLogicalParticles.Init(particleCount);
 
@@ -52,7 +55,7 @@ namespace Prism
 		myIsActive = myParticleEmitterData->myIsActiveAtStart;
 
 		myEmitterLife = myParticleEmitterData->myEmitterLifeTime;
-
+		myEmitterPath = myParticleEmitterData->myFileName;
 		CreateVertexBuffer();
 	}
 
@@ -198,7 +201,7 @@ namespace Prism
 			myGraphicalParticles[i].myAlpha += myParticleEmitterData->myData.myAlphaDelta * aDeltaTime; 
 			myGraphicalParticles[i].mySize += myParticleEmitterData->myData.mySizeDelta * aDeltaTime;
 
-			myGraphicalParticles[i].myColor += (myDiffColor - (myGraphicalParticles[i].myAlpha/2)) * aDeltaTime;
+			myGraphicalParticles[i].myColor += myDiffColor  * aDeltaTime;
 
 			myGraphicalParticles[i].myRotation += myLogicalParticles[i].myRotation * aDeltaTime;
 
@@ -259,3 +262,4 @@ namespace Prism
 	}
 
 }
+
