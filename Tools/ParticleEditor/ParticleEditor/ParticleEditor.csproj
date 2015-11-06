@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ParticleData\ParticleData.cs" />
+    <Compile Include="ParticleData\ParticleReader.cs" />
     <Compile Include="ParticleEditor.cs">
       <SubType>Form</SubType>
     </Compile>

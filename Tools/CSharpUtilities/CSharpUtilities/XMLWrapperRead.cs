@@ -108,6 +108,24 @@ namespace CSharpUtilities
             }
         }
 
+        public void ReadAttribute(XmlNode aNode, string aAttribute, ref bool aValue)
+        {
+            foreach (XmlAttribute att in aNode.Attributes)
+            {
+                if (att.Name == aAttribute)
+                {
+                    if (att.Value == "true" || att.Value == "True" || att.Value == "TRUE")
+                    {
+                        aValue = true;
+                    }
+                    else
+                    {
+                        aValue = false;
+                    }
+                }
+            }
+        }
+
         public void ReadAttribute(XmlNode aNode, string aAttribute, ref double aValue)
         {
             foreach (XmlAttribute att in aNode.Attributes)
