@@ -62,7 +62,7 @@ bool Game::Init(HWND& aHwnd)
 	startInMenu = false;
 #endif
 
-	startInMenu = true;
+	//startInMenu = true;
 
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
