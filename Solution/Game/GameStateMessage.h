@@ -9,7 +9,8 @@ enum class eGameState
 	COMPLETE_LEVEL,
 	LOAD_NEXT_LEVEL,
 	MOUSE_LOCK,
-	EXIT_GAME
+	EXIT_GAME,
+	COMPLETE_GAME
 };
 
 class GameStateMessage : public Message

@@ -52,14 +52,15 @@ Game::~Game()
 
 bool Game::Init(HWND& aHwnd)
 {
+	myIsComplete = false;
 	bool startInMenu = false;
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
-#ifdef _DEBUG
-	startInMenu = false;
-#endif
+//#ifdef _DEBUG
+	startInMenu = true;
+//#endif
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -150,6 +151,13 @@ bool Game::Update()
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f }, Prism::eTextType::DEBUG_TEXT);
 	}
 
+	if (myIsComplete == true)
+	{
+		myCurrentMenu = new MenuState("Data/Menu/MN_credits.xml", myInputWrapper);
+		myStateStack.PushMainGameState(myCurrentMenu);
+		myIsComplete = false;
+	}
+
 	return true;
 }
 
@@ -176,6 +184,7 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::LOAD_GAME:
+		myIsComplete = false;
 		myGame = new InGameState(myInputWrapper);
 		myStateStack.PushMainGameState(myGame);
 		myGame->SetLevel(aMessage.GetID());
@@ -186,6 +195,9 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		break;
 	case eGameState::MOUSE_LOCK:
 		myLockMouse = aMessage.GetMouseLocked();
+		break;
+	case eGameState::COMPLETE_GAME:
+		myIsComplete = true;
 		break;
 	}
 }
