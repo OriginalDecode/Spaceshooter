@@ -246,6 +246,7 @@
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="SystemMonitor.cpp" />
     <ClCompile Include="DebugText.cpp" />
+    <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="TextFile.cpp" />
     <ClCompile Include="TextParser.cpp" />
@@ -303,6 +304,7 @@
     <ClInclude Include="Surface.h" />
     <ClInclude Include="SystemMonitor.h" />
     <ClInclude Include="DebugText.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="TextFile.h" />
     <ClInclude Include="TextParser.h" />
