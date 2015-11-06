@@ -441,21 +441,19 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		if (myClosestEnemy != nullptr)
 		{
 			myHomingTarget->Rotate(myDeltaTime);
-			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
+			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, 1.f);
 		}
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 	}
-	else if (myHasRockets == true)
+	else if (myHasRockets == true && percentageToReady >= 1.f)
 	{
 		if (myClosestEnemy != nullptr)
 		{
 			myHomingTarget->Rotate(myDeltaTime);
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
 		}
-		if (percentageToReady >= 1.f)
-		{
-			myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
-		}
+	
+		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 	}
 
 	myEnemies.RemoveAll();
