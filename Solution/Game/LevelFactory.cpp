@@ -4,6 +4,7 @@
 #include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include <CommonHelper.h>
 #include "ConversationManager.h"
 #include "DefendMessage.h"
 #include "DirectionalLight.h"
@@ -328,11 +329,24 @@ void LevelFactory::LoadDirectionalLights(XMLReader& aReader, tinyxml2::XMLElemen
 
 		Prism::DirectionalLight* newDirLight = new Prism::DirectionalLight();
 
+		
+
 		CU::Vector3<float> lightDirection;
 		aReader.ForceReadAttribute(directionalElement, "X", lightDirection.x);
 		aReader.ForceReadAttribute(directionalElement, "Y", lightDirection.y);
 		aReader.ForceReadAttribute(directionalElement, "Z", lightDirection.z);
-		newDirLight->SetDir(lightDirection);
+
+		CU::Matrix44<float> orientation;
+		
+		CU::GetOrientation(orientation, lightDirection);
+		CU::Vector3<float> direction(0.f, 0.f, 1.f);
+
+		direction = direction * orientation;
+
+		newDirLight->SetDir(direction);
+
+		//newDirLight->SetOrientation(orientation);
+		//newDirLight->SetDir(lightDirection);
 
 		directionalElement = aReader.ForceFindFirstChild(entityElement, "color");
 
