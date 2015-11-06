@@ -108,11 +108,13 @@ bool Game::Update()
 		deltaTime = 1.0f / 10.0f;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyUp(DIK_O) == true)
 	{
 		myLockMouse = !myLockMouse;
 		ShowCursor(!myLockMouse);
 	}
+#endif
 
 	if (myLockMouse == true)
 	{
@@ -124,6 +126,7 @@ bool Game::Update()
 		return false;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyDown(DIK_F8))
 	{
 		myShowSystemInfo = !myShowSystemInfo;
@@ -133,10 +136,10 @@ bool Game::Update()
 	{
 		Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 	}
-
+#endif
 
 	myStateStack.RenderCurrentState();
-
+#ifndef RELEASE_BUILD
 	if (myShowSystemInfo == true)
 	{
 		int fps = int(1.f / realDeltaTime);
@@ -149,18 +152,20 @@ bool Game::Update()
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Mem: %d (MB)", memory), { 1000.f, -80.f }, Prism::eTextType::DEBUG_TEXT);
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f }, Prism::eTextType::DEBUG_TEXT);
 	}
-
+#endif
 	return true;
 }
 
 void Game::Pause()
 {
-
+	myLockMouse = false;
+	ShowCursor(true);
 }
 
 void Game::UnPause()
 {
-
+	myLockMouse = true;
+	ShowCursor(false);
 }
 
 void Game::OnResize(int aWidth, int aHeight)
