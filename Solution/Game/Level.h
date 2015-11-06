@@ -112,6 +112,7 @@ private:
 	float myEMPTimer;
 	bool myEMPActivated;
 
+	bool myIsSkipable;
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)

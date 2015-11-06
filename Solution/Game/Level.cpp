@@ -64,6 +64,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myEMPScale(1.f)
 	, myEMPTimer(0.f)
 	, myEMPActivated(false)
+	, myIsSkipable(false)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
@@ -163,6 +164,11 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	if (myIsSkipable == true && myInputWrapper->KeyIsPressed(DIK_L) == true)
+	{
+		CompleteLevel();
+	}
+
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 
@@ -250,6 +256,14 @@ void Level::Render()
 		}
 	}
 
+
+	if (myIsSkipable == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("Press [L] to skip level."
+			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.5f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.6f }
+			, Prism::eTextType::RELEASE_TEXT);
+	}
+	
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 #ifndef RELEASE_BUILD

@@ -308,6 +308,12 @@ void LevelFactory::ReadLevelSettings()
 		myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon), 2);
 	}
 
+	tinyxml2::XMLElement* skipableElement = reader.FindFirstChild("skipable");
+	if (skipableElement != nullptr)
+	{
+		myCurrentLevel->myIsSkipable = true;
+	}
+
 	reader.CloseDocument();
 }
 
