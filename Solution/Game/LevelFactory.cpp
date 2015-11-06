@@ -81,13 +81,6 @@ Level* LevelFactory::LoadCurrentLevel()
 	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
 		, "Data/Resource/Shader/S_effect_emp.fx");
 
-	//for debug only, please delete:
-	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
-	myCurrentLevel->myStreakEntity->AddComponent<ParticleEmitterComponent>();
-	myCurrentLevel->myStreakEntity->GetComponent<ParticleEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter.xml");
-	myCurrentLevel->myStreakEntity->AddComponent<StreakEmitterComponent>();
-	myCurrentLevel->myStreakEntity->GetComponent<StreakEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter_streak.xml");
-	myCurrentLevel->myStreakEntity->myOrientation.SetPos({ 0.f, 0.f, 70.f });
 	return myCurrentLevel;
 }
 
