@@ -207,6 +207,7 @@
     <ClCompile Include="Effect.cpp" />
     <ClCompile Include="EffectContainer.cpp" />
     <ClCompile Include="EmitterDataContainer.cpp" />
+    <ClCompile Include="HeightMapFactory.cpp" />
     <ClCompile Include="ParticleEmitterData.cpp" />
     <ClCompile Include="ParticleEmitterInstance.cpp" />
     <ClCompile Include="Engine.cpp" />
@@ -250,6 +251,7 @@
     <ClCompile Include="TextParser.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureContainer.cpp" />
+    <ClCompile Include="Tga32.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TreeNode.cpp" />
   </ItemGroup>
@@ -262,6 +264,8 @@
     <ClInclude Include="EffectContainer.h" />
     <ClInclude Include="EffectListener.h" />
     <ClInclude Include="EmitterDataContainer.h" />
+    <ClInclude Include="HeightMap.h" />
+    <ClInclude Include="HeightMapFactory.h" />
     <ClInclude Include="ParticleEmitterData.h" />
     <ClInclude Include="ParticleEmitterInstance.h" />
     <ClInclude Include="Engine.h" />
@@ -304,6 +308,7 @@
     <ClInclude Include="TextParser.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureContainer.h" />
+    <ClInclude Include="Tga32.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TreeNode.h" />
     <ClInclude Include="VertexBufferWrapper.h" />

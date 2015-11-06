@@ -112,6 +112,12 @@
       <Filter>Rendering\Streak</Filter>
     </ClCompile>
     <ClCompile Include="EmitterDataContainer.cpp" />
+    <ClCompile Include="Tga32.cpp">
+      <Filter>Tga32</Filter>
+    </ClCompile>
+    <ClCompile Include="HeightMapFactory.cpp">
+      <Filter>HeightMap</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h" />
@@ -267,6 +273,15 @@
       <Filter>Rendering\Streak</Filter>
     </ClInclude>
     <ClInclude Include="EmitterDataContainer.h" />
+    <ClInclude Include="Tga32.h">
+      <Filter>Tga32</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMap.h">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HeightMapFactory.h">
+      <Filter>HeightMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Precompile">
@@ -313,6 +328,12 @@
     </Filter>
     <Filter Include="Rendering\Streak">
       <UniqueIdentifier>{dd92a4e0-d37f-466b-9b7a-966645f4818d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HeightMap">
+      <UniqueIdentifier>{59d37244-123a-4cb5-bb00-433a66692270}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tga32">
+      <UniqueIdentifier>{18b9410f-d7c0-46f2-af85-b20098396534}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
