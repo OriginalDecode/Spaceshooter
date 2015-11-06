@@ -172,8 +172,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
-	UpdateDebug();
 
+#ifndef RELEASE_BUILD
+	UpdateDebug();
+#endif
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
 

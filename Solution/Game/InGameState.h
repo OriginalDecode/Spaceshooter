@@ -41,6 +41,8 @@ public:
 	void LoadLevelSettings(); 
 	void LoadPlayerSettings();
 
+	bool IsComplete() const;
+
 private:
 	void ShowMessage(const std::string& aBackgroundPath, const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage = nullptr);
 	
@@ -52,3 +54,8 @@ private:
 
 	bool myIsComplete;
 };
+
+inline bool InGameState::IsComplete() const
+{
+	return myIsComplete;
+}

@@ -62,13 +62,13 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 
 	if (myIsComplete == true)
 	{
+		PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_GAME));
 		return eStateStatus::ePopMainState;
 	}
 
 	if (myInputWrapper->KeyDown(DIK_ESCAPE))
 	{
 		myStateStack->PushSubGameState(new InGameMenuState("Data/Menu/MN_ingame_menu.xml", myInputWrapper));
-
 	}
 
 	if (myLevel->LogicUpdate(aDeltaTime) == true)
@@ -141,10 +141,8 @@ void InGameState::CompleteLevel()
 
 void InGameState::CompleteGame()
 {
+	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game won! Press [space] to continue.");
 	myIsComplete = true;
-	std::string message = "Data/Menu/MN_credits.xml";
-	GameStateMessage* newEvent = new GameStateMessage(eGameState::LOAD_MENU, message);
-	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game won! Press [space] to continue.", newEvent);
 }
 
 void InGameState::LoadLevelSettings()

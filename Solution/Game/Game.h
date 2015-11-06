@@ -41,6 +41,7 @@ private:
 
 	bool myLockMouse;
 	bool myShowSystemInfo;
+	bool myIsComplete;
 
 	CU::Vector2<int> myWindowSize;
 
