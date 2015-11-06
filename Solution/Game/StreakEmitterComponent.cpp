@@ -36,7 +36,7 @@ void StreakEmitterComponent::Init(std::string aPath)
 {
 	myXMLPath = aPath;
 
-	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
+	//DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
 	Prism::StreakEmitterData data;
 	data.LoadDataFile(myXMLPath.c_str());
 	myEmitterLeft = new Prism::StreakEmitterInstance(data);
