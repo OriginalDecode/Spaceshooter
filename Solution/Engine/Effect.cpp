@@ -62,6 +62,11 @@ void Prism::Effect::SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMa
 	myProjectionMatrix->SetMatrix(&aProjectionMatrix.myMatrix[0]);
 }
 
+void Prism::Effect::SetViewProjectionMatrix(const CU::Matrix44<float>& aMatrix)
+{
+	myViewProjectionMatrix->SetMatrix(&aMatrix.myMatrix[0]);
+}
+
 void Prism::Effect::SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask)
 {
 	Engine::GetInstance()->GetContex()->OMSetBlendState(aBlendState, aBlendFactor, aSampleMask);
@@ -249,6 +254,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	{
 		DL_MESSAGE_BOX("Failed to get ProjectionMatrix", "Effect Error", MB_ICONWARNING);
 		return false;
+	}
+
+	myViewProjectionMatrix = myEffect->GetVariableByName("ViewProjection")->AsMatrix();
+	if (myViewProjectionMatrix->IsValid() == false)
+	{
+		myViewProjectionMatrix = nullptr;
 	}
 
 	myTotalTime = nullptr;

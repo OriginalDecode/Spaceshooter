@@ -103,7 +103,7 @@ bool Game::Update()
 	CU::TimerManager::GetInstance()->Update();
 
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-
+	float realDeltaTime = deltaTime;
 	if (deltaTime > 1.0f / 10.0f)
 	{
 		deltaTime = 1.0f / 10.0f;
@@ -140,8 +140,8 @@ bool Game::Update()
 
 	if (myShowSystemInfo == true)
 	{
-		int fps = int(1.f / deltaTime);
-		float frameTime = deltaTime * 1000.f;
+		int fps = int(1.f / realDeltaTime);
+		float frameTime = realDeltaTime * 1000.f;
 		int memory = Prism::SystemMonitor::GetMemoryUsageMB();
 		float cpuUsage = Prism::SystemMonitor::GetCPUUsage();
 
