@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "Enums.h"
+#include <AudioInterface.h>
 
 struct WeaponData
 {
@@ -98,7 +99,12 @@ inline eComponentType ShootingComponent::GetType()
 
 inline void ShootingComponent::SetHomingTarget(Entity* aTarget)
 {
+	if (GetEntity().GetType() == eEntityType::PLAYER && myHomingTarget != aTarget)
+	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_HomingTargetSet", 0);
+	}
 	myHomingTarget = aTarget;
+
 }
 
 inline eBulletType ConvertToBulletEnum(const std::string& aString)
