@@ -396,6 +396,7 @@ void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
 	{
 		myEmitterManager->AddEmitter(newEntity->GetComponent<ParticleEmitterComponent>());
 	}
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_SpawnPowerUp", 0); 
 }
 
 void Level::ReceiveMessage(const EMPMessage& aMessage)
