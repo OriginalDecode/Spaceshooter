@@ -18,17 +18,22 @@ public:
 	int GetEmitterCount();
 	Prism::StreakEmitterInstance* GetEmitter();
 
+	void AddStreak(const CU::Matrix44f aOrientation);
+
 	//void ReceiveNote(const EmitterNote& aNote) override;
 
 
 private:
+	struct Emitter
+	{
+		CU::Matrix44f myOrientation;
+		Prism::StreakEmitterInstance* myEmitter;
+	};
 
-	CU::Matrix44f myOrientationLeft;
-	CU::Matrix44f myOrientationRight;
+	CU::GrowingArray<Emitter> myEmitters;
+	
+	Prism::StreakEmitterInstance* myEmitterInstance;
 
-	CU::Vector3f myPosition;
-	Prism::StreakEmitterInstance* myEmitterLeft;
-	Prism::StreakEmitterInstance* myEmitterRight;
 	std::string myXMLPath;
 };
 
@@ -37,4 +42,12 @@ private:
 inline eComponentType StreakEmitterComponent::GetType()
 {
 	return eComponentType::STREAK_EMITTER;
+}
+
+inline void StreakEmitterComponent::AddStreak(const CU::Matrix44f aOrientation)
+{
+	Emitter emitter;
+	emitter.myEmitter = myEmitterInstance;
+	emitter.myOrientation = aOrientation;
+	myEmitters.Add(emitter);
 }
