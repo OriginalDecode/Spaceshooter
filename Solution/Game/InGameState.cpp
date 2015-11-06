@@ -23,9 +23,8 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper, const bool& aShowMessages)
-	: myShowMessages(aShowMessages)
-	, myPlayer(nullptr)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+	: myPlayer(nullptr)
 {
 	myInputWrapper = anInputWrapper;
 }
@@ -161,15 +160,8 @@ void InGameState::LoadPlayerSettings()
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 
 	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
 {
-	if (myShowMessages == true)
-	{
-		myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
-		myMessageScreen->SetText(aText);
-		myMessageScreen->SetEvent(aMessage);
-		myStateStack->PushSubGameState(myMessageScreen);
-	}
-	else if (aMessage != nullptr)
-	{
-		PostMaster::GetInstance()->SendMessage(*aMessage);
-	}
+	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
+	myMessageScreen->SetText(aText);
+	myMessageScreen->SetEvent(aMessage);
+	myStateStack->PushSubGameState(myMessageScreen);
 }
