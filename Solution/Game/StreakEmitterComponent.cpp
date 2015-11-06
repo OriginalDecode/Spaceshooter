@@ -48,25 +48,25 @@ void StreakEmitterComponent::Update(float aDeltaTime)
 {
 	//myEmitterLeft->SetOrientation(myOrientationLeft * myEntity.myOrientation);
 	//myEmitterRight->SetOrientation(myOrientationRight * myEntity.myOrientation);
-	if (myEntity.GetAlive() == true)
-	{
-		for (int i = 0; i < myEmitters.Size(); ++i)
-		{
-			myEmitters[i].myEmitter->SetOrientation(myEmitters[i].myOrientation * myEntity.myOrientation);
-			myEmitters[i].myEmitter->Update(aDeltaTime);
-		}
-	}
+	//if (myEntity.GetAlive() == true)
+	//{
+	//	for (int i = 0; i < myEmitters.Size(); ++i)
+	//	{
+	//		myEmitters[i].myEmitter->SetOrientation(myEmitters[i].myOrientation * myEntity.myOrientation);
+	//		myEmitters[i].myEmitter->Update(aDeltaTime);
+	//	}
+	//}
 }
 
 void StreakEmitterComponent::Render()
 {
-	if (myEntity.GetAlive() == true)
-	{
-		for (int i = 0; i < myEmitters.Size(); ++i)
-		{
-			myEmitters[i].myEmitter->Render(&myEntity.GetScene().GetCamera());
-		}
-	}
+	//if (myEntity.GetAlive() == true)
+	//{
+	//	for (int i = 0; i < myEmitters.Size(); ++i)
+	//	{
+	//		myEmitters[i].myEmitter->Render(&myEntity.GetScene().GetCamera());
+	//	}
+	//}
 }
 
 Prism::StreakEmitterInstance* StreakEmitterComponent::GetEmitter()
