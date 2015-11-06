@@ -178,10 +178,12 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myBulletManager->Update(aDeltaTime);
 
 	bool forceNextMission = false;
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyDown(DIK_F4) == true)
 	{
 		forceNextMission = true;
 	}
+#endif
 	myMissionManager->Update(aDeltaTime, forceNextMission);
 	
 	myEventManager->Update();
