@@ -219,10 +219,12 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		myCurrentBoostValue = 0;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE))
 	{
 		Reset();
 	}
+#endif
 
 	int soundSpeed = static_cast<int>((movementSpeed / myMaxMovementSpeed) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());
