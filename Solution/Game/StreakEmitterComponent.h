@@ -23,10 +23,12 @@ public:
 
 private:
 
-	CU::Matrix44f myOrientation;
+	CU::Matrix44f myOrientationLeft;
+	CU::Matrix44f myOrientationRight;
 
 	CU::Vector3f myPosition;
-	Prism::StreakEmitterInstance* myEmitter;
+	Prism::StreakEmitterInstance* myEmitterLeft;
+	Prism::StreakEmitterInstance* myEmitterRight;
 	std::string myXMLPath;
 };
 

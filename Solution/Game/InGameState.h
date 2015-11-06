@@ -20,7 +20,7 @@ class InGameState : public GameState, public Subscriber
 {
 public:
 
-	InGameState(CU::InputWrapper* anInputWrapper, const bool& aShowMessages = true);
+	InGameState(CU::InputWrapper* anInputWrapper);
 	~InGameState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -51,5 +51,4 @@ private:
 	MessageState* myMessageScreen;
 
 	bool myIsComplete;
-	bool myShowMessages;
 };

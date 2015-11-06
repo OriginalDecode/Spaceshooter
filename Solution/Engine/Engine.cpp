@@ -190,6 +190,8 @@ namespace Prism
 		myText->SetText("едц");
 		myText->SetScale({ 1.f, 1.f });
 
+		myUsePBLPixelShader = true;
+
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 
 		ENGINE_LOG("Engine Init Successful");

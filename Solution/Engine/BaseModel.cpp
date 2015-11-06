@@ -61,14 +61,19 @@ namespace Prism
 		Engine::GetInstance()->GetContex()->IASetIndexBuffer(myIndexBuffer->myIndexBuffer
 			, myIndexBuffer->myIndexBufferFormat, myIndexBuffer->myByteOffset);
 
+		bool usePixelShader = Engine::GetInstance()->UsePBLPixelShader();
+
 		for (int s = 0; s < mySurfaces.Size(); ++s)
 		{
 			mySurfaces[s]->Activate();
 
 			ID3DX11EffectTechnique* tech = nullptr;
-			D3DX11_TECHNIQUE_DESC techDesc;
-
-			if (mySurfaces[s]->GetEmissive() == true)
+			
+			if (usePixelShader == false)
+			{
+				tech = myEffect->GetEffect()->GetTechniqueByName("Render_No_Pixel_Shader");
+			}
+			else if (mySurfaces[s]->GetEmissive() == true)
 			{
 				tech = myEffect->GetEffect()->GetTechniqueByName("Render_Emissive");
 			}
@@ -77,9 +82,15 @@ namespace Prism
 				tech = myEffect->GetTechnique();
 			}
 
+			if (tech->IsValid() == false)
+			{
+				tech = myEffect->GetTechnique();
+			}
+
 			DL_ASSERT_EXP(tech != nullptr, "Technique is nullptr");
 			DL_ASSERT_EXP(tech->IsValid() != false, "Technique is not valid");
 
+			D3DX11_TECHNIQUE_DESC techDesc;
 			tech->GetDesc(&techDesc);
 			for (UINT i = 0; i < techDesc.Passes; ++i)
 			{

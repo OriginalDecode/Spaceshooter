@@ -34,6 +34,7 @@ namespace Prism
 		void SetWorldMatrix(const CU::Matrix44<float>& aWorldMatrix);
 		void SetViewMatrix(const CU::Matrix44<float>& aViewMatrix);
 		void SetProjectionMatrix(const CU::Matrix44<float>& aProjectionMatrix);
+		void SetViewProjectionMatrix(const CU::Matrix44<float>& aMatrix);
 		void SetBlendState(ID3D11BlendState* aBlendState, float aBlendFactor[4], const unsigned int aSampleMask = 0xFFFFFFFF);
 		void SetTexture(Texture* aTexture);
 		void SetPosAndScale(const CU::Vector2<float>& aPos
@@ -68,6 +69,7 @@ namespace Prism
 		ID3DX11EffectMatrixVariable* myProjectionMatrix;
 		ID3DX11EffectMatrixVariable* myViewMatrix;
 		ID3DX11EffectMatrixVariable* myWorldMatrix;
+		ID3DX11EffectMatrixVariable* myViewProjectionMatrix;
 
 		ID3DX11EffectScalarVariable* myEyePosition;
 		ID3DX11EffectScalarVariable* myTotalTime;

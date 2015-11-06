@@ -60,7 +60,6 @@ bool Game::Init(HWND& aHwnd)
 #ifdef _DEBUG
 	startInMenu = false;
 #endif
-	reader.ReadAttribute(reader.FindFirstChild("showMessages"), "bool", myShowMessages);
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -103,7 +102,7 @@ bool Game::Update()
 	CU::TimerManager::GetInstance()->Update();
 
 	float deltaTime = CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
-
+	float realDeltaTime = deltaTime;
 	if (deltaTime > 1.0f / 10.0f)
 	{
 		deltaTime = 1.0f / 10.0f;
@@ -140,8 +139,8 @@ bool Game::Update()
 
 	if (myShowSystemInfo == true)
 	{
-		int fps = int(1.f / deltaTime);
-		float frameTime = deltaTime * 1000.f;
+		int fps = int(1.f / realDeltaTime);
+		float frameTime = realDeltaTime * 1000.f;
 		int memory = Prism::SystemMonitor::GetMemoryUsageMB();
 		float cpuUsage = Prism::SystemMonitor::GetCPUUsage();
 
@@ -168,7 +167,6 @@ void Game::OnResize(int aWidth, int aHeight)
 {
 	myWindowSize.x = aWidth;
 	myWindowSize.y = aHeight;
-	//myStateStack.OnResizeCurrentState(aWidth, aHeight);
 	myStateStack.OnResize(aWidth, aHeight);
 	PostMaster::GetInstance()->SendMessage(ResizeMessage(aWidth, aHeight));
 }
@@ -178,7 +176,7 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::LOAD_GAME:
-		myGame = new InGameState(myInputWrapper, myShowMessages);
+		myGame = new InGameState(myInputWrapper);
 		myStateStack.PushMainGameState(myGame);
 		myGame->SetLevel(aMessage.GetID());
 		break;

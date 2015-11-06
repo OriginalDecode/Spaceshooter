@@ -15,7 +15,7 @@ public:
 	MissionManager(Level& aLevel, Entity& aPlayer, const std::string& aFileToReadFrom);
 	~MissionManager();
 	void Init();
-	void Update(float aDeltaTime);
+	void Update(float aDeltaTime, bool aForceNextMission);
 
 	void ReceiveMessage(const EventQueueEmptyMessage&) override;
 private:

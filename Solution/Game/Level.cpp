@@ -64,6 +64,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myEMPScale(1.f)
 	, myEMPTimer(0.f)
 	, myEMPActivated(false)
+	, myIsSkipable(false)
 {
 	myInputWrapper = aInputWrapper;
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
@@ -163,30 +164,28 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	if (myIsSkipable == true && myInputWrapper->KeyIsPressed(DIK_L) == true)
+	{
+		CompleteLevel();
+	}
+
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
-
-	////streak debug only, please remove later
-	//static float totalTime = 0;
-	//totalTime += aDeltaTime;
-
-	//float radius = 34.f;
-	//float distance = 100.f;
-
-	//myStreakEntity->myOrientation.SetPos(CU::Vector3<float>(sinf(totalTime) * radius, cosf(totalTime) * radius, distance));
-
-	//myStreakEntity->Update(aDeltaTime);
-	////streak debug only END
-	//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Update(aDeltaTime);
-
-
-	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
 	UpdateDebug();
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
-	myMissionManager->Update(aDeltaTime);
+
+	bool forceNextMission = false;
+#ifndef RELEASE_BUILD
+	if (myInputWrapper->KeyDown(DIK_F4) == true)
+	{
+		forceNextMission = true;
+	}
+#endif
+	myMissionManager->Update(aDeltaTime, forceNextMission);
+	
 	myEventManager->Update();
 	myCamera->Update(aDeltaTime);
 	return myComplete;
@@ -250,6 +249,14 @@ void Level::Render()
 		}
 	}
 
+
+	if (myIsSkipable == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("Press [L] to skip level."
+			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.5f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.6f }
+			, Prism::eTextType::RELEASE_TEXT);
+	}
+	
 	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
 
 #ifndef RELEASE_BUILD
@@ -460,5 +467,9 @@ void Level::UpdateDebug()
 	if (myInputWrapper->KeyDown(DIK_F7))
 	{
 		myUsePostProcessing = !myUsePostProcessing;
+	}
+	if (myInputWrapper->KeyDown(DIK_F6))
+	{
+		Prism::Engine::GetInstance()->TogglePBLPixelShader();
 	}
 }

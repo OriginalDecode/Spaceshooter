@@ -106,12 +106,12 @@ private:
 	bool myUsePostProcessing;
 	bool myComplete;
 
-	Entity* myStreakEntity;
 	Entity* myEMP;
 	float myEMPScale;
 	float myEMPTimer;
 	bool myEMPActivated;
 
+	bool myIsSkipable;
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)

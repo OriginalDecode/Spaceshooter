@@ -4,6 +4,7 @@
 #include <Camera.h>
 #include "CollisionComponent.h"
 #include "CollisionManager.h"
+#include <CommonHelper.h>
 #include "ConversationManager.h"
 #include "DefendMessage.h"
 #include "DirectionalLight.h"
@@ -80,13 +81,6 @@ Level* LevelFactory::LoadCurrentLevel()
 	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
 		, "Data/Resource/Shader/S_effect_emp.fx");
 
-	//for debug only, please delete:
-	myCurrentLevel->myStreakEntity = new Entity(eEntityType::ENEMY, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
-	myCurrentLevel->myStreakEntity->AddComponent<ParticleEmitterComponent>();
-	myCurrentLevel->myStreakEntity->GetComponent<ParticleEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter.xml");
-	myCurrentLevel->myStreakEntity->AddComponent<StreakEmitterComponent>();
-	myCurrentLevel->myStreakEntity->GetComponent<StreakEmitterComponent>()->Init("Data/Resource/Particle/P_default_emitter_streak.xml");
-	myCurrentLevel->myStreakEntity->myOrientation.SetPos({ 0.f, 0.f, 70.f });
 	return myCurrentLevel;
 }
 
@@ -308,6 +302,12 @@ void LevelFactory::ReadLevelSettings()
 		myCurrentLevel->myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myCurrentLevel->myWeaponFactory->GetWeapon(thirdWeapon), 2);
 	}
 
+	tinyxml2::XMLElement* skipableElement = reader.FindFirstChild("skipable");
+	if (skipableElement != nullptr)
+	{
+		myCurrentLevel->myIsSkipable = true;
+	}
+
 	reader.CloseDocument();
 }
 
@@ -328,11 +328,24 @@ void LevelFactory::LoadDirectionalLights(XMLReader& aReader, tinyxml2::XMLElemen
 
 		Prism::DirectionalLight* newDirLight = new Prism::DirectionalLight();
 
+		
+
 		CU::Vector3<float> lightDirection;
 		aReader.ForceReadAttribute(directionalElement, "X", lightDirection.x);
 		aReader.ForceReadAttribute(directionalElement, "Y", lightDirection.y);
 		aReader.ForceReadAttribute(directionalElement, "Z", lightDirection.z);
-		newDirLight->SetDir(lightDirection);
+
+		CU::Matrix44<float> orientation;
+		
+		CU::GetOrientation(orientation, lightDirection);
+		CU::Vector3<float> direction(0.f, 0.f, 1.f);
+
+		direction = direction * orientation;
+
+		newDirLight->SetDir(direction);
+
+		//newDirLight->SetOrientation(orientation);
+		//newDirLight->SetDir(lightDirection);
 
 		directionalElement = aReader.ForceFindFirstChild(entityElement, "color");
 

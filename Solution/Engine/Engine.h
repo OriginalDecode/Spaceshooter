@@ -86,6 +86,9 @@ namespace Prism
 		void SetShowDebugText(bool aShowDebug);
 		void SetClearColor(const CU::Vector4<float>& aClearColor);
 
+		bool UsePBLPixelShader();
+		void TogglePBLPixelShader();
+
 		bool myWireframeShouldShow;
 
 	private:
@@ -95,6 +98,7 @@ namespace Prism
 		bool WindowSetup(HWND& aHwnd, WNDPROC aWindowProc);
 		
 		bool myWireframeIsOn;
+		bool myUsePBLPixelShader;
 
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;
@@ -166,4 +170,14 @@ inline void Prism::Engine::SetClearColor(const CU::Vector4<float>& aClearColor)
 inline void Prism::Engine::SetShowDebugText(bool aShowDebugText)
 {
 	myShowDebugText = aShowDebugText;
+}
+
+inline bool Prism::Engine::UsePBLPixelShader()
+{
+	return myUsePBLPixelShader;
+}
+
+inline void Prism::Engine::TogglePBLPixelShader()
+{
+	myUsePBLPixelShader = !myUsePBLPixelShader;
 }
