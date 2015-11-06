@@ -60,6 +60,8 @@ namespace Launcher
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
+
             resolutionDropdown.Items.Add("800 x 600");
             resolutionDropdown.Items.Add("1280 x 720");
             resolutionDropdown.Items.Add("1650 x 1080");
@@ -205,7 +207,7 @@ namespace Launcher
             {
                 resolutionDropdown.SelectedIndex = 2;
             }
-            else if (width == 1980 && height == 1080)
+            else if (width == 1920 && height == 1080)
             {
                 resolutionDropdown.SelectedIndex = 3;
             }
