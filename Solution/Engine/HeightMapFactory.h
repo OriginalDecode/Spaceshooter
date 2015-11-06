@@ -1,8 +1,12 @@
 #pragma once
-class HeightMapFactory
-{
-public:
-	HeightMapFactory();
-	~HeightMapFactory();
-};
 
+namespace Prism
+{
+	struct HeightMap;
+
+	class HeightMapFactory
+	{
+	public:
+		static HeightMap* Create(const char* aFilePath);
+	};
+}
