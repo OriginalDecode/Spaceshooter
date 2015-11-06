@@ -27,8 +27,9 @@ void Prism::Instance::Render(Camera& aCamera)
 {
 	if (myProxy.IsLoaded())
 	{
-		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
-		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+		//myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
+		//myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+		myProxy.GetEffect()->SetViewProjectionMatrix(aCamera.GetViewProjection());
 		myProxy.GetEffect()->SetScaleVector(myScale);
 		myProxy.GetEffect()->SetCameraPosition(aCamera.GetOrientation().GetPos());
 
@@ -40,8 +41,9 @@ void Prism::Instance::Render(const CU::Matrix44<float>& aParentMatrix, Camera& a
 {
 	if (myProxy.IsLoaded())
 	{
-		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
-		myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+		//myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
+		//myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
+		myProxy.GetEffect()->SetViewProjectionMatrix(aCamera.GetViewProjection());
 		myProxy.GetEffect()->SetScaleVector(myScale);
 		myProxy.GetEffect()->SetCameraPosition(aCamera.GetOrientation().GetPos());
 

@@ -70,28 +70,28 @@
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DLL_Release|Win32'">
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_Release</TargetName>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Internal|Win32'">
     <OutDir>$(SolutionDir)..\Workbed\</OutDir>
     <IntDir>$(SolutionDir)..\temp\$(ProjectName)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)</TargetName>
-    <IncludePath>$(SolutionDir)\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(FBX_SDK_ROOT)\include\;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\FBX\;$(SolutionDir)\Engine;$(SolutionDir)\DL_Debug;$(SolutionDir)\Game;$(SolutionDir)\CommonUtilities;$(SolutionDir)\Timer;$(SolutionDir)\InputWrapper;$(SolutionDir)\..\DirectX\Include;$(VTUNE_DIR)\include\;$(SolutionDir)\Audio;$(IncludePath)</IncludePath>
     <LibraryPath>$(LibraryPath);$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

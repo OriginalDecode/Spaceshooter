@@ -17,6 +17,7 @@ namespace Prism
 
 		const CU::Matrix44<float>& GetOrientation() const;
 		const CU::Matrix44<float>& GetProjection() const;
+		const CU::Matrix44<float>& GetViewProjection() const;
 
 		void Update(float aDeltaTime);
 
@@ -40,6 +41,7 @@ namespace Prism
 
 		CU::Matrix44<float>& myOrientation;
 		CU::Matrix44<float> myProjectionMatrix;
+		CU::Matrix44<float> myViewProjectionMatrix;
 		float myNear;
 		float myFar;
 		float myFOV;

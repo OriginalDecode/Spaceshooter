@@ -59,6 +59,11 @@ namespace Prism
 		return myProjectionMatrix;
 	}
 
+	const CU::Matrix44<float>& Camera::GetViewProjection() const
+	{
+		return myViewProjectionMatrix;
+	}
+
 	void Camera::Update(float aDeltaTime)
 	{
 		if (myShakeCamera == true)
@@ -78,6 +83,8 @@ namespace Prism
 			}
 			RotateZ(myCurrentShake * aDeltaTime);
 		}
+
+		myViewProjectionMatrix = CU::InverseSimple(myOrientation) * myProjectionMatrix;
 
 		myFrustum->Update();
 	}
