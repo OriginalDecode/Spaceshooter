@@ -23,9 +23,8 @@
 #include <VTuneApi.h>
 #include <Vector.h>
 
-InGameState::InGameState(CU::InputWrapper* anInputWrapper, const bool& aShowMessages)
-	: myShowMessages(aShowMessages)
-	, myPlayer(nullptr)
+InGameState::InGameState(CU::InputWrapper* anInputWrapper)
+	: myPlayer(nullptr)
 {
 	myInputWrapper = anInputWrapper;
 }
@@ -61,7 +60,12 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
 	myPlayer = myLevel->GetPlayer();
 
-	if (myInputWrapper->KeyDown(DIK_ESCAPE) || myIsComplete == true)
+	if (myIsComplete == true)
+	{
+		return eStateStatus::ePopMainState;
+	}
+
+	if (myInputWrapper->KeyDown(DIK_ESCAPE))
 	{
 		myStateStack->PushSubGameState(new InGameMenuState("Data/Menu/MN_ingame_menu.xml", myInputWrapper));
 
@@ -137,8 +141,10 @@ void InGameState::CompleteLevel()
 
 void InGameState::CompleteGame()
 {
-	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game won! Press [space] to continue.");
 	myIsComplete = true;
+	std::string message = "Data/Menu/MN_credits.xml";
+	GameStateMessage* newEvent = new GameStateMessage(eGameState::LOAD_MENU, message);
+	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game won! Press [space] to continue.", newEvent);
 }
 
 void InGameState::LoadLevelSettings()
@@ -154,15 +160,8 @@ void InGameState::LoadPlayerSettings()
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 
 	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
 {
-	if (myShowMessages == true)
-	{
-		myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
-		myMessageScreen->SetText(aText);
-		myMessageScreen->SetEvent(aMessage);
-		myStateStack->PushSubGameState(myMessageScreen);
-	}
-	else if (aMessage != nullptr)
-	{
-		PostMaster::GetInstance()->SendMessage(*aMessage);
-	}
+	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
+	myMessageScreen->SetText(aText);
+	myMessageScreen->SetEvent(aMessage);
+	myStateStack->PushSubGameState(myMessageScreen);
 }

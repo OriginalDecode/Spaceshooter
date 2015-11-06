@@ -7,7 +7,7 @@ GameStateMessage::GameStateMessage(eGameState aGameState)
 {
 }
 
-GameStateMessage::GameStateMessage(eGameState aGameState, std::string aFilePath)
+GameStateMessage::GameStateMessage(eGameState aGameState, const std::string& aFilePath)
 	: myGameState(aGameState)
 	, myFilePath(aFilePath)
 	, Message(eMessageType::GAME_STATE)
