@@ -475,4 +475,8 @@ void Level::UpdateDebug()
 	{
 		myUsePostProcessing = !myUsePostProcessing;
 	}
+	if (myInputWrapper->KeyDown(DIK_F6))
+	{
+		Prism::Engine::GetInstance()->TogglePBLPixelShader();
+	}
 }
