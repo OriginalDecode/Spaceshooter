@@ -58,9 +58,12 @@ bool Game::Init(HWND& aHwnd)
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
-//#ifdef _DEBUG
+#ifdef _DEBUG
+	startInMenu = false;
+#endif
+
 	startInMenu = true;
-//#endif
+
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -109,11 +112,13 @@ bool Game::Update()
 		deltaTime = 1.0f / 10.0f;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyUp(DIK_O) == true)
 	{
 		myLockMouse = !myLockMouse;
 		ShowCursor(!myLockMouse);
 	}
+#endif
 
 	if (myLockMouse == true)
 	{
@@ -125,6 +130,7 @@ bool Game::Update()
 		return false;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyDown(DIK_F8))
 	{
 		myShowSystemInfo = !myShowSystemInfo;
@@ -134,10 +140,10 @@ bool Game::Update()
 	{
 		Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 	}
-
+#endif
 
 	myStateStack.RenderCurrentState();
-
+#ifndef RELEASE_BUILD
 	if (myShowSystemInfo == true)
 	{
 		int fps = int(1.f / realDeltaTime);
@@ -150,6 +156,7 @@ bool Game::Update()
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Mem: %d (MB)", memory), { 1000.f, -80.f }, Prism::eTextType::DEBUG_TEXT);
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f }, Prism::eTextType::DEBUG_TEXT);
 	}
+#endif
 
 	if (myIsComplete == true)
 	{
@@ -163,12 +170,14 @@ bool Game::Update()
 
 void Game::Pause()
 {
-
+	myLockMouse = false;
+	ShowCursor(true);
 }
 
 void Game::UnPause()
 {
-
+	myLockMouse = true;
+	ShowCursor(false);
 }
 
 void Game::OnResize(int aWidth, int aHeight)
@@ -184,7 +193,6 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::LOAD_GAME:
-		myIsComplete = false;
 		myGame = new InGameState(myInputWrapper);
 		myStateStack.PushMainGameState(myGame);
 		myGame->SetLevel(aMessage.GetID());

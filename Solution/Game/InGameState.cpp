@@ -141,8 +141,6 @@ void InGameState::CompleteLevel()
 
 void InGameState::CompleteGame()
 {
-	//std::string message = "Data/Menu/MN_credits.xml";
-	GameStateMessage* newEvent = new GameStateMessage(eGameState::COMPLETE_GAME);
 	ShowMessage("Data/Resource/Texture/Menu/MainMenu/T_background_default.dds", { 600, 400 }, "Game won! Press [space] to continue.");
 	myIsComplete = true;
 }

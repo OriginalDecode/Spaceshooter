@@ -106,7 +106,6 @@ private:
 	bool myUsePostProcessing;
 	bool myComplete;
 
-	Entity* myStreakEntity;
 	Entity* myEMP;
 	float myEMPScale;
 	float myEMPTimer;

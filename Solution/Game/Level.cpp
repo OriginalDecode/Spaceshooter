@@ -171,28 +171,23 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
-
-	////streak debug only, please remove later
-	//static float totalTime = 0;
-	//totalTime += aDeltaTime;
-
-	//float radius = 34.f;
-	//float distance = 100.f;
-
-	//myStreakEntity->myOrientation.SetPos(CU::Vector3<float>(sinf(totalTime) * radius, cosf(totalTime) * radius, distance));
-
-	//myStreakEntity->Update(aDeltaTime);
-	////streak debug only END
-	//myStreakEntity->GetComponent<ParticleEmitterComponent>()->Update(aDeltaTime);
-
-
-	//mySkySphereOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
-	UpdateDebug();
 
+#ifndef RELEASE_BUILD
+	UpdateDebug();
+#endif
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
-	myMissionManager->Update(aDeltaTime);
+
+	bool forceNextMission = false;
+#ifndef RELEASE_BUILD
+	if (myInputWrapper->KeyDown(DIK_F4) == true)
+	{
+		forceNextMission = true;
+	}
+#endif
+	myMissionManager->Update(aDeltaTime, forceNextMission);
+	
 	myEventManager->Update();
 	myCamera->Update(aDeltaTime);
 	return myComplete;
