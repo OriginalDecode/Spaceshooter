@@ -15,16 +15,21 @@
 
 StreakEmitterComponent::StreakEmitterComponent(Entity& aEntity)
 	: Component(aEntity)
-	, myEmitter(nullptr)
+	, myEmitterLeft(nullptr)
+	, myEmitterRight(nullptr)
 {
+	myOrientationLeft.SetPos(CU::Vector3<float>(-3.f, 0, 0));
+	myOrientationRight.SetPos(CU::Vector3<float>(3.f, 0, 0));
 }
 
 StreakEmitterComponent::~StreakEmitterComponent()
 {
 	//PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
 
-	delete myEmitter;
-	myEmitter = nullptr;
+	delete myEmitterLeft;
+	myEmitterLeft = nullptr;
+	delete myEmitterRight;
+	myEmitterRight = nullptr;
 }
 
 void StreakEmitterComponent::Init(std::string aPath)
@@ -34,15 +39,18 @@ void StreakEmitterComponent::Init(std::string aPath)
 	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
 	Prism::StreakEmitterData data;
 	data.LoadDataFile(myXMLPath.c_str());
-	myEmitter = new Prism::StreakEmitterInstance(data);
+	myEmitterLeft = new Prism::StreakEmitterInstance(data);
+	myEmitterRight = new Prism::StreakEmitterInstance(data);
 }
 
 void StreakEmitterComponent::Update(float aDeltaTime)
 {
-	myEmitter->SetOrientation(myEntity.myOrientation);
+	myEmitterLeft->SetOrientation(myOrientationLeft * myEntity.myOrientation);
+	myEmitterRight->SetOrientation(myOrientationRight * myEntity.myOrientation);
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitter->Update(aDeltaTime);
+		myEmitterLeft->Update(aDeltaTime);
+		myEmitterRight->Update(aDeltaTime);
 	}
 }
 
@@ -50,14 +58,15 @@ void StreakEmitterComponent::Render()
 {
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitter->Render(&myEntity.GetScene().GetCamera());
+		myEmitterLeft->Render(&myEntity.GetScene().GetCamera());
+		myEmitterRight->Render(&myEntity.GetScene().GetCamera());
 	}
 }
 
 Prism::StreakEmitterInstance* StreakEmitterComponent::GetEmitter()
 {
 	if (this != nullptr)
-		return myEmitter;
+		return myEmitterLeft;
 
 	return nullptr;
 
