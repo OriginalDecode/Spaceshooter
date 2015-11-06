@@ -192,7 +192,14 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
-	myMissionManager->Update(aDeltaTime);
+
+	bool forceNextMission = false;
+	if (myInputWrapper->KeyDown(DIK_F4) == true)
+	{
+		forceNextMission = true;
+	}
+	myMissionManager->Update(aDeltaTime, forceNextMission);
+	
 	myEventManager->Update();
 	myCamera->Update(aDeltaTime);
 	return myComplete;
