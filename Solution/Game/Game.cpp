@@ -61,6 +61,9 @@ bool Game::Init(HWND& aHwnd)
 #ifdef _DEBUG
 	startInMenu = false;
 #endif
+
+	startInMenu = true;
+
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 
@@ -157,7 +160,7 @@ bool Game::Update()
 
 	if (myIsComplete == true)
 	{
-		myCurrentMenu = new MenuState("Data/Menu/MN_credits.xml", myInputWrapper);
+		myCurrentMenu = new MenuState("Data/Menu/MN_credits.xml", myInputWrapper, true);
 		myStateStack.PushMainGameState(myCurrentMenu);
 		myIsComplete = false;
 	}
