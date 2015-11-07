@@ -10,15 +10,15 @@ namespace Prism
 		Tga32::Image* image = Tga32::Load(aFilePath);
 
 		int width = image->myWidth;
-		int height = image->myHeight;
+		int depth = image->myHeight;
 
-		unsigned char* data = new unsigned char[width * height];
+		unsigned char* data = new unsigned char[width * depth];
 
-		for (int i = 0; i < width * height; ++i)
+		for (int i = 0; i < width * depth; ++i)
 		{
 			data[i] = image->myImage[i * 4];
 		}
 
-		return new HeightMap(width, height, data);
+		return new HeightMap(width, depth, data);
 	}
 }
