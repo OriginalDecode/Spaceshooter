@@ -7,16 +7,20 @@
 
 Prism::Texture::~Texture()
 {
-	myTexture->Release();
+	Release();
 }
 
 void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 	, unsigned int aFormat)
 {
-	myTexture = nullptr;
+	myShaderView = nullptr;
 	myRenderTargetView = nullptr;
+	myTexture = nullptr;
+
 	myDepthStencilView = nullptr;
 	myDepthStencilShaderView = nullptr;
+	myDepthTexture = nullptr;
+
 	myTextureFormat = aFormat;
 
 	if ((aBindFlag & D3D11_BIND_SHADER_RESOURCE) > 0 || (aBindFlag & D3D11_BIND_RENDER_TARGET) > 0)
@@ -34,24 +38,21 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 		tempBufferInfo.CPUAccessFlags = 0;
 		tempBufferInfo.MiscFlags = 0;
 
-		ID3D11Texture2D* tempBuffer;
-		HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &tempBuffer);
+		HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &myTexture);
 
 		if ((aBindFlag & D3D11_BIND_SHADER_RESOURCE) > 0)
 		{
-			hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(tempBuffer, NULL, &myTexture);
+			hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myTexture, NULL, &myShaderView);
 			if (FAILED(hr))
 				assert(0);
 		}
 
 		if ((aBindFlag & D3D11_BIND_RENDER_TARGET) > 0)
 		{
-			hr = Engine::GetInstance()->GetDevice()->CreateRenderTargetView(tempBuffer, NULL, &myRenderTargetView);
+			hr = Engine::GetInstance()->GetDevice()->CreateRenderTargetView(myTexture, NULL, &myRenderTargetView);
 			if (FAILED(hr))
 				assert(0);
 		}
-		tempBuffer->Release();
-
 	}
 
 	if ((aBindFlag & D3D11_BIND_DEPTH_STENCIL) > 0)
@@ -63,12 +64,12 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 {
 	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice(), aFilePath.c_str()
-		, NULL, NULL, &myTexture, NULL);
+		, NULL, NULL, &myShaderView, NULL);
 	
 	if (FAILED(hr) == S_OK)
 	{
 		ID3D11Resource* resource = nullptr;
-		myTexture->GetResource(&resource);
+		myShaderView->GetResource(&resource);
 		ID3D11Texture2D* texture2D = reinterpret_cast<ID3D11Texture2D*>(resource);
 		D3D11_TEXTURE2D_DESC* texture2DDEsc = new D3D11_TEXTURE2D_DESC;
 		texture2D->GetDesc(texture2DDEsc);
@@ -85,7 +86,7 @@ bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 	{
 		RESOURCE_LOG("Failed to load: %s, trying to use MissingTexture-texture.", aFilePath.c_str());
 		hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice()
-			, "Data/Resource/Texture/T_missing_texture.dds", NULL, NULL, &myTexture, NULL);
+			, "Data/Resource/Texture/T_missing_texture.dds", NULL, NULL, &myShaderView, NULL);
 		myFileName = "Data/Resource/Texture/T_missing_texture.dds";
 		if (FAILED(hr) != S_OK)
 		{
@@ -101,43 +102,83 @@ const std::string& Prism::Texture::GetFileName() const
 	return myFileName;
 }
 
-ID3D11ShaderResourceView* Prism::Texture::GetShaderView()
+ID3D11ShaderResourceView* Prism::Texture::GetShaderView() const
 {
-	DL_ASSERT_EXP(myTexture != nullptr, "[Texture]: Tried to GetShaderView, but texture wasnt created with D3D11_BIND_SHADER_RESOURCE");
-	return myTexture;
+	DL_ASSERT_EXP(myShaderView != nullptr, "[Texture]: Tried to GetShaderView, but texture wasnt created with D3D11_BIND_SHADER_RESOURCE");
+	return myShaderView;
 }
 
-ID3D11RenderTargetView* Prism::Texture::GetRenderTargetView()
+ID3D11RenderTargetView* Prism::Texture::GetRenderTargetView() const
 {
 	DL_ASSERT_EXP(myRenderTargetView != nullptr, "[Texture]: Tried to GetRenderTargetView, but texture wasnt created with D3D11_BIND_RENDER_TARGET");
 	return myRenderTargetView;
 }
 
-ID3D11DepthStencilView* Prism::Texture::GetDepthStencilView()
+ID3D11Texture2D* Prism::Texture::GetTexture() const
+{
+	DL_ASSERT_EXP(myTexture != nullptr, "[Texture]: Tried to GetTexture, but texture wasnt created with D3D11_BIND_SHADER_RESOURCE");
+	return myTexture;
+}
+
+ID3D11DepthStencilView* Prism::Texture::GetDepthStencilView() const
 {
 	DL_ASSERT_EXP(myDepthStencilView != nullptr, "[Texture]: Tried to GetDepthStencilView, but texture wasnt created with D3D11_BIND_DEPTH_STENCIL");
 	return myDepthStencilView;
 }
 
-ID3D11ShaderResourceView* Prism::Texture::GetDepthStencilShaderView()
+ID3D11ShaderResourceView* Prism::Texture::GetDepthStencilShaderView() const
 {
 	DL_ASSERT_EXP(myDepthStencilShaderView != nullptr, "[Texture]: Tried to GetDepthStencilShaderView, but texture wasnt created with D3D11_BIND_DEPTH_STENCIL");
 	return myDepthStencilShaderView;
 }
 
+ID3D11Texture2D* Prism::Texture::GetDepthTexture() const
+{
+	DL_ASSERT_EXP(myDepthStencilShaderView != nullptr, "[Texture]: Tried to GetDepthTexture, but texture wasnt created with D3D11_BIND_DEPTH_STENCIL");
+	return myDepthTexture;
+}
+
 void Prism::Texture::Release()
 {
-	myTexture->Release();
+	if (myShaderView != nullptr)
+	{
+		myShaderView->Release();
+	}
+
+	if (myRenderTargetView != nullptr)
+	{
+		myRenderTargetView->Release();
+	}
+
+	if (myTexture != nullptr)
+	{
+		myTexture->Release();
+	}
+
+	if (myDepthStencilView != nullptr)
+	{
+		myDepthStencilView->Release();
+	}
+
+	if (myDepthStencilShaderView != nullptr)
+	{
+		myDepthStencilShaderView->Release();
+	}
+
+	if (myDepthTexture != nullptr)
+	{
+		myDepthTexture->Release();
+	}
 }
 
 void Prism::Texture::Resize(float aWidth, float aHeight)
 {
 	int bindFlag = 0;
-	if (myTexture != nullptr)
+	if (myShaderView != nullptr)
 	{
 		bindFlag |= D3D11_BIND_SHADER_RESOURCE;
-		myTexture->Release();
-		myTexture = nullptr;
+		myShaderView->Release();
+		myShaderView = nullptr;
 	}
 
 	if (myRenderTargetView != nullptr)
@@ -174,8 +215,7 @@ void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 	tempBufferInfo.CPUAccessFlags = 0;
 	tempBufferInfo.MiscFlags = 0;
 
-	ID3D11Texture2D* tempBuffer;
-	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &tempBuffer);
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &myDepthTexture);
 
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthDesc;
@@ -185,7 +225,7 @@ void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 	depthDesc.Texture2D.MipSlice = 0;
 
 	//tempBufferInfo.Format = DXGI_FORMAT_D32_FLOAT;
-	hr = Engine::GetInstance()->GetDevice()->CreateDepthStencilView(tempBuffer, &depthDesc, &myDepthStencilView);
+	hr = Engine::GetInstance()->GetDevice()->CreateDepthStencilView(myDepthTexture, &depthDesc, &myDepthStencilView);
 	if (FAILED(hr))
 		assert(0);
 
@@ -198,11 +238,9 @@ void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 	viewDesc.Texture2D.MostDetailedMip = 0;
 
 	//tempBufferInfo.Format = static_cast<DXGI_FORMAT>(aFormat);
-	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(tempBuffer, &viewDesc, &myDepthStencilShaderView);
+	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myDepthTexture, &viewDesc, &myDepthStencilShaderView);
 	if (FAILED(hr))
 		assert(0);
-
-	tempBuffer->Release();
 }
 
 bool Prism::Texture::IsValid(UINT aValue)

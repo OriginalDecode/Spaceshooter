@@ -250,6 +250,19 @@ bool Prism::DirectX::D3DSwapChainSetup()
 
 	myInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
 	myInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+
+	D3D11_MESSAGE_ID hide[] =
+	{
+		D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD,
+		D3D11_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD
+		// Add more message IDs here as needed
+	};
+
+	D3D11_INFO_QUEUE_FILTER filter;
+	memset(&filter, 0, sizeof(filter));
+	filter.DenyList.NumIDs = _countof(hide);
+	filter.DenyList.pIDList = hide;
+	myInfoQueue->AddStorageFilterEntries(&filter);
 	myInfoQueue->Release();
 #endif
 
