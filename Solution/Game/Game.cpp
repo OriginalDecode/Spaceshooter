@@ -7,6 +7,7 @@
 #include <CommonHelper.h>
 #include "Constants.h"
 #include <Engine.h>
+#include "FadeMessage.h"
 #include <FileWatcher.h>
 #include <DebugFont.h>
 #include "Game.h"
@@ -45,6 +46,7 @@ Game::~Game()
 {
 	delete myInputWrapper;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::FADE, this);
 
 	Prism::Audio::AudioInterface::Destroy();
 	PostMaster::Destroy();
@@ -66,6 +68,7 @@ bool Game::Init(HWND& aHwnd)
 
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::FADE, this);
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Resource/Sound/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Resource/Sound/SpaceShooterBank.bnk");
@@ -142,7 +145,7 @@ bool Game::Update()
 	}
 	if (myInputWrapper->KeyDown(DIK_F3))
 	{
-		Prism::Engine::GetInstance()->StartFade(3.f);
+		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f));
 	}
 #endif
 
@@ -190,6 +193,11 @@ void Game::OnResize(int aWidth, int aHeight)
 	myWindowSize.y = aHeight;
 	myStateStack.OnResize(aWidth, aHeight);
 	PostMaster::GetInstance()->SendMessage(ResizeMessage(aWidth, aHeight));
+}
+
+void Game::ReceiveMessage(const FadeMessage& aMessage)
+{
+	Prism::Engine::GetInstance()->StartFade(aMessage.myDuration);
 }
 
 void Game::ReceiveMessage(const GameStateMessage& aMessage)

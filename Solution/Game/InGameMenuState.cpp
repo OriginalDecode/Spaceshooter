@@ -2,6 +2,7 @@
 #include "InGameMenuState.h"
 #include <Sprite.h>
 #include <Camera.h>
+#include "FadeMessage.h"
 #include <InputWrapper.h>
 #include "SplashState.h"
 #include "StateStackProxy.h"
@@ -40,6 +41,8 @@ void InGameMenuState::InitState(StateStackProxy* aStateStackProxy)
 	myCurrentTime = 0;
 	myFadeInTime = 0.5f;
 	myOverlayAlpha = 1.f;
+
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f));
 }
 
 void InGameMenuState::EndState()
