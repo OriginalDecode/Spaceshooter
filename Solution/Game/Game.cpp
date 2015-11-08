@@ -140,6 +140,10 @@ bool Game::Update()
 	{
 		Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 	}
+	if (myInputWrapper->KeyDown(DIK_F3))
+	{
+		Prism::Engine::GetInstance()->StartFade(3.f);
+	}
 #endif
 
 	myStateStack.RenderCurrentState();

@@ -15,6 +15,8 @@ Prism::Sprite::Sprite(const std::string& aFileName, const CU::Vector2<float>& aS
 		, const CU::Vector2<float>& aHotSpot)
 	: mySize(aSpriteSize)
 	, myHotspot(aHotSpot)
+	, myTexture(nullptr)
+	, myShaderView(nullptr)
 {
 	myFileName = aFileName;
 
@@ -31,6 +33,54 @@ Prism::Sprite::Sprite(const std::string& aFileName, const CU::Vector2<float>& aS
 	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_IMMUTABLE, 0);
 	InitIndexBuffer();
 	InitSurface("DiffuseTexture", myFileName);
+	InitBlendState();
+
+	ZeroMemory(myInitData, sizeof(myInitData));
+
+	CreateVertices();
+}
+
+Prism::Sprite::Sprite(ID3D11Texture2D* aTexture, const CU::Vector2<float>& aSpriteSize
+	, const CU::Vector2<float>& aHotSpot)
+	: mySize(aSpriteSize)
+	, myHotspot(aHotSpot)
+	, myTexture(nullptr)
+	, myShaderView(nullptr)
+{
+	myFileName = "Inited from ID3D11Texture";
+
+	myEffect = Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_sprite.fx");
+	myEffect->AddListener(this);
+
+	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	{
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+
+	D3D11_TEXTURE2D_DESC desc;
+	aTexture->GetDesc(&desc);
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&desc, NULL, &myTexture);
+	if (FAILED(hr))
+	{
+		DL_ASSERT("Failed to CreateTexture2D");
+	}
+
+	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myTexture, NULL, &myShaderView);
+	if (FAILED(hr))
+	{
+		DL_ASSERT("Failed to CopyFromD3DTexture");
+	}
+
+	
+	CopyFromD3DTexture(aTexture);
+
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_IMMUTABLE, 0);
+	InitSurface("DiffuseTexture", myShaderView);
+	InitIndexBuffer();
 	InitBlendState();
 
 	ZeroMemory(myInitData, sizeof(myInitData));
@@ -105,6 +155,12 @@ void Prism::Sprite::CreateVertices()
 
 	mySurfaces[0]->SetVertexCount(vertices.Size());
 	mySurfaces[0]->SetIndexCount(indices.Size());
+}
+
+void Prism::Sprite::CopyFromD3DTexture(ID3D11Texture2D* aTexture)
+{
+	DL_ASSERT_EXP(myTexture != nullptr, "Tried to CopyFromD3DTexture on a sprite that was created from file");
+	Engine::GetInstance()->GetContex()->CopyResource(myTexture, aTexture);
 }
 
 void Prism::Sprite::Rotate(float aRadians)

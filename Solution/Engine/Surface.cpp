@@ -17,6 +17,20 @@ Prism::Surface::Surface()
 	myEmissive = false;
 }
 
+Prism::Surface::~Surface()
+{
+	/*for (int i = 0; i < myShaderResources.Size(); ++i)
+	{
+		myShaderResources[i]->Release();
+	}*/
+
+	myShaderResources.RemoveAll();
+	myShaderResourceViews.RemoveAll();
+	myFilePaths.RemoveAll();
+	myTextures.RemoveAll();
+	myShaderResourceNames.RemoveAll();
+}
+
 bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
 {
 	aUseSRGB;
@@ -77,6 +91,17 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aText
 
 bool Prism::Surface::SetTexture(const std::string& aResourceName, ID3D11ShaderResourceView* aResource)
 {
+	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
+	if (shaderVar->IsValid() == false)
+	{
+		//DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
+		RESOURCE_LOG("Failed to get ShaderResource");
+		return false;
+	}
+
+	myShaderResources.Add(aResource);
+	myShaderResourceViews.Add(shaderVar);
+	myShaderResourceNames.Add(aResourceName);
 	return true;
 }
 

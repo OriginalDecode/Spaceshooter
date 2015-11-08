@@ -13,6 +13,7 @@ namespace Prism{
 	{
 	public:
 		Surface();
+		~Surface();
 
 		int GetVertexStart() const;
 		void SetVertexStart(int aStart);

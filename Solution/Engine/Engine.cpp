@@ -10,6 +10,7 @@
 #include "Model.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
+#include "Sprite.h"
 #include "Text.h"
 #include <TimerManager.h>
 #include "TextureContainer.h"
@@ -36,6 +37,12 @@ namespace Prism
 		myModelLoader = new ModelLoader();
 		myWireframeIsOn = false;
 		myWireframeShouldShow = false;
+
+		myFadeData.myIsFading = false;
+		myFadeData.myNeedToPrepareToFade = false;
+		myFadeData.myCurrentTime = 0.f;
+		myFadeData.myTotalTime = 0.f;
+		myFadeData.mySprite = nullptr;
 	}
 
 	Engine::~Engine()
@@ -96,9 +103,37 @@ namespace Prism
 			myText->SetPosition(myDebugTexts[i].myPosition);
 			//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
 			myText->Render();
-	}
+		}
 		myDebugTexts.RemoveAll();
+
+		if (myFadeData.myIsFading == true)
+		{
+			myFadeData.myCurrentTime -= CU::TimerManager::GetInstance()->GetMasterTimer().GetTime().GetFrameTime();
+
+			if (myFadeData.myCurrentTime <= 0.f)
+			{
+				myFadeData.myIsFading = false;
+				myFadeData.myCurrentTime = 0.f;
+			}
+
+			myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
+		}
+
 		myDirectX->Present(0, 0);
+
+		if (myFadeData.myNeedToPrepareToFade == true)
+		{
+			if (myFadeData.mySprite == nullptr)
+			{
+				myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
+			}
+			else
+			{
+				myFadeData.mySprite->CopyFromD3DTexture(myDirectX->GetBackbufferTexture());
+			}
+			myFadeData.myIsFading = true;
+			myFadeData.myNeedToPrepareToFade = false;
+		}
 
 #ifdef RELEASE_BUILD
 #ifndef DLL_EXPORT
@@ -120,6 +155,9 @@ namespace Prism
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
+
+		myFadeData.mySprite->SetSize({ static_cast<float>(myWindowSize.x)
+			, static_cast<float>(myWindowSize.y) }, { 0.f, 0.f });
 	}
 
 	Model* Engine::DLLLoadModel(const std::string& aModelPath, Effect* aEffect)
@@ -156,6 +194,11 @@ namespace Prism
 		return myDirectX->GetDepthBuffer();
 	}
 
+	ID3D11ShaderResourceView* Engine::GetBackbufferView()
+	{
+		return myDirectX->GetBackbufferView();
+	}
+
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
 	{
 		myWindowSize.x = mySetupInfo->myScreenWidth;
@@ -173,6 +216,9 @@ namespace Prism
 			ENGINE_LOG("Failed to Setup DirectX");
 			return false;
 		}
+
+		
+
 
 		ShowWindow(aHwnd, 10);
 		UpdateWindow(aHwnd);
@@ -276,6 +322,13 @@ namespace Prism
 	void Engine::DisableWireframe()
 	{
 		myDirectX->DisableWireframe();
+	}
+
+	void Engine::StartFade(float aDuration)
+	{
+		myFadeData.myNeedToPrepareToFade = true;
+		myFadeData.myTotalTime = aDuration;
+		myFadeData.myCurrentTime = aDuration;
 	}
 
 	bool Engine::WindowSetup(HWND& aHwnd, WNDPROC aWindowProc)

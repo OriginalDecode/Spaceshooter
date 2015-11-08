@@ -20,7 +20,6 @@ Prism::DirectX::~DirectX()
 void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned int aFlags)
 {
 	mySwapChain->Present(aSyncInterval, aFlags);
-	
 }
 
 void Prism::DirectX::Clear(const float aClearColor[4])
@@ -58,14 +57,17 @@ void Prism::DirectX::CleanD3D()
 	myBackbufferRenderTarget->Release();
 	myBackbufferRenderTarget = nullptr;
 
-	myDevice->Release();
-	myDevice = nullptr;
+	myBackbufferShaderResource->Release();
+	myBackbufferShaderResource = nullptr;
 
 	myBackbufferTexture->Release();
 	myBackbufferTexture = nullptr;
 
 	myBackbufferDepthStencil->Release();
 	myBackbufferDepthStencil = nullptr;
+
+	myDevice->Release();
+	myDevice = nullptr;
 
 	myEnabledDepthStencilState->Release();
 	myEnabledDepthStencilState = nullptr;
@@ -98,6 +100,16 @@ ID3D11DepthStencilView* Prism::DirectX::GetDepthStencil()
 ID3D11RenderTargetView* Prism::DirectX::GetDepthBuffer()
 {
 	return myBackbufferRenderTarget;
+}
+
+ID3D11ShaderResourceView* Prism::DirectX::GetBackbufferView()
+{
+	return myBackbufferShaderResource;
+}
+
+ID3D11Texture2D* Prism::DirectX::GetBackbufferTexture()
+{
+	return myBackbufferTexture;
 }
 
 void Prism::DirectX::RestoreViewPort()
@@ -192,7 +204,7 @@ bool Prism::DirectX::D3DSwapChainSetup()
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 	swapChainDesc.OutputWindow = myHWND;
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.Windowed = true;
