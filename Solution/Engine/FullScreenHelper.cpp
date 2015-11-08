@@ -103,7 +103,6 @@ namespace Prism
 
 		myRenderToTextureData.mySource->SetResource(aSource->GetShaderView());
 		Render(myRenderToTextureData.myEffect);
-		//myRenderToTextureData.mySource->SetResource(NULL);
 	}
 
 	void FullScreenHelper::RenderToScreen(Texture* aSource, Texture* aDepth)
@@ -117,7 +116,6 @@ namespace Prism
 
 		myRenderToTextureData.mySource->SetResource(aSource->GetShaderView());
 		Render(myRenderToTextureData.myEffect);
-		//myRenderToTextureData.mySource->SetResource(NULL);
 	}
 
 	void FullScreenHelper::CopyTexture(Texture* aSource, Texture* aTarget)
@@ -125,16 +123,6 @@ namespace Prism
 		DL_ASSERT_EXP(aSource != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 
 		Engine::GetInstance()->GetContex()->CopyResource(aTarget->GetTexture(), aSource->GetTexture());
-
-		/*myRenderToTextureData.mySource->SetResource(aSource->GetShaderView());
-
-		ID3D11RenderTargetView* target = aTarget->GetRenderTargetView();
-		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target
-			, Engine::GetInstance()->GetDepthView());
-
-		Render(myRenderToTextureData.myEffect);
-
-		myRenderToTextureData.mySource->SetResource(NULL);*/
 	}
 
 	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget, bool aUseDepth)
@@ -161,12 +149,6 @@ namespace Prism
 		{
 			Render(myCombineData.myEffect, "NoDepth");
 		}
-
-		//myCombineData.mySourceA->SetResource(NULL);
-		//myCombineData.mySourceB->SetResource(NULL);
-		//myCombineData.myDepthA->SetResource(NULL);
-		//myCombineData.myDepthB->SetResource(NULL);
-		
 	}
 
 	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aDepthA
@@ -188,11 +170,6 @@ namespace Prism
 		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
 
 		Render(myCombineData.myEffect, "Depth");
-
-		//myCombineData.mySourceA->SetResource(NULL);
-		//myCombineData.mySourceB->SetResource(NULL);
-		//myCombineData.myDepthA->SetResource(NULL);
-		//myCombineData.myDepthB->SetResource(NULL);
 	}
 
 	void FullScreenHelper::CreateCombineData()
@@ -370,8 +347,6 @@ namespace Prism
 
 		Render(myBloomData.myBloomEffect, "BLOOM_X");
 
-		//myBloomData.myBloomVariable->SetResource(NULL);
-
 		target = aTarget->GetRenderTargetView();
 		depth = aTarget->GetDepthStencilView();
 		Engine::GetInstance()->GetContex()->ClearRenderTargetView(target, myClearColor);
@@ -379,8 +354,6 @@ namespace Prism
 		myBloomData.myBloomVariable->SetResource(myBloomData.myMiddleMan->GetShaderView());
 
 		Render(myBloomData.myBloomEffect, "BLOOM_Y");
-
-		//myBloomData.myBloomVariable->SetResource(NULL);
 	}
 
 	void FullScreenHelper::OnResize(float aWidth, float aHeight)

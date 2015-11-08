@@ -13,6 +13,7 @@ Prism::Texture::~Texture()
 void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 	, unsigned int aFormat)
 {
+	myFileName = "Initied as SRV/RTV/DSV";
 	myShaderView = nullptr;
 	myRenderTargetView = nullptr;
 	myTexture = nullptr;

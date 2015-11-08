@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DirectX.h"
 #include <D3D11.h>
+#include "Texture.h"
 
 
 
@@ -24,15 +25,17 @@ void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned in
 
 void Prism::DirectX::Clear(const float aClearColor[4])
 {
-	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
-	myContext->ClearRenderTargetView(myRenderTargetView, aClearColor);
-	myContext->ClearDepthStencilView(myDepthBufferView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	myContext->OMSetRenderTargets(1, &myBackbufferRenderTarget, myBackbufferDepthStencil);
+	myContext->ClearRenderTargetView(myBackbufferRenderTarget, aClearColor);
+	myContext->ClearDepthStencilView(myBackbufferDepthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 {
 	myContext->OMSetRenderTargets(0, NULL, NULL);
-	myRenderTargetView->Release();
+	myBackbufferRenderTarget->Release();
+	myBackbufferShaderResource->Release();
+	myBackbufferTexture->Release();
 	myContext->Flush();
 	HRESULT result = mySwapChain->ResizeBuffers(1, aWidth, aHeight, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
 	if (FAILED(result) != S_OK)
@@ -41,9 +44,8 @@ void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 		DL_MESSAGE_BOX("Failed to Resize SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
 	}
 
-	D3DRenderTargetSetup();
+	D3DBackbufferSetup(aWidth, aHeight);
 	D3DViewPortSetup(aWidth, aHeight);
-	D3DStencilBufferSetup(aWidth, aHeight);
 }
 
 void Prism::DirectX::CleanD3D()
@@ -53,17 +55,17 @@ void Prism::DirectX::CleanD3D()
 	mySwapChain->Release();
 	mySwapChain = nullptr;
 
-	myRenderTargetView->Release();
-	myRenderTargetView = nullptr;
+	myBackbufferRenderTarget->Release();
+	myBackbufferRenderTarget = nullptr;
 
 	myDevice->Release();
 	myDevice = nullptr;
 
-	myDepthBuffer->Release();
-	myDepthBuffer = nullptr;
+	myBackbufferTexture->Release();
+	myBackbufferTexture = nullptr;
 
-	myDepthBufferView->Release();
-	myDepthBufferView = nullptr;
+	myBackbufferDepthStencil->Release();
+	myBackbufferDepthStencil = nullptr;
 
 	myEnabledDepthStencilState->Release();
 	myEnabledDepthStencilState = nullptr;
@@ -90,12 +92,12 @@ void Prism::DirectX::CleanD3D()
 
 ID3D11DepthStencilView* Prism::DirectX::GetDepthStencil()
 {
-	return myDepthBufferView;
+	return myBackbufferDepthStencil;
 }
 
 ID3D11RenderTargetView* Prism::DirectX::GetDepthBuffer()
 {
-	return myRenderTargetView;
+	return myBackbufferRenderTarget;
 }
 
 void Prism::DirectX::RestoreViewPort()
@@ -105,7 +107,7 @@ void Prism::DirectX::RestoreViewPort()
 
 void Prism::DirectX::SetBackBufferAsTarget()
 {
-	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
+	myContext->OMSetRenderTargets(1, &myBackbufferRenderTarget, myBackbufferDepthStencil);
 }
 
 void Prism::DirectX::EnableZBuffer()
@@ -118,6 +120,16 @@ void Prism::DirectX::DisableZBuffer()
 	myContext->OMSetDepthStencilState(myDisabledDepthStencilState, 1);
 }
 
+void Prism::DirectX::EnableWireframe()
+{
+	myContext->RSSetState(myWireframeRasterizer);
+}
+
+void Prism::DirectX::DisableWireframe()
+{
+	myContext->RSSetState(mySolidRasterizer);
+}
+
 bool Prism::DirectX::D3DSetup()
 {
 	if (D3DSwapChainSetup() == false)
@@ -126,21 +138,15 @@ bool Prism::DirectX::D3DSetup()
 		return false;
 	}
 
-	if (D3DRenderTargetSetup() == false)
+	if (D3DBackbufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
-		DIRECTX_LOG("Failed to Setup RenderTarget");
+		DIRECTX_LOG("Failed to Setup Backbuffer");
 		return false;
 	}
 
 	if (D3DViewPortSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
 		DIRECTX_LOG("Failed to Setup DirectX ViewPort");
-		return false;
-	}
-
-	if (D3DStencilBufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
-	{
-		DIRECTX_LOG("Failed to Setup DirectX Stencil Buffer");
 		return false;
 	}
 
@@ -151,12 +157,6 @@ bool Prism::DirectX::D3DSetup()
 	}
 
 	if (D3DDisabledStencilStateSetup() == false)
-	{
-		DIRECTX_LOG("Failed to Setup DisabledStencilBuffer");
-		return false;
-	}
-
-	if (D3DStencilBufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
 		DIRECTX_LOG("Failed to Setup DisabledStencilBuffer");
 		return false;
@@ -179,19 +179,6 @@ bool Prism::DirectX::D3DSetup()
 	
 	DIRECTX_LOG("DirectX Setup Successful");
 	return true;
-}
-
-bool Prism::DirectX::D3DRenderTargetSetup()
-{
-	ID3D11Texture2D* backBuffer = nullptr;
-	mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-
-	myDevice->CreateRenderTargetView(backBuffer, NULL, &myRenderTargetView);
-	backBuffer->Release();
-
-	myContext->OMSetRenderTargets(1, &myRenderTargetView, NULL);
-
-	return TRUE;
 }
 
 bool Prism::DirectX::D3DSwapChainSetup()
@@ -269,27 +256,20 @@ bool Prism::DirectX::D3DSwapChainSetup()
 	return TRUE;
 }
 
-bool Prism::DirectX::D3DViewPortSetup(int aWidth, int aHeight)
+bool Prism::DirectX::D3DBackbufferSetup(int aWidth, int aHeight)
 {
-	myViewPort = new D3D11_VIEWPORT();
-	ZeroMemory(myViewPort, sizeof(D3D11_VIEWPORT));
+	//BackbuffeTexture
+	mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&myBackbufferTexture);
 
-	myViewPort->TopLeftX = 0;
-	myViewPort->TopLeftY = 0;
-	myViewPort->Width = static_cast<FLOAT>(aWidth);
-	myViewPort->Height = static_cast<FLOAT>(aHeight);
-	myViewPort->MinDepth = 0.f;
-	myViewPort->MaxDepth = 1.f;
+	//BackbufferRenderTarget
+	myDevice->CreateRenderTargetView(myBackbufferTexture, NULL, &myBackbufferRenderTarget);
+	myDevice->CreateShaderResourceView(myBackbufferTexture, NULL, &myBackbufferShaderResource);
 
-	myContext->RSSetViewports(1, myViewPort);
+	myContext->OMSetRenderTargets(1, &myBackbufferRenderTarget, NULL);
 
-	return true;
-}
 
-bool Prism::DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
-{
+	//BackbufferDepthstencil
 	HRESULT hr = S_OK;
-
 	D3D11_TEXTURE2D_DESC depthBufferInfo;
 	ZeroMemory(&depthBufferInfo, sizeof(depthBufferInfo));
 
@@ -302,7 +282,7 @@ bool Prism::DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
 	depthBufferInfo.Usage = D3D11_USAGE_DEFAULT;
 	depthBufferInfo.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 
-	hr = myDevice->CreateTexture2D(&depthBufferInfo, NULL, &myDepthBuffer);
+	hr = myDevice->CreateTexture2D(&depthBufferInfo, NULL, &myDepthbufferTexture);
 	if (FAILED(hr))
 	{
 		return false;
@@ -316,11 +296,28 @@ bool Prism::DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
 
 	stencilDesc.Texture2D.MipSlice = 0;
 
-	hr = myDevice->CreateDepthStencilView(myDepthBuffer, &stencilDesc, &myDepthBufferView);
+	hr = myDevice->CreateDepthStencilView(myDepthbufferTexture, &stencilDesc, &myBackbufferDepthStencil);
 	if (FAILED(hr))
 	{
 		return false;
 	}
+
+	return true;
+}
+
+bool Prism::DirectX::D3DViewPortSetup(int aWidth, int aHeight)
+{
+	myViewPort = new D3D11_VIEWPORT();
+	ZeroMemory(myViewPort, sizeof(D3D11_VIEWPORT));
+
+	myViewPort->TopLeftX = 0;
+	myViewPort->TopLeftY = 0;
+	myViewPort->Width = static_cast<FLOAT>(aWidth);
+	myViewPort->Height = static_cast<FLOAT>(aHeight);
+	myViewPort->MinDepth = 0.f;
+	myViewPort->MaxDepth = 1.f;
+
+	myContext->RSSetViewports(1, myViewPort);
 
 	return true;
 }
@@ -428,14 +425,4 @@ bool Prism::DirectX::D3DSolidRasterizerStateSetup()
 	myDevice->CreateRasterizerState(&desc, &mySolidRasterizer);
 
 	return true;
-}
-
-void Prism::DirectX::EnableWireframe()
-{
-	myContext->RSSetState(myWireframeRasterizer);
-}
-
-void Prism::DirectX::DisableWireframe()
-{
-	myContext->RSSetState(mySolidRasterizer);
 }

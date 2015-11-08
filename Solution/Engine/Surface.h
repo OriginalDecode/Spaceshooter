@@ -2,6 +2,7 @@
 #include <D3DX11.h>
 #include <GrowingArray.h>
 
+struct ID3D11ShaderResourceView;
 struct ID3DX11EffectShaderResourceVariable;
 
 namespace Prism{
@@ -30,6 +31,7 @@ namespace Prism{
 
 		bool SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB);
 		bool SetTexture(const std::string& aResourceName, Texture* aTexture);
+		bool SetTexture(const std::string& aResourceName, ID3D11ShaderResourceView* aResource);
 
 		void Activate();
 		void ReloadSurface();
@@ -41,7 +43,8 @@ namespace Prism{
 
 	private:
 		CU::GrowingArray<Texture*> myTextures;
-		CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderViews;
+		CU::GrowingArray<ID3D11ShaderResourceView*> myShaderResources;
+		CU::GrowingArray<ID3DX11EffectShaderResourceVariable*> myShaderResourceViews;
 		CU::GrowingArray<std::string> myShaderResourceNames;
 		CU::GrowingArray<std::string> myFilePaths;
 

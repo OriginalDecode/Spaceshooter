@@ -11,6 +11,7 @@ struct ID3D11InfoQueue;
 struct ID3D11RasterizerState;
 struct ID3D11RenderTargetView;
 struct ID3D11Texture2D;
+struct ID3D11ShaderResourceView;
 struct IDXGISwapChain;
 struct D3D11_VIEWPORT;
 struct SetupInfo;
@@ -49,9 +50,8 @@ namespace Prism
 		void CleanD3D();
 		bool D3DSetup();
 		bool D3DSwapChainSetup();
-		bool D3DRenderTargetSetup();
+		bool D3DBackbufferSetup(int aWidth, int aHeight);
 		bool D3DViewPortSetup(int aWidth, int aHeight);
-		bool D3DStencilBufferSetup(int aWidth, int aHeight);
 		bool D3DEnabledStencilStateSetup();
 		bool D3DDisabledStencilStateSetup();
 		bool D3DWireframeRasterizerStateSetup();
@@ -64,15 +64,19 @@ namespace Prism
 		ID3D11Debug* myDebugInterface;
 		ID3D11InfoQueue *myInfoQueue;
 		IDXGISwapChain* mySwapChain;
-		ID3D11RenderTargetView* myRenderTargetView;
-		ID3D11DepthStencilView* myDepthBufferView;
+
+		ID3D11RenderTargetView* myBackbufferRenderTarget;
+		ID3D11DepthStencilView* myBackbufferDepthStencil;
+		ID3D11ShaderResourceView* myBackbufferShaderResource;
+		ID3D11Texture2D* myDepthbufferTexture;
+		ID3D11Texture2D* myBackbufferTexture;
+
 		ID3D11DepthStencilState* myEnabledDepthStencilState;
 		ID3D11DepthStencilState* myDisabledDepthStencilState;
-		ID3D11Texture2D* myDepthBuffer;
 		ID3D11RasterizerState* mySolidRasterizer;
 		ID3D11RasterizerState* myWireframeRasterizer;
-		D3D11_VIEWPORT* myViewPort;
 
+		D3D11_VIEWPORT* myViewPort;
 		HWND& myHWND;
 		SetupInfo mySetupInfo;
 	};
