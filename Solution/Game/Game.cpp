@@ -145,7 +145,7 @@ bool Game::Update()
 	}
 	if (myInputWrapper->KeyDown(DIK_F3))
 	{
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f));
+		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f/3.f));
 	}
 #endif
 
