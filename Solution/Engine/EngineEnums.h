@@ -7,6 +7,7 @@ namespace Prism
 		NOT_IN_OCTREE,
 		STATIC,
 		DYNAMIC,
+		PLAYER,
 	};
 
 	enum ePostProcessing

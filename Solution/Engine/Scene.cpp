@@ -4,6 +4,7 @@
 #include "Camera.h"
 #include "Defines.h"
 #include "DirectionalLight.h"
+#include "EngineEnums.h"
 #include "Instance.h"
 #include "PointLight.h"
 #include "Scene.h"
@@ -16,6 +17,7 @@
 Prism::Scene::Scene()
 #ifdef SCENE_USE_OCTREE
 	: myOctree(new Octree(6))
+	, myPlayerInstance(nullptr)
 #endif
 {
 	myInstances.Init(4);
@@ -84,6 +86,11 @@ void Prism::Scene::Render()
 		myInstances[i]->Render(*myCamera);
 	}
 
+	myPlayerInstance->UpdateDirectionalLights(myDirectionalLightData);
+	myPlayerInstance->UpdatePointLights(myPointLightData);
+	myPlayerInstance->UpdateSpotLights(mySpotLightData);
+	myPlayerInstance->Render(*myCamera);
+
 }
 
 void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
@@ -102,7 +109,15 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 void Prism::Scene::AddInstance(Instance* aInstance)
 {
 #ifdef SCENE_USE_OCTREE
-	myOctree->Add(aInstance);
+	if (aInstance->GetOctreeType() == eOctreeType::PLAYER)
+	{
+		DL_ASSERT_EXP(myPlayerInstance == nullptr, "Tried to add Player twice to Scene");
+		myPlayerInstance = aInstance;
+	}
+	else
+	{
+		myOctree->Add(aInstance);
+	}
 #else
 	myInstances.Add(aInstance);
 #endif

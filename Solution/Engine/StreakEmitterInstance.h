@@ -27,6 +27,8 @@ namespace Prism
 		void SetOrientation(const CU::Matrix44f& anOrientation);
 		void SetPosition(const CU::Vector3f& aPosition);
 
+		void Reset();
+
 	private:
 		void operator=(StreakEmitterInstance&) = delete;
 		void CreateIndexBuffer();

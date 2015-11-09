@@ -11,46 +11,67 @@
 #include "Entity.h"
 #include "PostMaster.h"
 #include "Scene.h"
+#include <XMLReader.h>
 
 
 StreakEmitterComponent::StreakEmitterComponent(Entity& aEntity)
 	: Component(aEntity)
-	, myEmitterLeft(nullptr)
-	, myEmitterRight(nullptr)
+	, myEmitterData(nullptr)
+	, myEmitters(8)
 {
-	myOrientationLeft.SetPos(CU::Vector3<float>(-3.f, 0, 0));
-	myOrientationRight.SetPos(CU::Vector3<float>(3.f, 0, 0));
 }
 
 StreakEmitterComponent::~StreakEmitterComponent()
 {
-	//PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
-
-	delete myEmitterLeft;
-	myEmitterLeft = nullptr;
-	delete myEmitterRight;
-	myEmitterRight = nullptr;
+	myEmitters.DeleteAll();
+	delete myEmitterData;
 }
 
 void StreakEmitterComponent::Init(std::string aPath)
 {
 	myXMLPath = aPath;
 
-	//DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
-	Prism::StreakEmitterData data;
-	data.LoadDataFile(myXMLPath.c_str());
-	myEmitterLeft = new Prism::StreakEmitterInstance(data);
-	myEmitterRight = new Prism::StreakEmitterInstance(data);
+	DL_ASSERT_EXP(myEmitterData== nullptr, "Emitter were inited twice. Contact Linus Skold");
+
+	XMLReader reader;
+	reader.OpenDocument(myXMLPath);
+
+	tinyxml2::XMLElement* element = reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "Emitter");
+
+	std::string streakEmitterDataPath;
+
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(element, "Path"), "src", streakEmitterDataPath);
+
+
+	myEmitterData = new Prism::StreakEmitterData();
+	myEmitterData->LoadDataFile(streakEmitterDataPath.c_str());
+
+	for (tinyxml2::XMLElement* positionElement = reader.ForceFindFirstChild(element, "Position"); positionElement != nullptr
+			; positionElement = reader.FindNextElement(positionElement, "Position"))
+	{
+		CU::Vector3<float> position;
+
+		reader.ForceReadAttribute(positionElement, "X", position.x);
+		reader.ForceReadAttribute(positionElement, "Y", position.y);
+		reader.ForceReadAttribute(positionElement, "Z", position.z);
+
+		CU::Matrix44<float> orientation;
+		orientation.SetPos(position);
+		AddStreak(orientation);
+	}
+
+	reader.CloseDocument();
 }
 
 void StreakEmitterComponent::Update(float aDeltaTime)
 {
-	myEmitterLeft->SetOrientation(myOrientationLeft * myEntity.myOrientation);
-	myEmitterRight->SetOrientation(myOrientationRight * myEntity.myOrientation);
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitterLeft->Update(aDeltaTime);
-		myEmitterRight->Update(aDeltaTime);
+		for (int i = 0; i < myEmitters.Size(); ++i)
+		{
+			myEmitters[i]->myEmitter->SetOrientation(myEmitters[i]->myOrientation * myEntity.myOrientation);
+			myEmitters[i]->myEmitter->Update(aDeltaTime);
+		}
 	}
 }
 
@@ -58,24 +79,31 @@ void StreakEmitterComponent::Render()
 {
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitterLeft->Render(&myEntity.GetScene().GetCamera());
-		myEmitterRight->Render(&myEntity.GetScene().GetCamera());
+		for (int i = 0; i < myEmitters.Size(); ++i)
+		{
+			myEmitters[i]->myEmitter->Render(&myEntity.GetScene().GetCamera());
+		}
 	}
 }
 
-Prism::StreakEmitterInstance* StreakEmitterComponent::GetEmitter()
+void StreakEmitterComponent::AddStreak(const CU::Matrix44f aOrientation)
 {
-	if (this != nullptr)
-		return myEmitterLeft;
-
-	return nullptr;
-
+	Emitter* emitter = new Emitter();
+	emitter->myEmitter = new Prism::StreakEmitterInstance(*myEmitterData);
+	emitter->myOrientation = aOrientation;
+	myEmitters.Add(emitter);
 }
 
-//void StreakEmitterComponent::ReceiveNote(const EmitterNote& aNote)
-//{
-//	if (aNote.myType == EmitterNote::eType::BULLET)
-//	{
-//		//myEmitter->ToggleActive(aNote.myIsActive);
-//	}
-//}
+void StreakEmitterComponent::Reset()
+{
+	for (int i = 0; i < myEmitters.Size(); ++i)
+	{
+		myEmitters[i]->myEmitter->Reset();
+	}
+}
+
+
+StreakEmitterComponent::Emitter::~Emitter()
+{
+	delete myEmitter;
+}

@@ -24,19 +24,21 @@ PowerUpGUIIcon::~PowerUpGUIIcon()
 	myInactiveIcon = nullptr;
 }
 
-void PowerUpGUIIcon::Render()
+void PowerUpGUIIcon::Render(const CU::Vector2<int>& aWindowSize)
 {
+	CU::Vector2<float> screenCenter(float(aWindowSize.x) * 0.5f, -float(aWindowSize.y) * 0.5f);
+
 	if (myActive == true)
 	{
-		myActiveIcon->Render(myPosition);
+		myActiveIcon->Render(screenCenter + myPosition);
 		if (myDuration != nullptr)
 		{
 			//rendertext på min pos
-			Prism::Engine::GetInstance()->PrintText(*myDuration, myTextPosition, Prism::eTextType::RELEASE_TEXT);
+			Prism::Engine::GetInstance()->PrintText(*myDuration, screenCenter + myTextPosition, Prism::eTextType::RELEASE_TEXT);
 		}
 	}
 	else
 	{
-		myInactiveIcon->Render(myPosition);
+		myInactiveIcon->Render(screenCenter + myPosition);
 	}
 }

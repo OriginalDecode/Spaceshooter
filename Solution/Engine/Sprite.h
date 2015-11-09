@@ -2,12 +2,17 @@
 
 #include "BaseModel.h"
 
+struct ID3D11Texture2D;
+
 namespace Prism
 {
 	class Sprite : public BaseModel
 	{
 	public:
 		Sprite(const std::string& aFileName, const CU::Vector2<float>& aSpriteSize
+			, const CU::Vector2<float>& aHotSpot);
+
+		Sprite(ID3D11Texture2D* aTexture, const CU::Vector2<float>& aSpriteSize
 			, const CU::Vector2<float>& aHotSpot);
 
 		void Render(const CU::Vector2<float>& aPosition, const CU::Vector2<float>& aScale = { 1.f, 1.f }
@@ -18,9 +23,14 @@ namespace Prism
 
 		void Rotate(float aRadians);
 
+		void CopyFromD3DTexture(ID3D11Texture2D* aTexture);
 	private:
-
 		void CreateVertices();
+
+
+		ID3D11Texture2D* myTexture;
+		ID3D11ShaderResourceView* myShaderView;
+
 		CU::Matrix44<float> myOrientation;
 		CU::Vector2<float> mySize;
 		CU::Vector2<float> myHotspot;

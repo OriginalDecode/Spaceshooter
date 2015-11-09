@@ -85,6 +85,7 @@ void WeaponFactory::LoadProjectile(const std::string& aProjectileFilePath)
 	}
 	
 	ProjectileDataType projectileType;
+	projectileType.myCollision = -1.f;
 
 	projectileDocument.ForceReadAttribute(projectileElement, "type", projectileType.myType);
 
@@ -109,6 +110,10 @@ void WeaponFactory::LoadProjectile(const std::string& aProjectileFilePath)
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("speed").c_str()) == 0)
 		{
 			projectileDocument.ForceReadAttribute(e, "value", projectileType.mySpeed);
+		}
+		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("collision").c_str()) == 0)
+		{
+			projectileDocument.ForceReadAttribute(e, "value", projectileType.myCollision);
 		}
 	}
 

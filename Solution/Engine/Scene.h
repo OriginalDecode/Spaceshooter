@@ -37,6 +37,7 @@ namespace Prism
 	private:
 #ifdef SCENE_USE_OCTREE
 		Octree* myOctree;
+		Instance* myPlayerInstance;
 #endif
 		CU::GrowingArray<Instance*> myInstances;
 		CU::GrowingArray<DirectionalLight*> myDirectionalLights;

@@ -34,8 +34,9 @@ namespace Prism
 
 		int particleCount = static_cast<int>(myParticleEmitterData->myParticlesLifeTime / myParticleEmitterData->myEmissionRate) + 1;
 
+#ifndef _DEBUG
 		DL_ASSERT_EXP(particleCount <= 201, "Can't have more than 201 particles in an emitter!");
-
+#endif
 
 		myGraphicalParticles.Init(particleCount);
 		myLogicalParticles.Init(particleCount);

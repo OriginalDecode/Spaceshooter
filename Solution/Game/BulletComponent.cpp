@@ -84,7 +84,7 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH
 			, myEntity.myOrientation.GetPos()));
 	}
-	else
+	else if (aNote.myEntity.GetType() != eEntityType::PLAYER)
 	{
 		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EFFECT_ON_HIT
 			, myEntity.myOrientation.GetPos()));

@@ -37,9 +37,11 @@
 #include "ShootingComponent.h"
 #include "SoundComponent.h"
 #include <SpotLight.h>
+#include <Sprite.h>
 #include "StreakEmitterComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
+#include <thread>
 
 LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, Entity& aPlayer)
 	: myInputWrapper(anInputWrapper)
@@ -50,12 +52,16 @@ LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* 
 	, myDirectionalLights(4)
 	, myPointLights(4)
 	, mySpotLights(4)
+	, myIsLoading(false)
+	, myLoadLevelThread(nullptr)
 {
 	LoadLevelListFromXML(aLevelListPath);
 }
 
 LevelFactory::~LevelFactory()
 {
+	delete myLoadLevelThread;
+	myLoadLevelThread = nullptr;
 }
 
 Level* LevelFactory::LoadLevel(const int& anID)
@@ -71,15 +77,16 @@ Level* LevelFactory::LoadLevel(const int& anID)
 
 Level* LevelFactory::LoadCurrentLevel()
 {
+	myIsLoading = true;
 	delete myCurrentLevel;
 	myCurrentLevel = nullptr;
 
 	myCurrentLevel = new Level(myInputWrapper);
-	ReadXML(myLevelPaths[myCurrentID]);
 
-	myCurrentLevel->myEMP = new Entity(eEntityType::EMP, *myCurrentLevel->myScene, Prism::eOctreeType::NOT_IN_OCTREE);
-	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
-		, "Data/Resource/Shader/S_effect_emp.fx");
+	delete myLoadLevelThread;
+	myLoadLevelThread = nullptr;
+
+	myLoadLevelThread = new std::thread(&LevelFactory::ReadXML, this, myLevelPaths[myCurrentID]);
 
 	return myCurrentLevel;
 }
@@ -145,7 +152,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myBulletManager = new BulletManager(*myCurrentLevel->myCollisionManager, *myCurrentLevel->myScene);
 	myCurrentLevel->myBulletManager->LoadFromFactory(myCurrentLevel->myWeaponFactory, myCurrentLevel->myEntityFactory, "Data/Script/LI_list_projectile.xml");
 	myCurrentLevel->myEmitterManager = new EmitterManager();
-
 
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
@@ -230,8 +236,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	
 	reader.CloseDocument();
 
-	
-
 	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
 	{
 		if (myCurrentLevel->myEntities[i]->GetComponent<AIComponent>() != nullptr)
@@ -251,7 +255,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 		}
 	}
 
-
 	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
 	{
 		if (i <= 8)
@@ -269,11 +272,19 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 			}
 		}
 	}
-
-
 	AddToScene();
 
 	myCurrentLevel->myMissionManager->Init();
+
+	myCurrentLevel->myEMP = new Entity(eEntityType::EMP, *myCurrentLevel->myScene, Prism::eOctreeType::NOT_IN_OCTREE);
+	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
+		, "Data/Resource/Shader/S_effect_emp.fx");
+
+	while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
+	{
+	}
+
+	myIsLoading = false;
 }
 
 void LevelFactory::ReadLevelSettings()
@@ -452,7 +463,7 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 void LevelFactory::LoadPlayer()
 {
 
-	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::PLAYER);
 	myCurrentLevel->myPlayer->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
 		, "Data/Resource/Shader/S_effect_pbl.fx");
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
@@ -563,4 +574,11 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
 		, myPlayer->GetComponent<InputComponent>()->GetSkyOrientation(), Prism::eOctreeType::NOT_IN_OCTREE
 		, myCurrentLevel->mySkySphereCullingRadius);
+}
+
+void LevelFactory::Cleanup()
+{
+	myLoadLevelThread->join();
+	delete myLoadLevelThread;
+	myLoadLevelThread = nullptr;
 }
