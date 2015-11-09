@@ -69,7 +69,9 @@ private:
 	Prism::Sprite* myDefendHitMarker;
 	Prism::Sprite* myCurrentHitmarker;
 	Prism::Sprite* myPropHitMarker;
-	Prism::Sprite* myDamageIndicator;
+	Prism::Sprite* myDamageIndicatorHealth;
+	Prism::Sprite* myDamageIndicatorShield;
+	float myCurrentShield;
 	Prism::Sprite* myHomingTarget;
 
 	Prism::Sprite* myStructureArrow;
