@@ -157,13 +157,40 @@ void Prism::Sprite::CreateVertices()
 	mySurfaces[0]->SetIndexCount(indices.Size());
 }
 
+void Prism::Sprite::Rotate(float aRadians)
+{
+	myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aRadians) * myOrientation;
+}
+
+void Prism::Sprite::ResizeTexture(ID3D11Texture2D* aSrcTexture)
+{
+	myTexture->Release();
+	myShaderView->Release();
+
+	D3D11_TEXTURE2D_DESC desc;
+	aSrcTexture->GetDesc(&desc);
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&desc, NULL, &myTexture);
+	if (FAILED(hr))
+	{
+		DL_ASSERT("Failed to CreateTexture2D");
+	}
+
+	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myTexture, NULL, &myShaderView);
+	if (FAILED(hr))
+	{
+		DL_ASSERT("Failed to CopyFromD3DTexture");
+	}
+
+	CopyFromD3DTexture(aSrcTexture);
+
+	mySurfaces.DeleteAll();
+	InitSurface("DiffuseTexture", myShaderView);
+}
+
 void Prism::Sprite::CopyFromD3DTexture(ID3D11Texture2D* aTexture)
 {
 	DL_ASSERT_EXP(myTexture != nullptr, "Tried to CopyFromD3DTexture on a sprite that was created from file");
 	Engine::GetInstance()->GetContex()->CopyResource(myTexture, aTexture);
-}
-
-void Prism::Sprite::Rotate(float aRadians)
-{
-	myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aRadians) * myOrientation;
 }

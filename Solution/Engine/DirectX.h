@@ -29,6 +29,7 @@ namespace Prism
 		void Clear(const float aClearColor[4]);
 
 		void OnResize(int aWidth, int aHeigth);
+		void SetFullscreen(bool aFullscreenFlag);
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();

@@ -287,7 +287,10 @@ void Level::Render()
 
 void Level::OnResize(int aWidth, int aHeight)
 {
-	myCamera->OnResize(aWidth, aHeight);
+	if (myCamera != nullptr)
+	{
+		myCamera->OnResize(aWidth, aHeight);
+	}
 	myRenderer->OnResize(float(aWidth), float(aHeight));
 }
 
