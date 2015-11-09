@@ -121,18 +121,9 @@ namespace Prism
 
 		myDirectX->Present(0, 0);
 
-		if (myFadeData.myNeedToPrepareToFade == true)
+		if (myFadeData.myIsFading == false)
 		{
-			if (myFadeData.mySprite == nullptr)
-			{
-				myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
-			}
-			else
-			{
-				myFadeData.mySprite->CopyFromD3DTexture(myDirectX->GetBackbufferTexture());
-			}
-			myFadeData.myIsFading = true;
-			myFadeData.myNeedToPrepareToFade = false;
+			myFadeData.mySprite->CopyFromD3DTexture(myDirectX->GetBackbufferTexture());
 		}
 
 #ifdef RELEASE_BUILD
@@ -156,8 +147,12 @@ namespace Prism
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
 
-		myFadeData.mySprite->SetSize({ static_cast<float>(myWindowSize.x)
-			, static_cast<float>(myWindowSize.y) }, { 0.f, 0.f });
+		if (myFadeData.mySprite != nullptr)
+		{
+			myFadeData.mySprite->SetSize({ static_cast<float>(myWindowSize.x)
+				, static_cast<float>(myWindowSize.y) }, { 0.f, 0.f });
+		}
+		
 	}
 
 	Model* Engine::DLLLoadModel(const std::string& aModelPath, Effect* aEffect)
@@ -237,6 +232,8 @@ namespace Prism
 		myText->SetScale({ 1.f, 1.f });
 
 		myUsePBLPixelShader = true;
+
+		myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 
@@ -329,6 +326,7 @@ namespace Prism
 		myFadeData.myNeedToPrepareToFade = true;
 		myFadeData.myTotalTime = aDuration;
 		myFadeData.myCurrentTime = aDuration;
+		myFadeData.myIsFading = true;
 	}
 
 	bool Engine::WindowSetup(HWND& aHwnd, WNDPROC aWindowProc)
