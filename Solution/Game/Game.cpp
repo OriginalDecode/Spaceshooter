@@ -7,6 +7,7 @@
 #include <CommonHelper.h>
 #include "Constants.h"
 #include <Engine.h>
+#include "FadeMessage.h"
 #include <FileWatcher.h>
 #include <DebugFont.h>
 #include "Game.h"
@@ -45,6 +46,7 @@ Game::~Game()
 {
 	delete myInputWrapper;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::FADE, this);
 
 	Prism::Audio::AudioInterface::Destroy();
 	PostMaster::Destroy();
@@ -52,16 +54,21 @@ Game::~Game()
 
 bool Game::Init(HWND& aHwnd)
 {
+	myIsComplete = false;
 	bool startInMenu = false;
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
 #ifdef _DEBUG
-	startInMenu = false;
+	//startInMenu = false;
 #endif
+
+	startInMenu = true;
+
 	reader.CloseDocument();
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::FADE, this);
 
 	Prism::Audio::AudioInterface::GetInstance()->Init("Data/Resource/Sound/Init.bnk");
 	Prism::Audio::AudioInterface::GetInstance()->LoadBank("Data/Resource/Sound/SpaceShooterBank.bnk");
@@ -108,11 +115,13 @@ bool Game::Update()
 		deltaTime = 1.0f / 10.0f;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyUp(DIK_O) == true)
 	{
 		myLockMouse = !myLockMouse;
 		ShowCursor(!myLockMouse);
 	}
+#endif
 
 	if (myLockMouse == true)
 	{
@@ -124,6 +133,7 @@ bool Game::Update()
 		return false;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyDown(DIK_F8))
 	{
 		myShowSystemInfo = !myShowSystemInfo;
@@ -133,10 +143,14 @@ bool Game::Update()
 	{
 		Prism::Engine::GetInstance()->GetFileWatcher()->CheckFiles();
 	}
-
+	if (myInputWrapper->KeyDown(DIK_F3))
+	{
+		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f/3.f));
+	}
+#endif
 
 	myStateStack.RenderCurrentState();
-
+#ifndef RELEASE_BUILD
 	if (myShowSystemInfo == true)
 	{
 		int fps = int(1.f / realDeltaTime);
@@ -149,18 +163,28 @@ bool Game::Update()
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("Mem: %d (MB)", memory), { 1000.f, -80.f }, Prism::eTextType::DEBUG_TEXT);
 		Prism::Engine::GetInstance()->PrintText(CU::Concatenate("CPU: %f", cpuUsage), { 1000.f, -110.f }, Prism::eTextType::DEBUG_TEXT);
 	}
+#endif
+
+	if (myIsComplete == true)
+	{
+		myCurrentMenu = new MenuState("Data/Menu/MN_credits.xml", myInputWrapper, true);
+		myStateStack.PushMainGameState(myCurrentMenu);
+		myIsComplete = false;
+	}
 
 	return true;
 }
 
 void Game::Pause()
 {
-
+	myLockMouse = false;
+	ShowCursor(true);
 }
 
 void Game::UnPause()
 {
-
+	myLockMouse = true;
+	ShowCursor(false);
 }
 
 void Game::OnResize(int aWidth, int aHeight)
@@ -169,6 +193,11 @@ void Game::OnResize(int aWidth, int aHeight)
 	myWindowSize.y = aHeight;
 	myStateStack.OnResize(aWidth, aHeight);
 	PostMaster::GetInstance()->SendMessage(ResizeMessage(aWidth, aHeight));
+}
+
+void Game::ReceiveMessage(const FadeMessage& aMessage)
+{
+	Prism::Engine::GetInstance()->StartFade(aMessage.myDuration);
 }
 
 void Game::ReceiveMessage(const GameStateMessage& aMessage)
@@ -186,6 +215,9 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		break;
 	case eGameState::MOUSE_LOCK:
 		myLockMouse = aMessage.GetMouseLocked();
+		break;
+	case eGameState::COMPLETE_GAME:
+		myIsComplete = true;
 		break;
 	}
 }

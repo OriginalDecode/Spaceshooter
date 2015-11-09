@@ -4,6 +4,7 @@
 #include <AudioInterface.h>
 #include "BulletAIComponent.h"
 #include "Constants.h"
+#include <Defines.h>
 #include <Engine.h>
 #include "Entity.h"
 #include <FileWatcher.h>
@@ -196,6 +197,13 @@ void InputComponent::ToggleCameraLock()
 
 void InputComponent::UpdateMovement(const float& aDelta)
 {
+	float distFromOrigo = CU::Length(myEntity.myOrientation.GetPos());
+	if (distFromOrigo > OCTREE_WIDTH)
+	{
+		myEntity.GetComponent<PhysicsComponent>()->Bounce();
+		return;
+	}
+
 	float acceleration = 0;
 	const float movementSpeed = myEntity.GetComponent<PhysicsComponent>()->GetSpeed();
 
@@ -219,10 +227,12 @@ void InputComponent::UpdateMovement(const float& aDelta)
 		myCurrentBoostValue = 0;
 	}
 
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE))
 	{
 		Reset();
 	}
+#endif
 
 	int soundSpeed = static_cast<int>((movementSpeed / myMaxMovementSpeed) * 100);
 	Prism::Audio::AudioInterface::GetInstance()->SetRTPC("SS_Air_RPM", soundSpeed, GetEntity().GetComponent<SoundComponent>()->GetAudioSFXID());

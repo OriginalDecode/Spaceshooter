@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "DirectX.h"
 #include <D3D11.h>
+#include "Texture.h"
 
 
 Prism::DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
@@ -18,21 +19,22 @@ Prism::DirectX::~DirectX()
 void Prism::DirectX::Present(const unsigned int aSyncInterval, const unsigned int aFlags)
 {
 	mySwapChain->Present(aSyncInterval, aFlags);
-	
 }
 
 void Prism::DirectX::Clear(const float aClearColor[4])
 {
-	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
-	myContext->ClearRenderTargetView(myRenderTargetView, aClearColor);
-	myContext->ClearDepthStencilView(myDepthBufferView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	myContext->OMSetRenderTargets(1, &myBackbufferRenderTarget, myBackbufferDepthStencil);
+	myContext->ClearRenderTargetView(myBackbufferRenderTarget, aClearColor);
+	myContext->ClearDepthStencilView(myBackbufferDepthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 {
 	
 	myContext->OMSetRenderTargets(0, NULL, NULL);
-	myRenderTargetView->Release();
+	myBackbufferRenderTarget->Release();
+	myBackbufferShaderResource->Release();
+	myBackbufferTexture->Release();
 	myContext->Flush();
 
 
@@ -44,9 +46,8 @@ void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 	}
 	
 
-	D3DRenderTargetSetup();
+	D3DBackbufferSetup(aWidth, aHeight);
 	D3DViewPortSetup(aWidth, aHeight);
-	D3DStencilBufferSetup(aWidth, aHeight);
 }
 
 void Prism::DirectX::SetFullscreen(bool aFullscreenFlag)
@@ -66,17 +67,20 @@ void Prism::DirectX::CleanD3D()
 	mySwapChain->Release();
 	mySwapChain = nullptr;
 
-	myRenderTargetView->Release();
-	myRenderTargetView = nullptr;
+	myBackbufferRenderTarget->Release();
+	myBackbufferRenderTarget = nullptr;
+
+	myBackbufferShaderResource->Release();
+	myBackbufferShaderResource = nullptr;
+
+	myBackbufferTexture->Release();
+	myBackbufferTexture = nullptr;
+
+	myBackbufferDepthStencil->Release();
+	myBackbufferDepthStencil = nullptr;
 
 	myDevice->Release();
 	myDevice = nullptr;
-
-	myDepthBuffer->Release();
-	myDepthBuffer = nullptr;
-
-	myDepthBufferView->Release();
-	myDepthBufferView = nullptr;
 
 	myEnabledDepthStencilState->Release();
 	myEnabledDepthStencilState = nullptr;
@@ -103,12 +107,22 @@ void Prism::DirectX::CleanD3D()
 
 ID3D11DepthStencilView* Prism::DirectX::GetDepthStencil()
 {
-	return myDepthBufferView;
+	return myBackbufferDepthStencil;
 }
 
 ID3D11RenderTargetView* Prism::DirectX::GetDepthBuffer()
 {
-	return myRenderTargetView;
+	return myBackbufferRenderTarget;
+}
+
+ID3D11ShaderResourceView* Prism::DirectX::GetBackbufferView()
+{
+	return myBackbufferShaderResource;
+}
+
+ID3D11Texture2D* Prism::DirectX::GetBackbufferTexture()
+{
+	return myBackbufferTexture;
 }
 
 void Prism::DirectX::RestoreViewPort()
@@ -118,7 +132,7 @@ void Prism::DirectX::RestoreViewPort()
 
 void Prism::DirectX::SetBackBufferAsTarget()
 {
-	myContext->OMSetRenderTargets(1, &myRenderTargetView, myDepthBufferView);
+	myContext->OMSetRenderTargets(1, &myBackbufferRenderTarget, myBackbufferDepthStencil);
 }
 
 void Prism::DirectX::EnableZBuffer()
@@ -131,6 +145,16 @@ void Prism::DirectX::DisableZBuffer()
 	myContext->OMSetDepthStencilState(myDisabledDepthStencilState, 1);
 }
 
+void Prism::DirectX::EnableWireframe()
+{
+	myContext->RSSetState(myWireframeRasterizer);
+}
+
+void Prism::DirectX::DisableWireframe()
+{
+	myContext->RSSetState(mySolidRasterizer);
+}
+
 bool Prism::DirectX::D3DSetup()
 {
 	if (D3DSwapChainSetup() == false)
@@ -139,21 +163,15 @@ bool Prism::DirectX::D3DSetup()
 		return false;
 	}
 
-	if (D3DRenderTargetSetup() == false)
+	if (D3DBackbufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
-		DIRECTX_LOG("Failed to Setup RenderTarget");
+		DIRECTX_LOG("Failed to Setup Backbuffer");
 		return false;
 	}
 
 	if (D3DViewPortSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
 		DIRECTX_LOG("Failed to Setup DirectX ViewPort");
-		return false;
-	}
-
-	if (D3DStencilBufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
-	{
-		DIRECTX_LOG("Failed to Setup DirectX Stencil Buffer");
 		return false;
 	}
 
@@ -164,12 +182,6 @@ bool Prism::DirectX::D3DSetup()
 	}
 
 	if (D3DDisabledStencilStateSetup() == false)
-	{
-		DIRECTX_LOG("Failed to Setup DisabledStencilBuffer");
-		return false;
-	}
-
-	if (D3DStencilBufferSetup(mySetupInfo.myScreenWidth, mySetupInfo.myScreenHeight) == false)
 	{
 		DIRECTX_LOG("Failed to Setup DisabledStencilBuffer");
 		return false;
@@ -194,19 +206,6 @@ bool Prism::DirectX::D3DSetup()
 	return true;
 }
 
-bool Prism::DirectX::D3DRenderTargetSetup()
-{
-	ID3D11Texture2D* backBuffer = nullptr;
-	mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBuffer);
-
-	myDevice->CreateRenderTargetView(backBuffer, NULL, &myRenderTargetView);
-	backBuffer->Release();
-
-	myContext->OMSetRenderTargets(1, &myRenderTargetView, NULL);
-
-	return TRUE;
-}
-
 bool Prism::DirectX::D3DSwapChainSetup()
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -218,7 +217,7 @@ bool Prism::DirectX::D3DSwapChainSetup()
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT | DXGI_USAGE_SHADER_INPUT;
 	swapChainDesc.OutputWindow = myHWND;
 	swapChainDesc.SampleDesc.Count = 1;
 	swapChainDesc.Windowed = true;
@@ -263,10 +262,72 @@ bool Prism::DirectX::D3DSwapChainSetup()
 
 	myInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
 	myInfoQueue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+
+	D3D11_MESSAGE_ID hide[] =
+	{
+		D3D11_MESSAGE_ID_DEVICE_PSSETSHADERRESOURCES_HAZARD,
+		D3D11_MESSAGE_ID_DEVICE_OMSETRENDERTARGETS_HAZARD
+		// Add more message IDs here as needed
+	};
+
+	D3D11_INFO_QUEUE_FILTER filter;
+	memset(&filter, 0, sizeof(filter));
+	filter.DenyList.NumIDs = _countof(hide);
+	filter.DenyList.pIDList = hide;
+	myInfoQueue->AddStorageFilterEntries(&filter);
 	myInfoQueue->Release();
 #endif
 
 	return TRUE;
+}
+
+bool Prism::DirectX::D3DBackbufferSetup(int aWidth, int aHeight)
+{
+	//BackbuffeTexture
+	mySwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&myBackbufferTexture);
+
+	//BackbufferRenderTarget
+	myDevice->CreateRenderTargetView(myBackbufferTexture, NULL, &myBackbufferRenderTarget);
+	myDevice->CreateShaderResourceView(myBackbufferTexture, NULL, &myBackbufferShaderResource);
+
+	myContext->OMSetRenderTargets(1, &myBackbufferRenderTarget, NULL);
+
+
+	//BackbufferDepthstencil
+	HRESULT hr = S_OK;
+	D3D11_TEXTURE2D_DESC depthBufferInfo;
+	ZeroMemory(&depthBufferInfo, sizeof(depthBufferInfo));
+
+	depthBufferInfo.Width = aWidth;
+	depthBufferInfo.Height = aHeight;
+	depthBufferInfo.MipLevels = 1;
+	depthBufferInfo.ArraySize = 1;
+	depthBufferInfo.Format = DXGI_FORMAT_D32_FLOAT;
+	depthBufferInfo.SampleDesc.Count = 1;
+	depthBufferInfo.Usage = D3D11_USAGE_DEFAULT;
+	depthBufferInfo.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+	hr = myDevice->CreateTexture2D(&depthBufferInfo, NULL, &myDepthbufferTexture);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	D3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc;
+	ZeroMemory(&stencilDesc, sizeof(stencilDesc));
+
+	stencilDesc.Format = depthBufferInfo.Format;
+	stencilDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+
+	stencilDesc.Texture2D.MipSlice = 0;
+
+	hr = myDevice->CreateDepthStencilView(myDepthbufferTexture, &stencilDesc, &myBackbufferDepthStencil);
+	if (FAILED(hr))
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool Prism::DirectX::D3DViewPortSetup(int aWidth, int aHeight)
@@ -282,45 +343,6 @@ bool Prism::DirectX::D3DViewPortSetup(int aWidth, int aHeight)
 	myViewPort->MaxDepth = 1.f;
 
 	myContext->RSSetViewports(1, myViewPort);
-
-	return true;
-}
-
-bool Prism::DirectX::D3DStencilBufferSetup(int aWidth, int aHeight)
-{
-	HRESULT hr = S_OK;
-
-	D3D11_TEXTURE2D_DESC depthBufferInfo;
-	ZeroMemory(&depthBufferInfo, sizeof(depthBufferInfo));
-
-	depthBufferInfo.Width = aWidth;
-	depthBufferInfo.Height = aHeight;
-	depthBufferInfo.MipLevels = 1;
-	depthBufferInfo.ArraySize = 1;
-	depthBufferInfo.Format = DXGI_FORMAT_D32_FLOAT;
-	depthBufferInfo.SampleDesc.Count = 1;
-	depthBufferInfo.Usage = D3D11_USAGE_DEFAULT;
-	depthBufferInfo.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-
-	hr = myDevice->CreateTexture2D(&depthBufferInfo, NULL, &myDepthBuffer);
-	if (FAILED(hr))
-	{
-		return false;
-	}
-
-	D3D11_DEPTH_STENCIL_VIEW_DESC stencilDesc;
-	ZeroMemory(&stencilDesc, sizeof(stencilDesc));
-
-	stencilDesc.Format = depthBufferInfo.Format;
-	stencilDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-
-	stencilDesc.Texture2D.MipSlice = 0;
-
-	hr = myDevice->CreateDepthStencilView(myDepthBuffer, &stencilDesc, &myDepthBufferView);
-	if (FAILED(hr))
-	{
-		return false;
-	}
 
 	return true;
 }
@@ -428,14 +450,4 @@ bool Prism::DirectX::D3DSolidRasterizerStateSetup()
 	myDevice->CreateRasterizerState(&desc, &mySolidRasterizer);
 
 	return true;
-}
-
-void Prism::DirectX::EnableWireframe()
-{
-	myContext->RSSetState(myWireframeRasterizer);
-}
-
-void Prism::DirectX::DisableWireframe()
-{
-	myContext->RSSetState(mySolidRasterizer);
 }

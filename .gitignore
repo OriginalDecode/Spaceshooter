@@ -75,3 +75,4 @@ Tools/CSharpUtilities/CSharpUtilities/obj/
 *.vcxproj.user
 /Tools/EntityEditor/EntityEditor/obj/Debug
 /Tools/EntityEditor/EntityEditor/obj/Release
+/Instancing_old_stuff

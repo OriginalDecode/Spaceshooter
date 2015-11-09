@@ -51,6 +51,8 @@ namespace Prism
 
 		bool myIsActive;
 		bool myShouldLive;
+
+		std::string myEmitterPath;
 	};
 
 	inline void ParticleEmitterInstance::ShouldLive(bool aToStop)

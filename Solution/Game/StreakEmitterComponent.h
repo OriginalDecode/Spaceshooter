@@ -4,6 +4,7 @@
 namespace Prism
 {
 	class StreakEmitterInstance;
+	class StreakEmitterData;
 }
 
 class StreakEmitterComponent : public Component
@@ -15,20 +16,24 @@ public:
 	void Update(float aDeltaTime) override;
 	void Render();
 	static eComponentType GetType();
-	int GetEmitterCount();
-	Prism::StreakEmitterInstance* GetEmitter();
 
-	//void ReceiveNote(const EmitterNote& aNote) override;
+	void AddStreak(const CU::Matrix44f aOrientation);
 
+	void Reset() override;
 
 private:
+	struct Emitter
+	{
+		~Emitter();
 
-	CU::Matrix44f myOrientationLeft;
-	CU::Matrix44f myOrientationRight;
+		CU::Matrix44f myOrientation;
+		Prism::StreakEmitterInstance* myEmitter;
+	};
 
-	CU::Vector3f myPosition;
-	Prism::StreakEmitterInstance* myEmitterLeft;
-	Prism::StreakEmitterInstance* myEmitterRight;
+	CU::GrowingArray<Emitter*> myEmitters;
+
+	Prism::StreakEmitterData* myEmitterData;
+
 	std::string myXMLPath;
 };
 
@@ -38,3 +43,4 @@ inline eComponentType StreakEmitterComponent::GetType()
 {
 	return eComponentType::STREAK_EMITTER;
 }
+

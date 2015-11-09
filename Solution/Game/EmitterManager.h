@@ -14,30 +14,14 @@ namespace Prism
 
 struct ExplosionData
 {
+	ExplosionData(std::string aType);
+	~ExplosionData();
 
-
-	ExplosionData(std::string aType)
-		: myType(aType)
-		, myEmitterIndex(0)
-	{
-	}
-
-	~ExplosionData()
-	{
-		myFireExplosion.DeleteAll();
-		mySmokeExplosion.DeleteAll();
-		mySparkExplosion.DeleteAll();
-	}
-
-
-
-	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myFireExplosion;
-	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> mySmokeExplosion;
-	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> mySparkExplosion;
-
+	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myEmitterA;
+	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myEmitterB;
+	CU::StaticArray<Prism::ParticleEmitterInstance*, PREALLOCATED_EMITTER_SIZE> myEmitterC;
 
 	std::string myType;
-
 
 	int myEmitterIndex;
 };
@@ -83,6 +67,14 @@ private:
 		ASTROID_EXPLOSION,
 		ROCKET_EXPLOSION,
 		ONHIT_EFFECT,
+		COUNT
+	};
+
+	enum class eTYPE
+	{
+		EXPLOSION,
+		SMOKE,
+		SPARK,
 		COUNT
 	};
 };

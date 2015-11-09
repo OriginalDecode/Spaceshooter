@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "Defines.h"
 #include "EngineEnums.h"
 #include "Instance.h"
 #include "Octree.h"
@@ -10,7 +11,7 @@
 Prism::Octree::Octree(int aMaxDepth)
 	: myMaxDepth(aMaxDepth)
 {
-	myRoot = new TreeNode(CU::Vector3<float>(0, 0, 0), 10000.f, nullptr, 0, aMaxDepth);
+	myRoot = new TreeNode(CU::Vector3<float>(0, 0, 0), OCTREE_WIDTH, nullptr, 0, aMaxDepth);
 }
 
 Prism::Octree::~Octree()

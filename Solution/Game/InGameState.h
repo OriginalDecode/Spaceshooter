@@ -9,6 +9,11 @@ namespace CU
 	class InputWrapper;
 }
 
+namespace Prism
+{
+	class Sprite;
+}
+
 class BulletManager;
 class CollisionManager;
 class LevelFactory;
@@ -41,6 +46,8 @@ public:
 	void LoadLevelSettings(); 
 	void LoadPlayerSettings();
 
+	bool IsComplete() const;
+
 private:
 	void ShowMessage(const std::string& aBackgroundPath, const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage = nullptr);
 	
@@ -50,5 +57,13 @@ private:
 
 	MessageState* myMessageScreen;
 
+	Prism::Sprite* myLoadingScreen;
+
 	bool myIsComplete;
+	bool myLevelIsLoading;
 };
+
+inline bool InGameState::IsComplete() const
+{
+	return myIsComplete;
+}

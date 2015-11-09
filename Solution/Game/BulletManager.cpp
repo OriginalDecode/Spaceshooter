@@ -15,6 +15,7 @@
 #include <Instance.h>
 #include "PostMaster.h"
 #include "PhysicsComponent.h"
+#include "StreakEmitterComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 #include "ShootingComponent.h"
@@ -130,7 +131,10 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
-
+		if (projectileDataType.myCollision > 0)
+		{
+			newEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(projectileDataType.myCollision);
+		}
 		bulletData->myEnemyBulletComponents.Add(newEntity->GetComponent<BulletComponent>());
 		bulletData->myEnemyBullets.Add(newEntity);
 	}
@@ -193,6 +197,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	
 	bullet->GetComponent<BulletComponent>()->SetActive(true);
 	bullet->GetComponent<CollisionComponent>()->Update(0.5f);
+
+	if (bullet->GetComponent<StreakEmitterComponent>() != nullptr)
+	{
+		bullet->GetComponent<StreakEmitterComponent>()->Reset();
+	}
 
 	if (aHomingTarget != nullptr)
 	{
@@ -270,6 +279,30 @@ void BulletManager::DeleteWeaponData(BulletData* aWeaponData)
 
 	delete aWeaponData;
 	aWeaponData = nullptr;
+}
+
+void BulletManager::RenderStreaks()
+{
+	for (int i = 0; i < static_cast<int>(eBulletType::COUNT); ++i)
+	{
+		if (myBulletDatas[i] != nullptr)
+		{
+			for (int j = 0; j < myBulletDatas[i]->myMaxBullet; ++j)
+			{
+				if (myBulletDatas[i]->myPlayerBulletComponents[j]->GetActive() == true
+					&& myBulletDatas[i]->myPlayerBullets[j]->GetComponent<StreakEmitterComponent>() != nullptr)
+				{
+					myBulletDatas[i]->myPlayerBullets[j]->GetComponent<StreakEmitterComponent>()->Render();
+				}
+
+				if (myBulletDatas[i]->myEnemyBulletComponents[j]->GetActive() == true
+					&& myBulletDatas[i]->myEnemyBullets[j]->GetComponent<StreakEmitterComponent>() != nullptr)
+				{
+					myBulletDatas[i]->myEnemyBullets[j]->GetComponent<StreakEmitterComponent>()->Render();
+				}
+			}
+		}
+	}
 }
 
 CU::GrowingArray<Prism::Instance*>& BulletManager::GetInstances()

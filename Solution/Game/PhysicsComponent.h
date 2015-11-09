@@ -22,6 +22,7 @@ public:
 
 	void Reset() override;
 	void BounceOff(Entity& anOtherEntity);
+	void Bounce();
 
 private:
 	float mySpeed;

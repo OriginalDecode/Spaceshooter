@@ -10,6 +10,7 @@ struct ID3D11Device;
 struct ID3D11DeviceContext;
 struct ID3D11DepthStencilView;
 struct ID3D11RenderTargetView;
+struct ID3D11ShaderResourceView;
 
 namespace Prism
 {
@@ -39,6 +40,7 @@ namespace Prism
 	class Model;
 	class ModelLoader;
 	class ModelProxy;
+	class Sprite;
 	class Text;
 	class TextureContainer;
 
@@ -57,6 +59,7 @@ namespace Prism
 		ID3D11DeviceContext* GetContex();
 		ID3D11DepthStencilView* GetDepthView();
 		ID3D11RenderTargetView* GetDepthBuffer();
+		ID3D11ShaderResourceView* GetBackbufferView();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
 		EmitterDataContainer* GetEmitterDataContainer();
@@ -89,9 +92,19 @@ namespace Prism
 		bool UsePBLPixelShader();
 		void TogglePBLPixelShader();
 
+		void StartFade(float aDuration);
+
 		bool myWireframeShouldShow;
 
 	private:
+		struct FadeData
+		{
+			Sprite* mySprite;
+			float myCurrentTime;
+			float myTotalTime;
+			bool myIsFading;
+		};
+
 		Engine();
 		~Engine();
 		bool Init(HWND& aHwnd, WNDPROC aWndProc);
@@ -109,6 +122,7 @@ namespace Prism
 		FileWatcher* myFileWatcher;
 		Font* myFont;
 		Text* myText;
+		FadeData myFadeData;
 
 		CU::Vector4<float> myClearColor;
 		CU::Vector2<int> myWindowSize;

@@ -32,6 +32,7 @@
 #include "ResizeMessage.h"
 #include "ShieldNote.h"
 #include "ShootingComponent.h"
+#include "SoundNote.h"
 #include <sstream>
 #include <XMLReader.h>
 
@@ -131,6 +132,9 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myDefendHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_defend.dds"
 		, { 256, 256 }, { 128.f, 128.f });
 
+	myPropHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_defend.dds"
+		, { 256, 256 }, { 128.f, 128.f });
+
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
@@ -138,7 +142,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
-	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
+	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_prop.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
 
 }
@@ -166,8 +170,10 @@ GUIComponent::~GUIComponent()
 	delete myHitMarker;
 	delete myDamageIndicator;
 	delete myHomingTarget;
+	delete myPropHitMarker;
 	//delete myCurrentHitmarker; // dont delete, please!
 	delete myDefendHitMarker;
+	myPropHitMarker = nullptr;
 	myCurrentHitmarker = nullptr;
 	myDefendHitMarker = nullptr;
 	myReticle = nullptr;
@@ -592,8 +598,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	{
 		myHitMarkerTimer = 0.1f;
 		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY 
-			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::STRUCTURE
-			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::PROP)
+			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::STRUCTURE)
 		{
 			myCurrentHitmarker = myHitMarker;
 		}
@@ -601,11 +606,16 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 		{
 			myCurrentHitmarker = myDefendHitMarker;
 		}
+		else if (aMessage.myEntityCollidedWith.GetType() == eEntityType::PROP)
+		{
+			myCurrentHitmarker = myStructureArrow;
+		}
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
 		myDamageIndicatorTimer = 0.1f;
-		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_PlayerHit", 0);
+		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerHit"));
+		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_PlayerHit", 0);
 		myCamera->ShakeCamera(100.f, 6.f, 0.5f); // pilla inte på dessa siffror!
 	}
 }

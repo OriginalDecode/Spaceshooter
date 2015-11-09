@@ -3,6 +3,7 @@
 enum class eMessageType
 {
 	ACTIVATE_BULLET,
+	FADE,
 	GAME_STATE,
 	SPAWN_ENEMY,
 	START_EVENT,

@@ -100,7 +100,9 @@ private:
 	eBulletType ConvertToBulletType(std::string aName);
 
 	std::unordered_map<std::string, EntityData> myEntities;
+#ifdef _DEBUG
 	std::unordered_map<std::string, std::string> myEntityTags;
+#endif
 
 	Prism::Scene* myDummyScene;
 	WeaponFactory* myWeaponFactoryPointer;

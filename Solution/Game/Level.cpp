@@ -164,7 +164,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-	if (myIsSkipable == true && myInputWrapper->KeyIsPressed(DIK_L) == true)
+	if (myIsSkipable == true && myInputWrapper->KeyIsPressed(DIK_RETURN) == true)
 	{
 		CompleteLevel();
 	}
@@ -172,8 +172,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
-	UpdateDebug();
 
+#ifndef RELEASE_BUILD
+	UpdateDebug();
+#endif
 	myCollisionManager->Update();
 	myBulletManager->Update(aDeltaTime);
 
@@ -249,10 +251,12 @@ void Level::Render()
 		}
 	}
 
+	myBulletManager->RenderStreaks();
+
 
 	if (myIsSkipable == true)
 	{
-		Prism::Engine::GetInstance()->PrintText("Press [L] to skip level."
+		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip level."
 			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.5f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.6f }
 			, Prism::eTextType::RELEASE_TEXT);
 	}
@@ -394,6 +398,7 @@ void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
 	{
 		myEmitterManager->AddEmitter(newEntity->GetComponent<ParticleEmitterComponent>());
 	}
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_SpawnPowerUp", 0); 
 }
 
 void Level::ReceiveMessage(const EMPMessage& aMessage)

@@ -23,6 +23,7 @@ struct ProjectileDataType
 	int myMaxBullet;
 
 	float mySpeed;
+	float myCollision;
 };
 
 class WeaponFactory
