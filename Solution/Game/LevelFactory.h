@@ -32,7 +32,8 @@ public:
 	void ReadLevelSettings();
 	void LoadPlayer();
 
-	volatile bool IsLevelLoading() const;
+	const volatile bool& IsLevelLoading() const;
+	const int& GetLevelID() const;
 
 	bool IsClean();
 
@@ -72,9 +73,14 @@ private:
 	std::thread* myLoadLevelThread;
 };
 
-inline volatile bool LevelFactory::IsLevelLoading() const
+inline const volatile bool& LevelFactory::IsLevelLoading() const
 {
 	return myIsLoading;
+}
+
+inline const int& LevelFactory::GetLevelID() const
+{
+	return myCurrentID;
 }
 
 inline bool LevelFactory::IsClean()
