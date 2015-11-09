@@ -68,3 +68,11 @@ void PhysicsComponent::BounceOff(Entity& anOtherEntity)
 	myEntity.myOrientation = myPreviousOrientation2;
 	myEntity.GetComponent<InputComponent>()->SetSkyPosition();
 }
+
+void PhysicsComponent::Bounce()
+{
+	mySpeed = -10.f;
+	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
+	myEntity.myOrientation = myPreviousOrientation2;
+	myEntity.GetComponent<InputComponent>()->SetSkyPosition();
+}

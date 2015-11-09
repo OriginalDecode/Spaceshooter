@@ -452,7 +452,7 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 void LevelFactory::LoadPlayer()
 {
 
-	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::DYNAMIC);
+	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::PLAYER);
 	myCurrentLevel->myPlayer->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
 		, "Data/Resource/Shader/S_effect_pbl.fx");
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
