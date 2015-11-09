@@ -11,6 +11,7 @@
 #include "Entity.h"
 #include "PostMaster.h"
 #include "Scene.h"
+#include <XMLReader.h>
 
 
 StreakEmitterComponent::StreakEmitterComponent(Entity& aEntity)
@@ -31,17 +32,35 @@ void StreakEmitterComponent::Init(std::string aPath)
 	myXMLPath = aPath;
 
 	DL_ASSERT_EXP(myEmitterData== nullptr, "Emitter were inited twice. Contact Linus Skold");
+
+	XMLReader reader;
+	reader.OpenDocument(myXMLPath);
+
+	tinyxml2::XMLElement* element = reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "Emitter");
+
+	std::string streakEmitterDataPath;
+
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(element, "Path"), "src", streakEmitterDataPath);
+
+
 	myEmitterData = new Prism::StreakEmitterData();
-	myEmitterData->LoadDataFile(myXMLPath.c_str());
+	myEmitterData->LoadDataFile(streakEmitterDataPath.c_str());
 
-	CU::Matrix44<float> posLeft;
-	//posLeft.SetPos(CU::Vector3<float>(-4.098f, 2.672f, 11.2789f));
-	posLeft.SetPos(CU::Vector3<float>());
-	//CU::Matrix44<float> posRight;
-	//posRight.SetPos(CU::Vector3<float>(4.098f, 2.672f, 11.2789f));
+	for (tinyxml2::XMLElement* positionElement = reader.ForceFindFirstChild(element, "Position"); positionElement != nullptr
+			; positionElement = reader.FindNextElement(positionElement, "Position"))
+	{
+		CU::Vector3<float> position;
 
-	AddStreak(posLeft);
-	//AddStreak(posRight);
+		reader.ForceReadAttribute(positionElement, "X", position.x);
+		reader.ForceReadAttribute(positionElement, "Y", position.y);
+		reader.ForceReadAttribute(positionElement, "Z", position.z);
+
+		CU::Matrix44<float> orientation;
+		orientation.SetPos(position);
+		AddStreak(orientation);
+	}
+
+	reader.CloseDocument();
 }
 
 void StreakEmitterComponent::Update(float aDeltaTime)
