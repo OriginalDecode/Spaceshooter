@@ -27,6 +27,7 @@
 #include "ModelLoader.h"
 #include "MissionManager.h"
 #include "ParticleEmitterComponent.h"
+#include <ParticleEmitterInstance.h>
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
@@ -502,6 +503,14 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 	myPlayer = myCurrentLevel->myPlayer;
 	myPlayer->SetName("player");
+
+	std::string particlePath;
+	reader.ReadAttribute(reader.FindFirstChild("particle"), "src", particlePath);
+
+	myPlayer->AddComponent<ParticleEmitterComponent>()->Init(particlePath);
+	myPlayer->GetComponent<ParticleEmitterComponent>()->GetEmitter()->ShouldLive(true);
+	myCurrentLevel->GetEmitterManager()->AddEmitter(myPlayer->GetComponent<ParticleEmitterComponent>());
+
 	reader.CloseDocument();	
 }
 

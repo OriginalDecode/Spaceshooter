@@ -68,11 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
-#ifdef RELEASE_BUILD
 	ReadSetup(setup, CU::GetMyDocumentFolderPath() + "/SpaceShooter/" + "Data/Setting/SET_config.bin");
-#else
-	ReadSetup(setup, "Data/Setting/SET_config.bin");
-#endif
 
 	HWND hwnd;
 
@@ -258,6 +254,8 @@ void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 		width = window.right;
 		height = window.bottom;
 	}
+#else
+	windowed = true;
 #endif
 
 	aSetup.myScreenWidth = width;

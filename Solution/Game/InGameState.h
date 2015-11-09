@@ -20,6 +20,7 @@ class LevelFactory;
 class Level;
 class Entity;
 class MessageState;
+class LoadingScreen;
 
 class InGameState : public GameState, public Subscriber
 {
@@ -57,10 +58,9 @@ private:
 
 	MessageState* myMessageScreen;
 
-	Prism::Sprite* myLoadingScreen;
+	LoadingScreen* myLoadingScreen;
 
 	bool myIsComplete;
-	bool myLevelIsLoading;
 };
 
 inline bool InGameState::IsComplete() const

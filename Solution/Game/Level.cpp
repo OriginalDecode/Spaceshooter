@@ -152,6 +152,14 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
+	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
+	{
+		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
+		myEMPTimer = 20.f;
+		myEMPScale = 1.f;
+		myEMPActivated = true;
+	}
+
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
@@ -209,20 +217,8 @@ void Level::Render()
 		myRenderer->BeginScene();
 		myScene->Render(myBulletManager->GetInstances());
 
-
-		
-
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 		myRenderer->FinalRender();
-	
-
-		if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
-		{
-			myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
-			myEMPTimer = 20.f;
-			myEMPScale = 1.f;
-			myEMPActivated = true;
-		}
 
 		if (myEMPActivated == true)
 		{
