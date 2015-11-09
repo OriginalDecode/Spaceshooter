@@ -38,8 +38,7 @@ namespace Prism
 		myWireframeIsOn = false;
 		myWireframeShouldShow = false;
 
-		myFadeData.myIsFading = false;
-		myFadeData.myNeedToPrepareToFade = false;
+		myFadeData.myIsFading = false; 
 		myFadeData.myCurrentTime = 0.f;
 		myFadeData.myTotalTime = 0.f;
 		myFadeData.mySprite = nullptr;
@@ -323,7 +322,6 @@ namespace Prism
 
 	void Engine::StartFade(float aDuration)
 	{
-		myFadeData.myNeedToPrepareToFade = true;
 		myFadeData.myTotalTime = aDuration;
 		myFadeData.myCurrentTime = aDuration;
 		myFadeData.myIsFading = true;

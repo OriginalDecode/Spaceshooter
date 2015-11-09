@@ -103,7 +103,6 @@ namespace Prism
 			float myCurrentTime;
 			float myTotalTime;
 			bool myIsFading;
-			bool myNeedToPrepareToFade;
 		};
 
 		Engine();
