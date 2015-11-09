@@ -152,11 +152,6 @@ void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
 		myLevelIsLoading = true;
 		myLevel = myLevelFactory->LoadNextLevel();
 		break;
-
-	case eGameState::LEVEL_IS_LOADED:
-		//myLevelFactory->Cleanup();
-		//myLevelIsLoading = false;
-		break;
 	}
 }
 

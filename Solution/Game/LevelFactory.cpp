@@ -87,9 +87,6 @@ Level* LevelFactory::LoadCurrentLevel()
 	myLoadLevelThread = nullptr;
 
 	myLoadLevelThread = new std::thread(&LevelFactory::ReadXML, this, myLevelPaths[myCurrentID]);
-	//myLoadLevelThread = new std::thread();
-
-	//ReadXML(myLevelPaths[myCurrentID]);
 
 	return myCurrentLevel;
 }
@@ -283,14 +280,9 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
 		, "Data/Resource/Shader/S_effect_emp.fx");
 
-
 	while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
 	{
-
 	}
-
-	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::LEVEL_IS_LOADED));
-
 
 	myIsLoading = false;
 }
