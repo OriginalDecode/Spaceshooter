@@ -151,6 +151,15 @@ namespace Launcher
                 Screen scr = Screen.PrimaryScreen;
                 width = scr.Bounds.Width;
                 height = scr.Bounds.Height;
+
+                float aspect = width / height;
+
+                if (width > 1920)
+                {
+                    width = 1920;
+                    height = (int)((float)width / aspect);
+                }
+                
             }
 
             aWriter.Write(width);
