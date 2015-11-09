@@ -8,6 +8,7 @@
 #include "Constants.h"
 #include <Engine.h>
 #include "Entity.h"
+#include "FadeMessage.h"
 #include <FileWatcher.h>
 #include <DebugFont.h>
 #include "GameStateMessage.h"

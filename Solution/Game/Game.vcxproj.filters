@@ -213,6 +213,9 @@
     <ClCompile Include="BulletAIComponent.cpp">
       <Filter>Components</Filter>
     </ClCompile>
+    <ClCompile Include="FadeMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -483,6 +486,9 @@
     </ClInclude>
     <ClInclude Include="BulletAIComponent.h">
       <Filter>Components</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeMessage.h">
+      <Filter>PostMaster\Messages</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

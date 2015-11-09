@@ -5,6 +5,7 @@ class BulletCollisionToGUIMessage;
 class BulletMessage;
 class ConversationMessage;
 class DefendMessage;
+class FadeMessage;
 class GameStateMessage;
 class SpawnEnemyMessage;
 class EnqueueEventMessage;
@@ -28,6 +29,7 @@ public:
 	virtual void ReceiveMessage(const ConversationMessage& aMessage);
 	virtual void ReceiveMessage(const EnemyKilledMessage& aMessage);
 	virtual void ReceiveMessage(const Message& aMessage);
+	virtual void ReceiveMessage(const FadeMessage& aMessage);
 	virtual void ReceiveMessage(const GameStateMessage& aMessage);
 	virtual void ReceiveMessage(const PowerUpMessage& aMessage);
 	virtual void ReceiveMessage(const SpawnEnemyMessage& aMessage);

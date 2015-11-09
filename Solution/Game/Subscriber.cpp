@@ -23,6 +23,10 @@ void Subscriber::ReceiveMessage(const ConversationMessage&)
 {
 }
 
+void Subscriber::ReceiveMessage(const FadeMessage&)
+{
+}
+
 void Subscriber::ReceiveMessage(const GameStateMessage&)
 {
 }

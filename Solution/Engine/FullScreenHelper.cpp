@@ -19,7 +19,7 @@ namespace Prism
 		myProcessingTexture = new Texture();
 		myProcessingTexture->Init(screenSize.x, screenSize.y
 			, D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL
-			, DXGI_FORMAT_R8G8B8A8_UNORM);
+			, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 
 		D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
@@ -122,15 +122,7 @@ namespace Prism
 	{
 		DL_ASSERT_EXP(aSource != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 
-		myRenderToTextureData.mySource->SetResource(aSource->GetShaderView());
-
-		ID3D11RenderTargetView* target = aTarget->GetRenderTargetView();
-		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target
-			, Engine::GetInstance()->GetDepthView());
-
-		Render(myRenderToTextureData.myEffect);
-
-		myRenderToTextureData.mySource->SetResource(NULL);
+		Engine::GetInstance()->GetContex()->CopyResource(aTarget->GetTexture(), aSource->GetTexture());
 	}
 
 	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aSourceB, Texture* aTarget, bool aUseDepth)
@@ -139,10 +131,7 @@ namespace Prism
 		DL_ASSERT_EXP(aSourceB != aTarget, "[Combine]: Cant use Texture as both Source and Target");
 
 		myCombineData.mySourceA->SetResource(aSourceA->GetShaderView());
-		myCombineData.myDepthA->SetResource(aSourceA->GetDepthStencilShaderView());
 		myCombineData.mySourceB->SetResource(aSourceB->GetShaderView());
-		myCombineData.myDepthB->SetResource(aSourceB->GetDepthStencilShaderView());
-
 
 		ID3D11RenderTargetView* target = aTarget->GetRenderTargetView();
 		ID3D11DepthStencilView* depth = aTarget->GetDepthStencilView();
@@ -152,13 +141,14 @@ namespace Prism
 
 		if (aUseDepth == true)
 		{
+			myCombineData.myDepthA->SetResource(aSourceA->GetDepthStencilShaderView());
+			myCombineData.myDepthB->SetResource(aSourceB->GetDepthStencilShaderView());
 			Render(myCombineData.myEffect, "Depth");
 		}
 		else
 		{
 			Render(myCombineData.myEffect, "NoDepth");
 		}
-		
 	}
 
 	void FullScreenHelper::CombineTextures(Texture* aSourceA, Texture* aDepthA
@@ -326,6 +316,8 @@ namespace Prism
 		myBloomData.myDownSampleVariable->SetResource(aSource->GetShaderView());
 
 		Render(myBloomData.myDownSampleEffect, "BLOOM_DOWNSAMPLE");
+
+		myBloomData.myDownSampleVariable->SetResource(NULL);
 	}
 
 	void FullScreenHelper::BloomEffect(Texture* aSource)

@@ -4,6 +4,7 @@
 
 struct ID3D11BlendState;
 struct ID3D11InputLayout;
+struct ID3D11ShaderResourceView;
 struct D3D11_BUFFER_DESC;
 struct D3D11_INPUT_ELEMENT_DESC;
 struct D3D11_SUBRESOURCE_DATA;
@@ -29,6 +30,7 @@ namespace Prism
 		void InitVertexBuffer(int aVertexSize, int aBufferUsage, int aCPUUsage);
 		void InitIndexBuffer();
 		void InitSurface(const std::string& aResourceName, const std::string& aFileName);
+		void InitSurface(const std::string& aResourceName, ID3D11ShaderResourceView* aShaderView);
 		void InitBlendState();
 
 		void SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData);

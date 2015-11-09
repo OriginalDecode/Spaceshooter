@@ -27,6 +27,7 @@ public:
 	void UnPause();
 	void OnResize(int aWidth, int aHeight);
 
+	void ReceiveMessage(const FadeMessage& aMessage) override;
 	void ReceiveMessage(const GameStateMessage& aMessage) override;
 
 private:

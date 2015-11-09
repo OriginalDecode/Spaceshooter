@@ -1,15 +1,17 @@
 #include "stdafx.h"
+
+#include "Button.h"
+#include <Camera.h>
+#include "FadeMessage.h"
+#include "GameStateMessage.h"
+#include <InputWrapper.h>
+#include "Menu.h"
 #include "MenuState.h"
 #include <Sprite.h>
-#include <Camera.h>
-#include <InputWrapper.h>
 #include "SplashState.h"
 #include "StateStackProxy.h"
 #include <TimerManager.h>
 #include "PostMaster.h"
-#include "GameStateMessage.h"
-#include "Menu.h"
-#include "Button.h"
 
 MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool aShowVictoryScreen)
 	: myHasFadeIn(aShowVictoryScreen)
@@ -54,6 +56,7 @@ void MenuState::InitState(StateStackProxy* aStateStackProxy)
 	myCurrentTime = 0;
 	myFadeInTime = 0.5f;
 	myOverlayAlpha = 1.f;
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
 void MenuState::EndState()
@@ -62,12 +65,14 @@ void MenuState::EndState()
 	delete myCamera;
 	myMenu = nullptr;
 	myCamera = nullptr;
+	
 }
 
 const eStateStatus MenuState::Update(const float& aDeltaTime)
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
+		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 
@@ -76,6 +81,7 @@ const eStateStatus MenuState::Update(const float& aDeltaTime)
 
 	if (myMenu->Update(myInputWrapper) == false)
 	{
+		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 

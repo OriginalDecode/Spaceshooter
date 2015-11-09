@@ -10,10 +10,25 @@
 Prism::Surface::Surface()
 {
 	myTextures.Init(2);
-	myShaderViews.Init(2);
+	myShaderResources.Init(2);
+	myShaderResourceViews.Init(2);
 	myFilePaths.Init(2);
 	myShaderResourceNames.Init(2);
 	myEmissive = false;
+}
+
+Prism::Surface::~Surface()
+{
+	/*for (int i = 0; i < myShaderResources.Size(); ++i)
+	{
+		myShaderResources[i]->Release();
+	}*/
+
+	myShaderResources.RemoveAll();
+	myShaderResourceViews.RemoveAll();
+	myFilePaths.RemoveAll();
+	myTextures.RemoveAll();
+	myShaderResourceNames.RemoveAll();
 }
 
 bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::string& aFileName, bool aUseSRGB)
@@ -40,17 +55,61 @@ bool Prism::Surface::SetTexture(const std::string& aResourceName, const std::str
 	}
 
 	myTextures.Add(tex);
-	myShaderViews.Add(shaderVar);
+	myShaderResources.Add(tex->GetShaderView());
+	myShaderResourceViews.Add(shaderVar);
 	myFilePaths.Add(aFileName);
 	myShaderResourceNames.Add(aResourceName);
 
 	return true;
 }
 
+bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
+{
+	DL_ASSERT_EXP(aTexture != nullptr
+		, CU::Concatenate("Shader resource ( %s ) tried to use invalid texture", aResourceName.c_str()));
+
+	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
+	if (shaderVar->IsValid() == false)
+	{
+		//DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
+		RESOURCE_LOG("Failed to get ShaderResource");
+		return false;
+	}
+
+	if (aResourceName == "EmissiveTexture")
+	{
+		myEmissive = true;
+	}
+
+	myTextures.Add(aTexture);
+	myShaderResources.Add(aTexture->GetShaderView());
+	myShaderResourceViews.Add(shaderVar);
+	myShaderResourceNames.Add(aResourceName);
+
+	return true;
+}
+
+bool Prism::Surface::SetTexture(const std::string& aResourceName, ID3D11ShaderResourceView* aResource)
+{
+	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
+	if (shaderVar->IsValid() == false)
+	{
+		//DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
+		RESOURCE_LOG("Failed to get ShaderResource");
+		return false;
+	}
+
+	myShaderResources.Add(aResource);
+	myShaderResourceViews.Add(shaderVar);
+	myShaderResourceNames.Add(aResourceName);
+	return true;
+}
+
 void Prism::Surface::ReloadSurface()
 {
 	myTextures.RemoveAll();
-	myShaderViews.RemoveAll();
+	myShaderResourceViews.RemoveAll();
+	myShaderResources.RemoveAll();
 
 	for (int i = 0; i < myFilePaths.Size(); ++i)
 	{
@@ -65,10 +124,10 @@ void Prism::Surface::ReloadSurface()
 		}
 
 		myTextures.Add(tex);
-		myShaderViews.Add(shaderVar);
+		myShaderResources.Add(tex->GetShaderView());
+		myShaderResourceViews.Add(shaderVar);
 	}
 }
-
 
 bool Prism::Surface::VerifyTextures(const std::string& aModelPath)
 {
@@ -132,37 +191,12 @@ bool Prism::Surface::VerifyTextures(const std::string& aModelPath)
 	return true;
 }
 
-bool Prism::Surface::SetTexture(const std::string& aResourceName, Texture* aTexture)
-{
-	DL_ASSERT_EXP(aTexture != nullptr
-		, CU::Concatenate("Shader resource ( %s ) tried to use invalid texture", aResourceName.c_str()));
-
-	ID3DX11EffectShaderResourceVariable* shaderVar = myEffect->GetEffect()->GetVariableByName(aResourceName.c_str())->AsShaderResource();
-	if (shaderVar->IsValid() == false)
-	{
-		//DL_MESSAGE_BOX("Failed to get ShaderResource", "Surface Error", MB_ICONWARNING);
-		RESOURCE_LOG("Failed to get ShaderResource");
-		return false;
-	}
-
-	if (aResourceName == "EmissiveTexture")
-	{
-		myEmissive = true;
-	}
-
-	myTextures.Add(aTexture);
-	myShaderViews.Add(shaderVar);
-	myShaderResourceNames.Add(aResourceName);
-
-	return true;
-}
-
 void Prism::Surface::Activate()
 {
 	Engine::GetInstance()->GetContex()->IASetPrimitiveTopology(myPrimitiveTopologyType);
 
-	for (int i = 0; i < myShaderViews.Size(); ++i)
+	for (int i = 0; i < myShaderResourceViews.Size(); ++i)
 	{
-		myShaderViews[i]->SetResource(myTextures[i]->GetShaderView());
+		myShaderResourceViews[i]->SetResource(myShaderResources[i]);
 	}
 }

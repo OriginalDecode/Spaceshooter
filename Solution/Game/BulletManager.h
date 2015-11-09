@@ -53,6 +53,8 @@ public:
 	void Update(float aDeltaTime);
 	void ReceiveMessage(const BulletMessage& aMessage) override;
 
+	void RenderStreaks();
+
 	CU::GrowingArray<Prism::Instance*>& GetInstances();
 
 	BulletData* GetBullet(int anIndex);
