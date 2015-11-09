@@ -13,6 +13,7 @@ namespace Prism
 	class DebugText;
 	class Instance;
 	class Renderer;
+	class Texture;
 };
 
 namespace CU
@@ -114,6 +115,8 @@ private:
 	bool myEMPActivated;
 
 	bool myIsSkipable;
+
+	Prism::Texture* myEMPDepthSprite;
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)
