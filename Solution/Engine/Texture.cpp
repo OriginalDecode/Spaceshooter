@@ -107,6 +107,11 @@ void Prism::Texture::InitAsDepthBuffer(ID3D11Texture2D* aSource)
 		assert(0);
 }
 
+void Prism::Texture::CopyDepthBuffer(ID3D11Texture2D* aSource)
+{
+	Engine::GetInstance()->GetContex()->CopyResource(myDepthTexture, aSource);
+}
+
 bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 {
 	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice(), aFilePath.c_str()
