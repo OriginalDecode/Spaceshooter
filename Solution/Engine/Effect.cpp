@@ -263,7 +263,7 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	}
 
 	myTotalTime = nullptr;
-	myTotalTime = myEffect->GetVariableByName("Time")->AsScalar();
+	myTotalTime = myEffect->GetVariableByName("TotalTime")->AsScalar();
 	if (myTotalTime->IsValid() == false)
 	{
 		myTotalTime = nullptr;
@@ -304,6 +304,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	if (myExtraTexture->IsValid() == false)
 	{
 		myExtraTexture = nullptr;
+	}
+
+	myExtraTexture2 = myEffect->GetVariableByName("ExtraTexture2")->AsShaderResource();
+	if (myExtraTexture2->IsValid() == false)
+	{
+		myExtraTexture2 = nullptr;
 	}
 
 	mySpritePosAndScale = myEffect->GetVariableByName("SpritePositionAndScale")->AsVector();
@@ -359,7 +365,8 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 
 void Prism::Effect::SetExtraTexture(Texture* aTexture)
 {
-	myExtraTexture->SetResource(aTexture->GetShaderView());
+	myExtraTexture->SetResource(aTexture->GetDepthStencilShaderView());
+	myExtraTexture2->SetResource(aTexture->GetShaderView());
 }
 
 void Prism::Effect::SetCameraPosition(const CU::Vector3<float>& aCameraPos)

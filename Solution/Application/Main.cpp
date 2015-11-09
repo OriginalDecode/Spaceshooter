@@ -17,6 +17,8 @@ Game* globalGame = nullptr;
 int globalClientWidth = 800;
 int globalClientHeight = 600;
 bool globalIsResizing = false;
+bool globalPreviousFullscreenState = false;
+bool globalIsActive = true;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 {
@@ -66,11 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
-#ifdef RELEASE_BUILD
 	ReadSetup(setup, CU::GetMyDocumentFolderPath() + "/SpaceShooter/" + "Data/Setting/SET_config.bin");
-#else
-	ReadSetup(setup, "Data/Setting/SET_config.bin");
-#endif
 
 	HWND hwnd;
 
@@ -84,6 +82,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	{
 		return 1;
 	}
+
+	globalPreviousFullscreenState = Prism::Engine::GetInstance()->IsFullscreen();
 
 	MSG msg;
 	while (1)
@@ -139,10 +139,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
+				globalPreviousFullscreenState = Prism::Engine::GetInstance()->IsFullscreen();
+				globalIsActive = false;
 				globalGame->Pause();
 			}
 			else
 			{
+				if (globalIsActive == false)
+				{
+					bool currFullscreen = Prism::Engine::GetInstance()->IsFullscreen();
+
+					if (currFullscreen != globalPreviousFullscreenState)
+					{
+						Prism::Engine::GetInstance()->SetFullscreen(globalPreviousFullscreenState);
+
+					}
+
+					globalIsActive = true;
+				}
+				
+
 				globalGame->UnPause();
 			}
 		}

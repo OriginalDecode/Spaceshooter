@@ -14,7 +14,7 @@ public:
 		, const CU::Vector2<float>& aPosition, const bool& aActive, const float* aDuration = nullptr);
 	~PowerUpGUIIcon();
 
-	void Render();
+	void Render(const CU::Vector2<int>& aWindowSize);
 
 private:
 	void operator=(PowerUpGUIIcon&) = delete;

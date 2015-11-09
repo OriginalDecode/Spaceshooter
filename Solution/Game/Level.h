@@ -69,6 +69,8 @@ public:
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 
+	EmitterManager* GetEmitterManager() const;
+
 private:
 	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
@@ -117,4 +119,9 @@ private:
 inline void Level::RemoveEntity(Entity* aEntity)
 {
 	myEntities.RemoveCyclic(aEntity);
+}
+
+inline EmitterManager* Level::GetEmitterManager() const
+{
+	return myEmitterManager;
 }

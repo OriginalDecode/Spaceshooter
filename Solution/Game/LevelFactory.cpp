@@ -27,6 +27,7 @@
 #include "ModelLoader.h"
 #include "MissionManager.h"
 #include "ParticleEmitterComponent.h"
+#include <ParticleEmitterInstance.h>
 #include "PointLight.h"
 #include "PostMaster.h"
 #include "PowerUpComponent.h"
@@ -469,7 +470,7 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
 	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Init(7.5f);
-	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
+
 	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 	myCurrentLevel->myPlayer->AddComponent<SoundComponent>();
 
@@ -483,8 +484,16 @@ void LevelFactory::LoadPlayer()
 	bool invulnerable = false;
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
-
 	myCurrentLevel->myPlayer->AddComponent<HealthComponent>()->Init(health, invulnerable);
+
+	float timeBeforeRecharging = 0.f;
+	float chargeRate = 0.f;
+	
+	reader.ReadAttribute(reader.FindFirstChild("shield"), "timeBeforeRecharching", timeBeforeRecharging);
+	reader.ReadAttribute(reader.FindFirstChild("shield"), "chargeRate", chargeRate);
+	
+	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init(timeBeforeRecharging, chargeRate);
+
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	//myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
@@ -494,6 +503,14 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
 	myPlayer = myCurrentLevel->myPlayer;
 	myPlayer->SetName("player");
+
+	std::string particlePath;
+	reader.ReadAttribute(reader.FindFirstChild("particle"), "src", particlePath);
+
+	myPlayer->AddComponent<ParticleEmitterComponent>()->Init(particlePath);
+	myPlayer->GetComponent<ParticleEmitterComponent>()->GetEmitter()->ShouldLive(true);
+	myCurrentLevel->GetEmitterManager()->AddEmitter(myPlayer->GetComponent<ParticleEmitterComponent>());
+
 	reader.CloseDocument();	
 }
 

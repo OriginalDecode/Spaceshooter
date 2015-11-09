@@ -4,7 +4,6 @@
 #include "Texture.h"
 
 
-
 Prism::DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
 	: myHWND(aHwnd)
 	, mySetupInfo(aSetupInfo)
@@ -31,20 +30,48 @@ void Prism::DirectX::Clear(const float aClearColor[4])
 
 void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 {
+	
 	myContext->OMSetRenderTargets(0, NULL, NULL);
 	myBackbufferRenderTarget->Release();
 	myBackbufferShaderResource->Release();
 	myBackbufferTexture->Release();
 	myContext->Flush();
-	HRESULT result = mySwapChain->ResizeBuffers(1, aWidth, aHeight, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
-	if (FAILED(result) != S_OK)
+
+
+	HRESULT result = mySwapChain->ResizeBuffers(1, aWidth, aHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	if (result != S_OK)
 	{
 		DIRECTX_LOG("Failed to Resize SwapChain Buffers");
 		DL_MESSAGE_BOX("Failed to Resize SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
 	}
+	
 
 	D3DBackbufferSetup(aWidth, aHeight);
 	D3DViewPortSetup(aWidth, aHeight);
+}
+
+void Prism::DirectX::SetFullscreen(bool aFullscreenFlag)
+{
+	HRESULT result = mySwapChain->SetFullscreenState(aFullscreenFlag, nullptr);
+	if (result != S_OK)
+	{
+		DIRECTX_LOG("Failed to SetFullscreenState on SwapChain Buffers");
+		DL_MESSAGE_BOX("Failed to SetFullscreenState on SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
+	}
+}
+
+bool Prism::DirectX::IsFullscreen() const
+{
+	BOOL isFullscreen;
+
+	HRESULT result = mySwapChain->GetFullscreenState(&isFullscreen, nullptr);
+	if (result != S_OK)
+	{
+		DIRECTX_LOG("Failed to GetFullscreenState on SwapChain Buffers");
+		DL_MESSAGE_BOX("Failed to GetFullscreenState on SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
+	}
+
+	return isFullscreen;
 }
 
 void Prism::DirectX::CleanD3D()
