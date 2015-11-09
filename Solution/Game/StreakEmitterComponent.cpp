@@ -35,12 +35,13 @@ void StreakEmitterComponent::Init(std::string aPath)
 	myEmitterData->LoadDataFile(myXMLPath.c_str());
 
 	CU::Matrix44<float> posLeft;
-	posLeft.SetPos(CU::Vector3<float>(-4.098f, 2.672f, 11.2789f));
-	CU::Matrix44<float> posRight;
-	posRight.SetPos(CU::Vector3<float>(4.098f, 2.672f, 11.2789f));
+	//posLeft.SetPos(CU::Vector3<float>(-4.098f, 2.672f, 11.2789f));
+	posLeft.SetPos(CU::Vector3<float>());
+	//CU::Matrix44<float> posRight;
+	//posRight.SetPos(CU::Vector3<float>(4.098f, 2.672f, 11.2789f));
 
 	AddStreak(posLeft);
-	AddStreak(posRight);
+	//AddStreak(posRight);
 }
 
 void StreakEmitterComponent::Update(float aDeltaTime)
@@ -72,6 +73,14 @@ void StreakEmitterComponent::AddStreak(const CU::Matrix44f aOrientation)
 	emitter->myEmitter = new Prism::StreakEmitterInstance(*myEmitterData);
 	emitter->myOrientation = aOrientation;
 	myEmitters.Add(emitter);
+}
+
+void StreakEmitterComponent::Reset()
+{
+	for (int i = 0; i < myEmitters.Size(); ++i)
+	{
+		myEmitters[i]->myEmitter->Reset();
+	}
 }
 
 

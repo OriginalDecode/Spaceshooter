@@ -208,3 +208,9 @@ void Prism::StreakEmitterInstance::UpdateVertexBuffer()
 		Engine::GetInstance()->GetContex()->Unmap(myVertexBufferWrapper.myVertexBuffer, 0);
 	}
 }
+
+void Prism::StreakEmitterInstance::Reset()
+{
+	myStreaks.RemoveAll();
+	myStreakIndices.RemoveAll();
+}

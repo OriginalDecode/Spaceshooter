@@ -19,6 +19,8 @@ public:
 
 	void AddStreak(const CU::Matrix44f aOrientation);
 
+	void Reset() override;
+
 private:
 	struct Emitter
 	{

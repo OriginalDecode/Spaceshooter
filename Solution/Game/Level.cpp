@@ -251,6 +251,8 @@ void Level::Render()
 		}
 	}
 
+	myBulletManager->RenderStreaks();
+
 
 	if (myIsSkipable == true)
 	{
