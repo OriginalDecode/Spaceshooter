@@ -10,6 +10,7 @@ namespace Prism
 	class DirectionalLight;
 	class PointLight;
 	class SpotLight;
+	class Sprite;
 };
 
 class Level;
@@ -30,6 +31,12 @@ public:
 	void ReadXML(const std::string& aFilePath);
 	void ReadLevelSettings();
 	void LoadPlayer();
+
+	volatile bool IsLevelLoading() const;
+
+	bool IsClean();
+
+	void Cleanup();
 
 private:
 	void LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
@@ -59,5 +66,18 @@ private:
 	Entity* myPlayer;
 
 	int myCurrentID;
+
+	volatile bool myIsLoading;
+
+	std::thread* myLoadLevelThread;
 };
 
+inline volatile bool LevelFactory::IsLevelLoading() const
+{
+	return myIsLoading;
+}
+
+inline bool LevelFactory::IsClean()
+{
+	return myLoadLevelThread == nullptr;
+}

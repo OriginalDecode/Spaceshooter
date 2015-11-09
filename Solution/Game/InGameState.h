@@ -9,6 +9,11 @@ namespace CU
 	class InputWrapper;
 }
 
+namespace Prism
+{
+	class Sprite;
+}
+
 class BulletManager;
 class CollisionManager;
 class LevelFactory;
@@ -52,7 +57,10 @@ private:
 
 	MessageState* myMessageScreen;
 
+	Prism::Sprite* myLoadingScreen;
+
 	bool myIsComplete;
+	bool myLevelIsLoading;
 };
 
 inline bool InGameState::IsComplete() const

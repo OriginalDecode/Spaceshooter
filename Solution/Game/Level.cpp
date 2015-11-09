@@ -164,7 +164,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-	if (myIsSkipable == true && myInputWrapper->KeyIsPressed(DIK_L) == true)
+	if (myIsSkipable == true && myInputWrapper->KeyIsPressed(DIK_RETURN) == true)
 	{
 		CompleteLevel();
 	}
@@ -256,7 +256,7 @@ void Level::Render()
 
 	if (myIsSkipable == true)
 	{
-		Prism::Engine::GetInstance()->PrintText("Press [L] to skip level."
+		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip level."
 			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.5f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.6f }
 			, Prism::eTextType::RELEASE_TEXT);
 	}
