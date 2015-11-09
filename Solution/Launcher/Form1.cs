@@ -36,31 +36,29 @@ namespace Launcher
         public Form1()
         {
             InitializeComponent();
-            if (File.Exists(myExePath[0]) == true)
+
+            string releaseConfig = myDocumentFolder + "\\SpaceShooter\\" + myConfigPath;
+            myConfigPath = releaseConfig;
+            string subString = myDocumentFolder + "\\SpaceShooter";
+            if (Directory.Exists(subString) == false)
             {
-                string releaseConfig = myDocumentFolder + "\\SpaceShooter\\" + myConfigPath;
-                myConfigPath = releaseConfig;
-                string subString = myDocumentFolder + "\\SpaceShooter";
-                if (Directory.Exists(subString) == false)
-                {
-                    Directory.CreateDirectory(subString);
-                }
-                subString += "\\Data";
-                if (Directory.Exists(subString) == false)
-                {
-                    Directory.CreateDirectory(subString);
-                }
-                subString += "\\Setting";
-                if (Directory.Exists(subString) == false)
-                {
-                    Directory.CreateDirectory(subString);
-                }
+                Directory.CreateDirectory(subString);
+            }
+            subString += "\\Data";
+            if (Directory.Exists(subString) == false)
+            {
+                Directory.CreateDirectory(subString);
+            }
+            subString += "\\Setting";
+            if (Directory.Exists(subString) == false)
+            {
+                Directory.CreateDirectory(subString);
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+
 
             resolutionDropdown.Items.Add("800 x 600");
             resolutionDropdown.Items.Add("1280 x 720");

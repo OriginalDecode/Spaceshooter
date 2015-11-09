@@ -17,6 +17,7 @@
 #include <InputWrapper.h>
 #include "Level.h"
 #include "LevelFactory.h"
+#include "LoadingScreen.h"
 #include "MessageState.h"
 #include <ModelLoader.h>
 #include "PostMaster.h"
@@ -27,7 +28,6 @@
 
 InGameState::InGameState(CU::InputWrapper* anInputWrapper)
 	: myPlayer(nullptr)
-	, myLevelIsLoading(false)
 	, myLoadingScreen(nullptr)
 {
 	myInputWrapper = anInputWrapper;
@@ -38,9 +38,11 @@ InGameState::~InGameState()
 	delete myLevelFactory;
 	delete myLevel;
 	delete myPlayer;
+	delete myLoadingScreen;
 	myLevelFactory = nullptr;
 	myLevel = nullptr;
 	myPlayer = nullptr;
+	myLoadingScreen = nullptr;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
 }
 
@@ -57,8 +59,10 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 	OnResize(windowSize.x, windowSize.y);
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
-	myLoadingScreen = new Prism::Sprite("Data/Resource/Texture/LoadingScreen/T_background_default.dds"
-		, { float(windowSize.x), float(windowSize.y) }, { float(windowSize.x / 2), float(windowSize.y / 2) });
+	myLoadingScreen = new LoadingScreen(myInputWrapper, myLevelFactory->IsLevelLoading(), myLevelFactory->GetLevelID());
+
+	//myLoadingScreen = new Prism::Sprite("Data/Resource/Texture/LoadingScreen/T_background_default.dds"
+	//	, { float(windowSize.x), float(windowSize.y) }, { float(windowSize.x / 2), float(windowSize.y / 2) });
 }
 
 void InGameState::EndState()
@@ -67,21 +71,20 @@ void InGameState::EndState()
 
 const eStateStatus InGameState::Update(const float& aDeltaTime)
 {
-	if (myLevelFactory->IsLevelLoading() == false)
+	if (myLoadingScreen->IsDone() == true)
 	{
 		if (myLevelFactory->IsClean() == false)
 		{
+			myPlayer = myLevel->GetPlayer();
 			myLevelFactory->Cleanup();
 			PostMaster::GetInstance()->SendMessage(FadeMessage(0.33f));
 		}
-
-		myPlayer = myLevel->GetPlayer();
 
 		if (myIsComplete == true)
 		{
 			PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::COMPLETE_GAME));
 			return eStateStatus::ePopMainState;
-		}
+		} 
 
 		if (myInputWrapper->KeyDown(DIK_ESCAPE))
 		{
@@ -95,6 +98,10 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 			return eStateStatus::eKeepState;
 		}
 	}
+	else
+	{
+		myLoadingScreen->Update(aDeltaTime);
+	}
 	return eStateStatus::eKeepState;
 }
 
@@ -102,14 +109,13 @@ void InGameState::Render()
 {
 	VTUNE_EVENT_BEGIN(VTUNE::GAME_RENDER);
 
-	if (myLevelFactory->IsLevelLoading() == false)
+	if (myLoadingScreen->IsDone() == true)
 	{
 		myLevel->Render();
 	}
 	else
 	{
-		CU::Vector2<int> windowSize = Prism::Engine::GetInstance()->GetWindowSize();
-		myLoadingScreen->Render({ float(windowSize.x / 2), -float(windowSize.y / 2) });
+		myLoadingScreen->Render();
 	}
 
 	VTUNE_EVENT_END();
@@ -126,6 +132,11 @@ void InGameState::OnResize(int aWidth, int aHeight)
 	{
 		myLevel->OnResize(aWidth, aHeight);
 	}
+
+	if (myLoadingScreen != nullptr)
+	{
+		myLoadingScreen->OnResize(aWidth, aHeight);
+	}
 }
 
 void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
@@ -133,7 +144,7 @@ void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
 	switch (aMessage.GetGameState())
 	{
 	case eGameState::RELOAD_LEVEL:
-		myLevelIsLoading = true;
+		myLoadingScreen->Reset();
 		myLevel = myLevelFactory->LoadCurrentLevel();
 		break;
 
@@ -149,7 +160,7 @@ void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
 		break;
 
 	case eGameState::LOAD_NEXT_LEVEL:
-		myLevelIsLoading = true;
+		myLoadingScreen->Reset();
 		myLevel = myLevelFactory->LoadNextLevel();
 		break;
 	}
@@ -157,7 +168,7 @@ void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
 
 void InGameState::SetLevel(int aLevelID)
 {
-	myLevelIsLoading = true;
+	myLoadingScreen->Reset();
 	myLevel = myLevelFactory->LoadLevel(aLevelID);
 }
 
