@@ -42,6 +42,7 @@
 #include "ShootingComponent.h"
 #include "SpawnEnemyMessage.h"
 #include "SpawnPowerUpMessage.h"
+#include <Sprite.h>
 #include "StreakEmitterComponent.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
@@ -76,6 +77,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 
+	//myEMPDepthSprite = Prism::Engine::GetInstance(
 	myRenderer = new Prism::Renderer();
 }
 
@@ -225,6 +227,7 @@ void Level::Render()
 		if (myEMPActivated == true)
 		{
 			//Prism::Engine::GetInstance()->DisableZBuffer();
+			
 			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myRenderer->GetWorldTexture());
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
 			//Prism::Engine::GetInstance()->EnableZBuffer();
