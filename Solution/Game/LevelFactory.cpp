@@ -469,7 +469,7 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
 	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Init(7.5f);
-	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init();
+
 	myCurrentLevel->myPlayer->AddComponent<PhysicsComponent>()->Init(1, { 0, 0, 0 });
 	myCurrentLevel->myPlayer->AddComponent<SoundComponent>();
 
@@ -483,8 +483,16 @@ void LevelFactory::LoadPlayer()
 	bool invulnerable = false;
 	reader.ReadAttribute(reader.FindFirstChild("life"), "value", health);
 	reader.ReadAttribute(reader.FindFirstChild("life"), "invulnerable", invulnerable);
-
 	myCurrentLevel->myPlayer->AddComponent<HealthComponent>()->Init(health, invulnerable);
+
+	float timeBeforeRecharging = 0.f;
+	float chargeRate = 0.f;
+	
+	reader.ReadAttribute(reader.FindFirstChild("shield"), "timeBeforeRecharching", timeBeforeRecharging);
+	reader.ReadAttribute(reader.FindFirstChild("shield"), "chargeRate", chargeRate);
+	
+	myCurrentLevel->myPlayer->AddComponent<ShieldComponent>()->Init(timeBeforeRecharging, chargeRate);
+
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	//myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
