@@ -155,7 +155,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPTimer -= aDeltaTime;
 		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 		//myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
-		myEMPScale += 50000 * aDeltaTime;
+		myEMPScale += 500 * aDeltaTime;
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
@@ -214,10 +214,18 @@ void Level::Render()
 		myRenderer->FinalRender();
 	
 
+		if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
+		{
+			myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
+			myEMPTimer = 20.f;
+			myEMPScale = 1.f;
+			myEMPActivated = true;
+		}
+
 		if (myEMPActivated == true)
 		{
 			//Prism::Engine::GetInstance()->DisableZBuffer();
-			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myRenderer->GetFinalTexture());
+			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myRenderer->GetWorldTexture());
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}

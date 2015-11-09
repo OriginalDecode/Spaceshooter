@@ -93,6 +93,7 @@ namespace Prism
 		ID3DX11EffectScalarVariable* myStreakAlphaDelta;
 
 		ID3DX11EffectShaderResourceVariable* myExtraTexture;
+		ID3DX11EffectShaderResourceVariable* myExtraTexture2;
 
 		CU::Vector4<float> mySpritePosAndScaleVector;
 		

@@ -18,7 +18,8 @@ void ShieldComponent::Init()
 
 	myShieldOvercharged = false;
 	
-	myReachargeTime = 5.f;
+	myReachargeTime = 5.f; //tiden innan den börjar rechargea
+	myChargeRate = 1.f;
 	myCooldown = 0.f;
 
 	myOvercharge = 0;
@@ -77,7 +78,7 @@ void ShieldComponent::Update(float aDelta)
 					myShieldStrength = myMaxShieldStrength;
 					return;
 				}
-				myShieldStrength += 1;
+				myShieldStrength += myChargeRate;
 				myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
 
 			}
