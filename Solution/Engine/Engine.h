@@ -11,6 +11,7 @@ struct ID3D11DeviceContext;
 struct ID3D11DepthStencilView;
 struct ID3D11RenderTargetView;
 struct ID3D11ShaderResourceView;
+struct ID3D11Texture2D;
 
 namespace Prism
 {
@@ -62,11 +63,13 @@ namespace Prism
 		ID3D11DepthStencilView* GetDepthView();
 		ID3D11RenderTargetView* GetDepthBuffer();
 		ID3D11ShaderResourceView* GetBackbufferView();
+		ID3D11Texture2D* GetDepthBufferTexture();
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
 		EmitterDataContainer* GetEmitterDataContainer();
 		FileWatcher* GetFileWatcher();
 		ModelLoader* GetModelLoader();
+
 
 		Model* DLLLoadModel(const std::string& aModelPath, Effect* aEffect);
 

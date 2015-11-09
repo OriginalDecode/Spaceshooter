@@ -38,6 +38,7 @@ namespace Prism
 		ID3D11RenderTargetView* GetDepthBuffer();
 		ID3D11ShaderResourceView* GetBackbufferView();
 		ID3D11Texture2D* GetBackbufferTexture();
+		ID3D11Texture2D* GetDepthbufferTexture();
 
 		void RestoreViewPort();
 		void SetBackBufferAsTarget();
