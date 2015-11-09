@@ -61,7 +61,7 @@ bool Game::Init(HWND& aHwnd)
 	reader.OpenDocument("Data/Setting/SET_options.xml");
 	reader.ReadAttribute(reader.FindFirstChild("startInMenu"), "bool", startInMenu);
 #ifdef _DEBUG
-	startInMenu = false;
+	//startInMenu = false;
 #endif
 
 	//startInMenu = true;

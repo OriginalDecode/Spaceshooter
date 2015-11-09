@@ -130,7 +130,10 @@ void BulletManager::LoadProjectile(WeaponFactory* aWeaponFactory, EntityFactory*
 		Entity* newEntity = new Entity(eEntityType::ENEMY_BULLET, myScene, Prism::eOctreeType::NOT_IN_OCTREE);
 		aEntityFactory->CopyEntity(newEntity, projectileDataType.myEntityType);
 		newEntity->GetComponent<GraphicsComponent>()->SetPosition({ 0, 0, 0 });
-
+		if (projectileDataType.myCollision > 0)
+		{
+			newEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(projectileDataType.myCollision);
+		}
 		bulletData->myEnemyBulletComponents.Add(newEntity->GetComponent<BulletComponent>());
 		bulletData->myEnemyBullets.Add(newEntity);
 	}
