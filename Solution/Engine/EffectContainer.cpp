@@ -46,14 +46,16 @@ void Prism::EffectContainer::LoadEffect(const std::string& aFilePath)
 		return;
 	}
 
-	Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(myCubeMap);
-	ID3DX11EffectShaderResourceVariable* shaderVar = newEffect->GetEffect()->GetVariableByName("CubeMap")->AsShaderResource();
-
-	if (shaderVar->IsValid())
+	if (myCubeMap != "")
 	{
-		shaderVar->SetResource(tex->GetShaderView());
-	}
+		Texture* tex = Engine::GetInstance()->GetTextureContainer()->GetTexture(myCubeMap);
+		ID3DX11EffectShaderResourceVariable* shaderVar = newEffect->GetEffect()->GetVariableByName("CubeMap")->AsShaderResource();
 
+		if (shaderVar->IsValid())
+		{
+			shaderVar->SetResource(tex->GetShaderView());
+		}
+	}
 
 	DL_ASSERT_EXP(newEffect != nullptr, "newEffect is nullpter in LoadEffect, HOW?");
 
