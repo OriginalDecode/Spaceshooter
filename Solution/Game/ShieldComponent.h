@@ -23,6 +23,7 @@ private:
 	bool myShieldOvercharged;
 
 	float myReachargeTime;
+	float myChargeRate;
 	float myCooldown;
 
 
