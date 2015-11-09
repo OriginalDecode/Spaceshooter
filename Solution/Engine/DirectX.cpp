@@ -3,7 +3,6 @@
 #include <D3D11.h>
 
 
-
 Prism::DirectX::DirectX(HWND& aHwnd, SetupInfo& aSetupInfo)
 	: myHWND(aHwnd)
 	, mySetupInfo(aSetupInfo)
@@ -31,19 +30,33 @@ void Prism::DirectX::Clear(const float aClearColor[4])
 
 void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 {
+	
 	myContext->OMSetRenderTargets(0, NULL, NULL);
 	myRenderTargetView->Release();
 	myContext->Flush();
-	HRESULT result = mySwapChain->ResizeBuffers(1, aWidth, aHeight, DXGI_FORMAT_R8G8B8A8_UNORM, DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH);
-	if (FAILED(result) != S_OK)
+
+
+	HRESULT result = mySwapChain->ResizeBuffers(1, aWidth, aHeight, DXGI_FORMAT_R8G8B8A8_UNORM, 0);
+	if (result != S_OK)
 	{
 		DIRECTX_LOG("Failed to Resize SwapChain Buffers");
 		DL_MESSAGE_BOX("Failed to Resize SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
 	}
+	
 
 	D3DRenderTargetSetup();
 	D3DViewPortSetup(aWidth, aHeight);
 	D3DStencilBufferSetup(aWidth, aHeight);
+}
+
+void Prism::DirectX::SetFullscreen(bool aFullscreenFlag)
+{
+	HRESULT result = mySwapChain->SetFullscreenState(aFullscreenFlag, nullptr);
+	if (result != S_OK)
+	{
+		DIRECTX_LOG("Failed to SetFullscreenState on SwapChain Buffers");
+		DL_MESSAGE_BOX("Failed to SetFullscreenState on SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
+	}
 }
 
 void Prism::DirectX::CleanD3D()

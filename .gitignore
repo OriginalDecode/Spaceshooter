@@ -73,3 +73,5 @@ Tools/CSharpUtilities/CSharpUtilities/obj/
 /fromLD
 
 *.vcxproj.user
+/Tools/EntityEditor/EntityEditor/obj/Debug
+/Tools/EntityEditor/EntityEditor/obj/Release

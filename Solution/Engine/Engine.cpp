@@ -63,7 +63,14 @@ namespace Prism
 		myInstance = new Engine();
 		myInstance->mySetupInfo = &aSetupInfo;
 
-		return myInstance->Init(aHwnd, aWndProc);
+		bool result = myInstance->Init(aHwnd, aWndProc);
+
+		if (aSetupInfo.myWindowed == false)
+		{
+			myInstance->myDirectX->SetFullscreen(true);
+		}
+
+		return result;
 	}
 
 	void Engine::Destroy()
@@ -116,7 +123,10 @@ namespace Prism
 	{
 		myWindowSize.x = aWidth;
 		myWindowSize.y = aHeigth;
-		myDirectX->OnResize(aWidth, aHeigth);
+		if (myDirectX != nullptr) 
+		{
+			myDirectX->OnResize(aWidth, aHeigth);
+		}
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
@@ -310,8 +320,8 @@ namespace Prism
 			"DirectX Window",
 			"DirectX Window",
 			WS_OVERLAPPEDWINDOW,
-			0,
-			0,
+			-2,
+			-2,
 			rc.right - rc.left,
 			rc.bottom - rc.top,
 			NULL, 
@@ -324,11 +334,6 @@ namespace Prism
 			ENGINE_LOG("Failed to CreateWindow");
 			return FALSE;
 		}
-
-		/*if (mySetupInfo->myWindowed == false)
-		{
-			SetWindowLong(aHwnd, GWL_STYLE, WS_POPUP);
-		}*/
 
 		ENGINE_LOG("Window Setup Successful");
 		return TRUE;
