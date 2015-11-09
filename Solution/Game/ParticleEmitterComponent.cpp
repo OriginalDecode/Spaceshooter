@@ -23,7 +23,10 @@ ParticleEmitterComponent::ParticleEmitterComponent(Entity& aEntity)
 ParticleEmitterComponent::~ParticleEmitterComponent()
 {
 #ifndef DLL_EXPORT
-	PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
+	if (myEntity.GetType() != eEntityType::PLAYER)
+	{
+		PostMaster::GetInstance()->SendMessage(DestroyEmitterMessage(this));
+	}
 #endif
 
 	delete myEmitter;
@@ -36,7 +39,10 @@ void ParticleEmitterComponent::Init(std::string aPath)
 
 	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
 	myEmitter = new Prism::ParticleEmitterInstance();
-	myEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(aPath));
+
+
+	myEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(aPath)
+		, myEntity.GetType() == eEntityType::PLAYER);
 }
 
 void ParticleEmitterComponent::Update(float aDeltaTime)

@@ -28,15 +28,14 @@ namespace Prism
 		myParticleEmitterData = nullptr;
 	}
 
-	void ParticleEmitterInstance::Initiate(ParticleEmitterData* someData)
+	void ParticleEmitterInstance::Initiate(ParticleEmitterData* someData, bool anAllowManyParticles)
 	{
 		myParticleEmitterData = someData;
 
-		int particleCount = static_cast<int>(myParticleEmitterData->myParticlesLifeTime / myParticleEmitterData->myEmissionRate) + 1;
+		int particleCount = static_cast<int>(myParticleEmitterData->myParticlesPerEmitt * myParticleEmitterData->myParticlesLifeTime / myParticleEmitterData->myEmissionRate) + 1;
 
-#ifndef _DEBUG
-		DL_ASSERT_EXP(particleCount <= 201, "Can't have more than 201 particles in an emitter!");
-#endif
+		
+		DL_ASSERT_EXP(anAllowManyParticles == true || particleCount <= 201, "Can't have more than 201 particles in an emitter!");
 
 		myGraphicalParticles.Init(particleCount);
 		myLogicalParticles.Init(particleCount);
@@ -227,8 +226,8 @@ namespace Prism
 			myGraphicalParticles[myParticleIndex].myColor = myParticleEmitterData->myData.myStartColor;
 
 			myGraphicalParticles[myParticleIndex].myPosition =
-				CU::Math::RandomRange(aWorldMatrix.GetPos() + myParticleEmitterData->myEmitterSize
-				, aWorldMatrix.GetPos() - myParticleEmitterData->myEmitterSize);
+				CU::Math::RandomVector(aWorldMatrix.GetPos() - myParticleEmitterData->myEmitterSize
+				, aWorldMatrix.GetPos() + myParticleEmitterData->myEmitterSize);
 
 			myGraphicalParticles[myParticleIndex].myLifeTime = myParticleEmitterData->myParticlesLifeTime;
 
