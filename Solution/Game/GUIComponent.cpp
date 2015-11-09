@@ -218,19 +218,19 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 	ShootingComponent* shootingComponent = myEntity.GetComponent<ShootingComponent>();
 
 	myPowerUpSlots[ePowerUpType::EMP] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_emp_active.dds"
-		, "Data/Resource/Texture/UI/PowerUp/T_powerup_emp_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * 2.5f + padding * 2.f }
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_emp_inactive.dds", { iconSize.x * 6.75f, iconSize.y * 2.5f + padding * 2.f }
 	, shootingComponent->GetEMPPowerUp(), nullptr);
 
 	myPowerUpSlots[ePowerUpType::FIRERATEBOOST] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_active.dds"
-		, "Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_inactive.dds", { halfScreenSize.x + iconSize.x * 7.1f, -halfScreenSize.y + iconSize.y * 1.5f + padding * 1.f }
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_firerate_inactive.dds", { iconSize.x * 7.1f, iconSize.y * 1.5f + padding * 1.f }
 	, shootingComponent->GetFireRatePowerUp(), &shootingComponent->GetFireRatePowerUpDuration());
 
 	myPowerUpSlots[ePowerUpType::HOMING] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_homing_active.dds"
-		, "Data/Resource/Texture/UI/PowerUp/T_powerup_homing_inactive.dds", { halfScreenSize.x + iconSize.x * 7.1f, -halfScreenSize.y + iconSize.y * -1.5f + padding * 0.f }
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_homing_inactive.dds", { iconSize.x * 7.1f, iconSize.y * -1.5f + padding * 0.f }
 	, shootingComponent->GetHomingPowerUp(), &shootingComponent->GetHomingPowerUpDuration());
 
 	myPowerUpSlots[ePowerUpType::INVULNERABLITY] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_active.dds"
-		, "Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_inactive.dds", { halfScreenSize.x + iconSize.x * 6.75f, -halfScreenSize.y + iconSize.y * -2.5f + padding * -1.f }
+		, "Data/Resource/Texture/UI/PowerUp/T_powerup_invulnerable_inactive.dds", { iconSize.x * 6.75f, iconSize.y * -2.5f + padding * -1.f }
 	, myEntity.GetComponent<HealthComponent>()->GetInvulnerability(), &myEntity.GetComponent<HealthComponent>()->GetInvulnerablityDuration());
 }
 
@@ -253,7 +253,7 @@ void GUIComponent::Update(float aDeltaTime)
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
-	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int> aWindowSize
+	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int>& aWindowSize
 	, bool aShowDist, float anAlpha, bool aIsPowerup, std::string aName)
 {
 	bool showName = false;
@@ -351,7 +351,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	}
 }
 
-void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<float> aMousePos)
+void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos)
 {
 	my3DClosestEnemyLength = 10000.f;
 	myClosestEnemyLength = 100000.f;
@@ -483,10 +483,10 @@ void GUIComponent::Render(const CU::Vector2<int> aWindowSize, const CU::Vector2<
 		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
-	myPowerUpSlots[ePowerUpType::EMP]->Render();
-	myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render();
-	myPowerUpSlots[ePowerUpType::HOMING]->Render();
-	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render();
+	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
+	myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize);
+	myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
+	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
 
 	Prism::Engine::GetInstance()->PrintText(myWeapon, { halfWidth * 1.47f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
 
