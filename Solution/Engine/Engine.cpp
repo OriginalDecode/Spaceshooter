@@ -75,7 +75,7 @@ namespace Prism
 
 		if (aSetupInfo.myWindowed == false)
 		{
-			myInstance->myDirectX->SetFullscreen(true);
+			myInstance->myDirectX->SetFullscreen(false);
 		}
 
 		return result;
@@ -217,6 +217,11 @@ namespace Prism
 	ID3D11ShaderResourceView* Engine::GetBackbufferView()
 	{
 		return myDirectX->GetBackbufferView();
+	}
+
+	ID3D11Texture2D* Engine::GetDepthBufferTexture()
+	{
+		return myDirectX->GetBackbufferTexture();
 	}
 
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)

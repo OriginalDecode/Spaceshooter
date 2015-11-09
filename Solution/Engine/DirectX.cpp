@@ -139,6 +139,11 @@ ID3D11Texture2D* Prism::DirectX::GetBackbufferTexture()
 	return myBackbufferTexture;
 }
 
+ID3D11Texture2D* Prism::DirectX::GetDepthbufferTexture()
+{
+	return myDepthbufferTexture;
+}
+
 void Prism::DirectX::RestoreViewPort()
 {
 	myContext->RSSetViewports(1, myViewPort);
