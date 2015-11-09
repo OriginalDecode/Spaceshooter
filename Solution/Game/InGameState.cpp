@@ -72,6 +72,7 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 		if (myLevelFactory->IsClean() == false)
 		{
 			myLevelFactory->Cleanup();
+			PostMaster::GetInstance()->SendMessage(FadeMessage(0.33f));
 		}
 
 		myPlayer = myLevel->GetPlayer();
