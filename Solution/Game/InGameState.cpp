@@ -61,12 +61,14 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 	PostMaster::GetInstance()->Subscribe(eMessageType::GAME_STATE, this);
 	myLoadingScreen = new LoadingScreen(myInputWrapper, myLevelFactory->IsLevelLoading(), myLevelFactory->GetLevelID());
 
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 	//myLoadingScreen = new Prism::Sprite("Data/Resource/Texture/LoadingScreen/T_background_default.dds"
 	//	, { float(windowSize.x), float(windowSize.y) }, { float(windowSize.x / 2), float(windowSize.y / 2) });
 }
 
 void InGameState::EndState()
 {
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
 const eStateStatus InGameState::Update(const float& aDeltaTime)
@@ -77,7 +79,7 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 		{
 			myPlayer = myLevel->GetPlayer();
 			myLevelFactory->Cleanup();
-			PostMaster::GetInstance()->SendMessage(FadeMessage(0.33f));
+			PostMaster::GetInstance()->SendMessage(FadeMessage(1.f/3.f));
 		}
 
 		if (myIsComplete == true)
