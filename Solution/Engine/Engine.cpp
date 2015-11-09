@@ -46,6 +46,8 @@ namespace Prism
 
 	Engine::~Engine()
 	{
+		delete myFadeData.mySprite;
+		myFadeData.mySprite = nullptr;
 		delete myTextureContainer;
 		delete myEffectContainer;
 		delete myModelFactory;
@@ -121,8 +123,11 @@ namespace Prism
 				myFadeData.myIsFading = false;
 				myFadeData.myCurrentTime = 0.f;
 			}
+			else
+			{
+			}
+				myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
 
-			myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
 		}
 
 		myDirectX->Present(0, 0);
@@ -158,10 +163,10 @@ namespace Prism
 
 		if (myFadeData.mySprite != nullptr)
 		{
+			myFadeData.mySprite->ResizeTexture(myDirectX->GetBackbufferTexture());
 			myFadeData.mySprite->SetSize({ static_cast<float>(myWindowSize.x)
 				, static_cast<float>(myWindowSize.y) }, { 0.f, 0.f });
 		}
-		
 	}
 
 	Model* Engine::DLLLoadModel(const std::string& aModelPath, Effect* aEffect)
@@ -223,6 +228,7 @@ namespace Prism
 
 		
 
+		myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
 
 		ShowWindow(aHwnd, 10);
 		UpdateWindow(aHwnd);
@@ -242,7 +248,6 @@ namespace Prism
 
 		myUsePBLPixelShader = true;
 
-		myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 

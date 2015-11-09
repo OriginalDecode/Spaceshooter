@@ -19,11 +19,6 @@ Prism::Surface::Surface()
 
 Prism::Surface::~Surface()
 {
-	/*for (int i = 0; i < myShaderResources.Size(); ++i)
-	{
-		myShaderResources[i]->Release();
-	}*/
-
 	myShaderResources.RemoveAll();
 	myShaderResourceViews.RemoveAll();
 	myFilePaths.RemoveAll();
