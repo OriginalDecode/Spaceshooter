@@ -169,6 +169,17 @@ namespace Prism
 		}
 	}
 
+	bool Engine::IsFullscreen() const
+	{
+		return myDirectX->IsFullscreen();
+	}
+
+	void Engine::SetFullscreen(bool aFullscreen)
+	{
+		myDirectX->SetFullscreen(aFullscreen);
+	}
+
+
 	Model* Engine::DLLLoadModel(const std::string& aModelPath, Effect* aEffect)
 	{
 		CU::TimerManager::GetInstance()->StartTimer("LoadModel");

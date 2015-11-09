@@ -60,6 +60,20 @@ void Prism::DirectX::SetFullscreen(bool aFullscreenFlag)
 	}
 }
 
+bool Prism::DirectX::IsFullscreen() const
+{
+	BOOL isFullscreen;
+
+	HRESULT result = mySwapChain->GetFullscreenState(&isFullscreen, nullptr);
+	if (result != S_OK)
+	{
+		DIRECTX_LOG("Failed to GetFullscreenState on SwapChain Buffers");
+		DL_MESSAGE_BOX("Failed to GetFullscreenState on SwapChain Buffers", "DirectX: SwapChain", MB_ICONWARNING);
+	}
+
+	return isFullscreen;
+}
+
 void Prism::DirectX::CleanD3D()
 {
 	mySwapChain->SetFullscreenState(FALSE, NULL);

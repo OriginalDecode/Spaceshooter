@@ -54,6 +54,8 @@ namespace Prism
 		static Engine* GetInstance();
 		void Render();
 		void OnResize(int aWidth, int aHeigth);
+		bool IsFullscreen() const;
+		void SetFullscreen(bool aFullscreen);
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();

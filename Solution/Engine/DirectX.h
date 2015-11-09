@@ -30,6 +30,7 @@ namespace Prism
 
 		void OnResize(int aWidth, int aHeigth);
 		void SetFullscreen(bool aFullscreenFlag);
+		bool IsFullscreen() const;
 
 		ID3D11Device* GetDevice();
 		ID3D11DeviceContext* GetContex();
