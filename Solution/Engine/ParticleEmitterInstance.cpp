@@ -1,8 +1,9 @@
 #include "stdafx.h"
 #include "Camera.h"
+#include <CommonHelper.h>
 #include <d3dx11effect.h>
-#include "ParticleEmitterInstance.h"
 #include <MathHelper.h>
+#include "ParticleEmitterInstance.h"
 #include "VertexBufferWrapper.h"
 namespace Prism
 {
@@ -31,10 +32,12 @@ namespace Prism
 	void ParticleEmitterInstance::Initiate(ParticleEmitterData* someData, bool anAllowManyParticles)
 	{
 		myParticleEmitterData = someData;
+		myEmitterPath = myParticleEmitterData->myFileName;
 
 		int particleCount = static_cast<int>(myParticleEmitterData->myParticlesPerEmitt * myParticleEmitterData->myParticlesLifeTime / myParticleEmitterData->myEmissionRate) + 1;
 
 		
+		DL_DEBUG(("Loading :" + myEmitterPath).c_str());
 		DL_ASSERT_EXP(anAllowManyParticles == true || particleCount <= 201, "Can't have more than 201 particles in an emitter!");
 
 		myGraphicalParticles.Init(particleCount);
@@ -55,7 +58,6 @@ namespace Prism
 		myIsActive = myParticleEmitterData->myIsActiveAtStart;
 
 		myEmitterLife = myParticleEmitterData->myEmitterLifeTime;
-		myEmitterPath = myParticleEmitterData->myFileName;
 		CreateVertexBuffer();
 	}
 
