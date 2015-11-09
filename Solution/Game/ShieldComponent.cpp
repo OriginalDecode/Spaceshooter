@@ -78,7 +78,7 @@ void ShieldComponent::Update(float aDelta)
 					myShieldStrength = myMaxShieldStrength;
 					return;
 				}
-				myShieldStrength += myChargeRate;
+				myShieldStrength += (myChargeRate * aDelta);
 				myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
 
 			}
