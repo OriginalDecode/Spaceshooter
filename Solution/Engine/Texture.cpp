@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <CommonHelper.h>
 #include <D3DX11tex.h>
 #include <DL_Debug.h>
 #include "Texture.h"
@@ -86,6 +87,8 @@ bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 	if (FAILED(hr) != S_OK)
 	{
 		RESOURCE_LOG("Failed to load: %s, trying to use MissingTexture-texture.", aFilePath.c_str());
+		DL_MESSAGE_BOX(CU::Concatenate("Failed to load: %s,\ntrying to use MissingTexture-texture.", aFilePath.c_str()).c_str()
+			, "Failed to load texture", MB_ICONWARNING);
 		hr = D3DX11CreateShaderResourceViewFromFile(Engine::GetInstance()->GetDevice()
 			, "Data/Resource/Texture/T_missing_texture.dds", NULL, NULL, &myShaderView, NULL);
 		myFileName = "Data/Resource/Texture/T_missing_texture.dds";
