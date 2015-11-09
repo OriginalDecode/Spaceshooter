@@ -7,11 +7,11 @@ public:
 	ShieldComponent(Entity& aEntity);
 
 
-	void Init() override;
+	void Init(float aTimeBeforeRecharge, float aChargeRate);
 	void ReceiveNote(const PowerUpNote& aNote) override;
 
 	void DamageShield(int someDamage);
-	int GetCurrentShieldStrength();
+	float GetCurrentShieldStrength();
 	void Update(float aDelta) override;
 
 	static eComponentType GetType();
@@ -23,16 +23,17 @@ private:
 	bool myShieldOvercharged;
 
 	float myReachargeTime;
+	float myChargeRate;
 	float myCooldown;
 
 
-	int myShieldStrength;
-	int myMaxShieldStrength;
+	float myShieldStrength;
+	float myMaxShieldStrength;
 	int myOvercharge;
 
 };
 
-inline int ShieldComponent::GetCurrentShieldStrength()
+inline float ShieldComponent::GetCurrentShieldStrength()
 {
 	return myShieldStrength;
 }

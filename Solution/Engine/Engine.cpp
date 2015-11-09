@@ -46,6 +46,8 @@ namespace Prism
 
 	Engine::~Engine()
 	{
+		delete myFadeData.mySprite;
+		myFadeData.mySprite = nullptr;
 		delete myTextureContainer;
 		delete myEffectContainer;
 		delete myModelFactory;
@@ -69,7 +71,14 @@ namespace Prism
 		myInstance = new Engine();
 		myInstance->mySetupInfo = &aSetupInfo;
 
-		return myInstance->Init(aHwnd, aWndProc);
+		bool result = myInstance->Init(aHwnd, aWndProc);
+
+		if (aSetupInfo.myWindowed == false)
+		{
+			myInstance->myDirectX->SetFullscreen(true);
+		}
+
+		return result;
 	}
 
 	void Engine::Destroy()
@@ -114,8 +123,11 @@ namespace Prism
 				myFadeData.myIsFading = false;
 				myFadeData.myCurrentTime = 0.f;
 			}
+			else
+			{
+			}
+				myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
 
-			myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
 		}
 
 		myDirectX->Present(0, 0);
@@ -141,18 +153,32 @@ namespace Prism
 	{
 		myWindowSize.x = aWidth;
 		myWindowSize.y = aHeigth;
-		myDirectX->OnResize(aWidth, aHeigth);
+		if (myDirectX != nullptr) 
+		{
+			myDirectX->OnResize(aWidth, aHeigth);
+		}
 
 		myOrthogonalMatrix = CU::Matrix44<float>::CreateOrthogonalMatrixLH(static_cast<float>(myWindowSize.x)
 			, static_cast<float>(myWindowSize.y), 0.1f, 1000.f);
 
 		if (myFadeData.mySprite != nullptr)
 		{
+			myFadeData.mySprite->ResizeTexture(myDirectX->GetBackbufferTexture());
 			myFadeData.mySprite->SetSize({ static_cast<float>(myWindowSize.x)
 				, static_cast<float>(myWindowSize.y) }, { 0.f, 0.f });
 		}
-		
 	}
+
+	bool Engine::IsFullscreen() const
+	{
+		return myDirectX->IsFullscreen();
+	}
+
+	void Engine::SetFullscreen(bool aFullscreen)
+	{
+		myDirectX->SetFullscreen(aFullscreen);
+	}
+
 
 	Model* Engine::DLLLoadModel(const std::string& aModelPath, Effect* aEffect)
 	{
@@ -213,6 +239,7 @@ namespace Prism
 
 		
 
+		myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
 
 		ShowWindow(aHwnd, 10);
 		UpdateWindow(aHwnd);
@@ -232,7 +259,6 @@ namespace Prism
 
 		myUsePBLPixelShader = true;
 
-		myFadeData.mySprite = new Sprite(myDirectX->GetBackbufferTexture(), { float(myWindowSize.x), float(myWindowSize.y) }, { 0.f, 0.f });
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 
@@ -359,8 +385,8 @@ namespace Prism
 			"DirectX Window",
 			"DirectX Window",
 			WS_OVERLAPPEDWINDOW,
-			0,
-			0,
+			-2,
+			-2,
 			rc.right - rc.left,
 			rc.bottom - rc.top,
 			NULL, 
@@ -373,11 +399,6 @@ namespace Prism
 			ENGINE_LOG("Failed to CreateWindow");
 			return FALSE;
 		}
-
-		/*if (mySetupInfo->myWindowed == false)
-		{
-			SetWindowLong(aHwnd, GWL_STYLE, WS_POPUP);
-		}*/
 
 		ENGINE_LOG("Window Setup Successful");
 		return TRUE;

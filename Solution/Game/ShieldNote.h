@@ -2,10 +2,10 @@
 
 struct ShieldNote
 {
-	ShieldNote(int someShieldStrength, int someMaxShieldStrength);
+	ShieldNote(float someShieldStrength, float someMaxShieldStrength);
 
-	int myShieldStrength;
-	int myMaxShieldStrength;
+	float myShieldStrength;
+	float myMaxShieldStrength;
 
 
 private:
@@ -13,7 +13,7 @@ private:
 	void operator=(ShieldNote&) = delete;
 };
 
-inline ShieldNote::ShieldNote(int someShieldStrength, int someMaxShieldStrength)
+inline ShieldNote::ShieldNote(float someShieldStrength, float someMaxShieldStrength)
 	: myShieldStrength(someShieldStrength)
 	, myMaxShieldStrength(someMaxShieldStrength)
 {

@@ -21,6 +21,8 @@ namespace Prism
 		void SetSize(const CU::Vector2<float> aTextureSize, const CU::Vector2<float>& aHotSpot);
 		const CU::Vector2<float>& GetSize() const;
 
+		void ResizeTexture(ID3D11Texture2D* aSrcTexture);
+
 		void Rotate(float aRadians);
 
 		void CopyFromD3DTexture(ID3D11Texture2D* aTexture);

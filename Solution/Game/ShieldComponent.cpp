@@ -13,12 +13,13 @@ ShieldComponent::ShieldComponent(Entity& aEntity)
 {
 }
 
-void ShieldComponent::Init()
+void ShieldComponent::Init(float aTimeBeforeRecharge, float aChargeRate)
 {
 
 	myShieldOvercharged = false;
 	
-	myReachargeTime = 5.f;
+	myReachargeTime = aTimeBeforeRecharge; //tiden innan den börjar rechargea
+	myChargeRate = aChargeRate;
 	myCooldown = 0.f;
 
 	myOvercharge = 0;
@@ -32,7 +33,7 @@ void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 	if (aNote.myType == ePowerUpType::SHIELDBOOST)
 	{
 		myShieldOvercharged = true;
-		myShieldStrength = static_cast<int>(aNote.myValue);
+		myShieldStrength = aNote.myValue;
 	}
 }
 
@@ -77,7 +78,7 @@ void ShieldComponent::Update(float aDelta)
 					myShieldStrength = myMaxShieldStrength;
 					return;
 				}
-				myShieldStrength += 1;
+				myShieldStrength += (myChargeRate * aDelta);
 				myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
 
 			}

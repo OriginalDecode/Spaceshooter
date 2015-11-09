@@ -23,7 +23,7 @@ namespace Prism
 
 		void OnResize(float aWidth, float aHeight);
 
-		Texture* GetFinalTexture();
+		Texture* GetWorldTexture();
 
 	private:
 		struct SceneData
@@ -43,9 +43,9 @@ namespace Prism
 		Texture* myCombineMiddleMan;
 	};
 
-	inline Texture* Renderer::GetFinalTexture()
+	inline Texture* Renderer::GetWorldTexture()
 	{
-		return myFinalTexture;
+		return mySceneData[1].myScene;
 	}
 }
 
