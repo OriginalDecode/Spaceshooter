@@ -254,6 +254,8 @@ void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 		width = window.right;
 		height = window.bottom;
 	}
+#else
+	windowed = true;
 #endif
 
 	aSetup.myScreenWidth = width;
