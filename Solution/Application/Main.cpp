@@ -217,7 +217,10 @@ void OnResize()
 
 	if (globalGame != nullptr)
 	{
-		globalGame->UnPause();
+		if (globalIsActive == true)
+		{
+			globalGame->UnPause();
+		}
 		globalGame->OnResize(globalClientWidth, globalClientHeight);
 	}
 }
