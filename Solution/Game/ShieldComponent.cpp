@@ -34,6 +34,7 @@ void ShieldComponent::ReceiveNote(const PowerUpNote& aNote)
 	{
 		myShieldOvercharged = true;
 		myShieldStrength = aNote.myValue;
+		myEntity.SendNote(ShieldNote(myShieldStrength, myMaxShieldStrength));
 	}
 }
 

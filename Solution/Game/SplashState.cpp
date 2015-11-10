@@ -34,7 +34,7 @@ void SplashState::InitState(StateStackProxy* aStateStackProxy)
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
-	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, false));
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 	
 	myLogoAlpha = 0.f;
 
@@ -111,7 +111,7 @@ void SplashState::Render()
 
 void SplashState::ResumeState()
 {
-	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, false));
+	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 }
 
 void SplashState::OnResize(int aWidth, int aHeight)

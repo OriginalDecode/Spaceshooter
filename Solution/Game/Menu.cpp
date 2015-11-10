@@ -8,12 +8,13 @@
 #include "Menu.h"
 #include <Sprite.h>
 #include <XMLReader.h>
+#include <WinUser.h>
+#include <Windows.h>
 
 Menu::Menu(const std::string& aXMLPath)
 	: myButtons(8)
 	, myMainMenu(false)
 	, myRenderCenter(false)
-	, myMouseSensitivty(100.f)
 {
 	XMLReader reader;
 	reader.OpenDocument(aXMLPath);
@@ -55,6 +56,11 @@ Menu::Menu(const std::string& aXMLPath)
 		myButtons.Add(newButton);
 	}
 	reader.CloseDocument();
+	myMouseSensitivty = 0;
+	int normalMouseSpeed = 0;
+	int* mouseSpeed = &normalMouseSpeed;
+	SystemParametersInfo(SPI_GETMOUSESPEED, 0, mouseSpeed, 0);
+	myMouseSensitivty = 100 * normalMouseSpeed;
 }
 
 Menu::~Menu()
@@ -85,7 +91,7 @@ void Menu::Render(CU::InputWrapper* anInputWrapper)
 	myCrosshair->Render(myMousePosition);
 
 	std::stringstream text;
-	text << "Mouse Pos X: " << myMousePosition.myX << ", Y: " << myMousePosition.myY;
+	text << "Mouse Pos X: " << myMousePosition.myX << ", Y: " << myMousePosition.myY << " Sensitivty: " << myMouseSensitivty;
 	Prism::Engine::GetInstance()->PrintText(text.str(), { 100, -100 }, Prism::eTextType::DEBUG_TEXT);
 }
 
