@@ -51,9 +51,11 @@ void InGameMenuState::EndState()
 	delete myCamera;
 	myMenu = nullptr;
 	myCamera = nullptr;
+
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
-const eStateStatus InGameMenuState::Update(const float&)
+const eStateStatus InGameMenuState::Update(const float& aDeltaTime)
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
@@ -63,13 +65,11 @@ const eStateStatus InGameMenuState::Update(const float&)
 		//	//wait for ModelLoader to exit its loading-loop
 		//}
 
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopSubState;
 	}
 #ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyDown(DIK_SPACE) == true)
 	{
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 #endif
@@ -79,7 +79,7 @@ const eStateStatus InGameMenuState::Update(const float&)
 	myCurrentTime += deltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	return myMenu->Update(myInputWrapper);
+	return myMenu->Update(aDeltaTime,myInputWrapper);
 }
 
 void InGameMenuState::Render()

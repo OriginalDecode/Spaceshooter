@@ -65,23 +65,21 @@ void MenuState::EndState()
 	delete myCamera;
 	myMenu = nullptr;
 	myCamera = nullptr;
-	
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
 const eStateStatus MenuState::Update(const float& aDeltaTime)
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 
 	myCurrentTime += aDeltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	if (myMenu->Update(myInputWrapper) == false)
+	if (myMenu->Update(aDeltaTime, myInputWrapper) == false)
 	{
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 

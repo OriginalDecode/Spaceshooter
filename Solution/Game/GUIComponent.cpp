@@ -61,6 +61,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myRocketCurrentTime(nullptr)
 	, myRocketMaxTime(nullptr)
 	, myCurrentHitmarker(nullptr)
+	, myCurrentShield(100.f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -137,7 +138,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
-	myDamageIndicator = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator.dds", screenSize, screenSize / 2.f);
+	myDamageIndicatorHealth = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator_health.dds", screenSize, screenSize / 2.f);
+	myDamageIndicatorShield = new Prism::Sprite("Data/Resource/Texture/UI/T_damage_indicator_shield.dds", screenSize, screenSize / 2.f);
 	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_enemy_lock.dds", { 100.f, 100.f }, { 50.f, 50.f });
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
@@ -168,7 +170,8 @@ GUIComponent::~GUIComponent()
 	delete myDefendMarker;
 	delete myDefendArrow;
 	delete myHitMarker;
-	delete myDamageIndicator;
+	delete myDamageIndicatorHealth;
+	delete myDamageIndicatorShield;
 	delete myHomingTarget;
 	delete myPropHitMarker;
 	//delete myCurrentHitmarker; // dont delete, please!
@@ -189,7 +192,8 @@ GUIComponent::~GUIComponent()
 	myDefendArrow = nullptr;
 	myDefendMarker = nullptr;
 	myHitMarker = nullptr;
-	myDamageIndicator = nullptr;
+	myDamageIndicatorHealth = nullptr;
+	myDamageIndicatorShield = nullptr;
 	myHomingTarget = nullptr;
 
 	delete myGUIBars[0];
@@ -475,7 +479,14 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myDamageIndicatorTimer >= 0.f)
 	{
-		myDamageIndicator->Render({ halfWidth, -halfHeight });
+		if (myCurrentShield <= 0)
+		{
+			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight });
+		}
+		else
+		{
+			myDamageIndicatorShield->Render({ halfWidth, -halfHeight });
+		}
 	}
 
 	if (myShowMessage == true)
@@ -550,6 +561,7 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
 	shieldBarEffect->SetPlayerVariable(aNote.myShieldStrength);
+	myCurrentShield = aNote.myShieldStrength;
 }
 
 void GUIComponent::ReceiveNote(const PowerUpNote& aNote)

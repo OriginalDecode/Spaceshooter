@@ -171,6 +171,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
+	myCurrentLevel->GetEmitterManager()->AddEmitter(myPlayer->GetComponent<ParticleEmitterComponent>());
+	myCurrentLevel->myPlayer->SetPlayerScene(*myCurrentLevel->myScene);
 
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
@@ -509,7 +511,6 @@ void LevelFactory::LoadPlayer()
 
 	myPlayer->AddComponent<ParticleEmitterComponent>()->Init(particlePath);
 	myPlayer->GetComponent<ParticleEmitterComponent>()->GetEmitter()->ShouldLive(true);
-	myCurrentLevel->GetEmitterManager()->AddEmitter(myPlayer->GetComponent<ParticleEmitterComponent>());
 
 	reader.CloseDocument();	
 }

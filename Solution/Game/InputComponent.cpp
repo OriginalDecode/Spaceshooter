@@ -200,7 +200,7 @@ void InputComponent::ToggleCameraLock()
 void InputComponent::UpdateMovement(const float& aDelta)
 {
 	float distFromOrigo = CU::Length(myEntity.myOrientation.GetPos());
-	if (distFromOrigo > OCTREE_WIDTH)
+	if (distFromOrigo > OCTREE_WIDTH * 0.98)
 	{
 		myEntity.GetComponent<PhysicsComponent>()->Bounce();
 		return;

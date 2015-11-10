@@ -22,7 +22,7 @@ bool globalIsActive = true;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 {
-	ShowCursor(false);
+	ShowCursor(true);
 	DL_Debug::Debug::Create();
 	CU::TimerManager::Create();
 
@@ -139,9 +139,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (LOWORD(wParam) == WA_INACTIVE)
 			{
-				globalPreviousFullscreenState = Prism::Engine::GetInstance()->IsFullscreen();
-				globalIsActive = false;
-				globalGame->Pause();
+				if (globalIsActive == true)
+				{
+					globalPreviousFullscreenState = Prism::Engine::GetInstance()->IsFullscreen();
+					globalIsActive = false;
+					globalGame->Pause();
+				}
+				
 			}
 			else
 			{
@@ -156,10 +160,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 
 					globalIsActive = true;
+					globalGame->UnPause();
 				}
-				
-
-				globalGame->UnPause();
 			}
 		}
 		break;

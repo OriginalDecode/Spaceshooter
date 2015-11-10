@@ -27,12 +27,9 @@ SpawnEnemyAction::SpawnEnemyAction(XMLReader& aReader, tinyxml2::XMLElement* aEl
 	}
 
 	element = aReader.FindFirstChild(aElement, "scale");
-	CU::Vector3<float> scale(1.f,1.f,1.f);
 	if (element != nullptr)
 	{
-		aReader.ForceReadAttribute(element, "X", scale.x);
-		aReader.ForceReadAttribute(element, "Y", scale.y);
-		aReader.ForceReadAttribute(element, "Z", scale.z);
+		DL_ASSERT("Tried to scale a enemy in SpawnEnemy event, the scale should be set in Entity instead.");
 	}
 
 	int powerUpCount = 0;
@@ -49,7 +46,7 @@ SpawnEnemyAction::SpawnEnemyAction(XMLReader& aReader, tinyxml2::XMLElement* aEl
 		++powerUpCount;
 	}
 
-	myMessage = new SpawnEnemyMessage(type, position, rotation, scale, powerUpName);
+	myMessage = new SpawnEnemyMessage(type, position, rotation, powerUpName);
 }
 
 SpawnEnemyAction::~SpawnEnemyAction()

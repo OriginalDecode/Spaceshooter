@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include <Camera.h>
 #include <Engine.h>
+#include "FadeMessage.h"
 #include "GameStateMessage.h"
 #include "MessageState.h"
 #include <Sprite.h>
@@ -32,10 +33,12 @@ void MessageState::InitState(StateStackProxy* aStateStackProxy)
 	CU::Matrix44<float> orientation;
 	myCamera = new Prism::Camera(orientation);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
 void MessageState::EndState()
 {
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
 const eStateStatus MessageState::Update(const float&)
