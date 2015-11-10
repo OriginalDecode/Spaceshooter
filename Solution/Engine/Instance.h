@@ -37,7 +37,7 @@ namespace Prism
 		eOctreeType GetOctreeType() const;
 
 		ModelProxy& GetModel();
-
+		const CU::Matrix44f& GetOrientation() const;
 	private:
 		void operator=(Instance&) = delete;
 
@@ -57,5 +57,10 @@ namespace Prism
 	inline eOctreeType Instance::GetOctreeType() const
 	{
 		return myOctreeType;
+	}
+
+	inline const CU::Matrix44f& Instance::GetOrientation() const
+	{
+		return myOrientation;
 	}
 }

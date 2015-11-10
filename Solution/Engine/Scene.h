@@ -38,6 +38,8 @@ namespace Prism
 #ifdef SCENE_USE_OCTREE
 		Octree* myOctree;
 		Instance* myPlayerInstance;
+		Instance* myGlassCockpit;
+		float myCockpitRadius;
 #endif
 		CU::GrowingArray<Instance*> myInstances;
 		CU::GrowingArray<DirectionalLight*> myDirectionalLights;
