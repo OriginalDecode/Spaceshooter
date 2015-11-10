@@ -80,6 +80,7 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 			myPlayer = myLevel->GetPlayer();
 			myLevelFactory->Cleanup();
 			PostMaster::GetInstance()->SendMessage(FadeMessage(1.f/3.f));
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
 		}
 
 		if (myIsComplete == true)
