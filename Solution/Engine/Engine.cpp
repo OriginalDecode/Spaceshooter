@@ -221,7 +221,7 @@ namespace Prism
 
 	ID3D11Texture2D* Engine::GetDepthBufferTexture()
 	{
-		return myDirectX->GetBackbufferTexture();
+		return myDirectX->GetDepthbufferTexture();
 	}
 
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)

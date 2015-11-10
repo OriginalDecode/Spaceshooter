@@ -42,6 +42,7 @@ void InputComponent::Init(CU::InputWrapper& aInputWrapper)
 	myCurrentBoostValue = 0.f;
 	myMaxBoostCooldown = 0.f;
 	myMaxBoostValue = 0.f;
+	myBoostSteeringLimiter = 0.f;
 
 	WATCH_FILE("Data/Setting/SET_player.xml", InputComponent::ReadXML);
 
@@ -141,6 +142,7 @@ void InputComponent::ReadXML(const std::string& aFile)
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "deacceleration", mySteeringDeacceleration);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "deaccelerationLowerLimit", mySteeringDeaccelerationLowerLimit);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "maxSteeringSpeed", myMaxSteeringSpeed);
+	reader.ForceReadAttribute(reader.ForceFindFirstChild("steering"), "boostLimiter", myBoostSteeringLimiter);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("roll"), "acceleration", myRollAcceleration);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("roll"), "deacceleration", myRollDeacceleration);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild("roll"), "maxRollSpeed", myMaxRollSpeed);
@@ -198,7 +200,7 @@ void InputComponent::ToggleCameraLock()
 void InputComponent::UpdateMovement(const float& aDelta)
 {
 	float distFromOrigo = CU::Length(myEntity.myOrientation.GetPos());
-	if (distFromOrigo > OCTREE_WIDTH)
+	if (distFromOrigo > OCTREE_WIDTH * 0.98)
 	{
 		myEntity.GetComponent<PhysicsComponent>()->Bounce();
 		return;
@@ -328,6 +330,10 @@ void InputComponent::UpdateSteering(const float& aDelta)
 		{
 			mySteering.y = 0.f;
 		}
+	}
+	if (myBoost == true)
+	{
+		mySteering *= myBoostSteeringLimiter;
 	}
 }
 

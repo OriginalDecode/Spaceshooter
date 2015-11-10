@@ -3,6 +3,9 @@
 #include "EngineEnums.h"
 
 #define MAX_NUMBER_OF_SCENES 2
+
+struct ID3D11RenderTargetView;
+struct ID3D11DepthStencilView;
 namespace Prism
 {
 	class FullScreenHelper;
@@ -24,6 +27,7 @@ namespace Prism
 		void OnResize(float aWidth, float aHeight);
 
 		Texture* GetWorldTexture();
+		void SetRenderTargets(ID3D11RenderTargetView* aRenderTarget, ID3D11DepthStencilView* aDepthBuffer);
 
 	private:
 		struct SceneData

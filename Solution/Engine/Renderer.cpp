@@ -122,4 +122,11 @@ namespace Prism
 
 		myFullScreenHelper->OnResize(aWidth, aHeight);
 	}
+
+	void Renderer::SetRenderTargets(ID3D11RenderTargetView* aRenderTarget, ID3D11DepthStencilView* aDepthBuffer)
+	{
+		ID3D11RenderTargetView* target = aRenderTarget;
+		ID3D11DepthStencilView* depth = aDepthBuffer;
+		Engine::GetInstance()->GetContex()->OMSetRenderTargets(1, &target, depth);
+	}
 }
