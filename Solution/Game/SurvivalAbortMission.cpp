@@ -17,7 +17,7 @@ bool SurvivalAbortMission::Update(float aDeltaTime, int aMissionIndex, eMissionC
 {
 	std::stringstream ss;
 	ss.precision(2);
-	ss << "Survive for: " << myVisualTime << " seconds (abort)";
+	ss << "Survive for: " << myVisualTime << " seconds";
 
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{

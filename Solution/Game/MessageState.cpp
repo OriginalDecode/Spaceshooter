@@ -12,8 +12,8 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	, const LevelScore& aLevelScore)
 	: myEvent(nullptr)
 	, myLevelScore(aLevelScore)
-	, myToUse(nullptr)
 {
+	myShowBadge = myEvent == nullptr || myEvent->GetGameState() != eGameState::RELOAD_LEVEL;
 	myBackground = new Prism::Sprite(aTexturePath, aSize, aSize/2.f);
 	myInputWrapper = anInputWrapper;
 	myTextMessage = "";
@@ -26,7 +26,6 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	myOneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
 	myTwoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
 	myThreeStarLimit = myLevelScore.myTotalEnemies * 0.80f;
-
 }
 
 MessageState::~MessageState()
@@ -85,23 +84,26 @@ void MessageState::Render()
 		Prism::Engine::GetInstance()->PrintText(myTextMessage, myMessagePosition, Prism::eTextType::RELEASE_TEXT);
 	}
 
-	Prism::Engine::GetInstance()->PrintText("Enemies killed: " + std::to_string(myLevelScore.myKilledEnemies) + "/" 
+	Prism::Engine::GetInstance()->PrintText("Enemies killed: " + std::to_string(myLevelScore.myKilledEnemies) + " / " 
 		+ std::to_string(myLevelScore.myTotalEnemies), { myMessagePosition.x, myMessagePosition.y - 200 }
 	, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->PrintText("Shots fired: "	+ std::to_string(myLevelScore.myTotalShotsFired)
 		, { myMessagePosition.x, myMessagePosition.y - 225 }, Prism::eTextType::RELEASE_TEXT);
-	Prism::Engine::GetInstance()->PrintText("Shots that hit enemies: " + std::to_string(myLevelScore.myShotsHit)
-		, { myMessagePosition.x, myMessagePosition.y - 250 }, Prism::eTextType::RELEASE_TEXT);
+
+	float denom = fmaxf(float(myLevelScore.myTotalShotsFired), 1.f);
 	Prism::Engine::GetInstance()->PrintText("Hit rate: " 
-		+ std::to_string(static_cast<float>(myLevelScore.myShotsHit) / static_cast<float>(myLevelScore.myTotalShotsFired) * 100.f) + "%"
-		, { myMessagePosition.x, myMessagePosition.y - 275 }, Prism::eTextType::RELEASE_TEXT);
+		+ std::to_string(int(float((myLevelScore.myShotsHit) / denom * 100.f))) + "%"
+		, { myMessagePosition.x, myMessagePosition.y - 250 }, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->PrintText("Optional missions completed: " 
-		+ std::to_string(myLevelScore.myCompletedOptional) + "/" + std::to_string(myLevelScore.myTotalOptional)
-		, { myMessagePosition.x, myMessagePosition.y - 300 }, Prism::eTextType::RELEASE_TEXT);
+		+ std::to_string(myLevelScore.myCompletedOptional) + " / " + std::to_string(myLevelScore.myTotalOptional)
+		, { myMessagePosition.x, myMessagePosition.y - 275 }, Prism::eTextType::RELEASE_TEXT);
 
-	RenderBadgesAndStars(myMessagePosition);
+	if (myShowBadge)
+	{
+		RenderBadgesAndStars(myMessagePosition);
+	}
 }
 
 void MessageState::ResumeState()

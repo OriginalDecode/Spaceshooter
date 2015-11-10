@@ -74,7 +74,7 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 			aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), myDamageRadius, myDamage);
 		}
 
-		if (myEntity.GetType() == eEntityType::PLAYER_BULLET && aNote.myEntity.GetType() == eEntityType::ENEMY)
+		if (myEntity.GetType() == eEntityType::PLAYER_BULLET && (aNote.myEntity.GetType() == eEntityType::ENEMY || aNote.myEntity.GetType() == eEntityType::STRUCTURE))
 		{
 			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_HIT_ENEMY));
 		}
