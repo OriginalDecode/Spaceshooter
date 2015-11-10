@@ -7,6 +7,7 @@
 #include <Windows.h>
 
 struct ID3D11Device;
+struct ID3D11DeviceChild;
 struct ID3D11DeviceContext;
 struct ID3D11DepthStencilView;
 struct ID3D11RenderTargetView;
@@ -64,6 +65,8 @@ namespace Prism
 		ID3D11RenderTargetView* GetDepthBuffer();
 		ID3D11ShaderResourceView* GetBackbufferView();
 		ID3D11Texture2D* GetDepthBufferTexture();
+		void SetDebugName(ID3D11DeviceChild* aChild, const std::string& aName);
+
 		TextureContainer* GetTextureContainer();
 		EffectContainer* GetEffectContainer();
 		EmitterDataContainer* GetEmitterDataContainer();

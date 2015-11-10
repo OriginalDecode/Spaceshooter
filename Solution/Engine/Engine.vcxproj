@@ -105,7 +105,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>Effects11_$(Configuration).lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;libfbxsdk-md_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Effects11_$(Configuration).lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;dxguid.lib;libfbxsdk-md_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Libs\</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4099,4221,4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
@@ -133,7 +133,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Effects11_$(Configuration).lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;libfbxsdk-md_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Effects11_$(Configuration).lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;dxguid.lib;libfbxsdk-md_$(Configuration).lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Libs\</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4099,4221,4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>
@@ -188,7 +188,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>Effects11_Release.lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;libfbxsdk-md_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Effects11_Release.lib;D3D11.lib;D3DX11.lib;D3DCompiler.lib;dxguid.lib;libfbxsdk-md_Release.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)..\Libs\</AdditionalLibraryDirectories>
       <AdditionalOptions>/ignore:4099,4221,4006 %(AdditionalOptions)</AdditionalOptions>
     </Lib>

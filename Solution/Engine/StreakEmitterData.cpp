@@ -10,6 +10,20 @@
 #include "TextureContainer.h"
 #include <XMLReader.h>
 
+Prism::StreakEmitterData::StreakEmitterData()
+	: myStreakInputLayout(nullptr)
+{
+}
+
+Prism::StreakEmitterData::~StreakEmitterData()
+{
+	/*if (myStreakInputLayout != nullptr)
+	{
+		myStreakInputLayout->Release();
+		myStreakInputLayout = nullptr;
+	}*/
+}
+
 bool Prism::StreakEmitterData::LoadDataFile(const std::string& aFileName)
 {
 	XMLReader reader;
@@ -156,5 +170,8 @@ bool Prism::StreakEmitterData::CreateInputLayout()
 		DL_ASSERT("Failed to create input layout.");
 		return false;
 	}
+
+	Engine::GetInstance()->SetDebugName(myStreakInputLayout, "StreakEmitterData::myStreakInputLayout");
+
 	return true;
 }

@@ -48,15 +48,15 @@ void Prism::Model::Init()
 			vertexDesc[i] = *myVertexFormat[i];
 		}
 
-		InitInputLayout(vertexDesc, size);
+		InitInputLayout(vertexDesc, size, "Model::InputLayout");
 
 		InitVertexBuffer(myVertexBaseData->myStride, D3D11_USAGE_IMMUTABLE, 0);
 		InitIndexBuffer();
 
 		SetupVertexBuffer(myVertexBaseData->myNumberOfVertices
-			, myVertexBaseData->myStride, myVertexBaseData->myVertexData);
+			, myVertexBaseData->myStride, myVertexBaseData->myVertexData, "Model::VertexBuffer");
 
-		SetupIndexBuffer(myIndexBaseData->myNumberOfIndices, myIndexBaseData->myIndexData);
+		SetupIndexBuffer(myIndexBaseData->myNumberOfIndices, myIndexBaseData->myIndexData, "Model::IndexBuffer");
 
 		myVertexCount = myVertexBaseData->myNumberOfVertices;
 	}
@@ -98,7 +98,7 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
-	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), "Model::InputLayout");
 
 
 #pragma region Vertices
@@ -209,8 +209,8 @@ void Prism::Model::InitCube(const float aWidth, const float aHeight, const float
 	InitVertexBuffer(sizeof(VertexPosColor), D3D11_USAGE_IMMUTABLE, 0);
 	InitIndexBuffer();
 
-	SetupVertexBuffer(vertices.Size(), sizeof(VertexPosColor), reinterpret_cast<char*>(&vertices[0]));
-	SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]));
+	SetupVertexBuffer(vertices.Size(), sizeof(VertexPosColor), reinterpret_cast<char*>(&vertices[0]), "Model::VertexBuffer");
+	SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]), "Model::IndexBuffer");
 
 	Surface surf;
 	surf.SetEffect(myEffect);

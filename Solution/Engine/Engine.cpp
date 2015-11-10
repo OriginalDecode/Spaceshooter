@@ -50,6 +50,7 @@ namespace Prism
 		myFadeData.mySprite = nullptr;
 		delete myTextureContainer;
 		delete myEffectContainer;
+		delete myEmitterDataContainer;
 		delete myModelFactory;
 		delete myFileWatcher;
 
@@ -222,6 +223,11 @@ namespace Prism
 	ID3D11Texture2D* Engine::GetDepthBufferTexture()
 	{
 		return myDirectX->GetDepthbufferTexture();
+	}
+
+	void Engine::SetDebugName(ID3D11DeviceChild* aChild, const std::string& aName)
+	{
+		myDirectX->SetDebugName(aChild, aName);
 	}
 
 	bool Engine::Init(HWND& aHwnd, WNDPROC aWndProc)
