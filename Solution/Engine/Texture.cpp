@@ -41,12 +41,15 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 		tempBufferInfo.MiscFlags = 0;
 
 		HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &myTexture);
+		Engine::GetInstance()->SetDebugName(myTexture, "Texture::myTexture");
 
 		if ((aBindFlag & D3D11_BIND_SHADER_RESOURCE) > 0)
 		{
 			hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myTexture, NULL, &myShaderView);
 			if (FAILED(hr))
 				assert(0);
+
+			Engine::GetInstance()->SetDebugName(myShaderView, "Texture::myShaderView");
 		}
 
 		if ((aBindFlag & D3D11_BIND_RENDER_TARGET) > 0)
@@ -54,6 +57,8 @@ void Prism::Texture::Init(float aWidth, float aHeight, unsigned int aBindFlag
 			hr = Engine::GetInstance()->GetDevice()->CreateRenderTargetView(myTexture, NULL, &myRenderTargetView);
 			if (FAILED(hr))
 				assert(0);
+
+			Engine::GetInstance()->SetDebugName(myRenderTargetView, "Texture::myRenderTargetView");
 		}
 	}
 
@@ -80,6 +85,7 @@ void Prism::Texture::InitAsDepthBuffer(ID3D11Texture2D* aSource)
 	tempBufferInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
 
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &myDepthTexture);
+	Engine::GetInstance()->SetDebugName(myDepthTexture, "Texture::myDepthTexture");
 
 
 	Engine::GetInstance()->GetContex()->CopyResource(myDepthTexture, aSource);
@@ -107,6 +113,8 @@ void Prism::Texture::InitAsDepthBuffer(ID3D11Texture2D* aSource)
 	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myDepthTexture, &viewDesc, &myDepthStencilShaderView);
 	if (FAILED(hr))
 		assert(0);
+
+	Engine::GetInstance()->SetDebugName(myDepthStencilShaderView, "Texture::myDepthStencilShaderView");
 }
 
 void Prism::Texture::CopyDepthBuffer(ID3D11Texture2D* aSource)
@@ -148,6 +156,8 @@ bool Prism::Texture::LoadTexture(const std::string& aFilePath)
 			DL_ASSERT("[Texture]: Failed to load MissingTexture-texture: Data/Resource/Texture/T_missing_texture.dds");
 		}
 	}
+
+	Engine::GetInstance()->SetDebugName(myShaderView, "Texture::myShaderView");
 
 	return true;
 }
@@ -276,6 +286,7 @@ void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 	tempBufferInfo.MiscFlags = 0;
 
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &myDepthTexture);
+	Engine::GetInstance()->SetDebugName(myDepthTexture, "Texture::myDepthTexture");
 
 
 	D3D11_DEPTH_STENCIL_VIEW_DESC depthDesc;
@@ -301,6 +312,8 @@ void Prism::Texture::CreateDepthStencilView(float aWidth, float aHeight)
 	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myDepthTexture, &viewDesc, &myDepthStencilShaderView);
 	if (FAILED(hr))
 		assert(0);
+
+	Engine::GetInstance()->SetDebugName(myDepthStencilShaderView, "Texture::myDepthStencilShaderView");
 }
 
 bool Prism::Texture::IsValid(UINT aValue)

@@ -26,15 +26,15 @@ namespace Prism
 	protected:
 		void Render();
 
-		void InitInputLayout(D3D11_INPUT_ELEMENT_DESC* aVertexDescArray, int aArraySize);
+		void InitInputLayout(D3D11_INPUT_ELEMENT_DESC* aVertexDescArray, int aArraySize, const std::string& aDebugName);
 		void InitVertexBuffer(int aVertexSize, int aBufferUsage, int aCPUUsage);
 		void InitIndexBuffer();
 		void InitSurface(const std::string& aResourceName, const std::string& aFileName);
 		void InitSurface(const std::string& aResourceName, ID3D11ShaderResourceView* aShaderView);
-		void InitBlendState();
+		void InitBlendState(const std::string& aDebugName);
 
-		void SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData);
-		void SetupIndexBuffer(int aVertexCount, char* aIndexData);
+		void SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData, const std::string& aDebugName);
+		void SetupIndexBuffer(int aVertexCount, char* aIndexData, const std::string& aDebugName);
 
 		virtual void OnEffectLoad();
 

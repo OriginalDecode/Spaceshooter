@@ -35,6 +35,26 @@ Prism::StreakEmitterInstance::StreakEmitterInstance(StreakEmitterData& anEmitter
 	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 
 	Engine::GetInstance()->GetDevice()->CreateBlendState(&blendDesc, &myBlendStateNoBlend);
+
+	Engine::GetInstance()->SetDebugName(myBlendStateNoBlend, "StreakEmitterInstance::myBlendStateNoBlend");
+}
+
+Prism::StreakEmitterInstance::~StreakEmitterInstance()
+{
+	if (myVertexBufferWrapper.myVertexBuffer != nullptr)
+	{
+		myVertexBufferWrapper.myVertexBuffer->Release();
+		myVertexBufferWrapper.myVertexBuffer = nullptr;
+	}
+
+	if (myIndexBufferWrapper.myIndexBuffer != nullptr)
+	{
+		myIndexBufferWrapper.myIndexBuffer->Release();
+		myIndexBufferWrapper.myIndexBuffer = nullptr;
+	}
+
+	myBlendStateNoBlend->Release();
+	myBlendStateNoBlend = nullptr;
 }
 
 
@@ -107,6 +127,9 @@ void Prism::StreakEmitterInstance::CreateIndexBuffer()
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&bd, nullptr, &myIndexBufferWrapper.myIndexBuffer);
 	DL_ASSERT_EXP(SUCCEEDED(hr) == true, "Failed to create index buffer.");
 
+	Engine::GetInstance()->SetDebugName(myIndexBufferWrapper.myIndexBuffer
+		, "StreakEmitterInstance::myIndexBufferWrapper->myIndexBuffer");
+
 	myIndexBufferWrapper.myByteOffset = 0;
 	myIndexBufferWrapper.myIndexBufferFormat = DXGI_FORMAT_R32_UINT;
 }
@@ -123,6 +146,9 @@ void Prism::StreakEmitterInstance::CreateVertexBuffer()
 
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&bd, nullptr, &myVertexBufferWrapper.myVertexBuffer);
 	DL_ASSERT_EXP(SUCCEEDED(hr) == true, "Failed to create vertex buffer.");
+
+	Engine::GetInstance()->SetDebugName(myVertexBufferWrapper.myVertexBuffer
+		, "StreakEmitterInstance::myVertexBufferWrapper->myVertexBuffer");
 
 	myVertexBufferWrapper.myStride = sizeof(StreakInstance);
 	myVertexBufferWrapper.myByteOffset = 0;

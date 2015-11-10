@@ -14,6 +14,8 @@ namespace Prism
 	{
 		friend StreakEmitterInstance;
 	public:
+		StreakEmitterData();
+		~StreakEmitterData();
 		bool LoadDataFile(const std::string& aFileName);
 
 	private:

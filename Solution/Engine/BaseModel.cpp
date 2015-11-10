@@ -101,7 +101,7 @@ namespace Prism
 		}
 	}
 
-	void BaseModel::InitInputLayout(D3D11_INPUT_ELEMENT_DESC* aVertexDescArray, int aArraySize)
+	void BaseModel::InitInputLayout(D3D11_INPUT_ELEMENT_DESC* aVertexDescArray, int aArraySize, const std::string& aDebugName)
 	{
 		D3DX11_PASS_DESC passDesc;
 		myEffect->GetTechnique()->GetPassByIndex(0)->GetDesc(&passDesc);
@@ -111,6 +111,8 @@ namespace Prism
 		{
 			DL_MESSAGE_BOX("Failed to CreateInputLayout", "BaseModel::Init", MB_ICONWARNING);
 		}
+
+		Engine::GetInstance()->SetDebugName(myVertexLayout, aDebugName);
 	}
 
 	void BaseModel::InitVertexBuffer(int aVertexSize, int aBufferUsage, int aCPUUsage)
@@ -173,7 +175,7 @@ namespace Prism
 		mySurfaces.Add(surface);
 	}
 
-	void BaseModel::InitBlendState()
+	void BaseModel::InitBlendState(const std::string& aDebugName)
 	{
 		D3D11_BLEND_DESC blendDesc;
 		blendDesc.AlphaToCoverageEnable = true;
@@ -192,9 +194,11 @@ namespace Prism
 		{
 			DL_ASSERT("BaseModel::InitBlendState: Failed to CreateBlendState");
 		}
+
+		Engine::GetInstance()->SetDebugName(myBlendState, aDebugName);
 	}
 
-	void BaseModel::SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData)
+	void BaseModel::SetupVertexBuffer(int aVertexCount, int aVertexSize, char* aVertexData, const std::string& aDebugName)
 	{
 		if (myVertexBuffer->myVertexBuffer != nullptr)
 			myVertexBuffer->myVertexBuffer->Release();
@@ -209,9 +213,11 @@ namespace Prism
 		{
 			DL_ASSERT("BaseModel::SetupVertexBuffer: Failed to SetupVertexBuffer");
 		}
+
+		Engine::GetInstance()->SetDebugName(myVertexBuffer->myVertexBuffer, aDebugName);
 	}
 
-	void BaseModel::SetupIndexBuffer(int aIndexCount, char* aIndexData)
+	void BaseModel::SetupIndexBuffer(int aIndexCount, char* aIndexData, const std::string& aDebugName)
 	{
 		if (myIndexBuffer->myIndexBuffer != nullptr)
 			myIndexBuffer->myIndexBuffer->Release();
@@ -226,6 +232,8 @@ namespace Prism
 		{
 			DL_ASSERT("BaseModel::SetupIndexBuffer: Failed to SetupIndexBuffer");
 		}
+
+		Engine::GetInstance()->SetDebugName(myIndexBuffer->myIndexBuffer, aDebugName);
 	}
 
 	void BaseModel::OnEffectLoad()
