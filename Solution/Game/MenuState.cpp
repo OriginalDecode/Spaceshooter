@@ -16,6 +16,8 @@
 MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool aShowVictoryScreen)
 	: myHasFadeIn(aShowVictoryScreen)
 	, myShowVictoryScreen(aShowVictoryScreen)
+	, myShowButtons(!aShowVictoryScreen)
+	, myWaitForButtonsTime(5.f)
 {
 	myInputWrapper = anInputWrapper;
 	
@@ -70,6 +72,17 @@ void MenuState::EndState()
 
 const eStateStatus MenuState::Update(const float& aDeltaTime)
 {
+	if (myShowButtons == false)
+	{
+		myWaitForButtonsTime -= aDeltaTime;
+		if (myWaitForButtonsTime <= 0.f)
+		{
+			myShowButtons = true;
+			myWaitForButtonsTime = 5.f;
+			PostMaster::GetInstance()->SendMessage(FadeMessage(0.33f));
+		}
+	}
+
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
 		return eStateStatus::ePopMainState;
@@ -78,7 +91,7 @@ const eStateStatus MenuState::Update(const float& aDeltaTime)
 	myCurrentTime += aDeltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	if (myMenu->Update(myInputWrapper) == false)
+	if (myMenu->Update(myInputWrapper, myShowButtons) == false)
 	{
 		return eStateStatus::ePopMainState;
 	}
@@ -88,7 +101,7 @@ const eStateStatus MenuState::Update(const float& aDeltaTime)
 
 void MenuState::Render()
 {
-	myMenu->Render(myInputWrapper);
+	myMenu->Render(myInputWrapper, myShowButtons);
 
 	if (myHasFadeIn == true)
 	{
