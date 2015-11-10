@@ -57,8 +57,10 @@ Menu::Menu(const std::string& aXMLPath)
 	}
 	reader.CloseDocument();
 	myMouseSensitivty = 0;
-	int* mouseSpeed = &myMouseSensitivty;
+	int normalMouseSpeed = 0;
+	int* mouseSpeed = &normalMouseSpeed;
 	SystemParametersInfo(SPI_GETMOUSESPEED, 0, mouseSpeed, 0);
+	myMouseSensitivty = 100 * normalMouseSpeed;
 }
 
 Menu::~Menu()

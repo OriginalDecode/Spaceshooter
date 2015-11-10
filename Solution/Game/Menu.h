@@ -38,7 +38,7 @@ private:
 	CU::Vector2<float> myBackgroundSize;
 	CU::Vector2<float> myMousePosition;
 	bool myRenderCenter;
-	int myMouseSensitivty;
+	float myMouseSensitivty;
 };
 
 inline bool Menu::GetMainMenu() const
