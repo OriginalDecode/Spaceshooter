@@ -149,5 +149,7 @@ enum class eAITargetPositionMode
 enum class eLevelScoreMessageType
 {
 	PLAYER_SHOT,
-	PLAYER_HIT_ENEMY
+	PLAYER_HIT_ENEMY,
+	OPTIONAL_MISSION_ADDED,
+	OPTIONAL_MISSION_COMPLETED
 };

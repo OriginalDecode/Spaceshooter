@@ -442,6 +442,14 @@ void Level::ReceiveMessage(const LevelScoreMessage& aMessage)
 	{
 		++myLevelScore.myShotsHit;
 	}
+	else if (aMessage.myScoreMessageType == eLevelScoreMessageType::OPTIONAL_MISSION_ADDED)
+	{
+		++myLevelScore.myTotalOptional;
+	}
+	else if (aMessage.myScoreMessageType == eLevelScoreMessageType::OPTIONAL_MISSION_COMPLETED)
+	{
+		++myLevelScore.myCompletedOptional;
+	}
 }
 
 void Level::CompleteLevel()

@@ -30,15 +30,25 @@ public:
 	void SetEvent(GameStateMessage* anEvent);
 
 private:
+	void RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos);
 
 	Prism::Camera* myCamera;
 	Prism::Sprite* myBackground;
+	Prism::Sprite* myOptionalBadgeGrey;
+	Prism::Sprite* myOptionalBadge;
+	Prism::Sprite* myStarGrey;
+	Prism::Sprite* myStar;
+	Prism::Sprite* myToUse;
+
 
 	std::string myTextMessage;
 	CU::Vector2<float> myMessagePosition;
 	GameStateMessage* myEvent;
 
 	LevelScore myLevelScore;
+	float myOneStarLimit;
+	float myTwoStarLimit;
+	float myThreeStarLimit;
 };
 
 inline void MessageState::SetText(const std::string& aText)
