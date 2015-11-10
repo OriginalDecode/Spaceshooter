@@ -38,7 +38,6 @@ private:
 	Prism::Sprite* myOptionalBadge;
 	Prism::Sprite* myStarGrey;
 	Prism::Sprite* myStar;
-	Prism::Sprite* myToUse;
 
 
 	std::string myTextMessage;
