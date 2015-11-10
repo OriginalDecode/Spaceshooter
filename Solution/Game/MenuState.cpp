@@ -78,7 +78,7 @@ const eStateStatus MenuState::Update(const float& aDeltaTime)
 	myCurrentTime += aDeltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	if (myMenu->Update(myInputWrapper) == false)
+	if (myMenu->Update(aDeltaTime, myInputWrapper) == false)
 	{
 		return eStateStatus::ePopMainState;
 	}

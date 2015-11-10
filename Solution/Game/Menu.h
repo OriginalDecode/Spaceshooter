@@ -23,7 +23,7 @@ public:
 	
 	void Render(CU::InputWrapper* anInputWrapper);
 
-	eStateStatus Update(CU::InputWrapper* anInputWrapper);
+	eStateStatus Update(float aDeltaTime, CU::InputWrapper* anInputWrapper);
 
 	void OnResize(int aWidth, int aHeight);
 
@@ -36,7 +36,9 @@ private:
 	Prism::Sprite* myCrosshair;
 	CU::Vector2<float> myScreenSize;
 	CU::Vector2<float> myBackgroundSize;
+	CU::Vector2<float> myMousePosition;
 	bool myRenderCenter;
+	float myMouseSensitivty;
 };
 
 inline bool Menu::GetMainMenu() const

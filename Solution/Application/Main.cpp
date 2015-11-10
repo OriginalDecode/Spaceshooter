@@ -22,7 +22,7 @@ bool globalIsActive = true;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 {
-	ShowCursor(false);
+	ShowCursor(true);
 	DL_Debug::Debug::Create();
 	CU::TimerManager::Create();
 
