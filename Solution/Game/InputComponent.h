@@ -48,6 +48,7 @@ private:
 	float myMinMovementSpeed;
 	float myMaxSteeringSpeed;
 	float myAcceleration;
+	float myBoostSteeringLimiter;
 
 	float myBoostAcceleration;
 	float myBoostDeacceleration;
