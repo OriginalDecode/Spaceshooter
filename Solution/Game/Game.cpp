@@ -128,6 +128,13 @@ bool Game::Update()
 	{
 		RECT windowRect;
 		GetWindowRect(*myWindowHandler, &windowRect);
+		if (Prism::Engine::GetInstance()->IsFullscreen() == false) 
+		{
+			windowRect.left += 10;
+			windowRect.top += 35;
+			windowRect.right -= 10;
+			windowRect.bottom -= 10;
+		}
 		ClipCursor(&windowRect);
 		//SetCursorPos(myWindowSize.x / 2, myWindowSize.y / 2);
 	}
