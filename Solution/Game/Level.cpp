@@ -28,6 +28,7 @@
 #include "InputComponent.h"
 #include <InputWrapper.h>
 #include "Level.h"
+#include "LevelScoreMessage.h"
 #include "MissionManager.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
@@ -73,6 +74,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_POWERUP, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::EMP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::LEVEL_SCORE, this);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
@@ -95,6 +97,7 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_POWERUP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::EMP, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::LEVEL_SCORE, this);
 	delete myCamera;
 
 	for (int i = 0; i < myEntities.Size(); i++)
@@ -141,6 +144,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		if (myEntities[i]->GetAlive() == false)
 		{
+			if (myEntities[i]->GetType() == eEntityType::ENEMY)
+			{
+				++myLevelScore.myKilledEnemies;
+			}
 			myEntities.DeleteCyclicAtIndex(i);
 			continue;
 		}
@@ -152,7 +159,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
-
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 	{
 		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
@@ -161,7 +168,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPActivated = true;
 		myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
 	}
-
+#endif
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
@@ -365,7 +372,7 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	{
 		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
 	}
-
+	++myLevelScore.myTotalEnemies;
 	myEntities.Add(newEntity);
 
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
@@ -423,6 +430,26 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPActivated = true;
 
 	myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
+}
+
+void Level::ReceiveMessage(const LevelScoreMessage& aMessage)
+{
+	if (aMessage.myScoreMessageType == eLevelScoreMessageType::PLAYER_SHOT)
+	{
+		++myLevelScore.myTotalShotsFired;
+	}
+	else if (aMessage.myScoreMessageType == eLevelScoreMessageType::PLAYER_HIT_ENEMY)
+	{
+		++myLevelScore.myShotsHit;
+	}
+	else if (aMessage.myScoreMessageType == eLevelScoreMessageType::OPTIONAL_MISSION_ADDED)
+	{
+		++myLevelScore.myTotalOptional;
+	}
+	else if (aMessage.myScoreMessageType == eLevelScoreMessageType::OPTIONAL_MISSION_COMPLETED)
+	{
+		++myLevelScore.myCompletedOptional;
+	}
 }
 
 void Level::CompleteLevel()

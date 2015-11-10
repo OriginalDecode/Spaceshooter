@@ -173,6 +173,8 @@
     <ClInclude Include="ExplosionMessage.h" />
     <ClInclude Include="FadeMessage.h" />
     <ClInclude Include="InGameMenuState.h" />
+    <ClInclude Include="LevelScore.h" />
+    <ClInclude Include="LevelScoreMessage.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="EmitterManager.h" />
@@ -228,6 +230,7 @@
     <ClInclude Include="PowerUpComponent.h" />
     <ClInclude Include="PropComponent.h" />
     <ClInclude Include="ResizeMessage.h" />
+    <ClInclude Include="ScoreIO.h" />
     <ClInclude Include="ShieldComponent.h" />
     <ClInclude Include="ShieldNote.h" />
     <ClInclude Include="ShootingComponent.h" />
@@ -274,6 +277,7 @@
     <ClCompile Include="ExplosionMessage.cpp" />
     <ClCompile Include="FadeMessage.cpp" />
     <ClCompile Include="InGameMenuState.cpp" />
+    <ClCompile Include="LevelScoreMessage.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />
     <ClCompile Include="ParticleEmitterComponent.cpp" />
     <ClCompile Include="EmitterManager.cpp" />
@@ -312,6 +316,7 @@
     <ClCompile Include="PowerUpGUIIcon.cpp" />
     <ClCompile Include="PowerUpMessage.cpp" />
     <ClCompile Include="PropComponent.cpp" />
+    <ClCompile Include="ScoreIO.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="SoundComponent.cpp" />

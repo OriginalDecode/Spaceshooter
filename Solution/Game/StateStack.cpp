@@ -100,6 +100,11 @@ void StateStack::RenderCurrentState()
 	RenderStateAtIndex(mySubIndex);
 }
 
+void StateStack::ResumeState()
+{
+	myGameStates[myMainIndex][mySubIndex]->ResumeState();
+}
+
 void StateStack::OnResizeCurrentState(int aWidth, int aHeight)
 {
 	myGameStates[myMainIndex][mySubIndex]->OnResize(aWidth, aHeight);

@@ -33,5 +33,9 @@ protected:
 	Prism::Camera* myCamera;
 	bool myHasFadeIn;
 	bool myShowVictoryScreen;
+
+	bool myShowButtons;
+
+	float myWaitForButtonsTime;
 };
 

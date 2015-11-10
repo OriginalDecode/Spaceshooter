@@ -32,7 +32,7 @@ bool KillXEnemiesAbortMission::Update(float aDeltaTime, int aMissionIndex, eMiss
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
 	std::stringstream ss;
-	ss << "Kill " << myEnemiesToKillVisual << " enemies (abort).";
+	ss << "Kill " << myEnemiesToKillVisual << " enemies";
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
 		ss << " (Optional)";

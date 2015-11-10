@@ -74,6 +74,10 @@ private:
 	float myCurrentShield;
 	Prism::Sprite* myHomingTarget;
 
+	Prism::Sprite* myBackgroundConversation;
+	Prism::Sprite* myBackgroundMission;
+
+
 	Prism::Sprite* myStructureArrow;
 	Prism::Sprite* myStructureMarker;
 

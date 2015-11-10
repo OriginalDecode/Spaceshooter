@@ -1,15 +1,11 @@
 #include "stdafx.h"
-#include "Button.h"
-#include <Camera.h>
-#include <Engine.h>
-#include <EngineEnums.h>
-#include "GameStateMessage.h"
-#include <InputWrapper.h>
 #include "Menu.h"
+#include "Button.h"
 #include <Sprite.h>
+#include <Camera.h>
+#include <InputWrapper.h>
+#include "GameStateMessage.h"
 #include <XMLReader.h>
-#include <WinUser.h>
-#include <Windows.h>
 
 Menu::Menu(const std::string& aXMLPath)
 	: myButtons(8)
@@ -46,9 +42,6 @@ Menu::Menu(const std::string& aXMLPath)
 		myBackground = new Prism::Sprite(background, myScreenSize, myScreenSize / 2.f);
 	}
 
-	myMousePosition.myX = myScreenSize.myX /2.f;
-	myMousePosition.myY = -myScreenSize.myY/2.f;
-
 	tinyxml2::XMLElement* buttonElement = reader.FindFirstChild(menuElement, "button");
 	for (; buttonElement != nullptr; buttonElement = reader.FindNextElement(buttonElement))
 	{
@@ -56,11 +49,6 @@ Menu::Menu(const std::string& aXMLPath)
 		myButtons.Add(newButton);
 	}
 	reader.CloseDocument();
-	myMouseSensitivty = 0;
-	int normalMouseSpeed = 0;
-	int* mouseSpeed = &normalMouseSpeed;
-	SystemParametersInfo(SPI_GETMOUSESPEED, 0, mouseSpeed, 0);
-	myMouseSensitivty = 100 * normalMouseSpeed;
 }
 
 Menu::~Menu()
@@ -72,7 +60,7 @@ Menu::~Menu()
 	myBackground = nullptr;
 }
 
-void Menu::Render(CU::InputWrapper* anInputWrapper)
+void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons)
 {
 	if (myRenderCenter == true)
 	{
@@ -83,40 +71,37 @@ void Menu::Render(CU::InputWrapper* anInputWrapper)
 		myBackground->Render({ (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2) });
 	}
 
-	for (int i = 0; i < myButtons.Size(); i++)
+	if (aRenderButtons == true)
 	{
-		myButtons[i]->Render();
+		for (int i = 0; i < myButtons.Size(); i++)
+		{
+			myButtons[i]->Render();
+		}
 	}
 
-	myCrosshair->Render(myMousePosition);
-
-	std::stringstream text;
-	text << "Mouse Pos X: " << myMousePosition.myX << ", Y: " << myMousePosition.myY << " Sensitivty: " << myMouseSensitivty;
-	Prism::Engine::GetInstance()->PrintText(text.str(), { 100, -100 }, Prism::eTextType::DEBUG_TEXT);
+	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
 
-eStateStatus Menu::Update(float aDeltaTime, CU::InputWrapper* anInputWrapper)
+eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons)
 {
-	bool isMouseClicked = anInputWrapper->MouseDown(0);
-
-	myMousePosition.myX += anInputWrapper->GetMouseDX() * myMouseSensitivty * aDeltaTime;
-	myMousePosition.myY -= anInputWrapper->GetMouseDY() * myMouseSensitivty * aDeltaTime;
-	if (myMousePosition.myX < 0) myMousePosition.myX = 0;
-	if (myMousePosition.myY > 0) myMousePosition.myY = 0;
-	if (myMousePosition.myX > myScreenSize.myX) myMousePosition.myX = myScreenSize.myX;
-	if (myMousePosition.myY < -myScreenSize.myY) myMousePosition.myY = -myScreenSize.myY;
-
 	eStateStatus returnValue = eStateStatus::eKeepState;
-	for (int i = 0; i < myButtons.Size(); i++)
+
+	if (aUpdateButtons == true)
 	{
-		eStateStatus currentButton = myButtons[i]->Update({ myMousePosition.myX, (myMousePosition.myY * -1) }, isMouseClicked);
-		if (currentButton == eStateStatus::ePopMainState)
+		bool isMouseClicked = anInputWrapper->MouseDown(0);
+		CU::Vector2<float> mousePos = anInputWrapper->GetMousePosition();
+
+		for (int i = 0; i < myButtons.Size(); i++)
 		{
-			returnValue = eStateStatus::ePopMainState;
-		}
-		else if (currentButton == eStateStatus::ePopSubState)
-		{
-			returnValue = eStateStatus::ePopSubState;
+			eStateStatus currentButton = myButtons[i]->Update(mousePos, isMouseClicked);
+			if (currentButton == eStateStatus::ePopMainState)
+			{
+				returnValue = eStateStatus::ePopMainState;
+			}
+			else if (currentButton == eStateStatus::ePopSubState)
+			{
+				returnValue = eStateStatus::ePopSubState;
+			}
 		}
 	}
 	return returnValue;

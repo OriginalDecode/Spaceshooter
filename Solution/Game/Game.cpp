@@ -54,6 +54,7 @@ Game::~Game()
 
 bool Game::Init(HWND& aHwnd)
 {
+	myWindowHandler = &aHwnd;
 	myIsComplete = false;
 	bool startInMenu = false;
 
@@ -125,7 +126,17 @@ bool Game::Update()
 
 	if (myLockMouse == true)
 	{
-		SetCursorPos(myWindowSize.x / 2, myWindowSize.y / 2);
+		RECT windowRect;
+		GetWindowRect(*myWindowHandler, &windowRect);
+		if (Prism::Engine::GetInstance()->IsFullscreen() == false) 
+		{
+			windowRect.left += 10;
+			windowRect.top += 35;
+			windowRect.right -= 10;
+			windowRect.bottom -= 10;
+		}
+		ClipCursor(&windowRect);
+		//SetCursorPos(myWindowSize.x / 2, myWindowSize.y / 2);
 	}
 
 	if (myStateStack.UpdateCurrentState(deltaTime) == false)
@@ -184,7 +195,7 @@ void Game::Pause()
 void Game::UnPause()
 {
 	myLockMouse = true;
-	ShowCursor(false);
+	ShowCursor(false);	
 }
 
 void Game::OnResize(int aWidth, int aHeight)

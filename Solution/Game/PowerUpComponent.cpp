@@ -57,7 +57,35 @@ void PowerUpComponent::ReceiveNote(const CollisionNote& aNote)
 		PowerUpNote note(myType, myInGameName, myValue, myDuration);
 		aNote.myEntity.SendNote(note);
 	}
-	aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PowerUpTaken"));
+
+	switch (myType)
+	{
+	case ePowerUpType::FIRERATEBOOST:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_FirerateUp"));
+		break;
+	case ePowerUpType::SHIELDBOOST:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldBoost"));
+		break;
+	case ePowerUpType::HEALTHKIT:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_HealthKit"));
+		break;
+	case ePowerUpType::WEAPON_UPGRADE:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_WeaponUpgrade"));
+		break;
+	case ePowerUpType::EMP:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_EMPAcquired"));
+		break;
+	case ePowerUpType::HOMING:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_WeaponHoming"));
+		break;
+	case ePowerUpType::INVULNERABLITY:
+		aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Invulnerability"));
+		break;
+	default:
+		DL_ASSERT("UNKNOWN PowerUpType");
+		//aNote.myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PowerUpTaken"));
+		break;
+	}
 	aNote.myCollisionManager.Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 	myEntity.Kill();
 }

@@ -79,7 +79,7 @@ const eStateStatus InGameMenuState::Update(const float& aDeltaTime)
 	myCurrentTime += deltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	return myMenu->Update(aDeltaTime,myInputWrapper);
+	return myMenu->Update(myInputWrapper);
 }
 
 void InGameMenuState::Render()

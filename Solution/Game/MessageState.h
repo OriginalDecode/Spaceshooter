@@ -1,18 +1,20 @@
 #pragma once
 #include "GameState.h"
+#include "LevelScore.h"
 
 namespace Prism
 {
 	class Sprite;
 	class Camera;
 }
-
+struct LevelScore;
 class GameStateMessage;
 
 class MessageState : public GameState
 {
 public:
-	MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper);
+	MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper
+		, const LevelScore& aLevelScore);
 	~MessageState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -28,13 +30,26 @@ public:
 	void SetEvent(GameStateMessage* anEvent);
 
 private:
+	void RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos);
 
 	Prism::Camera* myCamera;
 	Prism::Sprite* myBackground;
+	Prism::Sprite* myOptionalBadgeGrey;
+	Prism::Sprite* myOptionalBadge;
+	Prism::Sprite* myStarGrey;
+	Prism::Sprite* myStar;
+
 
 	std::string myTextMessage;
 	CU::Vector2<float> myMessagePosition;
 	GameStateMessage* myEvent;
+
+	LevelScore myLevelScore;
+	float myOneStarLimit;
+	float myTwoStarLimit;
+	float myThreeStarLimit;
+
+	bool myShowBadge;
 };
 
 inline void MessageState::SetText(const std::string& aText)
@@ -44,5 +59,6 @@ inline void MessageState::SetText(const std::string& aText)
 
 inline void MessageState::SetEvent(GameStateMessage* anEvent)
 {
+	myShowBadge = myEvent == nullptr || myEvent->GetGameState() != eGameState::RELOAD_LEVEL;
 	myEvent = anEvent;
 }

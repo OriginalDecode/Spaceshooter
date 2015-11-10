@@ -217,6 +217,10 @@
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
     <ClCompile Include="LoadingScreen.cpp" />
+    <ClCompile Include="LevelScoreMessage.cpp">
+      <Filter>PostMaster\Messages</Filter>
+    </ClCompile>
+    <ClCompile Include="ScoreIO.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -492,6 +496,11 @@
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
     <ClInclude Include="LoadingScreen.h" />
+    <ClInclude Include="LevelScore.h" />
+    <ClInclude Include="LevelScoreMessage.h">
+      <Filter>PostMaster\Messages</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreIO.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

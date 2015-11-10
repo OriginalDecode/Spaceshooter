@@ -78,6 +78,7 @@ Level* LevelFactory::LoadLevel(const int& anID)
 
 Level* LevelFactory::LoadCurrentLevel()
 {
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
 	myIsLoading = true;
 	delete myCurrentLevel;
 	myCurrentLevel = nullptr;

@@ -143,9 +143,15 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myHomingTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_enemy_lock.dds", { 100.f, 100.f }, { 50.f, 50.f });
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
-		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_prop.dds"
-		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);;
+		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
+
+
+	myBackgroundConversation = new Prism::Sprite("Data/Resource/Texture/UI/T_background_conversation.dds"
+		, { 1024.f, 256.f }, { 0, 0 });
+	myBackgroundMission = new Prism::Sprite("Data/Resource/Texture/UI/T_background_mission.dds"
+		, { 512.f, 512.f }, { 0, 0 });
 
 }
 
@@ -176,6 +182,8 @@ GUIComponent::~GUIComponent()
 	delete myPropHitMarker;
 	//delete myCurrentHitmarker; // dont delete, please!
 	delete myDefendHitMarker;
+	delete myBackgroundConversation;
+	delete myBackgroundMission;
 	myPropHitMarker = nullptr;
 	myCurrentHitmarker = nullptr;
 	myDefendHitMarker = nullptr;
@@ -195,6 +203,8 @@ GUIComponent::~GUIComponent()
 	myDamageIndicatorHealth = nullptr;
 	myDamageIndicatorShield = nullptr;
 	myHomingTarget = nullptr;
+	myBackgroundConversation = nullptr;
+	myBackgroundMission = nullptr;
 
 	delete myGUIBars[0];
 	delete myGUIBars[1];
@@ -268,7 +278,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	std::stringstream lengthToWaypoint;
 	if (aShowDist == true)
 	{
-		lengthToWaypoint << static_cast<int>(CU::Length(toTarget));
+		lengthToWaypoint << static_cast<int>(CU::Length(toTarget) - 150);
 	}
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toTarget) != 0)
@@ -342,7 +352,8 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aShowDist == true)
 	{
-		if (aCurrentModel == myWaypointMarker || aCurrentModel == myWaypointArrow)
+		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker 
+			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
 		{
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
@@ -366,6 +377,15 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	float halfWidth = aWindowSize.x * 0.5f;
 	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
+	if (myConversation.size() > 1)
+	{
+		myBackgroundConversation->Render({ 0, 0 });
+	}
+	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f });
+	/*engine->PrintText(aText, { screenCenter.x * 0.15f, -screenCenter.y * 1.2f - aMissionIndex * 25.f }
+	, Prism::eTextType::RELEASE_TEXT);*/
+
+
 	Prism::Engine::GetInstance()->PrintText(myConversation, { 50.f, -50.f }, Prism::eTextType::RELEASE_TEXT);
 	myReticle->Render({ halfWidth, -halfHeight });
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
@@ -671,6 +691,7 @@ void GUIComponent::Reset()
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
 	myHasRockets = false;
+	myWaypointActive = false;
 
 	ShootingComponent* shootingComp = myEntity.GetComponent<ShootingComponent>();
 	int weaponSize = shootingComp->GetWeaponSize();
@@ -696,4 +717,21 @@ void GUIComponent::Reset()
 	{
 		myWeapon = "";
 	}
+
+
+
+
+	myConversation = " ";
+	myEnemiesTarget = nullptr;
+	myHitMarkerTimer = -1.f;
+	myDamageIndicatorTimer = -1.f;
+	myClosestEnemy = nullptr;
+	myShowMessage = false;
+	myMessage = "";
+	myMessageTime = 0.0f;
+	myWeapon = "";
+	my3DClosestEnemyLength = 10000;
+	myBattlePlayed = false;
+	myBackgroundMusicPlayed = true;
+	myDeltaTime = 0.f;
 }

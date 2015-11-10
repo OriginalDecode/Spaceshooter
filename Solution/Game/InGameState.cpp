@@ -80,6 +80,7 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 			myPlayer = myLevel->GetPlayer();
 			myLevelFactory->Cleanup();
 			PostMaster::GetInstance()->SendMessage(FadeMessage(1.f/3.f));
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
 		}
 
 		if (myIsComplete == true)
@@ -199,7 +200,8 @@ void InGameState::LoadPlayerSettings()
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 
 	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
 {
-	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
+	LevelScore score = myLevel->GetLevelScore();
+	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper, score);
 	myMessageScreen->SetText(aText);
 	myMessageScreen->SetEvent(aMessage);
 	myStateStack->PushSubGameState(myMessageScreen);
