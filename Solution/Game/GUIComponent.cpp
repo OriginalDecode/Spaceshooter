@@ -690,6 +690,7 @@ void GUIComponent::Reset()
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
 	myHasRockets = false;
+	myWaypointActive = false;
 
 	ShootingComponent* shootingComp = myEntity.GetComponent<ShootingComponent>();
 	int weaponSize = shootingComp->GetWeaponSize();
@@ -715,4 +716,21 @@ void GUIComponent::Reset()
 	{
 		myWeapon = "";
 	}
+
+
+
+
+	myConversation = " ";
+	myEnemiesTarget = nullptr;
+	myHitMarkerTimer = -1.f;
+	myDamageIndicatorTimer = -1.f;
+	myClosestEnemy = nullptr;
+	myShowMessage = false;
+	myMessage = "";
+	myMessageTime = 0.0f;
+	myWeapon = "";
+	my3DClosestEnemyLength = 10000;
+	myBattlePlayed = false;
+	myBackgroundMusicPlayed = true;
+	myDeltaTime = 0.f;
 }
