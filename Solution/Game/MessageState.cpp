@@ -69,6 +69,15 @@ void MessageState::Render()
 	Prism::Engine::GetInstance()->PrintText("Enemies killed: " + std::to_string(myLevelScore.myKilledEnemies) + "/" 
 		+ std::to_string(myLevelScore.myTotalEnemies), { myMessagePosition.x, myMessagePosition.y - 200 }
 	, Prism::eTextType::RELEASE_TEXT);
+
+	Prism::Engine::GetInstance()->PrintText("Shots fired: "	+ std::to_string(myLevelScore.myTotalShotsFired)
+		, { myMessagePosition.x, myMessagePosition.y - 225 }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText("Shots that hit enemies: " + std::to_string(myLevelScore.myShotsHit)
+		, { myMessagePosition.x, myMessagePosition.y - 250 }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText("Hit rate: " 
+		+ std::to_string(static_cast<float>(myLevelScore.myShotsHit) / static_cast<float>(myLevelScore.myTotalShotsFired) * 100.f) + "%"
+		, { myMessagePosition.x, myMessagePosition.y - 275 }, Prism::eTextType::RELEASE_TEXT);
+
 }
 
 void MessageState::ResumeState()

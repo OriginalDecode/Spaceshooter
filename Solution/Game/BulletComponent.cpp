@@ -8,6 +8,7 @@
 #include "Entity.h"
 #include "EmitterNote.h"
 #include "HealthComponent.h"
+#include "LevelScoreMessage.h"
 #include "PostMaster.h"
 #include "ShieldComponent.h"
 #include "SoundNote.h"
@@ -73,6 +74,11 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 			aNote.myCollisionManager.DamageEnemiesWithinSphere(myEntity.myOrientation.GetPos(), myDamageRadius, myDamage);
 		}
 
+		if (myEntity.GetType() == eEntityType::PLAYER_BULLET && aNote.myEntity.GetType() == eEntityType::ENEMY)
+		{
+			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_HIT_ENEMY));
+		}
+
 		PostMaster::GetInstance()->SendMessage<BulletCollisionToGUIMessage>(BulletCollisionToGUIMessage(this->GetEntity(), aNote.myEntity));
 	}
 
@@ -99,6 +105,7 @@ void BulletComponent::SetActive(bool aActive)
 	{
 		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)
 		{
+			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_SHOT));
 			if (myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
 				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_2
 				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)

@@ -68,6 +68,7 @@ public:
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	void ReceiveMessage(const SpawnPowerUpMessage& aMessage) override;
 	void ReceiveMessage(const EMPMessage& aMessage) override;
+	void ReceiveMessage(const LevelScoreMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 

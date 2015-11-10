@@ -28,6 +28,7 @@
 #include "InputComponent.h"
 #include <InputWrapper.h>
 #include "Level.h"
+#include "LevelScoreMessage.h"
 #include "MissionManager.h"
 #include "ModelLoader.h"
 #include "ModelProxy.h"
@@ -73,6 +74,7 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_POWERUP, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::EMP, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::LEVEL_SCORE, this);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BackgroundMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
@@ -95,6 +97,7 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DEFEND, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_POWERUP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::EMP, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::LEVEL_SCORE, this);
 	delete myCamera;
 
 	for (int i = 0; i < myEntities.Size(); i++)
@@ -427,6 +430,18 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPActivated = true;
 
 	myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
+}
+
+void Level::ReceiveMessage(const LevelScoreMessage& aMessage)
+{
+	if (aMessage.myScoreMessageType == eLevelScoreMessageType::PLAYER_SHOT)
+	{
+		++myLevelScore.myTotalShotsFired;
+	}
+	else if (aMessage.myScoreMessageType == eLevelScoreMessageType::PLAYER_HIT_ENEMY)
+	{
+		++myLevelScore.myShotsHit;
+	}
 }
 
 void Level::CompleteLevel()

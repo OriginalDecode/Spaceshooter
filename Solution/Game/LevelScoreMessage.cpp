@@ -2,11 +2,8 @@
 #include "LevelScoreMessage.h"
 
 
-LevelScoreMessage::LevelScoreMessage()
-{
-}
-
-
-LevelScoreMessage::~LevelScoreMessage()
+LevelScoreMessage::LevelScoreMessage(const eLevelScoreMessageType& aScoreMessageType)
+	: Message(eMessageType::LEVEL_SCORE)
+	, myScoreMessageType(aScoreMessageType)
 {
 }

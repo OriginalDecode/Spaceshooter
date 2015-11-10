@@ -1,8 +1,10 @@
 #pragma once
-class LevelScoreMessage
+#include "Message.h"
+class LevelScoreMessage : public Message
 {
 public:
-	LevelScoreMessage();
-	~LevelScoreMessage();
+	LevelScoreMessage(const eLevelScoreMessageType& aScoreMessageType);
+
+	const eLevelScoreMessageType myScoreMessageType;
 };
 
