@@ -31,7 +31,7 @@ void StreakEmitterComponent::Init(std::string aPath)
 {
 	myXMLPath = aPath;
 
-	DL_ASSERT_EXP(myEmitterData== nullptr, "Emitter were inited twice. Contact Linus Skold");
+	DL_ASSERT_EXP(myEmitterData== nullptr, "StreakEmitter were inited twice. Contact Linus Ljungman");
 
 	XMLReader reader;
 	reader.OpenDocument(myXMLPath);
