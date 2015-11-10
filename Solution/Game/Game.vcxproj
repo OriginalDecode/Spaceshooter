@@ -230,6 +230,7 @@
     <ClInclude Include="PowerUpComponent.h" />
     <ClInclude Include="PropComponent.h" />
     <ClInclude Include="ResizeMessage.h" />
+    <ClInclude Include="ScoreIO.h" />
     <ClInclude Include="ShieldComponent.h" />
     <ClInclude Include="ShieldNote.h" />
     <ClInclude Include="ShootingComponent.h" />
@@ -315,6 +316,7 @@
     <ClCompile Include="PowerUpGUIIcon.cpp" />
     <ClCompile Include="PowerUpMessage.cpp" />
     <ClCompile Include="PropComponent.cpp" />
+    <ClCompile Include="ScoreIO.cpp" />
     <ClCompile Include="ShieldComponent.cpp" />
     <ClCompile Include="ShootingComponent.cpp" />
     <ClCompile Include="SoundComponent.cpp" />
