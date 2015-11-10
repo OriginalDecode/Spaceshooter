@@ -173,6 +173,7 @@
     <ClInclude Include="ExplosionMessage.h" />
     <ClInclude Include="FadeMessage.h" />
     <ClInclude Include="InGameMenuState.h" />
+    <ClInclude Include="LevelScore.h" />
     <ClInclude Include="LoadingScreen.h" />
     <ClInclude Include="ParticleEmitterComponent.h" />
     <ClInclude Include="EmitterManager.h" />

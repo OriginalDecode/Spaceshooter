@@ -8,8 +8,10 @@
 #include <InputWrapper.h>
 #include "PostMaster.h"
 
-MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper)
+MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper
+		, const LevelScore& aLevelScore)
 	: myEvent(nullptr)
+	, myLevelScore(aLevelScore)
 {
 	myBackground = new Prism::Sprite(aTexturePath, aSize, aSize/2.f);
 	myInputWrapper = anInputWrapper;
@@ -63,6 +65,10 @@ void MessageState::Render()
 	{
 		Prism::Engine::GetInstance()->PrintText(myTextMessage, myMessagePosition, Prism::eTextType::RELEASE_TEXT);
 	}
+
+	Prism::Engine::GetInstance()->PrintText("Enemies killed: " + std::to_string(myLevelScore.myKilledEnemies) + "/" 
+		+ std::to_string(myLevelScore.myTotalEnemies), { myMessagePosition.x, myMessagePosition.y - 200 }
+	, Prism::eTextType::RELEASE_TEXT);
 }
 
 void MessageState::ResumeState()

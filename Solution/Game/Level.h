@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Subscriber.h"
+#include "LevelScore.h"
 
 namespace Prism
 {
@@ -72,6 +73,8 @@ public:
 
 	EmitterManager* GetEmitterManager() const;
 
+	const LevelScore& GetLevelScore() const;
+
 private:
 	Level& operator=(Level&) = delete;
 	void ReadXML(const std::string& aFile);
@@ -117,6 +120,8 @@ private:
 	bool myIsSkipable;
 
 	Prism::Texture* myEMPDepthSprite;
+
+	LevelScore myLevelScore;
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)
@@ -127,4 +132,9 @@ inline void Level::RemoveEntity(Entity* aEntity)
 inline EmitterManager* Level::GetEmitterManager() const
 {
 	return myEmitterManager;
+}
+
+inline const LevelScore& Level::GetLevelScore() const
+{
+	return myLevelScore;
 }

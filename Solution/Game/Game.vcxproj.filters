@@ -492,6 +492,7 @@
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
     <ClInclude Include="LoadingScreen.h" />
+    <ClInclude Include="LevelScore.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

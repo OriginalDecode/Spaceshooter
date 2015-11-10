@@ -1,18 +1,20 @@
 #pragma once
 #include "GameState.h"
+#include "LevelScore.h"
 
 namespace Prism
 {
 	class Sprite;
 	class Camera;
 }
-
+struct LevelScore;
 class GameStateMessage;
 
 class MessageState : public GameState
 {
 public:
-	MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper);
+	MessageState(const std::string& aTexturePath, const CU::Vector2<float>& aSize, CU::InputWrapper* anInputWrapper
+		, const LevelScore& aLevelScore);
 	~MessageState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -35,6 +37,8 @@ private:
 	std::string myTextMessage;
 	CU::Vector2<float> myMessagePosition;
 	GameStateMessage* myEvent;
+
+	LevelScore myLevelScore;
 };
 
 inline void MessageState::SetText(const std::string& aText)

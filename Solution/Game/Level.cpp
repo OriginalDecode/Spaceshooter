@@ -141,6 +141,10 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		if (myEntities[i]->GetAlive() == false)
 		{
+			if (myEntities[i]->GetType() == eEntityType::ENEMY)
+			{
+				++myLevelScore.myKilledEnemies;
+			}
 			myEntities.DeleteCyclicAtIndex(i);
 			continue;
 		}
@@ -365,7 +369,7 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	{
 		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
 	}
-
+	++myLevelScore.myTotalEnemies;
 	myEntities.Add(newEntity);
 
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
