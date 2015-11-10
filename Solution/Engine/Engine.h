@@ -139,6 +139,7 @@ namespace Prism
 
 		ModelLoader* myModelLoader;
 		std::thread* myModelLoaderThread;
+		std::thread::id myMainThreadID;
 
 		static Engine* myInstance;
 

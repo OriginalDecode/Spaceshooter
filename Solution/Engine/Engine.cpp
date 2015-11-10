@@ -124,11 +124,8 @@ namespace Prism
 				myFadeData.myIsFading = false;
 				myFadeData.myCurrentTime = 0.f;
 			}
-			else
-			{
-			}
-				myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
 
+			myFadeData.mySprite->Render({ 0.f, 0.f }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 1.f * myFadeData.myCurrentTime / myFadeData.myTotalTime });
 		}
 
 		myDirectX->Present(0, 0);
@@ -197,6 +194,10 @@ namespace Prism
 
 	ID3D11Device* Engine::GetDevice()
 	{
+#ifdef THREADED_LOADING
+		DL_ASSERT_EXP(std::this_thread::get_id() != myMainThreadID ||
+			myModelLoader->IsLoading() == false, "Called GetDevice() from mainThread, while modelLoader is loading, not allowed!");
+#endif
 		return myDirectX->GetDevice();
 	}
 
@@ -270,6 +271,8 @@ namespace Prism
 
 		myUsePBLPixelShader = true;
 
+
+		myMainThreadID = std::this_thread::get_id();
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
 
