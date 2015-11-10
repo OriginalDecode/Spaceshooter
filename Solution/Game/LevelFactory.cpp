@@ -44,9 +44,8 @@
 #include <XMLReader.h>
 #include <thread>
 
-LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, Entity& aPlayer)
+LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper)
 	: myInputWrapper(anInputWrapper)
-	, myPlayer(&aPlayer)
 	, myCurrentLevel(nullptr)
 	, myLevelPaths(8)
 	, myCurrentID(0)
@@ -159,20 +158,15 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myPointLights.DeleteAll();
 	mySpotLights.DeleteAll();
 
-	if (myPlayer == nullptr)
-	{
-		LoadPlayer();
-	}
-	else
-	{
-		myCurrentLevel->myPlayer = myPlayer;
-	}
+
+	LoadPlayer();
+	
 
 	ReadLevelSettings();
 	myCurrentLevel->myEntities.Add(myCurrentLevel->myPlayer);
 	myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->SetCamera(myCurrentLevel->myCamera);
-	myCurrentLevel->GetEmitterManager()->AddEmitter(myPlayer->GetComponent<ParticleEmitterComponent>());
+	myCurrentLevel->GetEmitterManager()->AddEmitter(myCurrentLevel->myPlayer->GetComponent<ParticleEmitterComponent>());
 	myCurrentLevel->myPlayer->SetPlayerScene(*myCurrentLevel->myScene);
 
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
@@ -207,18 +201,21 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	reader.ForceReadAttribute(playerPosElement, "Y", playerRot.y);
 	reader.ForceReadAttribute(playerPosElement, "Z", playerRot.z);
 
-	myPlayer->myOrientation = CU::Matrix44f();
+	myCurrentLevel->myPlayer->myOrientation = CU::Matrix44f();
 
-	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundX(playerRot.x) * myPlayer->myOrientation;
-	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundY(playerRot.y) * myPlayer->myOrientation;
-	myPlayer->myOrientation = myPlayer->myOrientation.CreateRotateAroundZ(playerRot.z) * myPlayer->myOrientation;
+	myCurrentLevel->myPlayer->myOrientation = myCurrentLevel->myPlayer->myOrientation.CreateRotateAroundX(playerRot.x) 
+		* myCurrentLevel->myPlayer->myOrientation;
+	myCurrentLevel->myPlayer->myOrientation = myCurrentLevel->myPlayer->myOrientation.CreateRotateAroundY(playerRot.y) 
+		* myCurrentLevel->myPlayer->myOrientation;
+	myCurrentLevel->myPlayer->myOrientation = myCurrentLevel->myPlayer->myOrientation.CreateRotateAroundZ(playerRot.z) 
+		* myCurrentLevel->myPlayer->myOrientation;
 
-	myPlayer->myOrientation = CU::GetOrientation(myPlayer->myOrientation, playerRot);
+	myCurrentLevel->myPlayer->myOrientation = CU::GetOrientation(myCurrentLevel->myPlayer->myOrientation, playerRot);
 
-	myPlayer->myOrientation.SetPos(playerPos * 10.f);
-	myPlayer->myOriginalOrientation = myPlayer->myOrientation;
+	myCurrentLevel->myPlayer->myOrientation.SetPos(playerPos * 10.f);
+	myCurrentLevel->myPlayer->myOriginalOrientation = myCurrentLevel->myPlayer->myOrientation;
 
-	myPlayer->Reset();
+	myCurrentLevel->myPlayer->Reset();
 
 	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);
 	myCurrentLevel->myMissionManager = new MissionManager(*myCurrentLevel, *myCurrentLevel->myPlayer, missionXML);
@@ -504,14 +501,13 @@ void LevelFactory::LoadPlayer()
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);
-	myPlayer = myCurrentLevel->myPlayer;
-	myPlayer->SetName("player");
+	myCurrentLevel->myPlayer->SetName("player");
 
 	std::string particlePath;
 	reader.ReadAttribute(reader.FindFirstChild("particle"), "src", particlePath);
 
-	myPlayer->AddComponent<ParticleEmitterComponent>()->Init(particlePath);
-	myPlayer->GetComponent<ParticleEmitterComponent>()->GetEmitter()->ShouldLive(true);
+	myCurrentLevel->myPlayer->AddComponent<ParticleEmitterComponent>()->Init(particlePath);
+	myCurrentLevel->myPlayer->GetComponent<ParticleEmitterComponent>()->GetEmitter()->ShouldLive(true);
 
 	reader.CloseDocument();	
 }
@@ -591,7 +587,8 @@ void LevelFactory::SetSkySphere(const std::string& aModelFilePath, const std::st
 	delete myCurrentLevel->mySkySphere;
 	myCurrentLevel->mySkySphereCullingRadius = 10.f;
 	myCurrentLevel->mySkySphere = new Prism::Instance(*skySphere
-		, myPlayer->GetComponent<InputComponent>()->GetSkyOrientation(), Prism::eOctreeType::NOT_IN_OCTREE
+		, myCurrentLevel->myPlayer->GetComponent<InputComponent>()->GetSkyOrientation()
+		, Prism::eOctreeType::NOT_IN_OCTREE
 		, myCurrentLevel->mySkySphereCullingRadius);
 }
 

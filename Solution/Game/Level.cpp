@@ -102,11 +102,11 @@ Level::~Level()
 
 	for (int i = 0; i < myEntities.Size(); i++)
 	{
-		if (myEntities[i] != myPlayer)
-		{
+		//if (myEntities[i] != myPlayer)
+		//{
 			delete myEntities[i];
 			myEntities[i] = nullptr;
-		}
+		//}
 	}
 	delete myEMP;
 	delete mySkySphere;
