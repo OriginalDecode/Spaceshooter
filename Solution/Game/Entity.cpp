@@ -12,7 +12,7 @@
 Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOctreeType, const std::string& aName)
 	: myAlive(true)
 	, myType(aType)
-	, myScene(aScene)
+	, myScene(&aScene)
 	, myOctreeType(anOctreeType)
 	, myName(aName)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)

@@ -75,7 +75,7 @@ namespace Prism
 
 		if (aSetupInfo.myWindowed == false)
 		{
-			myInstance->myDirectX->SetFullscreen(false);
+			myInstance->myDirectX->SetFullscreen(true);
 		}
 
 		return result;

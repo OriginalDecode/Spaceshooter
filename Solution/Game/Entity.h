@@ -45,6 +45,8 @@ public:
 
 	Prism::Scene& GetScene();
 
+	void SetPlayerScene(Prism::Scene& aScene);
+
 	void SetShouldRotate(bool aShouldRotate);
 	void SetShouldRotateX(bool aShouldRotate);
 	void SetShouldRotateY(bool aShouldRotate);
@@ -73,7 +75,7 @@ private:
 	std::string myName;
 	std::string myPowerUpName;
 	const eEntityType myType;
-	Prism::Scene& myScene;
+	Prism::Scene* myScene;
 	const Prism::eOctreeType myOctreeType;
 	ePowerUpType myPowerUpType;
 
@@ -154,7 +156,12 @@ inline bool Entity::GetAlive() const
 
 inline Prism::Scene& Entity::GetScene()
 {
-	return myScene;
+	return *myScene;
+}
+
+inline void Entity::SetPlayerScene(Prism::Scene& aScene)
+{
+	myScene = &aScene;
 }
 
 inline const std::string& Entity::GetName() const

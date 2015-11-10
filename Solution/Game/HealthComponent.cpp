@@ -40,7 +40,10 @@ void HealthComponent::RemoveHealth(int aHealthToRemove)
 		if (myCurrentHealth <= aHealthToRemove)
 		{
 			myCurrentHealth = 0;
-			myEntity.Kill();
+			if (myEntity.GetAlive() == true)
+			{
+				myEntity.Kill();
+			}
 		}
 		else
 		{

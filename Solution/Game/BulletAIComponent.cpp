@@ -53,6 +53,12 @@ void BulletAIComponent::Update(float aDeltaTime)
 {
 	DL_ASSERT_EXP(myEntityToFollow != nullptr, "BulletAIComponent needs an entity to follow.");
 
+	if (myEntityToFollow->GetAlive() == false)
+	{
+		myEntity.Kill();
+		return;
+	}
+
 	if (myPhysicsComponent == nullptr)
 	{
 		myPhysicsComponent = myEntity.GetComponent<PhysicsComponent>();

@@ -65,14 +65,13 @@ void MenuState::EndState()
 	delete myCamera;
 	myMenu = nullptr;
 	myCamera = nullptr;
-	
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
 const eStateStatus MenuState::Update(const float& aDeltaTime)
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 
@@ -81,7 +80,6 @@ const eStateStatus MenuState::Update(const float& aDeltaTime)
 
 	if (myMenu->Update(aDeltaTime, myInputWrapper) == false)
 	{
-		PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 		return eStateStatus::ePopMainState;
 	}
 

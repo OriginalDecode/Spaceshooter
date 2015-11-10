@@ -76,3 +76,5 @@ Tools/CSharpUtilities/CSharpUtilities/obj/
 /Tools/EntityEditor/EntityEditor/obj/Debug
 /Tools/EntityEditor/EntityEditor/obj/Release
 /Instancing_old_stuff
+/Solution/Launcher/bin/Internal/Launcher.vshost.exe.config
+/Solution/Launcher/bin/Internal/Launcher.vshost.exe.manifest
