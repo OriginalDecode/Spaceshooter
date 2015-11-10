@@ -282,8 +282,7 @@ void InputComponent::UpdateMovement(const float& aDelta)
 
 	if (myBoost == false)
 	{
-		if (myEntity.GetComponent<PhysicsComponent>()->GetSpeed() > myMaxMovementSpeed 
-			&& myCurrentBoostValue > 0.f)
+		if (myEntity.GetComponent<PhysicsComponent>()->GetSpeed() > myMaxMovementSpeed)
 		{
 			float deacceleration = -(aDelta * myBoostDeacceleration);
 
