@@ -60,7 +60,7 @@ bool DefendMission::Update(float aDeltaTime, int aMissionIndex, eMissionCategory
 	ss.precision(2);
 	int health = myEntityToDefend->GetComponent<HealthComponent>()->GetHealth();
 	
-	ss << "Defend for " << myVisualTime << " s, " << health << " hp left.";
+	ss << "Defend for " << myVisualTime << " s, " << health << " hp";
 	
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
