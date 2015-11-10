@@ -86,7 +86,7 @@ void BulletAIComponent::FollowEntity(float aDeltaTime)
 
 	CU::Normalize(myToTarget);
 
-	myVelocity += myToTarget * (myBulletComponent->GetCurrentLifeTime() * myTurnRateModifier);
+	myVelocity += myToTarget * (myBulletComponent->GetCurrentLifeTime() * myTurnRateModifier * aDeltaTime);
 
 	CU::Normalize(myVelocity);
 
