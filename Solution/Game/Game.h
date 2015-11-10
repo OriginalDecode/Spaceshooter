@@ -34,6 +34,7 @@ private:
 	void operator=(Game& aApp) = delete;
 
 	CU::InputWrapper* myInputWrapper;
+	HWND* myWindowHandler;
 
 	StateStack myStateStack;
 

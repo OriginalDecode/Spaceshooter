@@ -19,6 +19,7 @@ public:
 	void PushMainGameState(GameState* aMainGameState);
 	bool UpdateCurrentState(const float& aDeltaTime);
 	void RenderCurrentState();
+	void ResumeState();
 	void OnResizeCurrentState(int aWidth, int aHeight);
 	void OnResize(int aWidth, int aHeight);
 	void Clear();
