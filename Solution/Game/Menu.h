@@ -21,9 +21,9 @@ public:
 	Menu(const std::string& aXMLPath);
 	~Menu();
 	
-	void Render(CU::InputWrapper* anInputWrapper);
+	void Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons = true);
 
-	eStateStatus Update(CU::InputWrapper* anInputWrapper);
+	eStateStatus Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons = true);
 
 	void OnResize(int aWidth, int aHeight);
 

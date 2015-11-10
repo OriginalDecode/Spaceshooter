@@ -30,7 +30,7 @@ Menu::Menu(const std::string& aXMLPath)
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "sizeX", crosshairSize.x);
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(menuElement, "crosshair"), "sizeY", crosshairSize.y);
 
-	myCrosshair = new Prism::Sprite(crosshair, crosshairSize, crosshairSize/2.f);
+	myCrosshair = new Prism::Sprite(crosshair, crosshairSize, crosshairSize / 2.f);
 	myScreenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y) };
 	if (myBackgroundSize.x != 0 && myBackgroundSize.y != 0)
@@ -60,7 +60,7 @@ Menu::~Menu()
 	myBackground = nullptr;
 }
 
-void Menu::Render(CU::InputWrapper* anInputWrapper)
+void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons)
 {
 	if (myRenderCenter == true)
 	{
@@ -71,30 +71,37 @@ void Menu::Render(CU::InputWrapper* anInputWrapper)
 		myBackground->Render({ (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2) });
 	}
 
-	for (int i = 0; i < myButtons.Size(); i++)
+	if (aRenderButtons == true)
 	{
-		myButtons[i]->Render();
+		for (int i = 0; i < myButtons.Size(); i++)
+		{
+			myButtons[i]->Render();
+		}
 	}
 
 	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
 
-eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper)
+eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons)
 {
-	bool isMouseClicked = anInputWrapper->MouseDown(0);
-	CU::Vector2<float> mousePos = anInputWrapper->GetMousePosition();
-
 	eStateStatus returnValue = eStateStatus::eKeepState;
-	for (int i = 0; i < myButtons.Size(); i++)
+
+	if (aUpdateButtons == true)
 	{
-		eStateStatus currentButton = myButtons[i]->Update(mousePos, isMouseClicked);
-		if (currentButton == eStateStatus::ePopMainState)
+		bool isMouseClicked = anInputWrapper->MouseDown(0);
+		CU::Vector2<float> mousePos = anInputWrapper->GetMousePosition();
+
+		for (int i = 0; i < myButtons.Size(); i++)
 		{
-			returnValue = eStateStatus::ePopMainState;
-		}
-		else if (currentButton == eStateStatus::ePopSubState)
-		{
-			returnValue = eStateStatus::ePopSubState;
+			eStateStatus currentButton = myButtons[i]->Update(mousePos, isMouseClicked);
+			if (currentButton == eStateStatus::ePopMainState)
+			{
+				returnValue = eStateStatus::ePopMainState;
+			}
+			else if (currentButton == eStateStatus::ePopSubState)
+			{
+				returnValue = eStateStatus::ePopSubState;
+			}
 		}
 	}
 	return returnValue;
@@ -102,7 +109,7 @@ eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper)
 
 void Menu::OnResize(int aWidth, int aHeight)
 {
-	myScreenSize = { float(aWidth),	float(aHeight) };
+	myScreenSize = { float(aWidth), float(aHeight) };
 
 	if (myBackground != nullptr)
 	{
@@ -114,7 +121,7 @@ void Menu::OnResize(int aWidth, int aHeight)
 		{
 			myBackground->SetSize(myScreenSize, myScreenSize / 2.f);
 		}
-		
+
 	}
 
 	for (int i = 0; i < myButtons.Size(); i++)
