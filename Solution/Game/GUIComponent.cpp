@@ -278,7 +278,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	std::stringstream lengthToWaypoint;
 	if (aShowDist == true)
 	{
-		lengthToWaypoint << static_cast<int>(CU::Length(toTarget));
+		lengthToWaypoint << static_cast<int>(CU::Length(toTarget) - 150);
 	}
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toTarget) != 0)
@@ -352,7 +352,8 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aShowDist == true)
 	{
-		if (aCurrentModel == myWaypointMarker || aCurrentModel == myWaypointArrow)
+		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker 
+			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
 		{
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
