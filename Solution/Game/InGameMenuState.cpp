@@ -53,7 +53,7 @@ void InGameMenuState::EndState()
 	myCamera = nullptr;
 }
 
-const eStateStatus InGameMenuState::Update(const float&)
+const eStateStatus InGameMenuState::Update(const float& aDeltaTime)
 {
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
@@ -79,7 +79,7 @@ const eStateStatus InGameMenuState::Update(const float&)
 	myCurrentTime += deltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	return myMenu->Update(myInputWrapper);
+	return myMenu->Update(aDeltaTime,myInputWrapper);
 }
 
 void InGameMenuState::Render()
