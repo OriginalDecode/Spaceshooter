@@ -48,6 +48,8 @@ private:
 	float myOneStarLimit;
 	float myTwoStarLimit;
 	float myThreeStarLimit;
+
+	bool myShowBadge;
 };
 
 inline void MessageState::SetText(const std::string& aText)
@@ -57,5 +59,6 @@ inline void MessageState::SetText(const std::string& aText)
 
 inline void MessageState::SetEvent(GameStateMessage* anEvent)
 {
+	myShowBadge = myEvent == nullptr || myEvent->GetGameState() != eGameState::RELOAD_LEVEL;
 	myEvent = anEvent;
 }

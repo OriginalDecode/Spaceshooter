@@ -13,6 +13,7 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	: myEvent(nullptr)
 	, myLevelScore(aLevelScore)
 {
+	myShowBadge = myEvent == nullptr || myEvent->GetGameState() != eGameState::RELOAD_LEVEL;
 	myBackground = new Prism::Sprite(aTexturePath, aSize, aSize/2.f);
 	myInputWrapper = anInputWrapper;
 	myTextMessage = "";
@@ -99,7 +100,7 @@ void MessageState::Render()
 		+ std::to_string(myLevelScore.myCompletedOptional) + " / " + std::to_string(myLevelScore.myTotalOptional)
 		, { myMessagePosition.x, myMessagePosition.y - 275 }, Prism::eTextType::RELEASE_TEXT);
 
-	if (myEvent == nullptr || myEvent->GetGameState() != eGameState::RELOAD_LEVEL)
+	if (myShowBadge)
 	{
 		RenderBadgesAndStars(myMessagePosition);
 	}
