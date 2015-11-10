@@ -38,8 +38,7 @@ Prism::Scene::~Scene()
 #ifdef SCENE_USE_OCTREE
 	delete myOctree;
 	myOctree = nullptr;
-	delete myGlassCockpit;
-	myGlassCockpit = nullptr;
+
 #else
 	myInstances.DeleteAll();
 #endif
@@ -90,11 +89,6 @@ void Prism::Scene::Render()
 		myInstances[i]->Render(*myCamera);
 	}
 
-	myGlassCockpit->UpdateDirectionalLights(myDirectionalLightData);
-	myGlassCockpit->UpdatePointLights(myPointLightData);
-	myGlassCockpit->UpdateSpotLights(mySpotLightData);
-	myGlassCockpit->Render(*myCamera);
-
 	myPlayerInstance->UpdateDirectionalLights(myDirectionalLightData);
 	myPlayerInstance->UpdatePointLights(myPointLightData);
 	myPlayerInstance->UpdateSpotLights(mySpotLightData);
@@ -123,16 +117,7 @@ void Prism::Scene::AddInstance(Instance* aInstance)
 		DL_ASSERT_EXP(myPlayerInstance == nullptr, "Tried to add Player twice to Scene");
 		myPlayerInstance = aInstance;
 
-		XMLReader reader;
-		reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_glass_a.xml");
-
-		reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius")
-			, "value", myCockpitRadius);
-		reader.CloseDocument();
-
-		Prism::ModelProxy* tempModel = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
-			"Data/Resource/Model/Player/SM_cockpit_glass_a.fbx", "Data/Resource/Shader/S_effect_glass.fx");
-		myGlassCockpit = new Prism::Instance(*tempModel, myPlayerInstance->GetOrientation(), Prism::eOctreeType::PLAYER, myCockpitRadius);
+		
 	}
 	else
 	{

@@ -510,10 +510,23 @@ void LevelFactory::LoadPlayer()
 	std::string particlePath;
 	reader.ReadAttribute(reader.FindFirstChild("particle"), "src", particlePath);
 
+	
+	
+
 	myPlayer->AddComponent<ParticleEmitterComponent>()->Init(particlePath);
 	myPlayer->GetComponent<ParticleEmitterComponent>()->GetEmitter()->ShouldLive(true);
 
 	reader.CloseDocument();	
+
+	reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_glass_a.xml");
+	reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius")
+		, "value", myCurrentLevel->myCockpitRadius);
+	reader.CloseDocument();
+	Prism::ModelProxy* tempModel = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		"Data/Resource/Model/Player/SM_cockpit_glass_a.fbx", "Data/Resource/Shader/S_effect_glass.fx");
+	myCurrentLevel->myGlassCockpit = new Prism::Instance(*tempModel, myPlayer->myOrientation, Prism::eOctreeType::PLAYER
+		, myCurrentLevel->myCockpitRadius);
+
 }
 
 void LevelFactory::FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate)

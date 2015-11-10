@@ -79,6 +79,8 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 
+
+
 	myEMPDepthSprite = new Prism::Texture();
 	myEMPDepthSprite->InitAsDepthBuffer(Prism::Engine::GetInstance()->GetDepthBufferTexture());
 	myRenderer = new Prism::Renderer();
@@ -99,6 +101,8 @@ Level::~Level()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::EMP, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::LEVEL_SCORE, this);
 	delete myCamera;
+	delete myGlassCockpit;
+	myGlassCockpit = nullptr;
 
 	for (int i = 0; i < myEntities.Size(); i++)
 	{
@@ -240,7 +244,9 @@ void Level::Render()
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
 
+
 		myEmitterManager->RenderEmitters(myCamera);
+		myGlassCockpit->Render(*myCamera);
 	}
 	else
 	{
