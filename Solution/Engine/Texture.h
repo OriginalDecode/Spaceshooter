@@ -31,6 +31,7 @@ namespace Prism
 		ID3D11DepthStencilView* GetDepthStencilView() const;
 		ID3D11Texture2D* GetDepthTexture() const;
 
+		void ClearDepth();
 
 		void Release();
 		void Resize(float aWidth, float aHeight);

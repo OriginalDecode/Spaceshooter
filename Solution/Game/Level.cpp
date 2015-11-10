@@ -42,8 +42,8 @@
 #include "ShootingComponent.h"
 #include "SpawnEnemyMessage.h"
 #include "SpawnPowerUpMessage.h"
-#include <Sprite.h>
 #include "StreakEmitterComponent.h"
+#include <Texture.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
@@ -77,7 +77,8 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 
-	//myEMPDepthSprite = Prism::Engine::GetInstance(
+	myEMPDepthSprite = new Prism::Texture();
+	myEMPDepthSprite->InitAsDepthBuffer(Prism::Engine::GetInstance()->GetDepthBufferTexture());
 	myRenderer = new Prism::Renderer();
 }
 
@@ -158,6 +159,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPTimer = 20.f;
 		myEMPScale = 1.f;
 		myEMPActivated = true;
+		myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
 	}
 
 	if (myEMPActivated == true)
@@ -223,9 +225,11 @@ void Level::Render()
 		if (myEMPActivated == true)
 		{
 			//Prism::Engine::GetInstance()->DisableZBuffer();
-			
+			myEMPDepthSprite->ClearDepth();
+			myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myEMPDepthSprite->GetDepthStencilView());
 			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myRenderer->GetWorldTexture());
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+			myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myRenderer->GetWorldTexture()->GetDepthStencilView());
 			//Prism::Engine::GetInstance()->EnableZBuffer();
 		}
 
@@ -417,6 +421,8 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPTimer = aMessage.myEMPTime;
 	myEMPScale = 1.f;
 	myEMPActivated = true;
+
+	myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
 }
 
 void Level::CompleteLevel()

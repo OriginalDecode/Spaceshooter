@@ -76,6 +76,8 @@ void Prism::Texture::InitAsDepthBuffer(ID3D11Texture2D* aSource)
 
 	D3D11_TEXTURE2D_DESC tempBufferInfo;
 	aSource->GetDesc(&tempBufferInfo);
+	tempBufferInfo.Format = DXGI_FORMAT_R32_TYPELESS;
+	tempBufferInfo.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
 
 	HRESULT hr = Engine::GetInstance()->GetDevice()->CreateTexture2D(&tempBufferInfo, NULL, &myDepthTexture);
 
@@ -189,6 +191,11 @@ ID3D11Texture2D* Prism::Texture::GetDepthTexture() const
 {
 	DL_ASSERT_EXP(myDepthStencilShaderView != nullptr, "[Texture]: Tried to GetDepthTexture, but texture wasnt created with D3D11_BIND_DEPTH_STENCIL");
 	return myDepthTexture;
+}
+
+void Prism::Texture::ClearDepth()
+{
+	Engine::GetInstance()->GetContex()->ClearDepthStencilView(myDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
 void Prism::Texture::Release()
