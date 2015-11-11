@@ -106,6 +106,7 @@ namespace Prism
 		myTexts.RemoveAll();
 
 		myText->SetColor({ 1.f, 0, 0, 0.8f });
+#ifndef THREADED_LOADING
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
 			myText->SetText(myDebugTexts[i].myText);
@@ -113,6 +114,7 @@ namespace Prism
 			//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
 			myText->Render();
 		}
+#endif
 		myDebugTexts.RemoveAll();
 
 		if (myFadeData.myIsFading == true)

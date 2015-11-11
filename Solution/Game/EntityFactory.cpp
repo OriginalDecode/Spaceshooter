@@ -49,6 +49,7 @@ EntityFactory::~EntityFactory()
 
 void EntityFactory::LoadEntites(const std::string& aEntityRootPath, float aDifficultScale)
 {
+	myDifficultScale = aDifficultScale;
 	XMLReader rootDocument;
 	rootDocument.OpenDocument(aEntityRootPath);
 	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
@@ -503,7 +504,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			DL_ASSERT(error);
 		}
 		
-		LoadEntity(myEntityTags[aEntityTag]);
+		LoadEntity(myEntityTags[aEntityTag], myDifficultScale);
 #else
 		std::string error = "[EntityFactory] No entity with name " + aEntityTag;
 		DL_ASSERT(error);
