@@ -8,6 +8,7 @@
 #include "KillXEnemiesAbortMission.h"
 #include "KillXEnemiesMission.h"
 #include <sstream>
+#include "LevelScoreMessage.h"
 #include "MissionContainer.h"
 #include "PostMaster.h"
 #include "SurvivalMission.h"
@@ -93,6 +94,7 @@ MissionContainer::MissionContainer(Level& aLevel, Entity& aPlayer, XMLReader& aR
 		else
 		{
 			unorderedOptionalMissions.Add(mission);
+			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::OPTIONAL_MISSION_ADDED));
 		}
 	}
 
@@ -142,7 +144,10 @@ void MissionContainer::Update(float aDeltaTime, CU::GrowingArray<Mission*>& some
 			{
 				someMissions[i]->End();
 			}
-
+			if (aCategory == eMissionCategory::NOT_REQUIRED)
+			{
+				PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::OPTIONAL_MISSION_COMPLETED));
+			}
 			someMissions.RemoveCyclicAtIndex(i);
 		}
 	}

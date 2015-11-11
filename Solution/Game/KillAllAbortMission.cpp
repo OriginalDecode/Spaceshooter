@@ -18,7 +18,7 @@ bool KillAllAbortMission::Update(float aDeltaTime, int aMissionIndex, eMissionCa
 	aDeltaTime;
 	Prism::Engine* engine = Prism::Engine::GetInstance();
 	CU::Vector2<float> screenCenter(engine->GetWindowSize().x * 0.5f, engine->GetWindowSize().y * 0.5f);
-	std::string message = "Kill all (abort) enemies!";
+	std::string message = "Kill all enemies!";
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
 		message += " (Optional)";

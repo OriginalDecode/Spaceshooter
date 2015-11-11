@@ -27,8 +27,7 @@
 #include <Vector.h>
 
 InGameState::InGameState(CU::InputWrapper* anInputWrapper)
-	: myPlayer(nullptr)
-	, myLoadingScreen(nullptr)
+	: myLoadingScreen(nullptr)
 {
 	myInputWrapper = anInputWrapper;
 }
@@ -37,18 +36,16 @@ InGameState::~InGameState()
 {
 	delete myLevelFactory;
 	delete myLevel;
-	delete myPlayer;
 	delete myLoadingScreen;
 	myLevelFactory = nullptr;
 	myLevel = nullptr;
-	myPlayer = nullptr;
 	myLoadingScreen = nullptr;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)
 {
-	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper, *myPlayer);
+	myLevelFactory = new LevelFactory("Data/Level/LI_list_level.xml", myInputWrapper);
 	myIsLetThrough = false;
 	myIsComplete = false;
 	myStateStack = aStateStackProxy;
@@ -77,7 +74,6 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 	{
 		if (myLevelFactory->IsClean() == false)
 		{
-			myPlayer = myLevel->GetPlayer();
 			myLevelFactory->Cleanup();
 			PostMaster::GetInstance()->SendMessage(FadeMessage(1.f/3.f));
 			Prism::Audio::AudioInterface::GetInstance()->PostEvent("UnMute", 0);
@@ -200,7 +196,8 @@ void InGameState::LoadPlayerSettings()
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 
 	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
 {
-	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper);
+	LevelScore score = myLevel->GetLevelScore();
+	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper, score);
 	myMessageScreen->SetText(aText);
 	myMessageScreen->SetEvent(aMessage);
 	myStateStack->PushSubGameState(myMessageScreen);

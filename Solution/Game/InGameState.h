@@ -54,7 +54,6 @@ private:
 	
 	LevelFactory* myLevelFactory;
 	Level* myLevel;
-	Entity* myPlayer;
 
 	MessageState* myMessageScreen;
 

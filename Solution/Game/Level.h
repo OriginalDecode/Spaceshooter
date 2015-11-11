@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Subscriber.h"
+#include "LevelScore.h"
 
 namespace Prism
 {
@@ -45,7 +46,7 @@ class Level : public Subscriber
 	friend class LevelFactory;
 
 public:
-	Level(CU::InputWrapper* aInputWrapper);
+	Level(CU::InputWrapper* aInputWrapper, int aLevelID);
 	~Level();
 
 	bool LogicUpdate(float aDeltaTime);
@@ -67,10 +68,13 @@ public:
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 	void ReceiveMessage(const SpawnPowerUpMessage& aMessage) override;
 	void ReceiveMessage(const EMPMessage& aMessage) override;
+	void ReceiveMessage(const LevelScoreMessage& aMessage) override;
 
 	const CU::Vector2<float>& GetScreenCenterPosition();
 
 	EmitterManager* GetEmitterManager() const;
+
+	const LevelScore& GetLevelScore() const;
 
 private:
 	Level& operator=(Level&) = delete;
@@ -79,6 +83,9 @@ private:
 	void UpdateDebug();
 
 	Prism::Instance* mySkySphere;
+	Prism::Instance* myGlassCockpit;
+	float myCockpitRadius;
+
 	CU::Matrix44<float> mySkySphereOrientation;
 	float mySkySphereCullingRadius;
 	Prism::Scene* myScene;
@@ -117,6 +124,8 @@ private:
 	bool myIsSkipable;
 
 	Prism::Texture* myEMPDepthSprite;
+
+	LevelScore myLevelScore;
 };
 
 inline void Level::RemoveEntity(Entity* aEntity)
@@ -127,4 +136,9 @@ inline void Level::RemoveEntity(Entity* aEntity)
 inline EmitterManager* Level::GetEmitterManager() const
 {
 	return myEmitterManager;
+}
+
+inline const LevelScore& Level::GetLevelScore() const
+{
+	return myLevelScore;
 }

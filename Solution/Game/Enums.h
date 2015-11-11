@@ -23,6 +23,7 @@ enum class eMessageType
 	SPAWN_EXPLOSION_ON_PROP_DEATH,
 	SPAWN_EXPLOSION_ON_ROCKET_DEATH,
 	SPAWN_EFFECT_ON_HIT,
+	LEVEL_SCORE,
 	COUNT,
 };
 
@@ -143,6 +144,14 @@ enum class eAITargetPositionMode
 	ESCAPE_THEN_RETURN,
 	KAMIKAZE,
 	MINE
+};
+
+enum class eLevelScoreMessageType
+{
+	PLAYER_SHOT,
+	PLAYER_HIT_ENEMY,
+	OPTIONAL_MISSION_ADDED,
+	OPTIONAL_MISSION_COMPLETED
 };
 
 enum class eDifficult

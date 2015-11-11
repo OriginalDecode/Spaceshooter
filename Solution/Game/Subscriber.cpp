@@ -82,3 +82,7 @@ void Subscriber::ReceiveMessage(const EMPMessage&)
 void Subscriber::ReceiveMessage(const SpawnExplosionMessage&)
 {
 }
+
+void Subscriber::ReceiveMessage(const LevelScoreMessage&)
+{
+}

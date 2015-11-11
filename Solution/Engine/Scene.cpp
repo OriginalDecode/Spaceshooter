@@ -9,7 +9,7 @@
 #include "PointLight.h"
 #include "Scene.h"
 #include "SpotLight.h"
-
+#include <XMLReader.h>
 #ifdef SCENE_USE_OCTREE
 #include "Octree.h"
 #endif
@@ -28,6 +28,8 @@ Prism::Scene::Scene()
 	memset(&myDirectionalLightData[0], 0, sizeof(DirectionalLightData) * NUMBER_OF_DIRECTIONAL_LIGHTS);
 	memset(&myPointLightData[0], 0, sizeof(PointLightData) * NUMBER_OF_POINT_LIGHTS);
 	memset(&mySpotLightData[0], 0, sizeof(SpotLightData) * NUMBER_OF_SPOT_LIGHTS);
+
+	
 }
 
 Prism::Scene::~Scene()
@@ -36,6 +38,7 @@ Prism::Scene::~Scene()
 #ifdef SCENE_USE_OCTREE
 	delete myOctree;
 	myOctree = nullptr;
+
 #else
 	myInstances.DeleteAll();
 #endif
@@ -113,6 +116,8 @@ void Prism::Scene::AddInstance(Instance* aInstance)
 	{
 		DL_ASSERT_EXP(myPlayerInstance == nullptr, "Tried to add Player twice to Scene");
 		myPlayerInstance = aInstance;
+
+		
 	}
 	else
 	{

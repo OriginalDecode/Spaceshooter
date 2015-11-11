@@ -15,7 +15,6 @@ namespace Prism
 	{
 		for (auto it = myParticleData.begin(); it != myParticleData.end(); ++it)
 		{
-			it->second->Release(); //Yeah, release the inputlayout. lel kek bur.
 			delete it->second;
 			it->second = nullptr;
 		}

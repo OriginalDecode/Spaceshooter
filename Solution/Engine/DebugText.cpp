@@ -27,11 +27,11 @@ void Prism::DebugText::Init(DebugFont* aFont)
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), "DebugText::InputLayout");
 	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
 	InitIndexBuffer();
 	InitSurface("DiffuseTexture", myFont->GetTexture()->GetFileName());
-	InitBlendState();
+	InitBlendState("DebugText::BlendState");
 
 	ZeroMemory(myInitData, sizeof(myInitData));
 
@@ -151,8 +151,10 @@ void Prism::DebugText::ConstructBuffers(const std::string& aString)
 		z -= 0.001f;
 	}
 
-	SetupVertexBuffer(myVertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&myVertices[0]));
-	SetupIndexBuffer(myIndices.Size(), reinterpret_cast<char*>(&myIndices[0]));
+	SetupVertexBuffer(myVertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&myVertices[0])
+		 , "DebugText::VertexBuffer");
+	SetupIndexBuffer(myIndices.Size(), reinterpret_cast<char*>(&myIndices[0])
+		, "DebugText::IndexBuffer");
 
 	mySurfaces[0]->SetVertexCount(myVertices.Size());
 	mySurfaces[0]->SetIndexCount(myIndices.Size());

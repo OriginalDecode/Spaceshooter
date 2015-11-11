@@ -18,6 +18,7 @@ class KillStructureMessage;
 class DestroyEmitterMessage;
 class EMPMessage;
 class SpawnExplosionMessage;
+class LevelScoreMessage;
 
 class Subscriber
 {
@@ -43,5 +44,6 @@ public:
 	virtual void ReceiveMessage(const DestroyEmitterMessage& aMessage);
 	virtual void ReceiveMessage(const EMPMessage& aMessage);
 	virtual void ReceiveMessage(const SpawnExplosionMessage& aMessage);
+	virtual void ReceiveMessage(const LevelScoreMessage& aMessage);
 };
 

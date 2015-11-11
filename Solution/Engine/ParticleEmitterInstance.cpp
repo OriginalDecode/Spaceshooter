@@ -20,6 +20,11 @@ namespace Prism
 
 	ParticleEmitterInstance::~ParticleEmitterInstance()
 	{
+		if (myVertexWrapper != nullptr && myVertexWrapper->myVertexBuffer != nullptr)
+		{
+			myVertexWrapper->myVertexBuffer->Release();
+		}
+
 		delete myVertexWrapper;
 		myVertexWrapper = nullptr;
 	}
@@ -146,6 +151,9 @@ namespace Prism
 
 		hr = Engine::GetInstance()->GetDevice()->CreateBuffer(&vertexBufferDesc, nullptr, &myVertexWrapper->myVertexBuffer);
 		DL_ASSERT_EXP(hr == S_OK, "[ParticleEmitterInstance](CreateVertexBuffer) : Failed to create VertexBuffer");
+
+		Engine::GetInstance()->SetDebugName(myVertexWrapper->myVertexBuffer
+			, "ParticleEmitterInstance::myVertexWrapper->myVertexBuffer");
 
 	}
 
