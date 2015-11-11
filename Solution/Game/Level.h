@@ -46,7 +46,7 @@ class Level : public Subscriber
 	friend class LevelFactory;
 
 public:
-	Level(CU::InputWrapper* aInputWrapper, int aLevelID);
+	Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID);
 	~Level();
 
 	bool LogicUpdate(float aDeltaTime);
