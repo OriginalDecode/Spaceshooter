@@ -7,6 +7,7 @@
 
 Screen::Screen()
 	: myBackground(nullptr)
+	, myRotatingThing(nullptr)
 	, myMessages(8)
 {
 };
@@ -14,6 +15,8 @@ Screen::~Screen()
 {
 	delete myBackground;
 	myBackground = nullptr;
+	delete myRotatingThing;
+	myRotatingThing = nullptr;
 };
 
 LoadingScreen::LoadingScreen(CU::InputWrapper* anInputWrapper, const volatile bool& aLevelIsLoading, const int& aLevelID)
@@ -38,17 +41,21 @@ void LoadingScreen::Render()
 	myScreens[myLevelID - 1]->myBackground->Render(myWindowMiddle);
 
 	Prism::Engine::GetInstance()->PrintText(myScreens[myLevelID - 1]->myMessages[0].myMessage
-		, { myWindowMiddle.x - 600.f, myWindowMiddle.y * 0.7f }, Prism::eTextType::RELEASE_TEXT);
+		, { myWindowMiddle.x - 600.f, myWindowMiddle.y + 150.f }, Prism::eTextType::RELEASE_TEXT);
 
 	if (myLevelIsLoading == false)
 	{
 		Prism::Engine::GetInstance()->PrintText("Press [Space] to enter level!"
-			, { myWindowMiddle.x * 0.7f, myWindowMiddle.y * 1.4f }, Prism::eTextType::RELEASE_TEXT);
+			, { myWindowMiddle.x - 300.f, myWindowMiddle.y - 300.f }, Prism::eTextType::RELEASE_TEXT);
 	}
+
+	myScreens[myLevelID - 1]->myRotatingThing->Render({ myWindowMiddle.x + 500.f, myWindowMiddle.y - 300.f });
 }
 
 void LoadingScreen::Update(float aDeltaTime)
 {
+	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-2.f * aDeltaTime);
+
 	if (myLevelIsLoading == false && (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true))
 	{
 		myIsDone = true;
@@ -96,11 +103,15 @@ void LoadingScreen::ReadXML()
 		{
 			DL_ASSERT("[LoadingScreen] Wrong ID-number in MN_loading_screen.xml! The numbers should be counting up, in order, starting from 0.");
 		}
+		
+		std::string aRotatingThingPath = "";
 
 		reader.ForceReadAttribute(reader.FindFirstChild(screenElement, "background"), "path", aSpritePath);
+		reader.ForceReadAttribute(reader.FindFirstChild(screenElement, "rotatingThing"), "path", aRotatingThingPath);
 
 		Screen* newScreen = new Screen();
 		newScreen->myBackground = new Prism::Sprite(aSpritePath, windowSize, windowSize / 2.f);
+		newScreen->myRotatingThing = new Prism::Sprite(aRotatingThingPath, { 256.f, 256.f }, { 128.f, 128.f } );
 
 		tinyxml2::XMLElement* textElement = reader.FindFirstChild(screenElement, "text");
 
