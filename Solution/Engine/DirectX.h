@@ -6,6 +6,7 @@ struct ID3D11DepthStencilState;
 struct ID3D11DepthStencilView;
 struct ID3D11DepthStencilState;
 struct ID3D11Device;
+struct ID3D11DeviceChild;
 struct ID3D11DeviceContext;
 struct ID3D11InfoQueue;
 struct ID3D11RasterizerState;
@@ -27,6 +28,8 @@ namespace Prism
 
 		void Present(const unsigned int aSyncInterval, const unsigned int aFlags);
 		void Clear(const float aClearColor[4]);
+
+		void SetDebugName(ID3D11DeviceChild* aChild, const std::string& aName);
 
 		void OnResize(int aWidth, int aHeigth);
 		void SetFullscreen(bool aFullscreenFlag);

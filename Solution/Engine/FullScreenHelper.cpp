@@ -34,8 +34,10 @@ namespace Prism
 			, ARRAYSIZE(vertexDesc), passDesc.pIAInputSignature, passDesc.IAInputSignatureSize, &myVertexLayout);
 		if (FAILED(hr) != S_OK)
 		{
-			DL_MESSAGE_BOX("Failed to CreateInputLayout", "Model2D::Init", MB_ICONWARNING);
+			DL_MESSAGE_BOX("Failed to CreateInputLayout", "FullScreenHelper::FullScreenHelper()", MB_ICONWARNING);
 		}
+
+		Engine::GetInstance()->SetDebugName(myVertexLayout, "FullScreenHelper::myVertexLayout");
 
 		InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_IMMUTABLE, 0);
 		InitIndexBuffer();
@@ -261,8 +263,10 @@ namespace Prism
 		indices.Add(2);
 		indices.Add(3);
 
-		SetupVertexBuffer(vertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&vertices[0]));
-		SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]));
+		SetupVertexBuffer(vertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&vertices[0])
+			, "FullScreenHelper::VertexBuffer");
+		SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0])
+			, "FullScreenHelper::IndexBuffer");
 	}
 
 	void FullScreenHelper::ActivateBuffers()

@@ -28,6 +28,14 @@ void Prism::DirectX::Clear(const float aClearColor[4])
 	myContext->ClearDepthStencilView(myBackbufferDepthStencil, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
+void Prism::DirectX::SetDebugName(ID3D11DeviceChild* aChild, const std::string& aName)
+{
+	if (aChild != nullptr)
+	{
+		aChild->SetPrivateData(WKPDID_D3DDebugObjectName, aName.size(), aName.c_str());
+	}
+}
+
 void Prism::DirectX::OnResize(const int aWidth, const int aHeight)
 {
 	

@@ -16,12 +16,11 @@ namespace Prism
 		friend class ParticleEmitterInstance;
 	
 	public:
-
 		ParticleEmitterData();
 		~ParticleEmitterData();
 
 		void LoadDataFile(const char* aFilePath);
-		void Release();
+
 	private:
 
 		void CreateInputLayout();

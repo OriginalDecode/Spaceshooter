@@ -37,12 +37,12 @@ namespace Prism
 
 
 
-		InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+		InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), "Terrain::InputLayout");
 		InitVertexBuffer(sizeof(VertexPosNormUV), D3D11_USAGE_IMMUTABLE, 0);
 
 		InitIndexBuffer();
 		InitSurface("DiffuseTexture", myFileName);
-		InitBlendState();
+		InitBlendState("Terrain::BlendState");
 
 		ZeroMemory(myInitData, sizeof(myInitData));
 
@@ -98,8 +98,9 @@ namespace Prism
 			}
 		}
 
-		SetupVertexBuffer(vertices.Size(), sizeof(VertexPosNormUV), reinterpret_cast<char*>(&vertices[0]));
-		SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]));
+		SetupVertexBuffer(vertices.Size(), sizeof(VertexPosNormUV), reinterpret_cast<char*>(&vertices[0])
+			, "Terrain::VertexBuffer");
+		SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]), "Terrain::IndexBuffer");
 
 		mySurfaces[0]->SetVertexCount(vertices.Size());
 		mySurfaces[0]->SetIndexCount(indices.Size());

@@ -83,6 +83,9 @@ private:
 	void UpdateDebug();
 
 	Prism::Instance* mySkySphere;
+	Prism::Instance* myGlassCockpit;
+	float myCockpitRadius;
+
 	CU::Matrix44<float> mySkySphereOrientation;
 	float mySkySphereCullingRadius;
 	Prism::Scene* myScene;

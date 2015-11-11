@@ -8,11 +8,17 @@
 namespace Prism
 {
 	ParticleEmitterData::ParticleEmitterData()
+		: myInputLayout(nullptr)
 	{
 	}
 
 	ParticleEmitterData::~ParticleEmitterData()
 	{
+		if (myInputLayout != nullptr)
+		{
+			myInputLayout->Release();
+			myInputLayout = nullptr;
+		}
 	}
 
 	void ParticleEmitterData::LoadDataFile(const char* aFilePath)
@@ -159,12 +165,7 @@ namespace Prism
 			, passDesc.IAInputSignatureSize
 			, &myInputLayout);
 		DL_ASSERT_EXP(!FAILED(hr), "[ParticleEmitterData](CreateInputLayout) : Failed to Create InputLayout!");
-	}
 
-	void ParticleEmitterData::Release()
-	{
-		myInputLayout->Release();
-		myInputLayout = nullptr;
+		Engine::GetInstance()->SetDebugName(myInputLayout, "ParticleEmitterData::myInputLayout");
 	}
-
 }

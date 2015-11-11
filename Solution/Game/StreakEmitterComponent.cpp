@@ -7,6 +7,7 @@
 #include <StreakEmitterData.h>
 #include <StreakEmitterInstance.h>
 #include "EmitterNote.h"
+#include <EmitterDataContainer.h>
 #include "DestroyEmitterMessage.h"
 #include "Entity.h"
 #include "PostMaster.h"
@@ -24,7 +25,6 @@ StreakEmitterComponent::StreakEmitterComponent(Entity& aEntity)
 StreakEmitterComponent::~StreakEmitterComponent()
 {
 	myEmitters.DeleteAll();
-	delete myEmitterData;
 }
 
 void StreakEmitterComponent::Init(std::string aPath)
@@ -42,9 +42,9 @@ void StreakEmitterComponent::Init(std::string aPath)
 
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(element, "Path"), "src", streakEmitterDataPath);
 
-
-	myEmitterData = new Prism::StreakEmitterData();
-	myEmitterData->LoadDataFile(streakEmitterDataPath.c_str());
+	myEmitterData = Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetStreakData(streakEmitterDataPath);
+	//myEmitterData = new Prism::StreakEmitterData();
+	//myEmitterData->LoadDataFile(streakEmitterDataPath.c_str());
 
 	for (tinyxml2::XMLElement* positionElement = reader.ForceFindFirstChild(element, "Position"); positionElement != nullptr
 			; positionElement = reader.FindNextElement(positionElement, "Position"))

@@ -29,11 +29,11 @@ Prism::Sprite::Sprite(const std::string& aFileName, const CU::Vector2<float>& aS
 		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 	};
 
-	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), "Sprite::InputLayout");
 	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_IMMUTABLE, 0);
 	InitIndexBuffer();
 	InitSurface("DiffuseTexture", myFileName);
-	InitBlendState();
+	InitBlendState("Sprite::BlendState");
 
 	ZeroMemory(myInitData, sizeof(myInitData));
 
@@ -67,21 +67,23 @@ Prism::Sprite::Sprite(ID3D11Texture2D* aTexture, const CU::Vector2<float>& aSpri
 	{
 		DL_ASSERT("Failed to CreateTexture2D");
 	}
+	Engine::GetInstance()->SetDebugName(myTexture, "Sprite::myTexture");
 
 	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myTexture, NULL, &myShaderView);
 	if (FAILED(hr))
 	{
 		DL_ASSERT("Failed to CopyFromD3DTexture");
 	}
+	Engine::GetInstance()->SetDebugName(myShaderView, "Sprite::myShaderView");
 
 	
 	CopyFromD3DTexture(aTexture);
 
-	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc));
+	InitInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), "Sprite::InputLayout");
 	InitVertexBuffer(sizeof(VertexPosUV), D3D11_USAGE_IMMUTABLE, 0);
 	InitSurface("DiffuseTexture", myShaderView);
 	InitIndexBuffer();
-	InitBlendState();
+	InitBlendState("Sprite::BlendState");
 
 	ZeroMemory(myInitData, sizeof(myInitData));
 
@@ -150,8 +152,8 @@ void Prism::Sprite::CreateVertices()
 	indices.Add(3);
 	indices.Add(1);
 
-	SetupVertexBuffer(vertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&vertices[0]));
-	SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]));
+	SetupVertexBuffer(vertices.Size(), sizeof(VertexPosUV), reinterpret_cast<char*>(&vertices[0]), "Sprite::VertexBuffer");
+	SetupIndexBuffer(indices.Size(), reinterpret_cast<char*>(&indices[0]), "Sprite::IndexBuffer");
 
 	mySurfaces[0]->SetVertexCount(vertices.Size());
 	mySurfaces[0]->SetIndexCount(indices.Size());
@@ -176,12 +178,14 @@ void Prism::Sprite::ResizeTexture(ID3D11Texture2D* aSrcTexture)
 	{
 		DL_ASSERT("Failed to CreateTexture2D");
 	}
+	Engine::GetInstance()->SetDebugName(myTexture, "Sprite::myTexture");
 
 	hr = Engine::GetInstance()->GetDevice()->CreateShaderResourceView(myTexture, NULL, &myShaderView);
 	if (FAILED(hr))
 	{
 		DL_ASSERT("Failed to CopyFromD3DTexture");
 	}
+	Engine::GetInstance()->SetDebugName(myShaderView, "Sprite::myShaderView");
 
 	CopyFromD3DTexture(aSrcTexture);
 
