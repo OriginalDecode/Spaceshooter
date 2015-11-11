@@ -85,7 +85,7 @@ Level* LevelFactory::LoadCurrentLevel()
 	delete myCurrentLevel;
 	myCurrentLevel = nullptr;
 
-	myCurrentLevel = new Level(myInputWrapper, myCurrentID);
+	myCurrentLevel = new Level(myInputWrapper, myCurrentID, myCurrentDifficultyID);
 
 	delete myLoadLevelThread;
 	myLoadLevelThread = nullptr;

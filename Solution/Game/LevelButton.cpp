@@ -15,7 +15,9 @@ LevelButton::LevelButton(XMLReader& aReader, tinyxml2::XMLElement* aButtonElemen
 	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", mySize, mySize * 0.5f);
 	myOptionalBadge = new Prism::Sprite("Data/Resource/Texture/Menu/Badge.dds", mySize, mySize * 0.5f);
 	myStarGrey = new Prism::Sprite("Data/Resource/Texture/Menu/StarGrey.dds", mySize, mySize * 0.5f);
-	myStar = new Prism::Sprite("Data/Resource/Texture/Menu/Star.dds", mySize, mySize * 0.5f);
+	myBronzeStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarBronze.dds", mySize, mySize * 0.5f);;
+	mySilverStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarSilver.dds", mySize, mySize * 0.5f);;
+	myGoldStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarGold.dds", mySize, mySize * 0.5f);;
 
 	myScore = ScoreIO::Load(aLevelID);
 }
@@ -25,11 +27,15 @@ LevelButton::~LevelButton()
 	delete myOptionalBadge;
 	delete myOptionalBadgeGrey;
 	delete myStarGrey;
-	delete myStar;
+	delete myBronzeStar;
+	delete mySilverStar;
+	delete myGoldStar;
 	myOptionalBadge = nullptr;
 	myOptionalBadgeGrey = nullptr;
 	myStarGrey = nullptr;
-	myStar = nullptr;
+	myBronzeStar = nullptr;
+	mySilverStar = nullptr;
+	myGoldStar = nullptr;
 }
 
 void LevelButton::Render()
@@ -39,11 +45,22 @@ void LevelButton::Render()
 	{
 		if (i < myScore.myStars)
 		{
-			myStar->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f});
+			if (myScore.myDifficulty == 0)
+			{
+				myBronzeStar->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f });
+			}
+			else if (myScore.myDifficulty == 1)
+			{
+				mySilverStar->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f });
+			}
+			else if (myScore.myDifficulty == 2)
+			{
+				myGoldStar->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f });
+			}
 		}
 		else
 		{
-			myStarGrey->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f});
+			myStarGrey->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f });
 		}
 	}
 

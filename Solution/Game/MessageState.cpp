@@ -24,7 +24,9 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", spriteSize, spriteSize * 0.5f);
 	myOptionalBadge = new Prism::Sprite("Data/Resource/Texture/Menu/Badge.dds", spriteSize, spriteSize * 0.5f);
 	myStarGrey = new Prism::Sprite("Data/Resource/Texture/Menu/StarGrey.dds", spriteSize, spriteSize * 0.5f);
-	myStar = new Prism::Sprite("Data/Resource/Texture/Menu/Star.dds", spriteSize, spriteSize * 0.5f);
+	myBronzeStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarBronze.dds", spriteSize, spriteSize * 0.5f);
+	mySilverStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarSilver.dds", spriteSize, spriteSize * 0.5f);
+	myGoldStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarGold.dds", spriteSize, spriteSize * 0.5f);
 
 	float oneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
 	float twoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
@@ -46,6 +48,7 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 
 	mySaveScore.myCompletedOptional = myLevelScore.myCompletedOptional;
 	mySaveScore.myTotalOptional = myLevelScore.myTotalOptional;
+	mySaveScore.myDifficulty = myLevelScore.myDifficulty;
 }
 
 MessageState::~MessageState()
@@ -56,14 +59,18 @@ MessageState::~MessageState()
 	delete myOptionalBadge;
 	delete myOptionalBadgeGrey;
 	delete myStarGrey;
-	delete myStar;
+	delete myBronzeStar;
+	delete mySilverStar;
+	delete myGoldStar;
 	myBackground = nullptr;
 	myCamera = nullptr;
 	myEvent = nullptr;
 	myOptionalBadge = nullptr;
 	myOptionalBadgeGrey = nullptr;
 	myStarGrey = nullptr;
-	myStar = nullptr;
+	myBronzeStar = nullptr;
+	mySilverStar = nullptr;
+	myGoldStar = nullptr;
 }
 
 void MessageState::InitState(StateStackProxy* aStateStackProxy)
@@ -147,7 +154,18 @@ void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 	{
 		if (i < mySaveScore.myStars)
 		{
-			myStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+			if (mySaveScore.myDifficulty == 0)
+			{
+				myBronzeStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+			}
+			else if (mySaveScore.myDifficulty == 1)
+			{
+				mySilverStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+			}
+			else if (mySaveScore.myDifficulty == 2)
+			{
+				myGoldStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+			}
 		}
 		else
 		{

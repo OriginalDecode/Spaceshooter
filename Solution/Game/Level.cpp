@@ -48,7 +48,7 @@
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
-Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID)
+Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
 	: myEntities(16)
 	, myComplete(false)
 	, myUsePostProcessing(true)
@@ -70,6 +70,7 @@ Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID)
 {
 	myInputWrapper = aInputWrapper;
 	myLevelScore.myLevel = aLevelID;
+	myLevelScore.myDifficulty = aDifficultyID;
 
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
@@ -282,8 +283,8 @@ void Level::Render()
 
 	if (myIsSkipable == true)
 	{
-		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip level."
-			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.5f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.6f }
+		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip tutorial."
+			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.45f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.55f }
 			, Prism::eTextType::RELEASE_TEXT);
 	}
 	
