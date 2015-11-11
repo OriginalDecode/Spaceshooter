@@ -704,7 +704,7 @@ std::string EntityFactory::ConvertToPowerUpInGameName(ePowerUpType aPowerUpType)
 	}
 	else if (aPowerUpType == ePowerUpType::INVULNERABLITY)
 	{
-		return "Invulnerable";
+		return "Invulnerability";
 	}
 
 	DL_ASSERT("[EntityFactory] Wrong powerup enum in ConvertToPowerUpInGameName.");
