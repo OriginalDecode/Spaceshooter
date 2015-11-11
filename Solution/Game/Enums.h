@@ -146,18 +146,18 @@ enum class eAITargetPositionMode
 	MINE
 };
 
-enum class eLevelScoreMessageType
-{
-	PLAYER_SHOT,
-	PLAYER_HIT_ENEMY,
-	OPTIONAL_MISSION_ADDED,
-	OPTIONAL_MISSION_COMPLETED
-};
-
 enum class eDifficult
 {
 	EASY,
 	NORMAL,
 	HARD,
 	_COUNT
+};
+
+enum class eLevelScoreMessageType
+{
+	PLAYER_SHOT,
+	PLAYER_HIT_ENEMY,
+	OPTIONAL_MISSION_ADDED,
+	OPTIONAL_MISSION_COMPLETED
 };
