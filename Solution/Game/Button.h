@@ -22,17 +22,19 @@ public:
 	Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement);
 	~Button();
 
-	void Render();
+	virtual void Render();
 	eStateStatus Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
 
 	void OnResize();
+
+protected:
+	CU::Vector2<float> myPosition;
 
 private:
 
 	CU::Vector2<float> myOriginalPosition;
 	CU::Vector2<float> myOriginalSize;
 
-	CU::Vector2<float> myPosition;
 	CU::Vector2<float> mySize;
 
 	Prism::Sprite* myBackground;

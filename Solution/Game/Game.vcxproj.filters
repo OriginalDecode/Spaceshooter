@@ -221,6 +221,9 @@
       <Filter>PostMaster\Messages</Filter>
     </ClCompile>
     <ClCompile Include="ScoreIO.cpp" />
+    <ClCompile Include="LevelButton.cpp">
+      <Filter>Menu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -501,6 +504,9 @@
       <Filter>PostMaster\Messages</Filter>
     </ClInclude>
     <ClInclude Include="ScoreIO.h" />
+    <ClInclude Include="LevelButton.h">
+      <Filter>Menu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

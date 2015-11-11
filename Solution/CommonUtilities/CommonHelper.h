@@ -73,6 +73,7 @@ namespace CU
 		}
 		std::stringstream ss;
 		ss << documents;
+		ss << "\\Distortion games\\";
 		return ss.str();
 	}
 	inline std::string Concatenate(const char* aFormattedString, ...)

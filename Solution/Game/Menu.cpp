@@ -4,6 +4,7 @@
 #include <Sprite.h>
 #include <Camera.h>
 #include <InputWrapper.h>
+#include "LevelButton.h"
 #include "GameStateMessage.h"
 #include <XMLReader.h>
 
@@ -45,7 +46,17 @@ Menu::Menu(const std::string& aXMLPath)
 	tinyxml2::XMLElement* buttonElement = reader.FindFirstChild(menuElement, "button");
 	for (; buttonElement != nullptr; buttonElement = reader.FindNextElement(buttonElement))
 	{
-		Button* newButton = new Button(reader, buttonElement);
+		Button* newButton = nullptr;
+		int id = -1;
+		reader.ReadAttribute(buttonElement, "ID", id);
+		if (id >= 0)
+		{
+			 newButton = new LevelButton(reader, buttonElement, id);
+		}
+		else
+		{
+			newButton = new Button(reader, buttonElement);
+		}
 		myButtons.Add(newButton);
 	}
 	reader.CloseDocument();

@@ -1,8 +1,10 @@
 #pragma once
+#include "LevelScore.h"
+
 class ScoreIO
 {
 public:
-	ScoreIO();
-	~ScoreIO();
+	static SaveScore Load(int aLevel);
+	static void Save(const SaveScore& aScore, int aLevel);
 };
 

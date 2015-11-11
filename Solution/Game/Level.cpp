@@ -48,7 +48,7 @@
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 
-Level::Level(CU::InputWrapper* aInputWrapper)
+Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID)
 	: myEntities(16)
 	, myComplete(false)
 	, myUsePostProcessing(true)
@@ -69,6 +69,8 @@ Level::Level(CU::InputWrapper* aInputWrapper)
 	, myIsSkipable(false)
 {
 	myInputWrapper = aInputWrapper;
+	myLevelScore.myLevel = aLevelID;
+
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ENEMY, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::DEFEND, this);

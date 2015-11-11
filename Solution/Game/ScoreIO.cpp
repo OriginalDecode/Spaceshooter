@@ -1,12 +1,47 @@
 #include "stdafx.h"
+
+#include <CommonHelper.h>
+#include <fstream>
 #include "ScoreIO.h"
 
 
-ScoreIO::ScoreIO()
+SaveScore ScoreIO::Load(int aLevel)
 {
+	SaveScore score;
+	
+	std::string path(CU::GetMyDocumentFolderPath());
+	path += "SpaceShooter\\gfx.dist";
+	path += std::to_string(aLevel);
+	std::ifstream stream(path.c_str(), std::ios::binary);
+	if (stream.fail() == true)
+	{
+		//std::string error = "Could not open save file";
+		//DL_ASSERT(error.c_str());
+		
+		return score;
+	}
+	char my_4_ByteBuffer[4];
+	stream.read(my_4_ByteBuffer, 4);
+	score.myStars = *(reinterpret_cast<int*>(my_4_ByteBuffer));
+	stream.read(my_4_ByteBuffer, 4);
+	score.myCompletedOptional = *(reinterpret_cast<int*>(my_4_ByteBuffer));
+	stream.read(my_4_ByteBuffer, 4);
+	score.myTotalOptional = *(reinterpret_cast<int*>(my_4_ByteBuffer));
+
+	return score;
 }
 
-
-ScoreIO::~ScoreIO()
+void ScoreIO::Save(const SaveScore& aScore, int aLevel)
 {
+	std::string path(CU::GetMyDocumentFolderPath());
+	path += "SpaceShooter\\gfx.dist";
+	path += std::to_string(aLevel);
+	std::ofstream file(path.c_str(), std::ofstream::binary);
+
+	//int easy = 0;
+	//if (someBadges[0].GetActive() == true) easy = 72;
+	file.write((char*)&aScore.myStars, sizeof(int));
+	file.write((char*)&aScore.myCompletedOptional, sizeof(int));
+	file.write((char*)&aScore.myTotalOptional, sizeof(int));
+	file.close();
 }

@@ -4,6 +4,7 @@
 #include "FadeMessage.h"
 #include "GameStateMessage.h"
 #include "MessageState.h"
+#include "ScoreIO.h"
 #include <Sprite.h>
 #include <InputWrapper.h>
 #include "PostMaster.h"
@@ -13,6 +14,8 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	: myEvent(nullptr)
 	, myLevelScore(aLevelScore)
 {
+	DL_ASSERT_EXP(aLevelScore.myLevel >= 0, "Invalid level number.");
+
 	myShowBadge = myEvent == nullptr || myEvent->GetGameState() != eGameState::RELOAD_LEVEL;
 	myBackground = new Prism::Sprite(aTexturePath, aSize, aSize/2.f);
 	myInputWrapper = anInputWrapper;
@@ -23,9 +26,26 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	myStarGrey = new Prism::Sprite("Data/Resource/Texture/Menu/StarGrey.dds", spriteSize, spriteSize * 0.5f);
 	myStar = new Prism::Sprite("Data/Resource/Texture/Menu/Star.dds", spriteSize, spriteSize * 0.5f);
 
-	myOneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
-	myTwoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
-	myThreeStarLimit = myLevelScore.myTotalEnemies * 0.80f;
+	float oneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
+	float twoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
+	float threeStarLimit = myLevelScore.myTotalEnemies * 0.80f;
+
+	mySaveScore.myStars = 0;
+	if (myLevelScore.myKilledEnemies >= oneStarLimit && myLevelScore.myKilledEnemies < twoStarLimit)
+	{
+		mySaveScore.myStars = 1;
+	}
+	else if (myLevelScore.myKilledEnemies >= twoStarLimit && myLevelScore.myKilledEnemies < threeStarLimit)
+	{
+		mySaveScore.myStars = 2;
+	}
+	else if (myLevelScore.myKilledEnemies >= threeStarLimit)
+	{
+		mySaveScore.myStars = 3;
+	}
+
+	mySaveScore.myCompletedOptional = myLevelScore.myCompletedOptional;
+	mySaveScore.myTotalOptional = myLevelScore.myTotalOptional;
 }
 
 MessageState::~MessageState()
@@ -54,6 +74,8 @@ void MessageState::InitState(StateStackProxy* aStateStackProxy)
 	myCamera = new Prism::Camera(orientation);
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
 	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
+
+	ScoreIO::Save(mySaveScore, myLevelScore.myLevel);
 }
 
 void MessageState::EndState()
@@ -121,23 +143,9 @@ void MessageState::OnResize(int aWidth, int aHeight)
 
 void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 {
-	int starsToHave = 0;
-	if (myLevelScore.myKilledEnemies >= myOneStarLimit && myLevelScore.myKilledEnemies < myTwoStarLimit)
-	{
-		starsToHave = 1;
-	}
-	else if (myLevelScore.myKilledEnemies >= myTwoStarLimit && myLevelScore.myKilledEnemies < myThreeStarLimit)
-	{
-		starsToHave = 2;
-	}
-	else if (myLevelScore.myKilledEnemies >= myThreeStarLimit)
-	{
-		starsToHave = 3;
-	}
-
 	for (int i = 0; i < 3; ++i)
 	{
-		if (i < starsToHave)
+		if (i < mySaveScore.myStars)
 		{
 			myStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
 		}
@@ -147,9 +155,9 @@ void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 		}
 	}
 
-	for (int i = 1; i <= myLevelScore.myTotalOptional; ++i)
+	for (int i = 1; i <= mySaveScore.myTotalOptional; ++i)
 	{
-		if (myLevelScore.myCompletedOptional <= i)
+		if (mySaveScore.myCompletedOptional <= i)
 		{
 			myOptionalBadgeGrey->Render({ aRenderPos.x + 32.f + (64.f * (i - 1)), aRenderPos.y - 350 });
 		}

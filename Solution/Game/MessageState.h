@@ -45,9 +45,7 @@ private:
 	GameStateMessage* myEvent;
 
 	LevelScore myLevelScore;
-	float myOneStarLimit;
-	float myTwoStarLimit;
-	float myThreeStarLimit;
+	SaveScore mySaveScore;
 
 	bool myShowBadge;
 };
