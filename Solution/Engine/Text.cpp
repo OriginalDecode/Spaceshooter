@@ -36,6 +36,11 @@ Prism::Text::Text(const Font& aFont)
 
 void Prism::Text::SetText(const std::string& aText)
 {
+	if (myText == aText)
+	{
+		return;
+	}
+
 	if (aText == "")
 	{
 		myText = " ";
