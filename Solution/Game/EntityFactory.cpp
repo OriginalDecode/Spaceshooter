@@ -49,6 +49,7 @@ EntityFactory::~EntityFactory()
 
 void EntityFactory::LoadEntites(const std::string& aEntityRootPath, float aDifficultScale)
 {
+	myDifficultScale = aDifficultScale;
 	XMLReader rootDocument;
 	rootDocument.OpenDocument(aEntityRootPath);
 	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
@@ -503,7 +504,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			DL_ASSERT(error);
 		}
 		
-		LoadEntity(myEntityTags[aEntityTag]);
+		LoadEntity(myEntityTags[aEntityTag], myDifficultScale);
 #else
 		std::string error = "[EntityFactory] No entity with name " + aEntityTag;
 		DL_ASSERT(error);
@@ -555,7 +556,8 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			aTargetEntity->GetComponent<GraphicsComponent>()->SetScale(it->second.myScale);
 			if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr) 
 			{
-				float scale = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius;
+				float scaleOrg = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius;
+				float scale = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius + it->second.myCollisionSphereRadius;
 				scale *= CU::Math::GetMaximumValueFromVector(it->second.myScale);
 				aTargetEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(scale);
 			}
