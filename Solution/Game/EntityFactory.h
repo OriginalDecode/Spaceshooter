@@ -104,6 +104,8 @@ private:
 	std::unordered_map<std::string, std::string> myEntityTags;
 #endif
 
+	float myDifficultScale;
+
 	Prism::Scene* myDummyScene;
 	WeaponFactory* myWeaponFactoryPointer;
 };
