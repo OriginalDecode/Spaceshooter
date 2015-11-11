@@ -19,6 +19,7 @@ class Menu
 {
 public:
 	Menu(const std::string& aXMLPath);
+	Menu(const std::string& aXMLPath, int aLevelID);
 	~Menu();
 	
 	void Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons = true);
@@ -37,6 +38,7 @@ private:
 	CU::Vector2<float> myScreenSize;
 	CU::Vector2<float> myBackgroundSize;
 	bool myRenderCenter;
+	int myLevelID;
 };
 
 inline bool Menu::GetMainMenu() const

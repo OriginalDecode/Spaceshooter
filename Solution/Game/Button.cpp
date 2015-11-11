@@ -13,7 +13,7 @@ Button::Button()
 {
 }
 
-Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
+Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement, const int aLevelID)
 	: myClickEvent(nullptr)
 	, myBack(false)
 	, myCalcFromCenter(false)
@@ -45,13 +45,21 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement)
 		int difficultID;
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", levelID);
 		aReader.ForceReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "difficulty", difficultID);
-		myClickEvent = new GameStateMessage(eGameState::LOAD_GAME, levelID, difficultID);
+		myClickEvent = new GameStateMessage(eGameState::LOAD_GAME, aLevelID, difficultID);
 	}
 	else if (eventType == "menu")
 	{
 		std::string menuID;
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", menuID);
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID);
+	}
+	else if (eventType == "difficultMenu")
+	{
+		std::string menuID;
+		int levelID;
+		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "ID", menuID);
+		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "level", levelID);
+		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID, levelID);
 	}
 	else if (eventType == "back")
 	{
@@ -96,7 +104,7 @@ void Button::Render()
 	}
 }
 
-eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed)
+eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed, const int aLevelID)
 {
 	myIsHovered = false;
 

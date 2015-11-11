@@ -10,6 +10,15 @@ GameStateMessage::GameStateMessage(eGameState aGameState)
 GameStateMessage::GameStateMessage(eGameState aGameState, const std::string& aFilePath)
 	: myGameState(aGameState)
 	, myFilePath(aFilePath)
+	, myID(-1)
+	, Message(eMessageType::GAME_STATE)
+{
+}
+
+GameStateMessage::GameStateMessage(eGameState aGameState, const std::string& aFilePath, const int& aID)
+	: myGameState(aGameState)
+	, myFilePath(aFilePath)
+	, myID(aID)
 	, Message(eMessageType::GAME_STATE)
 {
 }

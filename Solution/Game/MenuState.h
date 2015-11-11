@@ -12,7 +12,7 @@ class Menu;
 class MenuState : public GameState
 {
 public:
-	MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool aShowVictoryScreen = false);
+	MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, int aLevelID = -1, bool aShowVictoryScreen = false);
 	~MenuState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;

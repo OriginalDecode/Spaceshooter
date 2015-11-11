@@ -217,11 +217,18 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	{
 	case eGameState::LOAD_GAME:
 		myGame = new InGameState(myInputWrapper);
-		myStateStack.PushMainGameState(myGame);
+		myStateStack.PushSubGameState(myGame);
 		myGame->SetLevel(aMessage.GetID(), aMessage.GetSecondID());
 		break;
 	case eGameState::LOAD_MENU:
-		myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);
+		if (aMessage.GetID() == -1)
+		{
+			myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);
+		}
+		else
+		{
+			myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper, aMessage.GetID());
+		}
 		myStateStack.PushMainGameState(myCurrentMenu);
 		break;
 	case eGameState::MOUSE_LOCK:

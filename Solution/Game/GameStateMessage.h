@@ -18,6 +18,7 @@ class GameStateMessage : public Message
 public:
 	GameStateMessage(eGameState aGameState);
 	GameStateMessage(eGameState aGameState, const std::string& aFilePath);
+	GameStateMessage(eGameState aGameState, const std::string& aFilePath, const int& aID);
 	GameStateMessage(eGameState aGameState, const int& anID);
 	GameStateMessage(eGameState aGameState, const int& anID, const int& anSecondID);
 	GameStateMessage(eGameState aGameState, const bool& anIsMouseLocked);

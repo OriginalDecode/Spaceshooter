@@ -19,11 +19,11 @@ class Button
 {
 public:
 	Button();
-	Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement);
+	Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement, const int aLevelID);
 	~Button();
 
 	virtual void Render();
-	eStateStatus Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed);
+	eStateStatus Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed, const int aLevelID);
 
 	void OnResize();
 

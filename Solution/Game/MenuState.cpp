@@ -13,7 +13,7 @@
 #include <TimerManager.h>
 #include "PostMaster.h"
 
-MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool aShowVictoryScreen)
+MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, int aLevelID, bool aShowVictoryScreen)
 	: myHasFadeIn(aShowVictoryScreen)
 	, myShowVictoryScreen(aShowVictoryScreen)
 	, myShowButtons(!aShowVictoryScreen)
@@ -21,7 +21,14 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 {
 	myInputWrapper = anInputWrapper;
 	
-	myMenu = new Menu(aXMLPath);
+	if (aLevelID == -1)
+	{
+		myMenu = new Menu(aXMLPath);
+	}
+	else
+	{
+		myMenu = new Menu(aXMLPath, aLevelID);
+	}
 
 	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y));

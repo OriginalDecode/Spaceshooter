@@ -9,7 +9,7 @@ LevelButton::LevelButton()
 }
 
 LevelButton::LevelButton(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement, int aLevelID)
-	: Button(aReader, aButtonElement)
+	: Button(aReader, aButtonElement, aLevelID)
 {
 	mySize = CU::Vector2<float>(64.f, 64.f);
 	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", mySize, mySize * 0.5f);
