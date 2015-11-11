@@ -68,7 +68,7 @@ bool DL_Debug::Debug::Create(std::string aFile)
 	HRESULT hResult = SHGetFolderPath(NULL, CSIDL_PERSONAL, NULL, SHGFP_TYPE_CURRENT, documents);
 	std::stringstream documentPath;
 	documentPath << documents;
-	std::string logFolder = documentPath.str() + "\\SpaceShooter";
+	std::string logFolder = documentPath.str() + "\\Distortion Games\\SpaceShooter";
 	CreateDirectory(logFolder.c_str(), NULL);
 	logFolder += "\\log";
 	CreateDirectory(logFolder.c_str(), NULL);
