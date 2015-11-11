@@ -106,13 +106,15 @@ namespace Prism
 		myTexts.RemoveAll();
 
 		myText->SetColor({ 1.f, 0, 0, 0.8f });
-		//for (int i = 0; i < myDebugTexts.Size(); ++i)
-		//{
-		//	myText->SetText(myDebugTexts[i].myText);
-		//	myText->SetPosition(myDebugTexts[i].myPosition);
-		//	//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
-		//	myText->Render();
-		//}
+#ifndef THREADED_LOADING
+		for (int i = 0; i < myDebugTexts.Size(); ++i)
+		{
+			myText->SetText(myDebugTexts[i].myText);
+			myText->SetPosition(myDebugTexts[i].myPosition);
+			//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
+			myText->Render();
+		}
+#endif
 		myDebugTexts.RemoveAll();
 
 		if (myFadeData.myIsFading == true)
