@@ -11,22 +11,28 @@ class ParticleEmitterComponent : public Component
 public:
 	ParticleEmitterComponent(Entity& aEntity);
 	~ParticleEmitterComponent();
-	void Init(std::string aPath);
+	void Init(const std::string& aPath);
 	void Update(float aDeltaTime) override;
 	void Render();
 	static eComponentType GetType();
 	int GetEmitterCount();
-	Prism::ParticleEmitterInstance* GetEmitter();
+	Prism::ParticleEmitterInstance* GetEmitter(int anIndex = 0);
 
 	void ReceiveNote(const EmitterNote& aNote) override;
 
 
 private:
+	void ReadList(const std::string& aPath);
+	void AddEmitter(const std::string& aPath);
+	struct Emitter
+	{
+		~Emitter();
+		Prism::ParticleEmitterInstance* myEmitter;
+		//CU::Matrix44f myOrientation;
+	};
 
-	CU::Matrix44f myOrientation;
+	CU::GrowingArray<Emitter*> myEmitters;
 
-	CU::Vector3f myPosition;
-	Prism::ParticleEmitterInstance* myEmitter;
 	std::string myXMLPath;
 };
 

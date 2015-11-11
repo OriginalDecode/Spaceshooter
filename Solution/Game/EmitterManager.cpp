@@ -22,6 +22,8 @@ EmitterManager::EmitterManager()
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT, this);
+
 
 	int index = 0;
 
@@ -56,6 +58,8 @@ EmitterManager::~EmitterManager()
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT, this);
+
 
 	myExplosions.DeleteAll();
 }
@@ -149,6 +153,11 @@ void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
 	{
 		RocketExplosion(aMessage);
 	}
+
+	if (aMessage.GetMessageType() == eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT)
+	{
+		OnAstroidHitEffect(aMessage);
+	}
 }
 
 void EmitterManager::ReadListOfLists(std::string aPath)
@@ -190,6 +199,12 @@ void EmitterManager::ReadListOfLists(std::string aPath)
 				myExplosions.Insert(ID, newData);
 			}
 			if (ID == static_cast<int>(eExplosionID::ONHIT_EFFECT))
+			{
+				ReadList(entityPath);
+				ExplosionData* newData = new ExplosionData(entityPath);
+				myExplosions.Insert(ID, newData);
+			}
+			if (ID == static_cast<int>(eExplosionID::ON_ASTROID_HIT_EFFECT))
 			{
 				ReadList(entityPath);
 				ExplosionData* newData = new ExplosionData(entityPath);
@@ -335,6 +350,30 @@ void EmitterManager::OnHitEffect(const SpawnExplosionMessage& aMessage)
 	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
+
+	myExplosions[index]->myEmitterIndex++;
+}
+
+void EmitterManager::OnAstroidHitEffect(const SpawnExplosionMessage& aMessage)
+{
+	int index = static_cast<int>(eExplosionID::ON_ASTROID_HIT_EFFECT);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
+	int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
 
 	myExplosions[index]->myEmitterIndex++;
 }

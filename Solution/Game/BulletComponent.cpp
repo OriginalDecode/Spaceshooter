@@ -92,8 +92,16 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 	}
 	else if (aNote.myEntity.GetType() != eEntityType::PLAYER)
 	{
-		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EFFECT_ON_HIT
-			, myEntity.myOrientation.GetPos()));
+		if (aNote.myEntity.GetName().find("asteroid") != std::string::npos || aNote.myEntity.GetName().find("Asteroid") != std::string::npos)
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT
+				, myEntity.myOrientation.GetPos()));
+		}
+		else
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EFFECT_ON_HIT
+				, myEntity.myOrientation.GetPos()));
+		}
 	}
 }
 

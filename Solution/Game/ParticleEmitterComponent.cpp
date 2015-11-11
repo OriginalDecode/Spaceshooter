@@ -2,21 +2,20 @@
 
 #include "Camera.h"
 #include "Constants.h"
-
+#include "DestroyEmitterMessage.h"
+#include <EmitterDataContainer.h>
+#include "EmitterNote.h"
+#include "Entity.h"
 #include "ParticleEmitterComponent.h"
 #include <ParticleEmitterData.h>
 #include <ParticleEmitterInstance.h>
-#include "EmitterNote.h"
-#include "DestroyEmitterMessage.h"
-#include "Entity.h"
 #include "PostMaster.h"
 #include "Scene.h"
-#include <EmitterDataContainer.h>
-
+#include <XMLReader.h>
 
 ParticleEmitterComponent::ParticleEmitterComponent(Entity& aEntity)
 	: Component(aEntity)
-	, myEmitter(nullptr)
+	, myEmitters(12)
 {
 }
 
@@ -29,27 +28,31 @@ ParticleEmitterComponent::~ParticleEmitterComponent()
 	}
 #endif
 
-	delete myEmitter;
-	myEmitter = nullptr;
+	myEmitters.DeleteAll();
 }
 
-void ParticleEmitterComponent::Init(std::string aPath)
+void ParticleEmitterComponent::Init(const std::string& aPath)
 {
 	myXMLPath = aPath;
 
-	DL_ASSERT_EXP(myEmitter == nullptr, "Emitter were inited twice. Contact Linus Skold");
-	myEmitter = new Prism::ParticleEmitterInstance();
-
-
-	myEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(aPath)
-		, myEntity.GetType() == eEntityType::PLAYER);
+	if (aPath.rfind("P_speed_feeling_emitter.xml") != std::string::npos)
+	{
+		AddEmitter(aPath);
+	}
+	else
+	{
+		ReadList(aPath);
+	}
 }
 
 void ParticleEmitterComponent::Update(float aDeltaTime)
 {
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitter->Update(aDeltaTime, myEntity.myOrientation);
+		for (int i = 0; i < myEmitters.Size(); ++i)
+		{
+			myEmitters[i]->myEmitter->Update(aDeltaTime, myEntity.myOrientation);
+		}
 	}
 }
 
@@ -57,14 +60,17 @@ void ParticleEmitterComponent::Render()
 {
 	if (myEntity.GetAlive() == true)
 	{
-		myEmitter->Render(&myEntity.GetScene().GetCamera());
+		for (int i = 0; i < myEmitters.Size(); ++i)
+		{
+			myEmitters[i]->myEmitter->Render(&myEntity.GetScene().GetCamera());
+		}
 	}
 }
 
-Prism::ParticleEmitterInstance* ParticleEmitterComponent::GetEmitter()
+Prism::ParticleEmitterInstance* ParticleEmitterComponent::GetEmitter(int anIndex)
 {
 	if (this != nullptr)
-		return myEmitter;
+		return myEmitters[anIndex]->myEmitter;
 
 	return nullptr;
 
@@ -74,7 +80,44 @@ void ParticleEmitterComponent::ReceiveNote(const EmitterNote& aNote)
 {
 	if (aNote.myType == EmitterNote::eType::BULLET)
 	{
-		myEmitter->ToggleActive(aNote.myIsActive);
-		myEmitter->ShouldLive(aNote.myShouldLive);
+		for (int i = 0; i < myEmitters.Size(); ++i)
+		{
+			myEmitters[i]->myEmitter->ToggleActive(aNote.myIsActive);
+			myEmitters[i]->myEmitter->ShouldLive(aNote.myShouldLive);
+		}
 	}
+}
+
+void ParticleEmitterComponent::ReadList(const std::string& aPath)
+{
+	XMLReader rootDocument;
+	rootDocument.OpenDocument(aPath);
+	tinyxml2::XMLElement* rootElement = rootDocument.FindFirstChild("root");
+	for (tinyxml2::XMLElement* e = rootDocument.FindFirstChild(rootElement); e != nullptr;
+		e = rootDocument.FindNextElement(e))
+	{
+		std::string entityPath = "";
+		rootDocument.ForceReadAttribute(e, "src", entityPath);
+		if (entityPath != "")
+		{
+			AddEmitter(entityPath);
+		}
+	}
+	rootDocument.CloseDocument();
+}
+
+void ParticleEmitterComponent::AddEmitter(const std::string& aPath)
+{
+	Emitter* emitter = new Emitter();
+	emitter->myEmitter = new Prism::ParticleEmitterInstance();
+	myEmitters.Add(emitter);
+
+	myEmitters[myEmitters.Size()-1]->myEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->
+		GetParticleData(aPath), myEntity.GetType() == eEntityType::PLAYER);
+}
+
+ParticleEmitterComponent::Emitter::~Emitter()
+{
+	delete myEmitter;
+	myEmitter = nullptr;
 }

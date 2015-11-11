@@ -2,7 +2,7 @@
 #include "Subscriber.h"
 #include <StaticArray.h>
 #define PREALLOCATED_EMITTER_SIZE 10
-#define EXPLOSION_DATA_SIZE 5
+#define EXPLOSION_DATA_SIZE 6
 
 class ParticleEmitterComponent;
 
@@ -53,7 +53,7 @@ private:
 	void AstroidExplosion(const SpawnExplosionMessage& aMessage);
 	void RocketExplosion(const SpawnExplosionMessage& aMessage);
 	void OnHitEffect(const SpawnExplosionMessage& aMessage);
-
+	void OnAstroidHitEffect(const SpawnExplosionMessage& aMessage);
 
 	CU::GrowingArray<ParticleEmitterComponent*> myEmitters;
 	CU::GrowingArray<std::string> myXMLPaths;
@@ -67,6 +67,7 @@ private:
 		ASTROID_EXPLOSION,
 		ROCKET_EXPLOSION,
 		ONHIT_EFFECT,
+		ON_ASTROID_HIT_EFFECT,
 		COUNT
 	};
 

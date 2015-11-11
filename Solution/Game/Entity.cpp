@@ -71,8 +71,16 @@ void Entity::Kill()
 
 	if (myType == eEntityType::PROP)
 	{
-		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH
-			, myOrientation.GetPos()));
+		if (GetName().find("asteroid") != std::string::npos || GetName().find("Asteroid") != std::string::npos)
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH
+				, myOrientation.GetPos()));
+		}
+		else
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH
+				, myOrientation.GetPos()));
+		}
 	}
 	myAlive = false;
 }
