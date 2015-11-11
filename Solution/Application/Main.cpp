@@ -68,7 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
-	ReadSetup(setup, CU::GetMyDocumentFolderPath() + "/SpaceShooter/" + "Data/Setting/SET_config.bin");
+	ReadSetup(setup, CU::GetMyDocumentFolderPath() + "SpaceShooter\\Data\\Setting\\SET_config.bin");
 
 	HWND hwnd;
 

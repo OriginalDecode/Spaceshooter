@@ -70,6 +70,8 @@ private:
 	CU::GrowingArray<Prism::PointLight*> myPointLights;
 	CU::GrowingArray<Prism::SpotLight*> mySpotLights;
 
+	CU::StaticArray<Difficult, static_cast<int>(eDifficult::_COUNT)> myDifficults;
+
 	std::unordered_map<int, std::string> myLevelPaths;
 
 	int myCurrentID;

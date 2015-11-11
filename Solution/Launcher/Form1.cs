@@ -15,7 +15,7 @@ namespace Launcher
     public partial class Form1 : Form
     {
         private string myDocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        private string myConfigPath = "Data/Setting/SET_config.bin";
+        private string myConfigPath = "Data\\Setting\\SET_config.bin";
         private string[] myExePath = { "Application_Release.exe", "Application_Internal.exe", "Application_Debug.exe" };
 
         enum eResolutions
@@ -37,9 +37,14 @@ namespace Launcher
         {
             InitializeComponent();
 
-            string releaseConfig = myDocumentFolder + "\\SpaceShooter\\" + myConfigPath;
+            string releaseConfig = myDocumentFolder + "\\Distortion Games\\SpaceShooter\\" + myConfigPath;
             myConfigPath = releaseConfig;
-            string subString = myDocumentFolder + "\\SpaceShooter";
+            string subString = myDocumentFolder + "\\Distortion Games";
+            if (Directory.Exists(subString) == false)
+            {
+                Directory.CreateDirectory(subString);
+            }
+            subString += "\\SpaceShooter";
             if (Directory.Exists(subString) == false)
             {
                 Directory.CreateDirectory(subString);
