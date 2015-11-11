@@ -37,8 +37,8 @@ void LoadingScreen::Render()
 {
 	myScreens[myLevelID - 1]->myBackground->Render(myWindowMiddle);
 
-	Prism::Engine::GetInstance()->PrintText(myScreens[myLevelID - 1]->myMessages[myTextIndex].myMessage
-		, { myWindowMiddle.x * 0.7f, myWindowMiddle.y * 1.2f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myScreens[myLevelID - 1]->myMessages[0].myMessage
+		, { myWindowMiddle.x - 600.f, myWindowMiddle.y * 0.7f }, Prism::eTextType::RELEASE_TEXT);
 
 	if (myLevelIsLoading == false)
 	{
@@ -53,30 +53,6 @@ void LoadingScreen::Update(float aDeltaTime)
 	{
 		myIsDone = true;
 		return;
-	}
-	
-	if (myTextIndex < myScreens[myLevelID - 1]->myMessages.Size() - 1)
-	{
-		myScreens[myLevelID - 1]->myMessages[myTextIndex].myCurrentTime += aDeltaTime;
-
-		if (myScreens[myLevelID - 1]->myMessages[myTextIndex].myCurrentTime >= myScreens[myLevelID - 1]->myMessages[myTextIndex].myMaxTime)
-		{
-			myScreens[myLevelID - 1]->myMessages[myTextIndex].myCurrentTime = 0.f;
-
-			myTextIndex++;
-		}
-	}
-
-	if (myInputWrapper->KeyDown(DIK_RIGHT) == true && myTextIndex + 1 < myScreens[myLevelID - 1]->myMessages.Size())
-	{
-		myScreens[myLevelID - 1]->myMessages[myTextIndex].myCurrentTime = 0.f;
-		myTextIndex++;
-	}
-
-	if (myInputWrapper->KeyDown(DIK_LEFT) == true && myTextIndex > 0)
-	{
-		myScreens[myLevelID - 1]->myMessages[myTextIndex].myCurrentTime = 0.f;
-		myTextIndex--;
 	}
 }
 
@@ -126,17 +102,15 @@ void LoadingScreen::ReadXML()
 		Screen* newScreen = new Screen();
 		newScreen->myBackground = new Prism::Sprite(aSpritePath, windowSize, windowSize / 2.f);
 
-		for (tinyxml2::XMLElement* textElement = reader.FindFirstChild(screenElement, "text"); textElement != nullptr;
-			textElement = reader.FindNextElement(textElement, "text"))
-		{
-			TimedMessage newMessage;
-			newMessage.myCurrentTime = 0.f;
+		tinyxml2::XMLElement* textElement = reader.FindFirstChild(screenElement, "text");
 
-			reader.ForceReadAttribute(textElement, "value", newMessage.myMessage);
-			reader.ForceReadAttribute(textElement, "time", newMessage.myMaxTime);
+		TimedMessage newMessage;
+		newMessage.myCurrentTime = 0.f;
 
-			newScreen->myMessages.Add(newMessage);
-		}
+		reader.ForceReadAttribute(textElement, "value", newMessage.myMessage);
+		reader.ForceReadAttribute(textElement, "time", newMessage.myMaxTime);
+
+		newScreen->myMessages.Add(newMessage);
 
 		myScreens.Add(newScreen);
 	}
