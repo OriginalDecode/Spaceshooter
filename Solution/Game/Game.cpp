@@ -218,7 +218,7 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 	case eGameState::LOAD_GAME:
 		myGame = new InGameState(myInputWrapper);
 		myStateStack.PushMainGameState(myGame);
-		myGame->SetLevel(aMessage.GetID());
+		myGame->SetLevel(aMessage.GetID(), aMessage.GetSecondID());
 		break;
 	case eGameState::LOAD_MENU:
 		myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);

@@ -144,3 +144,11 @@ enum class eAITargetPositionMode
 	KAMIKAZE,
 	MINE
 };
+
+enum class eDifficult
+{
+	EASY,
+	NORMAL,
+	HARD,
+	_COUNT
+};

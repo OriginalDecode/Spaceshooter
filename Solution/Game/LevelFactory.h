@@ -1,4 +1,5 @@
 #pragma once
+#include "Enums.h"
 
 namespace CU
 {
@@ -16,13 +17,19 @@ namespace Prism
 class Level;
 class Entity;
 
+struct Difficult
+{
+	eDifficult myType;
+	float myMultiplier;
+};
+
 class LevelFactory
 {
 public:
 	LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* anInputWrapper, Entity& aPlayer);
 	~LevelFactory();
 
-	Level* LoadLevel(const int& anID);
+	Level* LoadLevel(const int& anID, const int &aDifficultID);
 	Level* LoadCurrentLevel();
 	Level* LoadNextLevel();
 	
@@ -43,10 +50,11 @@ private:
 	void LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadDirectionalLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
-	void LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
+	void LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, float aDifficultScale);
 	void LoadStructures(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadTriggers(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
+	void LoadDifficults();
 
 	void FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate);
 
@@ -64,9 +72,12 @@ private:
 
 	std::unordered_map<int, std::string> myLevelPaths;
 
+	CU::StaticArray<Difficult, static_cast<int>(eDifficult::_COUNT)> myDifficults;
+
 	Entity* myPlayer;
 
 	int myCurrentID;
+	int myCurrentDifficultyID;
 
 	volatile bool myIsLoading;
 

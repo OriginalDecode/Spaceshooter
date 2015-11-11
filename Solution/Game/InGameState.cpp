@@ -169,10 +169,10 @@ void InGameState::ReceiveMessage(const GameStateMessage& aMessage)
 	}
 }
 
-void InGameState::SetLevel(int aLevelID)
+void InGameState::SetLevel(int aLevelID, int aDifficultID)
 {
 	myLoadingScreen->Reset();
-	myLevel = myLevelFactory->LoadLevel(aLevelID);
+	myLevel = myLevelFactory->LoadLevel(aLevelID, aDifficultID);
 }
 
 void InGameState::CompleteLevel()

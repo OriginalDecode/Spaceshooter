@@ -47,7 +47,7 @@ EntityFactory::~EntityFactory()
 	delete myDummyScene;
 }
 
-void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
+void EntityFactory::LoadEntites(const std::string& aEntityRootPath, float aDifficultScale)
 {
 	XMLReader rootDocument;
 	rootDocument.OpenDocument(aEntityRootPath);
@@ -81,7 +81,7 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 			myEntityTags[entityName] = entityPath;
 			entityReader.CloseDocument();
 #else
-			LoadEntity(entityPath);
+			LoadEntity(entityPath, aDifficultScale);
 			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);
 #endif
 		}
@@ -90,7 +90,7 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath)
 	rootDocument.CloseDocument();
 }
 
-void EntityFactory::LoadEntity(const std::string& aEntityPath)
+void EntityFactory::LoadEntity(const std::string& aEntityPath, float aDifficultScale)
 {
 	XMLReader entityDocument;
 	entityDocument.OpenDocument(aEntityPath);
@@ -116,6 +116,13 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		DL_ASSERT(errorMessage.c_str());
 	}
 	newEntity.myEntity->SetName(entityName);
+	if (entityName != "E_projectile_enemy_fast")
+	{
+		aDifficultScale = 1.f;
+	}
+	else {
+		aDifficultScale = aDifficultScale;
+	}
 	ENTITY_LOG("Load entity %s starting", entityName.c_str());
 	for (tinyxml2::XMLElement* e = entityDocument.FindFirstChild(entityElement); e != nullptr;
 		e = entityDocument.FindNextElement(e))
@@ -153,7 +160,7 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath)
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("BulletComponent").c_str()) == 0)
 		{
-			LoadBulletComponent(newEntity, entityDocument, e);
+			LoadBulletComponent(newEntity, entityDocument, e, aDifficultScale);
 			ENTITY_LOG("Entity %s loaded %s", entityName.c_str(), e->Name());
 		}
 		else if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("HealthComponent").c_str()) == 0)
@@ -277,7 +284,7 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 	}
 }
 
-void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aBulletComponentElement)
+void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aBulletComponentElement, float aDifficultScale)
 {
 	aEntityToAddTo.myDamageRadius = 0.f;
 	aEntityToAddTo.myEntity->AddComponent<BulletComponent>();
@@ -293,7 +300,7 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 
 			aDocument.ForceReadAttribute(e, "value", damage);
 
-			aEntityToAddTo.myDamage = damage;
+			aEntityToAddTo.myDamage = damage * aDifficultScale;
 		}
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("damageRadius").c_str()) == 0)
 		{

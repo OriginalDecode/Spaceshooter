@@ -76,15 +76,15 @@ public:
 	EntityFactory(WeaponFactory* aWeaponFactory);
 	~EntityFactory();
 
-	void LoadEntites(const std::string& aEntityRootPath);
+	void LoadEntites(const std::string& aEntityRootPath, float aDifficultScale = 1.f);
 
 	void CopyEntity(Entity* aTargetEntity, const std::string& aEntityTag);
 	void ReloadEntity(const std::string&);
 private:
-	void LoadEntity(const std::string& aEntityPath);
+	void LoadEntity(const std::string& aEntityPath, float aDifficultScale = 1.f);
 
 	void LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aAIComponentElement);
-	void LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aBulletComponentElement);
+	void LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aBulletComponentElement, float aDifficultScale);
 	void LoadCollisionComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aCollisionComponenetElement, eCollisionType aCollisionType);
 	void LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aGraphicsComponentElement);
 	void LoadHealthComponent(EntityData& aEntityToAddTo, XMLReader& aDocument, tinyxml2::XMLElement* aHealthComponentElement);

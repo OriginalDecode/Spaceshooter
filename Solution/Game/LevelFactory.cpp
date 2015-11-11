@@ -55,7 +55,9 @@ LevelFactory::LevelFactory(const std::string& aLevelListPath, CU::InputWrapper* 
 	, mySpotLights(4)
 	, myIsLoading(false)
 	, myLoadLevelThread(nullptr)
+	, myCurrentDifficultyID(1)
 {
+	LoadDifficults();
 	LoadLevelListFromXML(aLevelListPath);
 }
 
@@ -65,13 +67,14 @@ LevelFactory::~LevelFactory()
 	myLoadLevelThread = nullptr;
 }
 
-Level* LevelFactory::LoadLevel(const int& anID)
+Level* LevelFactory::LoadLevel(const int& anID, const int &aDifficultID)
 {
 	if (myLevelPaths.find(anID) == myLevelPaths.end())
 	{
 		DL_ASSERT("[LevelFactory] Non-existing ID in LoadLevel! ID must correspond with levelList.xml");
 	}
 	myCurrentID = anID;
+	myCurrentDifficultyID = aDifficultID;
 
 	return LoadCurrentLevel();
 }
@@ -100,7 +103,7 @@ Level* LevelFactory::LoadNextLevel()
 		return myCurrentLevel;
 	}
 
-	return LoadLevel(myCurrentID + 1);
+	return LoadLevel(myCurrentID + 1, myCurrentDifficultyID);
 }
 
 bool LevelFactory::IsLastLevel() const
@@ -149,7 +152,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
 	myCurrentLevel->myWeaponFactory->LoadProjectiles("Data/Script/LI_list_projectile.xml");
 	myCurrentLevel->myEntityFactory = new EntityFactory(myCurrentLevel->myWeaponFactory);
-	myCurrentLevel->myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml");
+	myCurrentLevel->myEntityFactory->LoadEntites("Data/Script/LI_list_entity.xml", myDifficults[myCurrentDifficultyID].myMultiplier);
 	myCurrentLevel->myCollisionManager = new CollisionManager();
 	myCurrentLevel->myBulletManager = new BulletManager(*myCurrentLevel->myCollisionManager, *myCurrentLevel->myScene);
 	myCurrentLevel->myBulletManager->LoadFromFactory(myCurrentLevel->myWeaponFactory, myCurrentLevel->myEntityFactory, "Data/Script/LI_list_projectile.xml");
@@ -233,7 +236,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	LoadLights(reader, levelElement);
 	LoadProps(reader, levelElement);
-	LoadDefendables(reader, levelElement);
+	LoadDefendables(reader, levelElement, myDifficults[myCurrentDifficultyID].myMultiplier);
 	LoadStructures(reader, levelElement);
 	LoadTriggers(reader, levelElement);
 	LoadPowerups(reader, levelElement);
@@ -390,7 +393,7 @@ void LevelFactory::LoadProps(XMLReader& aReader, tinyxml2::XMLElement* aLevelEle
 	}
 }
 
-void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
+void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, float aDifficultScale)
 {
 	for (tinyxml2::XMLElement* entityElement = aReader.FindFirstChild(aLevelElement, "defendable"); entityElement != nullptr;
 		entityElement = aReader.FindNextElement(entityElement, "defendable"))
@@ -399,6 +402,8 @@ void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLe
 		std::string propType;
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
+		int difficultHealth = newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale);
+		newEntity->GetComponent<HealthComponent>()->Init(difficultHealth);
 
 		std::string defendName;
 		aReader.ForceReadAttribute(entityElement, "defendName", defendName);
@@ -462,6 +467,41 @@ void LevelFactory::LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevel
 
 		myCurrentLevel->myEntities.Add(newEntity);
 	}
+}
+
+void LevelFactory::LoadDifficults()
+{
+	XMLReader reader;
+	reader.OpenDocument("Data/Setting/SET_difficulty.xml");
+	tinyxml2::XMLElement* rootElement = reader.ForceFindFirstChild("root");
+	int index = 0;
+	for (tinyxml2::XMLElement* e = reader.ForceFindFirstChild(rootElement); e != nullptr; e = reader.FindNextElement(e))
+	{
+		DL_ASSERT_EXP(index < static_cast<int>(eDifficult::_COUNT), "You are trying to add more difficults than there should be.");
+		if (std::strcmp(e->Name(), "Difficult") == 0)
+		{
+			Difficult newDifficult;
+			std::string diffType;
+			reader.ForceReadAttribute(e, "type", diffType);
+			reader.ForceReadAttribute(e, "multiplier", newDifficult.myMultiplier);
+
+			if (diffType == "Easy")
+			{
+				newDifficult.myType = eDifficult::EASY;
+			}
+			else if (diffType == "Normal")
+			{
+				newDifficult.myType = eDifficult::NORMAL;
+			}
+			else if (diffType == "Hard")
+			{
+				newDifficult.myType = eDifficult::HARD;
+			}
+
+			myDifficults.Insert(index++,newDifficult);
+		}
+	}
+	reader.CloseDocument();
 }
 
 void LevelFactory::LoadPlayer()

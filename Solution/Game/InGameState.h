@@ -40,7 +40,7 @@ public:
 
 	void ReceiveMessage(const GameStateMessage& aMessage) override;
 
-	void SetLevel(int aLevelID);
+	void SetLevel(int aLevelID, int aDifficultID);
 
 	void CompleteLevel();
 	void CompleteGame();

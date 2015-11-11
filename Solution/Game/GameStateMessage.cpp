@@ -21,6 +21,14 @@ GameStateMessage::GameStateMessage(eGameState aGameState, const int& anID)
 {
 }
 
+GameStateMessage::GameStateMessage(eGameState aGameState, const int& anID, const int& anSecondID)
+	: myGameState(aGameState)
+	, myID(anID)
+	, mySecondID(anSecondID)
+	, Message(eMessageType::GAME_STATE)
+{
+}
+
 GameStateMessage::GameStateMessage(eGameState aGameState, const bool& anIsMouseLocked)
 	: myGameState(aGameState)
 	, myMouseIsLocked(anIsMouseLocked)

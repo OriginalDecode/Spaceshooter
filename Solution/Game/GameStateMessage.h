@@ -19,11 +19,13 @@ public:
 	GameStateMessage(eGameState aGameState);
 	GameStateMessage(eGameState aGameState, const std::string& aFilePath);
 	GameStateMessage(eGameState aGameState, const int& anID);
+	GameStateMessage(eGameState aGameState, const int& anID, const int& anSecondID);
 	GameStateMessage(eGameState aGameState, const bool& anIsMouseLocked);
 
 	const eGameState& GetGameState() const;
 	const std::string& GetFilePath() const;
 	const int GetID() const;
+	const int GetSecondID() const;
 	const bool& GetMouseLocked() const;
 
 private:
@@ -31,6 +33,7 @@ private:
 	eGameState myGameState;
 	std::string myFilePath;
 	int myID;
+	int mySecondID;
 	bool myMouseIsLocked; // temp
 };
 
@@ -47,6 +50,11 @@ inline const std::string& GameStateMessage::GetFilePath() const
 inline const int GameStateMessage::GetID() const
 {
 	return myID;
+}
+
+inline const int GameStateMessage::GetSecondID() const
+{
+	return mySecondID;
 }
 
 inline const bool& GameStateMessage::GetMouseLocked() const
