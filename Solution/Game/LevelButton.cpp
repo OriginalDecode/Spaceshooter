@@ -35,16 +35,15 @@ LevelButton::~LevelButton()
 void LevelButton::Render()
 {
 	Button::Render();
-
 	for (int i = 0; i < 3; ++i)
 	{
 		if (i < myScore.myStars)
 		{
-			myStar->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y });
+			myStar->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f});
 		}
 		else
 		{
-			myStarGrey->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y });
+			myStarGrey->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 1.5f});
 		}
 	}
 
@@ -52,11 +51,11 @@ void LevelButton::Render()
 	{
 		if (myScore.myCompletedOptional <= i)
 		{
-			myOptionalBadgeGrey->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 2.2f });
+			myOptionalBadgeGrey->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 2.5f });
 		}
 		else
 		{
-			myOptionalBadge->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 2.2f });
+			myOptionalBadge->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 2.5f });
 		}
 	}
 }
