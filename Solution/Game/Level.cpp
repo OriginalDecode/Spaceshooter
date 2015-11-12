@@ -166,16 +166,16 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
-#ifndef RELEASE_BUILD
-	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
-	{
-		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
-		myEMPTimer = 20.f;
-		myEMPScale = 1.f;
-		myEMPActivated = true;
-		myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
-	}
-#endif
+//#ifndef RELEASE_BUILD
+//	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
+//	{
+//		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
+//		myEMPTimer = 20.f;
+//		myEMPScale = 1.f;
+//		myEMPActivated = true;
+//		myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
+//	}
+//#endif
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
@@ -198,6 +198,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
+	myPlayer->GetComponent<GUIComponent>()->SetCockpitOrientation();
 
 #ifndef RELEASE_BUILD
 	UpdateDebug();
@@ -391,8 +392,17 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 {
 	if (aMessage.GetPowerupType() == ePowerUpType::WEAPON_UPGRADE)
 	{
+		bool changeWeapon = true;
+
+		if (aMessage.GetUpgradeID() >= 2 && myPlayer->GetComponent<ShootingComponent>()->GetWeaponSize() == 1) // handles a rare exception
+		{
+			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1);
+			changeWeapon = false;
+		}
+
 		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
-		if (aMessage.GetUpgradeID() < 2)
+
+		if (aMessage.GetUpgradeID() < 2 && changeWeapon == true)
 		{
 			myPlayer->GetComponent<ShootingComponent>()->SetCurrentWeaponID(aMessage.GetUpgradeID()); // Autochanges weapon on upgrade
 		}

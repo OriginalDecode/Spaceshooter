@@ -62,6 +62,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myRocketMaxTime(nullptr)
 	, myCurrentHitmarker(nullptr)
 	, myCurrentShield(100.f)
+	, myPlayedMissilesReady(false)
+	, myCockpitOffset(0, 0, -0.0f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -86,11 +88,11 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_healthbar.fbx", "Data/Resource/Shader/S_effect_bar_health.fx");
-	myGUIBars[0] = new Prism::Instance(*model, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
+	myGUIBars[0] = new Prism::Instance(*model, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
 
 	Prism::ModelProxy* model2 = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_shieldbar.fbx", "Data/Resource/Shader/S_effect_bar_shield.fx");
-	myGUIBars[1] = new Prism::Instance(*model2, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
+	myGUIBars[1] = new Prism::Instance(*model2, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
 
 
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
@@ -144,7 +146,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
-	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_prop.dds"
+	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 
 
@@ -463,6 +465,15 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		if (percentageToReady >= 1.f)
 		{
 			Prism::Engine::GetInstance()->PrintText("RL\nRDY", { halfWidth * 1.57f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
+			if (myPlayedMissilesReady == false)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_MissilesReady", 0);
+				myPlayedMissilesReady = true;
+			}
+		}
+		else
+		{
+			myPlayedMissilesReady = false;
 		}
 	}
 
@@ -622,6 +633,7 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
+
 }
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)

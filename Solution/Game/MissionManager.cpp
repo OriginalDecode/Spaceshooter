@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <AudioInterface.h>
 #include "CommonHelper.h"
 #include <DL_Assert.h>
 #include "Entity.h"
@@ -84,6 +85,7 @@ void MissionManager::Update(float aDeltaTime, bool aForceNextMission)
 	if (myEndEventsActive == true && myAllowedToStartNextMission == true)
 	{
 		myMissions[myCurrentMission]->End();
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_MissionCompleted", 0);
 		++myCurrentMission;
 		if (myCurrentMission == myMissions.Size())
 		{

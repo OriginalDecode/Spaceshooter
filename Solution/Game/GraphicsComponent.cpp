@@ -34,7 +34,7 @@ GraphicsComponent::~GraphicsComponent()
 	myInstance = nullptr;
 }
 
-void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
+void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath, const CU::Matrix44<float>* aCockpitOrientation)
 {
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(aModelPath
 		, aEffectPath);
@@ -48,7 +48,14 @@ void GraphicsComponent::Init(const char* aModelPath, const char* aEffectPath)
 	reader.ForceReadAttribute(reader.ForceFindFirstChild(reader.ForceFindFirstChild("root"), "radius"), "value", myCullingRadius);
 	reader.CloseDocument();
 
-	myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType(), myCullingRadius);
+	if (aCockpitOrientation != nullptr)
+	{
+		myInstance = new Prism::Instance(*model, *aCockpitOrientation, myEntity.GetOctreeType(), myCullingRadius);
+	}
+	else
+	{
+		myInstance = new Prism::Instance(*model, myEntity.myOrientation, myEntity.GetOctreeType(), myCullingRadius);
+	}
 
 	if (myEntity.GetComponent<CollisionComponent>() != nullptr)
 	{
