@@ -347,7 +347,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aIsPowerup == true && showName == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(aName, { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(aName, { newRenderPos.x - 46.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	if (aShowDist == true)
@@ -355,7 +355,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker
 			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
 		{
-			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, anAlpha });
 		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
