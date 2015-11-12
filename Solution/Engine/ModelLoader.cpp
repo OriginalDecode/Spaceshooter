@@ -18,6 +18,7 @@ namespace Prism
 		, myModelFactory(new FBXFactory())
 		, myIsLoading(false)
 		, myClearLoadJobs(true)
+		, myIsPaused(true)
 	{
 		myBuffers[0].Init(512);
 		myBuffers[1].Init(512);
@@ -39,6 +40,15 @@ namespace Prism
 #else
 		while (myIsRunning == true)
 		{
+			if (myIsPaused == true)
+			{
+				myCanAddToLoadArray = true;
+				myIsLoading = false;
+				std::this_thread::yield();
+				continue;
+			}
+
+
 			WaitUntilCopyIsAllowed();
 			myCanAddToLoadArray = false;
 
@@ -130,6 +140,35 @@ namespace Prism
 	volatile bool ModelLoader::IsLoading() const
 	{
 		return myIsLoading;
+	}
+
+	void ModelLoader::Pause()
+	{
+		myIsPaused = true;
+
+		while (myIsLoading == true)
+		{
+		}
+	}
+
+	void ModelLoader::UnPause()
+	{
+		myIsPaused = false;
+		if (myBuffers[myInactiveBuffer].Size() == 0)
+		{
+			return;
+		}
+
+		while (myIsLoading == false)
+		{
+		}
+	}
+
+	void ModelLoader::WaitUntilFinished() const
+	{
+		while (myIsLoading == true)
+		{
+		}
 	}
 
 	ModelProxy* ModelLoader::LoadModel(const std::string& aModelPath, const std::string& aEffectPath)

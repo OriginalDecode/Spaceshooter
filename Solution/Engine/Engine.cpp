@@ -105,11 +105,9 @@ namespace Prism
 		}
 		myTexts.RemoveAll();
 
-		myText->SetColor({ 1.f, 0, 0, 0.8f });
-
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
-			if (myModelLoader->IsLoading() == false)
+			if (myIsInLoadingScreen == false)
 			{
 				myDebugText->SetText(myDebugTexts[i].myText);
 				myDebugText->SetPosition(myDebugTexts[i].myPosition);
@@ -278,9 +276,10 @@ namespace Prism
 		myDebugText->SetPosition({ 800.f, -300.f });
 		myDebugText->SetText("едц");
 		myDebugText->SetScale({ 1.f, 1.f });
+		myDebugText->SetColor({ 1.f, 0, 0, 0.8f });
 
 		myUsePBLPixelShader = true;
-
+		myIsInLoadingScreen = false;
 
 		myMainThreadID = std::this_thread::get_id();
 
