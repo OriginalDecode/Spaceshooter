@@ -178,7 +178,7 @@ bool Game::Update()
 
 	if (myIsComplete == true)
 	{
-		myCurrentMenu = new MenuState("Data/Menu/MN_credits.xml", myInputWrapper, true);
+		myCurrentMenu = new MenuState("Data/Menu/MN_credits.xml", myInputWrapper, -1, true);
 		myStateStack.PushMainGameState(myCurrentMenu);
 		myIsComplete = false;
 	}
