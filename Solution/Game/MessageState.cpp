@@ -175,7 +175,7 @@ void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 
 	for (int i = 1; i <= mySaveScore.myTotalOptional; ++i)
 	{
-		if (mySaveScore.myCompletedOptional <= i)
+		if (mySaveScore.myCompletedOptional < i)
 		{
 			myOptionalBadgeGrey->Render({ aRenderPos.x + 32.f + (64.f * (i - 1)), aRenderPos.y - 350 });
 		}

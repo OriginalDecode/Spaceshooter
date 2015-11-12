@@ -218,7 +218,8 @@ void Prism::TreeNode::Modify(Instance* anObject, eModifyType aModifyType)
 			}
 			else
 			{
-				DL_ASSERT("Error: TreeNode not found to remove object.");
+				//use again when remove is moved to end of LogicUpdate by LinusL && Niklas:
+				//DL_ASSERT("Error: TreeNode not found to remove object.");
 				return;
 			}
 		}
