@@ -17,7 +17,9 @@ private:
 	Prism::Sprite* myOptionalBadgeGrey;
 	Prism::Sprite* myOptionalBadge;
 	Prism::Sprite* myStarGrey;
-	Prism::Sprite* myStar;
+	Prism::Sprite* myBronzeStar;
+	Prism::Sprite* myGoldStar;
+	Prism::Sprite* mySilverStar;
 
 	CU::Vector2<float> mySize;
 };

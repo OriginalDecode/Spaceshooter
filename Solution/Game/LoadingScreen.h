@@ -22,6 +22,7 @@ struct Screen
 	Screen();
 	~Screen();
 	Prism::Sprite* myBackground;
+	Prism::Sprite* myRotatingThing;
 	CU::GrowingArray<TimedMessage> myMessages;
 };
 

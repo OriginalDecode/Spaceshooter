@@ -27,21 +27,49 @@ SaveScore ScoreIO::Load(int aLevel)
 	score.myCompletedOptional = *(reinterpret_cast<int*>(my_4_ByteBuffer));
 	stream.read(my_4_ByteBuffer, 4);
 	score.myTotalOptional = *(reinterpret_cast<int*>(my_4_ByteBuffer));
+	stream.read(my_4_ByteBuffer, 4);
+	score.myDifficulty = *(reinterpret_cast<int*>(my_4_ByteBuffer));
 
 	return score;
 }
 
 void ScoreIO::Save(const SaveScore& aScore, int aLevel)
 {
-	std::string path(CU::GetMyDocumentFolderPath());
-	path += "SpaceShooter\\gfx.dist";
-	path += std::to_string(aLevel);
-	std::ofstream file(path.c_str(), std::ofstream::binary);
+	SaveScore scoreBefore = Load(aLevel);
+	
+	if (scoreBefore.myDifficulty < aScore.myDifficulty)
+	{
+		std::string path(CU::GetMyDocumentFolderPath());
+		path += "SpaceShooter\\gfx.dist";
+		path += std::to_string(aLevel);
+		std::ofstream file(path.c_str(), std::ofstream::binary);
 
-	//int easy = 0;
-	//if (someBadges[0].GetActive() == true) easy = 72;
-	file.write((char*)&aScore.myStars, sizeof(int));
-	file.write((char*)&aScore.myCompletedOptional, sizeof(int));
-	file.write((char*)&aScore.myTotalOptional, sizeof(int));
-	file.close();
+		file.write((char*)&aScore.myStars, sizeof(int));
+		file.write((char*)&aScore.myCompletedOptional, sizeof(int));
+		file.write((char*)&aScore.myTotalOptional, sizeof(int));
+		file.write((char*)&aScore.myDifficulty, sizeof(int));
+		file.close();
+	}
+	else if (scoreBefore.myDifficulty == aScore.myDifficulty)
+	{
+		if (scoreBefore.myStars < aScore.myStars)
+		{
+			std::string path(CU::GetMyDocumentFolderPath());
+			path += "SpaceShooter\\gfx.dist";
+			path += std::to_string(aLevel);
+			std::ofstream file(path.c_str(), std::ofstream::binary);
+
+			file.write((char*)&aScore.myStars, sizeof(int));
+			file.write((char*)&aScore.myCompletedOptional, sizeof(int));
+			file.write((char*)&aScore.myTotalOptional, sizeof(int));
+			file.write((char*)&aScore.myDifficulty, sizeof(int));
+			file.close();
+		}
+	}
+	else
+	{
+		//Do nothing
+	}
+
+
 }

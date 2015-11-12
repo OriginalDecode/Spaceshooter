@@ -212,8 +212,15 @@ void Prism::TreeNode::Modify(Instance* anObject, eModifyType aModifyType)
 	{
 		if (myChildren[childIndex] == nullptr)
 		{
-			DL_ASSERT_EXP(aModifyType != eModifyType::REMOVE, "Error: TreeNode not found to remove object.");
-			myChildren[childIndex] = SpawnChild(childIndex);
+			if (aModifyType != eModifyType::REMOVE)
+			{
+				myChildren[childIndex] = SpawnChild(childIndex);
+			}
+			else
+			{
+				DL_ASSERT("Error: TreeNode not found to remove object.");
+				return;
+			}
 		}
 
 		myChildren[childIndex]->Modify(anObject, aModifyType);

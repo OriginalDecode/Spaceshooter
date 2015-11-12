@@ -10,12 +10,14 @@ struct LevelScore
 	int myTotalShotsFired;
 	int myShotsHit;
 	int myLevel;
+	int myDifficulty;
 };
 
 struct SaveScore
 {
-	SaveScore() : myStars(0), myCompletedOptional(0), myTotalOptional(0) {}
+	SaveScore() : myStars(0), myCompletedOptional(0), myTotalOptional(0), myDifficulty(-1) {}
 	int myStars;
 	int myCompletedOptional;
 	int myTotalOptional;
+	int myDifficulty;
 };
