@@ -9,7 +9,7 @@ Screen::Screen()
 	: myBackground(nullptr)
 	, myRotatingThing(nullptr)
 	, myMessages(8)
-	, myRotatingThingScale(1.f)
+	, myRotatingThingScale(0.f)
 {
 };
 Screen::~Screen()
@@ -58,9 +58,18 @@ void LoadingScreen::Update(float aDeltaTime)
 {
 	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-2.f * aDeltaTime);
 
-	if (myLevelIsLoading == false)
+	if (myLevelIsLoading == true)
 	{
-		myScreens[myLevelID - 1]->myRotatingThingScale -= aDeltaTime;
+		myScreens[myLevelID - 1]->myRotatingThingScale += aDeltaTime * 2.f;
+
+		if (myScreens[myLevelID - 1]->myRotatingThingScale > 1.f)
+		{
+			myScreens[myLevelID - 1]->myRotatingThingScale = 1.f;
+		}
+	}
+	else
+	{
+		myScreens[myLevelID - 1]->myRotatingThingScale -= aDeltaTime * 2.f;
 
 		if (myScreens[myLevelID - 1]->myRotatingThingScale < 0.f)
 		{

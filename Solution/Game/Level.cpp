@@ -289,7 +289,7 @@ void Level::Render()
 	if (myIsSkipable == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip tutorial."
-			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) + 220.f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) - 300.f }
+			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) + 210.f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) - 300.f }
 			, Prism::eTextType::RELEASE_TEXT);
 	}
 	
