@@ -12,8 +12,8 @@ void MissionEventReader::ReadEventNames(XMLReader& aNamesReader, tinyxml2::XMLEl
 		std::string myName;
 	};
 
-	CU::GrowingArray<EventWithIndex> startEvents(4);
-	CU::GrowingArray<EventWithIndex> endEvents(4);
+	CU::GrowingArray<EventWithIndex> startEvents(32);
+	CU::GrowingArray<EventWithIndex> endEvents(32);
 
 	for (tinyxml2::XMLElement* element = aNamesReader.FindFirstChild(aNamesElement, "event"); element != nullptr;
 		element = aNamesReader.FindNextElement(element, "event"))

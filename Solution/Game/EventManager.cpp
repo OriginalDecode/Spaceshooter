@@ -33,7 +33,7 @@ EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aCo
 		}
 		eventNames[name] = 1;
 
-		CU::GrowingArray<Action*> actions(8);
+		CU::GrowingArray<Action*> actions(16);
 
 		for (tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "spawnEnemy"); element != nullptr;
 			element = reader.FindNextElement(element, "spawnEnemy"))

@@ -1,24 +1,31 @@
 #include "stdafx.h"
 
+#include <AudioInterface.h>
 #include "Button.h"
 #include <Camera.h>
+#include <Engine.h>
 #include "FadeMessage.h"
 #include "GameStateMessage.h"
 #include <InputWrapper.h>
 #include "Menu.h"
 #include "MenuState.h"
+#include <ModelLoader.h>
 #include <Sprite.h>
 #include "SplashState.h"
 #include "StateStackProxy.h"
 #include <TimerManager.h>
 #include "PostMaster.h"
+#include <XMLReader.h>
 
 MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, int aLevelID, bool aShowVictoryScreen)
 	: myHasFadeIn(aShowVictoryScreen)
 	, myShowVictoryScreen(aShowVictoryScreen)
 	, myShowButtons(!aShowVictoryScreen)
-	, myWaitForButtonsTime(5.f)
+	, myWaitForButtonsTime(4.f)
 {
+	//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_MenuMusic", 0);
+	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
+
 	myInputWrapper = anInputWrapper;
 	
 	if (aLevelID == -1)
@@ -35,6 +42,8 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 
 	CU::Vector2<float> overlaySize(4096.f, 4096.f);
 	myBlackOverlay = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
+
+	Prism::Engine::GetInstance()->GetModelLoader()->UnPause();
 }
 
 MenuState::~MenuState()
@@ -43,6 +52,9 @@ MenuState::~MenuState()
 
 void MenuState::InitState(StateStackProxy* aStateStackProxy)
 {
+	Prism::Engine::GetInstance()->myIsLoading = true;
+	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
+
 	myIsLetThrough = false;
 	myStateStack = aStateStackProxy;
 	CU::Matrix44<float> orientation;
@@ -66,6 +78,7 @@ void MenuState::InitState(StateStackProxy* aStateStackProxy)
 	myFadeInTime = 0.5f;
 	myOverlayAlpha = 1.f;
 	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
+	Prism::Engine::GetInstance()->GetModelLoader()->UnPause();
 }
 
 void MenuState::EndState()

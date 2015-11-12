@@ -11,7 +11,7 @@
 
 Prism::Effect::Effect()
 {
-	myEffectListeners.Init(2);
+	myEffectListeners.Init(512);
 	myEffect = nullptr;
 }
 
@@ -377,7 +377,7 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 void Prism::Effect::SetExtraTexture(Texture* aTexture)
 {
 	myExtraTexture->SetResource(aTexture->GetDepthStencilShaderView());
-	myExtraTexture2->SetResource(aTexture->GetShaderView());
+	//myExtraTexture2->SetResource(aTexture->GetShaderView());
 }
 
 void Prism::Effect::SetCameraPosition(const CU::Vector3<float>& aCameraPos)

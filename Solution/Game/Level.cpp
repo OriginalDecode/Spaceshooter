@@ -50,7 +50,7 @@
 #include <XMLReader.h>
 
 Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
-	: myEntities(16)
+	: myEntities(4096)
 	, myComplete(false)
 	, myUsePostProcessing(true)
 	, mySkySphere(nullptr)
@@ -167,16 +167,15 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
-//#ifndef RELEASE_BUILD
-//	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
-//	{
-//		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
-//		myEMPTimer = 20.f;
-//		myEMPScale = 1.f;
-//		myEMPActivated = true;
-//		myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
-//	}
-//#endif
+#ifndef RELEASE_BUILD
+	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
+	{
+		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
+		myEMPTimer = 20.f;
+		myEMPScale = 1.f;
+		myEMPActivated = true;
+	}
+#endif
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
@@ -227,27 +226,32 @@ void Level::Render()
 	if (myUsePostProcessing == true)
 	{
 		myRenderer->BeginScene();
+
 		Prism::Engine::GetInstance()->DisableZBuffer();
 		mySkySphere->Render(*myCamera);
 		Prism::Engine::GetInstance()->EnableZBuffer();
+
 		myRenderer->EndScene(Prism::ePostProcessing::NONE);
 
 		myRenderer->BeginScene();
 		myScene->Render(myBulletManager->GetInstances());
 
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
-		myRenderer->FinalRender();
 
 		if (myEMPActivated == true)
 		{
+			myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
 			//Prism::Engine::GetInstance()->DisableZBuffer();
-			myEMPDepthSprite->ClearDepth();
-			myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myEMPDepthSprite->GetDepthStencilView());
-			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myRenderer->GetWorldTexture());
+			//myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myEMPDepthSprite->GetDepthStencilView());
+			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myEMPDepthSprite);
 			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
-			myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myRenderer->GetWorldTexture()->GetDepthStencilView());
-			//Prism::Engine::GetInstance()->EnableZBuffer();
+			//myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myRenderer->GetWorldTexture()->GetDepthStencilView());
+			//myEMPDepthSprite->ClearDepth();
 		}
+
+		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+		myRenderer->FinalRender();
+
+
 
 
 		myEmitterManager->RenderEmitters(myCamera);
@@ -286,7 +290,7 @@ void Level::Render()
 	if (myIsSkipable == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip tutorial."
-			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.45f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) * 1.55f }
+			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) + 210.f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) - 300.f }
 			, Prism::eTextType::RELEASE_TEXT);
 	}
 	

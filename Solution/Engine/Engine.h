@@ -103,7 +103,7 @@ namespace Prism
 		void StartFade(float aDuration);
 
 		bool myWireframeShouldShow;
-		volatile bool myIsInLoadingScreen;
+		volatile bool myIsLoading;
 
 	private:
 		struct FadeData

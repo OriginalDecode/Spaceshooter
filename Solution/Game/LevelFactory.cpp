@@ -154,7 +154,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 {
 	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
 
-	Prism::Engine::GetInstance()->myIsInLoadingScreen = true;
+	Prism::Engine::GetInstance()->myIsLoading = true;
 
 
 	FindTextures("Data/Resource/Texture/Particle/");
@@ -301,8 +301,9 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	Prism::Engine::GetInstance()->GetModelLoader()->WaitUntilFinished();
 
 
-	Prism::Engine::GetInstance()->myIsInLoadingScreen = false;
+	
 	Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_pbl.fx")->SetAmbientHue(myAmbientHue);
+	Prism::Engine::GetInstance()->myIsLoading = false;
 
 	myIsLoading = false;
 }
@@ -350,6 +351,8 @@ void LevelFactory::ReadLevelSettings()
 	myAmbientHue.g = myAmbientHue.g / 255.f;
 	myAmbientHue.b = myAmbientHue.b / 255.f;
 
+
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->UpdateWeapons();
 
 	reader.CloseDocument();
 }
@@ -514,7 +517,7 @@ void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLe
 		std::string propType;
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
-		int difficultHealth = newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale);
+		int difficultHealth = int(newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale));
 		newEntity->GetComponent<HealthComponent>()->Init(difficultHealth);
 
 		std::string defendName;

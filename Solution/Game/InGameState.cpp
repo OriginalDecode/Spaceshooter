@@ -30,6 +30,7 @@ InGameState::InGameState(CU::InputWrapper* anInputWrapper)
 	: myLoadingScreen(nullptr)
 {
 	myInputWrapper = anInputWrapper;
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_MenuMusic", 0);
 }
 
 InGameState::~InGameState()
@@ -41,6 +42,7 @@ InGameState::~InGameState()
 	myLevel = nullptr;
 	myLoadingScreen = nullptr;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_MenuMusic", 0);
 }
 
 void InGameState::InitState(StateStackProxy* aStateStackProxy)

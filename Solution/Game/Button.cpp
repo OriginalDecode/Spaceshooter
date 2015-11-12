@@ -19,6 +19,7 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement, const i
 	, myCalcFromCenter(false)
 	, myQuit(false)
 	, myPostSoundEvent(false)
+	, myPlayedHover(false)
 {
 	std::string picPath;
 	std::string picHoveredPath;
@@ -106,6 +107,7 @@ void Button::Render()
 
 eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed, const int aLevelID)
 {
+	aLevelID;
 	myIsHovered = false;
 
 	if ((aMousePos.x + mySize.x / 2) >= myPosition.x && 
@@ -113,8 +115,14 @@ eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMo
 		(-aMousePos.y - mySize.y / 2) <= myPosition.y &&
 		(-aMousePos.y - mySize.y / 2) >= myPosition.y - mySize.y)
 	{
+		if (myPlayedHover == false)
+		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ButtonHovered", 0);
+			myPlayedHover = true;
+		}
 		if (aMouseIsPressed == true)
 		{
+			Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ButtonClicked", 0);
 			if (myBack == true)
 			{
 				return eStateStatus::ePopSubState;
@@ -133,6 +141,10 @@ eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMo
 			}
 		}
 		myIsHovered = true;
+	}
+	else
+	{
+		myPlayedHover = false;
 	}
 	return eStateStatus::eKeepState;
 }

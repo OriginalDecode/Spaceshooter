@@ -21,7 +21,7 @@
 #include "ShootingComponent.h"
 
 BulletManager::BulletManager(CollisionManager& aCollisionManager, Prism::Scene& aScene)
-	: myInstances(8)
+	: myInstances(256)
 	, myCollisionManager(aCollisionManager)
 	, myScene(aScene)
 {

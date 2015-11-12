@@ -13,8 +13,8 @@
 
 
 EmitterManager::EmitterManager()
-	: myEmitters(32)
-	, myXMLPaths(32)
+	: myEmitters(64)
+	, myXMLPaths(64)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DESTORY_EMITTER, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH, this);
