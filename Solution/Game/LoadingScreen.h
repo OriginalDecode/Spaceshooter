@@ -24,6 +24,7 @@ struct Screen
 	Prism::Sprite* myBackground;
 	Prism::Sprite* myRotatingThing;
 	CU::GrowingArray<TimedMessage> myMessages;
+	float myRotatingThingScale;
 };
 
 class LoadingScreen

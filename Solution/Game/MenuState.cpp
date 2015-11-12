@@ -21,7 +21,7 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 	: myHasFadeIn(aShowVictoryScreen)
 	, myShowVictoryScreen(aShowVictoryScreen)
 	, myShowButtons(!aShowVictoryScreen)
-	, myWaitForButtonsTime(5.f)
+	, myWaitForButtonsTime(4.f)
 {
 	//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_MenuMusic", 0);
 	Prism::Engine::GetInstance()->GetModelLoader()->Pause();

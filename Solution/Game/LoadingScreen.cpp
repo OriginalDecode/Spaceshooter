@@ -9,6 +9,7 @@ Screen::Screen()
 	: myBackground(nullptr)
 	, myRotatingThing(nullptr)
 	, myMessages(8)
+	, myRotatingThingScale(0.f)
 {
 };
 Screen::~Screen()
@@ -49,17 +50,37 @@ void LoadingScreen::Render()
 			, { myWindowMiddle.x - 300.f, myWindowMiddle.y - 300.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
-	myScreens[myLevelID - 1]->myRotatingThing->Render({ myWindowMiddle.x + 500.f, myWindowMiddle.y - 300.f });
+	myScreens[myLevelID - 1]->myRotatingThing->Render({ myWindowMiddle.x + 500.f, myWindowMiddle.y - 300.f }
+	, { myScreens[myLevelID - 1]->myRotatingThingScale, myScreens[myLevelID - 1]->myRotatingThingScale });
 }
 
 void LoadingScreen::Update(float aDeltaTime)
 {
 	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-2.f * aDeltaTime);
 
-	if (myLevelIsLoading == false && (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true))
+	if (myLevelIsLoading == true)
 	{
-		myIsDone = true;
-		return;
+		myScreens[myLevelID - 1]->myRotatingThingScale += aDeltaTime * 2.f;
+
+		if (myScreens[myLevelID - 1]->myRotatingThingScale > 1.f)
+		{
+			myScreens[myLevelID - 1]->myRotatingThingScale = 1.f;
+		}
+	}
+	else
+	{
+		myScreens[myLevelID - 1]->myRotatingThingScale -= aDeltaTime * 2.f;
+
+		if (myScreens[myLevelID - 1]->myRotatingThingScale < 0.f)
+		{
+			myScreens[myLevelID - 1]->myRotatingThingScale = 0.f;
+		}
+
+		if (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true)
+		{
+			myIsDone = true;
+			return;
+		}
 	}
 }
 
