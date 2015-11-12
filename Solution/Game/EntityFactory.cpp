@@ -301,7 +301,7 @@ void EntityFactory::LoadBulletComponent(EntityData& aEntityToAddTo, XMLReader& a
 
 			aDocument.ForceReadAttribute(e, "value", damage);
 
-			aEntityToAddTo.myDamage = damage * aDifficultScale;
+			aEntityToAddTo.myDamage = int(damage * aDifficultScale);
 		}
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("damageRadius").c_str()) == 0)
 		{
@@ -519,7 +519,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	aTargetEntity->SetShouldRotateX(sourceEntity->GetShouldRotateX());
 	aTargetEntity->SetShouldRotateY(sourceEntity->GetShouldRotateY());
 	aTargetEntity->SetShouldRotateZ(sourceEntity->GetShouldRotateZ());
-
+	
 	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
 	{
 		eCollisionType collisionType = sourceEntity->GetComponent<CollisionComponent>()->GetCollisionType();
@@ -556,13 +556,16 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 			aTargetEntity->GetComponent<GraphicsComponent>()->SetScale(it->second.myScale);
 			if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr) 
 			{
-				float scaleOrg = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius;
 				float scale = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius + it->second.myCollisionSphereRadius;
 				scale *= CU::Math::GetMaximumValueFromVector(it->second.myScale);
 				aTargetEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(scale);
 			}
 		}
-
+		else if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr)
+		{
+			float scaleOrg = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius;
+			aTargetEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(scaleOrg + it->second.myCollisionSphereRadius);
+		}
 	}
 	if (sourceEntity->GetComponent<PhysicsComponent>() != nullptr)
 	{

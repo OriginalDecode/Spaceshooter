@@ -64,6 +64,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myRocketMaxTime(nullptr)
 	, myCurrentHitmarker(nullptr)
 	, myCurrentShield(100.f)
+	, myPlayedMissilesReady(false)
+	, myCockpitOffset(CalcCockpitOffset())
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -86,11 +88,11 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_healthbar.fbx", "Data/Resource/Shader/S_effect_bar_health.fx");
-	myGUIBars[0] = new Prism::Instance(*model, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
+	myGUIBars[0] = new Prism::Instance(*model, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
 
 	Prism::ModelProxy* model2 = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_shieldbar.fbx", "Data/Resource/Shader/S_effect_bar_shield.fx");
-	myGUIBars[1] = new Prism::Instance(*model2, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
+	myGUIBars[1] = new Prism::Instance(*model2, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
 
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_health.fx");
@@ -141,7 +143,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
-	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_prop.dds"
+	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 
 	myBackgroundConversation = new Prism::Sprite("Data/Resource/Texture/UI/T_background_conversation.dds"
@@ -225,12 +227,9 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 	float padding = 5.f;
 
 	ShootingComponent* shootingComponent = myEntity.GetComponent<ShootingComponent>();
+
 	myCurrentWeapon = &shootingComponent->GetCurrentWeaponID();
-	int weaponSize = shootingComponent->GetWeaponSize();
-	
-	myHasMachinegun = weaponSize == 1 ? true : false;
-	myHasShotgun = weaponSize == 2 ? true : false;
-	myHasRocketLauncher = weaponSize == 3 ? true : false;
+
 
 	myPowerUpSlots[ePowerUpType::EMP] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_emp_active.dds"
 		, "Data/Resource/Texture/UI/PowerUp/T_powerup_emp_inactive.dds", { iconSize.x * 6.75f, iconSize.y * 2.5f + padding * 2.f }
@@ -353,7 +352,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aShowDist == true)
 	{
-		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker 
+		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker
 			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
 		{
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
@@ -369,6 +368,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos)
 {
+	aMousePos;
 	my3DClosestEnemyLength = 10000.f;
 	myClosestEnemyLength = 100000.f;
 	myClosestEnemy = nullptr;
@@ -465,6 +465,11 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 550.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 	}
+	else
+	{
+		myPlayedMissilesReady = false;
+	}
+
 
 	if (myHasHomingWeapon == true)
 	{
@@ -482,7 +487,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			myHomingTarget->Rotate(myDeltaTime);
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
 		}
-	
+
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 	}
 
@@ -538,7 +543,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 480.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 	}
-	
+
 
 	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
 		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
@@ -599,7 +604,7 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 {
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
-	shieldBarEffect->SetPlayerVariable(aNote.myShieldStrength);
+	shieldBarEffect->SetPlayerVariable(int(aNote.myShieldStrength));
 	myCurrentShield = aNote.myShieldStrength;
 }
 
@@ -641,6 +646,8 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
+	aMessage;
+	myCockpitOffset = CalcCockpitOffset();
 }
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
@@ -648,7 +655,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
-		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY 
+		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY
 			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::STRUCTURE)
 		{
 			myCurrentHitmarker = myHitMarker;
@@ -753,6 +760,24 @@ void GUIComponent::Reset()
 	myBattlePlayed = false;
 	myBackgroundMusicPlayed = true;
 	myDeltaTime = 0.f;
+}
+
+CU::Vector3<float> GUIComponent::CalcCockpitOffset() const
+{
+	CU::Vector2<float> resolution(float(Prism::Engine::GetInstance()->GetWindowSize().x), float(Prism::Engine::GetInstance()->GetWindowSize().y));
+
+	float aspect = resolution.x / resolution.y;
+	float epsilon = 0.05f;
+	if (aspect < epsilon + 1280.f / 1024.f)
+	{
+		return CU::Vector3<float>(0, 0, -0.2f);
+	}
+	else if (aspect < epsilon + 1920.f / 1200.f)
+	{
+		return CU::Vector3<float>(0, 0, -0.1f);
+	}
+
+	return CU::Vector3<float>(0, 0, 0);
 }
 
 void GUIComponent::UpdateWeapons()

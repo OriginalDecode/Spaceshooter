@@ -52,9 +52,13 @@ public:
 	Entity* GetClosestEnemy();
 	void SetRocketValues(const float& aRocketCurrentTime, const float& aRocketMaxTime);
 
+	const CU::Matrix44<float>* GetCockpitOrientation() const;
+	void SetCockpitOrientation();
+
 	void UpdateWeapons();
 
 private:
+	CU::Vector3<float> CalcCockpitOffset() const;
 	Prism::Sprite* myReticle;
 	Prism::Sprite* myModel2DToRender;
 	Prism::Sprite* myEnemyArrow;
@@ -127,8 +131,13 @@ private:
 	bool myHasMachinegun;
 	bool myHasShotgun;
 
+	bool myHasRockets;
+	bool myPlayedMissilesReady;
 	const float* myRocketCurrentTime;
 	const float* myRocketMaxTime;
+
+	CU::Matrix44<float> myCockpitOrientation;
+	CU::Vector3<float> myCockpitOffset;
 
 	const int* myCurrentWeapon;
 };
@@ -158,4 +167,17 @@ inline void GUIComponent::SetRocketValues(const float& aRocketCurrentTime, const
 	myRocketCurrentTime = &aRocketCurrentTime;
 	myRocketMaxTime = &aRocketMaxTime;
 	myHasRocketLauncher = true;
+}
+
+inline void GUIComponent::SetCockpitOrientation()
+{
+	myCockpitOrientation = myEntity.myOrientation;
+	CU::Vector3<float> cockpitPosition = myCockpitOrientation.GetPos();
+	cockpitPosition += myCockpitOffset * myCockpitOrientation;
+	myCockpitOrientation.SetPos(cockpitPosition);
+}
+
+inline const CU::Matrix44<float>* GUIComponent::GetCockpitOrientation() const
+{
+	return &myCockpitOrientation;
 }

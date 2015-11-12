@@ -42,7 +42,7 @@ void Prism::DebugText::Init(DebugFont* aFont)
 void Prism::DebugText::Render(const std::string& aString, const CU::Vector2<float>& aPosition
 	, const CU::Vector2<float>& aScale, const CU::Vector4<float>& aColor)
 {
-
+	aColor;
 	if (Engine::GetInstance()->myWireframeShouldShow == true)
 	{
 		Engine::GetInstance()->DisableWireframe();
