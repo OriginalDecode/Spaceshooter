@@ -271,6 +271,9 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 			case 3:
 				aEntityToAddTo.myAITargetPositionMode = eAITargetPositionMode::KAMIKAZE;
 				break;
+			case 5:
+				aEntityToAddTo.myAITargetPositionMode = eAITargetPositionMode::TURRET;
+				break;
 			default:
 				DL_ASSERT("Invalid AI-mode");
 				break;

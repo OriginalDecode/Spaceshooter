@@ -104,7 +104,10 @@ void AIComponent::Update(float aDeltaTime)
 		{
 			myRandomizeMovementTimer -= aDeltaTime;
 		}
-		FollowEntity(aDeltaTime);
+		if (myTargetPositionMode != eAITargetPositionMode::TURRET)
+		{
+			FollowEntity(aDeltaTime);
+		}
 
 		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE 
 			&& myTargetPositionMode != eAITargetPositionMode::MINE)

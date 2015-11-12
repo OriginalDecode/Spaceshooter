@@ -22,9 +22,9 @@ namespace Prism
 		, myIsPaused(true)
 		, myHasPrefetched(false)
 	{
-		myBuffers[0].Init(512);
-		myBuffers[1].Init(512);
-		myLoadArray.Init(512);
+		myBuffers[0].Init(4096);
+		myBuffers[1].Init(4096);
+		myLoadArray.Init(8192);
 		myActiveBuffer = 0;
 		myInactiveBuffer = 1;
 	}

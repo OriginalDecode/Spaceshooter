@@ -144,7 +144,8 @@ enum class eAITargetPositionMode
 	KEEP_DISTANCE,
 	ESCAPE_THEN_RETURN,
 	KAMIKAZE,
-	MINE
+	MINE,
+	TURRET
 };
 
 enum class eDifficult
