@@ -41,6 +41,7 @@ private:
 	Prism::Sprite* myHoverBackground;
 	GameStateMessage* myClickEvent;
 
+	bool myPlayedHover;
 	bool myIsHovered;
 	bool myBack;
 	bool myQuit;
