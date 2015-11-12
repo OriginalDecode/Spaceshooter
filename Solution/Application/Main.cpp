@@ -10,7 +10,7 @@
 
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath);
+bool ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath);
 void OnResize();
 
 Game* globalGame = nullptr;
@@ -68,7 +68,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
-	ReadSetup(setup, CU::GetMyDocumentFolderPath() + "SpaceShooter\\Data\\Setting\\SET_config.bin");
+	if (ReadSetup(setup, CU::GetMyDocumentFolderPath() + "SpaceShooter\\Data\\Setting\\SET_config.bin") == false)
+	{
+		return 1;
+	}
 
 	HWND hwnd;
 
@@ -225,7 +228,7 @@ void OnResize()
 	}
 }
 
-void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
+bool ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 {
 	int width = 800;
 	int height = 600;
@@ -250,16 +253,12 @@ void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 		file.read(buffer, 4);
 		windowed = *(reinterpret_cast<int*>(buffer));
 	}
-#ifdef RELEASE_BUILD
-	else if (aFilePath == CU::GetMyDocumentFolderPath() + "/SpaceShooter/" + "Data/Setting/SET_config.bin")
+	else 
 	{
-		RECT window;
-		const HWND desktopHandler = GetDesktopWindow();
-		GetWindowRect(desktopHandler, &window);
-		width = window.right;
-		height = window.bottom;
+		MessageBox(NULL, "Could not find the config file. Please use the launcher instead.", "Error: Could not find config", MB_ICONERROR);
+		return false;
 	}
-#else
+#ifndef RELEASE_BUILD
 	windowed = true;
 #endif
 
@@ -271,4 +270,5 @@ void ReadSetup(Prism::SetupInfo& aSetup, const std::string& aFilePath)
 		aSetup.myWindowed = true;
 	else
 		aSetup.myWindowed = false;
+	return true;
 }

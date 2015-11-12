@@ -200,7 +200,7 @@ namespace Prism
 	ID3D11Device* Engine::GetDevice()
 	{
 #ifdef THREADED_LOADING
-		DL_ASSERT_EXP(std::this_thread::get_id() != myMainThreadID ||
+		DL_ASSERT_EXP(std::this_thread::get_id() == myModelLoaderThreadID ||
 			myModelLoader->IsLoading() == false, "Called GetDevice() from mainThread, while modelLoader is loading, not allowed!");
 #endif
 		return myDirectX->GetDevice();
@@ -285,6 +285,8 @@ namespace Prism
 		myMainThreadID = std::this_thread::get_id();
 
 		myModelLoaderThread = new std::thread(&ModelLoader::Run, myModelLoader);
+
+		myModelLoaderThreadID = myModelLoaderThread->get_id();
 
 		ENGINE_LOG("Engine Init Successful");
 		return true;

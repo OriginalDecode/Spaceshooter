@@ -169,6 +169,7 @@
     <ClInclude Include="ConversationMessage.h" />
     <ClInclude Include="DefendMessage.h" />
     <ClInclude Include="DefendMission.h" />
+    <ClInclude Include="dirent.h" />
     <ClInclude Include="EMPMessage.h" />
     <ClInclude Include="ExplosionMessage.h" />
     <ClInclude Include="FadeMessage.h" />
