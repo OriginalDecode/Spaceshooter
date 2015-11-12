@@ -29,8 +29,8 @@ Prism::Text::Text(const Font& aFont)
 
 	ZeroMemory(myInitData, sizeof(myInitData));
 
-	myVertices.Init(16);
-	myIndices.Init(16);
+	myVertices.Init(1024);
+	myIndices.Init(1024);
 }
 
 

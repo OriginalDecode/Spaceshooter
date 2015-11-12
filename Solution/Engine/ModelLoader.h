@@ -20,6 +20,9 @@ namespace Prism
 		void ClearLoadJobs();
 
 		volatile bool IsLoading() const;
+		void Pause();
+		void UnPause();
+		void WaitUntilFinished() const;
 
 		ModelProxy* LoadModel(const std::string& aModelPath, const std::string& aEffectPath);
 		ModelProxy* LoadCube(float aWidth = 1.f, float aHeight = 1.f, float aDepth = 1.f
@@ -44,8 +47,10 @@ namespace Prism
 
 		void WaitUntilCopyIsAllowed();
 		void WaitUntilAddIsAllowed();
+		void AddPrefetchJobs();
 
 		CU::GrowingArray<LoadData> myBuffers[2];
+		CU::GrowingArray<LoadData> myLoadArray;
 		int myActiveBuffer;
 		int myInactiveBuffer;
 		volatile bool myCanAddToLoadArray;
@@ -53,6 +58,8 @@ namespace Prism
 		volatile bool myIsRunning;
 		volatile bool myIsLoading;
 		volatile bool myClearLoadJobs;
+		volatile bool myIsPaused;
+		volatile bool myHasPrefetched;
 
 		FBXFactory* myModelFactory;
 		CU::GrowingArray<Model*> myNonFXBModels;

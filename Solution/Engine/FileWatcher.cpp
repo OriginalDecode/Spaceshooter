@@ -6,7 +6,7 @@ namespace Prism
 {
 	FileWatcher::FileWatcher()
 	{
-		myFileDatas.Init(4);
+		myFileDatas.Init(256);
 	}
 
 	void FileWatcher::WatchFile(const std::string& aFile, std::function<void()> aCallBack)

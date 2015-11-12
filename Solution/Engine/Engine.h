@@ -103,6 +103,7 @@ namespace Prism
 		void StartFade(float aDuration);
 
 		bool myWireframeShouldShow;
+		volatile bool myIsLoading;
 
 	private:
 		struct FadeData
@@ -120,6 +121,7 @@ namespace Prism
 		
 		bool myWireframeIsOn;
 		bool myUsePBLPixelShader;
+		
 
 		DirectX* myDirectX;
 		SetupInfo* mySetupInfo;

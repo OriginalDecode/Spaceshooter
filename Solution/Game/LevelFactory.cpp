@@ -8,6 +8,7 @@
 #include "ConversationManager.h"
 #include "DefendMessage.h"
 #include "DirectionalLight.h"
+#include "dirent.h"
 #include "HealthComponent.h"
 #include "EffectContainer.h"
 #include <Engine.h>
@@ -39,7 +40,11 @@
 #include "SoundComponent.h"
 #include <SpotLight.h>
 #include <Sprite.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include "StreakEmitterComponent.h"
+#include <TextureContainer.h>
+#include <TimerManager.h>
 #include "WeaponFactory.h"
 #include <XMLReader.h>
 #include <thread>
@@ -146,6 +151,13 @@ void LevelFactory::LoadLevelListFromXML(const std::string& aXMLPath)
 
 void LevelFactory::ReadXML(const std::string& aFilePath)
 {
+	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
+
+	Prism::Engine::GetInstance()->myIsLoading = true;
+
+
+	FindTextures("Data/Resource/Texture/Particle/");
+
 	myCurrentLevel->myScene = new Prism::Scene();
 	myCurrentLevel->myWeaponFactory = new WeaponFactory();
 	myCurrentLevel->myWeaponFactory->LoadWeapons("Data/Script/LI_list_weapon.xml");
@@ -284,9 +296,11 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myEMP->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_boxsphere.fbx"
 		, "Data/Resource/Shader/S_effect_emp.fx");
 
-	while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
-	{
-	}
+	Prism::Engine::GetInstance()->GetModelLoader()->UnPause();
+	Prism::Engine::GetInstance()->GetModelLoader()->WaitUntilFinished();
+
+
+	Prism::Engine::GetInstance()->myIsLoading = false;
 
 	myIsLoading = false;
 }
@@ -323,7 +337,96 @@ void LevelFactory::ReadLevelSettings()
 		myCurrentLevel->myIsSkipable = true;
 	}
 
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->UpdateWeapons();
+
 	reader.CloseDocument();
+}
+
+void LevelFactory::FindTextures(const char *aDirName)
+{
+	DIR *dir;
+	char buffer[PATH_MAX + 2];
+	char *p = buffer;
+	const char *src;
+	char *end = &buffer[PATH_MAX];
+	int ok;
+
+	/* Copy directory name to buffer */
+	src = aDirName;
+	while (p < end  &&  *src != '\0') {
+		*p++ = *src++;
+	}
+	*p = '\0';
+
+	/* Open directory stream */
+	dir = opendir(aDirName);
+	if (dir != NULL) {
+		struct dirent *ent;
+
+		/* Print all files and directories within the directory */
+		while ((ent = readdir(dir)) != NULL) {
+			char *q = p;
+			char c;
+
+			/* Get final character of directory name */
+			if (buffer < q) {
+				c = q[-1];
+			}
+			else {
+				c = ':';
+			}
+
+			/* Append directory separator if not already there */
+			if (c != ':'  &&  c != '/'  &&  c != '\\') {
+				*q++ = '/';
+			}
+
+			/* Append file name */
+			src = ent->d_name;
+			while (q < end  &&  *src != '\0') {
+				*q++ = *src++;
+			}
+			*q = '\0';
+
+			/* Decide what to do with the directory entry */
+			switch (ent->d_type) {
+			case DT_LNK:
+			case DT_REG:
+				/* Output file name with directory */
+				//printf("%s\n", buffer);
+				LoadTexture(buffer);
+				break;
+
+			case DT_DIR:
+				/* Scan sub-directory recursively */
+				if (strcmp(ent->d_name, ".") != 0
+					&& strcmp(ent->d_name, "..") != 0) {
+					FindTextures(buffer);
+				}
+				break;
+
+			default:
+				/* Ignore device entries */
+				/*NOP*/;
+			}
+
+		}
+
+		closedir(dir);
+		ok = 1;
+
+	}
+	else {
+		DL_ASSERT(CU::Concatenate("Cannot open directory %s", aDirName));
+	}
+}
+
+void LevelFactory::LoadTexture(const std::string& aPath)
+{
+	if (aPath.compare(aPath.size() - 4, 4, ".dds") == 0)
+	{
+		Prism::Engine::GetInstance()->GetTextureContainer()->GetTexture(aPath);
+	}
 }
 
 void LevelFactory::LoadLights(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement)
@@ -399,7 +502,7 @@ void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLe
 		std::string propType;
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
-		int difficultHealth = newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale);
+		int difficultHealth = int(newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale));
 		newEntity->GetComponent<HealthComponent>()->Init(difficultHealth);
 
 		std::string defendName;

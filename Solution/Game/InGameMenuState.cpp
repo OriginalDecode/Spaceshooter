@@ -57,6 +57,7 @@ void InGameMenuState::EndState()
 
 const eStateStatus InGameMenuState::Update(const float& aDeltaTime)
 {
+	aDeltaTime;
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
 		//Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();

@@ -20,7 +20,7 @@ Prism::Scene::Scene()
 	, myPlayerInstance(nullptr)
 #endif
 {
-	myInstances.Init(4);
+	myInstances.Init(4096);
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
 	mySpotLights.Init(4);

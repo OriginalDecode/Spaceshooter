@@ -9,11 +9,11 @@
 
 Prism::Surface::Surface()
 {
-	myTextures.Init(2);
-	myShaderResources.Init(2);
-	myShaderResourceViews.Init(2);
-	myFilePaths.Init(2);
-	myShaderResourceNames.Init(2);
+	myTextures.Init(8);
+	myShaderResources.Init(8);
+	myShaderResourceViews.Init(8);
+	myFilePaths.Init(8);
+	myShaderResourceNames.Init(8);
 	myEmissive = false;
 }
 

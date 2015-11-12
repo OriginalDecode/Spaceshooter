@@ -55,10 +55,8 @@ namespace Prism
 		delete myFileWatcher;
 
 		Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
-		while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
-		{
-			//wait for ModelLoader to exit its loading-loop
-		}
+		Prism::Engine::GetInstance()->GetModelLoader()->WaitUntilFinished();
+
 		myModelLoader->Shutdown();
 		myModelLoaderThread->join();
 		delete myModelLoader;
@@ -78,6 +76,8 @@ namespace Prism
 		{
 			myInstance->myDirectX->SetFullscreen(true);
 		}
+
+		myInstance->Render();
 
 		return result;
 	}
@@ -105,11 +105,9 @@ namespace Prism
 		}
 		myTexts.RemoveAll();
 
-		myText->SetColor({ 1.f, 0, 0, 0.8f });
-
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
-			if (myModelLoader->IsLoading() == false)
+			if (myIsLoading == false)
 			{
 				myDebugText->SetText(myDebugTexts[i].myText);
 				myDebugText->SetPosition(myDebugTexts[i].myPosition);
@@ -278,9 +276,10 @@ namespace Prism
 		myDebugText->SetPosition({ 800.f, -300.f });
 		myDebugText->SetText("едц");
 		myDebugText->SetScale({ 1.f, 1.f });
+		myDebugText->SetColor({ 1.f, 0, 0, 0.8f });
 
 		myUsePBLPixelShader = true;
-
+		myIsLoading = false;
 
 		myMainThreadID = std::this_thread::get_id();
 
