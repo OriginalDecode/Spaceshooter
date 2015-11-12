@@ -11,7 +11,7 @@
 
 Prism::Effect::Effect()
 {
-	myEffectListeners.Init(2);
+	myEffectListeners.Init(512);
 	myEffect = nullptr;
 }
 

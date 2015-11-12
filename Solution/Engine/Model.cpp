@@ -14,9 +14,9 @@
 
 Prism::Model::Model()
 	: BaseModel()
-	, myChildren(2)
-	, myChildTransforms(2)
-	, myVertexFormat(4)
+	, myChildren(32)
+	, myChildTransforms(32)
+	, myVertexFormat(8)
 	, myIsNULLObject(true)
 	, myVertexBaseData(nullptr)
 	, myIndexBaseData(nullptr)

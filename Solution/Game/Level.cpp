@@ -49,7 +49,7 @@
 #include <XMLReader.h>
 
 Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
-	: myEntities(16)
+	: myEntities(4096)
 	, myComplete(false)
 	, myUsePostProcessing(true)
 	, mySkySphere(nullptr)
