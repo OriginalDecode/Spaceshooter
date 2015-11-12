@@ -198,6 +198,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	myEmitterManager->UpdateEmitters(aDeltaTime,myWorldMatrix);
 
 	myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
+	myPlayer->GetComponent<GUIComponent>()->SetCockpitOrientation();
 
 #ifndef RELEASE_BUILD
 	UpdateDebug();

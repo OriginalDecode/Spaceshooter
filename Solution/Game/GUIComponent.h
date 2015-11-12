@@ -55,6 +55,7 @@ public:
 	void SetRocketValues(const float& aRocketCurrentTime, const float& aRocketMaxTime);
 
 	const CU::Matrix44<float>* GetCockpitOrientation() const;
+	void SetCockpitOrientation();
 
 private:
 	Prism::Sprite* myReticle;
@@ -128,6 +129,9 @@ private:
 	bool myHasRockets;
 	const float* myRocketCurrentTime;
 	const float* myRocketMaxTime;
+
+	CU::Matrix44<float> myCockpitOrientation;
+	CU::Vector3<float> myCockpitOffset;
 };
 
 inline eComponentType GUIComponent::GetType()
@@ -157,7 +161,15 @@ inline void GUIComponent::SetRocketValues(const float& aRocketCurrentTime, const
 	myHasRockets = true;
 }
 
+inline void GUIComponent::SetCockpitOrientation()
+{
+	myCockpitOrientation = myEntity.myOrientation;
+	CU::Vector3<float> cockpitPosition = myCockpitOrientation.GetPos();
+	cockpitPosition += myCockpitOffset * myCockpitOrientation;
+	myCockpitOrientation.SetPos(cockpitPosition);
+}
+
 inline const CU::Matrix44<float>* GUIComponent::GetCockpitOrientation() const
 {
-	return &myEntity.myOrientation;
+	return &myCockpitOrientation;
 }

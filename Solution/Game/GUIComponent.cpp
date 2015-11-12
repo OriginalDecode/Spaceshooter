@@ -62,6 +62,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myRocketMaxTime(nullptr)
 	, myCurrentHitmarker(nullptr)
 	, myCurrentShield(100.f)
+	, myCockpitOffset(0, 0, -0.0f)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -86,11 +87,11 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	Prism::ModelProxy* model = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_healthbar.fbx", "Data/Resource/Shader/S_effect_bar_health.fx");
-	myGUIBars[0] = new Prism::Instance(*model, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
+	myGUIBars[0] = new Prism::Instance(*model, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myHealthBarRadius);
 
 	Prism::ModelProxy* model2 = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_shieldbar.fbx", "Data/Resource/Shader/S_effect_bar_shield.fx");
-	myGUIBars[1] = new Prism::Instance(*model2, myEntity.myOrientation, Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
+	myGUIBars[1] = new Prism::Instance(*model2, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
 
 
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
@@ -622,6 +623,7 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
+
 }
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)

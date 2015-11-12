@@ -557,8 +557,8 @@ void LevelFactory::LoadPlayer()
 	reader.CloseDocument();
 	Prism::ModelProxy* tempModel = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
 		"Data/Resource/Model/Player/SM_cockpit_glass_a.fbx", "Data/Resource/Shader/S_effect_glass.fx");
-	myCurrentLevel->myGlassCockpit = new Prism::Instance(*tempModel, myCurrentLevel->myPlayer->myOrientation, Prism::eOctreeType::PLAYER
-		, myCurrentLevel->myCockpitRadius);
+	myCurrentLevel->myGlassCockpit = new Prism::Instance(*tempModel, *myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->GetCockpitOrientation()
+		, Prism::eOctreeType::PLAYER, myCurrentLevel->myCockpitRadius);
 
 }
 
