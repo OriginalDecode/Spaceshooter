@@ -57,13 +57,15 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myBattlePlayed(false)
 	, myBackgroundMusicPlayed(true)
 	, myDeltaTime(0.f)
-	, myHasRockets(false)
+	, myHasRocketLauncher(false)
+	, myHasShotgun(false)
+	, myHasMachinegun(false)
 	, myRocketCurrentTime(nullptr)
 	, myRocketMaxTime(nullptr)
 	, myCurrentHitmarker(nullptr)
 	, myCurrentShield(100.f)
 	, myPlayedMissilesReady(false)
-	, myCockpitOffset(0, 0, -0.0f)
+	, myCockpitOffset(CalcCockpitOffset())
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -71,8 +73,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	PostMaster::GetInstance()->Subscribe(eMessageType::BULLET_COLLISION_TO_GUI, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::POWER_UP, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::KILL_STRUCTURE, this);
-
-
 
 	XMLReader reader;
 	reader.OpenDocument("Data/Resource/Model/Player/SM_cockpit_healthbar.xml");
@@ -94,7 +94,6 @@ GUIComponent::GUIComponent(Entity& aEntity)
 		"Data/Resource/Model/Player/SM_cockpit_shieldbar.fbx", "Data/Resource/Shader/S_effect_bar_shield.fx");
 	myGUIBars[1] = new Prism::Instance(*model2, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
 
-
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_health.fx");
 	hpBarEffect->SetPlayerVariable(1000);
@@ -103,15 +102,13 @@ GUIComponent::GUIComponent(Entity& aEntity)
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
 	shieldBarEffect->SetPlayerVariable(1000);
 
-
-
 	myReticle = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_circle.dds"
 		, { 1024.f, 1024.f }, { 512.f, 512.f });
 	CU::Vector2<float> arrowAndMarkerSize(64, 64);
 	mySteeringTarget = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_stearing.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 	myCrosshair = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting.dds"
-		, { 256.f, 256.f }, { 128.f, 128.f }); // the size scales the pic
+		, { 256.f, 256.f }, { 128.f, 128.f });
 	myEnemyMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_enemy.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 	myEnemyArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_enemy.dds"
@@ -149,12 +146,10 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 
-
 	myBackgroundConversation = new Prism::Sprite("Data/Resource/Texture/UI/T_background_conversation.dds"
 		, { 1024.f, 256.f }, { 0, 0 });
 	myBackgroundMission = new Prism::Sprite("Data/Resource/Texture/UI/T_background_mission.dds"
 		, { 512.f, 512.f }, { 0, 0 });
-
 }
 
 GUIComponent::~GUIComponent()
@@ -232,6 +227,9 @@ void GUIComponent::Init(float aMaxDistanceToEnemies)
 	float padding = 5.f;
 
 	ShootingComponent* shootingComponent = myEntity.GetComponent<ShootingComponent>();
+
+	myCurrentWeapon = &shootingComponent->GetCurrentWeaponID();
+
 
 	myPowerUpSlots[ePowerUpType::EMP] = new PowerUpGUIIcon("Data/Resource/Texture/UI/PowerUp/T_powerup_emp_active.dds"
 		, "Data/Resource/Texture/UI/PowerUp/T_powerup_emp_inactive.dds", { iconSize.x * 6.75f, iconSize.y * 2.5f + padding * 2.f }
@@ -349,15 +347,15 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aIsPowerup == true && showName == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(aName, { newRenderPos.x - 16.f, newRenderPos.y + 64.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(aName, { newRenderPos.x - 46.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	if (aShowDist == true)
 	{
-		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker 
+		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker
 			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
 		{
-			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 16.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, anAlpha });
 		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
@@ -370,6 +368,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos)
 {
+	aMousePos;
 	my3DClosestEnemyLength = 10000.f;
 	myClosestEnemyLength = 100000.f;
 	myClosestEnemy = nullptr;
@@ -384,9 +383,6 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		myBackgroundConversation->Render({ 0, 0 });
 	}
 	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f });
-	/*engine->PrintText(aText, { screenCenter.x * 0.15f, -screenCenter.y * 1.2f - aMissionIndex * 25.f }
-	, Prism::eTextType::RELEASE_TEXT);*/
-
 
 	Prism::Engine::GetInstance()->PrintText(myConversation, { 50.f, -50.f }, Prism::eTextType::RELEASE_TEXT);
 	myReticle->Render({ halfWidth, -halfHeight });
@@ -459,23 +455,21 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	float percentageToReady = 1.f;
 
-	if (myHasRockets == true)
+	if (myHasRocketLauncher == true)
 	{
+		Prism::Engine::GetInstance()->PrintText("RL", { halfWidth + 550.f, -halfHeight + 15.f }, Prism::eTextType::RELEASE_TEXT);
+
 		percentageToReady = *myRocketCurrentTime / *myRocketMaxTime;
 		if (percentageToReady >= 1.f)
 		{
-			Prism::Engine::GetInstance()->PrintText("RL\nRDY", { halfWidth * 1.57f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
-			if (myPlayedMissilesReady == false)
-			{
-				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_MissilesReady", 0);
-				myPlayedMissilesReady = true;
-			}
-		}
-		else
-		{
-			myPlayedMissilesReady = false;
+			Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 550.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
 		}
 	}
+	else
+	{
+		myPlayedMissilesReady = false;
+	}
+
 
 	if (myHasHomingWeapon == true)
 	{
@@ -486,14 +480,14 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 	}
-	else if (myHasRockets == true && percentageToReady >= 1.f)
+	else if (myHasRocketLauncher == true && percentageToReady >= 1.f)
 	{
 		if (myClosestEnemy != nullptr)
 		{
 			myHomingTarget->Rotate(myDeltaTime);
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
 		}
-	
+
 		myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
 	}
 
@@ -530,7 +524,26 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
 	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
 
-	Prism::Engine::GetInstance()->PrintText(myWeapon, { halfWidth * 1.47f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
+	if (myHasMachinegun == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("MG", { halfWidth + 420.f, -halfHeight + 15.f }, Prism::eTextType::RELEASE_TEXT);
+
+		if (*myCurrentWeapon == 0)
+		{
+			Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 420.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
+		}
+	}
+
+	if (myHasShotgun == true)
+	{
+		Prism::Engine::GetInstance()->PrintText("SG", { halfWidth + 480.f, -halfHeight + 15.f }, Prism::eTextType::RELEASE_TEXT);
+
+		if (*myCurrentWeapon == 1)
+		{
+			Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 480.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
+		}
+	}
+
 
 	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
 		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
@@ -591,7 +604,7 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 {
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
-	shieldBarEffect->SetPlayerVariable(aNote.myShieldStrength);
+	shieldBarEffect->SetPlayerVariable(int(aNote.myShieldStrength));
 	myCurrentShield = aNote.myShieldStrength;
 }
 
@@ -633,7 +646,8 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
-
+	aMessage;
+	myCockpitOffset = CalcCockpitOffset();
 }
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
@@ -641,7 +655,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
-		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY 
+		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY
 			|| aMessage.myEntityCollidedWith.GetType() == eEntityType::STRUCTURE)
 		{
 			myCurrentHitmarker = myHitMarker;
@@ -672,11 +686,11 @@ void GUIComponent::ReceiveMessage(const PowerUpMessage& aMessage)
 
 	if (aMessage.GetUpgradeID() == 0)
 	{
-		myWeapon = "MG\nRDY";
+		myHasMachinegun = true;
 	}
 	else if (aMessage.GetUpgradeID() == 1)
 	{
-		myWeapon = "SG\nRDY";
+		myHasShotgun = true;
 	}
 }
 
@@ -702,7 +716,7 @@ void GUIComponent::Reset()
 
 	myEnemiesTarget = nullptr;
 	myClosestEnemy = nullptr;
-	myHasRockets = false;
+	myHasRocketLauncher = false;
 	myWaypointActive = false;
 
 	ShootingComponent* shootingComp = myEntity.GetComponent<ShootingComponent>();
@@ -712,15 +726,15 @@ void GUIComponent::Reset()
 		int weaponID = shootingComp->GetCurrentWeaponID();
 		if (weaponID == 0)
 		{
-			myWeapon = "MG\nRDY";
+			myHasMachinegun = true;
 		}
 		else if (weaponID == 1)
 		{
-			myWeapon = "SG\nRDY";
+			myHasShotgun = true;
 		}
 		if (weaponSize >= 2)
 		{
-			myHasRockets = true;
+			myHasRocketLauncher = true;
 			myRocketCurrentTime = &shootingComp->GetRocketCurrentTime();
 			myRocketMaxTime = &shootingComp->GetRocketMaxTime();
 		}
@@ -746,4 +760,31 @@ void GUIComponent::Reset()
 	myBattlePlayed = false;
 	myBackgroundMusicPlayed = true;
 	myDeltaTime = 0.f;
+}
+
+CU::Vector3<float> GUIComponent::CalcCockpitOffset() const
+{
+	CU::Vector2<float> resolution(float(Prism::Engine::GetInstance()->GetWindowSize().x), float(Prism::Engine::GetInstance()->GetWindowSize().y));
+
+	float aspect = resolution.x / resolution.y;
+	float epsilon = 0.05f;
+	if (aspect < epsilon + 1280.f / 1024.f)
+	{
+		return CU::Vector3<float>(0, 0, -0.2f);
+	}
+	else if (aspect < epsilon + 1920.f / 1200.f)
+	{
+		return CU::Vector3<float>(0, 0, -0.1f);
+	}
+
+	return CU::Vector3<float>(0, 0, 0);
+}
+
+void GUIComponent::UpdateWeapons()
+{
+	int weaponSize = myEntity.GetComponent<ShootingComponent>()->GetWeaponSize();
+
+	myHasMachinegun = weaponSize >= 1 ? true : false;
+	myHasShotgun = weaponSize >= 2 ? true : false;
+	myHasRocketLauncher = weaponSize >= 3 ? true : false;
 }

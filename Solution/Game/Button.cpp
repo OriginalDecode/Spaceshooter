@@ -106,6 +106,7 @@ void Button::Render()
 
 eStateStatus Button::Update(const CU::Vector2<float>& aMousePos, const bool& aMouseIsPressed, const int aLevelID)
 {
+	aLevelID;
 	myIsHovered = false;
 
 	if ((aMousePos.x + mySize.x / 2) >= myPosition.x && 
