@@ -63,7 +63,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCurrentHitmarker(nullptr)
 	, myCurrentShield(100.f)
 	, myPlayedMissilesReady(false)
-	, myCockpitOffset(0, 0, -0.0f)
+	, myCockpitOffset(CalcCockpitOffset())
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -633,7 +633,7 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
-
+	myCockpitOffset = CalcCockpitOffset();
 }
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
@@ -746,4 +746,22 @@ void GUIComponent::Reset()
 	myBattlePlayed = false;
 	myBackgroundMusicPlayed = true;
 	myDeltaTime = 0.f;
+}
+
+CU::Vector3<float> GUIComponent::CalcCockpitOffset() const
+{
+	CU::Vector2<float> resolution(float(Prism::Engine::GetInstance()->GetWindowSize().x), float(Prism::Engine::GetInstance()->GetWindowSize().y));
+
+	float aspect = resolution.x / resolution.y;
+	float epsilon = 0.05f;
+	if (aspect < epsilon + 1280.f / 1024.f)
+	{
+		return CU::Vector3<float>(0, 0, -0.2f);
+	}
+	else if (aspect < epsilon + 1920.f / 1200.f)
+	{
+		return CU::Vector3<float>(0, 0, -0.1f);
+	}
+
+	return CU::Vector3<float>(0, 0, 0);
 }

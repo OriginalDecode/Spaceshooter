@@ -58,6 +58,7 @@ public:
 	void SetCockpitOrientation();
 
 private:
+	CU::Vector3<float> CalcCockpitOffset() const;
 	Prism::Sprite* myReticle;
 	Prism::Sprite* myModel2DToRender;
 	Prism::Sprite* myEnemyArrow;
