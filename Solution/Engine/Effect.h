@@ -61,6 +61,8 @@ namespace Prism
 		void SetExtraTexture(Texture* aTexture);
 		void SetCameraPosition(const CU::Vector3<float>& aCameraPos);
 
+		void SetAmbientHue(CU::Vector4f aVector);
+
 	private:
 		ID3DX11Effect* myEffect;
 		ID3DX11EffectTechnique* myTechnique;
@@ -76,6 +78,8 @@ namespace Prism
 		ID3DX11EffectScalarVariable* myPlayerVariable;
 
 		ID3DX11EffectVectorVariable* myScaleVector;
+		ID3DX11EffectVectorVariable* myAmbientHue;
+
 
 		ID3DX11EffectVariable* myDirectionalLight;
 		ID3DX11EffectVariable* myPointLight;

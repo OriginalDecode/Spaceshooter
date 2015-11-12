@@ -57,7 +57,6 @@ private:
 	void LoadTriggers(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadPowerups(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement);
 	void LoadDifficults();
-
 	void FillDataPropOrDefendable(XMLReader& aReader, tinyxml2::XMLElement* aLevelElement, Entity* aEntityToCreate);
 
 	void AddToScene();
@@ -67,7 +66,7 @@ private:
 	CU::InputWrapper* myInputWrapper;
 	Level* myCurrentLevel;
 	Level* myOldLevel;
-
+	CU::Vector4f myAmbientHue;
 	CU::GrowingArray<Prism::DirectionalLight*> myDirectionalLights;
 	CU::GrowingArray<Prism::PointLight*> myPointLights;
 	CU::GrowingArray<Prism::SpotLight*> mySpotLights;

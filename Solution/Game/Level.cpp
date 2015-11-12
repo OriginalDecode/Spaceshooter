@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include "ConversationManager.h"
 #include "DefendMessage.h"
+#include <Effect.h>
 #include "EffectContainer.h"
 #include "EMPMessage.h"
 #include <Engine.h>

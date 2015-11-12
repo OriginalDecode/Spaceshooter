@@ -11,6 +11,7 @@
 #include "dirent.h"
 #include "HealthComponent.h"
 #include "EffectContainer.h"
+#include <Effect.h>
 #include <Engine.h>
 #include <EngineEnums.h>
 #include "Entity.h"
@@ -301,6 +302,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 
 	Prism::Engine::GetInstance()->myIsInLoadingScreen = false;
+	Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_pbl.fx")->SetAmbientHue(myAmbientHue);
 
 	myIsLoading = false;
 }
@@ -310,6 +312,8 @@ void LevelFactory::ReadLevelSettings()
 	XMLReader reader;
 	std::string settingsPath = "Data/Level/Level0" + std::to_string(myCurrentID - 1) + "/L_level_0" + std::to_string(myCurrentID - 1) + "_settings.xml";
 	reader.OpenDocument(settingsPath);
+
+	myAmbientHue = { 0.f, 0.f, 0.f, 0.f };
 
 	std::string firstWeapon = "";
 	std::string secondWeapon = "";
@@ -336,6 +340,16 @@ void LevelFactory::ReadLevelSettings()
 	{
 		myCurrentLevel->myIsSkipable = true;
 	}
+
+
+	reader.ReadAttribute(reader.FindFirstChild("Ambient"), "r", myAmbientHue.r);
+	reader.ReadAttribute(reader.FindFirstChild("Ambient"), "g", myAmbientHue.g);
+	reader.ReadAttribute(reader.FindFirstChild("Ambient"), "b", myAmbientHue.b);
+	
+	myAmbientHue.r = myAmbientHue.r / 255.f;
+	myAmbientHue.g = myAmbientHue.g / 255.f;
+	myAmbientHue.b = myAmbientHue.b / 255.f;
+
 
 	reader.CloseDocument();
 }
