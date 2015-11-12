@@ -47,12 +47,12 @@ public:
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 	void ReceiveMessage(const KillStructureMessage& aMessage) override;
 
-
-
 	void Reset() override;
 
 	Entity* GetClosestEnemy();
 	void SetRocketValues(const float& aRocketCurrentTime, const float& aRocketMaxTime);
+
+	void UpdateWeapons();
 
 private:
 	Prism::Sprite* myReticle;
@@ -123,9 +123,14 @@ private:
 
 	std::string myWeapon;
 
-	bool myHasRockets;
+	bool myHasRocketLauncher;
+	bool myHasMachinegun;
+	bool myHasShotgun;
+
 	const float* myRocketCurrentTime;
 	const float* myRocketMaxTime;
+
+	const int* myCurrentWeapon;
 };
 
 inline eComponentType GUIComponent::GetType()
@@ -152,5 +157,5 @@ inline void GUIComponent::SetRocketValues(const float& aRocketCurrentTime, const
 {
 	myRocketCurrentTime = &aRocketCurrentTime;
 	myRocketMaxTime = &aRocketMaxTime;
-	myHasRockets = true;
+	myHasRocketLauncher = true;
 }

@@ -323,6 +323,8 @@ void LevelFactory::ReadLevelSettings()
 		myCurrentLevel->myIsSkipable = true;
 	}
 
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->UpdateWeapons();
+
 	reader.CloseDocument();
 }
 
