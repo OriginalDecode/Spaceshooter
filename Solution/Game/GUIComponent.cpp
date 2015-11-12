@@ -62,6 +62,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myRocketMaxTime(nullptr)
 	, myCurrentHitmarker(nullptr)
 	, myCurrentShield(100.f)
+	, myPlayedMissilesReady(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -463,6 +464,15 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		if (percentageToReady >= 1.f)
 		{
 			Prism::Engine::GetInstance()->PrintText("RL\nRDY", { halfWidth * 1.57f, -halfHeight }, Prism::eTextType::RELEASE_TEXT);
+			if (myPlayedMissilesReady == false)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_MissilesReady", 0);
+				myPlayedMissilesReady = true;
+			}
+		}
+		else
+		{
+			myPlayedMissilesReady = false;
 		}
 	}
 
