@@ -20,13 +20,13 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	myBackground = new Prism::Sprite(aTexturePath, aSize, aSize/2.f);
 	myInputWrapper = anInputWrapper;
 	myTextMessage = "";
-	CU::Vector2<float> spriteSize(64.f, 64.f);
-	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", spriteSize, spriteSize * 0.5f);
-	myOptionalBadge = new Prism::Sprite("Data/Resource/Texture/Menu/Badge.dds", spriteSize, spriteSize * 0.5f);
-	myStarGrey = new Prism::Sprite("Data/Resource/Texture/Menu/StarGrey.dds", spriteSize, spriteSize * 0.5f);
-	myBronzeStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarBronze.dds", spriteSize, spriteSize * 0.5f);
-	mySilverStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarSilver.dds", spriteSize, spriteSize * 0.5f);
-	myGoldStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarGold.dds", spriteSize, spriteSize * 0.5f);
+	mySpriteSize = {64.f, 64.f};
+	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", mySpriteSize, mySpriteSize * 0.5f);
+	myOptionalBadge = new Prism::Sprite("Data/Resource/Texture/Menu/Badge.dds", mySpriteSize, mySpriteSize * 0.5f);
+	myStarGrey = new Prism::Sprite("Data/Resource/Texture/Menu/StarGrey.dds", mySpriteSize, mySpriteSize * 0.5f);
+	myBronzeStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarBronze.dds", mySpriteSize, mySpriteSize * 0.5f);
+	mySilverStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarSilver.dds", mySpriteSize, mySpriteSize * 0.5f);
+	myGoldStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarGold.dds", mySpriteSize, mySpriteSize * 0.5f);
 
 	float oneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
 	float twoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
@@ -125,8 +125,7 @@ void MessageState::Render()
 		+ std::to_string(int(float((myLevelScore.myShotsHit) / denom * 100.f))) + "%"
 		, { myMessagePosition.x, myMessagePosition.y - 250 }, Prism::eTextType::RELEASE_TEXT);
 
-	Prism::Engine::GetInstance()->PrintText("Optional missions completed: " 
-		+ std::to_string(myLevelScore.myCompletedOptional) + " / " + std::to_string(myLevelScore.myTotalOptional)
+	Prism::Engine::GetInstance()->PrintText("Optional missions completed: "
 		, { myMessagePosition.x, myMessagePosition.y - 275 }, Prism::eTextType::RELEASE_TEXT);
 
 	if (myShowBadge)
@@ -177,11 +176,11 @@ void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 	{
 		if (mySaveScore.myCompletedOptional < i)
 		{
-			myOptionalBadgeGrey->Render({ aRenderPos.x + 32.f + (64.f * (i - 1)), aRenderPos.y - 350 });
+			myOptionalBadgeGrey->Render({ myMessagePosition.x + 350.f + (mySpriteSize.x * i), myMessagePosition.y - 275 });
 		}
 		else
 		{
-			myOptionalBadge->Render({ aRenderPos.x + 32.f + (64.f * (i - 1)), aRenderPos.y - 350 });
+			myOptionalBadge->Render({ myMessagePosition.x + 350.f + (mySpriteSize.x * i), myMessagePosition.y - 275 });
 		}
 	}
 }

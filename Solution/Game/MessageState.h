@@ -40,6 +40,7 @@ private:
 	Prism::Sprite* myBronzeStar;
 	Prism::Sprite* myGoldStar;
 	Prism::Sprite* mySilverStar;
+	CU::Vector2<float> mySpriteSize;
 
 
 	std::string myTextMessage;
