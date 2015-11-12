@@ -130,6 +130,7 @@ namespace Prism
 		FileWatcher* myFileWatcher;
 		Font* myFont;
 		Text* myText;
+		Text* myDebugText;
 		FadeData myFadeData;
 
 		CU::Vector4<float> myClearColor;

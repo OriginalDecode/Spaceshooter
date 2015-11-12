@@ -106,15 +106,18 @@ namespace Prism
 		myTexts.RemoveAll();
 
 		myText->SetColor({ 1.f, 0, 0, 0.8f });
-#ifndef THREADED_LOADING
+
 		for (int i = 0; i < myDebugTexts.Size(); ++i)
 		{
-			myText->SetText(myDebugTexts[i].myText);
-			myText->SetPosition(myDebugTexts[i].myPosition);
-			//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
-			myText->Render();
+			if (myModelLoader->IsLoading() == false)
+			{
+				myDebugText->SetText(myDebugTexts[i].myText);
+				myDebugText->SetPosition(myDebugTexts[i].myPosition);
+				//myText->SetScale({ myDebugTexts[i].myScale / 2.f, myDebugTexts[i].myScale / 2.f });
+				myDebugText->Render();
+			}
 		}
-#endif
+
 		myDebugTexts.RemoveAll();
 
 		if (myFadeData.myIsFading == true)
@@ -270,6 +273,11 @@ namespace Prism
 		myText->SetPosition({ 800.f, -300.f });
 		myText->SetText("едц");
 		myText->SetScale({ 1.f, 1.f });
+
+		myDebugText = new Text(*myFont);
+		myDebugText->SetPosition({ 800.f, -300.f });
+		myDebugText->SetText("едц");
+		myDebugText->SetScale({ 1.f, 1.f });
 
 		myUsePBLPixelShader = true;
 
