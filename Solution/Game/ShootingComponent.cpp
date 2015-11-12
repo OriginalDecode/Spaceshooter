@@ -403,10 +403,6 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	}
 
 	newWeapon.myID = myWeapons.Size();
-	if (newWeapon.myID < 2)
-	{
-		myCurrentWeaponID = newWeapon.myID;
-	}
 
 	myWeapons.Add(newWeapon);
 	myHasWeapon = true;
@@ -422,8 +418,6 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 {
 	if (aWeaponID >= myWeapons.Size())
 	{
-		//std::string errorMessage = "[ShootingComponent] Tried to upgrade non existing weapon with ID " + aWeaponID;
-		//DL_ASSERT(errorMessage.c_str());
 		AddWeapon(aWeapon);
 		return;
 	}

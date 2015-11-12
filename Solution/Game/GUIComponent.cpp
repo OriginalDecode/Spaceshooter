@@ -144,7 +144,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 
 	myStructureMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_marker_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
-	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_prop.dds"
+	myStructureArrow = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_arrow_structure.dds"
 		, arrowAndMarkerSize, arrowAndMarkerSize / 2.f);
 
 

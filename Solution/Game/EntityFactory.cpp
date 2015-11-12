@@ -519,7 +519,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	aTargetEntity->SetShouldRotateX(sourceEntity->GetShouldRotateX());
 	aTargetEntity->SetShouldRotateY(sourceEntity->GetShouldRotateY());
 	aTargetEntity->SetShouldRotateZ(sourceEntity->GetShouldRotateZ());
-
+	
 	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
 	{
 		eCollisionType collisionType = sourceEntity->GetComponent<CollisionComponent>()->GetCollisionType();
@@ -562,7 +562,11 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 				aTargetEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(scale);
 			}
 		}
-
+		else if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr)
+		{
+			float scaleOrg = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius;
+			aTargetEntity->GetComponent<CollisionComponent>()->SetCollisionRadius(scaleOrg + it->second.myCollisionSphereRadius);
+		}
 	}
 	if (sourceEntity->GetComponent<PhysicsComponent>() != nullptr)
 	{
