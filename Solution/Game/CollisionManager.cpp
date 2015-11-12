@@ -15,12 +15,12 @@
 #include "SpawnExplosionMessage.h"
 
 CollisionManager::CollisionManager()
-	: myPlayers(1)
-	, myEnemies(16)
-	, myPlayerBullets(16)
-	, myEnemyBullets(16)
+	: myPlayers(2)
+	, myEnemies(64)
+	, myPlayerBullets(128)
+	, myEnemyBullets(128)
 	, myTriggers(16)
-	, myProps(16)
+	, myProps(4096)
 	, myPowerUps(16)
 	, myDefendables(16)
 	, myStructures(16)

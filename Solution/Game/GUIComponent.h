@@ -47,8 +47,6 @@ public:
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 	void ReceiveMessage(const KillStructureMessage& aMessage) override;
 
-
-
 	void Reset() override;
 
 	Entity* GetClosestEnemy();
@@ -57,7 +55,10 @@ public:
 	const CU::Matrix44<float>* GetCockpitOrientation() const;
 	void SetCockpitOrientation();
 
+	void UpdateWeapons();
+
 private:
+	CU::Vector3<float> CalcCockpitOffset() const;
 	Prism::Sprite* myReticle;
 	Prism::Sprite* myModel2DToRender;
 	Prism::Sprite* myEnemyArrow;
@@ -126,6 +127,10 @@ private:
 
 	std::string myWeapon;
 
+	bool myHasRocketLauncher;
+	bool myHasMachinegun;
+	bool myHasShotgun;
+
 	bool myHasRockets;
 	bool myPlayedMissilesReady;
 	const float* myRocketCurrentTime;
@@ -133,6 +138,8 @@ private:
 
 	CU::Matrix44<float> myCockpitOrientation;
 	CU::Vector3<float> myCockpitOffset;
+
+	const int* myCurrentWeapon;
 };
 
 inline eComponentType GUIComponent::GetType()
@@ -159,7 +166,7 @@ inline void GUIComponent::SetRocketValues(const float& aRocketCurrentTime, const
 {
 	myRocketCurrentTime = &aRocketCurrentTime;
 	myRocketMaxTime = &aRocketMaxTime;
-	myHasRockets = true;
+	myHasRocketLauncher = true;
 }
 
 inline void GUIComponent::SetCockpitOrientation()

@@ -33,8 +33,8 @@ Prism::TreeNode::TreeNode(const CU::Vector3<float>& aPosition, float aHalfWidth,
 	, myDepth(aDepth)
 	, myMaxDepth(aMaxDepth)
 	, myLooseness(1.f)
-	, myObjectsDynamic(16)
-	, myObjectsStatic(16)
+	, myObjectsDynamic(64)
+	, myObjectsStatic(256)
 {
 	myLooseWidth = myHalfWidth * myLooseness;
 }

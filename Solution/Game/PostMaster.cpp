@@ -7,7 +7,7 @@ PostMaster::PostMaster()
 {
 	for (int i = 0; i < static_cast<int>(eMessageType::COUNT); ++i)
 	{
-		mySubscribers[i].Init(2);
+		mySubscribers[i].Init(64);
 	}
 }
 

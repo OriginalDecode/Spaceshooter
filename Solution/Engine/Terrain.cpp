@@ -111,7 +111,7 @@ namespace Prism
 		unsigned int height = myHeightMap->myDepth;
 		unsigned int width = myHeightMap->myWidth;
 		float yScale = myHeight / 255.f;
-		float xScale = mySize.x / myHeightMap->myDepth;
+		//float xScale = mySize.x / myHeightMap->myDepth;
 		float xzScale = mySize.y / myHeightMap->myDepth;
 
 

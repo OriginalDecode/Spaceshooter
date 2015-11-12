@@ -337,6 +337,8 @@ void LevelFactory::ReadLevelSettings()
 		myCurrentLevel->myIsSkipable = true;
 	}
 
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->UpdateWeapons();
+
 	reader.CloseDocument();
 }
 
@@ -500,7 +502,7 @@ void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLe
 		std::string propType;
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
-		int difficultHealth = newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale);
+		int difficultHealth = int(newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale));
 		newEntity->GetComponent<HealthComponent>()->Init(difficultHealth);
 
 		std::string defendName;

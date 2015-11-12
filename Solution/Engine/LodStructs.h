@@ -12,8 +12,8 @@ namespace Prism
 	struct LodGroup
 	{
 		LodGroup()
-			: myLods(4)
-			, myThreshHolds(4)
+			: myLods(8)
+			, myThreshHolds(8)
 			, myMin(0.f)
 			, myMax(1000.f)
 		{}

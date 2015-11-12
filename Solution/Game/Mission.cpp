@@ -7,8 +7,8 @@
 
 Mission::Mission(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	: myIndex(-1)
-	, myStartEventNames(4)
-	, myEndEventNames(4)
+	, myStartEventNames(32)
+	, myEndEventNames(32)
 {
 	MissionEventReader::ReadEventNames(aReader, aElement, myStartEventNames, myEndEventNames);
 }
