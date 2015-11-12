@@ -127,6 +127,7 @@ private:
 	std::string myWeapon;
 
 	bool myHasRockets;
+	bool myPlayedMissilesReady;
 	const float* myRocketCurrentTime;
 	const float* myRocketMaxTime;
 
