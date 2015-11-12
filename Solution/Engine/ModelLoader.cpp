@@ -7,6 +7,7 @@
 #include "ModelProxy.h"
 #include "FBXFactory.h"
 #include <TimerManager.h>
+#include <XMLReader.h>
 
 namespace Prism
 {
@@ -19,9 +20,11 @@ namespace Prism
 		, myIsLoading(false)
 		, myClearLoadJobs(true)
 		, myIsPaused(true)
+		, myHasPrefetched(false)
 	{
 		myBuffers[0].Init(512);
 		myBuffers[1].Init(512);
+		myLoadArray.Init(512);
 		myActiveBuffer = 0;
 		myInactiveBuffer = 1;
 	}
@@ -40,6 +43,11 @@ namespace Prism
 #else
 		while (myIsRunning == true)
 		{
+			if (myHasPrefetched == false)
+			{
+				AddPrefetchJobs();
+			}
+
 			if (myIsPaused == true)
 			{
 				myCanAddToLoadArray = true;
@@ -76,20 +84,29 @@ namespace Prism
 			myCanAddToLoadArray = true;
 			myIsLoading = true;
 
-			CU::GrowingArray<LoadData>& loadArray = myBuffers[myActiveBuffer];
-			for (int i = 0; i < loadArray.Size(); ++i)
+			for (int i = 0; i < myBuffers[myActiveBuffer].Size(); ++i)
+			{
+				myLoadArray.Add(myBuffers[myActiveBuffer][i]);
+			}
+
+			for (int i = myLoadArray.Size() - 1; i >= 0; --i)
 			{
 				//check in here aswell to allow early outs so we dont have to wait for 2-3 seconds to quit if
 				//we got a big load-array
+				if (myIsPaused == true)
+				{
+					break;
+				}
+
 				if (myIsRunning == false || myClearLoadJobs == true)
 				{
 					myIsLoading = false;
 					myClearLoadJobs = false;
-					loadArray.RemoveAll();
+					myLoadArray.RemoveAll();
 					break;
 				}
 
-				eLoadType loadType = loadArray[i].myLoadType;
+				eLoadType loadType = myLoadArray[i].myLoadType;
 
 				Model* model = nullptr;
 				switch (loadType)
@@ -97,16 +114,16 @@ namespace Prism
 				case Prism::ModelLoader::eLoadType::MODEL:
 				{
 					
-					model = myModelFactory->LoadModel(loadArray[i].myModelPath.c_str(),
-						Engine::GetInstance()->GetEffectContainer()->GetEffect(loadArray[i].myEffectPath));
+					model = myModelFactory->LoadModel(myLoadArray[i].myModelPath.c_str(),
+						Engine::GetInstance()->GetEffectContainer()->GetEffect(myLoadArray[i].myEffectPath));
 					
 					break;
 				}
 				case Prism::ModelLoader::eLoadType::CUBE:
 				{
 					model = new Prism::Model();
-					model->InitCube(loadArray[i].mySize.x, loadArray[i].mySize.y,
-						loadArray[i].mySize.z, loadArray[i].myColor);
+					model->InitCube(myLoadArray[i].mySize.x, myLoadArray[i].mySize.y,
+						myLoadArray[i].mySize.z, myLoadArray[i].myColor);
 
 					myNonFXBModels.Add(model);
 					break;
@@ -121,7 +138,8 @@ namespace Prism
 					DL_MESSAGE_BOX("Failed to Load model", "ModelLoader->Error", MB_ICONWARNING);
 				}
 
-				loadArray[i].myProxy->SetModel(model);
+				myLoadArray[i].myProxy->SetModel(model);
+				myLoadArray.RemoveCyclicAtIndex(i);
 			}
 		}
 #endif
@@ -169,6 +187,52 @@ namespace Prism
 		while (myIsLoading == true)
 		{
 		}
+	}
+
+	void ModelLoader::AddPrefetchJobs()
+	{
+		XMLReader entityReader;
+		entityReader.OpenDocument("Data/Script/LI_list_entity.xml");
+		tinyxml2::XMLElement* entityRoot = entityReader.FindFirstChild("root");
+		tinyxml2::XMLElement* entityPathElement = entityReader.ForceFindFirstChild(entityRoot, "path");
+		for (; entityPathElement != nullptr; entityPathElement = entityReader.FindNextElement(entityPathElement, "path"))
+		{
+			std::string entityPath;
+			entityReader.ForceReadAttribute(entityPathElement, "src", entityPath);
+
+			XMLReader fbxReader;
+			fbxReader.OpenDocument(entityPath);
+
+			entityRoot = fbxReader.FindFirstChild("root");
+			tinyxml2::XMLElement* entityElement = nullptr;
+			if (entityRoot != nullptr)
+			{
+				entityElement = fbxReader.ForceFindFirstChild(entityRoot, "Entity");
+			}
+			else
+			{
+				entityElement = fbxReader.ForceFindFirstChild("Entity");
+			}
+
+			tinyxml2::XMLElement* gfxElement = fbxReader.FindFirstChild(entityElement, "GraphicsComponent");
+			if (gfxElement != nullptr)
+			{
+				tinyxml2::XMLElement* modelElement = fbxReader.ForceFindFirstChild(gfxElement, "Model");
+				std::string model;
+				std::string effect;
+
+				fbxReader.ForceReadAttribute(modelElement, "modelFile", model);
+				fbxReader.ForceReadAttribute(modelElement, "effectFile", effect);
+
+				LoadModel(model, effect);
+			}
+
+			fbxReader.CloseDocument();
+		}
+
+		entityReader.CloseDocument();
+
+		myHasPrefetched = true;
 	}
 
 	ModelProxy* ModelLoader::LoadModel(const std::string& aModelPath, const std::string& aEffectPath)

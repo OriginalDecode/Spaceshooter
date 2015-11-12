@@ -153,7 +153,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 {
 	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
 
-	Prism::Engine::GetInstance()->myIsInLoadingScreen = true;
+	Prism::Engine::GetInstance()->myIsLoading = true;
 
 
 	FindTextures("Data/Resource/Texture/Particle/");
@@ -300,7 +300,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	Prism::Engine::GetInstance()->GetModelLoader()->WaitUntilFinished();
 
 
-	Prism::Engine::GetInstance()->myIsInLoadingScreen = false;
+	Prism::Engine::GetInstance()->myIsLoading = false;
 
 	myIsLoading = false;
 }

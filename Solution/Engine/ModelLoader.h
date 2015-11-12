@@ -47,8 +47,10 @@ namespace Prism
 
 		void WaitUntilCopyIsAllowed();
 		void WaitUntilAddIsAllowed();
+		void AddPrefetchJobs();
 
 		CU::GrowingArray<LoadData> myBuffers[2];
+		CU::GrowingArray<LoadData> myLoadArray;
 		int myActiveBuffer;
 		int myInactiveBuffer;
 		volatile bool myCanAddToLoadArray;
@@ -57,6 +59,7 @@ namespace Prism
 		volatile bool myIsLoading;
 		volatile bool myClearLoadJobs;
 		volatile bool myIsPaused;
+		volatile bool myHasPrefetched;
 
 		FBXFactory* myModelFactory;
 		CU::GrowingArray<Model*> myNonFXBModels;
