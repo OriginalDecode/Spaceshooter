@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include <AudioInterface.h>
 #include "Button.h"
 #include <Camera.h>
 #include <Engine.h>
@@ -22,6 +23,7 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 	, myShowButtons(!aShowVictoryScreen)
 	, myWaitForButtonsTime(5.f)
 {
+	//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_MenuMusic", 0);
 	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
 
 	myInputWrapper = anInputWrapper;

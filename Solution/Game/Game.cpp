@@ -47,7 +47,7 @@ Game::~Game()
 	delete myInputWrapper;
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::GAME_STATE, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::FADE, this);
-
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_MenuMusic", 0);
 	Prism::Audio::AudioInterface::Destroy();
 	PostMaster::Destroy();
 }
@@ -83,6 +83,7 @@ bool Game::Init(HWND& aHwnd)
 	}
 	else
 	{
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_MenuMusic", 0);
 		myCurrentMenu = new MenuState("Data/Menu/MN_main_menu.xml", myInputWrapper);
 		myStateStack.PushMainGameState(myCurrentMenu);
 		myLockMouse = false;
