@@ -370,6 +370,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos)
 {
+	aMousePos;
 	my3DClosestEnemyLength = 10000.f;
 	myClosestEnemyLength = 100000.f;
 	myClosestEnemy = nullptr;
@@ -591,7 +592,7 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 {
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
-	shieldBarEffect->SetPlayerVariable(aNote.myShieldStrength);
+	shieldBarEffect->SetPlayerVariable(int(aNote.myShieldStrength));
 	myCurrentShield = aNote.myShieldStrength;
 }
 
@@ -633,6 +634,7 @@ void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 {
+	aMessage;
 	myCockpitOffset = CalcCockpitOffset();
 }
 

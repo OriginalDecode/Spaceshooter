@@ -22,5 +22,6 @@ PointLightComponent::~PointLightComponent()
 
 void PointLightComponent::Update(float aDeltaTime)
 {
+	aDeltaTime;
 	myPointLight->SetPosition(GetEntity().myOrientation.GetPos4());
 }
