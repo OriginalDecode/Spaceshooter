@@ -505,8 +505,9 @@ void LevelFactory::LoadPlayer()
 {
 
 	myCurrentLevel->myPlayer = new Entity(eEntityType::PLAYER, *myCurrentLevel->myScene, Prism::eOctreeType::PLAYER);
+	myCurrentLevel->myPlayer->AddComponent<GUIComponent>();
 	myCurrentLevel->myPlayer->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Player/SM_Cockpit.fbx"
-		, "Data/Resource/Shader/S_effect_pbl.fx");
+		, "Data/Resource/Shader/S_effect_pbl.fx", myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->GetCockpitOrientation());
 	myCurrentLevel->myPlayer->AddComponent<InputComponent>()->Init(*myCurrentLevel->myInputWrapper);
 	myCurrentLevel->myPlayer->AddComponent<ShootingComponent>();
 	myCurrentLevel->myPlayer->AddComponent<CollisionComponent>()->Init(7.5f);
@@ -537,7 +538,6 @@ void LevelFactory::LoadPlayer()
 	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
 
 	//myCurrentLevel->myCamera = new Prism::Camera(myCurrentLevel->myPlayer->myOrientation);
-	myCurrentLevel->myPlayer->AddComponent<GUIComponent>();
 	float maxMetersToEnemies = 0;
 	reader.ReadAttribute(reader.ForceFindFirstChild("maxdistancetoenemiesinGUI"), "meters", maxMetersToEnemies);
 	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->Init(maxMetersToEnemies);

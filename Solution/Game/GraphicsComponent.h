@@ -15,7 +15,7 @@ public:
 	GraphicsComponent(Entity& aEntity);
 	~GraphicsComponent();
 
-	void Init(const char* aModelPath, const char* aEffectPath);
+	void Init(const char* aModelPath, const char* aEffectPath, const CU::Matrix44<float>* aCockpitOrientation = nullptr);
 	void InitDLL(const char* aModelPath, const char* aEffectPath);
 	void InitGeometry(const Prism::MeshData& aMeshData);
 	void InitCube(float aWidth, float aHeight, float aDepth);
