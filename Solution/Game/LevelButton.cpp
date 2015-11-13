@@ -10,6 +10,7 @@ LevelButton::LevelButton()
 
 LevelButton::LevelButton(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement, int aLevelID)
 	: Button(aReader, aButtonElement, aLevelID)
+	, myLevelID(aLevelID)
 {
 	mySize = CU::Vector2<float>(64.f, 64.f);
 	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", mySize, mySize * 0.5f);
@@ -75,4 +76,9 @@ void LevelButton::Render()
 			myOptionalBadge->Render({ myPosition.x + (mySize.x * (i - 1)), myPosition.y - mySize.y * 2.5f });
 		}
 	}
+}
+
+void LevelButton::Reload()
+{
+	myScore = ScoreIO::Load(myLevelID);
 }
