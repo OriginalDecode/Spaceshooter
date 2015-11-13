@@ -17,6 +17,7 @@
 #include "HealthComponent.h"
 #include "HealthNote.h"
 #include "KillStructureMessage.h"
+#include <MathHelper.h>
 #include "MissionNote.h"
 #include "Model.h"
 #include "ModelLoader.h"
@@ -275,11 +276,13 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	float halfHeight = aWindowSize.y * 0.5f;
 
 	CU::Vector3<float> toTarget = aPosition - myCamera->GetOrientation().GetPos();
+	float lengthToTarget = CU::Length(toTarget);
 	std::stringstream lengthToWaypoint;
 	if (aShowDist == true)
 	{
 		lengthToWaypoint << static_cast<int>(CU::Length(toTarget) - 150);
 	}
+	
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toTarget) != 0)
 	{
@@ -352,12 +355,29 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 	if (aShowDist == true)
 	{
+		float scale = 1.f;
+		if (lengthToTarget <= 100)
+		{
+			anAlpha = 1.f;
+			scale = 1.f;
+		}
+		else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
+		{
+			anAlpha = 0.5f;
+			scale = 0.5f;
+		}
+		else 
+		{
+			anAlpha = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+			scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+		}
+
 		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker
 			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
 		{
 			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 		}
-		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, anAlpha });
+		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { scale, scale }, { 1.f, 1.f, 1.f, anAlpha });
 		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
