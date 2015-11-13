@@ -181,6 +181,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 0.f;
+			myPBL->SetEMPScale(myEMPScale);
 			myEMPActivated = false;
 		}
 	}
