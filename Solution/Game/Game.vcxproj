@@ -170,6 +170,7 @@
     <ClInclude Include="DefendMessage.h" />
     <ClInclude Include="DefendMission.h" />
     <ClInclude Include="dirent.h" />
+    <ClInclude Include="EMPAction.h" />
     <ClInclude Include="EMPMessage.h" />
     <ClInclude Include="EMPNote.h" />
     <ClInclude Include="ExplosionMessage.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="ConversationMessage.cpp" />
     <ClCompile Include="DefendMessage.cpp" />
     <ClCompile Include="DefendMission.cpp" />
+    <ClCompile Include="EMPAction.cpp" />
     <ClCompile Include="EMPMessage.cpp" />
     <ClCompile Include="ExplosionMessage.cpp" />
     <ClCompile Include="FadeMessage.cpp" />

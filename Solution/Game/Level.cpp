@@ -161,6 +161,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
+
 //#ifndef RELEASE_BUILD
 //	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 //	{
@@ -170,6 +171,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 //		myEMPPosition = myPlayer->myOrientation.GetPos();
 //	}
 //#endif
+
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
@@ -439,7 +441,7 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPTimer = aMessage.myEMPTime;
 	myEMPScale = 0.f;
 	myEMPActivated = true;
-	myEMPPosition = myPlayer->myOrientation.GetPos();
+	myEMPPosition = aMessage.myPosition;
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)

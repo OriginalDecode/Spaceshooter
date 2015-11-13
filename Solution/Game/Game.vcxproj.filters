@@ -224,6 +224,9 @@
     <ClCompile Include="LevelButton.cpp">
       <Filter>Menu</Filter>
     </ClCompile>
+    <ClCompile Include="EMPAction.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -510,6 +513,9 @@
     <ClInclude Include="dirent.h" />
     <ClInclude Include="EMPNote.h">
       <Filter>Components\Notes</Filter>
+    </ClInclude>
+    <ClInclude Include="EMPAction.h">
+      <Filter>Event\Action</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
