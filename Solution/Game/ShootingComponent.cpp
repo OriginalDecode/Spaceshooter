@@ -343,21 +343,24 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 
-void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID)
+void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID, bool anIsIngame)
 {
 	if (aWeaponID >= myWeapons.Size())
 	{
 		AddWeapon(aWeapon);
 
-		if (aWeaponID == 0)
+		if (anIsIngame == true)
 		{
-			myHasShotMachinegun = false;
-			myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use right mouse button to shoot");
-		}
-		else if (aWeaponID == 2)
-		{
-			myHasShotRocket = false;
-			myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use left mouse button to shoot rockets");
+			if (aWeaponID == 0)
+			{
+				myHasShotMachinegun = false;
+				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use left mouse button to shoot machinegun");
+			}
+			else if (aWeaponID == 2)
+			{
+				myHasShotRocket = false;
+				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use right mouse button to shoot a rocket");
+			}
 		}
 
 		return;
