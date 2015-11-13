@@ -157,7 +157,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 {
 
 	Entity* bullet = nullptr;
-	if (aEntityType == eEntityType::PLAYER)
+	if (aEntityType == eEntityType::PLAYER || aEntityType == eEntityType::ALLY)
 	{
 		bullet = aWeaponData->myPlayerBullets[aWeaponData->myPlayerBulletCounter];
 	}
@@ -167,9 +167,11 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	}
 	DL_ASSERT_EXP(bullet != nullptr, "Non Player/Enemy cant activate bullets!");
 
+	bullet->GetComponent<BulletComponent>()->SetOwner(aEntityType);
+
 	if (bullet->GetComponent<BulletComponent>()->GetActive() == false)
 	{
-		if (aEntityType == eEntityType::PLAYER)
+		if (aEntityType == eEntityType::PLAYER || aEntityType == eEntityType::ALLY)
 		{
 			myCollisionManager.Add(bullet->GetComponent<CollisionComponent>(), eEntityType::PLAYER_BULLET);
 		}
@@ -189,7 +191,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
 			(anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity);
 	}
-	else if (aEntityType == eEntityType::ENEMY)
+	else if (aEntityType == eEntityType::ENEMY || aEntityType == eEntityType::ALLY)
 	{
 		bullet->GetComponent<PhysicsComponent>()->Init(anOrientation,
 			(aDirection * (aWeaponData->mySpeed)) + aEnitityVelocity);

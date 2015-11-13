@@ -612,7 +612,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		myWaypointPosition = aNote.myEntity->myOrientation.GetPos();
 		break;
 	case eGUINoteType::ENEMY:
-		myEnemies.Add(aNote.myEntity);
+ 		myEnemies.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::POWERUP:
 		myPowerUps.Add(aNote.myEntity);
@@ -688,7 +688,7 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 {
-	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
+	if (aMessage.myBulletOwner == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
 		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY

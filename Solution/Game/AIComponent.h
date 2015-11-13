@@ -4,6 +4,7 @@
 #include "Enums.h"
 #include "Subscriber.h"
 
+class CollisionComponent;
 class PhysicsComponent;
 
 class AIComponent : public ControllerComponent, public Subscriber
@@ -21,6 +22,7 @@ public:
 	void Update(float aDeltaTime) override;
 
 	void SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity);
+	void SetAllyTargets(const CU::GrowingArray<CollisionComponent*>& someEnemies);
 
 	void ReceiveMessage(const DefendMessage& aMessage) override;
 
@@ -32,6 +34,7 @@ private:
 
 	void FollowEntity(float aDeltaTime);
 	void CalculateToTarget(eAITargetPositionMode aMode);
+	void ChooseTarget();
 
 	float myTimeBetweenDecisions;
 	std::string myTargetName;
@@ -55,6 +58,8 @@ private:
 	eAITargetPositionMode myTargetPositionMode;
 
 	PhysicsComponent* myPhysicsComponent;
+
+	const CU::GrowingArray<CollisionComponent*>* myAllyTargets;
 };
 
 inline const std::string& AIComponent::GetTargetName() const
