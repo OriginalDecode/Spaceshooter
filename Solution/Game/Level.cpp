@@ -170,8 +170,9 @@ bool Level::LogicUpdate(float aDeltaTime)
 #ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 	{
-		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
-		myEMPTimer = 20.f;
+		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos() + (myPlayer->myOrientation.GetForward() * 100.f));
+		myEMPTimer = 0.8f;
+		//myEMPScale = 1500.f;
 		myEMPScale = 1.f;
 		myEMPActivated = true;
 	}
@@ -180,8 +181,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		myEMPTimer -= aDeltaTime;
 		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
-		//myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
-		myEMPScale += 500 * aDeltaTime;
+		myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
+		myEMPScale += 5000 * aDeltaTime;
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 1.f;
@@ -237,6 +238,11 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
+
+		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
+		myRenderer->FinalRender();
+
+
 		if (myEMPActivated == true)
 		{
 			myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
@@ -247,11 +253,6 @@ void Level::Render()
 			//myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myRenderer->GetWorldTexture()->GetDepthStencilView());
 			//myEMPDepthSprite->ClearDepth();
 		}
-
-		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
-		myRenderer->FinalRender();
-
-
 
 
 		myEmitterManager->RenderEmitters(myCamera);
