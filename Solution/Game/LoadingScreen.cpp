@@ -56,7 +56,12 @@ void LoadingScreen::Render()
 
 void LoadingScreen::Update(float aDeltaTime)
 {
-	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-2.f * aDeltaTime);
+	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-4.f * aDeltaTime * (1.f / (myScreens[myLevelID - 1]->myRotatingThingScale + 0.001f)));
+
+	if (myScreens[myLevelID - 1]->myRotatingThingScale < 1.f)
+	{
+		myScreens[myLevelID - 1]->myRotatingThing->Rotate(-8.f * aDeltaTime);
+	}
 
 	if (myLevelIsLoading == true)
 	{
