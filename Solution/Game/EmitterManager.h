@@ -3,7 +3,7 @@
 #include <StaticArray.h>
 #define PREALLOCATED_EMITTER_SIZE 10
 #define EXPLOSION_DATA_SIZE 6
-
+class Entity;
 class ParticleEmitterComponent;
 
 namespace Prism
@@ -30,7 +30,7 @@ struct ExplosionData
 class EmitterManager : public Subscriber
 {
 public:
-	EmitterManager();
+	EmitterManager(Entity* aPlayer);
 	~EmitterManager();
 
 	void AddEmitter(ParticleEmitterComponent* anEmitter);
@@ -60,6 +60,10 @@ private:
 
 	CU::StaticArray<ExplosionData*, EXPLOSION_DATA_SIZE> myExplosions;
 	
+	Entity* myPlayer;
+
+	bool myIsCloseToPlayer;
+
 	enum class eExplosionID
 	{
 		ENEMY_EXPLOSION,
