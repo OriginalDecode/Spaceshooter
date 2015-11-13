@@ -40,6 +40,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myEMPTime(10.f)
 	, myHasShotMachinegun(true)
 	, myHasShotRocket(true)
+	, myHasSwitchWeapon(true)
 {
 
 }
@@ -226,6 +227,12 @@ void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 	if (myHasWeapon == true)
 	{
 		SetCurrentWeaponID(aMessage.myKey);
+
+		if (myHasSwitchWeapon == false && aMessage.myKey == 0)
+		{
+			myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+			myHasSwitchWeapon = true;
+		}
 	}
 }
 
@@ -355,6 +362,11 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 			{
 				myHasShotMachinegun = false;
 				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use left mouse button to shoot machinegun");
+			}
+			else if (aWeaponID == 1)
+			{
+				myHasSwitchWeapon = false;
+				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Press '1' to change to machinegun again");
 			}
 			else if (aWeaponID == 2)
 			{
