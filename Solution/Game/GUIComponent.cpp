@@ -95,6 +95,10 @@ GUIComponent::GUIComponent(Entity& aEntity)
 		"Data/Resource/Model/Player/SM_cockpit_shieldbar.fbx", "Data/Resource/Shader/S_effect_bar_shield.fx");
 	myGUIBars[1] = new Prism::Instance(*model2, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
 
+	Prism::ModelProxy* model3 = Prism::Engine::GetInstance()->GetModelLoader()->LoadModel(
+		"Data/Resource/Model/Player/SM_cockpit_overcharge.fbx", "Data/Resource/Shader/S_effect_bar_overcharged_shield.fx");
+	myGUIBars[2] = new Prism::Instance(*model3, *GetCockpitOrientation(), Prism::eOctreeType::DYNAMIC, myShieldBarRadius);
+
 	Prism::Effect* hpBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_health.fx");
 	hpBarEffect->SetPlayerVariable(1000);
@@ -102,6 +106,12 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
 		"Data/Resource/Shader/S_effect_bar_shield.fx");
 	shieldBarEffect->SetPlayerVariable(1000);
+
+	Prism::Effect* overcharge = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+		"Data/Resource/Shader/S_effect_bar_overcharged_shield.fx");
+	overcharge->SetPlayerVariable(1000);
+
+
 
 	myReticle = new Prism::Sprite("Data/Resource/Texture/UI/T_navigation_circle.dds"
 		, { 1024.f, 1024.f }, { 512.f, 512.f });
@@ -206,9 +216,13 @@ GUIComponent::~GUIComponent()
 
 	delete myGUIBars[0];
 	delete myGUIBars[1];
+	delete myGUIBars[2];
+
 
 	myGUIBars[0] = nullptr;
 	myGUIBars[1] = nullptr;
+	myGUIBars[2] = nullptr;
+
 
 	delete myPowerUpSlots[ePowerUpType::EMP];
 	delete myPowerUpSlots[ePowerUpType::FIRERATEBOOST];
@@ -523,8 +537,14 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	myPowerUps.RemoveAll();
 
 	myGUIBars[0]->Render(*myCamera);
-	myGUIBars[1]->Render(*myCamera);
-
+	if (myCurrentShield <= 100)
+	{
+		myGUIBars[1]->Render(*myCamera);
+	}
+	else if (myCurrentShield > 100)
+	{
+		myGUIBars[2]->Render(*myCamera);
+	}
 	if (myHitMarkerTimer >= 0.f)
 	{
 		myCurrentHitmarker->Render(crosshairPosition);
@@ -630,10 +650,20 @@ void GUIComponent::ReceiveNote(const HealthNote& aNote)
 
 void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 {
-	Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
-		"Data/Resource/Shader/S_effect_bar_shield.fx");
-	shieldBarEffect->SetPlayerVariable(int(aNote.myShieldStrength));
-	myCurrentShield = aNote.myShieldStrength;
+	if (aNote.myShieldStrength <= 100)
+	{
+		Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+			"Data/Resource/Shader/S_effect_bar_shield.fx");
+		shieldBarEffect->SetPlayerVariable(int(aNote.myShieldStrength));
+		myCurrentShield = aNote.myShieldStrength;
+	}
+	else if (aNote.myShieldStrength > 100)
+	{
+		Prism::Effect* shieldBarEffect = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect(
+			"Data/Resource/Shader/S_effect_bar_overcharged_shield.fx");
+		shieldBarEffect->SetPlayerVariable(int(aNote.myShieldStrength));
+		myCurrentShield = aNote.myShieldStrength;
+	}
 }
 
 void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
