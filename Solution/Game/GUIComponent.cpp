@@ -550,7 +550,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
 	{
-		Prism::Engine::GetInstance()->PrintText("EMP ready. Shoot to release."
+		Prism::Engine::GetInstance()->PrintText("EMP ready. Press [Space] to release."
 			, { 100.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
