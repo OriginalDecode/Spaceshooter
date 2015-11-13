@@ -12,9 +12,11 @@
 #include <XMLReader.h>
 
 
-EmitterManager::EmitterManager()
-	: myEmitters(64)
+EmitterManager::EmitterManager(Entity* aPlayer)
+	: myPlayer(aPlayer)
+	, myEmitters(64)
 	, myXMLPaths(64)
+	, myIsCloseToPlayer(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DESTORY_EMITTER, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH, this);
@@ -24,16 +26,14 @@ EmitterManager::EmitterManager()
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT, this);
 
-
 	int index = 0;
-
 	ReadListOfLists("Data/Resource/Particle/LI_emitter_lists.xml");
 
 	for (int i = 0; i < EXPLOSION_DATA_SIZE; ++i)
 	{
 		for (int j = 0; j < PREALLOCATED_EMITTER_SIZE; ++j)
 		{
-			
+
 			Prism::ParticleEmitterInstance* newEmitter = new Prism::ParticleEmitterInstance();
 			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index]));
 			myExplosions[i]->myEmitterA.Insert(j, newEmitter);
@@ -114,7 +114,7 @@ void EmitterManager::RenderEmitters(Prism::Camera* aCamera)
 		{
 			if (myExplosions[i]->myEmitterA[j]->GetIsActive() == true)
 			{
-				myExplosions[i]->myEmitterA[j]->Render(aCamera); 
+				myExplosions[i]->myEmitterA[j]->Render(aCamera);
 				myExplosions[i]->myEmitterB[j]->Render(aCamera);
 				myExplosions[i]->myEmitterC[j]->Render(aCamera);
 			}
@@ -129,16 +129,26 @@ void EmitterManager::ReceiveMessage(const DestroyEmitterMessage& aMessage)
 
 void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
 {
+	myIsCloseToPlayer = false;
+
+	CU::Vector3f distanceToEmitter = aMessage.myPosition - myPlayer->myOrientation.GetPos();
+	float dist = CU::Length2(distanceToEmitter) * 0.1f;
+	float v = (128.f * 128.f);
+	if (dist < v)
+	{
+		myIsCloseToPlayer = true;
+	}
+
 	if (aMessage.GetMessageType() == eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH)
 	{
 		EnemyExplosion(aMessage);
 	}
-	
+
 	if (aMessage.GetMessageType() == eMessageType::SPAWN_EFFECT_ON_HIT)
 	{
 		OnHitEffect(aMessage);
 	}
-	
+
 	if (aMessage.GetMessageType() == eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH)
 	{
 		AstroidExplosion(aMessage);
@@ -226,7 +236,7 @@ void EmitterManager::ReadList(std::string aPath)
 		std::string entityPath = "";
 		rootDocument.ForceReadAttribute(e, "src", entityPath);
 		if (entityPath != "")
-		{	
+		{
 			myXMLPaths.Add(entityPath);
 		}
 	}
@@ -245,14 +255,32 @@ void EmitterManager::EnemyExplosion(const SpawnExplosionMessage& aMessage)
 	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -269,14 +297,32 @@ void EmitterManager::PropExplosion(const SpawnExplosionMessage& aMessage)
 	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -293,14 +339,32 @@ void EmitterManager::AstroidExplosion(const SpawnExplosionMessage& aMessage)
 	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(false);
+
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 
 	myExplosions[index]->myEmitterIndex++;
 }
@@ -317,67 +381,89 @@ void EmitterManager::RocketExplosion(const SpawnExplosionMessage& aMessage)
 	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
-
+	myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(false);
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
-
+	myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(false);
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
 	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
 	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
-
+	myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(false);
+	if (myIsCloseToPlayer == true)
+	{
+		myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(true);
+	}
 	myExplosions[index]->myEmitterIndex++;
 }
 
 void EmitterManager::OnHitEffect(const SpawnExplosionMessage& aMessage)
 {
-	int index = static_cast<int>(eExplosionID::ONHIT_EFFECT);
-	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	if (myIsCloseToPlayer == false)
 	{
-		myExplosions[index]->myEmitterIndex = 0;
+		int index = static_cast<int>(eExplosionID::ONHIT_EFFECT);
+		if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+		{
+			myExplosions[index]->myEmitterIndex = 0;
+		}
+		int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+		myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+		myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+		myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+		myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(true);
+
+		myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+		myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+		myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+		myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(true);
+
+		myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+		myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+		myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+		myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(true);
+
+		myExplosions[index]->myEmitterIndex++;
 	}
-	int emitterIndex = myExplosions[index]->myEmitterIndex;
-
-	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
-
-	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
-
-	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
-
-
-	myExplosions[index]->myEmitterIndex++;
 }
 
 void EmitterManager::OnAstroidHitEffect(const SpawnExplosionMessage& aMessage)
 {
-	int index = static_cast<int>(eExplosionID::ON_ASTROID_HIT_EFFECT);
-	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	if (myIsCloseToPlayer == false)
 	{
-		myExplosions[index]->myEmitterIndex = 0;
+		int index = static_cast<int>(eExplosionID::ON_ASTROID_HIT_EFFECT);
+		if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+		{
+			myExplosions[index]->myEmitterIndex = 0;
+		}
+		int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+		myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+		myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+		myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+		myExplosions[index]->myEmitterA[emitterIndex]->SetIsCloseToPlayer(true);
+
+		myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+		myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+		myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+		myExplosions[index]->myEmitterB[emitterIndex]->SetIsCloseToPlayer(true);
+
+		myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+		myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+		myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+		myExplosions[index]->myEmitterC[emitterIndex]->SetIsCloseToPlayer(true);
+
+		myExplosions[index]->myEmitterIndex++;
 	}
-	int emitterIndex = myExplosions[index]->myEmitterIndex;
-
-	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
-
-	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
-
-	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
-	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
-	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
-
-	myExplosions[index]->myEmitterIndex++;
 }
-
 
 //Data
 ExplosionData::ExplosionData(std::string aType)
