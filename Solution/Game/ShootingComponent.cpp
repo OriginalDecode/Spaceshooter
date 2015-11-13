@@ -38,6 +38,9 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myEMPPowerUpDuration(0.f)
 	, myHomingPowerUpDuration(0.f)
 	, myEMPTime(10.f)
+	, myHasShotMachinegun(true)
+	, myHasShotRocket(true)
+	, myHasSwitchWeapon(true)
 {
 
 }
@@ -113,10 +116,20 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 		WeaponData* currWepData = nullptr;
 		if (aShootNote.myIsRocket == false)
 		{
+			if (myHasShotMachinegun == false)
+			{
+				myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+				myHasShotMachinegun = true;
+			}
 			currWepData = &myWeapons[myCurrentWeaponID];
 		}
 		else if (myWeapons.Size() >= 3)
 		{
+			if (myHasShotRocket == false)
+			{
+				myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+				myHasShotRocket = true;
+			}
 			currWepData = &myWeapons[2];
 		}
 
@@ -214,6 +227,12 @@ void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 	if (myHasWeapon == true)
 	{
 		SetCurrentWeaponID(aMessage.myKey);
+
+		if (myHasSwitchWeapon == false && aMessage.myKey == 0)
+		{
+			myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+			myHasSwitchWeapon = true;
+		}
 	}
 }
 
@@ -331,11 +350,31 @@ void ShootingComponent::AddWeapon(const WeaponDataType& aWeapon)
 	myEntity.SendNote(GUINote(myWeapons[myCurrentWeaponID].myIsHoming || HasPowerUp(ePowerUpType::HOMING), eGUINoteType::HOMING_TARGET));
 }
 
-void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID)
+void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID, bool anIsIngame)
 {
 	if (aWeaponID >= myWeapons.Size())
 	{
 		AddWeapon(aWeapon);
+
+		if (anIsIngame == true)
+		{
+			if (aWeaponID == 0)
+			{
+				myHasShotMachinegun = false;
+				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use left mouse button to shoot machinegun");
+			}
+			else if (aWeaponID == 1)
+			{
+				myHasSwitchWeapon = false;
+				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Press '1' to change to machinegun again");
+			}
+			else if (aWeaponID == 2)
+			{
+				myHasShotRocket = false;
+				myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use right mouse button to shoot a rocket");
+			}
+		}
+
 		return;
 	}
 	myWeapons[aWeaponID].myHomingTurnRateModifier = aWeapon.myHomingTurnRateModifier;
@@ -410,7 +449,7 @@ void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
 		if (myPowerUps[i].myPowerUpType == aPowerUp)
 		{
 			//MAKE AWESOME THINGY
-			PostMaster::GetInstance()->SendMessage(EMPMessage(myEMPTime));
+			PostMaster::GetInstance()->SendMessage(EMPMessage(myEntity.myOrientation.GetPos(), myEMPTime));
 			//SKICKA MEDDELANDE TILL SCNENEN OM ATT DEN FÅR RENDERA EMP
 			PostMaster::GetInstance()->SendMessage(PowerUpMessage(aPowerUp, myEntity.myOrientation.GetPos()
 				, myPowerUps[i].myPowerUpValue, myEMPPowerUpDuration));

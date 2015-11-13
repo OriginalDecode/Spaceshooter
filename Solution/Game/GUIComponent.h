@@ -57,6 +57,9 @@ public:
 
 	void UpdateWeapons();
 
+	void ShowTutorialMessage(const std::string& aMessage);
+	void RemoveTutorialMessage();
+
 private:
 	CU::Vector3<float> CalcCockpitOffset() const;
 	Prism::Sprite* myReticle;
@@ -125,6 +128,9 @@ private:
 	std::string myMessage; 
 	float myMessageTime;
 
+	bool myShowTutorialMessage;
+	std::string myTutorialMessage;
+
 	std::string myWeapon;
 
 	bool myHasRocketLauncher;
@@ -140,6 +146,12 @@ private:
 	CU::Vector3<float> myCockpitOffset;
 
 	const int* myCurrentWeapon;
+
+	bool myFirstSpawn;
+	float myFirstSpawnTimer;
+
+	bool myWaypointSpawn;
+	float myWaypointSpawnTimer;
 };
 
 inline eComponentType GUIComponent::GetType()

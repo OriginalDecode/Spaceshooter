@@ -64,7 +64,9 @@ public:
 	ePowerUpType GetPowerUpType() const;
 	Prism::eOctreeType GetOctreeType() const;
 
-
+	void ActivateGUIStartRenderingMarker();
+	float GetGUIStartRenderingMarkerTimer();
+	bool GetGUIStartReneringMarker();
 	//void ShakeCamera(float aRotationRate, float aMaxRotation, float aTime);
 
 private:
@@ -88,6 +90,8 @@ private:
 	CU::Matrix44f myRotateYMatrix;
 	CU::Matrix44f myRotateZMatrix;
 
+	bool myGUIMarkerStartRendering;
+	float myGUIMarkerStartRenderingTime;
 
 	//bool myShakeCamera;
 	//float myRotateRate;
@@ -231,4 +235,19 @@ inline void Entity::SetShouldRotateZ(bool aShouldRotate)
 inline bool Entity::GetShouldRotateZ()
 {
 	return myRotateZ;
+}
+
+inline void Entity::ActivateGUIStartRenderingMarker()
+{
+	myGUIMarkerStartRendering = true;
+}
+
+inline float Entity::GetGUIStartRenderingMarkerTimer()
+{
+	return myGUIMarkerStartRenderingTime;
+}
+
+inline bool Entity::GetGUIStartReneringMarker()
+{
+	return myGUIMarkerStartRendering;
 }

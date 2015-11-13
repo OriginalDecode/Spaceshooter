@@ -9,6 +9,7 @@ public:
 	
 	void Update(float aDeltaTime) override;
 	void Init(float aMaxTime, int aDamage, float aDamageRadius, eBulletType aType);
+	void SetOwner(eEntityType aOwner);
 
 	void ReceiveNote(const CollisionNote& aNote) override;
 
@@ -22,6 +23,7 @@ public:
 	eBulletType GetBulletType();
 private:
 	eBulletType myType;
+	eEntityType myOwner;
 	float myCurrentLifeTime;
 	float myMaxLifeTime;
 	float myDamageRadius;

@@ -5,8 +5,9 @@
 class EMPMessage : public Message
 {
 public:
-	EMPMessage(float aEMPTime);
+	EMPMessage(const CU::Vector3<float>& aPosition, float aEMPTime);
 
+	const CU::Vector3<float> myPosition;
 	const float myEMPTime;
 };
 

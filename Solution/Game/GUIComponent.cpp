@@ -67,6 +67,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCurrentShield(100.f)
 	, myPlayedMissilesReady(false)
 	, myCockpitOffset(CalcCockpitOffset())
+	, myShowTutorialMessage(false)
+	, myTutorialMessage("")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -279,6 +281,11 @@ void GUIComponent::Update(float aDeltaTime)
 			myMessage = "";
 		}
 	}
+	if (myWaypointSpawn == true)
+	{
+		myWaypointSpawnTimer -= aDeltaTime;
+		if (myWaypointSpawnTimer <= 0) myWaypointSpawn = false;
+	}
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
@@ -373,20 +380,30 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow || aCurrentModel == myDefendArrow 
 			|| aCurrentModel == myWaypointArrow || aCurrentModel == myStructureArrow)
 		{
-			if (lengthToTarget <= 100)
-			{
-				anAlpha = 1.f;
-				scale = 1.f;
+			if (myFirstSpawn == false){
+				if (lengthToTarget <= 100)
+				{
+					anAlpha = 1.f;
+					scale = 1.f;
+				}
+				else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
+				{
+					anAlpha = 0.5f;
+					scale = 0.5f;
+				}
+				else
+				{
+					anAlpha = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+					scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+				}
 			}
-			else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
+			else 
 			{
-				anAlpha = 0.5f;
-				scale = 0.5f;
-			}
-			else
-			{
-				anAlpha = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
-				scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+				if (myFirstSpawnTimer <= 0)
+				{
+					myFirstSpawn = false;
+				}
+				scale = CU::Math::Remap<float>(myFirstSpawnTimer, 0, 2, 0.5f, 1.5f);
 			}
 		}
 
@@ -431,11 +448,17 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
 	myCrosshair->Render(crosshairPosition);
 
+	myFirstSpawn = myWaypointSpawn;
+	myFirstSpawnTimer = myWaypointSpawnTimer;
+
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);
 
 	for (int i = 0; i < myEnemies.Size(); ++i)
 	{
+		myFirstSpawn = myEnemies[i]->GetGUIStartReneringMarker();
+		myFirstSpawnTimer = myEnemies[i]->GetGUIStartRenderingMarkerTimer();
+		if (myFirstSpawn == false && myFirstSpawnTimer != 0) myEnemies[i]->ActivateGUIStartRenderingMarker();
 		float lengthToEnemy = CU::Length(myEnemies[i]->myOrientation.GetPos() - myCamera->GetOrientation().GetPos());
 		if (lengthToEnemy < my3DClosestEnemyLength)
 		{
@@ -444,6 +467,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 		if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
 		{
+			
 			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
 		}
 		else
@@ -486,6 +510,9 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	for (int i = 0; i < myPowerUps.Size(); ++i)
 	{
+		myFirstSpawn = myPowerUps[i]->GetGUIStartReneringMarker();
+		myFirstSpawnTimer = myPowerUps[i]->GetGUIStartRenderingMarkerTimer();
+		if (myFirstSpawn == false && myFirstSpawnTimer != 0) myPowerUps[i]->ActivateGUIStartRenderingMarker();
 		CalculateAndRender(myPowerUps[i]->myOrientation.GetPos(), myModel2DToRender, myPowerUpArrow, myPowerUpMarker
 			, aWindowSize, true, true, 1.f, myPowerUps[i]->GetComponent<PowerUpComponent>()->GetInGameName());
 	}
@@ -564,7 +591,12 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myShowMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT);
+	}
+
+	if (myShowTutorialMessage == true)
+	{
+		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 200.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
@@ -623,9 +655,11 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 	{
 	case eGUINoteType::WAYPOINT:
 		myWaypointPosition = aNote.myEntity->myOrientation.GetPos();
+		myWaypointSpawn = true;
+		myWaypointSpawnTimer = 2.f;
 		break;
 	case eGUINoteType::ENEMY:
-		myEnemies.Add(aNote.myEntity);
+ 		myEnemies.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::POWERUP:
 		myPowerUps.Add(aNote.myEntity);
@@ -711,7 +745,7 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 {
-	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
+	if (aMessage.myBulletOwner == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
 		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY
@@ -846,4 +880,16 @@ void GUIComponent::UpdateWeapons()
 	myHasMachinegun = weaponSize >= 1 ? true : false;
 	myHasShotgun = weaponSize >= 2 ? true : false;
 	myHasRocketLauncher = weaponSize >= 3 ? true : false;
+}
+
+void GUIComponent::ShowTutorialMessage(const std::string& aMessage)
+{
+	myShowTutorialMessage = true;
+	myTutorialMessage = aMessage;
+}
+
+void GUIComponent::RemoveTutorialMessage()
+{
+	myShowTutorialMessage = false;
+	myTutorialMessage = "";
 }

@@ -42,6 +42,11 @@ void BulletComponent::Init(float aMaxTime, int aDamage, float aDamageRadius, eBu
 	DL_ASSERT_EXP(myDamage >= 0, "Can't have negative damage.");
 }
 
+void BulletComponent::SetOwner(eEntityType aOwner)
+{
+	myOwner = aOwner;
+}
+
 void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 {
 	if (aNote.myEntity.GetAlive() == true)
@@ -79,7 +84,8 @@ void BulletComponent::ReceiveNote(const CollisionNote& aNote)
 			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_HIT_ENEMY));
 		}
 
-		PostMaster::GetInstance()->SendMessage<BulletCollisionToGUIMessage>(BulletCollisionToGUIMessage(this->GetEntity(), aNote.myEntity));
+		
+		PostMaster::GetInstance()->SendMessage<BulletCollisionToGUIMessage>(BulletCollisionToGUIMessage(this->GetEntity(), aNote.myEntity, myOwner));
 	}
 
 

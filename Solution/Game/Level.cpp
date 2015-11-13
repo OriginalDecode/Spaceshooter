@@ -161,6 +161,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
+
 //#ifndef RELEASE_BUILD
 //	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 //	{
@@ -170,6 +171,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 //		myEMPPosition = myPlayer->myOrientation.GetPos();
 //	}
 //#endif
+
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
@@ -340,7 +342,14 @@ Entity* Level::GetPlayer()
 
 void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 {
-	Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
+	eEntityType entityType = eEntityType::ENEMY;
+	if (aMessage.myType == "ally")
+	{
+		entityType = eEntityType::ALLY;
+	}
+
+	Entity* newEntity = new Entity(entityType, *myScene, Prism::eOctreeType::DYNAMIC);
+	
 	myEntityFactory->CopyEntity(newEntity, aMessage.myType);
 	if (aMessage.myPowerUpName != "")
 	{
@@ -351,19 +360,26 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	
 	newEntity->myOrientation = CU::GetOrientation(newEntity->myOrientation, aMessage.myRotation);
 
-	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
+	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), entityType);
 
-	if (myEntityToDefend != nullptr)
+	if (entityType == eEntityType::ALLY)
 	{
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+		newEntity->GetComponent<AIComponent>()->SetAllyTargets(myCollisionManager->GetEnemies());
 	}
 	else
 	{
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+		if (myEntityToDefend != nullptr)
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+		}
+		else
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+		}
+		++myLevelScore.myTotalEnemies;
 	}
-	++myLevelScore.myTotalEnemies;
-	myEntities.Add(newEntity);
 
+	myEntities.Add(newEntity);
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
 }
 
@@ -375,11 +391,11 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 
 		if (aMessage.GetUpgradeID() >= 2 && myPlayer->GetComponent<ShootingComponent>()->GetWeaponSize() == 1) // handles a rare exception
 		{
-			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1);
+			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1, true);
 			changeWeapon = false;
 		}
 
-		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
+		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID(), true);
 
 		if (aMessage.GetUpgradeID() < 2 && changeWeapon == true)
 		{
@@ -425,7 +441,7 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPTimer = aMessage.myEMPTime;
 	myEMPScale = 0.f;
 	myEMPActivated = true;
-	myEMPPosition = myPlayer->myOrientation.GetPos();
+	myEMPPosition = aMessage.myPosition;
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)

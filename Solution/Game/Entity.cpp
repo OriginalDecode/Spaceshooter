@@ -17,6 +17,8 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	, myName(aName)
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
 	, myPowerUpName("")
+	, myGUIMarkerStartRendering(false)
+	, myGUIMarkerStartRenderingTime(2.f)
 
 {
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)
@@ -46,6 +48,17 @@ void Entity::Update(float aDeltaTime)
 		if (myComponents[i] != nullptr)
 		{
 			myComponents[i]->Update(aDeltaTime);
+		}
+	}
+	if (myGUIMarkerStartRendering == true)
+	{
+		if (myGUIMarkerStartRenderingTime > 0)
+		{
+			myGUIMarkerStartRenderingTime -= aDeltaTime;
+		}
+		else
+		{
+			myGUIMarkerStartRendering = false;
 		}
 	}
 }
