@@ -630,6 +630,7 @@ void GUIComponent::ReceiveNote(const InputNote& aMessage)
 void GUIComponent::ReceiveMessage(const ConversationMessage& aMessage)
 {
 	myConversation = aMessage.myText;
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ConvoInc", 0);
 }
 
 void GUIComponent::ReceiveMessage(const DefendMessage& aMessage)
