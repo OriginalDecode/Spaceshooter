@@ -124,6 +124,11 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 		}
 		else if (myWeapons.Size() >= 3)
 		{
+			if (myHasShotRocket == false)
+			{
+				myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+				myHasShotRocket = true;
+			}
 			currWepData = &myWeapons[2];
 		}
 
@@ -348,6 +353,11 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 		{
 			myHasShotMachinegun = false;
 			myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use right mouse button to shoot");
+		}
+		else if (aWeaponID == 2)
+		{
+			myHasShotRocket = false;
+			myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use left mouse button to shoot rockets");
 		}
 
 		return;
