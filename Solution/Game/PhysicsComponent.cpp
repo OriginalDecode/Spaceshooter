@@ -2,6 +2,7 @@
 #include "InputComponent.h"
 #include "ControllerComponent.h"
 #include "Entity.h"
+#include "GUIComponent.h"
 #include "PhysicsComponent.h"
 #include "SoundNote.h"
 #include "ShieldComponent.h"
@@ -82,6 +83,11 @@ void PhysicsComponent::BounceOff(Entity& anOtherEntity)
 	myVelocity = myEntity.myOrientation.GetForward() * mySpeed;
 	myEntity.myOrientation = myPreviousOrientation2;
 	myEntity.GetComponent<InputComponent>()->SetSkyPosition();
+
+	if (myEntity.GetComponent<GUIComponent>() != nullptr)
+	{
+		myEntity.GetComponent<GUIComponent>()->SetCockpitOrientation();
+	}
 }
 
 void PhysicsComponent::Bounce()
