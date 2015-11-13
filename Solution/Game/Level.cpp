@@ -63,7 +63,7 @@ Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
 	, myConversationManager(nullptr)
 	, myEntityToDefend(nullptr)
 	, myEmitterManager(nullptr)
-	, myEMPScale(1.f)
+	, myEMPScale(0.f)
 	, myEMPTimer(0.f)
 	, myEMPActivated(false)
 	, myIsSkipable(false)
@@ -181,6 +181,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 0.f;
+			myPBL->SetEMPScale(myEMPScale);
 			myEMPActivated = false;
 		}
 	}

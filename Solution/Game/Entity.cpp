@@ -18,7 +18,7 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	, myPowerUpType(ePowerUpType::NO_POWERUP)
 	, myPowerUpName("")
 	, myGUIMarkerStartRendering(false)
-	, myGUIMarkerStartRenderingTime(2.f)
+	, myGUIMarkerStartRenderingTime(0.2f)
 
 {
 	for (int i = 0; i < static_cast<int>(eComponentType::_COUNT); ++i)

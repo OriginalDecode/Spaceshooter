@@ -12,9 +12,10 @@
 #include "Menu.h"
 #include "Button.h"
 
-InGameMenuState::InGameMenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper)
+InGameMenuState::InGameMenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool anIsIngame)
 {
 	myInputWrapper = anInputWrapper;
+	myIsInGame = anIsIngame;
 
 	myMenu = new Menu(aXMLPath);
 
@@ -60,12 +61,6 @@ const eStateStatus InGameMenuState::Update(const float& aDeltaTime)
 	aDeltaTime;
 	if (myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
-		//Prism::Engine::GetInstance()->GetModelLoader()->ClearLoadJobs();
-		//while (Prism::Engine::GetInstance()->GetModelLoader()->IsLoading() == true)
-		//{
-		//	//wait for ModelLoader to exit its loading-loop
-		//}
-
 		return eStateStatus::ePopSubState;
 	}
 #ifndef RELEASE_BUILD
@@ -80,17 +75,23 @@ const eStateStatus InGameMenuState::Update(const float& aDeltaTime)
 	myCurrentTime += deltaTime;
 	myOverlayAlpha = fmaxf(1.f - myCurrentTime / myFadeInTime, 0);
 
-	return myMenu->Update(myInputWrapper);
+	return myMenu->Update(myInputWrapper, true, !myIsInGame);
 }
 
 void InGameMenuState::Render()
 {
-	myMenu->Render(myInputWrapper);
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		float(-Prism::Engine::GetInstance()->GetWindowSize().y));
+
+	if (myIsInGame == false)
+	{
+		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 0.5f });
+	}
+
+	myMenu->Render(myInputWrapper, true, !myIsInGame);
 
 	if (myMenu->GetMainMenu() == true)
 	{
-		CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
-			float(-Prism::Engine::GetInstance()->GetWindowSize().y));
 		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, myOverlayAlpha });
 	}
 }

@@ -383,18 +383,15 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			if (myFirstSpawn == false){
 				if (lengthToTarget <= 100)
 				{
-					anAlpha = 1.f;
 					scale = 1.f;
 				}
 				else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
 				{
-					anAlpha = 0.5f;
 					scale = 0.5f;
 				}
 				else
 				{
-					anAlpha = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
-					scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+					scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.25f, 0.75f);
 				}
 			}
 			else 
@@ -403,7 +400,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 				{
 					myFirstSpawn = false;
 				}
-				scale = CU::Math::Remap<float>(myFirstSpawnTimer, 0, 2, 0.5f, 1.5f);
+				scale = CU::Math::Remap<float>(myFirstSpawnTimer, 0, 0.2f, 0.75f, 1.5f);
 			}
 		}
 
@@ -596,7 +593,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myShowTutorialMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 200.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 270.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
@@ -656,10 +653,10 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 	case eGUINoteType::WAYPOINT:
 		myWaypointPosition = aNote.myEntity->myOrientation.GetPos();
 		myWaypointSpawn = true;
-		myWaypointSpawnTimer = 2.f;
+		myWaypointSpawnTimer = 0.2f;
 		break;
 	case eGUINoteType::ENEMY:
- 		myEnemies.Add(aNote.myEntity);
+		myEnemies.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::POWERUP:
 		myPowerUps.Add(aNote.myEntity);
@@ -888,8 +885,15 @@ void GUIComponent::ShowTutorialMessage(const std::string& aMessage)
 	myTutorialMessage = aMessage;
 }
 
-void GUIComponent::RemoveTutorialMessage()
+void GUIComponent::RemoveTutorialMessage(const std::string& aMessage)
 {
 	myShowTutorialMessage = false;
 	myTutorialMessage = "";
+
+	if (aMessage != "")
+	{
+		myMessage = aMessage;
+		myMessageTime = 3.f;
+		myShowMessage = true;
+	}
 }
