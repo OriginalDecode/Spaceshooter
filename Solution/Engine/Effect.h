@@ -58,8 +58,9 @@ namespace Prism
 		void AddListener(EffectListener* aListener);
 		bool ReloadShader(const std::string& aFile);
 
-		void SetExtraTexture(Texture* aTexture);
 		void SetCameraPosition(const CU::Vector3<float>& aCameraPos);
+		void SetEMPScale(float aScale);
+		void SetEMPPosition(const CU::Vector3<float>& aPosition);
 
 		void SetAmbientHue(CU::Vector4f aVector);
 
@@ -79,7 +80,7 @@ namespace Prism
 
 		ID3DX11EffectVectorVariable* myScaleVector;
 		ID3DX11EffectVectorVariable* myAmbientHue;
-
+		ID3DX11EffectVectorVariable* myEMPPosition;
 
 		ID3DX11EffectVariable* myDirectionalLight;
 		ID3DX11EffectVariable* myPointLight;
@@ -95,9 +96,7 @@ namespace Prism
 		ID3DX11EffectScalarVariable* myStreakSizeDelta;
 		ID3DX11EffectScalarVariable* myStreakStartAlpha;
 		ID3DX11EffectScalarVariable* myStreakAlphaDelta;
-
-		ID3DX11EffectShaderResourceVariable* myExtraTexture;
-		ID3DX11EffectShaderResourceVariable* myExtraTexture2;
+		ID3DX11EffectScalarVariable* myEMPScale;
 
 		CU::Vector4<float> mySpritePosAndScaleVector;
 		

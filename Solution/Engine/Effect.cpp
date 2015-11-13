@@ -305,18 +305,6 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		myTexture = nullptr;
 	}
 
-	myExtraTexture = myEffect->GetVariableByName("ExtraTexture")->AsShaderResource();
-	if (myExtraTexture->IsValid() == false)
-	{
-		myExtraTexture = nullptr;
-	}
-
-	myExtraTexture2 = myEffect->GetVariableByName("ExtraTexture2")->AsShaderResource();
-	if (myExtraTexture2->IsValid() == false)
-	{
-		myExtraTexture2 = nullptr;
-	}
-
 	mySpritePosAndScale = myEffect->GetVariableByName("SpritePositionAndScale")->AsVector();
 	if (mySpritePosAndScale->IsValid() == false)
 	{
@@ -359,6 +347,18 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 		myStreakAlphaDelta = nullptr;
 	}
 
+	myEMPScale = myEffect->GetVariableByName("myEMPScale")->AsScalar();
+	if (myEMPScale->IsValid() == false)
+	{
+		myEMPScale = nullptr;
+	}
+
+	myEMPPosition = myEffect->GetVariableByName("myEMPPosition")->AsVector();
+	if (myEMPPosition->IsValid() == false)
+	{
+		myEMPPosition = nullptr;
+	}
+
 	myCameraPosition = myEffect->GetVariableByName("cameraPosition")->AsVector();
 	if (myCameraPosition->IsValid() == false)
 	{
@@ -374,12 +374,6 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	return true;
 }
 
-void Prism::Effect::SetExtraTexture(Texture* aTexture)
-{
-	myExtraTexture->SetResource(aTexture->GetDepthStencilShaderView());
-	//myExtraTexture2->SetResource(aTexture->GetShaderView());
-}
-
 void Prism::Effect::SetCameraPosition(const CU::Vector3<float>& aCameraPos)
 {
 	if (myCameraPosition != nullptr)
@@ -388,3 +382,18 @@ void Prism::Effect::SetCameraPosition(const CU::Vector3<float>& aCameraPos)
 	}
 }
 
+void Prism::Effect::SetEMPScale(float aScale)
+{
+	if (myEMPScale != nullptr)
+	{
+		myEMPScale->SetFloat(aScale);
+	}
+}
+
+void Prism::Effect::SetEMPPosition(const CU::Vector3<float>& aPosition)
+{
+	if (myEMPPosition != nullptr)
+	{
+		myEMPPosition->SetFloatVector(static_cast<const float*>(&aPosition.x));
+	}
+}

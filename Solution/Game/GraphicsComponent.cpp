@@ -120,8 +120,3 @@ void GraphicsComponent::SetScale(const CU::Vector3<float>& aScale)
 {
 	myInstance->SetScale(aScale);
 }
-
-void GraphicsComponent::ApplyExtraTexture(Prism::Texture* aTexture)
-{
-	myInstance->GetModel().GetEffect()->SetExtraTexture(aTexture);
-}

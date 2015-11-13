@@ -57,6 +57,9 @@ public:
 
 	void UpdateWeapons();
 
+	void ShowTutorialMessage(const std::string& aMessage);
+	void RemoveTutorialMessage();
+
 private:
 	CU::Vector3<float> CalcCockpitOffset() const;
 	Prism::Sprite* myReticle;
@@ -124,6 +127,9 @@ private:
 	bool myShowMessage;
 	std::string myMessage; 
 	float myMessageTime;
+
+	bool myShowTutorialMessage;
+	std::string myTutorialMessage;
 
 	std::string myWeapon;
 

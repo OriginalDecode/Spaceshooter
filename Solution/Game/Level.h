@@ -116,7 +116,8 @@ private:
 	bool myUsePostProcessing;
 	bool myComplete;
 
-	Entity* myEMP;
+	Prism::Effect* myPBL;
+	CU::Vector3<float> myEMPPosition;
 	float myEMPScale;
 	float myEMPTimer;
 	bool myEMPActivated;

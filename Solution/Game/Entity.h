@@ -86,6 +86,10 @@ private:
 	bool myRotateY;
 	bool myRotateZ;
 
+	CU::Matrix44f myRotateXMatrix;
+	CU::Matrix44f myRotateYMatrix;
+	CU::Matrix44f myRotateZMatrix;
+
 	bool myGUIMarkerStartRendering;
 	float myGUIMarkerStartRenderingTime;
 

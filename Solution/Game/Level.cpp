@@ -63,7 +63,6 @@ Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
 	, myConversationManager(nullptr)
 	, myEntityToDefend(nullptr)
 	, myEmitterManager(nullptr)
-	, myEMP(nullptr)
 	, myEMPScale(1.f)
 	, myEMPTimer(0.f)
 	, myEMPActivated(false)
@@ -83,11 +82,8 @@ Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_BattleMusic", 0);
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_BattleMusicNoFade", 0);
 
-
-
-	myEMPDepthSprite = new Prism::Texture();
-	myEMPDepthSprite->InitAsDepthBuffer(Prism::Engine::GetInstance()->GetDepthBufferTexture());
 	myRenderer = new Prism::Renderer();
+	myPBL = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_pbl.fx");
 }
 
 Level::~Level()
@@ -116,7 +112,6 @@ Level::~Level()
 			myEntities[i] = nullptr;
 		//}
 	}
-	delete myEMP;
 	delete mySkySphere;
 	delete myEntityFactory;
 	delete myWeaponFactory;
@@ -126,7 +121,6 @@ Level::~Level()
 	delete myEventManager;
 	delete myConversationManager;
 	delete myScene;
-	myEMP = nullptr;
 	mySkySphere = nullptr;
 	myScene = nullptr;
 
@@ -167,26 +161,26 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
+
 //#ifndef RELEASE_BUILD
 //	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 //	{
-//		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos() + (myPlayer->myOrientation.GetForward() * 100.f));
-//		myEMPTimer = 0.8f;
-//		//myEMPScale = 1500.f;
-//		myEMPScale = 1.f;
+//		myEMPTimer = 10.f;
+//		myEMPScale = 0.f;
 //		myEMPActivated = true;
+//		myEMPPosition = myPlayer->myOrientation.GetPos();
 //	}
 //#endif
+
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
-		myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
-		myEMP->myOrientation = CU::Matrix44<float>::CreateRotateAroundZ(aDeltaTime) * myEMP->myOrientation;
-		myEMPScale += 5000 * aDeltaTime;
+		myEMPScale += 1000 * aDeltaTime;
+		myPBL->SetEMPScale(myEMPScale);
+		myPBL->SetEMPPosition(myEMPPosition);
 		if (myEMPTimer <= 0.f)
 		{
-			myEMPScale = 1.f;
-			myEMP->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
+			myEMPScale = 0.f;
 			myEMPActivated = false;
 		}
 	}
@@ -243,18 +237,6 @@ void Level::Render()
 		myRenderer->FinalRender();
 
 
-		if (myEMPActivated == true)
-		{
-			myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
-			//Prism::Engine::GetInstance()->DisableZBuffer();
-			//myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myEMPDepthSprite->GetDepthStencilView());
-			myEMP->GetComponent<GraphicsComponent>()->ApplyExtraTexture(myEMPDepthSprite);
-			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
-			//myRenderer->SetRenderTargets(Prism::Engine::GetInstance()->GetDepthBuffer(), myRenderer->GetWorldTexture()->GetDepthStencilView());
-			//myEMPDepthSprite->ClearDepth();
-		}
-
-
 		myEmitterManager->RenderEmitters(myCamera);
 		myGlassCockpit->Render(*myCamera);
 	}
@@ -265,13 +247,6 @@ void Level::Render()
 		Prism::Engine::GetInstance()->EnableZBuffer();
 
 		myScene->Render(myBulletManager->GetInstances());
-
-		if (myEMPActivated == true)
-		{
-			//Prism::Engine::GetInstance()->DisableZBuffer();
-			myEMP->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
-			//Prism::Engine::GetInstance()->EnableZBuffer();
-		}
 
 		myEmitterManager->RenderEmitters(myCamera);
 	}
@@ -367,7 +342,14 @@ Entity* Level::GetPlayer()
 
 void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 {
-	Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
+	eEntityType entityType = eEntityType::ENEMY;
+	if (aMessage.myType == "ally")
+	{
+		entityType = eEntityType::ALLY;
+	}
+
+	Entity* newEntity = new Entity(entityType, *myScene, Prism::eOctreeType::DYNAMIC);
+	
 	myEntityFactory->CopyEntity(newEntity, aMessage.myType);
 	if (aMessage.myPowerUpName != "")
 	{
@@ -378,19 +360,26 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	
 	newEntity->myOrientation = CU::GetOrientation(newEntity->myOrientation, aMessage.myRotation);
 
-	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
+	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), entityType);
 
-	if (myEntityToDefend != nullptr)
+	if (entityType == eEntityType::ALLY)
 	{
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+		newEntity->GetComponent<AIComponent>()->SetAllyTargets(myCollisionManager->GetEnemies());
 	}
 	else
 	{
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+		if (myEntityToDefend != nullptr)
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+		}
+		else
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+		}
+		++myLevelScore.myTotalEnemies;
 	}
-	++myLevelScore.myTotalEnemies;
-	myEntities.Add(newEntity);
 
+	myEntities.Add(newEntity);
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
 }
 
@@ -402,11 +391,11 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 
 		if (aMessage.GetUpgradeID() >= 2 && myPlayer->GetComponent<ShootingComponent>()->GetWeaponSize() == 1) // handles a rare exception
 		{
-			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1);
+			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1, true);
 			changeWeapon = false;
 		}
 
-		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
+		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID(), true);
 
 		if (aMessage.GetUpgradeID() < 2 && changeWeapon == true)
 		{
@@ -449,12 +438,10 @@ void Level::ReceiveMessage(const SpawnPowerUpMessage& aMessage)
 
 void Level::ReceiveMessage(const EMPMessage& aMessage)
 {
-	myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos());
 	myEMPTimer = aMessage.myEMPTime;
-	myEMPScale = 1.f;
+	myEMPScale = 0.f;
 	myEMPActivated = true;
-
-	myEMPDepthSprite->CopyDepthBuffer(myRenderer->GetWorldTexture()->GetDepthTexture());
+	myEMPPosition = aMessage.myPosition;
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)

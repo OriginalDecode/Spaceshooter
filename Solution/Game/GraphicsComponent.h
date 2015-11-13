@@ -28,8 +28,6 @@ public:
 
 	float GetCullingRadius() const;
 
-	void ApplyExtraTexture(Prism::Texture* aTexture);
-
 private:
 	Prism::Instance* myInstance;
 	float myCullingRadius;

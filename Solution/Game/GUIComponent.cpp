@@ -67,6 +67,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCurrentShield(100.f)
 	, myPlayedMissilesReady(false)
 	, myCockpitOffset(CalcCockpitOffset())
+	, myShowTutorialMessage(false)
+	, myTutorialMessage("")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -569,7 +571,12 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myShowMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT);
+	}
+
+	if (myShowTutorialMessage == true)
+	{
+		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 200.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
@@ -632,7 +639,7 @@ void GUIComponent::ReceiveNote(const GUINote& aNote)
 		myWaypointSpawnTimer = 2.f;
 		break;
 	case eGUINoteType::ENEMY:
-		myEnemies.Add(aNote.myEntity);
+ 		myEnemies.Add(aNote.myEntity);
 		break;
 	case eGUINoteType::POWERUP:
 		myPowerUps.Add(aNote.myEntity);
@@ -708,7 +715,7 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 {
-	if (aMessage.myBullet.GetType() == eEntityType::PLAYER_BULLET)
+	if (aMessage.myBulletOwner == eEntityType::PLAYER_BULLET)
 	{
 		myHitMarkerTimer = 0.1f;
 		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY
@@ -843,4 +850,16 @@ void GUIComponent::UpdateWeapons()
 	myHasMachinegun = weaponSize >= 1 ? true : false;
 	myHasShotgun = weaponSize >= 2 ? true : false;
 	myHasRocketLauncher = weaponSize >= 3 ? true : false;
+}
+
+void GUIComponent::ShowTutorialMessage(const std::string& aMessage)
+{
+	myShowTutorialMessage = true;
+	myTutorialMessage = aMessage;
+}
+
+void GUIComponent::RemoveTutorialMessage()
+{
+	myShowTutorialMessage = false;
+	myTutorialMessage = "";
 }

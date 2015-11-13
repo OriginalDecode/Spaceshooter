@@ -23,6 +23,7 @@ public:
 	void ReceiveMessage(const PowerUpMessage& aMessage) override;
 
 	int GetEnemiesAlive() const;
+	const CU::GrowingArray<CollisionComponent*>& GetEnemies() const;
 
 	void DisableEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, float aTime);
 	void DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage);
@@ -33,6 +34,7 @@ private:
 	bool CheckCollision(CollisionComponent* aComponent, CU::GrowingArray<CollisionComponent*>& someOtherComponents);
 
 	int myPlayerFilter;
+	int myAllyFilter;
 	int myEnemyFilter;
 	int myPlayerBulletFilter;
 	int myEnemyBulletFilter;
@@ -43,6 +45,7 @@ private:
 	int myStructureFilter;
 
 	CU::GrowingArray<CollisionComponent*> myPlayers;
+	CU::GrowingArray<CollisionComponent*> myAllies;
 	CU::GrowingArray<CollisionComponent*> myEnemies;
 	CU::GrowingArray<CollisionComponent*> myPlayerBullets;
 	CU::GrowingArray<CollisionComponent*> myEnemyBullets;
@@ -56,4 +59,9 @@ private:
 inline int CollisionManager::GetEnemiesAlive() const
 {
 	return myEnemies.Size();
+}
+
+inline const CU::GrowingArray<CollisionComponent*>& CollisionManager::GetEnemies() const
+{
+	return myEnemies;
 }
