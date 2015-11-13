@@ -139,6 +139,7 @@ void MenuState::Render()
 void MenuState::ResumeState()
 {
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
+	myMenu->Reload();
 }
 
 void MenuState::OnResize(int aWidth, int aHeight)

@@ -12,6 +12,8 @@ public:
 
 	void Render() override;
 
+	void Reload() override;
+
 private:
 	SaveScore myScore;
 	Prism::Sprite* myOptionalBadgeGrey;
@@ -22,5 +24,6 @@ private:
 	Prism::Sprite* mySilverStar;
 
 	CU::Vector2<float> mySize;
+	int myLevelID;
 };
 

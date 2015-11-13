@@ -2,12 +2,12 @@
 
 #include "ParticleEmitterData.h"
 #include "ParticleData.h"
-
+#include <bitset>
 namespace Prism
 {
 	class Camera;
 	struct VertexBufferWrapper;
-	
+
 	class ParticleEmitterInstance
 	{
 	public:
@@ -23,6 +23,7 @@ namespace Prism
 		void ToggleActive(bool aIsActive);
 		void ShouldLive(bool aToStop);
 		void SetPosition(CU::Vector3f aPosition);
+		void SetIsCloseToPlayer(bool aIsCloseToPlayer);
 	private:
 
 		void CreateVertexBuffer();
@@ -51,6 +52,8 @@ namespace Prism
 
 		bool myIsActive;
 		bool myShouldLive;
+		bool myIsCloseToPlayer;
+
 
 		std::string myEmitterPath;
 	};
@@ -58,6 +61,11 @@ namespace Prism
 	inline void ParticleEmitterInstance::ShouldLive(bool aToStop)
 	{
 		myShouldLive = aToStop;
+	}
+
+	inline void ParticleEmitterInstance::SetIsCloseToPlayer(bool aIsCloseToPlayer)
+	{
+		myIsCloseToPlayer = aIsCloseToPlayer;
 	}
 
 

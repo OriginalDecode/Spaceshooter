@@ -30,6 +30,8 @@ public:
 
 	bool GetMainMenu() const;
 
+	void Reload();
+
 private:
 	bool myMainMenu;
 	CU::GrowingArray<Button*> myButtons;

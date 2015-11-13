@@ -168,7 +168,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myCollisionManager = new CollisionManager();
 	myCurrentLevel->myBulletManager = new BulletManager(*myCurrentLevel->myCollisionManager, *myCurrentLevel->myScene);
 	myCurrentLevel->myBulletManager->LoadFromFactory(myCurrentLevel->myWeaponFactory, myCurrentLevel->myEntityFactory, "Data/Script/LI_list_projectile.xml");
-	myCurrentLevel->myEmitterManager = new EmitterManager();
 
 	myDirectionalLights.DeleteAll();
 	myPointLights.DeleteAll();
@@ -176,6 +175,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 
 	LoadPlayer();
+
+	myCurrentLevel->myEmitterManager = new EmitterManager(myCurrentLevel->myPlayer);
 	
 
 	ReadLevelSettings();
