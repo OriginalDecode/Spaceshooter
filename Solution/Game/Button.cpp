@@ -62,6 +62,10 @@ Button::Button(XMLReader& aReader, tinyxml2::XMLElement* aButtonElement, const i
 		aReader.ReadAttribute(aReader.FindFirstChild(aButtonElement, "onClick"), "level", levelID);
 		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, menuID, levelID);
 	}
+	else if (eventType == "optionsMenu")
+	{
+		myClickEvent = new GameStateMessage(eGameState::LOAD_MENU, -2);
+	}
 	else if (eventType == "back")
 	{
 		myBack = true;

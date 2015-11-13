@@ -13,6 +13,7 @@
 #include "Game.h"
 #include "GameStateMessage.h"
 #include "InGameState.h"
+#include "InGameMenuState.h"
 #include <InputWrapper.h>
 #include "Level.h"
 #include "LevelFactory.h"
@@ -225,6 +226,11 @@ void Game::ReceiveMessage(const GameStateMessage& aMessage)
 		if (aMessage.GetID() == -1)
 		{
 			myCurrentMenu = new MenuState(aMessage.GetFilePath(), myInputWrapper);
+		}
+		else if (aMessage.GetID() == -2)
+		{
+			myStateStack.PushSubGameState(new InGameMenuState("Data/Menu/MN_ingame_menu.xml", myInputWrapper, false));
+			return;
 		}
 		else
 		{

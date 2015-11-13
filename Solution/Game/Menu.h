@@ -22,9 +22,9 @@ public:
 	Menu(const std::string& aXMLPath, int aLevelID);
 	~Menu();
 	
-	void Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons = true);
+	void Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons = true, bool aDontRenderSecondButton = false);
 
-	eStateStatus Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons = true);
+	eStateStatus Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons = true, bool aDontUpdateSecondButton = false);
 
 	void OnResize(int aWidth, int aHeight);
 
