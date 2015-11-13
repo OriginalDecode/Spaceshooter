@@ -121,13 +121,18 @@ const eStateStatus MenuState::Update(const float& aDeltaTime)
 
 void MenuState::Render()
 {
-	myMenu->Render(myInputWrapper, myShowButtons);
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		float(-Prism::Engine::GetInstance()->GetWindowSize().y));
 
 	if (myHasFadeIn == true)
 	{
-		CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
-			float(-Prism::Engine::GetInstance()->GetWindowSize().y));
+		myMenu->Render(myInputWrapper, myShowButtons);
 		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, myOverlayAlpha });
+	}
+	else
+	{
+		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f });
+		myMenu->Render(myInputWrapper, myShowButtons);
 	}
 }
 

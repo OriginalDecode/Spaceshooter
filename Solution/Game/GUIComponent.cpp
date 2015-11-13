@@ -356,20 +356,24 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	if (aShowDist == true)
 	{
 		float scale = 1.f;
-		if (lengthToTarget <= 100)
+		if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow || aCurrentModel == myDefendArrow 
+			|| aCurrentModel == myWaypointArrow || aCurrentModel == myStructureArrow)
 		{
-			anAlpha = 1.f;
-			scale = 1.f;
-		}
-		else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
-		{
-			anAlpha = 0.5f;
-			scale = 0.5f;
-		}
-		else 
-		{
-			anAlpha = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
-			scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+			if (lengthToTarget <= 100)
+			{
+				anAlpha = 1.f;
+				scale = 1.f;
+			}
+			else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
+			{
+				anAlpha = 0.5f;
+				scale = 0.5f;
+			}
+			else
+			{
+				anAlpha = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+				scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.f, 0.5f);
+			}
 		}
 
 		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker

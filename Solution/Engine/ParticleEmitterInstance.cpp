@@ -11,6 +11,7 @@ namespace Prism
 		: myVertexWrapper(nullptr)
 		, myIsActive(false)
 		, myShouldLive(false)
+		, myIsCloseToPlayer(false)
 		, myEmissionTime(0)
 		, myEmitterLife(0)
 		, myParticleIndex(0)
@@ -185,7 +186,10 @@ namespace Prism
 			&& myShouldLive == true)
 		{
 			EmitParticle(aWorldMatrix);
-			myEmissionTime = myParticleEmitterData->myEmissionRate;
+
+			myEmissionTime = myParticleEmitterData->myEmissionRate * 5.f;
+			if (myIsCloseToPlayer == false)
+				myEmissionTime = myParticleEmitterData->myEmissionRate;
 		}
 		
 		if (myEmitterLife <= 0.f && myDeadParticleCount == myLogicalParticles.Size())
@@ -224,47 +228,93 @@ namespace Prism
 
 	void ParticleEmitterInstance::EmitParticle(const CU::Matrix44f& aWorldMatrix)
 	{
-		for (int i = 0; i < myParticleEmitterData->myParticlesPerEmitt; ++i)
+		if (myIsCloseToPlayer == false)
 		{
-			if (myParticleIndex == myLogicalParticles.Size() - 1)
+			for (int i = 0; i < myParticleEmitterData->myParticlesPerEmitt; ++i)
 			{
-				myParticleIndex = 0;
+				if (myParticleIndex == myLogicalParticles.Size() - 1)
+				{
+					myParticleIndex = 0;
+				}
+				myDeadParticleCount--;
+				myLogicalParticles[myParticleIndex].myIsAlive = true;
+
+
+				myGraphicalParticles[myParticleIndex].myColor = myParticleEmitterData->myData.myStartColor;
+
+				myGraphicalParticles[myParticleIndex].myPosition =
+					CU::Math::RandomVector(aWorldMatrix.GetPos() - myParticleEmitterData->myEmitterSize
+					, aWorldMatrix.GetPos() + myParticleEmitterData->myEmitterSize);
+
+				myGraphicalParticles[myParticleIndex].myLifeTime = myParticleEmitterData->myParticlesLifeTime;
+
+				myParticleScaling = CU::Math::RandomRange(myParticleEmitterData->myData.myMinStartSize
+					, myParticleEmitterData->myData.myMaxStartSize);
+
+				myGraphicalParticles[myParticleIndex].mySize = 1 * myParticleScaling;
+
+				myLogicalParticles[myParticleIndex].myVelocity.x = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.x,
+					myParticleEmitterData->myData.myMaxVelocity.x);
+
+				myLogicalParticles[myParticleIndex].myVelocity.y = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.y,
+					myParticleEmitterData->myData.myMaxVelocity.y);
+
+				myLogicalParticles[myParticleIndex].myVelocity.z = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.z,
+					myParticleEmitterData->myData.myMaxVelocity.z);
+
+				myLogicalParticles[myParticleIndex].myRotation = CU::Math::RandomRange(myParticleEmitterData->myMinRotation, myParticleEmitterData->myMaxRotation);
+
+				myLogicalParticles[myParticleIndex].mySpeed = myParticleEmitterData->mySpeedMultiplier;
+
+				myGraphicalParticles[myParticleIndex].myAlpha = myParticleEmitterData->myData.myStartAlpha;
+
+				myParticleIndex += 1;
 			}
-			myDeadParticleCount--;
-			myLogicalParticles[myParticleIndex].myIsAlive = true;
-
-
-			myGraphicalParticles[myParticleIndex].myColor = myParticleEmitterData->myData.myStartColor;
-
-			myGraphicalParticles[myParticleIndex].myPosition =
-				CU::Math::RandomVector(aWorldMatrix.GetPos() - myParticleEmitterData->myEmitterSize
-				, aWorldMatrix.GetPos() + myParticleEmitterData->myEmitterSize);
-
-			myGraphicalParticles[myParticleIndex].myLifeTime = myParticleEmitterData->myParticlesLifeTime;
-
-			myParticleScaling = CU::Math::RandomRange(myParticleEmitterData->myData.myMinStartSize
-				, myParticleEmitterData->myData.myMaxStartSize);
-
-			myGraphicalParticles[myParticleIndex].mySize = 1 * myParticleScaling;
-
-			myLogicalParticles[myParticleIndex].myVelocity.x = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.x,
-				myParticleEmitterData->myData.myMaxVelocity.x);
-
-			myLogicalParticles[myParticleIndex].myVelocity.y = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.y,
-				myParticleEmitterData->myData.myMaxVelocity.y);
-
-			myLogicalParticles[myParticleIndex].myVelocity.z = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.z,
-				myParticleEmitterData->myData.myMaxVelocity.z);
-			
-			myLogicalParticles[myParticleIndex].myRotation = CU::Math::RandomRange(myParticleEmitterData->myMinRotation, myParticleEmitterData->myMaxRotation);
-			
-			myLogicalParticles[myParticleIndex].mySpeed = myParticleEmitterData->mySpeedMultiplier;
-
-			myGraphicalParticles[myParticleIndex].myAlpha = myParticleEmitterData->myData.myStartAlpha;
-
-			myParticleIndex += 1;
 		}
 
+		if (myIsCloseToPlayer == true)
+		{
+			for (int i = 0; i < 1; ++i)
+			{
+				if (myParticleIndex == myLogicalParticles.Size() - 1)
+				{
+					myParticleIndex = 0;
+				}
+				myDeadParticleCount--;
+				myLogicalParticles[myParticleIndex].myIsAlive = true;
+
+
+				myGraphicalParticles[myParticleIndex].myColor = myParticleEmitterData->myData.myStartColor;
+
+				myGraphicalParticles[myParticleIndex].myPosition =
+					CU::Math::RandomVector(aWorldMatrix.GetPos() - myParticleEmitterData->myEmitterSize
+					, aWorldMatrix.GetPos() + myParticleEmitterData->myEmitterSize);
+
+				myGraphicalParticles[myParticleIndex].myLifeTime = myParticleEmitterData->myParticlesLifeTime;
+
+				myParticleScaling = CU::Math::RandomRange(myParticleEmitterData->myData.myMinStartSize
+					, myParticleEmitterData->myData.myMaxStartSize);
+
+				myGraphicalParticles[myParticleIndex].mySize = 1 * myParticleScaling;
+
+				myLogicalParticles[myParticleIndex].myVelocity.x = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.x,
+					myParticleEmitterData->myData.myMaxVelocity.x);
+
+				myLogicalParticles[myParticleIndex].myVelocity.y = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.y,
+					myParticleEmitterData->myData.myMaxVelocity.y);
+
+				myLogicalParticles[myParticleIndex].myVelocity.z = CU::Math::RandomRange(myParticleEmitterData->myData.myMinVelocity.z,
+					myParticleEmitterData->myData.myMaxVelocity.z);
+
+				myLogicalParticles[myParticleIndex].myRotation = CU::Math::RandomRange(myParticleEmitterData->myMinRotation, myParticleEmitterData->myMaxRotation);
+
+				myLogicalParticles[myParticleIndex].mySpeed = myParticleEmitterData->mySpeedMultiplier;
+
+				myGraphicalParticles[myParticleIndex].myAlpha = myParticleEmitterData->myData.myStartAlpha;
+
+				myParticleIndex += 1;
+			}
+		}
 	}
 
 	void ParticleEmitterInstance::SetPosition(CU::Vector3f aPosition)
