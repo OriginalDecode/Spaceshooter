@@ -27,6 +27,8 @@ public:
 
 	void OnResize();
 
+	virtual void Reload(){ };
+
 protected:
 	CU::Vector2<float> myPosition;
 

@@ -196,3 +196,11 @@ void Menu::OnResize(int aWidth, int aHeight)
 		myButtons[i]->OnResize();
 	}
 }
+
+void Menu::Reload()
+{
+	for (int i = 0; i < myButtons.Size(); ++i)
+	{
+		myButtons[i]->Reload();
+	}
+}
