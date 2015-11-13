@@ -5,6 +5,7 @@
 #include "BulletAIComponent.h"
 #include "Constants.h"
 #include <Defines.h>
+#include "EMPNote.h"
 #include <Engine.h>
 #include "Entity.h"
 #include <FileWatcher.h>
@@ -63,6 +64,10 @@ void InputComponent::Update(float aDeltaTime)
 		if (myInputWrapper->KeyIsPressed(DIK_2))
 		{
 			myEntity.SendNote(InputNote(1));
+		}
+		if (myInputWrapper->KeyIsPressed(DIK_SPACE))
+		{
+			myEntity.SendNote(EMPNote());
 		}
 
 		if (myInputWrapper->MouseIsPressed(0) == true)
