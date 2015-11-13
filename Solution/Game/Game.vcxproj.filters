@@ -508,6 +508,9 @@
       <Filter>Menu</Filter>
     </ClInclude>
     <ClInclude Include="dirent.h" />
+    <ClInclude Include="EMPNote.h">
+      <Filter>Components\Notes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">
