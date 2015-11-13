@@ -67,6 +67,8 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCurrentShield(100.f)
 	, myPlayedMissilesReady(false)
 	, myCockpitOffset(CalcCockpitOffset())
+	, myShowTutorialMessage(false)
+	, myTutorialMessage("")
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -544,7 +546,12 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myShowMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth, -halfHeight * 0.5f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT);
+	}
+
+	if (myShowTutorialMessage == true)
+	{
+		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 130.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
@@ -816,4 +823,16 @@ void GUIComponent::UpdateWeapons()
 	myHasMachinegun = weaponSize >= 1 ? true : false;
 	myHasShotgun = weaponSize >= 2 ? true : false;
 	myHasRocketLauncher = weaponSize >= 3 ? true : false;
+}
+
+void GUIComponent::ShowTutorialMessage(const std::string& aMessage)
+{
+	myShowTutorialMessage = true;
+	myTutorialMessage = aMessage;
+}
+
+void GUIComponent::RemoveTutorialMessage()
+{
+	myShowTutorialMessage = false;
+	myTutorialMessage = "";
 }
