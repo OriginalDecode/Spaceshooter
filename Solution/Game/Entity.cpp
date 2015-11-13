@@ -23,7 +23,6 @@ Entity::Entity(eEntityType aType, Prism::Scene& aScene, Prism::eOctreeType anOct
 	{
 		myComponents[i] = nullptr;
 	}
-
 }
 
 Entity::~Entity()

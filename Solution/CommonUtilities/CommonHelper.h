@@ -58,9 +58,6 @@ namespace CU
 				return toReturn = aStringToReadFrom.substr(aStringToReadFrom.rfind(aWordToFind) + (someCharsToSkip - 1));
 			}
 		}
-		//DL_DEBUG("Attempting to load : %s", aStringToReadFrom.c_str());
-		//DL_ASSERT("Failed to find texture.");
-
 		return aStringToReadFrom;
 	}
 	inline std::string GetMyDocumentFolderPath()
