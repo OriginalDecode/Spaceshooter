@@ -86,6 +86,10 @@ private:
 	bool myFireRatePowerUp;
 	bool myEMPPowerUp;
 	bool myHomingPowerUp;
+
+	bool myHasShotMachinegun;
+	bool myHasShotRocket;
+
 	float myFireRatePowerUpDuration;
 	float myEMPPowerUpDuration;
 	float myHomingPowerUpDuration;

@@ -37,7 +37,9 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myFireRatePowerUpDuration(0.f)
 	, myEMPPowerUpDuration(0.f)
 	, myHomingPowerUpDuration(0.f)
-	, myEMPTime(0.8f)
+	, myEMPTime(10.f)
+	, myHasShotMachinegun(true)
+	, myHasShotRocket(true)
 {
 
 }
@@ -113,6 +115,11 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 		WeaponData* currWepData = nullptr;
 		if (aShootNote.myIsRocket == false)
 		{
+			if (myHasShotMachinegun == false)
+			{
+				myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+				myHasShotMachinegun = true;
+			}
 			currWepData = &myWeapons[myCurrentWeaponID];
 		}
 		else if (myWeapons.Size() >= 3)
@@ -336,6 +343,13 @@ void ShootingComponent::UpgradeWeapon(const WeaponDataType& aWeapon, int aWeapon
 	if (aWeaponID >= myWeapons.Size())
 	{
 		AddWeapon(aWeapon);
+
+		if (aWeaponID == 0)
+		{
+			myHasShotMachinegun = false;
+			myEntity.GetComponent<GUIComponent>()->ShowTutorialMessage("Use right mouse button to shoot");
+		}
+
 		return;
 	}
 	myWeapons[aWeaponID].myHomingTurnRateModifier = aWeapon.myHomingTurnRateModifier;

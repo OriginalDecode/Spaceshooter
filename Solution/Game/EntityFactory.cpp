@@ -3,6 +3,7 @@
 #include "AIComponent.h"
 #include "CollisionComponent.h"
 #include "BulletComponent.h"
+#include <CommonHelper.h>
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
@@ -63,28 +64,28 @@ void EntityFactory::LoadEntites(const std::string& aEntityRootPath, float aDiffi
 		rootDocument.ForceReadAttribute(e, "src", entityPath);
 		if (entityPath != "")
 		{
-//#ifdef _DEBUG
-//			XMLReader entityReader;
-//			entityReader.OpenDocument(entityPath);
-//			tinyxml2::XMLElement* entityElement;
-//			tinyxml2::XMLElement* rootElement = entityReader.FindFirstChild("root");
-//			if (rootElement == nullptr)
-//			{
-//				entityElement = entityReader.FindFirstChild("Entity");
-//			}
-//			else
-//			{
-//				entityElement = entityReader.FindFirstChild(rootElement, "Entity");
-//			}
-//
-//			std::string entityName;
-//			entityReader.ForceReadAttribute(entityElement, "name", entityName);
-//			myEntityTags[entityName] = entityPath;
-//			entityReader.CloseDocument();
-//#else
+			//#ifdef _DEBUG
+			//			XMLReader entityReader;
+			//			entityReader.OpenDocument(entityPath);
+			//			tinyxml2::XMLElement* entityElement;
+			//			tinyxml2::XMLElement* rootElement = entityReader.FindFirstChild("root");
+			//			if (rootElement == nullptr)
+			//			{
+			//				entityElement = entityReader.FindFirstChild("Entity");
+			//			}
+			//			else
+			//			{
+			//				entityElement = entityReader.FindFirstChild(rootElement, "Entity");
+			//			}
+			//
+			//			std::string entityName;
+			//			entityReader.ForceReadAttribute(entityElement, "name", entityName);
+			//			myEntityTags[entityName] = entityPath;
+			//			entityReader.CloseDocument();
+			//#else
 			LoadEntity(entityPath, aDifficultScale);
 			WATCH_FILE(entityPath, EntityFactory::ReloadEntity);
-//#endif
+			//#endif
 		}
 	}
 
@@ -103,7 +104,7 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath, float aDifficultS
 	{
 		entityElement = entityDocument.FindFirstChild("Entity");
 	}
-	else 
+	else
 	{
 		entityElement = entityDocument.FindFirstChild(rootElement, "Entity");
 	}
@@ -208,7 +209,7 @@ void EntityFactory::LoadEntity(const std::string& aEntityPath, float aDifficultS
 
 		else
 		{
-			std::string errorMessage = "[EntityFactory]: Entity could not find the component " 
+			std::string errorMessage = "[EntityFactory]: Entity could not find the component "
 				+ static_cast<std::string>(e->Name());
 			DL_ASSERT(errorMessage.c_str());
 		}
@@ -259,7 +260,7 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 		{
 			int aiMode = -1;
 			aDocument.ForceReadAttribute(e, "value", aiMode);
-			
+
 			switch (aiMode)
 			{
 			case 1:
@@ -378,7 +379,7 @@ void EntityFactory::LoadGraphicsComponent(EntityData& aEntityToAddTo, XMLReader&
 			aEntityToAddTo.myGraphicsType = eEntityDataGraphicsType::CUBE;
 			aEntityToAddTo.myEntity->GetComponent<GraphicsComponent>()->InitCube(width, height, depth);
 		}
-		
+
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Scale").c_str()) == 0)
 		{
 			aDocument.ForceReadAttribute(e, "x", aEntityToAddTo.myScale.myX);
@@ -443,7 +444,7 @@ void EntityFactory::LoadPowerUpComponent(EntityData& aEntityToAddTo, XMLReader& 
 	aEntityToAddTo.myUpgradePickupMessage = "";
 	aEntityToAddTo.myUpgradeID = -1;
 	aEntityToAddTo.myEntity->AddComponent<PowerUpComponent>();
-	
+
 	for (tinyxml2::XMLElement* e = aPowerUpComponent->FirstChildElement(); e != nullptr; e = e->NextSiblingElement())
 	{
 		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("Power").c_str()) == 0)
@@ -500,29 +501,64 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 {
 	if (myEntities.find(aEntityTag) == myEntities.end())
 	{
-//#ifdef _DEBUG
-//		if (myEntityTags.find(aEntityTag) == myEntityTags.end())
-//		{
-//			std::string error = "[EntityFactory] No entity with name " + aEntityTag;
-//			DL_ASSERT(error);
-//		}
-//		
-//		LoadEntity(myEntityTags[aEntityTag], myDifficultScale);
-//#else
+		//#ifdef _DEBUG
+		//		if (myEntityTags.find(aEntityTag) == myEntityTags.end())
+		//		{
+		//			std::string error = "[EntityFactory] No entity with name " + aEntityTag;
+		//			DL_ASSERT(error);
+		//		}
+		//		
+		//		LoadEntity(myEntityTags[aEntityTag], myDifficultScale);
+		//#else
 		std::string error = "[EntityFactory] No entity with name " + aEntityTag;
 		DL_ASSERT(error);
-//#endif
+		//#endif
 	}
 	auto it = myEntities.find(aEntityTag);
 	Entity* sourceEntity = it->second.myEntity;
 
 	aTargetEntity->SetName(sourceEntity->GetName());
 
-	aTargetEntity->SetShouldRotate(sourceEntity->GetShouldRotate());
-	aTargetEntity->SetShouldRotateX(sourceEntity->GetShouldRotateX());
-	aTargetEntity->SetShouldRotateY(sourceEntity->GetShouldRotateY());
-	aTargetEntity->SetShouldRotateZ(sourceEntity->GetShouldRotateZ());
-	
+	if (aEntityTag.rfind("Asteroid") != std::string::npos || aEntityTag.rfind("asteroid") != std::string::npos)
+	{
+		int value = CU::Math::RandomRange(1, 6);
+		aTargetEntity->SetShouldRotate(true);
+		if (value == 1)
+			aTargetEntity->SetShouldRotateX(true);
+		else if (value == 2)
+			aTargetEntity->SetShouldRotateY(true);
+		else if (value == 3)
+			aTargetEntity->SetShouldRotateZ(true);
+		else if (value == 4)
+		{
+			aTargetEntity->SetShouldRotateX(true);
+			aTargetEntity->SetShouldRotateY(true);
+		}
+		else if (value == 5)
+		{
+			aTargetEntity->SetShouldRotateY(true);
+			aTargetEntity->SetShouldRotateZ(true);
+		}
+		else if (value == 6)
+		{
+			aTargetEntity->SetShouldRotateZ(true);
+			aTargetEntity->SetShouldRotateX(true);
+		}
+	}
+	else
+	{
+		aTargetEntity->SetShouldRotate(sourceEntity->GetShouldRotate());
+		aTargetEntity->SetShouldRotateX(sourceEntity->GetShouldRotateX());
+		aTargetEntity->SetShouldRotateY(sourceEntity->GetShouldRotateY());
+		aTargetEntity->SetShouldRotateZ(sourceEntity->GetShouldRotateZ());
+	}
+
+
+
+
+
+
+
 	if (sourceEntity->GetComponent<CollisionComponent>() != nullptr)
 	{
 		eCollisionType collisionType = sourceEntity->GetComponent<CollisionComponent>()->GetCollisionType();
@@ -557,7 +593,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 		if (it->second.myScale != CU::Vector3f())
 		{
 			aTargetEntity->GetComponent<GraphicsComponent>()->SetScale(it->second.myScale);
-			if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr) 
+			if (aTargetEntity->GetComponent<CollisionComponent>() != nullptr)
 			{
 				float scale = aTargetEntity->GetComponent<CollisionComponent>()->GetSphere().myRadius + it->second.myCollisionSphereRadius;
 				scale *= CU::Math::GetMaximumValueFromVector(it->second.myScale);
@@ -614,7 +650,7 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 	if (sourceEntity->GetComponent<PowerUpComponent>() != nullptr)
 	{
 		aTargetEntity->AddComponent<PowerUpComponent>();
-		
+
 		if (it->second.myPowerUpType == ePowerUpType::WEAPON_UPGRADE)
 		{
 			aTargetEntity->GetComponent<PowerUpComponent>()->Init(it->second.myPowerUpType, it->second.myPowerUpName, it->second.myUpgradeName
@@ -676,10 +712,10 @@ ePowerUpType EntityFactory::ConvertToPowerUpType(std::string aName)
 	{
 		return ePowerUpType::INVULNERABLITY;
 	}
-	
+
 	std::string errorMessage = "[EntityFactory] There is no powerup named " + aName;
 	DL_ASSERT(errorMessage.c_str());
-	
+
 	return ePowerUpType::NO_POWERUP;
 }
 
@@ -718,10 +754,10 @@ std::string EntityFactory::ConvertToPowerUpInGameName(ePowerUpType aPowerUpType)
 	return "";
 }
 
-eBulletType EntityFactory::ConvertToBulletType(std::string aName) 
+eBulletType EntityFactory::ConvertToBulletType(std::string aName)
 {
 	std::string type = CU::ToLower(aName);
-	if (type == "machinegunbullet1") 
+	if (type == "machinegunbullet1")
 	{
 		return eBulletType::MACHINGUN_BULLET_LEVEL_1;
 	}
