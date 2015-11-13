@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "PhysicsComponent.h"
 #include "SoundNote.h"
+#include "ShieldComponent.h"
 
 PhysicsComponent::PhysicsComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -59,6 +60,14 @@ void PhysicsComponent::BounceOff(Entity& anOtherEntity)
 	if (myEntity.GetType() == eEntityType::PLAYER)
 	{
 		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_AsteroidCrash"));
+		if (myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() > 0.f)
+		{
+			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldHit"));
+		}
+		else
+		{
+			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerHit"));
+		}
 	}
 	
 	if (CU::Dot(myEntity.myOrientation.GetForward(), toOther) > 0)
