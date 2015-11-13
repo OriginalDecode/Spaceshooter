@@ -3,6 +3,7 @@
 #include "ControllerComponent.h"
 #include "Entity.h"
 #include "PhysicsComponent.h"
+#include "SoundNote.h"
 
 PhysicsComponent::PhysicsComponent(Entity& aEntity)
 	: Component(aEntity)
@@ -54,6 +55,11 @@ void PhysicsComponent::BounceOff(Entity& anOtherEntity)
 {
 	CU::Vector3<float> toOther = anOtherEntity.myOrientation.GetPos() - myEntity.myOrientation.GetPos();
 	CU::Normalize(toOther);
+
+	if (myEntity.GetType() == eEntityType::PLAYER)
+	{
+		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_AsteroidCrash"));
+	}
 	
 	if (CU::Dot(myEntity.myOrientation.GetForward(), toOther) > 0)
 	{
