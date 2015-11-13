@@ -17,6 +17,7 @@
 #include "HealthComponent.h"
 #include "HealthNote.h"
 #include "KillStructureMessage.h"
+#include <MathHelper.h>
 #include "MissionNote.h"
 #include "Model.h"
 #include "ModelLoader.h"
@@ -385,9 +386,13 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f });
 
 	Prism::Engine::GetInstance()->PrintText(myConversation, { 50.f, -50.f }, Prism::eTextType::RELEASE_TEXT);
+
+	CU::Vector2<float> crosshairPosition(CU::Math::Lerp<CU::Vector2<float>>({ halfWidth, -halfHeight }
+		, { steeringPos.x, steeringPos.y }, 0.3f));
+
 	myReticle->Render({ halfWidth, -halfHeight });
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
-	myCrosshair->Render({ halfWidth, -(halfHeight) });
+	myCrosshair->Render(crosshairPosition);
 
 	CalculateAndRender(myWaypointPosition, myModel2DToRender, myWaypointArrow, myWaypointMarker
 		, aWindowSize, myWaypointActive);
@@ -499,7 +504,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myHitMarkerTimer >= 0.f)
 	{
-		myCurrentHitmarker->Render({ steeringPos.x, steeringPos.y });
+		myCurrentHitmarker->Render(crosshairPosition);
 	}
 
 	if (myDamageIndicatorTimer >= 0.f)
