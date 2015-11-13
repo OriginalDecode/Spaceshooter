@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CommonHelper.h"
 #include "ConversationAction.h"
+#include "EMPAction.h"
 #include "Event.h"
 #include "EventManager.h"
 #include "EventQueueEmptyMessage.h"
@@ -44,6 +45,11 @@ EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aCo
 			element = reader.FindNextElement(element, "wait"))
 		{
 			actions.Add(new WaitAction(reader, element));
+		}
+		for (tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "emp"); element != nullptr;
+			element = reader.FindNextElement(element, "emp"))
+		{
+			actions.Add(new EMPAction(reader, element));
 		}
 
 		tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "conversation");

@@ -424,7 +424,7 @@ void ShootingComponent::ActivatePowerUp(ePowerUpType aPowerUp)
 		if (myPowerUps[i].myPowerUpType == aPowerUp)
 		{
 			//MAKE AWESOME THINGY
-			PostMaster::GetInstance()->SendMessage(EMPMessage(myEMPTime));
+			PostMaster::GetInstance()->SendMessage(EMPMessage(myEntity.myOrientation.GetPos(), myEMPTime));
 			//SKICKA MEDDELANDE TILL SCNENEN OM ATT DEN FÅR RENDERA EMP
 			PostMaster::GetInstance()->SendMessage(PowerUpMessage(aPowerUp, myEntity.myOrientation.GetPos()
 				, myPowerUps[i].myPowerUpValue, myEMPPowerUpDuration));
