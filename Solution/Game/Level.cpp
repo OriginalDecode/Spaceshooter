@@ -367,7 +367,14 @@ Entity* Level::GetPlayer()
 
 void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 {
-	Entity* newEntity = new Entity(eEntityType::ENEMY, *myScene, Prism::eOctreeType::DYNAMIC);
+	eEntityType entityType = eEntityType::ENEMY;
+	if (aMessage.myType == "ally")
+	{
+		entityType = eEntityType::ALLY;
+	}
+
+	Entity* newEntity = new Entity(entityType, *myScene, Prism::eOctreeType::DYNAMIC);
+	
 	myEntityFactory->CopyEntity(newEntity, aMessage.myType);
 	if (aMessage.myPowerUpName != "")
 	{
@@ -378,19 +385,26 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	
 	newEntity->myOrientation = CU::GetOrientation(newEntity->myOrientation, aMessage.myRotation);
 
-	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), eEntityType::ENEMY);
+	myCollisionManager->Add(newEntity->GetComponent<CollisionComponent>(), entityType);
 
-	if (myEntityToDefend != nullptr)
+	if (entityType == eEntityType::ALLY)
 	{
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+		newEntity->GetComponent<AIComponent>()->SetAllyTargets(myCollisionManager->GetEnemies());
 	}
 	else
 	{
-		newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+		if (myEntityToDefend != nullptr)
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myEntityToDefend, myPlayer);
+		}
+		else
+		{
+			newEntity->GetComponent<AIComponent>()->SetEntityToFollow(myPlayer, myPlayer);
+		}
+		++myLevelScore.myTotalEnemies;
 	}
-	++myLevelScore.myTotalEnemies;
-	myEntities.Add(newEntity);
 
+	myEntities.Add(newEntity);
 	myScene->AddInstance(newEntity->GetComponent<GraphicsComponent>()->GetInstance());
 }
 

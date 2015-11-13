@@ -281,7 +281,7 @@ void EntityFactory::LoadAIComponent(EntityData& aEntityToAddTo, XMLReader& aDocu
 		}
 
 		aEntityToAddTo.myAITurnRate = 1.f;
-		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("TurnRate").c_str()) == 0)
+		if (std::strcmp(CU::ToLower(e->Name()).c_str(), CU::ToLower("AITurnRate").c_str()) == 0)
 		{
 			aDocument.ReadAttribute(e, "value", aEntityToAddTo.myAITurnRate);
 		}

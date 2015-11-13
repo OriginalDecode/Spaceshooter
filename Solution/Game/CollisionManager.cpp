@@ -16,6 +16,7 @@
 
 CollisionManager::CollisionManager()
 	: myPlayers(2)
+	, myAllies(64)
 	, myEnemies(64)
 	, myPlayerBullets(128)
 	, myEnemyBullets(128)
@@ -25,6 +26,7 @@ CollisionManager::CollisionManager()
 	, myDefendables(16)
 	, myStructures(16)
 	, myPlayerFilter(0)
+	, myAllyFilter(0)
 	, myEnemyFilter(0)
 	, myPlayerBulletFilter(0)
 	, myEnemyBulletFilter(0)
@@ -35,7 +37,8 @@ CollisionManager::CollisionManager()
 	, myStructureFilter(0)
 {
 	//myPlayerFilter = eEntityType::ENEMY | eEntityType::ENEMY_BULLET | eEntityType::TRIGGER;
-	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP | eEntityType::DEFENDABLE | eEntityType::STRUCTURE;
+	myAllyFilter = 0;
+	myPlayerBulletFilter = eEntityType::ENEMY | eEntityType::PROP | eEntityType::STRUCTURE;
 	myEnemyBulletFilter = eEntityType::PLAYER | eEntityType::DEFENDABLE;
 	myTriggerFilter = eEntityType::PLAYER;
 	myPowerUpFilter = eEntityType::PLAYER;
@@ -82,6 +85,9 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 	case eEntityType::STRUCTURE:
 		myStructures.Add(aComponent);
 		break;
+	case eEntityType::ALLY:
+		myAllies.Add(aComponent);
+		break;
 	default:
 		DL_ASSERT("Tried to Add invalid EntityType to CollisionManager.");
 		break;
@@ -119,6 +125,9 @@ void CollisionManager::Remove(CollisionComponent* aComponent, eEntityType aEnum)
 		break;
 	case eEntityType::STRUCTURE:
 		myStructures.RemoveCyclic(aComponent);
+		break;
+	case eEntityType::ALLY:
+		myAllies.RemoveCyclic(aComponent);
 		break;
 	default:
 		DL_ASSERT("Tried to Remove invalid EntityType to CollisionManager.");
@@ -163,6 +172,10 @@ void CollisionManager::Update()
 	for (int i = myStructures.Size() - 1; i >= 0; --i)
 	{
 		CheckAllCollisions(myStructures[i], myStructureFilter);
+	}
+	for (int i = myAllies.Size() - 1; i >= 0; --i)
+	{
+		CheckAllCollisions(myAllies[i], myStructureFilter);
 	}
 }
 
@@ -214,6 +227,14 @@ void CollisionManager::CleanUp()
 			myStructures.RemoveCyclicAtIndex(i);
 		}
 	}
+
+	for (int i = myAllies.Size() - 1; i >= 0; --i)
+	{
+		if (myAllies[i]->GetEntity().GetAlive() == false)
+		{
+			myAllies.RemoveCyclicAtIndex(i);
+		}
+	}
 }
 
 void CollisionManager::ReceiveMessage(const PowerUpMessage& aMessage)
@@ -260,6 +281,10 @@ void CollisionManager::CheckAllCollisions(CollisionComponent* aComponent, int aF
 	if (collided == false && aFilter & eEntityType::STRUCTURE)
 	{
 		collided = CheckCollision(aComponent, myStructures);
+	}
+	if (collided == false && aFilter & eEntityType::ALLY)
+	{
+		collided = CheckCollision(aComponent, myAllies);
 	}
 }
 

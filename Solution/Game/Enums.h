@@ -60,6 +60,8 @@ enum eEntityType //Collision manager needs this as ints!
 	DEFENDABLE = 128,
 	STRUCTURE = 256,
 	EMP = 512,
+	ALLY = 1024,
+	ALLY_BULLET = 2048,
 };
 
 enum class eCollisionType

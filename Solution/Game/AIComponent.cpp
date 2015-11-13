@@ -3,6 +3,7 @@
 #include "AIComponent.h"
 #include "BulletAIComponent.h"
 #include "Constants.h"
+#include "CollisionComponent.h"
 #include "DefendMessage.h"
 #include <Engine.h>
 #include "Entity.h"
@@ -21,6 +22,7 @@ AIComponent::AIComponent(Entity& aEntity)
 	, myPrevEntityToFollow(nullptr)
 	, myTurnRateModifier(1.f)
 	, myRandomizeMovementTimer(2.f)
+	, myAllyTargets(nullptr)
 {
 	DL_ASSERT_EXP(aEntity.GetComponent<InputComponent>() == nullptr
 		, "Tried to add AIComponent when there was a InputComponent");
@@ -89,64 +91,72 @@ void AIComponent::Init(float aSpeed, eAITargetPositionMode aTargetPositionMode)
 
 void AIComponent::Update(float aDeltaTime)
 {
-	DL_ASSERT_EXP(myEntityToFollow != nullptr, "AI needs an entity to follow.");
-
-	if (myPhysicsComponent == nullptr)
+	if (myEntity.GetType() == eEntityType::ALLY)
 	{
-		myPhysicsComponent = myEntity.GetComponent<PhysicsComponent>();
-		DL_ASSERT_EXP(myPhysicsComponent != nullptr, "AI component needs physics component for movement."); // remove later
+		ChooseTarget();
 	}
-	myVelocity = myPhysicsComponent->GetVelocity();
-	if (myCanMove == true)
+
+	DL_ASSERT_EXP(myEntityToFollow != nullptr || myEntity.GetType() == eEntityType::ALLY, "AI needs an entity to follow.");
+
+	if (myEntityToFollow != nullptr)
 	{
-		myTimeToNextDecision -= aDeltaTime;
-		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
+		if (myPhysicsComponent == nullptr)
 		{
-			myRandomizeMovementTimer -= aDeltaTime;
+			myPhysicsComponent = myEntity.GetComponent<PhysicsComponent>();
+			DL_ASSERT_EXP(myPhysicsComponent != nullptr, "AI component needs physics component for movement."); // remove later
 		}
-		if (myTargetPositionMode != eAITargetPositionMode::TURRET)
+		myVelocity = myPhysicsComponent->GetVelocity();
+		if (myCanMove == true)
 		{
-			FollowEntity(aDeltaTime);
-		}
-
-		if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE 
-			&& myTargetPositionMode != eAITargetPositionMode::MINE)
-		{
-			CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
-
-			CU::Normalize(toTarget);
-			if (myTimeToNextDecision < 0)
+			myTimeToNextDecision -= aDeltaTime;
+			if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE)
 			{
-				CU::Vector3<float> shootingDir = toTarget;
-				myTimeToNextDecision = myTimeBetweenDecisions;
-				PhysicsComponent* targetPhys = myEntityToFollow->GetComponent<PhysicsComponent>();
-				if (targetPhys != nullptr)
-				{
-					CU::Vector3<float> targetVel = targetPhys->GetVelocity();
-					CU::Vector3<float> shootingTarget = myEntityToFollow->myOrientation.GetPos();
-					shootingTarget += myEntityToFollow->myOrientation.GetForward() * (CU::Length(targetVel) / 2.f);
-					shootingDir = CU::GetNormalized(shootingTarget - myEntity.myOrientation.GetPos());
-				}
+				myRandomizeMovementTimer -= aDeltaTime;
+			}
+			if (myTargetPositionMode != eAITargetPositionMode::TURRET)
+			{
+				FollowEntity(aDeltaTime);
+			}
 
-				Shoot(shootingDir*myPhysicsComponent->GetSpeed(), shootingDir);
+			if (myTargetPositionMode != eAITargetPositionMode::KAMIKAZE
+				&& myTargetPositionMode != eAITargetPositionMode::MINE)
+			{
+				CU::Vector3<float> toTarget = myEntityToFollow->myOrientation.GetPos() - myEntity.myOrientation.GetPos();
+
+				CU::Normalize(toTarget);
+				if (myTimeToNextDecision < 0)
+				{
+					CU::Vector3<float> shootingDir = toTarget;
+					myTimeToNextDecision = myTimeBetweenDecisions;
+					PhysicsComponent* targetPhys = myEntityToFollow->GetComponent<PhysicsComponent>();
+					if (targetPhys != nullptr)
+					{
+						CU::Vector3<float> targetVel = targetPhys->GetVelocity();
+						CU::Vector3<float> shootingTarget = myEntityToFollow->myOrientation.GetPos();
+						shootingTarget += myEntityToFollow->myOrientation.GetForward() * (CU::Length(targetVel) / 2.f);
+						shootingDir = CU::GetNormalized(shootingTarget - myEntity.myOrientation.GetPos());
+					}
+
+					Shoot(shootingDir*myPhysicsComponent->GetSpeed(), shootingDir);
+				}
 			}
 		}
-	}
-	else
-	{
-		myVelocity -= myVelocity * aDeltaTime * 0.01f;
-		myTimeBeforeMovement -= aDeltaTime;
-
-		if (myTimeBeforeMovement <= 0.f)
+		else
 		{
-			myCanMove = true;
+			myVelocity -= myVelocity * aDeltaTime * 0.01f;
+			myTimeBeforeMovement -= aDeltaTime;
+
+			if (myTimeBeforeMovement <= 0.f)
+			{
+				myCanMove = true;
+			}
+
+			RotateX(aDeltaTime / 10);
+			RotateZ(aDeltaTime / 5);
 		}
 
-		RotateX(aDeltaTime / 10);
-		RotateZ(aDeltaTime / 5);
+		myPhysicsComponent->SetVelocity(myVelocity);
 	}
-
-	myPhysicsComponent->SetVelocity(myVelocity);
 }
 
 void AIComponent::SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity)
@@ -156,6 +166,12 @@ void AIComponent::SetEntityToFollow(Entity* aEntity, Entity* aPlayerEntity)
 	{
 		myPrevEntityToFollow = aPlayerEntity;
 	}
+}
+
+void AIComponent::SetAllyTargets(const CU::GrowingArray<CollisionComponent*>& someEnemies)
+{
+	myAllyTargets = &someEnemies;
+	DL_ASSERT_EXP(myAllyTargets != nullptr, "AllyTarget is nullptr after SetAllyTargets");
 }
 
 void AIComponent::ReceiveMessage(const DefendMessage& aMessage)
@@ -270,5 +286,27 @@ void AIComponent::CalculateToTarget(eAITargetPositionMode aMode)
 	{
 		CU::Vector3<float> targetPos = myEntityToFollow->myOrientation.GetPos() + myRandomMovementOffset;
 		myToTarget = targetPos - myEntity.myOrientation.GetPos();
+	}
+}
+
+void AIComponent::ChooseTarget()
+{
+	Entity* target = nullptr;
+	float targetDist2 = FLT_MAX;
+	for (int i = 0; i < myAllyTargets->Size(); ++i)
+	{
+		Entity& enemy = (*myAllyTargets)[i]->GetEntity();
+		float dist2 = CU::Length2(myEntity.myOrientation.GetPos() - enemy.myOrientation.GetPos());
+		if (dist2 < targetDist2)
+		{
+			target = &enemy;
+			targetDist2 = dist2;
+		}
+	}
+
+	myEntityToFollow = target;
+	if (myEntityToFollow == nullptr)
+	{
+		myEntity.Kill();
 	}
 }
