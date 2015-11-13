@@ -576,7 +576,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myShowTutorialMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 200.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 270.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
