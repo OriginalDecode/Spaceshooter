@@ -885,8 +885,15 @@ void GUIComponent::ShowTutorialMessage(const std::string& aMessage)
 	myTutorialMessage = aMessage;
 }
 
-void GUIComponent::RemoveTutorialMessage()
+void GUIComponent::RemoveTutorialMessage(const std::string& aMessage)
 {
 	myShowTutorialMessage = false;
 	myTutorialMessage = "";
+
+	if (aMessage != "")
+	{
+		myMessage = aMessage;
+		myMessageTime = 3.f;
+		myShowMessage = true;
+	}
 }
