@@ -171,6 +171,7 @@
     <ClInclude Include="DefendMission.h" />
     <ClInclude Include="dirent.h" />
     <ClInclude Include="EMPMessage.h" />
+    <ClInclude Include="EMPNote.h" />
     <ClInclude Include="ExplosionMessage.h" />
     <ClInclude Include="FadeMessage.h" />
     <ClInclude Include="InGameMenuState.h" />

@@ -40,6 +40,7 @@ namespace Prism
 		Instance* myPlayerInstance;
 #endif
 		CU::GrowingArray<Instance*> myInstances;
+		CU::GrowingArray<Instance*> myDynamicInstances;
 		CU::GrowingArray<DirectionalLight*> myDirectionalLights;
 		CU::GrowingArray<PointLight*> myPointLights;
 		CU::GrowingArray<SpotLight*> mySpotLights;

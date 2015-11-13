@@ -58,6 +58,10 @@ void Component::ReceiveNote(const EmitterNote&)
 {
 }
 
+void Component::ReceiveNote(const EMPNote&)
+{
+}
+
 void Component::Reset()
 {
 }

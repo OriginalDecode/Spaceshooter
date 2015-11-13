@@ -21,6 +21,7 @@ Prism::Scene::Scene()
 #endif
 {
 	myInstances.Init(4096);
+	myDynamicInstances.Init(64);
 	myDirectionalLights.Init(4);
 	myPointLights.Init(4);
 	mySpotLights.Init(4);
@@ -73,10 +74,24 @@ void Prism::Scene::Render()
 		mySpotLightData[i].myRange = mySpotLights[i]->GetRange();
 		mySpotLightData[i].myCone = mySpotLights[i]->GetCone();
 	}
+
+	myPlayerInstance->UpdateDirectionalLights(myDirectionalLightData);
+	myPlayerInstance->UpdatePointLights(myPointLightData);
+	myPlayerInstance->UpdateSpotLights(mySpotLightData);
+	myPlayerInstance->Render(*myCamera);
+
 #ifdef SCENE_USE_OCTREE
 	myOctree->Update();
 	myInstances.RemoveAll();
 	myOctree->GetOccupantsInAABB(myCamera->GetFrustum(), myInstances);
+
+	for (int i = 0; i < myDynamicInstances.Size(); ++i)
+	{
+		myDynamicInstances[i]->UpdateDirectionalLights(myDirectionalLightData);
+		myDynamicInstances[i]->UpdatePointLights(myPointLightData);
+		myDynamicInstances[i]->UpdateSpotLights(mySpotLightData);
+		myDynamicInstances[i]->Render(*myCamera);
+	}
 #ifdef SHOW_OCTREE_DEBUG
 	Engine::GetInstance()->PrintText(myInstances.Size(), { 600.f, -600.f });
 #endif
@@ -88,12 +103,6 @@ void Prism::Scene::Render()
 		myInstances[i]->UpdateSpotLights(mySpotLightData);
 		myInstances[i]->Render(*myCamera);
 	}
-
-	myPlayerInstance->UpdateDirectionalLights(myDirectionalLightData);
-	myPlayerInstance->UpdatePointLights(myPointLightData);
-	myPlayerInstance->UpdateSpotLights(mySpotLightData);
-	myPlayerInstance->Render(*myCamera);
-
 }
 
 void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
@@ -116,8 +125,10 @@ void Prism::Scene::AddInstance(Instance* aInstance)
 	{
 		DL_ASSERT_EXP(myPlayerInstance == nullptr, "Tried to add Player twice to Scene");
 		myPlayerInstance = aInstance;
-
-		
+	}
+	else if (aInstance->GetOctreeType() == eOctreeType::DYNAMIC)
+	{
+		myDynamicInstances.Add(aInstance);
 	}
 	else
 	{
@@ -146,7 +157,14 @@ void Prism::Scene::AddLight(SpotLight* aLight)
 void Prism::Scene::RemoveInstance(Instance* aInstance) 
 {
 #ifdef SCENE_USE_OCTREE
-	myOctree->Remove(aInstance);
+	if (aInstance->GetOctreeType() == eOctreeType::DYNAMIC)
+	{
+		myDynamicInstances.RemoveCyclic(aInstance);
+	}
+	else
+	{
+		myOctree->Remove(aInstance);
+	}
 #else
 	myInstances.RemoveCyclic(aInstance);
 #endif

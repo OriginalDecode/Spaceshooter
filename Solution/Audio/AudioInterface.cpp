@@ -9,7 +9,9 @@ namespace Prism
 		AudioInterface* AudioInterface::myInstance = nullptr;
 		AudioInterface::AudioInterface()
 			:myWwiseManager(nullptr)
-		{
+			, mySFXVolume(90)
+			, myMusicVolume(80)
+		{	
 		}
 
 		AudioInterface::~AudioInterface()
@@ -77,6 +79,44 @@ namespace Prism
 		{
 			if (myWwiseManager)
 			{
+				std::string eventName(aEvent);
+				if (eventName == "IncreaseVolume")
+				{
+					if (mySFXVolume >= 100)
+					{
+						mySFXVolume = 100;
+						return;
+					}
+					mySFXVolume += 5;
+				}
+				if (eventName == "LowerVolume")
+				{
+					if (mySFXVolume <= 0)
+					{
+						mySFXVolume = 0;
+						return;
+					}
+					mySFXVolume -= 5;
+				}
+				if (eventName == "IncreaseMusic")
+				{
+					if (myMusicVolume >= 100)
+					{
+						myMusicVolume = 100;
+						return;
+					}
+					myMusicVolume += 5;
+				}
+				if (eventName == "LowerMusic")
+				{
+					if (myMusicVolume <= 0)
+					{
+						myMusicVolume = 0;
+						return;
+					}
+					myMusicVolume -= 5;
+				}
+
 				return myWwiseManager->PostEvent(aEvent, anObjectID);
 			}
 		}

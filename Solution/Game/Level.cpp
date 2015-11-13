@@ -167,16 +167,16 @@ bool Level::LogicUpdate(float aDeltaTime)
 			myPlayer->SendNote<GUINote>(GUINote(myEntities[i], eGUINoteType::ENEMY));
 		}
 	}
-#ifndef RELEASE_BUILD
-	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
-	{
-		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos() + (myPlayer->myOrientation.GetForward() * 100.f));
-		myEMPTimer = 0.8f;
-		//myEMPScale = 1500.f;
-		myEMPScale = 1.f;
-		myEMPActivated = true;
-	}
-#endif
+//#ifndef RELEASE_BUILD
+//	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
+//	{
+//		myEMP->myOrientation.SetPos(myPlayer->myOrientation.GetPos() + (myPlayer->myOrientation.GetForward() * 100.f));
+//		myEMPTimer = 0.8f;
+//		//myEMPScale = 1500.f;
+//		myEMPScale = 1.f;
+//		myEMPActivated = true;
+//	}
+//#endif
 	if (myEMPActivated == true)
 	{
 		myEMPTimer -= aDeltaTime;
