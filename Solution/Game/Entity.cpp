@@ -81,7 +81,7 @@ void Entity::Kill()
 				, myOrientation.GetPos()));
 	}
 
-	if (myType == eEntityType::PROP)
+	if (myType == eEntityType::PROP || myType == eEntityType::STRUCTURE)
 	{
 		if (GetName().find("asteroid") != std::string::npos || GetName().find("Asteroid") != std::string::npos)
 		{

@@ -519,7 +519,10 @@ void EntityFactory::CopyEntity(Entity* aTargetEntity, const std::string& aEntity
 
 	aTargetEntity->SetName(sourceEntity->GetName());
 
-	if (aEntityTag.rfind("Asteroid") != std::string::npos || aEntityTag.rfind("asteroid") != std::string::npos)
+	if (aEntityTag.rfind("Asteroid") != std::string::npos 
+		|| aEntityTag.rfind("asteroid") != std::string::npos 
+		|| aEntityTag.rfind("Junk") != std::string::npos
+		|| aEntityTag.rfind("junk") != std::string::npos)
 	{
 		int value = CU::Math::RandomRange(1, 6);
 		aTargetEntity->SetShouldRotate(true);
