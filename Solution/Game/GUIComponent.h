@@ -140,6 +140,12 @@ private:
 	CU::Vector3<float> myCockpitOffset;
 
 	const int* myCurrentWeapon;
+
+	bool myFirstSpawn;
+	float myFirstSpawnTimer;
+
+	bool myWaypointSpawn;
+	float myWaypointSpawnTimer;
 };
 
 inline eComponentType GUIComponent::GetType()
