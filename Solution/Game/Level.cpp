@@ -391,11 +391,11 @@ void Level::ReceiveMessage(const PowerUpMessage& aMessage)
 
 		if (aMessage.GetUpgradeID() >= 2 && myPlayer->GetComponent<ShootingComponent>()->GetWeaponSize() == 1) // handles a rare exception
 		{
-			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1);
+			myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon("W_gun_shotgun_level_1"), 1, true);
 			changeWeapon = false;
 		}
 
-		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID());
+		myPlayer->GetComponent<ShootingComponent>()->UpgradeWeapon(myWeaponFactory->GetWeapon(aMessage.GetUprgade()), aMessage.GetUpgradeID(), true);
 
 		if (aMessage.GetUpgradeID() < 2 && changeWeapon == true)
 		{

@@ -44,7 +44,7 @@ public:
 	void ReceiveNote(const EMPNote& aNote) override;
 
 	void AddWeapon(const WeaponDataType& aWeapon);
-	void UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID);
+	void UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID, bool anIsIngame = false);
 
 	static eComponentType GetType();
 
@@ -89,6 +89,7 @@ private:
 
 	bool myHasShotMachinegun;
 	bool myHasShotRocket;
+	bool myHasSwitchWeapon;
 
 	float myFireRatePowerUpDuration;
 	float myEMPPowerUpDuration;
