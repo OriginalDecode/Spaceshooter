@@ -116,7 +116,7 @@ private:
 	float myMaxDistanceToEnemies;
 	bool myWaypointActive;
 
-	Prism::Instance* myGUIBars[2];
+	Prism::Instance* myGUIBars[3];
 	float myHealthBarRadius;
 	float myShieldBarRadius;
 
