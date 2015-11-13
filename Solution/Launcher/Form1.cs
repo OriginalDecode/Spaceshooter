@@ -17,6 +17,7 @@ namespace Launcher
         private string myDocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         private string myConfigPath = "Data\\Setting\\SET_config.bin";
         private string[] myExePath = { "Application_Release.exe", "Application_Internal.exe", "Application_Debug.exe" };
+        private string myLogo = "Data\\Resource\\Texture\\Logo\\T_launcher_logo.png";
 
         enum eResolutions
         {
@@ -35,6 +36,7 @@ namespace Launcher
 
         public Form1()
         {
+            
             InitializeComponent();
 
             string releaseConfig = myDocumentFolder + "\\Distortion Games\\SpaceShooter\\" + myConfigPath;
@@ -59,6 +61,9 @@ namespace Launcher
             {
                 Directory.CreateDirectory(subString);
             }
+
+            //pictureBox1.Image = Image.FromFile(myLogo);
+            pictureBox1.ImageLocation = Directory.GetCurrentDirectory() + "\\" + myLogo;
         }
 
         private void Form1_Load(object sender, EventArgs e)
