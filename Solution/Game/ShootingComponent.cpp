@@ -3,6 +3,7 @@
 #include <Camera.h>
 #include "Constants.h"
 #include "EMPMessage.h"
+#include "EMPNote.h"
 #include "Entity.h"
 #include <FileWatcher.h>
 #include "GraphicsComponent.h"
@@ -107,197 +108,104 @@ void ShootingComponent::Update(float aDeltaTime)
 
 void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 {
-	if (HasPowerUp(ePowerUpType::EMP) == false)
+	if (myHasWeapon == true)
 	{
-		if (myHasWeapon == true)
+		WeaponData* currWepData = nullptr;
+		if (aShootNote.myIsRocket == false)
 		{
-			WeaponData* currWepData = nullptr;
-			if (aShootNote.myIsRocket == false)
+			currWepData = &myWeapons[myCurrentWeaponID];
+		}
+		else if (myWeapons.Size() >= 3)
+		{
+			currWepData = &myWeapons[2];
+		}
+
+		if (currWepData != nullptr && currWepData->myCurrentTime == currWepData->myCoolDownTime)
+		{
+			for (int i = 0; i < currWepData->myBulletsPerShot; ++i)
 			{
-				currWepData = &myWeapons[myCurrentWeaponID];
-				/*if (myWeapons[myCurrentWeaponID].myCurrentTime == myWeapons[myCurrentWeaponID].myCoolDownTime)
+				CU::Matrix44<float> orientation = myEntity.myOrientation;
+				orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
+					+ (currWepData->myPosition * myEntity.myOrientation));
+				CU::Vector3<float> dir = aShootNote.myDirection;
+				if (currWepData->mySpread > 0)
 				{
-					for (int i = 0; i < myWeapons[myCurrentWeaponID].myBulletsPerShot; ++i)
-					{
-						CU::Matrix44<float> orientation = myEntity.myOrientation;
-						orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-							+ (myWeapons[myCurrentWeaponID].myPosition * myEntity.myOrientation));
-						CU::Vector3<float> dir = aShootNote.myDirection;
-						if (myWeapons[myCurrentWeaponID].mySpread > 0)
-						{
-							float max = float(myWeapons[myCurrentWeaponID].mySpread);
-							float min = float(-myWeapons[myCurrentWeaponID].mySpread);
+					float max = float(currWepData->mySpread);
+					float min = float(-currWepData->mySpread);
 
-							float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
-							float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
+					float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
+					float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
 
-							CU::Matrix44<float> rotation;
-							rotation.myMatrix[8] = randomSpreadX;
-							rotation.myMatrix[9] = randomSpreadY;
+					CU::Matrix44<float> rotation;
+					rotation.myMatrix[8] = randomSpreadX;
+					rotation.myMatrix[9] = randomSpreadY;
 
-							CU::Vector4<float> pos = orientation.GetPos();
-							orientation = rotation * orientation;
-							orientation.SetPos(pos);
+					CU::Vector4<float> pos = orientation.GetPos();
+					orientation = rotation * orientation;
+					orientation.SetPos(pos);
 
-							dir = dir * rotation;
-						}
-
-						CU::Matrix44<float> rotation;
-						rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
-						rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
-
-						CU::Vector4<float> pos = orientation.GetPos();
-						orientation = rotation * orientation;
-						orientation.SetPos(pos);
-
-						PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[myCurrentWeaponID].myBulletType
-							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-							, dir
-							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[myCurrentWeaponID].myIsHoming ? myHomingTarget : nullptr));
-						myWeapons[myCurrentWeaponID].myCurrentTime = 0.f;
-					}
-				}*/
-			}
-			else if (myWeapons.Size() >= 3)
-			{
-				currWepData = &myWeapons[2];
-				/*if (myWeapons[2].myCurrentTime == myWeapons[2].myCoolDownTime)
-				{
-					for (int i = 0; i < myWeapons[2].myBulletsPerShot; ++i)
-					{
-						CU::Matrix44<float> orientation = myEntity.myOrientation;
-						orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-							+ (myWeapons[2].myPosition * myEntity.myOrientation));
-						CU::Vector3<float> dir = aShootNote.myDirection;
-						if (myWeapons[2].mySpread > 0)
-						{
-							float max = float(myWeapons[2].mySpread);
-							float min = float(-myWeapons[2].mySpread);
-
-							float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
-							float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
-
-							CU::Matrix44<float> rotation;
-							rotation.myMatrix[8] = randomSpreadX;
-							rotation.myMatrix[9] = randomSpreadY;
-
-							CU::Vector4<float> pos = orientation.GetPos();
-							orientation = rotation * orientation;
-							orientation.SetPos(pos);
-
-							dir = dir * rotation;
-						}
-
-						CU::Matrix44<float> rotation;
-						rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
-						rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
-
-						CU::Vector4<float> pos = orientation.GetPos();
-						orientation = rotation * orientation;
-						orientation.SetPos(pos);
-
-						PostMaster::GetInstance()->SendMessage(BulletMessage(myWeapons[2].myBulletType
-							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-							, dir
-							, HasPowerUp(ePowerUpType::HOMING) || myWeapons[2].myIsHoming ? myHomingTarget : nullptr
-							, myWeapons[2].myHomingTurnRateModifier));
-						myWeapons[2].myCurrentTime = 0.f;
-					}
-				}*/
-			}
-
-			if (currWepData != nullptr && currWepData->myCurrentTime == currWepData->myCoolDownTime)
-			{
-				for (int i = 0; i < currWepData->myBulletsPerShot; ++i)
-				{
-					CU::Matrix44<float> orientation = myEntity.myOrientation;
-					orientation.SetPos(orientation.GetPos() + (orientation.GetForward() * 2.f)
-						+ (currWepData->myPosition * myEntity.myOrientation));
-					CU::Vector3<float> dir = aShootNote.myDirection;
-					if (currWepData->mySpread > 0)
-					{
-						float max = float(currWepData->mySpread);
-						float min = float(-currWepData->mySpread);
-
-						float randomSpreadX = CU::Math::RandomRange<float>(min, max) / 100.f;
-						float randomSpreadY = CU::Math::RandomRange<float>(min, max) / 100.f;
-
-						CU::Matrix44<float> rotation;
-						rotation.myMatrix[8] = randomSpreadX;
-						rotation.myMatrix[9] = randomSpreadY;
-
-						CU::Vector4<float> pos = orientation.GetPos();
-						orientation = rotation * orientation;
-						orientation.SetPos(pos);
-
-						dir = dir * rotation;
-					}
-
-					if (myEntity.GetType() == eEntityType::PLAYER)
-					{
-						CU::Matrix44<float> rotation;
-						rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
-						rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
-
-						CU::Vector4<float> pos = orientation.GetPos();
-						orientation = rotation * orientation;
-						orientation.SetPos(pos);
-					}
-					else
-					{
-						CU::Normalize(dir);
-						CU::Vector3<float> up(dir);
-						up = up * CU::Matrix44<float>::CreateRotateAroundX(globalPi / 2.f);
-						up = up * CU::Matrix44<float>::CreateRotateAroundY(globalPi / 2.f);
-						CU::Normalize(up);
-
-						CU::Vector3<float> right = CU::Cross<float>(up, dir);
-						CU::Normalize(right);
-						up = CU::Cross<float>(dir, right);
-						CU::Normalize(up);
-
-
-						orientation.myMatrix[0] = right.x;
-						orientation.myMatrix[1] = right.y;
-						orientation.myMatrix[2] = right.z;
-						orientation.myMatrix[3] = 0;
-						
-						orientation.myMatrix[4] = up.x;
-						orientation.myMatrix[5] = up.y;
-						orientation.myMatrix[6] = up.z;
-						orientation.myMatrix[7] = 0;
-						
-						orientation.myMatrix[8] = dir.x;
-						orientation.myMatrix[9] = dir.y;
-						orientation.myMatrix[10] = dir.z;
-						orientation.myMatrix[11] = 0;
-					}
-
-					if (aShootNote.myIsRocket == false)
-					{
-						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
-							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-							, dir
-							, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr));
-					}
-					else
-					{
-						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
-							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-							, dir
-							, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
-							, currWepData->myHomingTurnRateModifier));
-					}
-					
-					currWepData->myCurrentTime = 0.f;
+					dir = dir * rotation;
 				}
+
+				if (myEntity.GetType() == eEntityType::PLAYER)
+				{
+					CU::Matrix44<float> rotation;
+					rotation.myMatrix[8] = aShootNote.myEnititySteering.x;
+					rotation.myMatrix[9] = -aShootNote.myEnititySteering.y;
+
+					CU::Vector4<float> pos = orientation.GetPos();
+					orientation = rotation * orientation;
+					orientation.SetPos(pos);
+				}
+				else
+				{
+					CU::Normalize(dir);
+					CU::Vector3<float> up(dir);
+					up = up * CU::Matrix44<float>::CreateRotateAroundX(globalPi / 2.f);
+					up = up * CU::Matrix44<float>::CreateRotateAroundY(globalPi / 2.f);
+					CU::Normalize(up);
+
+					CU::Vector3<float> right = CU::Cross<float>(up, dir);
+					CU::Normalize(right);
+					up = CU::Cross<float>(dir, right);
+					CU::Normalize(up);
+
+
+					orientation.myMatrix[0] = right.x;
+					orientation.myMatrix[1] = right.y;
+					orientation.myMatrix[2] = right.z;
+					orientation.myMatrix[3] = 0;
+
+					orientation.myMatrix[4] = up.x;
+					orientation.myMatrix[5] = up.y;
+					orientation.myMatrix[6] = up.z;
+					orientation.myMatrix[7] = 0;
+
+					orientation.myMatrix[8] = dir.x;
+					orientation.myMatrix[9] = dir.y;
+					orientation.myMatrix[10] = dir.z;
+					orientation.myMatrix[11] = 0;
+				}
+
+				if (aShootNote.myIsRocket == false)
+				{
+					PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+						, dir
+						, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr));
+				}
+				else
+				{
+					PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+						, dir
+						, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
+						, currWepData->myHomingTurnRateModifier));
+				}
+
+				currWepData->myCurrentTime = 0.f;
 			}
 		}
-	}
-	else
-	{
-		SetActivatePowerUp(ePowerUpType::EMP, false);
-		ActivatePowerUp(ePowerUpType::EMP);
 	}
 }
 
@@ -377,6 +285,15 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 			myPowerUps.Add(powerUp);
 		}
 
+	}
+}
+
+void ShootingComponent::ReceiveNote(const EMPNote&)
+{
+	if (HasPowerUp(ePowerUpType::EMP) == true)
+	{
+		SetActivatePowerUp(ePowerUpType::EMP, false);
+		ActivatePowerUp(ePowerUpType::EMP);
 	}
 }
 

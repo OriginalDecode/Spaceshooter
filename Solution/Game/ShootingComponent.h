@@ -41,6 +41,7 @@ public:
 	void ReceiveNote(const ShootNote& aMessage) override;
 	void ReceiveNote(const InputNote& aMessage) override;
 	void ReceiveNote(const PowerUpNote& aNote) override;
+	void ReceiveNote(const EMPNote& aNote) override;
 
 	void AddWeapon(const WeaponDataType& aWeapon);
 	void UpgradeWeapon(const WeaponDataType& aWeapon, int aWeaponID);

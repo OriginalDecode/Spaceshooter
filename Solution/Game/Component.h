@@ -13,7 +13,7 @@ struct HealthNote;
 struct ShieldNote;
 struct SoundNote;
 struct EmitterNote;
-
+struct EMPNote;
 
 class Component
 {
@@ -34,6 +34,7 @@ public:
 	virtual void ReceiveNote(const ShieldNote& aNote);
 	virtual void ReceiveNote(const SoundNote& aNote);
 	virtual void ReceiveNote(const EmitterNote& aNote);
+	virtual void ReceiveNote(const EMPNote& aNote);
 
 	Entity& GetEntity();
 

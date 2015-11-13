@@ -23,6 +23,9 @@ namespace Prism
 			void SetPosition(float aX, float aY, float aZ, int aObjectID);
 			void SetListenerPosition(float aX, float aY, float aZ);
 
+			const int GetSFXVolume() const;
+			const int GetMusicVolume() const;
+
 			void RegisterObject(int anObjectID);
 			void UnRegisterObject(int aObjectID);
 			typedef void(*callback_function)(const char*);
@@ -34,8 +37,21 @@ namespace Prism
 			AudioInterface();
 			~AudioInterface();
 
+			int mySFXVolume;
+			int myMusicVolume;
+
 
 			WwiseManager* myWwiseManager;
 		};
+
+		inline const int AudioInterface::GetSFXVolume() const
+		{
+			return mySFXVolume;
+		}
+
+		inline const int AudioInterface::GetMusicVolume() const
+		{
+			return myMusicVolume;
+		}
 	}
 }
