@@ -77,6 +77,11 @@ void Prism::Effect::SetTexture(Texture* aTexture)
 	myTexture->SetResource(aTexture->GetShaderView());
 }
 
+void Prism::Effect::SetAmbientHue(CU::Vector4f aVector)
+{
+	myAmbientHue->SetFloatVector(&aVector.x);
+}
+
 void Prism::Effect::SetPosAndScale(const CU::Vector2<float>& aPos
 	, const CU::Vector2<float>& aScale)
 {
@@ -358,6 +363,12 @@ bool Prism::Effect::ReloadShader(const std::string& aFile)
 	if (myCameraPosition->IsValid() == false)
 	{
 		myCameraPosition = nullptr;
+	}
+
+	myAmbientHue = myEffect->GetVariableByName("AmbientHue")->AsVector();
+	if (myAmbientHue->IsValid() == false)
+	{
+		myAmbientHue = nullptr;
 	}
 
 	return true;
