@@ -58,7 +58,7 @@ public:
 	void UpdateWeapons();
 
 	void ShowTutorialMessage(const std::string& aMessage);
-	void RemoveTutorialMessage();
+	void RemoveTutorialMessage(const std::string& aMessage = "");
 
 private:
 	CU::Vector3<float> CalcCockpitOffset() const;

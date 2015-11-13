@@ -230,7 +230,7 @@ void ShootingComponent::ReceiveNote(const InputNote& aMessage)
 
 		if (myHasSwitchWeapon == false && aMessage.myKey == 0)
 		{
-			myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage();
+			myEntity.GetComponent<GUIComponent>()->RemoveTutorialMessage("Change weapon on '1' and '2'");
 			myHasSwitchWeapon = true;
 		}
 	}
