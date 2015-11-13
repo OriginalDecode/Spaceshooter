@@ -132,7 +132,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myDefendHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_defend.dds"
 		, { 256, 256 }, { 128.f, 128.f });
 
-	myPropHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_defend.dds"
+	myPropHitMarker = new Prism::Sprite("Data/Resource/Texture/UI/T_crosshair_shooting_hitmarks_prop.dds"
 		, { 256, 256 }, { 128.f, 128.f });
 
 	CU::Vector2<float> screenSize = { float(Prism::Engine::GetInstance()->GetWindowSize().x),
@@ -667,7 +667,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 		}
 		else if (aMessage.myEntityCollidedWith.GetType() == eEntityType::PROP)
 		{
-			myCurrentHitmarker = myStructureArrow;
+			myCurrentHitmarker = myPropHitMarker;
 		}
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())

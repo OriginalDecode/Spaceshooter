@@ -27,7 +27,7 @@ void Prism::Instance::Render(Camera& aCamera)
 {
 	if (myProxy.IsLoaded())
 	{
-		//myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
+		myProxy.GetEffect()->SetViewMatrix(CU::InverseSimple(aCamera.GetOrientation()));
 		//myProxy.GetEffect()->SetProjectionMatrix(aCamera.GetProjection());
 		myProxy.GetEffect()->SetViewProjectionMatrix(aCamera.GetViewProjection());
 		myProxy.GetEffect()->SetScaleVector(myScale);
