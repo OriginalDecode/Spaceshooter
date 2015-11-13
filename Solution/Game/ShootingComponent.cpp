@@ -288,7 +288,7 @@ void ShootingComponent::ReceiveNote(const PowerUpNote& aNote)
 	}
 }
 
-void ShootingComponent::ReceiveNote(const EMPNote& aNote)
+void ShootingComponent::ReceiveNote(const EMPNote&)
 {
 	if (HasPowerUp(ePowerUpType::EMP) == true)
 	{
