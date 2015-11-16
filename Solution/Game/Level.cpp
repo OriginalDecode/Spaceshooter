@@ -184,7 +184,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myPBL->SetEMPPosition(myEMPPosition);
 
 		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
-		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 25.f, myEMPScale* 25.f, myEMPScale* 25.f });
+		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 15.f, myEMPScale* 15.f, myEMPScale* 15.f });
 		
 		if (myEMPTimer <= 0.f)
 		{

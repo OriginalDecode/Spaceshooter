@@ -32,6 +32,7 @@
 #include "PropComponent.h"
 #include "ResizeMessage.h"
 #include "ShieldNote.h"
+#include "ShieldComponent.h"
 #include "ShootingComponent.h"
 #include "SoundNote.h"
 #include <sstream>
@@ -830,8 +831,14 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
 		myDamageIndicatorTimer = 0.1f;
-		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerHit"));
-		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_PlayerHit", 0);
+		if (myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() > 0.f)
+		{
+			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldHit"));
+		}
+		else
+		{
+			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerHit"));
+		}
 		myCamera->ShakeCamera(100.f, 6.f, 0.5f); // pilla inte på dessa siffror!
 	}
 }
