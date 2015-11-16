@@ -371,6 +371,16 @@ namespace Prism
 		myDirectX->DisableWireframe();
 	}
 
+	void Engine::EnableCulling()
+	{
+		myDirectX->EnableCulling();
+	}
+
+	void Engine::DisableCulling()
+	{
+		myDirectX->DisableCulling();
+	}
+
 	void Engine::StartFade(float aDuration)
 	{
 		myFadeData.myTotalTime = aDuration;

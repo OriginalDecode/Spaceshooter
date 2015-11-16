@@ -94,6 +94,9 @@ namespace Prism
 		void EnableWireframe();
 		void DisableWireframe();
 
+		void EnableCulling();
+		void DisableCulling();
+
 		void SetShowDebugText(bool aShowDebug);
 		void SetClearColor(const CU::Vector4<float>& aClearColor);
 

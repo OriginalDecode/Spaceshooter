@@ -182,6 +182,17 @@ void Prism::DirectX::DisableWireframe()
 	myContext->RSSetState(mySolidRasterizer);
 }
 
+void Prism::DirectX::EnableCulling()
+{
+	myContext->RSSetState(mySolidRasterizer);
+}
+
+void Prism::DirectX::DisableCulling()
+{
+	myContext->RSSetState(myNoCullingRasterizer);
+}
+
+
 bool Prism::DirectX::D3DSetup()
 {
 	if (D3DSwapChainSetup() == false)
@@ -221,6 +232,12 @@ bool Prism::DirectX::D3DSetup()
 	}
 
 	if (D3DSolidRasterizerStateSetup() == false)
+	{
+		DIRECTX_LOG("Failed to Setup SolidRasterizerState");
+		return false;
+	}
+
+	if (D3DNoCullingRasterizerStateSetup() == false)
 	{
 		DIRECTX_LOG("Failed to Setup SolidRasterizerState");
 		return false;
@@ -475,6 +492,27 @@ bool Prism::DirectX::D3DSolidRasterizerStateSetup()
 	desc.AntialiasedLineEnable = false;
 
 	myDevice->CreateRasterizerState(&desc, &mySolidRasterizer);
+
+	return true;
+}
+
+bool Prism::DirectX::D3DNoCullingRasterizerStateSetup()
+{
+	D3D11_RASTERIZER_DESC desc;
+	ZeroMemory(&desc, sizeof(D3D11_RASTERIZER_DESC));
+
+	desc.FillMode = D3D11_FILL_SOLID;
+	desc.CullMode = D3D11_CULL_NONE;
+	desc.FrontCounterClockwise = true;
+	desc.DepthBias = false;
+	desc.DepthBiasClamp = 0;
+	desc.SlopeScaledDepthBias = 0;
+	desc.DepthClipEnable = false;
+	desc.ScissorEnable = false;
+	desc.MultisampleEnable = false;
+	desc.AntialiasedLineEnable = false;
+
+	myDevice->CreateRasterizerState(&desc, &myNoCullingRasterizer);
 
 	return true;
 }
