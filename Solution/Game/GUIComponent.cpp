@@ -497,12 +497,12 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myConversation.size() > 1)
 	{
-		myBackgroundConversation->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f - 150.f });
+		myBackgroundConversation->Render({ 15.f, -halfHeight * 1.2f + 20.f + 128.f - 150.f });
 	}
 
-	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -10.f });
+	myBackgroundMission->Render({ 15.f, -10.f });
 
-	Prism::Engine::GetInstance()->PrintText(myConversation, { halfWidth * 0.15f - 128.f + 20.f, -halfHeight * 1.2f + 20.f + 128.f - 200.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myConversation, { 35.f, -halfHeight * 1.2f + 20.f + 128.f - 200.f }, Prism::eTextType::RELEASE_TEXT);
 
 	CU::Vector2<float> crosshairPosition(CU::Math::Lerp<CU::Vector2<float>>({ halfWidth, -halfHeight }
 	, { steeringPos.x, steeringPos.y }, 0.3f));
