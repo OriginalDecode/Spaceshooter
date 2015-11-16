@@ -83,10 +83,7 @@ void InGameMenuState::Render()
 	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(-Prism::Engine::GetInstance()->GetWindowSize().y));
 
-	if (myIsInGame == false)
-	{
-		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 0.5f });
-	}
+	myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 0.5f });
 
 	myMenu->Render(myInputWrapper, true, !myIsInGame);
 
