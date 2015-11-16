@@ -563,14 +563,16 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	myPowerUps.RemoveAll();
 
 	myGUIBars[0]->Render(*myCamera);
-	if (myCurrentShield <= 100)
+
+	if (myCurrentShield <= 101.f)
 	{
 		myGUIBars[1]->Render(*myCamera);
 	}
-	else if (myCurrentShield > 100)
+	else
 	{
 		myGUIBars[2]->Render(*myCamera);
 	}
+
 	if (myHitMarkerTimer >= 0.f)
 	{
 		myCurrentHitmarker->Render(crosshairPosition);
