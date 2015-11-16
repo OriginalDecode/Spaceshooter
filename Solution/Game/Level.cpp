@@ -9,6 +9,7 @@
 #include "Constants.h"
 #include "ConversationManager.h"
 #include "DefendMessage.h"
+#include <EngineEnums.h>
 #include <Effect.h>
 #include "EffectContainer.h"
 #include "EMPMessage.h"
@@ -63,7 +64,7 @@ Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
 	, myConversationManager(nullptr)
 	, myEntityToDefend(nullptr)
 	, myEmitterManager(nullptr)
-	, myEMPScale(1.f)
+	, myEMPScale(0.f)
 	, myEMPTimer(0.f)
 	, myEMPActivated(false)
 	, myIsSkipable(false)
@@ -162,15 +163,17 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-//#ifndef RELEASE_BUILD
-//	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
-//	{
-//		myEMPTimer = 10.f;
-//		myEMPScale = 0.f;
-//		myEMPActivated = true;
-//		myEMPPosition = myPlayer->myOrientation.GetPos();
-//	}
-//#endif
+#ifndef RELEASE_BUILD
+	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
+	{
+		myEMPTimer = 10.f;
+		myEMPScale = 0.f;
+		myEMPActivated = true;
+		myEMPPosition = myPlayer->myOrientation.GetPos();
+		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
+		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
+	}
+#endif
 
 	if (myEMPActivated == true)
 	{
@@ -178,9 +181,14 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPScale += 1000 * aDeltaTime;
 		myPBL->SetEMPScale(myEMPScale);
 		myPBL->SetEMPPosition(myEMPPosition);
+
+		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
+		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 5.f, myEMPScale* 5.f, myEMPScale* 5.f });
+		
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 0.f;
+			myPBL->SetEMPScale(myEMPScale);
 			myEMPActivated = false;
 		}
 	}
@@ -232,10 +240,14 @@ void Level::Render()
 		myScene->Render(myBulletManager->GetInstances());
 
 
-
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 		myRenderer->FinalRender();
 
+
+		if (myEMPActivated == true)
+		{
+			myEMPHexagon->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+		}
 
 		myEmitterManager->RenderEmitters(myCamera);
 		myGlassCockpit->Render(*myCamera);
@@ -442,6 +454,9 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPScale = 0.f;
 	myEMPActivated = true;
 	myEMPPosition = aMessage.myPosition;
+
+	myEMPHexagon->myOrientation.SetPos(myEMPPosition);
+	myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)

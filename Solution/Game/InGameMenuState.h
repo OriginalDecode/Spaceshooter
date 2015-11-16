@@ -13,7 +13,7 @@ class Menu;
 class InGameMenuState : public GameState, public Subscriber
 {
 public:
-	InGameMenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper);
+	InGameMenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapper, bool anIsIngame = true);
 	~InGameMenuState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -32,5 +32,6 @@ protected:
 	float myOverlayAlpha;
 	Menu* myMenu;
 	Prism::Camera* myCamera;
+	bool myIsInGame;
 };
 

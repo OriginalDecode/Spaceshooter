@@ -127,7 +127,7 @@ Menu::~Menu()
 	myBackground = nullptr;
 }
 
-void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons)
+void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons, bool aDontRenderSecondButton)
 {
 	if (myRenderCenter == true)
 	{
@@ -142,6 +142,11 @@ void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons)
 	{
 		for (int i = 0; i < myButtons.Size(); i++)
 		{
+			if (aDontRenderSecondButton == true && i == 1)
+			{
+				continue;
+			}
+
 			myButtons[i]->Render();
 		}
 	}
@@ -149,7 +154,7 @@ void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons)
 	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
 
-eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons)
+eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons, bool aDontUpdateSecondButton)
 {
 	eStateStatus returnValue = eStateStatus::eKeepState;
 
@@ -160,6 +165,11 @@ eStateStatus Menu::Update(CU::InputWrapper* anInputWrapper, bool aUpdateButtons)
 
 		for (int i = 0; i < myButtons.Size(); i++)
 		{
+			if (aDontUpdateSecondButton == true && i == 1)
+			{
+				continue;
+			}
+
 			eStateStatus currentButton = myButtons[i]->Update(mousePos, isMouseClicked, myLevelID);
 			if (currentButton == eStateStatus::ePopMainState)
 			{

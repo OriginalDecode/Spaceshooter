@@ -133,7 +133,7 @@ void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
 
 	CU::Vector3f distanceToEmitter = aMessage.myPosition - myPlayer->myOrientation.GetPos();
 	float dist = CU::Length2(distanceToEmitter) * 0.1f;
-	float v = (128.f * 128.f);
+	float v = (64.f * 64.f);
 	if (dist < v)
 	{
 		myIsCloseToPlayer = true;

@@ -12,6 +12,7 @@ EMPAction::EMPAction(XMLReader& aReader, tinyxml2::XMLElement* aElement)
 	aReader.ForceReadAttribute(aReader.ForceFindFirstChild(aElement, "position"), "X", myPosition.x);
 	aReader.ForceReadAttribute(aReader.ForceFindFirstChild(aElement, "position"), "Y", myPosition.y);
 	aReader.ForceReadAttribute(aReader.ForceFindFirstChild(aElement, "position"), "Z", myPosition.z);
+	myPosition *= 10.f;
 }
 
 EMPAction::~EMPAction()
