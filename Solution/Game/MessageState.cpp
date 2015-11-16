@@ -28,6 +28,11 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	mySilverStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarSilver.dds", mySpriteSize, mySpriteSize * 0.5f);
 	myGoldStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarGold.dds", mySpriteSize, mySpriteSize * 0.5f);
 
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
+		float(Prism::Engine::GetInstance()->GetWindowSize().y));
+
+	myBlackOverlay = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
+
 	float oneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
 	float twoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
 	float threeStarLimit = myLevelScore.myTotalEnemies * 0.80f;
@@ -62,6 +67,7 @@ MessageState::~MessageState()
 	delete myBronzeStar;
 	delete mySilverStar;
 	delete myGoldStar;
+	delete myBlackOverlay;
 	myBackground = nullptr;
 	myCamera = nullptr;
 	myEvent = nullptr;
@@ -71,6 +77,7 @@ MessageState::~MessageState()
 	myBronzeStar = nullptr;
 	mySilverStar = nullptr;
 	myGoldStar = nullptr;
+	myBlackOverlay = nullptr;
 }
 
 void MessageState::InitState(StateStackProxy* aStateStackProxy)
@@ -106,11 +113,16 @@ const eStateStatus MessageState::Update(const float&)
 
 void MessageState::Render()
 {
+	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x / 2.f)
+		, float(-Prism::Engine::GetInstance()->GetWindowSize().y / 2.f));
+
+	myBlackOverlay->Render(windowSize, { 1.f, 1.f }, { 1.f, 1.f, 1.f, 0.5f });
+
 	float leftMargin = 50.f;
 	float rowHeight = 28.f;
 	float offsetY = -480.f;
 
-	myBackground->Render({ Prism::Engine::GetInstance()->GetWindowSize().x / 2.f, -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f });
+	myBackground->Render(windowSize);
 
 	if (myTextMessage != "")
 	{
