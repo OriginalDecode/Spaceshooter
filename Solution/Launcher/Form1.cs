@@ -39,14 +39,14 @@ namespace Launcher
             
             InitializeComponent();
 
-            string releaseConfig = myDocumentFolder + "\\Distortion Games\\SpaceShooter\\" + myConfigPath;
+            string releaseConfig = myDocumentFolder + "\\Distortion Games\\Raven\\" + myConfigPath;
             myConfigPath = releaseConfig;
             string subString = myDocumentFolder + "\\Distortion Games";
             if (Directory.Exists(subString) == false)
             {
                 Directory.CreateDirectory(subString);
             }
-            subString += "\\SpaceShooter";
+            subString += "\\Raven";
             if (Directory.Exists(subString) == false)
             {
                 Directory.CreateDirectory(subString);

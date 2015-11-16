@@ -10,7 +10,7 @@ SaveScore ScoreIO::Load(int aLevel)
 	SaveScore score;
 	
 	std::string path(CU::GetMyDocumentFolderPath());
-	path += "SpaceShooter\\gfx.dist";
+	path += "Raven\\gfx.dist";
 	path += std::to_string(aLevel);
 	std::ifstream stream(path.c_str(), std::ios::binary);
 	if (stream.fail() == true)
@@ -40,7 +40,7 @@ void ScoreIO::Save(const SaveScore& aScore, int aLevel)
 	if (scoreBefore.myDifficulty < aScore.myDifficulty)
 	{
 		std::string path(CU::GetMyDocumentFolderPath());
-		path += "SpaceShooter\\gfx.dist";
+		path += "Raven\\gfx.dist";
 		path += std::to_string(aLevel);
 		std::ofstream file(path.c_str(), std::ofstream::binary);
 
@@ -55,7 +55,7 @@ void ScoreIO::Save(const SaveScore& aScore, int aLevel)
 		if (scoreBefore.myStars < aScore.myStars)
 		{
 			std::string path(CU::GetMyDocumentFolderPath());
-			path += "SpaceShooter\\gfx.dist";
+			path += "Raven\\gfx.dist";
 			path += std::to_string(aLevel);
 			std::ofstream file(path.c_str(), std::ofstream::binary);
 

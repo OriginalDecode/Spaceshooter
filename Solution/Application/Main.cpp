@@ -68,7 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 	}
 
 	Prism::SetupInfo setup;
-	if (ReadSetup(setup, CU::GetMyDocumentFolderPath() + "SpaceShooter\\Data\\Setting\\SET_config.bin") == false)
+	if (ReadSetup(setup, CU::GetMyDocumentFolderPath() + "Raven\\Data\\Setting\\SET_config.bin") == false)
 	{
 		return 1;
 	}
