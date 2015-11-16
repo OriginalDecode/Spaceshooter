@@ -82,7 +82,10 @@ void MessageState::InitState(StateStackProxy* aStateStackProxy)
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
 	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 
-	ScoreIO::Save(mySaveScore, myLevelScore.myLevel);
+	if (myShowBadge)
+	{
+		ScoreIO::Save(mySaveScore, myLevelScore.myLevel);
+	}
 }
 
 void MessageState::EndState()
