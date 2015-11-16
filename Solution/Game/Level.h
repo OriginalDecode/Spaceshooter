@@ -50,7 +50,7 @@ public:
 	~Level();
 
 	bool LogicUpdate(float aDeltaTime);
-	void Render();
+	void Render(bool aIsActiveState);
 
 	void OnResize(int aWidth, int aHeigth);
 

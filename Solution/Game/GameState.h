@@ -31,6 +31,7 @@ protected:
 	StateStackProxy* myStateStack;
 	eStateStatus myStateStatus;
 	bool myIsLetThrough;
+	bool myIsActiveState;
 };
 
 inline GameState::~GameState()

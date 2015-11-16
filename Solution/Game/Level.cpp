@@ -223,9 +223,8 @@ bool Level::LogicUpdate(float aDeltaTime)
 	return myComplete;
 }
 
-void Level::Render()
+void Level::Render(bool aIsActiveState)
 {
-	
 	if (myUsePostProcessing == true)
 	{
 		myRenderer->BeginScene();
@@ -277,14 +276,14 @@ void Level::Render()
 	myBulletManager->RenderStreaks();
 
 
-	if (myIsSkipable == true)
+	if (myIsSkipable == true && aIsActiveState == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("Press [Enter] to skip tutorial."
 			, { (Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) + 210.f, -(Prism::Engine::GetInstance()->GetWindowSize().y * 0.5f) - 300.f }
 			, Prism::eTextType::RELEASE_TEXT);
 	}
 	
-	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition());
+	myPlayer->GetComponent<GUIComponent>()->Render(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition(), aIsActiveState);
 
 #ifndef RELEASE_BUILD
 	Prism::Engine::GetInstance()->PrintText(static_cast<float>(myPlayer->myOrientation.GetPos().x), CU::Vector2<float>(0, 0), Prism::eTextType::DEBUG_TEXT);

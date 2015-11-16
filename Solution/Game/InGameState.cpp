@@ -29,6 +29,7 @@
 InGameState::InGameState(CU::InputWrapper* anInputWrapper)
 	: myLoadingScreen(nullptr)
 {
+	myIsActiveState = false;
 	myInputWrapper = anInputWrapper;
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Pause_MenuMusic", 0);
 }
@@ -61,8 +62,8 @@ void InGameState::InitState(StateStackProxy* aStateStackProxy)
 	myLoadingScreen = new LoadingScreen(myInputWrapper, myLevelFactory->IsLevelLoading(), myLevelFactory->GetLevelID());
 
 	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
-	//myLoadingScreen = new Prism::Sprite("Data/Resource/Texture/LoadingScreen/T_background_default.dds"
-	//	, { float(windowSize.x), float(windowSize.y) }, { float(windowSize.x / 2), float(windowSize.y / 2) });
+
+	myIsActiveState = true;
 }
 
 void InGameState::EndState()
@@ -89,6 +90,7 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 
 		if (myInputWrapper->KeyDown(DIK_ESCAPE))
 		{
+			myIsActiveState = false;
 			myStateStack->PushSubGameState(new InGameMenuState("Data/Menu/MN_ingame_menu.xml", myInputWrapper));
 		}
 
@@ -112,7 +114,7 @@ void InGameState::Render()
 
 	if (myLoadingScreen->IsDone() == true)
 	{
-		myLevel->Render();
+		myLevel->Render(myIsActiveState);
 	}
 	else
 	{
@@ -124,6 +126,7 @@ void InGameState::Render()
 
 void InGameState::ResumeState()
 {
+	myIsActiveState = true;
 	PostMaster::GetInstance()->SendMessage(GameStateMessage(eGameState::MOUSE_LOCK, true));
 }
 
@@ -198,6 +201,7 @@ void InGameState::LoadPlayerSettings()
 void InGameState::ShowMessage(const std::string& aBackgroundPath, 
 	const CU::Vector2<float>& aSize, std::string aText, GameStateMessage* aMessage)
 {
+	myIsActiveState = false;
 	LevelScore score = myLevel->GetLevelScore();
 	myMessageScreen = new MessageState(aBackgroundPath, aSize, myInputWrapper, score);
 	myMessageScreen->SetText(aText);

@@ -27,7 +27,7 @@ public:
 		, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int>& aWindowSize
 		, bool aShowDist, float anAlpha = 1.f, bool aIsPowerup = false, std::string aName = "");
 
-	void Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos);
+	void Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState);
 
 	void SetCamera(Prism::Camera* aCamera);
 	Prism::Camera* GetCamera();
@@ -160,6 +160,7 @@ private:
 	bool myEMPFadeInMessage;
 
 	bool myHasEMP;
+	bool myIsActiveState;
 };
 
 inline eComponentType GUIComponent::GetType()
