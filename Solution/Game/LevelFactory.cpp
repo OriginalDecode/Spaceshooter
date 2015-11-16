@@ -236,7 +236,8 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	myCurrentLevel->myConversationManager = new ConversationManager(conversationXML);
 	myCurrentLevel->myMissionManager = new MissionManager(*myCurrentLevel, *myCurrentLevel->myPlayer, missionXML);
-	myCurrentLevel->myEventManager = new EventManager(eventXML, *myCurrentLevel->myConversationManager);
+	myCurrentLevel->myEventManager = new EventManager(eventXML, *myCurrentLevel->myConversationManager
+		, *myCurrentLevel->myPlayer);
 
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "skysphere"), "source", skySphere);
 	reader.ReadAttribute(reader.ForceFindFirstChild(levelElement, "cubemap"), "source", cubeMap);

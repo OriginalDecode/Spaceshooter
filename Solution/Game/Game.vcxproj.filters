@@ -227,6 +227,9 @@
     <ClCompile Include="EMPAction.cpp">
       <Filter>Event\Action</Filter>
     </ClCompile>
+    <ClCompile Include="InvulnerabilityAction.cpp">
+      <Filter>Event\Action</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -515,6 +518,9 @@
       <Filter>Components\Notes</Filter>
     </ClInclude>
     <ClInclude Include="EMPAction.h">
+      <Filter>Event\Action</Filter>
+    </ClInclude>
+    <ClInclude Include="InvulnerabilityAction.h">
       <Filter>Event\Action</Filter>
     </ClInclude>
   </ItemGroup>

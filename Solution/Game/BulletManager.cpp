@@ -212,7 +212,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 		bullet->GetComponent<BulletAIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
 	}
 
-	if (aEntityType == eEntityType::PLAYER)
+	if (aEntityType == eEntityType::PLAYER || aEntityType == eEntityType::ALLY)
 	{
 		aWeaponData->myPlayerBulletCounter++;
 		if (aWeaponData->myPlayerBulletCounter >= aWeaponData->myMaxBullet)
