@@ -433,18 +433,22 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow || aCurrentModel == myDefendArrow
 			|| aCurrentModel == myWaypointArrow || aCurrentModel == myStructureArrow)
 		{
-			if (myFirstSpawn == false){
-				if (lengthToTarget <= 100)
+			if (myFirstSpawn == false)
+			{
+				if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow)
 				{
-					scale = 1.f;
-				}
-				else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
-				{
-					scale = 0.5f;
-				}
-				else
-				{
-					scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.25f, 0.75f);
+					if (lengthToTarget <= 100)
+					{
+						scale = 1.f;
+					}
+					else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
+					{
+						scale = 0.75f;
+					}
+					else
+					{
+						scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.25f, 0.75f);
+					}
 				}
 			}
 			else
@@ -455,6 +459,13 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 				}
 				scale = CU::Math::Remap<float>(myFirstSpawnTimer, 0, 0.2f, 0.75f, 1.5f);
 			}
+		}
+
+		if (aCurrentModel == myWaypointMarker)
+		{
+			scale = CU::Math::Remap<float>(lengthToTarget, 0, 500, 2, 1);
+			if (scale < 1) scale = 1.f;
+			if (scale > 2) scale = 2.f;
 		}
 
 		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker

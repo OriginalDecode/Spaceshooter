@@ -163,7 +163,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-#ifndef RELEASE_BUILD
+//#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 	{
 		myEMPTimer = 10.f;
@@ -173,7 +173,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
 		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 	}
-#endif
+//#endif
 
 	if (myEMPActivated == true)
 	{
@@ -246,7 +246,9 @@ void Level::Render()
 
 		if (myEMPActivated == true)
 		{
+			Prism::Engine::GetInstance()->DisableCulling();
 			myEMPHexagon->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+			Prism::Engine::GetInstance()->EnableCulling();
 		}
 
 		myEmitterManager->RenderEmitters(myCamera);
