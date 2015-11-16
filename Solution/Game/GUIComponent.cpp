@@ -69,6 +69,11 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myCockpitOffset(CalcCockpitOffset())
 	, myShowTutorialMessage(false)
 	, myTutorialMessage("")
+	, myMessageAlpha(1.f)
+	, myFadeInMessage(false)
+	, myEMPMessageAlpha(1.f)
+	, myEMPFadeInMessage(false)
+	, myHasEMP(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -286,6 +291,54 @@ void GUIComponent::Update(float aDeltaTime)
 		myWaypointSpawnTimer -= aDeltaTime;
 		if (myWaypointSpawnTimer <= 0) myWaypointSpawn = false;
 	}
+
+	myHasEMP = false;
+
+	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
+	{
+		myHasEMP = true;
+
+		if (myEMPFadeInMessage == false)
+		{
+			myEMPMessageAlpha -= myDeltaTime;
+			if (myEMPMessageAlpha <= 0.f)
+			{
+				myEMPMessageAlpha = 0.f;
+				myEMPFadeInMessage = true;
+			}
+		}
+		else
+		{
+			myEMPMessageAlpha += myDeltaTime;
+			if (myEMPMessageAlpha >= 1.f)
+			{
+				myEMPMessageAlpha = 1.f;
+				myEMPFadeInMessage = false;
+			}
+		}
+	}
+
+	if (myShowTutorialMessage == true)
+	{
+		if (myFadeInMessage == false)
+		{
+			myMessageAlpha -= myDeltaTime;
+			if (myMessageAlpha <= 0.f)
+			{
+				myMessageAlpha = 0.f;
+				myFadeInMessage = true;
+			}
+		}
+		else
+		{
+			myMessageAlpha += myDeltaTime;
+			if (myMessageAlpha >= 1.f)
+			{
+				myMessageAlpha = 1.f;
+				myFadeInMessage = false;
+			}
+		}
+	}
 }
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
@@ -303,7 +356,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	{
 		lengthToWaypoint << static_cast<int>(CU::Length(toTarget) - 150);
 	}
-	
+
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
 	if (CU::Length(toTarget) != 0)
 	{
@@ -377,24 +430,28 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	if (aShowDist == true)
 	{
 		float scale = 1.f;
-		if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow || aCurrentModel == myDefendArrow 
+		if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow || aCurrentModel == myDefendArrow
 			|| aCurrentModel == myWaypointArrow || aCurrentModel == myStructureArrow)
 		{
-			if (myFirstSpawn == false){
-				if (lengthToTarget <= 100)
+			if (myFirstSpawn == false)
+			{
+				if (aCurrentModel == myPowerUpArrow || aCurrentModel == myEnemyArrow)
 				{
-					scale = 1.f;
-				}
-				else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
-				{
-					scale = 0.5f;
-				}
-				else
-				{
-					scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.25f, 0.75f);
+					if (lengthToTarget <= 100)
+					{
+						scale = 1.f;
+					}
+					else if (lengthToTarget >= myMaxDistanceToEnemies * 0.1)
+					{
+						scale = 0.75f;
+					}
+					else
+					{
+						scale = CU::Math::Remap<float>(lengthToTarget, 100, myMaxDistanceToEnemies * 0.1f, 1.25f, 0.75f);
+					}
 				}
 			}
-			else 
+			else
 			{
 				if (myFirstSpawnTimer <= 0)
 				{
@@ -402,6 +459,13 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 				}
 				scale = CU::Math::Remap<float>(myFirstSpawnTimer, 0, 0.2f, 0.75f, 1.5f);
 			}
+		}
+
+		if (aCurrentModel == myWaypointMarker)
+		{
+			scale = CU::Math::Remap<float>(lengthToTarget, 0, 500, 2, 1);
+			if (scale < 1) scale = 1.f;
+			if (scale > 2) scale = 2.f;
 		}
 
 		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker
@@ -433,15 +497,15 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myConversation.size() > 1)
 	{
-		myBackgroundConversation->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f - 150.f });
+		myBackgroundConversation->Render({ 15.f, -halfHeight * 1.2f + 20.f + 128.f - 150.f });
 	}
 
-	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -10.f });
+	myBackgroundMission->Render({ 15.f, -10.f });
 
-	Prism::Engine::GetInstance()->PrintText(myConversation, { halfWidth * 0.15f - 128.f + 20.f, -halfHeight * 1.2f + 20.f + 128.f - 200.f }, Prism::eTextType::RELEASE_TEXT);
+	Prism::Engine::GetInstance()->PrintText(myConversation, { 35.f, -halfHeight * 1.2f + 20.f + 128.f - 200.f }, Prism::eTextType::RELEASE_TEXT);
 
 	CU::Vector2<float> crosshairPosition(CU::Math::Lerp<CU::Vector2<float>>({ halfWidth, -halfHeight }
-		, { steeringPos.x, steeringPos.y }, 0.3f));
+	, { steeringPos.x, steeringPos.y }, 0.3f));
 
 	myReticle->Render({ halfWidth, -halfHeight });
 	mySteeringTarget->Render({ steeringPos.x, steeringPos.y });
@@ -466,7 +530,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 		if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
 		{
-			
+
 			CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
 		}
 		else
@@ -597,7 +661,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myShowTutorialMessage == true)
 	{
-		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 270.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 270.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT, 1.f, { 1.f, 1.f, 1.f, myMessageAlpha });
 	}
 
 	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
@@ -629,10 +693,10 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
 		, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
 
-	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
+	if (myHasEMP == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("EMP ready. Press [Space] to release."
-			, { halfWidth * 0.15f - 128.f + 20.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
+			, { halfWidth - 240.f, -halfHeight - 270.f }, Prism::eTextType::RELEASE_TEXT, 1.f, { 1.f, 1.f, 1.f, myEMPMessageAlpha });
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();

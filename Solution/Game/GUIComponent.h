@@ -152,6 +152,14 @@ private:
 
 	bool myWaypointSpawn;
 	float myWaypointSpawnTimer;
+
+	float myMessageAlpha;
+	bool myFadeInMessage;
+
+	float myEMPMessageAlpha;
+	bool myEMPFadeInMessage;
+
+	bool myHasEMP;
 };
 
 inline eComponentType GUIComponent::GetType()
