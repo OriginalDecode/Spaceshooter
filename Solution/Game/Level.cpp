@@ -163,7 +163,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		}
 	}
 
-//#ifndef RELEASE_BUILD
+#ifndef RELEASE_BUILD
 	if (myInputWrapper->KeyIsPressed(DIK_SPACE) == true)
 	{
 		myEMPTimer = 10.f;
@@ -172,8 +172,9 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myEMPPosition = myPlayer->myOrientation.GetPos();
 		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
 		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
+		Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_EMPShot", 0);
 	}
-//#endif
+#endif
 
 	if (myEMPActivated == true)
 	{
@@ -183,7 +184,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 		myPBL->SetEMPPosition(myEMPPosition);
 
 		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
-		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 5.f, myEMPScale* 5.f, myEMPScale* 5.f });
+		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 25.f, myEMPScale* 25.f, myEMPScale* 25.f });
 		
 		if (myEMPTimer <= 0.f)
 		{
@@ -459,6 +460,7 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 
 	myEMPHexagon->myOrientation.SetPos(myEMPPosition);
 	myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_EMPShot", 0);
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)
