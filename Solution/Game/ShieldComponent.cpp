@@ -84,6 +84,10 @@ void ShieldComponent::Update(float aDelta)
 
 			}
 		}
+		if (myShieldStrength > 100.f)
+		{
+			myShieldStrength = 100.f;
+		}
 	}
 
 	if (myShieldOvercharged == true)

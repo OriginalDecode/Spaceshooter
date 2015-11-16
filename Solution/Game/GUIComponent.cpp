@@ -162,7 +162,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	myBackgroundConversation = new Prism::Sprite("Data/Resource/Texture/UI/T_background_conversation.dds"
 		, { 1024.f, 256.f }, { 0, 0 });
 	myBackgroundMission = new Prism::Sprite("Data/Resource/Texture/UI/T_background_mission.dds"
-		, { 512.f, 512.f }, { 0, 0 });
+		, { 1024.f, 256.f }, { 0, 0 });
 }
 
 GUIComponent::~GUIComponent()
@@ -430,13 +430,15 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	float halfWidth = aWindowSize.x * 0.5f;
 	CU::Vector2<float> steeringPos(halfWidth + mySteeringTargetPosition.x
 		, -halfHeight - mySteeringTargetPosition.y);
+
 	if (myConversation.size() > 1)
 	{
-		myBackgroundConversation->Render({ 0, 0 });
+		myBackgroundConversation->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f - 150.f });
 	}
-	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -halfHeight * 1.2f + 20.f + 128.f });
 
-	Prism::Engine::GetInstance()->PrintText(myConversation, { 50.f, -50.f }, Prism::eTextType::RELEASE_TEXT);
+	myBackgroundMission->Render({ halfWidth * 0.15f - 128.f, -10.f });
+
+	Prism::Engine::GetInstance()->PrintText(myConversation, { halfWidth * 0.15f - 128.f + 20.f, -halfHeight * 1.2f + 20.f + 128.f - 200.f }, Prism::eTextType::RELEASE_TEXT);
 
 	CU::Vector2<float> crosshairPosition(CU::Math::Lerp<CU::Vector2<float>>({ halfWidth, -halfHeight }
 		, { steeringPos.x, steeringPos.y }, 0.3f));
@@ -561,14 +563,16 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	myPowerUps.RemoveAll();
 
 	myGUIBars[0]->Render(*myCamera);
-	if (myCurrentShield <= 100)
+
+	if (myCurrentShield <= 101.f)
 	{
 		myGUIBars[1]->Render(*myCamera);
 	}
-	else if (myCurrentShield > 100)
+	else
 	{
 		myGUIBars[2]->Render(*myCamera);
 	}
+
 	if (myHitMarkerTimer >= 0.f)
 	{
 		myCurrentHitmarker->Render(crosshairPosition);
@@ -628,7 +632,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("EMP ready. Press [Space] to release."
-			, { 100.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
+			, { halfWidth * 0.15f - 128.f + 20.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
@@ -699,7 +703,7 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 
 void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	myMessage = aNote.myIngameName;
+	myMessage = "      " + aNote.myIngameName;
 	myMessageTime = 3.f;
 	myShowMessage = true;
 }
