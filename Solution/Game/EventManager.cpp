@@ -5,14 +5,17 @@
 #include "Event.h"
 #include "EventManager.h"
 #include "EventQueueEmptyMessage.h"
+#include "InvulnerabilityAction.h"
 #include "PostMaster.h"
 #include "SpawnEnemyAction.h"
 #include "EnqueueEventMessage.h"
 #include "WaitAction.h"
 #include <XMLReader.h>
 
-EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aConversationManager)
+EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aConversationManager
+		, Entity& aPlayer)
 	: myEventQueue(16)
+	, myPlayer(aPlayer)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::START_EVENT, this);
 	XMLReader reader;
@@ -50,6 +53,11 @@ EventManager::EventManager(const std::string& aXmlPath, ConversationManager& aCo
 			element = reader.FindNextElement(element, "emp"))
 		{
 			actions.Add(new EMPAction(reader, element));
+		}
+		for (tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "invulnerability"); element != nullptr;
+			element = reader.FindNextElement(element, "invulnerability"))
+		{
+			actions.Add(new InvulnerabilityAction(reader, element, myPlayer));
 		}
 
 		tinyxml2::XMLElement* element = reader.FindFirstChild(eventElement, "conversation");

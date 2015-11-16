@@ -176,6 +176,7 @@
     <ClInclude Include="ExplosionMessage.h" />
     <ClInclude Include="FadeMessage.h" />
     <ClInclude Include="InGameMenuState.h" />
+    <ClInclude Include="InvulnerabilityAction.h" />
     <ClInclude Include="LevelButton.h" />
     <ClInclude Include="LevelScore.h" />
     <ClInclude Include="LevelScoreMessage.h" />
@@ -282,6 +283,7 @@
     <ClCompile Include="ExplosionMessage.cpp" />
     <ClCompile Include="FadeMessage.cpp" />
     <ClCompile Include="InGameMenuState.cpp" />
+    <ClCompile Include="InvulnerabilityAction.cpp" />
     <ClCompile Include="LevelButton.cpp" />
     <ClCompile Include="LevelScoreMessage.cpp" />
     <ClCompile Include="LoadingScreen.cpp" />

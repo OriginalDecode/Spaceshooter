@@ -106,27 +106,31 @@ const eStateStatus MessageState::Update(const float&)
 
 void MessageState::Render()
 {
+	float leftMargin = 50.f;
+	float rowHeight = 28.f;
+	float offsetY = -480.f;
+
 	myBackground->Render({ Prism::Engine::GetInstance()->GetWindowSize().x / 2.f, -Prism::Engine::GetInstance()->GetWindowSize().y / 2.f });
 
 	if (myTextMessage != "")
 	{
-		Prism::Engine::GetInstance()->PrintText(myTextMessage, myMessagePosition, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText(myTextMessage, { myMessagePosition.x + 342.f, myMessagePosition.y - 740.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	Prism::Engine::GetInstance()->PrintText("Enemies killed: " + std::to_string(myLevelScore.myKilledEnemies) + " / " 
-		+ std::to_string(myLevelScore.myTotalEnemies), { myMessagePosition.x, myMessagePosition.y - 200 }
+		+ std::to_string(myLevelScore.myTotalEnemies), { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY }
 	, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->PrintText("Shots fired: "	+ std::to_string(myLevelScore.myTotalShotsFired)
-		, { myMessagePosition.x, myMessagePosition.y - 225 }, Prism::eTextType::RELEASE_TEXT);
+		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight }, Prism::eTextType::RELEASE_TEXT);
 
 	float denom = fmaxf(float(myLevelScore.myTotalShotsFired), 1.f);
 	Prism::Engine::GetInstance()->PrintText("Hit rate: " 
 		+ std::to_string(int(float((myLevelScore.myShotsHit) / denom * 100.f))) + "%"
-		, { myMessagePosition.x, myMessagePosition.y - 250 }, Prism::eTextType::RELEASE_TEXT);
+		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 2.f }, Prism::eTextType::RELEASE_TEXT);
 
 	Prism::Engine::GetInstance()->PrintText("Optional missions completed: "
-		, { myMessagePosition.x, myMessagePosition.y - 275 }, Prism::eTextType::RELEASE_TEXT);
+		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 3.f }, Prism::eTextType::RELEASE_TEXT);
 
 	if (myShowBadge)
 	{
@@ -149,26 +153,28 @@ void MessageState::OnResize(int aWidth, int aHeight)
 
 void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 {
+	float starOffsetY = 372.f;
+	float badgesOffsetY = 564.f;
 	for (int i = 0; i < 3; ++i)
 	{
 		if (i < mySaveScore.myStars)
 		{
 			if (mySaveScore.myDifficulty == 0)
 			{
-				myBronzeStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+				myBronzeStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
 			}
 			else if (mySaveScore.myDifficulty == 1)
 			{
-				mySilverStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+				mySilverStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
 			}
 			else if (mySaveScore.myDifficulty == 2)
 			{
-				myGoldStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+				myGoldStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
 			}
 		}
 		else
 		{
-			myStarGrey->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - 50 });
+			myStarGrey->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
 		}
 	}
 
@@ -176,11 +182,11 @@ void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 	{
 		if (mySaveScore.myCompletedOptional < i)
 		{
-			myOptionalBadgeGrey->Render({ myMessagePosition.x + 350.f + (mySpriteSize.x * i), myMessagePosition.y - 275 });
+			myOptionalBadgeGrey->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * i), myMessagePosition.y - badgesOffsetY });
 		}
 		else
 		{
-			myOptionalBadge->Render({ myMessagePosition.x + 350.f + (mySpriteSize.x * i), myMessagePosition.y - 275 });
+			myOptionalBadge->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * i), myMessagePosition.y - badgesOffsetY });
 		}
 	}
 }
