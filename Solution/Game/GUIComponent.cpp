@@ -632,7 +632,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	if (myEntity.GetComponent<ShootingComponent>()->HasPowerUp(ePowerUpType::EMP) == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("EMP ready. Press [Space] to release."
-			, { 100.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
+			, { halfWidth * 0.15f - 128.f + 20.f, -400.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
 	Prism::Engine::GetInstance()->EnableZBuffer();
@@ -703,7 +703,7 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 
 void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	myMessage = aNote.myIngameName;
+	myMessage = "      " + aNote.myIngameName;
 	myMessageTime = 3.f;
 	myShowMessage = true;
 }
