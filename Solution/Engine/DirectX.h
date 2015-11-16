@@ -52,6 +52,9 @@ namespace Prism
 		void EnableWireframe();
 		void DisableWireframe();
 
+		void EnableCulling();
+		void DisableCulling();
+
 	private:
 		void operator=(const DirectX&) = delete;
 
@@ -64,6 +67,7 @@ namespace Prism
 		bool D3DDisabledStencilStateSetup();
 		bool D3DWireframeRasterizerStateSetup();
 		bool D3DSolidRasterizerStateSetup();
+		bool D3DNoCullingRasterizerStateSetup();
 
 
 
@@ -83,6 +87,7 @@ namespace Prism
 		ID3D11DepthStencilState* myDisabledDepthStencilState;
 		ID3D11RasterizerState* mySolidRasterizer;
 		ID3D11RasterizerState* myWireframeRasterizer;
+		ID3D11RasterizerState* myNoCullingRasterizer;
 
 		D3D11_VIEWPORT* myViewPort;
 		HWND& myHWND;

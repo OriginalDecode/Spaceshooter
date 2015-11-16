@@ -291,13 +291,13 @@ namespace Prism
 		return true;
 	}
 
-	void Engine::PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)
+	void Engine::PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale, CU::Vector4<float> aColor)
 	{
 		TextCommand toAdd;
 		toAdd.myText = aText;
 		toAdd.myPosition = aPosition;
 		toAdd.myScale = aScale;
-		toAdd.myColor = { 1.f, 1.f, 1.f, 1.f };
+		toAdd.myColor = aColor;
 		if (aTextType == eTextType::RELEASE_TEXT)
 		{
 			myTexts.Add(toAdd);
@@ -308,20 +308,20 @@ namespace Prism
 		}
 	}
 
-	void Engine::PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)
+	void Engine::PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale, CU::Vector4<float> aColor)
 	{
 		std::stringstream ss;
 		ss.precision(3);
 		ss << aNumber;
-		PrintText(ss.str(), aPosition, aTextType, aScale);
+		PrintText(ss.str(), aPosition, aTextType, aScale, aColor);
 	}
 
-	void Engine::PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale)
+	void Engine::PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale, CU::Vector4<float> aColor)
 	{
 		std::stringstream ss;
 		ss.precision(3);
 		ss << aNumber;
-		PrintText(ss.str(), aPosition, aTextType, aScale);
+		PrintText(ss.str(), aPosition, aTextType, aScale, aColor);
 	}
 	
 	void Engine::RestoreViewPort()
@@ -369,6 +369,16 @@ namespace Prism
 	void Engine::DisableWireframe()
 	{
 		myDirectX->DisableWireframe();
+	}
+
+	void Engine::EnableCulling()
+	{
+		myDirectX->EnableCulling();
+	}
+
+	void Engine::DisableCulling()
+	{
+		myDirectX->DisableCulling();
 	}
 
 	void Engine::StartFade(float aDuration)

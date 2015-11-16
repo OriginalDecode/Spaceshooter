@@ -79,9 +79,9 @@ namespace Prism
 		const CU::Vector2<int>& GetWindowSize() const;
 		const CU::Matrix44<float>& GetOrthogonalMatrix() const;
 
-		void PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
-		void PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
-		void PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f);
+		void PrintText(const std::string& aText, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f, CU::Vector4<float> aColor = { 1.f, 1.f, 1.f, 1.f });
+		void PrintText(float aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f, CU::Vector4<float> aColor = { 1.f, 1.f, 1.f, 1.f });
+		void PrintText(int aNumber, const CU::Vector2<float>& aPosition, eTextType aTextType, float aScale = 1.f, CU::Vector4<float> aColor = { 1.f, 1.f, 1.f, 1.f });
 
 		void RestoreViewPort();
 		void SetBackBufferAsTarget();
@@ -93,6 +93,9 @@ namespace Prism
 
 		void EnableWireframe();
 		void DisableWireframe();
+
+		void EnableCulling();
+		void DisableCulling();
 
 		void SetShowDebugText(bool aShowDebug);
 		void SetClearColor(const CU::Vector4<float>& aClearColor);
