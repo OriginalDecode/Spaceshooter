@@ -742,7 +742,7 @@ void GUIComponent::ReceiveMessage(const ResizeMessage& aMessage)
 
 void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 {
-	if (aMessage.myBulletOwner == eEntityType::PLAYER_BULLET)
+	if (aMessage.myBulletOwner == eEntityType::PLAYER)
 	{
 		myHitMarkerTimer = 0.1f;
 		if (aMessage.myEntityCollidedWith.GetType() == eEntityType::ENEMY
