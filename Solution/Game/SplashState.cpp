@@ -10,13 +10,20 @@
 #include "Menu.h"
 #include "Button.h"
 
-SplashState::SplashState(const std::string& aTexturePath, CU::InputWrapper* anInputWrapper)
+SplashState::SplashState(const std::string& aTexturePath, CU::InputWrapper* anInputWrapper, bool aVictoryScreen)
+	: myVictoryScreen(aVictoryScreen)
 {
 	CU::Vector2<float> size(1024.f, 1024.f);
-	myLogo = new Prism::Sprite(aTexturePath, size, size / 2.f);
-
 	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x)
 		, float(Prism::Engine::GetInstance()->GetWindowSize().y));
+
+	if (aVictoryScreen == true)
+	{
+		size = { windowSize.y * 2.f, windowSize.y };
+	}
+
+	myLogo = new Prism::Sprite(aTexturePath, size, size / 2.f);
+
 
 	CU::Vector2<float> backgroundSize(4096.f, 4096.f);
 	myBackground = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
@@ -41,6 +48,12 @@ void SplashState::InitState(StateStackProxy* aStateStackProxy)
 	myFadeInTime = 1.5f;
 	myFadeOutTime = 1.5f;
 	myDisplayTime = 1.5f;
+	
+	if (myVictoryScreen == true)
+	{
+		myDisplayTime += 3.f;
+	}
+	
 	myCurrentTime = 0;
 	myFadeOut = false;
 	myDisplay = false;
