@@ -726,7 +726,7 @@ std::string EntityFactory::ConvertToPowerUpInGameName(ePowerUpType aPowerUpType)
 {
 	if (aPowerUpType == ePowerUpType::HEALTHKIT)
 	{
-		return "Health";
+		return "Repair kit";
 	}
 	else if (aPowerUpType == ePowerUpType::SHIELDBOOST)
 	{
