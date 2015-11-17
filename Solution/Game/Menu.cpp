@@ -41,7 +41,8 @@ Menu::Menu(const std::string& aXMLPath)
 	}
 	else
 	{
-		myBackground = new Prism::Sprite(background, myScreenSize, myScreenSize / 2.f);
+		myFullscreenBackgroundSize = { myScreenSize.y * 2.f, myScreenSize.y };
+		myBackground = new Prism::Sprite(background, myFullscreenBackgroundSize, myFullscreenBackgroundSize / 2.f);
 	}
 
 	tinyxml2::XMLElement* buttonElement = reader.FindFirstChild(menuElement, "button");
@@ -129,13 +130,13 @@ Menu::~Menu()
 
 void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons, bool aDontRenderSecondButton)
 {
-	if (myRenderCenter == true)
+	//if (myRenderCenter == true)
 	{
 		myBackground->Render({ (myScreenSize.x / 2.f), -(myScreenSize.y / 2.f) });
 	}
-	else
+	//else
 	{
-		myBackground->Render({ (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2) });
+		//myBackground->Render({ (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2) });
 	}
 
 	if (aRenderButtons == true)
@@ -196,9 +197,9 @@ void Menu::OnResize(int aWidth, int aHeight)
 		}
 		else
 		{
-			myBackground->SetSize(myScreenSize, myScreenSize / 2.f);
+			myFullscreenBackgroundSize = { myScreenSize.y * 2.f, myScreenSize.y };
+			myBackground->SetSize(myFullscreenBackgroundSize, myFullscreenBackgroundSize / 2.f);
 		}
-
 	}
 
 	for (int i = 0; i < myButtons.Size(); i++)
