@@ -70,7 +70,7 @@ void MenuState::InitState(StateStackProxy* aStateStackProxy)
 
 	if (myShowVictoryScreen == true)
 	{
-		myStateStack->PushSubGameState(new SplashState("Data/Resource/Texture/Menu/Splash/T_victory_screen.dds", myInputWrapper));
+		myStateStack->PushSubGameState(new SplashState("Data/Resource/Texture/Menu/Splash/T_victory_screen.dds", myInputWrapper, true));
 	}
 
 	myCurrentTime = 0;

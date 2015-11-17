@@ -12,7 +12,7 @@ class Menu;
 class SplashState : public GameState
 {
 public:
-	SplashState(const std::string& aTexturePath, CU::InputWrapper* anInputWrapper);
+	SplashState(const std::string& aTexturePath, CU::InputWrapper* anInputWrapper, bool aVictoryScreen = false);
 	~SplashState();
 
 	void InitState(StateStackProxy* aStateStackProxy) override;
@@ -36,5 +36,7 @@ protected:
 	Prism::Sprite* myBackground;
 	Prism::Sprite* myLogo;
 	Prism::Camera* myCamera;
+
+	bool myVictoryScreen;
 };
 
