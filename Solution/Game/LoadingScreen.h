@@ -61,6 +61,9 @@ private:
 
 	const volatile bool& myLevelIsLoading;
 	const int& myLevelID;
+
+	float myFinishedTextAlpha;
+	bool myFinishedTextFadeIn;
 };
 
 inline bool LoadingScreen::IsDone() const

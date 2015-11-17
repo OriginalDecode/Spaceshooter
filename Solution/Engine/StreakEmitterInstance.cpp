@@ -158,8 +158,9 @@ void Prism::StreakEmitterInstance::CreateVertexBuffer()
 
 void Prism::StreakEmitterInstance::EmitterUpdate(float aDeltaTime)
 {
-	if (myEmitter.myEmissionLifeTime > 0)
-	{
+
+	//if (myEmitter.myEmissionLifeTime > 0)
+	//{
 		if (myTimeSinceLastSpawn > myEmitter.myEmissionRate && myStreaks.Size() < myEmitter.myMaxNrOfStreaks)
 		{
 			EmitStreak();
@@ -167,9 +168,9 @@ void Prism::StreakEmitterInstance::EmitterUpdate(float aDeltaTime)
 		}
 
 		myTimeSinceLastSpawn += aDeltaTime;
-	}
+	//}
 
-	myEmitter.myEmissionLifeTime -= aDeltaTime;
+	//myEmitter.myEmissionLifeTime -= aDeltaTime;
 }
 
 void Prism::StreakEmitterInstance::EmitStreak()

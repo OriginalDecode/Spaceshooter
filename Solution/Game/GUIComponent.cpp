@@ -344,7 +344,7 @@ void GUIComponent::Update(float aDeltaTime)
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
 	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int>& aWindowSize
-	, bool aShowDist, float anAlpha, bool aIsPowerup, std::string aName)
+	, bool aShowDist, float anAlpha, bool aIsPowerup, std::string aName, Entity* aStructure)
 {
 	bool showName = false;
 	float halfWidth = aWindowSize.x *0.5f;
@@ -355,7 +355,10 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 	std::stringstream lengthToWaypoint;
 	if (aShowDist == true)
 	{
-		lengthToWaypoint << static_cast<int>(CU::Length(toTarget) - 150);
+		if (aArrowModel == myWaypointArrow && aMarkerModel == myWaypointMarker)
+		{
+			lengthToWaypoint << static_cast<int>(CU::Length(toTarget) - 150);
+		}
 	}
 
 	CU::Vector3<float> forward = myCamera->GetOrientation().GetForward();
@@ -469,11 +472,20 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			if (scale > 2) scale = 2.f;
 		}
 
-		if (length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointMarker
-			|| length < CIRCLERADIUS && circleAroundPoint > 0.f && aCurrentModel == myWaypointArrow)
+		if (length < CIRCLERADIUS && circleAroundPoint > 0.f || length < CIRCLERADIUS && circleAroundPoint > 0.f)
 		{
-			Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+			if (aMarkerModel == myStructureMarker || aArrowModel == myStructureArrow)
+			{
+				lengthToWaypoint << "Hp: " << aStructure->GetComponent<HealthComponent>()->GetHealth();
+				Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+			}
+			else if (aMarkerModel == myWaypointMarker || aArrowModel == myWaypointArrow)
+			{
+				Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+			}
+
 		}
+
 		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { scale, scale }, { 1.f, 1.f, 1.f, anAlpha });
 		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
 		{
@@ -534,8 +546,8 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 			if (myEnemies[i]->GetType() == eEntityType::STRUCTURE)
 			{
-
-				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow, myStructureMarker, aWindowSize, true);
+				CalculateAndRender(myEnemies[i]->myOrientation.GetPos(), myModel2DToRender, myStructureArrow
+					, myStructureMarker, aWindowSize, true, 1.f, false, "", myEnemies[i]);
 			}
 			else
 			{
@@ -697,7 +709,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 
 		Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
-			, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
+			, { halfWidth - 360.f, -halfHeight - 270.f }, Prism::eTextType::RELEASE_TEXT);
 
 		if (myHasEMP == true)
 		{
