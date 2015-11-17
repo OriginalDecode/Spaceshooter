@@ -155,7 +155,7 @@ void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons, bool aD
 	if (aDontRenderSecondButton == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("SFX: " + std::to_string(Prism::Audio::AudioInterface::GetInstance()->GetSFXVolume())
-			, { myScreenSize.x / 2.f - 120.f, -myScreenSize.y / 2.f + 55.f }, Prism::eTextType::RELEASE_TEXT);
+			, { myScreenSize.x / 2.f - 120.f, -myScreenSize.y / 2.f + 65.f }, Prism::eTextType::RELEASE_TEXT);
 
 		Prism::Engine::GetInstance()->PrintText("Music: " + std::to_string(Prism::Audio::AudioInterface::GetInstance()->GetMusicVolume())
 			, { myScreenSize.x / 2.f - 120.f, -myScreenSize.y / 2.f - 10.f }, Prism::eTextType::RELEASE_TEXT);
