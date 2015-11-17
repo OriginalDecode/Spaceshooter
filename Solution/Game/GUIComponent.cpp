@@ -709,7 +709,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 
 		Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
-			, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
+			, { halfWidth - 360.f, -halfHeight - 270.f }, Prism::eTextType::RELEASE_TEXT);
 
 		if (myHasEMP == true)
 		{
