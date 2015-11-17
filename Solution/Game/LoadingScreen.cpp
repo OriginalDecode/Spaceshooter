@@ -27,6 +27,8 @@ LoadingScreen::LoadingScreen(CU::InputWrapper* anInputWrapper, const volatile bo
 	, myInputWrapper(anInputWrapper)
 	, myLevelID(aLevelID)
 	, myLevelIsLoading(aLevelIsLoading)
+	, myFinishedTextAlpha(1.f)
+	, myFinishedTextFadeIn(true)
 {
 	OnResize(Prism::Engine::GetInstance()->GetWindowSize().x, Prism::Engine::GetInstance()->GetWindowSize().y);
 	ReadXML();
@@ -46,8 +48,9 @@ void LoadingScreen::Render()
 
 	if (myLevelIsLoading == false)
 	{
-		Prism::Engine::GetInstance()->PrintText("Press [Space] to enter level!"
-			, { myWindowMiddle.x - 300.f, myWindowMiddle.y - 300.f }, Prism::eTextType::RELEASE_TEXT);
+		Prism::Engine::GetInstance()->PrintText("Press [Space] to begin."
+			, { myWindowMiddle.x - 300.f, myWindowMiddle.y - 300.f }, Prism::eTextType::RELEASE_TEXT
+			, 1.f, { 1.f, 1.f, 1.f, myFinishedTextAlpha});
 	}
 
 	myScreens[myLevelID - 1]->myRotatingThing->Render({ myWindowMiddle.x + 500.f, myWindowMiddle.y - 300.f }
@@ -56,6 +59,28 @@ void LoadingScreen::Render()
 
 void LoadingScreen::Update(float aDeltaTime)
 {
+	if (myLevelIsLoading == false)
+	{
+		if (myFinishedTextFadeIn == false)
+		{
+			myFinishedTextAlpha -= aDeltaTime;
+			if (myFinishedTextAlpha <= 0.f)
+			{
+				myFinishedTextAlpha = 0.f;
+				myFinishedTextFadeIn = true;
+			}
+		}
+		else
+		{
+			myFinishedTextAlpha += aDeltaTime;
+			if (myFinishedTextAlpha >= 1.f)
+			{
+				myFinishedTextAlpha = 1.f;
+				myFinishedTextFadeIn = false;
+			}
+		}
+	}
+
 	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-4.f * aDeltaTime * (1.f / (myScreens[myLevelID - 1]->myRotatingThingScale + 0.001f)));
 
 	if (myScreens[myLevelID - 1]->myRotatingThingScale < 1.f)
