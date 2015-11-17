@@ -3,6 +3,8 @@
 #include "AIComponent.h"
 #include "BulletAIComponent.h"
 #include "BulletComponent.h"
+#include "CollisionComponent.h"
+#include "CollisionManager.h"
 #include "Constants.h"
 #include "DefendMessage.h"
 #include <Engine.h>
@@ -31,9 +33,10 @@ BulletAIComponent::~BulletAIComponent()
 {
 }
 
-void BulletAIComponent::Init(float aSpeed, float aTurnRateModifier)
+void BulletAIComponent::Init(float aSpeed, float aTurnRateModifier, CollisionManager* aCollisionManager)
 {
 	myEntityToFollow = nullptr;
+	myCollisionManager = aCollisionManager;
 
 	PhysicsComponent* physicsComponent = myEntity.GetComponent<PhysicsComponent>();
 	if (physicsComponent != nullptr)
@@ -55,6 +58,7 @@ void BulletAIComponent::Update(float aDeltaTime)
 	if (myEntityToFollow->GetAlive() == false && myEntity.GetAlive() == true)
 	{
 		myEntity.GetComponent<BulletComponent>()->SetActive(false);
+		myCollisionManager->Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 		//myEntity.Kill();
 		return;
 	}
