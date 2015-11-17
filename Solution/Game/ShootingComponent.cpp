@@ -489,13 +489,13 @@ void ShootingComponent::AddDuration(ePowerUpType aPowerUp, float aTime)
 	switch (aPowerUp)
 	{
 	case ePowerUpType::FIRERATEBOOST:
-		myFireRatePowerUpDuration += aTime;
+		myFireRatePowerUpDuration = aTime;
 		break;
 	case ePowerUpType::EMP:
-		myEMPPowerUpDuration += aTime;
+		myEMPPowerUpDuration = aTime;
 		break;
 	case ePowerUpType::HOMING:
-		myHomingPowerUpDuration += aTime;
+		myHomingPowerUpDuration = aTime;
 		break;
 	default:
 		DL_ASSERT("INVALID POWERUP");
