@@ -17,10 +17,11 @@ namespace Launcher
         private string myDocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         private string myConfigPath = "Data\\Setting\\SET_config.bin";
         private string[] myExePath = { "Application_Release.exe", "Application_Internal.exe", "Application_Debug.exe" };
-        private string myLogo = "Data\\Resource\\Texture\\Logo\\T_launcher_logo.png";
+        private string myLogo = "bin\\Data\\Resource\\Texture\\Logo\\T_launcher_logo.png";
 
         enum eResolutions
         {
+            R1280x1024,
             R1600x900,
             R1920x1080,
             RAuto
@@ -68,6 +69,7 @@ namespace Launcher
         private void Form1_Load(object sender, EventArgs e)
         {
 
+            myResolutionList.Items.Add("1280 x 1024");
             myResolutionList.Items.Add("1600 x 900");
             myResolutionList.Items.Add("1920 x 1080");
             myResolutionList.Items.Add("Automatic");
@@ -100,19 +102,26 @@ namespace Launcher
                 WriterWindowedToFile(writer);
             }
 
-            if (File.Exists(myExePath[0]) == true)
+            ProcessStartInfo processInfo = new ProcessStartInfo();
+            processInfo.WorkingDirectory = "bin\\";
+            processInfo.FileName = myExePath[0];
+
+            if (File.Exists("bin\\" + myExePath[0]) == true)
             {
-                Process.Start(myExePath[0]);
+                processInfo.FileName = myExePath[0];
+                Process.Start(processInfo);
                 Application.Exit();
             }
-            else if (File.Exists(myExePath[1]) == true)
+            else if (File.Exists("bin\\" + myExePath[1]) == true)
             {
-                Process.Start(myExePath[1]);
+                processInfo.FileName = myExePath[1];
+                Process.Start(processInfo);
                 Application.Exit();
             }
-            else if (File.Exists(myExePath[2]) == true)
+            else if (File.Exists("bin\\" + myExePath[2]) == true)
             {
-                Process.Start(myExePath[2]);
+                processInfo.FileName = myExePath[2];
+                Process.Start(processInfo);
                 Application.Exit();
             }
             else
@@ -131,6 +140,10 @@ namespace Launcher
             Screen scr = Screen.PrimaryScreen;
             switch (myResolutionList.SelectedIndex)
             {
+                case (int)eResolutions.R1280x1024:
+                    width = 1280;
+                    height = 1024;
+                    break;
                 case (int)eResolutions.R1600x900:
                     width = 1600;
                     height = 900;
@@ -195,17 +208,21 @@ namespace Launcher
             int width = aReader.ReadInt32();
             int height = aReader.ReadInt32();
 
-            if (width == 1600 && height == 900)
+            if (width == 1280 && height == 1024)
             {
                 myResolutionList.SelectedIndex = 0;
             }
-            else if (width == 1920 && height == 1080)
+            if (width == 1600 && height == 900)
             {
                 myResolutionList.SelectedIndex = 1;
             }
-            else
+            else if (width == 1920 && height == 1080)
             {
                 myResolutionList.SelectedIndex = 2;
+            }
+            else
+            {
+                myResolutionList.SelectedIndex = 3;
             }
         }
 

@@ -39,6 +39,7 @@ private:
 	Prism::Sprite* myCrosshair;
 	CU::Vector2<float> myScreenSize;
 	CU::Vector2<float> myBackgroundSize;
+	CU::Vector2<float> myFullscreenBackgroundSize;
 	bool myRenderCenter;
 	bool myIsOptionsMenu;
 	int myLevelID;

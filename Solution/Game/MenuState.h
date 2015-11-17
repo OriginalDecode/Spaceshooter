@@ -26,6 +26,7 @@ public:
 
 protected:
 	Prism::Sprite* myBlackOverlay;
+	Prism::Sprite* myCredits;
 	float myFadeInTime;
 	float myCurrentTime;
 	float myOverlayAlpha;
