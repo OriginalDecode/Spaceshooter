@@ -21,10 +21,9 @@ namespace Launcher
 
         enum eResolutions
         {
-            R800x600,
-            R1280x720,
-            R1650x1080,
-            R1920x1080
+            R1600x900,
+            R1920x1080,
+            RAuto
         }
 
         enum eMSAA
@@ -36,7 +35,7 @@ namespace Launcher
 
         public Form1()
         {
-            
+
             InitializeComponent();
 
             string releaseConfig = myDocumentFolder + "\\Distortion Games\\Raven\\" + myConfigPath;
@@ -69,12 +68,10 @@ namespace Launcher
         private void Form1_Load(object sender, EventArgs e)
         {
 
-
-            //resolutionDropdown.Items.Add("800 x 600");
-            //resolutionDropdown.Items.Add("1280 x 720");
-            //resolutionDropdown.Items.Add("1650 x 1080");
-            //resolutionDropdown.Items.Add("1920 x 1080");
-            //resolutionDropdown.SelectedIndex = 3;
+            myResolutionList.Items.Add("1600 x 900");
+            myResolutionList.Items.Add("1920 x 1080");
+            myResolutionList.Items.Add("Automatic");
+            myResolutionList.SelectedIndex = 1;
 
             //aaDropdown.Items.Add("MSAA x1");
             //aaDropdown.Items.Add("MSAA x2");
@@ -128,47 +125,33 @@ namespace Launcher
 
         void WriteResolutionToFile(BinaryWriter aWriter)
         {
-            bool windowed = false;
             Int32 width = 800;
             Int32 height = 600;
 
-            //if (windowed == true)
-            //{
-            //    switch (resolutionDropdown.SelectedIndex)
-            //    {
-            //        case (int)eResolutions.R800x600:
-            //            width = 800;
-            //            height = 600;
-            //            break;
-            //        case (int)eResolutions.R1280x720:
-            //            width = 1280;
-            //            height = 720;
-            //            break;
-            //        case (int)eResolutions.R1650x1080:
-            //            width = 1650;
-            //            height = 1080;
-            //            break;
-            //        case (int)eResolutions.R1920x1080:
-            //            width = 1920;
-            //            height = 1080;
-            //            break;
-            //    }
-            //}
-            //else
-            //{
-                Screen scr = Screen.PrimaryScreen;
-                width = scr.Bounds.Width;
-                height = scr.Bounds.Height;
-
-                float aspect = width / height;
-
-                if (width > 1920)
-                {
+            Screen scr = Screen.PrimaryScreen;
+            switch (myResolutionList.SelectedIndex)
+            {
+                case (int)eResolutions.R1600x900:
+                    width = 1600;
+                    height = 900;
+                    break;
+                case (int)eResolutions.R1920x1080:
                     width = 1920;
-                    height = (int)((float)width / aspect);
-                }
-                
-            //}
+                    height = 1080;
+                    break;
+                default:
+                    width = scr.Bounds.Width;
+                    height = scr.Bounds.Height;
+
+                    float aspect = width / height;
+
+                    if (width > 1920)
+                    {
+                        width = 1920;
+                        height = (int)((float)width / aspect);
+                    }
+                    break;
+            }
 
             aWriter.Write(width);
             aWriter.Write(height);
@@ -209,25 +192,21 @@ namespace Launcher
 
         void ReadResolutionFromFile(BinaryReader aReader)
         {
-            //int width = aReader.ReadInt32();
-            //int height = aReader.ReadInt32();
+            int width = aReader.ReadInt32();
+            int height = aReader.ReadInt32();
 
-            //if (width == 800 && height == 600)
-            //{
-            //    resolutionDropdown.SelectedIndex = 0;
-            //}
-            //else if (width == 1280 && height == 720)
-            //{
-            //    resolutionDropdown.SelectedIndex = 1;
-            //}
-            //else if (width == 1650 && height == 1080)
-            //{
-            //    resolutionDropdown.SelectedIndex = 2;
-            //}
-            //else if (width == 1920 && height == 1080)
-            //{
-            //    resolutionDropdown.SelectedIndex = 3;
-            //}
+            if (width == 1600 && height == 900)
+            {
+                myResolutionList.SelectedIndex = 0;
+            }
+            else if (width == 1920 && height == 1080)
+            {
+                myResolutionList.SelectedIndex = 1;
+            }
+            else
+            {
+                myResolutionList.SelectedIndex = 2;
+            }
         }
 
         void ReadMSAAFromFile(BinaryReader aReader)

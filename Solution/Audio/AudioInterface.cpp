@@ -11,6 +11,7 @@ namespace Prism
 			:myWwiseManager(nullptr)
 			, mySFXVolume(90)
 			, myMusicVolume(80)
+			, myVoiceVolume(90)
 		{	
 		}
 
@@ -89,7 +90,7 @@ namespace Prism
 					}
 					mySFXVolume += 5;
 				}
-				if (eventName == "LowerVolume")
+				else if (eventName == "LowerVolume")
 				{
 					if (mySFXVolume <= 0)
 					{
@@ -98,7 +99,7 @@ namespace Prism
 					}
 					mySFXVolume -= 5;
 				}
-				if (eventName == "IncreaseMusic")
+				else if (eventName == "IncreaseMusic")
 				{
 					if (myMusicVolume >= 100)
 					{
@@ -107,7 +108,7 @@ namespace Prism
 					}
 					myMusicVolume += 5;
 				}
-				if (eventName == "LowerMusic")
+				else if (eventName == "LowerMusic")
 				{
 					if (myMusicVolume <= 0)
 					{
@@ -115,6 +116,24 @@ namespace Prism
 						return;
 					}
 					myMusicVolume -= 5;
+				}
+				else if (eventName == "IncreaseVoice")
+				{
+					if (myVoiceVolume >= 100)
+					{
+						myVoiceVolume = 100;
+						return;
+					}
+					myVoiceVolume += 5;
+				}
+				else if (eventName == "LowerVoice")
+				{
+					if (myVoiceVolume <= 0)
+					{
+						myVoiceVolume = 0;
+						return;
+					}
+					myVoiceVolume -= 5;
 				}
 
 				return myWwiseManager->PostEvent(aEvent, anObjectID);

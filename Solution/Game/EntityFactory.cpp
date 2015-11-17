@@ -730,7 +730,7 @@ std::string EntityFactory::ConvertToPowerUpInGameName(ePowerUpType aPowerUpType)
 	}
 	else if (aPowerUpType == ePowerUpType::SHIELDBOOST)
 	{
-		return "Shield";
+		return "Shield boost";
 	}
 	else if (aPowerUpType == ePowerUpType::FIRERATEBOOST)
 	{

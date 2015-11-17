@@ -25,6 +25,7 @@ namespace Prism
 
 			const int GetSFXVolume() const;
 			const int GetMusicVolume() const;
+			const int GetVoiceVolume() const;
 
 			void RegisterObject(int anObjectID);
 			void UnRegisterObject(int aObjectID);
@@ -39,6 +40,7 @@ namespace Prism
 
 			int mySFXVolume;
 			int myMusicVolume;
+			int myVoiceVolume;
 
 
 			WwiseManager* myWwiseManager;
@@ -52,6 +54,11 @@ namespace Prism
 		inline const int AudioInterface::GetMusicVolume() const
 		{
 			return myMusicVolume;
+		}
+
+		inline const int AudioInterface::GetVoiceVolume() const
+		{
+			return myVoiceVolume;
 		}
 	}
 }

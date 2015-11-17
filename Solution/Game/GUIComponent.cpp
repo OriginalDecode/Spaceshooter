@@ -319,25 +319,22 @@ void GUIComponent::Update(float aDeltaTime)
 		}
 	}
 
-	if (myShowTutorialMessage == true)
+	if (myFadeInMessage == false)
 	{
-		if (myFadeInMessage == false)
+		myMessageAlpha -= myDeltaTime;
+		if (myMessageAlpha <= 0.f)
 		{
-			myMessageAlpha -= myDeltaTime;
-			if (myMessageAlpha <= 0.f)
-			{
-				myMessageAlpha = 0.f;
-				myFadeInMessage = true;
-			}
+			myMessageAlpha = 0.f;
+			myFadeInMessage = true;
 		}
-		else
+	}
+	else
+	{
+		myMessageAlpha += myDeltaTime;
+		if (myMessageAlpha >= 1.f)
 		{
-			myMessageAlpha += myDeltaTime;
-			if (myMessageAlpha >= 1.f)
-			{
-				myMessageAlpha = 1.f;
-				myFadeInMessage = false;
-			}
+			myMessageAlpha = 1.f;
+			myFadeInMessage = false;
 		}
 	}
 }
@@ -680,12 +677,14 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 	{
 		if (myShowMessage == true)
 		{
-			Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT);
+			Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT
+				, 1.f, { 1.f, 1.f, 1.f, myMessageAlpha });
 		}
 
 		if (myShowTutorialMessage == true)
 		{
-			Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 270.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT, 1.f, { 1.f, 1.f, 1.f, myMessageAlpha });
+			Prism::Engine::GetInstance()->PrintText(myTutorialMessage, { halfWidth - 270.f, -halfHeight + 220.f }, Prism::eTextType::RELEASE_TEXT
+				, 1.f, { 1.f, 1.f, 1.f, myMessageAlpha });
 		}
 
 		if (myHasMachinegun == true)
@@ -709,7 +708,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 
 		Prism::Engine::GetInstance()->PrintText(int(myEntity.GetComponent<PhysicsComponent>()->GetSpeed())
-			, { 600.f, -800.f }, Prism::eTextType::RELEASE_TEXT);
+			, { halfWidth - 360.f, -halfHeight - 270.f }, Prism::eTextType::RELEASE_TEXT);
 
 		if (myHasEMP == true)
 		{
