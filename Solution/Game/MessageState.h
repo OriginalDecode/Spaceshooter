@@ -1,6 +1,7 @@
 #pragma once
 #include "GameState.h"
 #include "LevelScore.h"
+#include "ScoreItem.h"
 
 namespace Prism
 {
@@ -32,14 +33,12 @@ public:
 private:
 	void RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos);
 
+	CU::GrowingArray<ScoreItem*> myStars;
+	CU::GrowingArray<ScoreItem*> myBadges;
+
+
 	Prism::Camera* myCamera;
 	Prism::Sprite* myBackground;
-	Prism::Sprite* myOptionalBadgeGrey;
-	Prism::Sprite* myOptionalBadge;
-	Prism::Sprite* myStarGrey;
-	Prism::Sprite* myBronzeStar;
-	Prism::Sprite* myGoldStar;
-	Prism::Sprite* mySilverStar;
 
 	Prism::Sprite* myBlackOverlay;
 
