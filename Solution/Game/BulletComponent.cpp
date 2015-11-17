@@ -133,7 +133,10 @@ void BulletComponent::SetActive(bool aActive)
 				|| myType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
 			{
 				//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", myEntity.GetAudioSFXID());
-				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Shotgun"));
+				if (myEntity.GetType() == eEntityType::PLAYER)
+				{
+					myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Shotgun"));
+				}
 			}
 			if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
 				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
