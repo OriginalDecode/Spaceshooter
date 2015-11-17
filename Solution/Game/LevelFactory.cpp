@@ -260,6 +260,11 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->myEMPHexagon->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_hexasphere.fbx"
 		, "Data/Resource/Shader/S_effect_emp.fx");
 
+	myCurrentLevel->myEMPHexagon2 = new Entity(eEntityType::EMP, *myCurrentLevel->myScene, Prism::eOctreeType::STATIC
+		, "EMP");
+	myCurrentLevel->myEMPHexagon2->AddComponent<GraphicsComponent>()->Init("Data/Resource/Model/Weapon/SM_emp_hexasphere.fbx"
+		, "Data/Resource/Shader/S_effect_emp.fx");
+
 
 	for (int i = 0; i < myCurrentLevel->myEntities.Size(); ++i)
 	{
