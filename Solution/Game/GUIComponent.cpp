@@ -860,7 +860,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
-		myDamageIndicatorTimer = 0.1f;
+		myDamageIndicatorTimer = 0.3f;
 		if (myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() > 0.f)
 		{
 			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldHit"));
