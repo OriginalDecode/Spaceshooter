@@ -671,24 +671,23 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 	}
 
-
-	if (myClosestEnemy != nullptr)
-	{
-		CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
-			, true, 1.f, false, "", myClosestEnemy);
-
-		Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
-			, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
-			, 0.5f, { 1.f, 1.f, 1.f, 0.5f });
-	}
-
-	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
-	myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize);
-	myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
-	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
-
 	if (myIsActiveState == true)
 	{
+		if (myClosestEnemy != nullptr)
+		{
+			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
+				, true, 1.f, false, "", myClosestEnemy);
+
+			Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
+				, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
+				, 0.5f, { 1.f, 1.f, 1.f, 0.5f });
+		}
+
+		myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
+
 		if (myShowMessage == true)
 		{
 			Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT
