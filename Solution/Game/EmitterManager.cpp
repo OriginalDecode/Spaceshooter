@@ -19,12 +19,17 @@ EmitterManager::EmitterManager(Entity* aPlayer)
 	, myIsCloseToPlayer(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::DESTORY_EMITTER, this);
-	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_UNIT_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ON_FINAL_STRUCTURE_1, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ON_FINAL_STRUCTURE_2, this);
+	PostMaster::GetInstance()->Subscribe(eMessageType::SPAWN_ON_FINAL_STRUCTURE_3, this);
+
+
 
 	int index = 0;
 	ReadListOfLists("Data/Resource/Particle/LI_emitter_lists.xml");
@@ -33,17 +38,38 @@ EmitterManager::EmitterManager(Entity* aPlayer)
 	{
 		for (int j = 0; j < PREALLOCATED_EMITTER_SIZE; ++j)
 		{
-
 			Prism::ParticleEmitterInstance* newEmitter = new Prism::ParticleEmitterInstance();
-			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index]));
+			if (myXMLPaths[index].find("final_") != std::string::npos)
+			{
+				newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index]), true);
+			}
+			else
+			{
+				newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index]));
+			}
 			myExplosions[i]->myEmitterA.Insert(j, newEmitter);
 
 			newEmitter = new Prism::ParticleEmitterInstance();
-			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 1]));
+			if (myXMLPaths[index + 1].find("final_") != std::string::npos)
+			{
+				newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 1]), true);
+			}
+			else
+			{
+				newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 1]));
+			}
 			myExplosions[i]->myEmitterB.Insert(j, newEmitter);
 
 			newEmitter = new Prism::ParticleEmitterInstance();
-			newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 2]));
+			if (myXMLPaths[index + 2].find("final_") != std::string::npos)
+			{
+				newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 2]), true);
+			}
+			else
+			{
+				newEmitter->Initiate(Prism::Engine::GetInstance()->GetEmitterDataContainer()->GetParticleData(myXMLPaths[index + 2]));
+			}
+
 			myExplosions[i]->myEmitterC.Insert(j, newEmitter);
 		}
 		index += 3;
@@ -53,12 +79,15 @@ EmitterManager::EmitterManager(Entity* aPlayer)
 EmitterManager::~EmitterManager()
 {
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::DESTORY_EMITTER, this);
-	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_UNIT_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_PROP_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EXPLOSION_ON_ROCKET_DEATH, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EFFECT_ON_HIT, this);
 	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_EFFECT_ON_ASTROID_HIT, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ON_FINAL_STRUCTURE_1, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ON_FINAL_STRUCTURE_2, this);
+	PostMaster::GetInstance()->UnSubscribe(eMessageType::SPAWN_ON_FINAL_STRUCTURE_3, this);
 
 
 	myExplosions.DeleteAll();
@@ -139,7 +168,7 @@ void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
 		myIsCloseToPlayer = true;
 	}
 
-	if (aMessage.GetMessageType() == eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH)
+	if (aMessage.GetMessageType() == eMessageType::SPAWN_EXPLOSION_ON_UNIT_DEATH)
 	{
 		EnemyExplosion(aMessage);
 	}
@@ -168,6 +197,22 @@ void EmitterManager::ReceiveMessage(const SpawnExplosionMessage& aMessage)
 	{
 		OnAstroidHitEffect(aMessage);
 	}
+
+	if (aMessage.GetMessageType() == eMessageType::SPAWN_ON_FINAL_STRUCTURE_1)
+	{
+		OnFirstFinal(aMessage);
+	}
+
+	if (aMessage.GetMessageType() == eMessageType::SPAWN_ON_FINAL_STRUCTURE_2)
+	{
+		OnSecondFinal(aMessage);
+	}
+
+	if (aMessage.GetMessageType() == eMessageType::SPAWN_ON_FINAL_STRUCTURE_3)
+	{
+		OnThirdFinal(aMessage);
+	}
+
 }
 
 void EmitterManager::ReadListOfLists(std::string aPath)
@@ -215,6 +260,24 @@ void EmitterManager::ReadListOfLists(std::string aPath)
 				myExplosions.Insert(ID, newData);
 			}
 			if (ID == static_cast<int>(eExplosionID::ON_ASTROID_HIT_EFFECT))
+			{
+				ReadList(entityPath);
+				ExplosionData* newData = new ExplosionData(entityPath);
+				myExplosions.Insert(ID, newData);
+			}
+			if (ID == static_cast<int>(eExplosionID::FINAL_EXPLOSION_1))
+			{
+				ReadList(entityPath);
+				ExplosionData* newData = new ExplosionData(entityPath);
+				myExplosions.Insert(ID, newData);
+			}
+			if (ID == static_cast<int>(eExplosionID::FINAL_EXPLOSION_2))
+			{
+				ReadList(entityPath);
+				ExplosionData* newData = new ExplosionData(entityPath);
+				myExplosions.Insert(ID, newData);
+			}
+			if (ID == static_cast<int>(eExplosionID::FINAL_EXPLOSION_3))
 			{
 				ReadList(entityPath);
 				ExplosionData* newData = new ExplosionData(entityPath);
@@ -463,6 +526,78 @@ void EmitterManager::OnAstroidHitEffect(const SpawnExplosionMessage& aMessage)
 
 		myExplosions[index]->myEmitterIndex++;
 	}
+}
+
+void EmitterManager::OnFirstFinal(const SpawnExplosionMessage& aMessage)
+{
+	int index = static_cast<int>(eExplosionID::FINAL_EXPLOSION_1);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
+	int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterIndex++;
+}
+
+void EmitterManager::OnSecondFinal(const SpawnExplosionMessage& aMessage)
+{
+	int index = static_cast<int>(eExplosionID::FINAL_EXPLOSION_3);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
+	int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterIndex++;
+}
+
+void EmitterManager::OnThirdFinal(const SpawnExplosionMessage& aMessage)
+{
+	int index = static_cast<int>(eExplosionID::FINAL_EXPLOSION_3);
+	if (myExplosions[index]->myEmitterIndex >= PREALLOCATED_EMITTER_SIZE)
+	{
+		myExplosions[index]->myEmitterIndex = 0;
+	}
+	int emitterIndex = myExplosions[index]->myEmitterIndex;
+
+	myExplosions[index]->myEmitterA[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterA[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterA[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterB[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterB[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterB[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterC[emitterIndex]->SetPosition(aMessage.myPosition);
+	myExplosions[index]->myEmitterC[emitterIndex]->ToggleActive(true);
+	myExplosions[index]->myEmitterC[emitterIndex]->ShouldLive(true);
+
+	myExplosions[index]->myEmitterIndex++;
 }
 
 //Data
