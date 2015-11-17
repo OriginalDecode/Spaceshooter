@@ -399,10 +399,14 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
-		if (aArrowModel == myHomingTarget || aArrowModel == myEnemyArrow)
+		if (aArrowModel == myHomingTarget)
 		{
 			myClosestEnemy = nullptr;
 			return;
+		}
+		else if (aArrowModel == myEnemyArrow)
+		{
+			myClosestEnemy = nullptr;
 		}
 	}
 	else
@@ -416,10 +420,14 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 		showName = false;
-		if (aArrowModel == myHomingTarget || aArrowModel == myEnemyArrow)
+		if (aArrowModel == myHomingTarget)
 		{
 			myClosestEnemy = nullptr;
 			return;
+		}
+		else if (aArrowModel == myEnemyArrow)
+		{
+			myClosestEnemy = nullptr;
 		}
 	}
 
@@ -610,13 +618,19 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			percentageToReady = *myRocketCurrentTime / *myRocketMaxTime;
 			if (percentageToReady >= 1.f)
 			{
+				if (myPlayedMissilesReady == false)
+				{
+					myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_MissilesReady"));
+					myPlayedMissilesReady = true;
+				}
 				Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 550.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
 			}
+			else
+			{
+				myPlayedMissilesReady = false;
+			}
 		}
-		else
-		{
-			myPlayedMissilesReady = false;
-		}
+
 
 
 		if (myHasHomingWeapon == true)
