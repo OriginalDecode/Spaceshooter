@@ -139,7 +139,6 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 		{
 			if (myEntity.GetType() == eEntityType::PLAYER)
 			{
-				PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_SHOT));
 				if (currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_1
 					|| currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_2
 					|| currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
@@ -233,11 +232,31 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				}
 				else
 				{
+					if (currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_2
+						|| currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_3)
+					{
+						CU::Vector3<float> pos = orientation.GetPos();
+						pos += orientation.GetRight() * 10.f;
+						orientation.SetPos(pos);
+					}
 					PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
 						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
 						, dir
 						, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
 						, currWepData->myHomingTurnRateModifier));
+
+					if (currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_2
+						|| currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_3)
+					{
+						CU::Vector3<float> pos = orientation.GetPos();
+						pos += orientation.GetRight() * -20.f;
+						orientation.SetPos(pos);
+						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+							, dir
+							, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
+							, currWepData->myHomingTurnRateModifier));
+					}
 				}
 
 				currWepData->myCurrentTime = 0.f;

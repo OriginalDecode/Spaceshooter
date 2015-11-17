@@ -119,6 +119,7 @@ void BulletComponent::SetActive(bool aActive)
 	{
 		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)
 		{
+			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_SHOT));
 			if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
 				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
 				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
