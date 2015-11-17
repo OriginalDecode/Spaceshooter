@@ -675,13 +675,14 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myDamageIndicatorTimer >= 0.f)
 	{
+		float alpha = fminf(1.f, myDamageIndicatorTimer);
 		if (myCurrentShield <= 0)
 		{
-			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight });
+			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 		else
 		{
-			myDamageIndicatorShield->Render({ halfWidth, -halfHeight });
+			myDamageIndicatorShield->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 	}
 
@@ -874,7 +875,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
-		myDamageIndicatorTimer = 0.1f;
+		myDamageIndicatorTimer = 1.0f;
 		if (myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() > 0.f)
 		{
 			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldHit"));

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <AudioInterface.h>
 #include "ScoreItem.h"
 
 
@@ -6,6 +7,8 @@ ScoreItem::ScoreItem(const LevelScore& aLevelScore, const SaveScore& aSaveScore,
 	: myBackground(nullptr)
 	, myItem(nullptr)
 	, myScaleDown(false)
+	, myWaitDone(false)
+	, myShouldPlaySound(false)
 {
 	float timeDelay = 0.5f;
 
@@ -67,6 +70,14 @@ void ScoreItem::Update(float aDeltaTime)
 	}
 	else
 	{
+		if (myWaitDone == false)
+		{
+			if (myShouldPlaySound == true)
+			{
+				Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_ScoreBoom", 0);
+			}
+			myWaitDone = true;
+		}
 		myTime += aDeltaTime;
 		if (myScaleDown == false)
 		{
@@ -91,5 +102,6 @@ void ScoreItem::Render(const CU::Vector2<float>& aPosition, bool aShowItem)
 	if (aShowItem == true)
 	{
 		myItem->Render(aPosition, { myScale, myScale });
+		myShouldPlaySound = true;
 	}
 }
