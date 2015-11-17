@@ -40,6 +40,7 @@ private:
 	CU::Vector2<float> myScreenSize;
 	CU::Vector2<float> myBackgroundSize;
 	bool myRenderCenter;
+	bool myIsOptionsMenu;
 	int myLevelID;
 };
 

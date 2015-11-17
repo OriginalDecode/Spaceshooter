@@ -22,6 +22,15 @@ Menu::Menu(const std::string& aXMLPath)
 	std::string crosshair;
 	CU::Vector2<float> crosshairSize;
 
+	if (aXMLPath == "Data/Menu/MN_ingame_menu.xml")
+	{
+		myIsOptionsMenu = true;
+	}
+	else 
+	{
+		myIsOptionsMenu = false;
+	}
+
 	tinyxml2::XMLElement* menuElement = reader.FindFirstChild("menu");
 
 	reader.ReadAttribute(menuElement, "mainMenu", myMainMenu);
@@ -69,6 +78,7 @@ Menu::Menu(const std::string& aXMLPath, int aLevelID)
 	, myMainMenu(false)
 	, myRenderCenter(false)
 	, myLevelID(aLevelID)
+	, myIsOptionsMenu(false)
 {
 	XMLReader reader;
 	reader.OpenDocument(aXMLPath);
@@ -152,7 +162,7 @@ void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons, bool aD
 		}
 	}
 
-	if (aDontRenderSecondButton == true)
+	if (myIsOptionsMenu == true)
 	{
 		Prism::Engine::GetInstance()->PrintText("SFX: " + std::to_string(Prism::Audio::AudioInterface::GetInstance()->GetSFXVolume())
 			, { myScreenSize.x / 2.f - 120.f, -myScreenSize.y / 2.f + 65.f }, Prism::eTextType::RELEASE_TEXT);

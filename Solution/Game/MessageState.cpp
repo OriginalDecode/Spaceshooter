@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <AudioInterface.h>
 #include <Camera.h>
 #include <Engine.h>
 #include "FadeMessage.h"
@@ -93,6 +94,7 @@ void MessageState::InitState(StateStackProxy* aStateStackProxy)
 	{
 		ScoreIO::Save(mySaveScore, myLevelScore.myLevel);
 	}
+	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Mute", 0);
 }
 
 void MessageState::EndState()
