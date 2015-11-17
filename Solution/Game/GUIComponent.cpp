@@ -476,7 +476,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		{
 			if (aMarkerModel == myStructureMarker || aArrowModel == myStructureArrow)
 			{
-				lengthToWaypoint << aStructure->GetComponent<HealthComponent>()->GetHealth();
+				lengthToWaypoint << "Hp: " << aStructure->GetComponent<HealthComponent>()->GetHealth();
 				Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 			}
 			else if (aMarkerModel == myWaypointMarker || aArrowModel == myWaypointArrow)
