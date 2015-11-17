@@ -33,6 +33,8 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.myResolutionList = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel3.SuspendLayout();
@@ -40,9 +42,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(3, 3);
+            this.button1.Location = new System.Drawing.Point(349, 3);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(578, 62);
+            this.button1.Size = new System.Drawing.Size(232, 62);
             this.button1.TabIndex = 0;
             this.button1.Text = "Launch Game";
             this.button1.UseVisualStyleBackColor = true;
@@ -72,12 +74,31 @@
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.myResolutionList);
             this.panel3.Controls.Add(this.button1);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel3.Location = new System.Drawing.Point(0, 225);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(584, 71);
             this.panel3.TabIndex = 8;
+            // 
+            // myResolutionList
+            // 
+            this.myResolutionList.FormattingEnabled = true;
+            this.myResolutionList.Location = new System.Drawing.Point(12, 25);
+            this.myResolutionList.Name = "myResolutionList";
+            this.myResolutionList.Size = new System.Drawing.Size(121, 21);
+            this.myResolutionList.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(57, 13);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Resolution";
             // 
             // Form1
             // 
@@ -95,6 +116,7 @@
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -105,6 +127,8 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox myResolutionList;
     }
 }
 

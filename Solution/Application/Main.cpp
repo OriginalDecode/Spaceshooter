@@ -19,6 +19,7 @@ int globalClientHeight = 600;
 bool globalIsResizing = false;
 bool globalPreviousFullscreenState = false;
 bool globalIsActive = true;
+Prism::SetupInfo globalSetup;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 {
@@ -67,15 +68,14 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 		LocalFree(realCommands);
 	}
 
-	Prism::SetupInfo setup;
-	if (ReadSetup(setup, CU::GetMyDocumentFolderPath() + "Raven\\Data\\Setting\\SET_config.bin") == false)
+	if (ReadSetup(globalSetup, CU::GetMyDocumentFolderPath() + "Raven\\Data\\Setting\\SET_config.bin") == false)
 	{
 		return 1;
 	}
 
 	HWND hwnd;
 
-	if (Prism::Engine::Create(hwnd, WndProc, setup) == false)
+	if (Prism::Engine::Create(hwnd, WndProc, globalSetup) == false)
 	{
 		return 1;
 	}
@@ -172,6 +172,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		globalClientWidth = LOWORD(lParam);
 		globalClientHeight = HIWORD(lParam);
+
+		if (globalClientWidth >= globalSetup.myScreenWidth) globalClientWidth = globalSetup.myScreenWidth;
+		if (globalClientHeight >= globalSetup.myScreenHeight) globalClientHeight = globalSetup.myScreenHeight;
 
 		if (LOWORD(wParam) == SIZE_MINIMIZED)
 		{
