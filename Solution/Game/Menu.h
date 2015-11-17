@@ -37,6 +37,7 @@ private:
 	CU::GrowingArray<Button*> myButtons;
 	Prism::Sprite* myBackground;
 	Prism::Sprite* myCrosshair;
+	Prism::Sprite* myCredits;
 	CU::Vector2<float> myScreenSize;
 	CU::Vector2<float> myBackgroundSize;
 	CU::Vector2<float> myFullscreenBackgroundSize;

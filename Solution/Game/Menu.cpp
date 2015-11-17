@@ -14,6 +14,7 @@ Menu::Menu(const std::string& aXMLPath)
 	, myMainMenu(false)
 	, myRenderCenter(false)
 	, myLevelID(-1)
+	, myCredits(nullptr)
 {
 	XMLReader reader;
 	reader.OpenDocument(aXMLPath);
@@ -29,6 +30,11 @@ Menu::Menu(const std::string& aXMLPath)
 	else 
 	{
 		myIsOptionsMenu = false;
+	}
+
+	if (aXMLPath == "Data/Menu/MN_credits.xml")
+	{
+		myCredits = new Prism::Sprite("Data/Resource/Texture/Menu/Credits/T_credits.dds", { 1024.f, 1024.f }, { 512.f, 512.f });
 	}
 
 	tinyxml2::XMLElement* menuElement = reader.FindFirstChild("menu");
@@ -135,20 +141,17 @@ Menu::~Menu()
 	myButtons.DeleteAll();
 	delete myCrosshair;
 	delete myBackground;
+	delete myCredits;
 	myCrosshair = nullptr;
 	myBackground = nullptr;
+	myCredits = nullptr;
 }
 
 void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons, bool aDontRenderSecondButton)
 {
-	//if (myRenderCenter == true)
-	{
-		myBackground->Render({ (myScreenSize.x / 2.f), -(myScreenSize.y / 2.f) });
-	}
-	//else
-	{
-		//myBackground->Render({ (myBackground->GetSize().x / 2), -(myBackground->GetSize().y / 2) });
-	}
+	
+	myBackground->Render({ (myScreenSize.x / 2.f), -(myScreenSize.y / 2.f) });
+	
 
 	if (aRenderButtons == true)
 	{
@@ -175,7 +178,10 @@ void Menu::Render(CU::InputWrapper* anInputWrapper, bool aRenderButtons, bool aD
 			, { myScreenSize.x / 2.f - 120.f, -myScreenSize.y / 2.f - 85.f }, Prism::eTextType::RELEASE_TEXT);
 	}
 
-	
+	if (myCredits != nullptr)
+	{
+		myCredits->Render({ (myScreenSize.x / 2.f), -(myScreenSize.y / 2.f) });
+	}
 
 	myCrosshair->Render({ anInputWrapper->GetMousePosition().x, -anInputWrapper->GetMousePosition().y });
 }
