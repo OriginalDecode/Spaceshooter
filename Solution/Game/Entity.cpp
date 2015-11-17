@@ -75,9 +75,9 @@ void Entity::Kill()
 		PostMaster::GetInstance()->SendMessage(SpawnPowerUpMessage(myPowerUpName, myOrientation));
 	}
 
-	if (myType == eEntityType::ENEMY)
+	if (myType == eEntityType::ENEMY || myType == eEntityType::ALLY)
 	{
-		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_ENEMY_DEATH
+		PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_UNIT_DEATH
 				, myOrientation.GetPos()));
 	}
 
@@ -86,6 +86,33 @@ void Entity::Kill()
 		if (GetName().find("asteroid") != std::string::npos || GetName().find("Asteroid") != std::string::npos)
 		{
 			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_EXPLOSION_ON_ASTROID_DEATH
+				, myOrientation.GetPos()));
+		}
+		else if ( GetName().find("space_station_layer1") != std::string::npos //detta är det sista eventet
+			|| GetName().find("Space_Station_Layer1") != std::string::npos
+			|| GetName().find("Space_station_layer1") != std::string::npos
+			|| GetName().find("Space_Station_layer1") != std::string::npos
+			)
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_ON_FINAL_STRUCTURE_1
+				, myOrientation.GetPos()));
+		}
+		else if (GetName().find("space_station_layer2") != std::string::npos
+			|| GetName().find("Space_Station_Layer2") != std::string::npos
+			|| GetName().find("Space_station_layer2") != std::string::npos
+			|| GetName().find("Space_Station_layer2") != std::string::npos
+			)
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_ON_FINAL_STRUCTURE_2
+				, myOrientation.GetPos()));
+		}
+		else if (GetName().find("space_station_layer3") != std::string::npos
+			|| GetName().find("Space_Station_Layer3") != std::string::npos
+			|| GetName().find("Space_station_layer3") != std::string::npos
+			|| GetName().find("Space_Station_layer3") != std::string::npos
+			)
+		{
+			PostMaster::GetInstance()->SendMessage(SpawnExplosionMessage(eMessageType::SPAWN_ON_FINAL_STRUCTURE_3
 				, myOrientation.GetPos()));
 		}
 		else

@@ -20,5 +20,7 @@ private:
 	CU::Vector2<float> mySpriteSize;
 	float myScale;
 	bool myScaleDown;
+	bool myWaitDone;
+	bool myShouldPlaySound;
 };
 

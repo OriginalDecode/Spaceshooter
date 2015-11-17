@@ -75,6 +75,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myEMPMessageAlpha(1.f)
 	, myEMPFadeInMessage(false)
 	, myHasEMP(false)
+	, myShouldRenderHP(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -393,7 +394,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		length = CU::Length(radius);
 		CU::Normalize(radius);
 	}
-
+	myShouldRenderHP = true;
 	if (length > CIRCLERADIUS)
 	{
 		aCurrentModel = aArrowModel;
@@ -404,10 +405,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			myClosestEnemy = nullptr;
 			return;
 		}
-		else if (aArrowModel == myEnemyArrow)
-		{
-			myClosestEnemy = nullptr;
-		}
+		myShouldRenderHP = false;
 	}
 	else
 	{
@@ -425,10 +423,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			myClosestEnemy = nullptr;
 			return;
 		}
-		else if (aArrowModel == myEnemyArrow)
-		{
-			myClosestEnemy = nullptr;
-		}
+		myShouldRenderHP = false;
 	}
 
 	if (aIsPowerup == true && showName == true)
@@ -495,7 +490,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		{
 			aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { scale, scale }, { 1.f, 1.f, 1.f, anAlpha });
 		}
-		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow || aArrowModel == myHomingTarget || aArrowModel == nullptr)
+		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow || aArrowModel == myHomingTarget || aArrowModel == nullptr && myClosestEnemy != nullptr)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
 			myClosestScreenPos.y = newRenderPos.y;
@@ -675,13 +670,14 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myDamageIndicatorTimer >= 0.f)
 	{
+		float alpha = fminf(1.f, myDamageIndicatorTimer);
 		if (myCurrentShield <= 0)
 		{
-			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight });
+			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 		else
 		{
-			myDamageIndicatorShield->Render({ halfWidth, -halfHeight });
+			myDamageIndicatorShield->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 	}
 
@@ -692,9 +688,12 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
 				, true, 1.f, false, "", myClosestEnemy);
 
-			Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
-				, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
-				, 0.5f, { 1.f, 1.f, 1.f, 0.5f });
+			if (myShouldRenderHP == true)
+			{
+				Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
+					, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
+					, 0.5f, { 1.f, 1.f, 1.f, 0.5f });
+			}
 		}
 
 		myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
@@ -874,7 +873,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
-		myDamageIndicatorTimer = 0.3f;
+		myDamageIndicatorTimer = 1.0f;
 		if (myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() > 0.f)
 		{
 			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldHit"));

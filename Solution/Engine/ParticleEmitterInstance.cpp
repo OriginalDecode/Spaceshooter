@@ -187,7 +187,7 @@ namespace Prism
 		{
 			EmitParticle(aWorldMatrix);
 
-			myEmissionTime = myParticleEmitterData->myEmissionRate * 5.f;
+			myEmissionTime = myParticleEmitterData->myEmissionRate * 8.f;
 			if (myIsCloseToPlayer == false)
 				myEmissionTime = myParticleEmitterData->myEmissionRate;
 		}
