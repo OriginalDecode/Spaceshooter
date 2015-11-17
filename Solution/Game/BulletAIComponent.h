@@ -6,6 +6,7 @@
 
 class BulletComponent;
 class PhysicsComponent;
+class CollisionManager;
 
 class BulletAIComponent : public ControllerComponent
 {
@@ -13,7 +14,7 @@ public:
 	BulletAIComponent(Entity& aEntity);
 	~BulletAIComponent();
 
-	void Init(float aSpeed, float aTurnRateModifier);
+	void Init(float aSpeed, float aTurnRateModifier, CollisionManager* aCollisionManager);
 
 	void Update(float aDeltaTime) override;
 
@@ -34,6 +35,7 @@ private:
 
 	PhysicsComponent* myPhysicsComponent;
 	BulletComponent* myBulletComponent;
+	CollisionManager* myCollisionManager;
 };
 
 inline eComponentType BulletAIComponent::GetType()

@@ -208,7 +208,7 @@ void BulletManager::ActivateBullet(BulletData* aWeaponData, const CU::Matrix44<f
 	if (aHomingTarget != nullptr)
 	{
 		bullet->AddComponent<BulletAIComponent>()->Init((CU::Length((anOrientation.GetForward() * (aWeaponData->mySpeed)) + aEnitityVelocity) / 2.f)
-			, aHomingTurnRateModifier);
+			, aHomingTurnRateModifier, &myCollisionManager);
 		bullet->GetComponent<BulletAIComponent>()->SetEntityToFollow(aHomingTarget, aHomingTarget);
 	}
 
