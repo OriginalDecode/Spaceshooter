@@ -44,7 +44,7 @@ void LoadingScreen::Render()
 	myScreens[myLevelID - 1]->myBackground->Render(myWindowMiddle);
 
 	Prism::Engine::GetInstance()->PrintText(myScreens[myLevelID - 1]->myMessages[0].myMessage
-		, { myWindowMiddle.x - 600.f, myWindowMiddle.y + 150.f }, Prism::eTextType::RELEASE_TEXT);
+		, { myWindowMiddle.x - 425.f, myWindowMiddle.y + 400.f }, Prism::eTextType::RELEASE_TEXT);
 
 	if (myLevelIsLoading == false)
 	{
