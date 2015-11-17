@@ -193,14 +193,14 @@ namespace Launcher
         {
             bool windowed = false;
 
-            if (windowed == true)
-            {
-                aWriter.Write((Int32)1);
-            }
-            else
-            {
+            //if (windowed == true)
+            //{
+            //    aWriter.Write((Int32)1);
+            //}
+            //else
+            //{
                 aWriter.Write((Int32)0);
-            }
+            //}
         }
 
         void ReadResolutionFromFile(BinaryReader aReader)
