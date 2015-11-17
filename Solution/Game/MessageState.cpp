@@ -129,7 +129,7 @@ void MessageState::Render()
 
 	float leftMargin = 50.f;
 	float rowHeight = 28.f;
-	float offsetY = -480.f;
+	float offsetY = -520.f;
 
 	myBackground->Render(windowSize);
 
@@ -150,8 +150,11 @@ void MessageState::Render()
 		+ std::to_string(int(float((myLevelScore.myShotsHit) / denom * 100.f))) + "%"
 		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 2.f }, Prism::eTextType::RELEASE_TEXT);
 
-	Prism::Engine::GetInstance()->PrintText("Optional missions completed: "
-		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 3.f }, Prism::eTextType::RELEASE_TEXT);
+	if (mySaveScore.myTotalOptional > 0)
+	{
+		Prism::Engine::GetInstance()->PrintText("Optional missions completed: "
+			, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 3.f }, Prism::eTextType::RELEASE_TEXT);
+	}
 
 	if (myShowBadge)
 	{
@@ -175,7 +178,7 @@ void MessageState::OnResize(int aWidth, int aHeight)
 void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 {
 	float starOffsetY = 372.f;
-	float badgesOffsetY = 564.f;
+	float badgesOffsetY = 604.f;
 
 
 	for (int i = 0; i < 3; ++i)
@@ -190,15 +193,18 @@ void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 		}
 	}
 
-	for (int i = 0; i < mySaveScore.myTotalOptional; ++i)
+	if (mySaveScore.myTotalOptional > 0)
 	{
-		if (mySaveScore.myCompletedOptional < (i + 1))
+		for (int i = 0; i < mySaveScore.myTotalOptional; ++i)
 		{
-			myBadges[i]->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * (i + 1)), myMessagePosition.y - badgesOffsetY }, true);
-		}
-		else
-		{
-			myBadges[i]->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * (i + 1)), myMessagePosition.y - badgesOffsetY }, false);
+			if (mySaveScore.myCompletedOptional > i)
+			{
+				myBadges[i]->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * (i + 1)), myMessagePosition.y - badgesOffsetY }, true);
+			}
+			else
+			{
+				myBadges[i]->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * (i + 1)), myMessagePosition.y - badgesOffsetY }, false);
+			}
 		}
 	}
 }
