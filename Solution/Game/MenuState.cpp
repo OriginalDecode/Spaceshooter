@@ -22,9 +22,7 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 	, myShowVictoryScreen(aShowVictoryScreen)
 	, myShowButtons(!aShowVictoryScreen)
 	, myWaitForButtonsTime(4.f)
-	, myCredits(nullptr)
 {
-	//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Resume_MenuMusic", 0);
 	Prism::Engine::GetInstance()->GetModelLoader()->Pause();
 
 	myInputWrapper = anInputWrapper;
@@ -43,11 +41,6 @@ MenuState::MenuState(const std::string& aXMLPath, CU::InputWrapper* anInputWrapp
 
 	CU::Vector2<float> overlaySize(4096.f, 4096.f);
 	myBlackOverlay = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
-
-	if (aXMLPath == "Data/Menu/MN_credits.xml")
-	{
-		myCredits = new Prism::Sprite("Data/Resource/Texture/Menu/Credits/T_credits.dds", { 1024.f, 1024.f }, { 512.f, 512.f });
-	}
 
 	Prism::Engine::GetInstance()->GetModelLoader()->UnPause();
 }
@@ -91,10 +84,8 @@ void MenuState::EndState()
 {
 	delete myMenu;
 	delete myCamera;
-	delete myCredits;
 	myMenu = nullptr;
 	myCamera = nullptr;
-	myCredits = nullptr;
 	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
@@ -132,8 +123,6 @@ void MenuState::Render()
 	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(-Prism::Engine::GetInstance()->GetWindowSize().y));
 
-
-
 	if (myHasFadeIn == true)
 	{
 		myMenu->Render(myInputWrapper, myShowButtons);
@@ -143,10 +132,6 @@ void MenuState::Render()
 	{
 		myBlackOverlay->Render(windowSize / 2.f, { 1.f, 1.f });
 		myMenu->Render(myInputWrapper, myShowButtons);
-	}
-	if (myCredits != nullptr)
-	{
-		myCredits->Render(windowSize / 2.f);
 	}
 }
 

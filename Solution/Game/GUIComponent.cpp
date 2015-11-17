@@ -75,6 +75,7 @@ GUIComponent::GUIComponent(Entity& aEntity)
 	, myEMPMessageAlpha(1.f)
 	, myEMPFadeInMessage(false)
 	, myHasEMP(false)
+	, myShouldRenderHP(false)
 {
 	PostMaster::GetInstance()->Subscribe(eMessageType::RESIZE, this);
 	PostMaster::GetInstance()->Subscribe(eMessageType::CONVERSATION, this);
@@ -341,7 +342,7 @@ void GUIComponent::Update(float aDeltaTime)
 
 void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
 	, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int>& aWindowSize
-	, bool aShowDist, float anAlpha, bool aIsPowerup, std::string aName, Entity* aStructure)
+	, bool aShowDist, float anAlpha, bool aIsPowerup, std::string aName, Entity* aHealthCheckEntity)
 {
 	bool showName = false;
 	float halfWidth = aWindowSize.x *0.5f;
@@ -393,7 +394,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		length = CU::Length(radius);
 		CU::Normalize(radius);
 	}
-
+	myShouldRenderHP = true;
 	if (length > CIRCLERADIUS)
 	{
 		aCurrentModel = aArrowModel;
@@ -404,6 +405,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			myClosestEnemy = nullptr;
 			return;
 		}
+		myShouldRenderHP = false;
 	}
 	else
 	{
@@ -421,6 +423,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 			myClosestEnemy = nullptr;
 			return;
 		}
+		myShouldRenderHP = false;
 	}
 
 	if (aIsPowerup == true && showName == true)
@@ -473,8 +476,8 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		{
 			if (aMarkerModel == myStructureMarker || aArrowModel == myStructureArrow)
 			{
-				lengthToWaypoint << "Hp: " << aStructure->GetComponent<HealthComponent>()->GetHealth();
-				Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 20.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
+				lengthToWaypoint << "Hp: " << aHealthCheckEntity->GetComponent<HealthComponent>()->GetHealth();
+				Prism::Engine::GetInstance()->PrintText(lengthToWaypoint.str(), { newRenderPos.x - 30.f, newRenderPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT);
 			}
 			else if (aMarkerModel == myWaypointMarker || aArrowModel == myWaypointArrow)
 			{
@@ -483,8 +486,11 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 
 		}
 
-		aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { scale, scale }, { 1.f, 1.f, 1.f, anAlpha });
-		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow)
+		if (aCurrentModel != nullptr)
+		{
+			aCurrentModel->Render({ newRenderPos.x, newRenderPos.y }, { scale, scale }, { 1.f, 1.f, 1.f, anAlpha });
+		}
+		if (aArrowModel == myEnemyArrow || aArrowModel == myStructureArrow || aArrowModel == myHomingTarget || aArrowModel == nullptr && myClosestEnemy != nullptr)
 		{
 			myClosestScreenPos.x = newRenderPos.x;
 			myClosestScreenPos.y = newRenderPos.y;
@@ -607,13 +613,19 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			percentageToReady = *myRocketCurrentTime / *myRocketMaxTime;
 			if (percentageToReady >= 1.f)
 			{
+				if (myPlayedMissilesReady == false)
+				{
+					myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_MissilesReady"));
+					myPlayedMissilesReady = true;
+				}
 				Prism::Engine::GetInstance()->PrintText("RDY", { halfWidth + 550.f, -halfHeight - 20.f }, Prism::eTextType::RELEASE_TEXT);
 			}
+			else
+			{
+				myPlayedMissilesReady = false;
+			}
 		}
-		else
-		{
-			myPlayedMissilesReady = false;
-		}
+
 
 
 		if (myHasHomingWeapon == true)
@@ -658,23 +670,37 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 	if (myDamageIndicatorTimer >= 0.f)
 	{
+		float alpha = fminf(1.f, myDamageIndicatorTimer);
 		if (myCurrentShield <= 0)
 		{
-			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight });
+			myDamageIndicatorHealth->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 		else
 		{
-			myDamageIndicatorShield->Render({ halfWidth, -halfHeight });
+			myDamageIndicatorShield->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 	}
 
-	myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
-	myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize);
-	myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
-	myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
-
 	if (myIsActiveState == true)
 	{
+		if (myClosestEnemy != nullptr)
+		{
+			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
+				, true, 1.f, false, "", myClosestEnemy);
+
+			if (myShouldRenderHP == true)
+			{
+				Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
+					, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
+					, 0.5f, { 1.f, 1.f, 1.f, 0.5f });
+			}
+		}
+
+		myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
+
 		if (myShowMessage == true)
 		{
 			Prism::Engine::GetInstance()->PrintText(myMessage, { halfWidth - 150.f, -halfHeight + 200.f }, Prism::eTextType::RELEASE_TEXT
@@ -847,7 +873,7 @@ void GUIComponent::ReceiveMessage(const BulletCollisionToGUIMessage& aMessage)
 	}
 	else if (aMessage.myBullet.GetType() == eEntityType::ENEMY_BULLET && &aMessage.myEntityCollidedWith == &GetEntity())
 	{
-		myDamageIndicatorTimer = 0.1f;
+		myDamageIndicatorTimer = 1.0f;
 		if (myEntity.GetComponent<ShieldComponent>()->GetCurrentShieldStrength() > 0.f)
 		{
 			myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_ShieldHit"));

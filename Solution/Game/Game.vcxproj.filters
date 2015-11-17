@@ -230,6 +230,7 @@
     <ClCompile Include="InvulnerabilityAction.cpp">
       <Filter>Event\Action</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BulletManager.h" />
@@ -523,6 +524,7 @@
     <ClInclude Include="InvulnerabilityAction.h">
       <Filter>Event\Action</Filter>
     </ClInclude>
+    <ClInclude Include="ScoreItem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Components">

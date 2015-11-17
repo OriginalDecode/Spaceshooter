@@ -14,6 +14,8 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	, const LevelScore& aLevelScore)
 	: myEvent(nullptr)
 	, myLevelScore(aLevelScore)
+	, myStars(4)
+	, myBadges(4)
 {
 	DL_ASSERT_EXP(aLevelScore.myLevel >= 0, "Invalid level number.");
 
@@ -22,12 +24,6 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	myInputWrapper = anInputWrapper;
 	myTextMessage = "";
 	mySpriteSize = {64.f, 64.f};
-	myOptionalBadgeGrey = new Prism::Sprite("Data/Resource/Texture/Menu/BadgeGrey.dds", mySpriteSize, mySpriteSize * 0.5f);
-	myOptionalBadge = new Prism::Sprite("Data/Resource/Texture/Menu/Badge.dds", mySpriteSize, mySpriteSize * 0.5f);
-	myStarGrey = new Prism::Sprite("Data/Resource/Texture/Menu/StarGrey.dds", mySpriteSize, mySpriteSize * 0.5f);
-	myBronzeStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarBronze.dds", mySpriteSize, mySpriteSize * 0.5f);
-	mySilverStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarSilver.dds", mySpriteSize, mySpriteSize * 0.5f);
-	myGoldStar = new Prism::Sprite("Data/Resource/Texture/Menu/StarGold.dds", mySpriteSize, mySpriteSize * 0.5f);
 
 	CU::Vector2<float> windowSize = CU::Vector2<float>(float(Prism::Engine::GetInstance()->GetWindowSize().x),
 		float(Prism::Engine::GetInstance()->GetWindowSize().y));
@@ -55,6 +51,15 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 	mySaveScore.myCompletedOptional = myLevelScore.myCompletedOptional;
 	mySaveScore.myTotalOptional = myLevelScore.myTotalOptional;
 	mySaveScore.myDifficulty = myLevelScore.myDifficulty;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		myStars.Add(new ScoreItem(myLevelScore, mySaveScore, true, i));
+	}
+	for (int i = 0; i < mySaveScore.myTotalOptional; ++i)
+	{
+		myBadges.Add(new ScoreItem(myLevelScore, mySaveScore, false, i));
+	}
 }
 
 MessageState::~MessageState()
@@ -62,22 +67,12 @@ MessageState::~MessageState()
 	delete myBackground;
 	delete myCamera;
 	delete myEvent;
-	delete myOptionalBadge;
-	delete myOptionalBadgeGrey;
-	delete myStarGrey;
-	delete myBronzeStar;
-	delete mySilverStar;
-	delete myGoldStar;
 	delete myBlackOverlay;
+	myStars.DeleteAll();
+	myBadges.DeleteAll();
 	myBackground = nullptr;
 	myCamera = nullptr;
 	myEvent = nullptr;
-	myOptionalBadge = nullptr;
-	myOptionalBadgeGrey = nullptr;
-	myStarGrey = nullptr;
-	myBronzeStar = nullptr;
-	mySilverStar = nullptr;
-	myGoldStar = nullptr;
 	myBlackOverlay = nullptr;
 }
 
@@ -102,8 +97,17 @@ void MessageState::EndState()
 	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f / 3.f));
 }
 
-const eStateStatus MessageState::Update(const float&)
+const eStateStatus MessageState::Update(const float& aDeltaTime)
 {
+	for (int i = 0; i < myStars.Size(); ++i)
+	{
+		myStars[i]->Update(aDeltaTime);
+	}
+	for (int i = 0; i < myBadges.Size(); ++i)
+	{
+		myBadges[i]->Update(aDeltaTime);
+	}
+
 	if (myInputWrapper->KeyDown(DIK_SPACE) == true || myInputWrapper->KeyDown(DIK_ESCAPE) == true)
 	{
 		if (myEvent != nullptr)
@@ -125,7 +129,7 @@ void MessageState::Render()
 
 	float leftMargin = 50.f;
 	float rowHeight = 28.f;
-	float offsetY = -480.f;
+	float offsetY = -520.f;
 
 	myBackground->Render(windowSize);
 
@@ -146,8 +150,11 @@ void MessageState::Render()
 		+ std::to_string(int(float((myLevelScore.myShotsHit) / denom * 100.f))) + "%"
 		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 2.f }, Prism::eTextType::RELEASE_TEXT);
 
-	Prism::Engine::GetInstance()->PrintText("Optional missions completed: "
-		, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 3.f }, Prism::eTextType::RELEASE_TEXT);
+	if (mySaveScore.myTotalOptional > 0)
+	{
+		Prism::Engine::GetInstance()->PrintText("Optional missions completed: "
+			, { myMessagePosition.x + leftMargin, myMessagePosition.y + offsetY - rowHeight * 3.f }, Prism::eTextType::RELEASE_TEXT);
+	}
 
 	if (myShowBadge)
 	{
@@ -171,39 +178,33 @@ void MessageState::OnResize(int aWidth, int aHeight)
 void MessageState::RenderBadgesAndStars(const CU::Vector2<float>& aRenderPos)
 {
 	float starOffsetY = 372.f;
-	float badgesOffsetY = 564.f;
+	float badgesOffsetY = 604.f;
+
+
 	for (int i = 0; i < 3; ++i)
 	{
 		if (i < mySaveScore.myStars)
 		{
-			if (mySaveScore.myDifficulty == 0)
-			{
-				myBronzeStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
-			}
-			else if (mySaveScore.myDifficulty == 1)
-			{
-				mySilverStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
-			}
-			else if (mySaveScore.myDifficulty == 2)
-			{
-				myGoldStar->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
-			}
+			myStars[i]->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY }, true);
 		}
 		else
 		{
-			myStarGrey->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY });
+			myStars[i]->Render({ (Prism::Engine::GetInstance()->GetWindowSize().x / 2.f) + (64.f * (i - 1)), aRenderPos.y - starOffsetY }, false);
 		}
 	}
 
-	for (int i = 1; i <= mySaveScore.myTotalOptional; ++i)
+	if (mySaveScore.myTotalOptional > 0)
 	{
-		if (mySaveScore.myCompletedOptional < i)
+		for (int i = 0; i < mySaveScore.myTotalOptional; ++i)
 		{
-			myOptionalBadgeGrey->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * i), myMessagePosition.y - badgesOffsetY });
-		}
-		else
-		{
-			myOptionalBadge->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * i), myMessagePosition.y - badgesOffsetY });
+			if (mySaveScore.myCompletedOptional > i)
+			{
+				myBadges[i]->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * (i + 1)), myMessagePosition.y - badgesOffsetY }, true);
+			}
+			else
+			{
+				myBadges[i]->Render({ myMessagePosition.x + 400.f + (mySpriteSize.x * (i + 1)), myMessagePosition.y - badgesOffsetY }, false);
+			}
 		}
 	}
 }
