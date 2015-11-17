@@ -140,6 +140,8 @@ void AIComponent::Update(float aDeltaTime)
 					Shoot(shootingDir*myPhysicsComponent->GetSpeed(), shootingDir);
 				}
 			}
+
+			myPhysicsComponent->SetVelocity(myVelocity);
 		}
 		else
 		{
@@ -153,9 +155,10 @@ void AIComponent::Update(float aDeltaTime)
 
 			RotateX(aDeltaTime / 10);
 			RotateZ(aDeltaTime / 5);
-		}
 
-		myPhysicsComponent->SetVelocity(myVelocity);
+			CU::Normalize(myVelocity);
+			myPhysicsComponent->SetVelocity(myVelocity * myPhysicsComponent->GetSpeed());
+		}
 	}
 }
 
