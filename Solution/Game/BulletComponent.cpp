@@ -119,27 +119,10 @@ void BulletComponent::SetActive(bool aActive)
 	{
 		if (myEntity.GetType() == eEntityType::PLAYER_BULLET)
 		{
-			PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_SHOT));
-			if (myType == eBulletType::MACHINGUN_BULLET_LEVEL_1
-				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_2
-				|| myType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
-			{
-				//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Laser", myEntity.GetAudioSFXID());
-				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerMachineGun"));
-
-			}
-			if (myType == eBulletType::SHOTGUN_BULLET_LEVEL_1
-				|| myType == eBulletType::SHOTGUN_BULLET_LEVEL_2
-				|| myType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
-			{
-				//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Shotgun", myEntity.GetAudioSFXID());
-				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Shotgun"));
-			}
 			if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
 				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2
 				|| myType == eBulletType::ROCKET_MISSILE_LEVEL_3)
 			{
-				//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_Rocket", myEntity.GetAudioSFXID());
 				myEntity.SendNote(EmitterNote(EmitterNote::eType::BULLET, true, true));
 				myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Missiles"));
 			}
@@ -148,7 +131,6 @@ void BulletComponent::SetActive(bool aActive)
 	}
 	else
 	{
-		//Prism::Audio::AudioInterface::GetInstance()->PostEvent("Stop_Rocket", myEntity.GetAudioSFXID());
 		myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::STOP, "Stop_Missiles"));
 		if (myType == eBulletType::ROCKET_MISSILE_LEVEL_1
 			|| myType == eBulletType::ROCKET_MISSILE_LEVEL_2

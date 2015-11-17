@@ -117,6 +117,7 @@ private:
 	bool myComplete;
 
 	Entity* myEMPHexagon;
+	Entity* myEMPHexagon2;
 	Prism::Effect* myPBL;
 	CU::Vector3<float> myEMPPosition;
 	float myEMPScale;

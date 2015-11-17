@@ -161,6 +161,7 @@ private:
 
 	bool myHasEMP;
 	bool myIsActiveState;
+	bool myShouldRenderHP;
 };
 
 inline eComponentType GUIComponent::GetType()

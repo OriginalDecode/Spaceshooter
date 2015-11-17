@@ -185,7 +185,15 @@ bool Level::LogicUpdate(float aDeltaTime)
 
 		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
 		myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 15.f, myEMPScale* 15.f, myEMPScale* 15.f });
-		
+
+		myEMPHexagon2->myOrientation.SetPos(myEMPPosition);
+		myEMPHexagon2->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale * 14.f, myEMPScale* 14.f, myEMPScale* 14.f });
+
+		myEMPHexagon->myOrientation = CU::Matrix44<float>::CreateRotateAroundY(aDeltaTime * 1.5f) * myEMPHexagon->myOrientation;
+		myEMPHexagon->myOrientation = CU::Matrix44<float>::CreateRotateAroundX(aDeltaTime * 1.5f) * myEMPHexagon->myOrientation;
+		myEMPHexagon2->myOrientation = CU::Matrix44<float>::CreateRotateAroundY(-aDeltaTime * 1.5f) * myEMPHexagon2->myOrientation;
+		myEMPHexagon2->myOrientation = CU::Matrix44<float>::CreateRotateAroundX(-aDeltaTime * 1.5f) * myEMPHexagon2->myOrientation;
+
 		if (myEMPTimer <= 0.f)
 		{
 			myEMPScale = 0.f;
@@ -248,6 +256,7 @@ void Level::Render(bool aIsActiveState)
 		{
 			Prism::Engine::GetInstance()->DisableCulling();
 			myEMPHexagon->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
+			myEMPHexagon2->GetComponent<GraphicsComponent>()->GetInstance()->Render(*myCamera);
 			Prism::Engine::GetInstance()->EnableCulling();
 		}
 
@@ -459,6 +468,8 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 
 	myEMPHexagon->myOrientation.SetPos(myEMPPosition);
 	myEMPHexagon->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
+	myEMPHexagon2->myOrientation.SetPos(myEMPPosition);
+	myEMPHexagon2->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_EMPShot", 0);
 }
 

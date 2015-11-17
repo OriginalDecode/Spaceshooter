@@ -11,6 +11,7 @@
 #include "GUINote.h"
 #include <Instance.h>
 #include "InputNote.h"
+#include "LevelScoreMessage.h"
 #include <MathHelper.h>
 #include <ModelLoader.h>
 #include "PostMaster.h"
@@ -18,6 +19,7 @@
 #include "PowerUpNote.h"
 #include "ShootingComponent.h"
 #include "ShootNote.h"
+#include "SoundNote.h"
 #include "PowerUpMessage.h"
 #include "WeaponFactory.h"
 #include <XMLReader.h>
@@ -135,6 +137,28 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 
 		if (currWepData != nullptr && currWepData->myCurrentTime == currWepData->myCoolDownTime)
 		{
+			if (myEntity.GetType() == eEntityType::PLAYER)
+			{
+				PostMaster::GetInstance()->SendMessage<LevelScoreMessage>(LevelScoreMessage(eLevelScoreMessageType::PLAYER_SHOT));
+				if (currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_1
+					|| currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_2
+					|| currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
+				{
+					myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_PlayerMachineGun"));
+
+				}
+				if (currWepData->myBulletType == eBulletType::SHOTGUN_BULLET_LEVEL_1
+					|| currWepData->myBulletType == eBulletType::SHOTGUN_BULLET_LEVEL_2
+					|| currWepData->myBulletType == eBulletType::SHOTGUN_BULLET_LEVEL_3)
+				{
+					if (myEntity.GetType() == eEntityType::PLAYER)
+					{
+						myEntity.SendNote<SoundNote>(SoundNote(eSoundNoteType::PLAY, "Play_Shotgun"));
+					}
+				}
+			}
+
+
 			for (int i = 0; i < currWepData->myBulletsPerShot; ++i)
 			{
 				CU::Matrix44<float> orientation = myEntity.myOrientation;
