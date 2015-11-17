@@ -143,7 +143,7 @@ void AIComponent::Update(float aDeltaTime)
 		}
 		else
 		{
-			myVelocity -= myVelocity * aDeltaTime * 0.01f;
+			//myVelocity -= myVelocity * aDeltaTime * 0.01f;
 			myTimeBeforeMovement -= aDeltaTime;
 
 			if (myTimeBeforeMovement <= 0.f)
