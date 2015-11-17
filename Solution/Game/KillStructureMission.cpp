@@ -59,7 +59,7 @@ bool KillStructureMission::Update(float, int aMissionIndex, eMissionCategory aMi
 
 	int structuresKilled = myAmountOfStructures - myStructuresToKill.Size();
 
-	ss << "Kill structures " << structuresKilled << "/" << myAmountOfStructures;
+	ss << "Destroy structures " << structuresKilled << "/" << myAmountOfStructures;
 
 	if (aMissionCategory == eMissionCategory::NOT_REQUIRED)
 	{
