@@ -25,7 +25,7 @@ public:
 	void Update(float aDeltaTime) override;
 	void CalculateAndRender(const CU::Vector3<float>& aPosition, Prism::Sprite* aCurrentModel
 		, Prism::Sprite* aArrowModel, Prism::Sprite* aMarkerModel, const CU::Vector2<int>& aWindowSize
-		, bool aShowDist, float anAlpha = 1.f, bool aIsPowerup = false, std::string aName = "", Entity* aStructure = nullptr);
+		, bool aShowDist, float anAlpha = 1.f, bool aIsPowerup = false, std::string aName = "", Entity* aHealthCheckEntity = nullptr);
 
 	void Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState);
 
