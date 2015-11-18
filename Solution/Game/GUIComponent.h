@@ -28,6 +28,7 @@ public:
 		, bool aShowDist, float anAlpha = 1.f, bool aIsPowerup = false, std::string aName = "", Entity* aHealthCheckEntity = nullptr);
 
 	void Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState);
+	void RenderShield(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState);
 
 	void SetCamera(Prism::Camera* aCamera);
 	Prism::Camera* GetCamera();

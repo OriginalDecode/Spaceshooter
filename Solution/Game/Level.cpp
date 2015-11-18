@@ -251,6 +251,9 @@ void Level::Render(bool aIsActiveState)
 		myRenderer->EndScene(Prism::ePostProcessing::BLOOM);
 		myRenderer->FinalRender();
 
+		myPlayer->GetComponent<GUIComponent>()->RenderShield(Prism::Engine::GetInstance()->GetWindowSize(), myInputWrapper->GetMousePosition(), aIsActiveState);
+
+		myScene->RenderCockpit();
 
 		if (myEMPActivated == true)
 		{

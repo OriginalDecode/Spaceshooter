@@ -680,7 +680,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 		else
 		{
-			myDamageIndicatorShield->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
+			//myDamageIndicatorShield->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
 		}
 	}
 
@@ -746,6 +746,27 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 	}
 
+	Prism::Engine::GetInstance()->EnableZBuffer();
+}
+
+void GUIComponent::RenderShield(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState)
+{
+	Prism::Engine::GetInstance()->DisableZBuffer();
+	float halfHeight = aWindowSize.y * 0.5f;
+	float halfWidth = aWindowSize.x * 0.5f;
+
+	if (myDamageIndicatorTimer >= 0.f)
+	{
+		float alpha = fminf(1.f, myDamageIndicatorTimer);
+		if (myCurrentShield <= 0)
+		{
+			//myDamageIndicatorHealth->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
+		}
+		else
+		{
+			myDamageIndicatorShield->Render({ halfWidth, -halfHeight }, { 1.f, 1.f }, { 1.f, 1.f, 1.f, alpha });
+		}
+	}
 	Prism::Engine::GetInstance()->EnableZBuffer();
 }
 

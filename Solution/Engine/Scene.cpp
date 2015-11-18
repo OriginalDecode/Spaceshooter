@@ -78,7 +78,7 @@ void Prism::Scene::Render()
 	myPlayerInstance->UpdateDirectionalLights(myDirectionalLightData);
 	myPlayerInstance->UpdatePointLights(myPointLightData);
 	myPlayerInstance->UpdateSpotLights(mySpotLightData);
-	myPlayerInstance->Render(*myCamera);
+	//myPlayerInstance->Render(*myCamera);
 
 #ifdef SCENE_USE_OCTREE
 	myOctree->Update();
@@ -116,6 +116,11 @@ void Prism::Scene::Render(CU::GrowingArray<Instance*>& someBulletInstances)
 		someBulletInstances[i]->UpdateSpotLights(mySpotLightData);
 		someBulletInstances[i]->Render(*myCamera);
 	}
+}
+
+void Prism::Scene::RenderCockpit()
+{
+	myPlayerInstance->Render(*myCamera);
 }
 
 void Prism::Scene::AddInstance(Instance* aInstance)
