@@ -126,7 +126,13 @@ namespace Launcher
                 }
                 else
                 {
-                    Process.Start(processInfo);
+                    Process newProcess = new Process();
+                    newProcess.StartInfo.FileName = myExePath;
+                    newProcess.StartInfo.WorkingDirectory = "bin\\";
+                    newProcess.Start();
+
+                    newProcess.WaitForInputIdle();
+                    
                 }
                 Application.Exit();
             }
