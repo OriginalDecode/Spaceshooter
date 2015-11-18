@@ -1,5 +1,6 @@
 #include "stdafx.h"
 
+#include "AIComponent.h"
 #include "Camera.h"
 #include "Constants.h"
 
@@ -67,10 +68,16 @@ void StreakEmitterComponent::Update(float aDeltaTime)
 {
 	if (myEntity.GetAlive() == true)
 	{
+		AIComponent* comp = myEntity.GetComponent<AIComponent>();
 		for (int i = 0; i < myEmitters.Size(); ++i)
 		{
+			if (comp != nullptr && comp->GetCouldMove() == false)
+			{
+				myEmitters[i]->myEmitter->Reset();
+			}
 			myEmitters[i]->myEmitter->SetOrientation(myEmitters[i]->myOrientation * myEntity.myOrientation);
 			myEmitters[i]->myEmitter->Update(aDeltaTime);
+
 		}
 	}
 }
