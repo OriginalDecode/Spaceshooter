@@ -29,6 +29,8 @@ public:
 	void DamageEnemiesWithinSphere(CU::Vector3<float> aCenter, float aRadius, int aDamage);
 	Entity* GetClosestEnemyWithinSphere(const CU::Matrix44<float> &anOrientation, float aRadius);
 
+	std::string GetDebugText() const;
+
 private:
 	void CheckAllCollisions(CollisionComponent* aComponent, int aFilter);
 	bool CheckCollision(CollisionComponent* aComponent, CU::GrowingArray<CollisionComponent*>& someOtherComponents);

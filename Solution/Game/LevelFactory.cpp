@@ -186,8 +186,6 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 	myCurrentLevel->GetEmitterManager()->AddEmitter(myCurrentLevel->myPlayer->GetComponent<ParticleEmitterComponent>());
 	myCurrentLevel->myPlayer->SetPlayerScene(*myCurrentLevel->myScene);
 
-	myCurrentLevel->myCollisionManager->Add(myCurrentLevel->myPlayer->GetComponent<CollisionComponent>(), eEntityType::PLAYER);
-
 	Sleep(10);
 	XMLReader reader;
 	reader.OpenDocument(aFilePath);

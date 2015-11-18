@@ -691,7 +691,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
 				, true, 1.f, false, "", myClosestEnemy);
 
-			if (myShouldRenderHP == true && myClosestEnemy->GetName() != "E_enemy_turret_noShoot");
+			if (myShouldRenderHP == true && myClosestEnemy->GetName() != "E_enemy_turret_noShoot")
 			{
 				Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
 					, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
@@ -751,6 +751,8 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 void GUIComponent::RenderShield(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState)
 {
+	aIsActiveState;
+	aMousePos;
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;
