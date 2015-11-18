@@ -375,6 +375,7 @@ void Level::ReceiveMessage(const SpawnEnemyMessage& aMessage)
 	if (aMessage.myType == "ally")
 	{
 		entityType = eEntityType::ALLY;
+		myPlayer->GetComponent<GUIComponent>()->ShowTimedMessage("Reinforcement has arrived!", 3.f);
 	}
 
 	Entity* newEntity = new Entity(entityType, *myScene, Prism::eOctreeType::DYNAMIC);
