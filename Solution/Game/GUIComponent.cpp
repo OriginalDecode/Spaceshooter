@@ -642,7 +642,10 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			if (myClosestEnemy != nullptr)
 			{
 				myHomingTarget->Rotate(myDeltaTime);
-				CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
+				if (myClosestEnemy->GetName() != "E_enemy_turret_noShoot")
+				{
+					CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), myModel2DToRender, myHomingTarget, myHomingTarget, aWindowSize, true, percentageToReady);
+				}
 			}
 
 			myEntity.GetComponent<ShootingComponent>()->SetHomingTarget(myClosestEnemy);
@@ -688,7 +691,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
 				, true, 1.f, false, "", myClosestEnemy);
 
-			if (myShouldRenderHP == true)
+			if (myShouldRenderHP == true && myClosestEnemy->GetName() != "E_enemy_turret_noShoot");
 			{
 				Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
 					, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
