@@ -30,7 +30,7 @@ MessageState::MessageState(const std::string& aTexturePath, const CU::Vector2<fl
 
 	myBlackOverlay = new Prism::Sprite("Data/Resource/Texture/Menu/Splash/T_background_default.dds", windowSize, windowSize / 2.f);
 
-	float oneStarLimit = myLevelScore.myTotalEnemies * 0.33f;
+	float oneStarLimit = myLevelScore.myTotalEnemies * 0.0f;
 	float twoStarLimit = myLevelScore.myTotalEnemies * 0.66f;
 	float threeStarLimit = myLevelScore.myTotalEnemies * 0.80f;
 

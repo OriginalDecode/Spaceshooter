@@ -70,6 +70,4 @@ void ScoreIO::Save(const SaveScore& aScore, int aLevel)
 	{
 		//Do nothing
 	}
-
-
 }
