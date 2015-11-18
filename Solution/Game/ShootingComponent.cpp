@@ -232,24 +232,33 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 				}
 				else
 				{
-					if (currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_2
+					if (currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_1
 						|| currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_3)
 					{
-						CU::Vector3<float> pos = orientation.GetPos();
-						pos += orientation.GetRight() * 10.f;
-						orientation.SetPos(pos);
+						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+							, dir
+							, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
+							, currWepData->myHomingTurnRateModifier));
 					}
-					PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
-						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-						, dir
-						, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
-						, currWepData->myHomingTurnRateModifier));
+
+
 
 					if (currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_2
 						|| currWepData->myBulletType == eBulletType::ROCKET_MISSILE_LEVEL_3)
 					{
 						CU::Vector3<float> pos = orientation.GetPos();
-						pos += orientation.GetRight() * -20.f;
+						pos -= orientation.GetForward() * 40.f;
+						pos += orientation.GetRight() * 20.f;
+						orientation.SetPos(pos);
+						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+							, dir
+							, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr
+							, currWepData->myHomingTurnRateModifier));
+
+						pos = orientation.GetPos();
+						pos += orientation.GetRight() * -40.f;
 						orientation.SetPos(pos);
 						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
 							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
