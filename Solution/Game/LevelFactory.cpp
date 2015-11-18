@@ -304,6 +304,9 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	myCurrentLevel->myMissionManager->Init();
 
+	myCurrentLevel->myPlayer->GetComponent<InputComponent>()->SetSkyPosition();
+	myCurrentLevel->myPlayer->GetComponent<GUIComponent>()->SetCockpitOrientation();
+
 	Prism::Engine::GetInstance()->GetModelLoader()->UnPause();
 	Prism::Engine::GetInstance()->GetModelLoader()->WaitUntilFinished();
 
