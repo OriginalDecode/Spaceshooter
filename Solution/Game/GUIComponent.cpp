@@ -400,7 +400,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
-		if (aArrowModel == myHomingTarget)
+		if (aArrowModel == myHomingTarget || aArrowModel == nullptr && aHealthCheckEntity == nullptr)
 		{
 			myClosestEnemy = nullptr;
 			return;
@@ -418,7 +418,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 		showName = false;
-		if (aArrowModel == myHomingTarget)
+		if (aArrowModel == myHomingTarget || aArrowModel == nullptr && aHealthCheckEntity == nullptr)
 		{
 			myClosestEnemy = nullptr;
 			return;
