@@ -18,6 +18,9 @@
 #include <sstream>
 #include <XMLReader.h>
 
+#include "PostMaster.h"
+#include "EMPMessage.h"
+
 InputComponent::InputComponent(Entity& aEntity)
 	: ControllerComponent(aEntity)
 {
@@ -68,6 +71,10 @@ void InputComponent::Update(float aDeltaTime)
 		if (myInputWrapper->KeyIsPressed(DIK_SPACE))
 		{
 			myEntity.SendNote(EMPNote());
+
+#ifndef RELEASE_BUILD
+			PostMaster::GetInstance()->SendMessage(EMPMessage(myEntity.myOrientation.GetPos(), 10.f));
+#endif
 		}
 
 		if (myInputWrapper->MouseIsPressed(0) == true)

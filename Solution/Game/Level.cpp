@@ -482,7 +482,7 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPHexagon2->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_EMPShot", 0);
 
-	//PostMaster::GetInstance()->SendMessage(FadeMessage(1.f));
+	PostMaster::GetInstance()->SendMessage(FadeMessage(1.f));
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)
