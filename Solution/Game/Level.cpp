@@ -86,6 +86,8 @@ Level::Level(CU::InputWrapper* aInputWrapper, int aLevelID, int aDifficultyID)
 
 	myRenderer = new Prism::Renderer();
 	myPBL = Prism::Engine::GetInstance()->GetEffectContainer()->GetEffect("Data/Resource/Shader/S_effect_pbl.fx");
+
+	myPBL->SetEMPScale(myEMPScale);
 }
 
 Level::~Level()
