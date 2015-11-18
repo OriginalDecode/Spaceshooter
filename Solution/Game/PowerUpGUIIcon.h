@@ -14,7 +14,7 @@ public:
 		, const CU::Vector2<float>& aPosition, const bool& aActive, const float* aDuration = nullptr);
 	~PowerUpGUIIcon();
 
-	void Render(const CU::Vector2<int>& aWindowSize);
+	void Render(const CU::Vector2<int>& aWindowSize, float aDeltaTime);
 
 private:
 	void operator=(PowerUpGUIIcon&) = delete;
@@ -24,7 +24,11 @@ private:
 	CU::Vector2<float> myPosition;
 	CU::Vector2<float> myTextPosition;
 	const bool& myActive;
+	bool myLastFrameActive;
+	bool myFadeUp;
+	float myAlpha;
 	const float* myDuration;
+
 
 };
 

@@ -701,10 +701,10 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			}
 		}
 
-		myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize);
-		myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize);
-		myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize);
-		myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize);
+		myPowerUpSlots[ePowerUpType::EMP]->Render(aWindowSize, myDeltaTime);
+		myPowerUpSlots[ePowerUpType::FIRERATEBOOST]->Render(aWindowSize, myDeltaTime);
+		myPowerUpSlots[ePowerUpType::HOMING]->Render(aWindowSize, myDeltaTime);
+		myPowerUpSlots[ePowerUpType::INVULNERABLITY]->Render(aWindowSize, myDeltaTime);
 
 		if (myShowMessage == true)
 		{
