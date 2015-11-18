@@ -58,7 +58,7 @@ void BulletAIComponent::Update(float aDeltaTime)
 	if (myEntityToFollow->GetAlive() == false && myEntity.GetAlive() == true)
 	{
 		myEntity.GetComponent<BulletComponent>()->SetActive(false);
-		myCollisionManager->Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
+		//myCollisionManager->Remove(myEntity.GetComponent<CollisionComponent>(), myEntity.GetType());
 		//myEntity.Kill();
 		return;
 	}
