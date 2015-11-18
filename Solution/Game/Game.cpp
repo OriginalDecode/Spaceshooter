@@ -185,6 +185,9 @@ bool Game::Update()
 		myIsComplete = false;
 	}
 
+	//cap framerate
+	CU::TimerManager::GetInstance()->CapFrameRate(100.f);
+
 	return true;
 }
 

@@ -115,3 +115,17 @@ void CU::TimerManager::StartAll()
 		myTimerList[i].Start();
 	}
 }
+
+void CU::TimerManager::CapFrameRate(float aFrameRate)
+{
+	float capTime = 1.f / aFrameRate;
+
+	float waitTime = 0;
+
+	while (waitTime < capTime)
+	{
+		float frameTime = float(GetTime());
+		frameTime /= 1000000.f;
+		waitTime = frameTime;
+	}
+}
