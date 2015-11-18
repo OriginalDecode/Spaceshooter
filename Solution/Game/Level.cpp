@@ -17,6 +17,7 @@
 #include <EngineEnums.h>
 #include "Entity.h"
 #include "EntityFactory.h"
+#include "FadeMessage.h"
 #include "ParticleEmitterComponent.h"
 #include "EmitterManager.h"
 #include "EventManager.h"
@@ -478,6 +479,8 @@ void Level::ReceiveMessage(const EMPMessage& aMessage)
 	myEMPHexagon2->myOrientation.SetPos(myEMPPosition);
 	myEMPHexagon2->GetComponent<GraphicsComponent>()->SetScale({ myEMPScale, myEMPScale, myEMPScale });
 	Prism::Audio::AudioInterface::GetInstance()->PostEvent("Play_EMPShot", 0);
+
+	//PostMaster::GetInstance()->SendMessage(FadeMessage(1.f));
 }
 
 void Level::ReceiveMessage(const LevelScoreMessage& aMessage)

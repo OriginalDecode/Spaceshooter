@@ -37,7 +37,7 @@ void ScoreIO::Save(const SaveScore& aScore, int aLevel)
 {
 	SaveScore scoreBefore = Load(aLevel);
 	
-	if (scoreBefore.myDifficulty < aScore.myDifficulty)
+	if (scoreBefore.myDifficulty < aScore.myDifficulty && aScore.myStars > 0)
 	{
 		std::string path(CU::GetMyDocumentFolderPath());
 		path += "Raven\\gfx.dist";
