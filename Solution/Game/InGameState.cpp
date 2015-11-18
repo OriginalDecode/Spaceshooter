@@ -104,6 +104,11 @@ const eStateStatus InGameState::Update(const float& aDeltaTime)
 	else
 	{
 		myLoadingScreen->Update(aDeltaTime);
+		if (myLoadingScreen->IsDone() == true)
+		{
+			//Need to call Update again to fix Cockpit and Skysphere on the first frame
+			Update(aDeltaTime);
+		}
 	}
 	return eStateStatus::eKeepState;
 }

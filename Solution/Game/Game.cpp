@@ -163,6 +163,7 @@ bool Game::Update()
 #endif
 
 	myStateStack.RenderCurrentState();
+
 #ifndef RELEASE_BUILD
 	if (myShowSystemInfo == true)
 	{
