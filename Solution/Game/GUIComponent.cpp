@@ -400,7 +400,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		aCurrentModel = aArrowModel;
 		newRenderPos.x = radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(radius.y * CIRCLERADIUS + (halfHeight));
-		if (aArrowModel == myHomingTarget)
+		if (aArrowModel == myHomingTarget || aArrowModel == nullptr && aHealthCheckEntity == nullptr)
 		{
 			myClosestEnemy = nullptr;
 			return;
@@ -418,7 +418,7 @@ void GUIComponent::CalculateAndRender(const CU::Vector3<float>& aPosition, Prism
 		newRenderPos.x = -radius.x * CIRCLERADIUS + (halfWidth);
 		newRenderPos.y = -(-radius.y * CIRCLERADIUS + (halfHeight));
 		showName = false;
-		if (aArrowModel == myHomingTarget)
+		if (aArrowModel == myHomingTarget || aArrowModel == nullptr && aHealthCheckEntity == nullptr)
 		{
 			myClosestEnemy = nullptr;
 			return;
@@ -691,7 +691,7 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 			CalculateAndRender(myClosestEnemy->myOrientation.GetPos(), nullptr, nullptr, nullptr, aWindowSize
 				, true, 1.f, false, "", myClosestEnemy);
 
-			if (myShouldRenderHP == true && myClosestEnemy->GetName() != "E_enemy_turret_noShoot");
+			if (myShouldRenderHP == true && myClosestEnemy->GetName() != "E_enemy_turret_noShoot")
 			{
 				Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
 					, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
