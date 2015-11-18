@@ -96,6 +96,7 @@ private:
 	float myHomingPowerUpDuration;
 
 	float myEMPTime;
+	bool myShootSwitch;
 };
 
 inline eComponentType ShootingComponent::GetType()

@@ -43,6 +43,7 @@ ShootingComponent::ShootingComponent(Entity& aEntity)
 	, myHasShotMachinegun(true)
 	, myHasShotRocket(true)
 	, myHasSwitchWeapon(true)
+	, myShootSwitch(false)
 {
 
 }
@@ -225,10 +226,39 @@ void ShootingComponent::ReceiveNote(const ShootNote& aShootNote)
 
 				if (aShootNote.myIsRocket == false)
 				{
-					PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
-						, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
-						, dir
-						, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr));
+					if (currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_2
+						|| currWepData->myBulletType == eBulletType::MACHINGUN_BULLET_LEVEL_3)
+					{
+						if (myShootSwitch == false)
+						{
+							CU::Vector3<float> pos = orientation.GetPos();
+							pos += orientation.GetRight() * 5.f;
+							orientation.SetPos(pos);
+							PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+								, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+								, dir
+								, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr));
+							myShootSwitch = true;
+						}
+						else
+						{
+							CU::Vector3<float> pos = orientation.GetPos();
+							pos += orientation.GetRight() * -5.f;
+							orientation.SetPos(pos);
+							PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+								, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+								, dir
+								, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr));
+							myShootSwitch = false;
+						}
+					}
+					else
+					{
+						PostMaster::GetInstance()->SendMessage(BulletMessage(currWepData->myBulletType
+							, orientation, myEntity.GetType(), aShootNote.myEnitityVelocity
+							, dir
+							, HasPowerUp(ePowerUpType::HOMING) || currWepData->myIsHoming ? myHomingTarget : nullptr));
+					}
 				}
 				else
 				{
