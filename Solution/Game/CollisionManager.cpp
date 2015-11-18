@@ -59,33 +59,63 @@ void CollisionManager::Add(CollisionComponent* aComponent, eEntityType aEnum)
 	switch (aEnum)
 	{
 	case eEntityType::PLAYER:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myPlayers.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myPlayers.Add(aComponent);
 		break;
 	case eEntityType::ENEMY:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myEnemies.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myEnemies.Add(aComponent);
 		break;
 	case eEntityType::PLAYER_BULLET:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myPlayerBullets.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myPlayerBullets.Add(aComponent);
 		break;
 	case eEntityType::ENEMY_BULLET:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myEnemyBullets.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myEnemyBullets.Add(aComponent);
 		break;
 	case eEntityType::TRIGGER:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myTriggers.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myTriggers.Add(aComponent);
 		break;
 	case eEntityType::POWERUP:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myPowerUps.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myPowerUps.Add(aComponent);
 		break;
 	case eEntityType::PROP:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myProps.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myProps.Add(aComponent);
 		break;
 	case eEntityType::DEFENDABLE:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myDefendables.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myDefendables.Add(aComponent);
 		break;
 	case eEntityType::STRUCTURE:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myStructures.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myStructures.Add(aComponent);
 		break;
 	case eEntityType::ALLY:
+#ifdef _DEBUG
+		DL_ASSERT_EXP(myAllies.Find(aComponent) < 1, "component already in collisionmanager.");
+#endif
 		myAllies.Add(aComponent);
 		break;
 	default:
