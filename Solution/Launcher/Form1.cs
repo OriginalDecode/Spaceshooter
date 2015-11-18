@@ -97,7 +97,7 @@ namespace Launcher
         {
             foreach (Process runningProcess in Process.GetProcesses())
             {
-                if(runningProcess.ProcessName.Contains(name) == true)
+                if (runningProcess.ProcessName.Contains(name) == true)
                 {
                     return true;
                 }
@@ -203,25 +203,7 @@ namespace Launcher
 
         void ReadResolutionFromFile(BinaryReader aReader)
         {
-            int width = aReader.ReadInt32();
-            int height = aReader.ReadInt32();
-
-            if (width == 1280 && height == 1024)
-            {
-                myResolutionList.SelectedIndex = 0;
-            }
-            if (width == 1600 && height == 900)
-            {
-                myResolutionList.SelectedIndex = 1;
-            }
-            else if (width == 1920 && height == 1080)
-            {
-                myResolutionList.SelectedIndex = 2;
-            }
-            else
-            {
-                myResolutionList.SelectedIndex = 3;
-            }
+            myResolutionList.SelectedIndex = 3;
         }
 
         void ReadMSAAFromFile(BinaryReader aReader)
