@@ -60,6 +60,7 @@ public:
 
 	void ShowTutorialMessage(const std::string& aMessage);
 	void RemoveTutorialMessage(const std::string& aMessage = "");
+	void ShowTimedMessage(const std::string& aMessage, float aTime);
 
 private:
 	CU::Vector3<float> CalcCockpitOffset() const;

@@ -55,6 +55,8 @@ void LoadingScreen::Render()
 
 	myScreens[myLevelID - 1]->myRotatingThing->Render({ myWindowMiddle.x + 500.f, myWindowMiddle.y - 300.f }
 	, { myScreens[myLevelID - 1]->myRotatingThingScale, myScreens[myLevelID - 1]->myRotatingThingScale });
+	myScreens[myLevelID - 1]->myRotatingThing2->Render({ myWindowMiddle.x + 500.f, myWindowMiddle.y - 300.f }
+	, { myScreens[myLevelID - 1]->myRotatingThingScale, myScreens[myLevelID - 1]->myRotatingThingScale });
 }
 
 void LoadingScreen::Update(float aDeltaTime)
@@ -81,11 +83,16 @@ void LoadingScreen::Update(float aDeltaTime)
 		}
 	}
 
-	myScreens[myLevelID - 1]->myRotatingThing->Rotate(-8.f * aDeltaTime * (1.f / (myScreens[myLevelID - 1]->myRotatingThingScale + 0.001f)));
+	float speed1 = -3.f;
+	float speed2 = 0.2f;
+
+	myScreens[myLevelID - 1]->myRotatingThing->Rotate(speed1 * aDeltaTime * (1.f / (myScreens[myLevelID - 1]->myRotatingThingScale + 0.001f)));
+	myScreens[myLevelID - 1]->myRotatingThing2->Rotate(speed2 * aDeltaTime * (1.f / (myScreens[myLevelID - 1]->myRotatingThingScale + 0.001f)));
 
 	if (myScreens[myLevelID - 1]->myRotatingThingScale < 1.f)
 	{
-		myScreens[myLevelID - 1]->myRotatingThing->Rotate(-8.f * aDeltaTime);
+		myScreens[myLevelID - 1]->myRotatingThing->Rotate(speed1 * aDeltaTime);
+		myScreens[myLevelID - 1]->myRotatingThing2->Rotate(speed2 * aDeltaTime);
 	}
 
 	if (myLevelIsLoading == true)
@@ -156,13 +163,18 @@ void LoadingScreen::ReadXML()
 		}
 		
 		std::string aRotatingThingPath = "";
+		std::string aRotatingThingPath2 = "";
 
 		reader.ForceReadAttribute(reader.FindFirstChild(screenElement, "background"), "path", aSpritePath);
 		reader.ForceReadAttribute(reader.FindFirstChild(screenElement, "rotatingThing"), "path", aRotatingThingPath);
-
+		reader.ForceReadAttribute(reader.FindFirstChild(screenElement, "rotatingThing2"), "path", aRotatingThingPath2);
+		
 		Screen* newScreen = new Screen();
 		newScreen->myBackground = new Prism::Sprite(aSpritePath, { windowSize.y * 2.f, windowSize.y }, windowSize / 2.f);
-		newScreen->myRotatingThing = new Prism::Sprite(aRotatingThingPath, { 256.f, 256.f }, { 128.f, 128.f } );
+		newScreen->myRotatingThing = new Prism::Sprite(aRotatingThingPath, { 256.f, 256.f }, { 128.f, 128.f });
+		newScreen->myRotatingThing2 = new Prism::Sprite(aRotatingThingPath2, { 256.f, 256.f }, { 128.f, 128.f });
+
+
 
 		tinyxml2::XMLElement* textElement = reader.FindFirstChild(screenElement, "text");
 

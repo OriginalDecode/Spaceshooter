@@ -27,6 +27,8 @@ public:
 
 	static eComponentType GetType();
 
+	const bool GetCouldMove() const;
+
 protected:
 	float myTimeBeforeMovement;
 	bool myCanMove;
@@ -40,4 +42,9 @@ inline void ControllerComponent::SetCanMove(const bool& aCanMove)
 inline eComponentType ControllerComponent::GetType()
 {
 	return eComponentType::NOT_USED;
+}
+
+inline const bool ControllerComponent::GetCouldMove() const
+{
+	return myCanMove;
 }
