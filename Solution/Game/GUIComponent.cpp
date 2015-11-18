@@ -693,9 +693,11 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 			if (myShouldRenderHP == true && myClosestEnemy->GetName() != "E_enemy_turret_noShoot")
 			{
+				float alpha = CU::Length(steeringPos - myClosestScreenPos);
+				alpha = 1.f - (alpha / CIRCLERADIUS);
 				Prism::Engine::GetInstance()->PrintText("Hp: " + std::to_string(myClosestEnemy->GetComponent<HealthComponent>()->GetHealth())
 					, { myClosestScreenPos.x - 30.f, myClosestScreenPos.y + 40.f }, Prism::eTextType::RELEASE_TEXT
-					, 0.5f, { 1.f, 1.f, 1.f, 0.5f });
+					, 0.5f, { 1.f, 1.f, 1.f, alpha });
 			}
 		}
 
