@@ -21,6 +21,7 @@ struct Difficult
 {
 	eDifficult myType;
 	float myMultiplier;
+	float myHealthMultiplier;
 };
 
 class LevelFactory
