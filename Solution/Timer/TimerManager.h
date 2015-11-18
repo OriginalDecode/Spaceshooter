@@ -23,6 +23,8 @@ namespace CU
 		void Update();
 		void PauseAll();
 		void StartAll();
+
+		void CapFrameRate(float aFrameRate);
 	private:
 		TimerManager();
 		~TimerManager();

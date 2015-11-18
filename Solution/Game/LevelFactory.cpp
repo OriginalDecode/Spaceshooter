@@ -246,7 +246,7 @@ void LevelFactory::ReadXML(const std::string& aFilePath)
 
 	LoadLights(reader, levelElement);
 	LoadProps(reader, levelElement);
-	LoadDefendables(reader, levelElement, myDifficults[myCurrentDifficultyID].myMultiplier);
+	LoadDefendables(reader, levelElement, myDifficults[myCurrentDifficultyID].myHealthMultiplier);
 	LoadStructures(reader, levelElement);
 	LoadTriggers(reader, levelElement);
 	LoadPowerups(reader, levelElement);
@@ -524,7 +524,7 @@ void LevelFactory::LoadDefendables(XMLReader& aReader, tinyxml2::XMLElement* aLe
 		std::string propType;
 		aReader.ForceReadAttribute(entityElement, "propType", propType);
 		myCurrentLevel->myEntityFactory->CopyEntity(newEntity, propType);
-		int difficultHealth = int(newEntity->GetComponent<HealthComponent>()->GetHealth() * (2 - aDifficultScale));
+		int difficultHealth = int(newEntity->GetComponent<HealthComponent>()->GetHealth() * aDifficultScale);
 		newEntity->GetComponent<HealthComponent>()->Init(difficultHealth);
 
 		std::string defendName;
@@ -606,6 +606,7 @@ void LevelFactory::LoadDifficults()
 			std::string diffType;
 			reader.ForceReadAttribute(e, "type", diffType);
 			reader.ForceReadAttribute(e, "multiplier", newDifficult.myMultiplier);
+			reader.ForceReadAttribute(e, "defendHealthMulitplier", newDifficult.myHealthMultiplier);
 
 			if (diffType == "Easy")
 			{
