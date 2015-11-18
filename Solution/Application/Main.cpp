@@ -92,6 +92,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPTSTR, int aNumberCommands)
 
 #ifdef RELEASE_BUILD
 	Prism::Engine::GetInstance()->SetFullscreen(true);
+	globalPreviousFullscreenState = true;
 #endif
 
 	MSG msg;
@@ -167,6 +168,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						Prism::Engine::GetInstance()->SetFullscreen(globalPreviousFullscreenState);
 
 					}
+#ifdef RELEASE_BUILD
+					Prism::Engine::GetInstance()->SetFullscreen(true);
+#endif
 
 					globalIsActive = true;
 					globalGame->UnPause();

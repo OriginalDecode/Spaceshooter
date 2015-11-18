@@ -183,7 +183,7 @@ bool Level::LogicUpdate(float aDeltaTime)
 	{
 		myEMPTimer -= aDeltaTime;
 		myEMPScale += 1000 * aDeltaTime;
-		myPBL->SetEMPScale(myEMPScale);
+		myPBL->SetEMPScale(myEMPScale * 4);
 		myPBL->SetEMPPosition(myEMPPosition);
 
 		myEMPHexagon->myOrientation.SetPos(myEMPPosition);
