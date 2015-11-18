@@ -837,9 +837,12 @@ void GUIComponent::ReceiveNote(const ShieldNote& aNote)
 
 void GUIComponent::ReceiveNote(const PowerUpNote& aNote)
 {
-	myMessage = "      " + aNote.myIngameName;
-	myMessageTime = 3.f;
-	myShowMessage = true;
+	if (aNote.myIngameName != "")
+	{
+		myMessage = "      " + aNote.myIngameName;
+		myMessageTime = 3.f;
+		myShowMessage = true;
+	}
 }
 
 void GUIComponent::ReceiveNote(const InputNote& aMessage)
@@ -1040,4 +1043,11 @@ void GUIComponent::RemoveTutorialMessage(const std::string& aMessage)
 		myMessageTime = 3.f;
 		myShowMessage = true;
 	}
+}
+
+void GUIComponent::ShowTimedMessage(const std::string& aMessage, float aTime)
+{
+	myMessage = aMessage;
+	myMessageTime = aTime;
+	myShowMessage = true;
 }
