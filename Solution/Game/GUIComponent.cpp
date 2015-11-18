@@ -739,11 +739,15 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 		}
 
 		float speed = myEntity.GetComponent<PhysicsComponent>()->GetSpeed();
-		speed += 1.f;
+		speed += 0.5f;
 		int displaySpeed = int(speed);
-		if (displaySpeed > 100)
+		if (speed > 99.5f && speed < 102.f)
 		{
 			displaySpeed = 100;
+		}
+		if (speed > 250.f)
+		{
+			displaySpeed = 250;
 		}
 
 		Prism::Engine::GetInstance()->PrintText(displaySpeed
