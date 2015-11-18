@@ -751,6 +751,8 @@ void GUIComponent::Render(const CU::Vector2<int>& aWindowSize, const CU::Vector2
 
 void GUIComponent::RenderShield(const CU::Vector2<int>& aWindowSize, const CU::Vector2<float>& aMousePos, bool aIsActiveState)
 {
+	aIsActiveState;
+	aMousePos;
 	Prism::Engine::GetInstance()->DisableZBuffer();
 	float halfHeight = aWindowSize.y * 0.5f;
 	float halfWidth = aWindowSize.x * 0.5f;

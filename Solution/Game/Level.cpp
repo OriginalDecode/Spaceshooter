@@ -288,6 +288,9 @@ void Level::Render(bool aIsActiveState)
 
 	myBulletManager->RenderStreaks();
 
+#ifdef _DEBUG
+	//Prism::Engine::GetInstance()->PrintText(myCollisionManager->GetDebugText(), { 800.f, -76.f }, Prism::eTextType::DEBUG_TEXT);
+#endif
 
 	if (myIsSkipable == true && aIsActiveState == true)
 	{

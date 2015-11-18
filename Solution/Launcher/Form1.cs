@@ -16,7 +16,7 @@ namespace Launcher
     {
         private string myDocumentFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
         private string myConfigPath = "Data\\Setting\\SET_config.bin";
-        private string[] myExePath = { "Application_Release.exe", "Application_Internal.exe", "Application_Debug.exe" };
+        private string myExePath = "Application_Release.exe";
         private string myLogo = "bin\\Data\\Resource\\Texture\\Logo\\T_launcher_logo.png";
 
         enum eResolutions
@@ -93,6 +93,18 @@ namespace Launcher
             }
         }
 
+        public bool IsProcessOpen(string name)
+        {
+            foreach (Process runningProcess in Process.GetProcesses())
+            {
+                if (runningProcess.ProcessName.Contains(name) == true)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             using (BinaryWriter writer = new BinaryWriter(File.Open(myConfigPath, FileMode.Create)))
@@ -104,29 +116,23 @@ namespace Launcher
 
             ProcessStartInfo processInfo = new ProcessStartInfo();
             processInfo.WorkingDirectory = "bin\\";
-            processInfo.FileName = myExePath[0];
+            processInfo.FileName = myExePath;
 
-            if (File.Exists("bin\\" + myExePath[0]) == true)
+            if (File.Exists("bin\\" + myExePath) == true)
             {
-                processInfo.FileName = myExePath[0];
-                Process.Start(processInfo);
-                Application.Exit();
-            }
-            else if (File.Exists("bin\\" + myExePath[1]) == true)
-            {
-                processInfo.FileName = myExePath[1];
-                Process.Start(processInfo);
-                Application.Exit();
-            }
-            else if (File.Exists("bin\\" + myExePath[2]) == true)
-            {
-                processInfo.FileName = myExePath[2];
-                Process.Start(processInfo);
+                if (IsProcessOpen("Application_Release") == true)
+                {
+                    MessageBox.Show("A instance of the game Raven is already running.");
+                }
+                else
+                {
+                    Process.Start(processInfo);
+                }
                 Application.Exit();
             }
             else
             {
-                MessageBox.Show("Could not find a Release, Internal or Debug executable :(");
+                MessageBox.Show("Could not find a Release executable :(");
             }
 
 
@@ -155,14 +161,6 @@ namespace Launcher
                 default:
                     width = scr.Bounds.Width;
                     height = scr.Bounds.Height;
-
-                    float aspect = width / height;
-
-                    if (width > 1920)
-                    {
-                        width = 1920;
-                        height = (int)((float)width / aspect);
-                    }
                     break;
             }
 
@@ -199,31 +197,13 @@ namespace Launcher
             //}
             //else
             //{
-                aWriter.Write((Int32)0);
+            aWriter.Write((Int32)0);
             //}
         }
 
         void ReadResolutionFromFile(BinaryReader aReader)
         {
-            int width = aReader.ReadInt32();
-            int height = aReader.ReadInt32();
-
-            if (width == 1280 && height == 1024)
-            {
-                myResolutionList.SelectedIndex = 0;
-            }
-            if (width == 1600 && height == 900)
-            {
-                myResolutionList.SelectedIndex = 1;
-            }
-            else if (width == 1920 && height == 1080)
-            {
-                myResolutionList.SelectedIndex = 2;
-            }
-            else
-            {
-                myResolutionList.SelectedIndex = 3;
-            }
+            myResolutionList.SelectedIndex = 3;
         }
 
         void ReadMSAAFromFile(BinaryReader aReader)
