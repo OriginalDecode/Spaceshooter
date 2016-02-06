@@ -79,3 +79,6 @@ Tools/CSharpUtilities/CSharpUtilities/obj/
 /Solution/Launcher/bin/Internal/Launcher.vshost.exe.config
 /Solution/Launcher/bin/Internal/Launcher.vshost.exe.manifest
 /Solution/Launcher/bin/Internal/Raven.exe.config
+/Controller/ControllerInput.cpp
+/Controller/ControllerInput.h
+/installer.png
